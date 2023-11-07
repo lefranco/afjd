@@ -941,11 +941,6 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
             # decide if send
 
-            if type_ == 'start_stop':
-                # does not want to receive start/stop notifications
-                if not pseudo_dest.notify_adjudication:
-                    continue
-
             if type_ == 'message':
                 # does not want to receive message/press notifications
                 if not pseudo_dest.notify_message:
@@ -1890,7 +1885,7 @@ class SiteImageRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': 'Ok inserted'}
         return data, 201
 
-    def get(self) -> typing.Tuple[typing.Any, int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Provides the site legend + image
         EXPOSED
@@ -1902,7 +1897,9 @@ class SiteImageRessource(flask_restful.Resource):  # type: ignore
 
         # find the site image
         image_data = site_image.SiteImage.content(sql_executor)
+
         legend = image_data[0]
+
         image_bytes = image_data[1]
         image_content = image_bytes.decode() if image_bytes else None
 
