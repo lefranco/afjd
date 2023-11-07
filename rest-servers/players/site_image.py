@@ -8,13 +8,14 @@ Handles the site image
 """
 
 import database
+import typing
 
 
 class SiteImage:
     """ Class for handling a site image """
 
     @staticmethod
-    def content(sql_executor: database.SqlExecutor) -> bytes:
+    def content(sql_executor: database.SqlExecutor) -> typing.Tuple[str, bytes]:
         """ get content """
 
         item_found = sql_executor.execute("SELECT * FROM site_image", None, need_result=True)
