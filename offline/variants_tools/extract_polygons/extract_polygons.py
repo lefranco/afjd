@@ -254,6 +254,10 @@ class Application(tkinter.Frame):
             with open(self.parameters_file, 'w', encoding='utf-8') as file_ptr:
                 file_ptr.write(output)
 
+            # update button
+            button = self._export_zone_button_table[num]
+            button['relief'] = tkinter.SUNKEN
+
         def export_center_callback(num: int) -> None:
 
             if not self.export_data:
@@ -278,6 +282,10 @@ class Application(tkinter.Frame):
             output = json.dumps(json_parameters_data, indent=4, ensure_ascii=False)
             with open(self.parameters_file, 'w', encoding='utf-8') as file_ptr:
                 file_ptr.write(output)
+
+            # update button
+            button = self._export_center_button_table[num]
+            button['relief'] = tkinter.SUNKEN
 
         def reload_callback() -> None:
 
@@ -386,6 +394,8 @@ class Application(tkinter.Frame):
         frame_export_zones = tkinter.LabelFrame(main_frame, text="Export zones (polygon + middle)")
         frame_export_zones.grid(row=2, column=3, sticky='nw')
 
+        self._export_zone_button_table = {}
+
         for number, zone in json_parameters_data['zones'].items():
 
             if zone['name']:
@@ -400,8 +410,12 @@ class Application(tkinter.Frame):
             export_button = tkinter.Button(frame_export_zones, text=legend, command=lambda number=number: export_zone_callback(int(number)))  # type: ignore
             export_button.grid(row=(int(number) - 1) % BUTTONS_PER_COLUMN + 1, column=(int(number) - 1) // BUTTONS_PER_COLUMN + 1, sticky='we')
 
+            self._export_zone_button_table[int(number)] = export_button
+
         frame_export_centers = tkinter.LabelFrame(main_frame, text="Export centers (click)")
         frame_export_centers.grid(row=2, column=4, sticky='nw')
+
+        self._export_center_button_table = {}
 
         for number in json_parameters_data['centers']:
 
@@ -409,6 +423,8 @@ class Application(tkinter.Frame):
             legend = json_parameters_data['zones'][str(num_zone)]['name']
             export_button = tkinter.Button(frame_export_centers, text=legend, command=lambda number=number: export_center_callback(int(number)))  # type: ignore
             export_button.grid(row=(int(number) - 1) % BUTTONS_PER_COLUMN + 1, column=(int(number) - 1) // BUTTONS_PER_COLUMN + 1, sticky='we')
+
+            self._export_center_button_table[int(number)] = export_button
 
     def menu_complete_quit(self) -> None:
         """ as it says """
