@@ -547,13 +547,18 @@ def show_news():
     # ----
     div_a0 = html.DIV(Class='tooltip')
 
-    title8 = html.H4("Problèmes locaux d'horloge")
+    title8 = html.H4("Date sur le serveur")
     div_a0 <= title8
 
     # time shift
 
+    # time on server
     server_time = news_content_table_loaded['server_time']
+
+    # time locally
     local_time = time.time()
+
+    # difference
     delta_time = round(local_time - server_time)
     if delta_time > 0:
         status = "en avance"
@@ -565,6 +570,11 @@ def show_news():
         unit = "minutes"
     else:
         unit = "secondes"
+
+    server_time_gmt = mydatetime.fromtimestamp(server_time)
+    server_time_gmt_str = mydatetime.strftime(*server_time_gmt)
+    div_a0 <= server_time_gmt_str
+    div_a0 <= html.BR()
 
     # do not always display
     if abs(delta_time) > THRESHOLD_DRIFT_ALERT_SEC:
