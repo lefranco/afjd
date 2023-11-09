@@ -25,7 +25,7 @@ VERSION_FILE_NAME = "./version.ini"
 
 VERSION_SECTION = "version"
 
-TITLE = "Adjust centers : \nclick to select center, arrows to move selected, + to move faster, - to move slower,\n, u to undo last action and save button to save to file"
+TITLE = "Adjust centers : \nclick to select center, arrows to move selected, + to move faster, - to move slower,\n u to undo last action and save button to save to file"
 
 
 class VersionRecord(typing.NamedTuple):
