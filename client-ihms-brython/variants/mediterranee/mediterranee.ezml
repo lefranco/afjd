@@ -3,21 +3,76 @@ Méditerranée (Ancienne méditerranéee)
 _
 $ Contexte
 
-
+Méditerranée est une variante à 5 joueurs dans la méditerranée classique.
 _
 $ Côtes spéciales
 
+Méditerranée ne possède aucune provinces avec deux côtes.
 
 _
 $ Particularités de la carte
 
 
+(Atlantic Sea)
+Cette zone est hors-jeu et inaccessible
+
+(Gaul et Lusitania)
+Du fait de la mise hors-jeu de la Mer Atlantique, ces deux régions sont en fait des terres
+
+(Iles)
+Ce sont des côtes qui peuvent être occupées pas des armées ou des flottes :
+- Sardinia
+- Corsica
+- Sicilia
+- Crete
+- Cyprus
+
+
+(Lien fléchés - détroits)
+L'accès est possible, pour une flotte ou une armée entre:
+- Saguntum et Mauretania
+- Neapolis et Sicilia
+- Corsica et Sardinia
+
+
+(Byzantium)
+Cette côte fonctionne de la même manière que Constantinople sur la carte standard.
+
+(Baléares)
+Dans la version officielle, les Baléares dévient de la règle en étant à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Ici, les Baléares sont une mer et sont donc inaccessibles aux armées. *C'est la seule différence avec la version officielle*
+
+(Intersection dans les hautes mers)
+L'accès est possible, pour une flotte, de n'importe quelle des mers suivantes vers une autre :
+- Ausonian Sea
+- Messenian Sea
+- Gulf of Tacape
+- Libyan Sea
+
+
+(Les Diokos)
+Une flotte peut passer de  Aegean Sea à Athens et ensuite en Ionian Sea.
+
+(Le Delta du Nil)
+L'accès est possible, pour une unité, de n'importe quelle des régions suivantes vers une autre :
+- Alexandria
+- Thebes
+- Sinai 
+- Gulf of Pelusium (flotte seulement)
+
+
+(Memphis)
+C'est une côte (par le Nil)
+
+(Le canal de Suez)
+L'accès est possible, pour une flotte  entre :
+- Red Sea et Gulf of Pelusimu
+
 
 _
 $ Datation
 
-La partie commence en *1425*. 
-Chaque tour représente *5* années 
+La partie commence en *1*. 
+Chaque tour représente *1* années 
 "en temps réel".
 
 _
@@ -25,7 +80,7 @@ $ Centres de ravitaillement
 
 Il y a *34* centres de ravitaillement sur le plateau.
 .
-Le gagnant donc est la puissance qui détient *9* centres de ravitaillement ou plus pendant une phase d'ajustement.
+Le gagnant donc est la puissance qui détient *18* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
 _
 $ Puissances en présence
@@ -35,24 +90,97 @@ Il y a cinq puissances dont les unités de départ sont les suivantes :
 .
 = Position de départ
 |Puissance | Centres | Armées | Flottes| Centres inoccupés|
-|Rome    | 3 |Roma, Ravenna | Neapolis | |
+|Rome     | 3 |Roma, Ravenna | Neapolis | |
 |Carthage | 3 |Cirta, Carthage | Thapsus | |
-|Grèce   | 3 |Athens, Macedonia | Sparta | |
-|Perse   | 3 |Antioch, Damascus | Sidon | |
-|Egyte   | 3 |Memphis, Thebes | Alexandria | |
+|Grèce    | 3 |Athens, Macedonia | Sparta | |
+|Perse    | 3 |Antioch, Damascus | Sidon | |
+|Egyte    | 3 |Memphis, Thebes | Alexandria | |
 =
-
-_
-$ Particularités
-
-TODO
 
 _
 $ Nomenclature
 
 = Régions et abbréviations de la variante
 | Abbréviation | Nom complet |
-| TODO | Nom TODO |
+| Adr | Adriatic Sea  |
+| Aeg | Aegaen Sea |
+| Ale | Alexandria |
+| Ant | Antioch |
+| Apu | Apulia |
+| Ara | Arabia |
+| Arm | Armenia |
+| Ath | Athena |
+| Aus | Ausanian Sea |
+| Bal | Baleares |
+| Bar | Barber Sea |
+| Bay | Bayuda |
+| Bit | Bithynia |
+| Bla | Black Sea |
+| Byz | Byzantinum |
+| Cap | Capadocia |
+| Car | Carthage |
+| Che | Chersonesus |
+| Cil | Cilician Strait |
+| Cir | Cirta |
+| Cor | Corsica |
+| Cre | Crete |
+| Cyp | Cyprus |
+| Cyr | Cyrene |
+| Dac | Dacia |
+| Dal | Dalmatia |
+| Dam | Damascus |
+| Egy | Egyptian Sea  |
+| Epi | Epirus |
+| Etr | Etruria |
+| Gal | Galatia |
+| Gau | Gaul |
+| GoP | Gulf of Pelusium |
+| GoS | Gulf of Syrtis |
+| GoT | Gulf of Tacape |
+| Ibe | Iberian Sea |
+| Ill | Illyria |
+| Ion | Ionian Sea |
+| Isa | Isauria |
+| Jer | Jerusalem |
+| Lep | Leptis |
+| Lig | Ligurian Sea |
+| Lus | Lusitania |
+| Lyb | Lybian Sea |
+| Mab | Mabatea |
+| Mac | Macedonia |
+| Mar | Marmarica |
+| Mas | Massilia |
+| Mau | Mauretania |
+| Mem | Memphis |
+| Mes | Messenian Sea |
+| Mil | Miletus |
+| Min | Minoan Sea |
+| Nea | Neapolis |
+| Num | Numidia |
+| Pet | Petia |
+| Pha | Phazania |
+| Pun | Punic Sea |
+| Rav | Ravenna |
+| Red | Red Sea |
+| Rha | Rhaetia |
+| Rom | Roma |
+| Sad | Sardinia |
+| Sag | Saguntum |
+| Sah | Sahara |
+| Sam | Sarmatia |
+| Sic | Sicilia |
+| Sid | Sidon |
+| Sii | Sinai |
+| Sip | Sinope |
+| Spa | Sparta |
+| Syr | Syrian Sea |
+| Tar | Tarraconensis |
+| Tha | Thapsus |
+| The | Thebes |
+| Tye | Tyre |
+| Tyn | Thyrrhenean Sea |
+| Ven | Venetia |
+| Vin | Vindobona |
 =
 
 _
@@ -64,3 +192,14 @@ Constructions sur les centres de départ.
 _
 $ Source 
 
+[[https://www.vdiplomacy.com/variants.php?variantID=9]]
+.
+.
+[[http://www.dipwiki.com/index.php?title=Ancient\_Mediterranean]]
+.
+.
+[[https://diplomacyzines.co.uk/home/contents/alphabetical-list-of-variants-by-name/a-variants/ancient-mediterranean-ac18/]]
+.
+.
+DIP POUCH : PAGE A TROUVER
+// [[https://diplom.org/Zine/F1996M/Schwarz/hundf96m.html]]
