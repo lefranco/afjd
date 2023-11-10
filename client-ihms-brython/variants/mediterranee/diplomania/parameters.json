@@ -46,16 +46,16 @@
             "adjective_name": "romain",
             "letter_name": "R",
             "red": [
-                240,
-                255
+                211,
+                196
             ],
             "green": [
-                0,
-                15
+                158,
+                143
             ],
             "blue": [
-                0,
-                15
+                148,
+                133
             ]
         },
         "2": {
@@ -63,33 +63,33 @@
             "adjective_name": "cartaginois",
             "letter_name": "C",
             "red": [
-                0,
-                15
+                136,
+                121
             ],
             "green": [
-                0,
-                15
+                190,
+                175
             ],
             "blue": [
-                124,
-                139
+                213,
+                198
             ]
         },
         "3": {
-            "name": "Grèce",
+            "name": "Grece",
             "adjective_name": "grec",
             "letter_name": "G",
             "red": [
-                0,
-                15
+                179,
+                164
             ],
             "green": [
-                240,
-                255
+                211,
+                196
             ],
             "blue": [
-                0,
-                15
+                168,
+                153
             ]
         },
         "4": {
@@ -97,33 +97,33 @@
             "adjective_name": "perse",
             "letter_name": "P",
             "red": [
-                0,
-                15
+                183,
+                168
             ],
             "green": [
-                0,
-                15
+                141,
+                126
             ],
             "blue": [
-                0,
-                15
+                174,
+                159
             ]
         },
         "5": {
             "name": "Egypte",
-            "adjective_name": "égyptien",
+            "adjective_name": "egyptien",
             "letter_name": "E",
             "red": [
-                240,
-                255
+                249,
+                234
             ],
             "green": [
-                240,
-                255
+                249,
+                234
             ],
             "blue": [
-                0,
-                15
+                190,
+                175
             ]
         }
     },
@@ -156,18 +156,18 @@
         "4": {
             "name": "Ant",
             "full_name": "Antioch",
-            "x_pos": 1154,
+            "x_pos": 1158,
             "y_pos": 396,
-            "x_legend_pos": 1154,
+            "x_legend_pos": 1158,
             "y_legend_pos": 382
         },
         "5": {
             "name": "Apu",
             "full_name": "Apulia",
-            "x_pos": 566,
-            "y_pos": 285,
-            "x_legend_pos": 566,
-            "y_legend_pos": 271
+            "x_pos": 568,
+            "y_pos": 286,
+            "x_legend_pos": 530,
+            "y_legend_pos": 268
         },
         "6": {
             "name": "Ara",
@@ -188,10 +188,10 @@
         "8": {
             "name": "Ath",
             "full_name": "Athena",
-            "x_pos": 750,
-            "y_pos": 376,
-            "x_legend_pos": 750,
-            "y_legend_pos": 362
+            "x_pos": 736,
+            "y_pos": 380,
+            "x_legend_pos": 754,
+            "y_legend_pos": 369
         },
         "9": {
             "name": "Aus",
@@ -204,10 +204,10 @@
         "10": {
             "name": "Bal",
             "full_name": "Baleares",
-            "x_pos": 228,
-            "y_pos": 324,
-            "x_legend_pos": 228,
-            "y_legend_pos": 310
+            "x_pos": 260,
+            "y_pos": 300,
+            "x_legend_pos": 245,
+            "y_legend_pos": 334
         },
         "11": {
             "name": "Bar",
@@ -293,25 +293,25 @@
             "name": "Cor",
             "full_name": "Corsica",
             "x_pos": 403,
-            "y_pos": 267,
-            "x_legend_pos": 403,
-            "y_legend_pos": 253
+            "y_pos": 280,
+            "x_legend_pos": 407,
+            "y_legend_pos": 263
         },
         "22": {
             "name": "Cre",
             "full_name": "Crete",
-            "x_pos": 848,
-            "y_pos": 494,
-            "x_legend_pos": 848,
-            "y_legend_pos": 480
+            "x_pos": 834,
+            "y_pos": 493,
+            "x_legend_pos": 876,
+            "y_legend_pos": 495
         },
         "23": {
             "name": "Cyp",
             "full_name": "Cyprus",
             "x_pos": 1026,
             "y_pos": 489,
-            "x_legend_pos": 1026,
-            "y_legend_pos": 475
+            "x_legend_pos": 1047,
+            "y_legend_pos": 482
         },
         "24": {
             "name": "Cyr",
@@ -445,9 +445,9 @@
             "name": "Jer",
             "full_name": "Jerusalem",
             "x_pos": 1141,
-            "y_pos": 569,
-            "x_legend_pos": 1141,
-            "y_legend_pos": 555
+            "y_pos": 553,
+            "x_legend_pos": 1138,
+            "y_legend_pos": 537
         },
         "41": {
             "name": "Lep",
@@ -558,7 +558,7 @@
             "full_name": "Neapolis",
             "x_pos": 579,
             "y_pos": 331,
-            "x_legend_pos": 579,
+            "x_legend_pos": 559,
             "y_legend_pos": 317
         },
         "55": {
@@ -596,10 +596,10 @@
         "59": {
             "name": "Rav",
             "full_name": "Ravenna",
-            "x_pos": 473,
-            "y_pos": 188,
-            "x_legend_pos": 473,
-            "y_legend_pos": 174
+            "x_pos": 476,
+            "y_pos": 190,
+            "x_legend_pos": 479,
+            "y_legend_pos": 166
         },
         "60": {
             "name": "Red",
@@ -662,8 +662,8 @@
             "full_name": "Sicilia",
             "x_pos": 540,
             "y_pos": 435,
-            "x_legend_pos": 540,
-            "y_legend_pos": 421
+            "x_legend_pos": 509,
+            "y_legend_pos": 428
         },
         "68": {
             "name": "Sid",
@@ -748,10 +748,10 @@
         "78": {
             "name": "Ven",
             "full_name": "Venetia",
-            "x_pos": 488,
-            "y_pos": 124,
+            "x_pos": 474,
+            "y_pos": 131,
             "x_legend_pos": 488,
-            "y_legend_pos": 110
+            "y_legend_pos": 115
         },
         "79": {
             "name": "Vin",
@@ -828,8 +828,8 @@
             "y_pos": 326
         },
         "17": {
-            "x_pos": 318,
-            "y_pos": 211
+            "x_pos": 319,
+            "y_pos": 212
         },
         "18": {
             "x_pos": 1032,
@@ -841,10 +841,10 @@
         },
         "20": {
             "x_pos": 531,
-            "y_pos": 307
+            "y_pos": 308
         },
         "21": {
-            "x_pos": 480,
+            "x_pos": 481,
             "y_pos": 608
         },
         "22": {
@@ -852,8 +852,8 @@
             "y_pos": 607
         },
         "23": {
-            "x_pos": 464,
-            "y_pos": 168
+            "x_pos": 463,
+            "y_pos": 169
         },
         "24": {
             "x_pos": 489,
@@ -896,8 +896,8 @@
             "y_pos": 492
         },
         "34": {
-            "x_pos": 547,
-            "y_pos": 67
+            "x_pos": 548,
+            "y_pos": 68
         }
     },
     "seasons": {
