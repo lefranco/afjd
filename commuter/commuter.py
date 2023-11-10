@@ -37,6 +37,7 @@ INTERFACE_TABLE = {
     'hundred': ['diplomania'],
     'moderne': ['diplomania'],
     'egeemonie': ['diplomania'],
+    'mediterranee': ['diplomania'],
 }
 
 
