@@ -69,23 +69,21 @@ def main() -> None:
             assert dist <= MAX_DIST, f"Infinite loop ! for {role=} {zone=}"
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-v', '--variant_input', required=True, help='Input variant json file')
-    parser.add_argument('-d', '--distancing_output', required=True, help='Output distacnce json file')
+    parser.add_argument('-v', '--variant_file', required=True, help='Load variant json file')
     args = parser.parse_args()
 
-    json_variant_input = args.variant_input
-    json_distancing_output = args.distancing_output
+    json_variant_file = args.variant_file
 
-    if not os.path.exists(json_variant_input):
-        print(f"File '{json_variant_input}' does not seem to exist, please advise !", file=sys.stderr)
+    if not os.path.exists(json_variant_file):
+        print(f"File '{json_variant_file}' does not seem to exist, please advise !", file=sys.stderr)
         sys.exit(-1)
 
     # load variant from json data file
-    with open(json_variant_input, "r", encoding='utf-8') as read_file:
+    with open(json_variant_file, "r", encoding='utf-8') as read_file:
         try:
             json_variant_data = json.load(read_file)
         except Exception as exception:  # pylint: disable=broad-except
-            print(f"Failed to load {json_variant_input} : {exception}")
+            print(f"Failed to load {json_variant_file} : {exception}")
             sys.exit(-1)
 
     regions_ = json_variant_data['regions']
@@ -156,11 +154,11 @@ def main() -> None:
         distancing.append(distancing_type)
     #  print(f"{distancing=}")
 
-    json_output_data = {'distancing': distancing}
+    json_variant_data['distancing'] = distancing
 
     # save distancing in file to add to variant file
-    output = json.dumps(json_output_data, indent=4, ensure_ascii=False)
-    with open(json_distancing_output, 'w', encoding='utf-8') as write_file:
+    output = json.dumps(json_variant_data, indent=4, ensure_ascii=False)
+    with open(json_variant_file, 'w', encoding='utf-8') as write_file:
         write_file.write(output)
 
 
