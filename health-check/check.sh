@@ -8,7 +8,7 @@ echo "check players"
 curl https://players.diplomania.fr/site_image -X GET | cut -d, -f 1
 
 echo "check games + its database"
-curl https://games.diplomania.fr/statistics -X GET
+curl https://games.diplomania.fr/tournaments -X GET
 
 echo "check emails"
 curl https://emails.diplomania.fr/send-email-simple -H "Content-Type: application/json" -d '{"subject":"test", "body":"test", "email":"jeremie.lefrancois@gmail.com"}' -X POST
