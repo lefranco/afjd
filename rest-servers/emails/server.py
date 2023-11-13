@@ -22,8 +22,6 @@ import flask_restful.reqparse  # type: ignore
 
 import lowdata
 import mylogger
-import populate
-import database
 import mailer
 
 
@@ -313,16 +311,6 @@ def main() -> None:
     lowdata.load_servers_config()
     load_support_config()
     mailer.load_mail_config(APP)
-
-    # emergency
-    if not database.db_present():
-
-        mylogger.LOGGER.info("Emergency populate procedure")
-
-        sql_executor = database.SqlExecutor()
-        populate.populate(sql_executor)
-        sql_executor.commit()
-        del sql_executor
 
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
