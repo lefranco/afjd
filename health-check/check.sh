@@ -7,7 +7,7 @@ curl https://users.diplomania.fr/login -H "Content-Type: application/json" -d '{
 
 echo "------------------------------"
 echo "check players"
-curl https://players.diplomania.fr/site_image -X GET | cut -d, -f 1
+curl https://players.diplomania.fr/events -X GET 
 
 echo "------------------------------"
 echo "check games + its database"
