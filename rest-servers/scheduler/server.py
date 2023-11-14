@@ -243,9 +243,8 @@ def acting_threaded_procedure() -> None:
         req_result = json.loads(req_result.text)
         jwt_token = req_result['AccessToken']  # type: ignore
 
-        wait_time = time_to_wait()
-        mylogger.LOGGER.info("Before everything... waiting for %s secs...", wait_time)
-        time.sleep(wait_time)
+        # No, we do not wait, we go straight, because there are probably some pending...
+        mylogger.LOGGER.info("Ok, go straight, make a first round...")
 
         while True:
 
