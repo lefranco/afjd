@@ -235,13 +235,13 @@ static void creesuppressions(_PAYS *pays, int souhaites) {
 
 			if (el == elrec) {
 
-				/* Si c'est une flotte et l'autre une armée il passe devant */
+				/* Si c'est une flotte et l'autre une armï¿½e il passe devant */
 				if (t->typeunite == FLOTTE && trec->typeunite == ARMEE) {
 					trec = t;
 					continue;
 				}
 
-				/* S'il est avant dans l'ordre alphabétique il passe devant */
+				/* S'il est avant dans l'ordre alphabï¿½tique il passe devant */
 				if (t->typeunite == trec->typeunite) {
 					if (strcmp(t->zone->region->nom, trec->zone->region->nom)
 							< 0) {
@@ -308,11 +308,6 @@ static void creeconstructions(_PAYS *pays, int souhaites) {
 				continue;
 			}
 
-			/* la zone doit etre compatible */
-			if (!compatibles(typeunite, zonedest)) {
-				continue;
-			}
-
 			/* la zone doit etre libre */
 			if (chercheoccupant(zonedest->region)) {
 				continue;
@@ -327,6 +322,12 @@ static void creeconstructions(_PAYS *pays, int souhaites) {
 			if(q != UNITEFUTURE.t + UNITEFUTURE.n) {
 				continue;
 			}
+
+			/* la zone doit etre compatible */
+			if (!compatibles(typeunite, zonedest)) {
+				typeunite = FLOTTE;
+				assert(compatibles(typeunite, zonedest));
+			} 
 
 			/* unite */
 			UNITEFUTURE.t[UNITEFUTURE.n].pays = pays;
@@ -389,7 +390,7 @@ void verifmouvements(void) {
 		erreurverif(pays, DUPLIQUE, buf);
 	}
 
-	/* Recherche des doublons distincts ou égaux : on s'arrete au premier */
+	/* Recherche des doublons distincts ou ï¿½gaux : on s'arrete au premier */
 	for (p = MOUVEMENT.t; p < MOUVEMENT.t + MOUVEMENT.n - 1; p++)
 		for (q = p + 1; q < MOUVEMENT.t + MOUVEMENT.n; q++)
 			/* Doublon si ordre sur meme unite  */
@@ -539,7 +540,7 @@ void verifmouvements(void) {
 					if (r) {
 						decritunite(p->unite, buf2);
 						decritunite(r, buf3);
-						cherchechaine(__FILE__, 8, buf, 2, buf2, buf3); /*"L'unite %1 requiert pour son déplacement le convoi de l'unite compatriote %2 (=> annule)"*/
+						cherchechaine(__FILE__, 8, buf, 2, buf2, buf3); /*"L'unite %1 requiert pour son dï¿½placement le convoi de l'unite compatriote %2 (=> annule)"*/
 						avertir(buf);
 					}
 					p->valable = FALSE;
@@ -593,7 +594,7 @@ void verifretraites(void) {
 		erreurverif(pays, DUPLIQUE, buf);
 	}
 
-	/* Recherche des doublons distincts ou égaux : on s'arrete au premier */
+	/* Recherche des doublons distincts ou ï¿½gaux : on s'arrete au premier */
 	for (p = RETRAITE.t; p < RETRAITE.t + RETRAITE.n - 1; p++)
 		for (q = p + 1; q < RETRAITE.t + RETRAITE.n; q++)
 			/* Doublon si ordre sur meme unite delogee */
@@ -671,7 +672,7 @@ void verifajustements(void) {
 		erreurverif(pays, DUPLIQUE, buf);
 	}
 
-	/* Recherche des doublons distincts ou égaux construction : on s'arrete au premier */
+	/* Recherche des doublons distincts ou ï¿½gaux construction : on s'arrete au premier */
 	for (u = AJUSTEMENT.t; u < AJUSTEMENT.t + AJUSTEMENT.n - 1; u++)
 		for (v = u + 1; v < AJUSTEMENT.t + AJUSTEMENT.n; v++)
 			/* Doublon construction  sur meme region */
@@ -684,7 +685,7 @@ void verifajustements(void) {
 				erreurverif2(v->unite->pays, DUPLIQUE, buf);
 			}
 
-	/* Recherche des doublons distincts ou égaux suppression : on s'arrete au premier */
+	/* Recherche des doublons distincts ou ï¿½gaux suppression : on s'arrete au premier */
 	for (u = AJUSTEMENT.t; u < AJUSTEMENT.t + AJUSTEMENT.n - 1; u++)
 		for (v = u + 1; v < AJUSTEMENT.t + AJUSTEMENT.n; v++)
 			/* Doublon suppression d'une meme unite */
@@ -738,7 +739,7 @@ void verifajustements(void) {
 
 		/* Maintenant on est forcement dans le cas ou les ajustements sont tous dans le bon sens */
 
-		/* On affiche un résumé complet de la situation */
+		/* On affiche un rï¿½sumï¿½ complet de la situation */
 		if (ajustements != souhaites) {
 			for (p = OPTIONx; *p; p++)
 				if (paysdinitiale(*p) == r)
@@ -765,17 +766,17 @@ void verifajustements(void) {
 		/* 3 cas clairs d'erreur */
 		if (souhaites < 0 && abs(ajustements) < abs(souhaites)) {
 			(void) sprintf(bufn1, "%d", abs(souhaites));
-			cherchechaine(__FILE__, 27, buf, 1, bufn1); /*"Suppression de %1 unité(s) attendue, moins de suppressions qu'attendu"*/
+			cherchechaine(__FILE__, 27, buf, 1, bufn1); /*"Suppression de %1 unitï¿½(s) attendue, moins de suppressions qu'attendu"*/
 			erreurverif(r, COHERENCE, buf);
 		}
 		if (souhaites < 0 && abs(ajustements) > abs(souhaites)) {
 			(void) sprintf(bufn1, "%d", abs(souhaites));
-			cherchechaine(__FILE__, 28, buf, 1, bufn1); /*"Suppression de %1 unité(s) attendue, plus de suppressions qu'attendu"*/
+			cherchechaine(__FILE__, 28, buf, 1, bufn1); /*"Suppression de %1 unitï¿½(s) attendue, plus de suppressions qu'attendu"*/
 			erreurverif(r, COHERENCE, buf);
 		}
 		if (souhaites > 0 && ajustements > souhaites) {
 			(void) sprintf(bufn1, "%d", souhaites);
-			cherchechaine(__FILE__, 29, buf, 1, bufn1); /*"Construction de %1 unité(s) attendue, plus de constructions qu'attendu"*/
+			cherchechaine(__FILE__, 29, buf, 1, bufn1); /*"Construction de %1 unitï¿½(s) attendue, plus de constructions qu'attendu"*/
 			erreurverif(r, COHERENCE, buf);
 		}
 
@@ -789,7 +790,7 @@ void verifajustements(void) {
 				cherchechaine(__FILE__, 17, buf, 2, r->nom, bufn1); /*"Ajustements %1 : encore %2 construction(s) autorisee(s)"*/
 				informer(buf);
 				(void) sprintf(bufn1, "%d", souhaites);
-				cherchechaine(__FILE__, 30, buf, 1, bufn1); /*"Construction de %1 unité(s) attendue, moins de constructions qu'attendu"*/
+				cherchechaine(__FILE__, 30, buf, 1, bufn1); /*"Construction de %1 unitï¿½(s) attendue, moins de constructions qu'attendu"*/
 				avertir(buf);
 			}
 		}
