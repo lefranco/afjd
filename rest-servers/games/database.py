@@ -12,6 +12,11 @@ import pathlib
 import unicodedata
 import lzma
 import base64
+import time
+import datetime
+import traceback
+# import sys
+# import uuid
 
 # File holding the SQLITE database
 FILE = "./db/games.db"
@@ -90,10 +95,56 @@ def db_present() -> bool:
     return db_file.is_file()
 
 
+TRACE_FILE = "./SqlExecutor.log"
+STACK_LIMIT = 4
+ONGOING_TRANSACTIONS = []
+
+
+def log_stack(create: bool, uuid_str: str) -> None:
+    """ log_stack (not used) """
+
+    # the time
+    now = time.time()
+    date_now_gmt = datetime.datetime.utcfromtimestamp(now)
+    date_now_gmt_str = date_now_gmt.strftime("%Y-%m-%d %H:%M:%S %f")
+
+    # the stack
+    raw_stack = traceback.extract_stack(limit=STACK_LIMIT)
+    stack = traceback.format_list(raw_stack)
+    stack_str = ''.join(stack)
+
+    # into the file
+    with open(TRACE_FILE, "a", encoding="utf-8") as write_file:
+
+        # the action
+        if create:
+            write_file.write("=====^^^======\n")
+        write_file.write(f"{date_now_gmt_str} : {'CREATING' if create else 'DELETING'} {uuid_str} : called by :\n")
+        write_file.write(f"{stack_str}\n")
+        if not create:
+            write_file.write("=====vvv======\n")
+
+        # the current set
+        if create:
+            ONGOING_TRANSACTIONS.append(uuid_str)
+        else:
+            ONGOING_TRANSACTIONS.remove(uuid_str)
+
+        if not create:
+            if ONGOING_TRANSACTIONS:
+                write_file.write(f"Now : {' '.join(map(lambda u: u.split('-')[0], ONGOING_TRANSACTIONS))}\n")
+
+
 class SqlExecutor:
     """ Object capable of executing sql requests """
 
     def __init__(self) -> None:
+
+        # for watching (not used)
+        #  self.uuid = uuid.uuid4()
+        #  log_stack(True, str(self.uuid))
+
+        # actual work
         self._connection = sqlite3.connect(FILE, detect_types=sqlite3.PARSE_DECLTYPES)
 
     def execute(self, command: str, parameters: typing.Optional[typing.Tuple[typing.Any, ...]] = None, need_result: bool = False) -> typing.Optional[typing.List[typing.Any]]:
@@ -116,7 +167,15 @@ class SqlExecutor:
         self._connection.commit()  # necessary otherwise nothing happens
 
     def __del__(self) -> None:
+
+        # actual work
         self._connection.close()
+
+        # for watching (not used)
+        #  if sys.is_finalizing():
+        #      print(f"WARNING : {self.uuid} SURVIVED (it is being deleted at finalization time)")
+        #      return
+        #  log_stack(False, str(self.uuid))
 
 
 if __name__ == '__main__':
