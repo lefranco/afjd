@@ -3190,12 +3190,15 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             for the_order in the_orders:
                 if game.current_advancement % 5 in [0, 2]:
                     if the_order['order_type'] not in [1, 2, 3, 4, 5]:
+                        del sql_executor
                         flask_restful.abort(400, msg="Seems we have a move phase, you must provide move orders! (or more probably, you submitted twice or game changed just before you submitted)")
                 if game.current_advancement % 5 in [1, 3]:
                     if the_order['order_type'] not in [6, 7]:
+                        del sql_executor
                         flask_restful.abort(400, msg="Seems we have a retreat phase, you must provide retreat orders! (or more probably, you submitted twice or game changed just before you submitted")
                 if game.current_advancement % 5 in [4]:
                     if the_order['order_type'] not in [8, 9]:
+                        del sql_executor
                         flask_restful.abort(400, msg="Seems we have a adjustements phase, you must provide adjustments orders! (or more probably, you submitted twice or game changed just before you submitted")
 
             # put in database fake units - units for build orders
