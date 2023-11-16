@@ -388,7 +388,7 @@ def show_position(direct_last_moves):
 
         buttons_right <= html.H3("Position")
 
-        input_refresh = html.INPUT(type="submit", value="Recharger la partie")
+        input_refresh = html.INPUT(type="submit", value="Recharger la partie", Class='btn-inside')
         input_refresh.bind("click", callback_refresh)
         buttons_right <= input_refresh
         buttons_right <= html.BR()
@@ -399,25 +399,25 @@ def show_position(direct_last_moves):
 
         buttons_right <= html.H3("Historique")
 
-        input_first = html.INPUT(type="submit", value="||<<")
+        input_first = html.INPUT(type="submit", value="||<<", Class='btn-inside')
         input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
         buttons_right <= input_first
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        input_previous = html.INPUT(type="submit", value="<")
+        input_previous = html.INPUT(type="submit", value="<", Class='btn-inside')
         input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
         buttons_right <= input_previous
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        input_next = html.INPUT(type="submit", value=">")
+        input_next = html.INPUT(type="submit", value=">", Class='btn-inside')
         input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
         buttons_right <= input_next
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        input_last = html.INPUT(type="submit", value=">>||")
+        input_last = html.INPUT(type="submit", value=">>||", Class='btn-inside')
         input_last.bind("click", lambda e, a=last_advancement: transition_display_callback(e, a))
         buttons_right <= input_last
         buttons_right <= html.BR()
@@ -428,7 +428,7 @@ def show_position(direct_last_moves):
             adv_sample_season, adv_sample_year = common.get_short_season(adv_sample, play_low.VARIANT_DATA)
             adv_sample_season_readable = play_low.VARIANT_DATA.season_name_table[adv_sample_season]
 
-            input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}")
+            input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}", Class='btn-inside')
             input_last.bind("click", lambda e, a=adv_sample: transition_display_callback(e, a))
             buttons_right <= input_last
             if adv_sample + 5 < last_advancement:
@@ -438,19 +438,19 @@ def show_position(direct_last_moves):
         buttons_right <= html.H3("Divers")
 
         if orders_data_txt:
-            input_show_orders_text = html.INPUT(type="submit", value="Visualiser les ordres en texte")
+            input_show_orders_text = html.INPUT(type="submit", value="Visualiser les ordres en texte", Class='btn-inside')
             input_show_orders_text.bind("click", callback_text_orders)
             buttons_right <= input_show_orders_text
             buttons_right <= html.BR()
             buttons_right <= html.BR()
 
-        input_export_sandbox = html.INPUT(type="submit", value="Exporter la partie vers le bac à sable")
+        input_export_sandbox = html.INPUT(type="submit", value="Exporter la partie vers le bac à sable", Class='btn-inside')
         input_export_sandbox.bind("click", callback_export_sandbox)
         buttons_right <= input_export_sandbox
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        input_download_game_json = html.INPUT(type="submit", value="Télécharger la partie au format JSON")
+        input_download_game_json = html.INPUT(type="submit", value="Télécharger la partie au format JSON", Class='btn-inside')
         input_download_game_json.bind("click", callback_export_game_json)
         buttons_right <= input_download_game_json
         buttons_right <= html.BR()
@@ -789,7 +789,7 @@ def show_events_in_game():
         # remove
         if play_low.ROLE_ID == 0:
             form = html.FORM()
-            input_remove_dropout = html.INPUT(type="submit", value="Supprimer")
+            input_remove_dropout = html.INPUT(type="submit", value="Supprimer", Class='btn-inside')
             text = f"Rôle {role_name} et joueur {pseudo_quitter}"
             input_remove_dropout.bind("click", lambda e, r=role_id, p=player_id, t=text: remove_dropout_callback_confirm(e, r, p, t))
             form <= input_remove_dropout
@@ -869,7 +869,7 @@ def show_events_in_game():
         # remove
         if play_low.ROLE_ID == 0:
             form = html.FORM()
-            input_remove_incident = html.INPUT(type="submit", value="Supprimer")
+            input_remove_incident = html.INPUT(type="submit", value="Supprimer", Class='btn-inside')
             text = f"Rôle {role_name} en saison {game_season}"
             input_remove_incident.bind("click", lambda e, r=role_id, a=advancement, t=text: remove_incident_callback_confirm(e, r, a, t))
             form <= input_remove_incident
@@ -1141,7 +1141,7 @@ def pairing():
     # join game
 
     form = html.FORM()
-    input_join_game = html.INPUT(type="submit", value="Je rejoins la partie")
+    input_join_game = html.INPUT(type="submit", value="Je rejoins la partie", Class='btn-inside')
     input_join_game.bind("click", join_game_callback)
     form <= input_join_game
     play_low.MY_SUB_PANEL <= form
@@ -1151,7 +1151,7 @@ def pairing():
     play_low.MY_SUB_PANEL <= html.H3("Se retirer de la partie (à condition d'y être déjà et de ne pas y avoir un rôle attribué)")
 
     form = html.FORM()
-    input_quit_game = html.INPUT(type="submit", value="Je quitte la partie !")
+    input_quit_game = html.INPUT(type="submit", value="Je quitte la partie !", Class='btn-inside')
     input_quit_game.bind("click", quit_game_callback)
     form <= input_quit_game
     play_low.MY_SUB_PANEL <= form
@@ -1161,7 +1161,7 @@ def pairing():
     play_low.MY_SUB_PANEL <= html.H3("Prendre l'arbitrage de la partie (à condition qu'il n'y ait pas déjà un arbitre)")
 
     form = html.FORM()
-    input_join_game = html.INPUT(type="submit", value="Je prends l'arbitrage !")
+    input_join_game = html.INPUT(type="submit", value="Je prends l'arbitrage !", Class='btn-inside')
     input_join_game.bind("click", take_mastering_game_callback)
     form <= input_join_game
     play_low.MY_SUB_PANEL <= form
@@ -1171,7 +1171,7 @@ def pairing():
     play_low.MY_SUB_PANEL <= html.H3("Quitter l'arbitrage de cette partie (à condition d'en être l'arbitre)")
 
     form = html.FORM()
-    input_join_game = html.INPUT(type="submit", value="Je démissionne de l'arbitrage !")
+    input_join_game = html.INPUT(type="submit", value="Je démissionne de l'arbitrage !", Class='btn-inside')
     input_join_game.bind("click", quit_mastering_game_callback)
     form <= input_join_game
     play_low.MY_SUB_PANEL <= form
@@ -1360,7 +1360,7 @@ def negotiate(default_dest_set, def_focus_role_id):
             pseudo_there = play_low.ID2PSEUDO[player_id]
 
         # the alternative
-        input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set)
+        input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set, Class='btn-inside')
 
         # create col
         col = html.TD()
@@ -1387,7 +1387,7 @@ def negotiate(default_dest_set, def_focus_role_id):
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Envoyer le message")
+    input_declare_in_game = html.INPUT(type="submit", value="Envoyer le message", Class='btn-inside')
     input_declare_in_game.bind("click", add_message_callback)
     form <= input_declare_in_game
 
@@ -1519,7 +1519,7 @@ def negotiate(default_dest_set, def_focus_role_id):
 
         col = html.TD()
         if play_low.ROLE_ID in dest_role_id_msgs:
-            button = html.BUTTON("Répondre", Class='btn-menu')
+            button = html.BUTTON("Répondre", Class='btn-inside')
             new_dest_role_id_msgs = set(dest_role_id_msgs)
             new_dest_role_id_msgs.add(from_role_id_msg)
             new_dest_role_id_msgs.remove(play_low.ROLE_ID)
@@ -1675,13 +1675,13 @@ def declare():
     fieldset = html.FIELDSET()
     label_anonymous = html.LABEL("En restant anonyme ? (pas anonyme auprès de l'arbitre cependant)")
     fieldset <= label_anonymous
-    input_anonymous = html.INPUT(type="checkbox")
+    input_anonymous = html.INPUT(type="checkbox", Class='btn-inside')
     fieldset <= input_anonymous
     form <= fieldset
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Déclarer dans la partie")
+    input_declare_in_game = html.INPUT(type="submit", value="Déclarer dans la partie", Class='btn-inside')
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
 
@@ -1898,7 +1898,7 @@ def note():
 
     form <= html.BR()
 
-    input_vote_in_game = html.INPUT(type="submit", value="Enregistrer dans la partie")
+    input_vote_in_game = html.INPUT(type="submit", value="Enregistrer dans la partie", Class='btn-inside')
     input_vote_in_game.bind("click", add_note_callback)
     form <= input_vote_in_game
 

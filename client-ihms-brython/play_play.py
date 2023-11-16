@@ -381,7 +381,7 @@ def submit_orders():
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum.inventory():
                 if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
-                    input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type])
+                    input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type], Class='btn-inside')
                     buttons_right <= html.BR()
                     input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
@@ -570,7 +570,7 @@ def submit_orders():
                 buttons_right <= legend_select_active
 
                 for unit_type in mapping.UnitTypeEnum.inventory():
-                    input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.unit_name_table[unit_type])
+                    input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.unit_name_table[unit_type], Class='btn-inside')
                     buttons_right <= html.BR()
                     input_select.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
                     buttons_right <= html.BR()
@@ -664,7 +664,7 @@ def submit_orders():
                     buttons_right <= legend_select_unit
                     for order_type in mapping.OrderTypeEnum.inventory():
                         if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
-                            input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type])
+                            input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type], Class='btn-inside')
                             buttons_right <= html.BR()
                             input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                             buttons_right <= html.BR()
@@ -697,7 +697,7 @@ def submit_orders():
 
                 for order_type in mapping.OrderTypeEnum.inventory():
                     if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
-                        input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type])
+                        input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type], Class='btn-inside')
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
@@ -820,7 +820,7 @@ def submit_orders():
                 buttons_right <= legend_select_unit
                 for order_type in mapping.OrderTypeEnum.inventory():
                     if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
-                        input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type])
+                        input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type], Class='btn-inside')
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
@@ -991,7 +991,7 @@ def submit_orders():
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum.inventory():
                 if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
-                    input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type])
+                    input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type], Class='btn-inside')
                     buttons_right <= html.BR()
                     input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
@@ -1160,7 +1160,7 @@ def submit_orders():
     def put_erase_all(buttons_right):
         """ put_erase_all """
 
-        input_erase_all = html.INPUT(type="submit", value="Effacer tout")
+        input_erase_all = html.INPUT(type="submit", value="Effacer tout", Class='btn-inside')
         input_erase_all.bind("click", erase_all_callback)
         buttons_right <= html.BR()
         buttons_right <= input_erase_all
@@ -1169,7 +1169,7 @@ def submit_orders():
     def put_rest_hold(buttons_right):
         """ put_rest_hold """
 
-        input_rest_hold = html.INPUT(type="submit", value="Tout le reste tient")
+        input_rest_hold = html.INPUT(type="submit", value="Tout le reste tient", Class='btn-inside')
         input_rest_hold.bind("click", rest_hold_callback)
         buttons_right <= html.BR()
         buttons_right <= input_rest_hold
@@ -1202,7 +1202,7 @@ def submit_orders():
         option_now = "maintenant"
         label_now = html.LABEL(html.EM(option_now))
         buttons_right <= label_now
-        input_now = html.INPUT(type="radio", id="now", name="agreed", checked=(definitive_value == 1))
+        input_now = html.INPUT(type="radio", id="now", name="agreed", checked=(definitive_value == 1), Class='btn-inside')
         input_now.bind("click", update_select)
         buttons_right <= input_now
         buttons_right <= html.BR()
@@ -1212,9 +1212,9 @@ def submit_orders():
         buttons_right <= label_after
 
         if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['archive']:
-            input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), disabled=True)
+            input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), disabled=True, Class='btn-inside')
         else:
-            input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2))
+            input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), Class='btn-inside')
 
         input_after.bind("click", update_select)
         buttons_right <= input_after
@@ -1230,12 +1230,12 @@ def submit_orders():
 
         label_never = html.LABEL(html.EM(option_never))
         buttons_right <= label_never
-        input_never = html.INPUT(type="radio", id="never", name="agreed", checked=(definitive_value == 0))
+        input_never = html.INPUT(type="radio", id="never", name="agreed", checked=(definitive_value == 0), Class='btn-inside')
         input_never.bind("click", update_select)
         buttons_right <= input_never
         buttons_right <= html.BR()
 
-        input_submit = html.INPUT(type="submit", value="Soumettre ces ordres")
+        input_submit = html.INPUT(type="submit", value="Soumettre ces ordres", Class='btn-inside')
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -1448,7 +1448,7 @@ def submit_orders():
         buttons_right <= legend_select_order
         for order_type in mapping.OrderTypeEnum.inventory():
             if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
-                input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type])
+                input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type], Class='btn-inside')
                 buttons_right <= html.BR()
                 input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                 buttons_right <= html.BR()
@@ -1730,7 +1730,7 @@ def submit_communication_orders():
 
                 for order_type in mapping.OrderTypeEnum.inventory():
                     if mapping.OrderTypeEnum.compatible(order_type, mapping.SeasonEnum.SPRING_SEASON):
-                        input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type])
+                        input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type], Class='btn-inside')
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
@@ -2052,7 +2052,7 @@ def submit_communication_orders():
     def put_erase_all(buttons_right):
         """ put_erase_all """
 
-        input_erase_all = html.INPUT(type="submit", value="Effacer tout")
+        input_erase_all = html.INPUT(type="submit", value="Effacer tout", Class='btn-inside')
         input_erase_all.bind("click", erase_all_callback)
         buttons_right <= html.BR()
         buttons_right <= input_erase_all
@@ -2061,7 +2061,7 @@ def submit_communication_orders():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="Enregistrer ces ordres")
+        input_submit = html.INPUT(type="submit", value="Enregistrer ces ordres", Class='btn-inside')
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -2290,13 +2290,13 @@ def imagine_units():
         play_low.stack_last_moves_button(buttons_right)
 
         for unit_type in mapping.UnitTypeEnum.inventory():
-            input_select = html.INPUT(type="submit", value=f"Imaginer une {play_low.VARIANT_DATA.unit_name_table[unit_type]}")
+            input_select = html.INPUT(type="submit", value=f"Imaginer une {play_low.VARIANT_DATA.unit_name_table[unit_type]}", Class='btn-inside')
             buttons_right <= html.BR()
             input_select.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
             buttons_right <= html.BR()
             buttons_right <= input_select
 
-        input_remove = html.INPUT(type="submit", value="Retirer une unité des imaginées")
+        input_remove = html.INPUT(type="submit", value="Retirer une unité des imaginées", Class='btn-inside')
         buttons_right <= html.BR()
         input_remove.bind("click", select_remove_unit_callback)
         buttons_right <= html.BR()
@@ -2517,7 +2517,7 @@ def imagine_units():
     def put_reset(buttons_right):
         """ put_reset """
 
-        input_reset = html.INPUT(type="submit", value="Reset")
+        input_reset = html.INPUT(type="submit", value="Reset", Class='btn-inside')
         input_reset.bind("click", reset_callback)
         buttons_right <= html.BR()
         buttons_right <= input_reset
@@ -2528,9 +2528,9 @@ def imagine_units():
         """ put_submit """
 
         if delete:
-            input_submit = html.INPUT(type="submit", value="On l'enlève !")
+            input_submit = html.INPUT(type="submit", value="On l'enlève !", Class='btn-inside')
         else:
-            input_submit = html.INPUT(type="submit", value="On la met !")
+            input_submit = html.INPUT(type="submit", value="On la met !", Class='btn-inside')
         input_submit.bind("click", lambda e: imagine_unit_callback(e, delete))
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -2664,13 +2664,13 @@ def imagine_units():
     play_low.stack_last_moves_button(buttons_right)
 
     for unit_type in mapping.UnitTypeEnum.inventory():
-        input_select = html.INPUT(type="submit", value=f"Imaginer une {play_low.VARIANT_DATA.unit_name_table[unit_type]}")
+        input_select = html.INPUT(type="submit", value=f"Imaginer une {play_low.VARIANT_DATA.unit_name_table[unit_type]}", Class='btn-inside')
         buttons_right <= html.BR()
         input_select.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
         buttons_right <= html.BR()
         buttons_right <= input_select
 
-    input_remove = html.INPUT(type="submit", value="Retirer une unité des imaginées")
+    input_remove = html.INPUT(type="submit", value="Retirer une unité des imaginées", Class='btn-inside')
     buttons_right <= html.BR()
     input_remove.bind("click", select_remove_unit_callback)
     buttons_right <= html.BR()
@@ -2782,13 +2782,13 @@ def vote():
     legend_vote = html.LEGEND("Cochez pour voter l'arrêt", title="Etes vous d'accord pour terminer la partie en l'état ?")
     fieldset <= legend_vote
     form <= fieldset
-    input_vote = html.INPUT(type="checkbox", checked=vote_value)
+    input_vote = html.INPUT(type="checkbox", checked=vote_value, Class='btn-inside')
     fieldset <= input_vote
     form <= fieldset
 
     form <= html.BR()
 
-    input_vote_in_game = html.INPUT(type="submit", value="Voter dans la partie")
+    input_vote_in_game = html.INPUT(type="submit", value="Voter dans la partie", Class='btn-inside')
     input_vote_in_game.bind("click", add_vote_callback)
     form <= input_vote_in_game
 

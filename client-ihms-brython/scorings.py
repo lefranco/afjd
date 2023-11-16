@@ -109,13 +109,13 @@ def show_scoring():
         fieldset = html.FIELDSET()
         legend_centers = html.LEGEND(role_name, title="nombre de centres")
         fieldset <= legend_centers
-        input_centers = html.INPUT(type="number", value=str(RATING_TABLE[role_name]) if role_name in RATING_TABLE else "")
+        input_centers = html.INPUT(type="number", value=str(RATING_TABLE[role_name]) if role_name in RATING_TABLE else "", Class='btn-inside')
         fieldset <= input_centers
         form <= fieldset
 
         ratings_input[role_name] = input_centers
 
-    input_test_scoring = html.INPUT(type="submit", value="Calculer le scorage")
+    input_test_scoring = html.INPUT(type="submit", value="Calculer le scorage", Class='btn-inside')
     input_test_scoring.bind("click", lambda e, ri=ratings_input: test_scoring_callback(e, ri))
     form <= input_test_scoring
 

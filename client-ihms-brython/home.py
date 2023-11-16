@@ -427,7 +427,7 @@ def show_news():
 
     col = html.TD()
     form = html.FORM()
-    input_show_chart = html.INPUT(type="submit", value="La charte")
+    input_show_chart = html.INPUT(type="submit", value="La charte", Class='btn-inside')
     input_show_chart.attrs['style'] = 'font-size: 10px'
     input_show_chart.bind("click", show_chart_callback)
     form <= input_show_chart
@@ -514,7 +514,7 @@ def show_news():
         col = html.TD()
 
         form = html.FORM()
-        input_show_variant = html.INPUT(type="submit", value=variant_name)
+        input_show_variant = html.INPUT(type="submit", value=variant_name, Class='btn-inside')
         input_show_variant.attrs['style'] = 'font-size: 10px'
         input_show_variant.bind("click", lambda e, v=variant_name: show_variant_callback(e, v))
         form <= input_show_variant
@@ -722,7 +722,7 @@ def live_chat():
     # reload
 
     form1 = html.FORM()
-    input_reload_all = html.INPUT(type="submit", value="Recharger les messages")
+    input_reload_all = html.INPUT(type="submit", value="Recharger les messages", Class='btn-inside')
     input_reload_all.bind("click", chats_reload_callback)
     form1 <= input_reload_all
 
@@ -737,7 +737,7 @@ def live_chat():
     fieldset <= input_message
     form2 <= fieldset
 
-    input_say_message = html.INPUT(type="submit", value="Envoyer")
+    input_say_message = html.INPUT(type="submit", value="Envoyer", Class='btn-inside')
     input_say_message.bind("click", add_chat_callback)
     form2 <= input_say_message
 
@@ -932,21 +932,21 @@ def declare_incident(json_dict_params):
     fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("pseudo (facultatif)", title="Votre pseudo (si applicable)")
     fieldset <= legend_pseudo
-    input_pseudo = html.INPUT(type="text", value=pseudo if pseudo is not None else "")
+    input_pseudo = html.INPUT(type="text", value=pseudo if pseudo is not None else "", Class='btn-inside')
     fieldset <= input_pseudo
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_email = html.LEGEND("courriel (obligatoire)", title="Votre courriel")
     fieldset <= legend_email
-    input_email = html.INPUT(type="text", value=email if email is not None else "", size=MAX_LEN_EMAIL)
+    input_email = html.INPUT(type="text", value=email if email is not None else "", size=MAX_LEN_EMAIL, Class='btn-inside')
     fieldset <= input_email
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_game = html.LEGEND("partie (facultatif)", title="La partie (si applicable)")
     fieldset <= legend_game
-    input_game = html.INPUT(type="text", value=game if game is not None else "", size=MAX_LEN_GAME_NAME)
+    input_game = html.INPUT(type="text", value=game if game is not None else "", size=MAX_LEN_GAME_NAME, Class='btn-inside')
     fieldset <= input_game
     form <= fieldset
 
@@ -965,7 +965,7 @@ def declare_incident(json_dict_params):
     fieldset <= "Il est toujours bienvenu de fournir une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu..."
     form <= fieldset
 
-    input_submit_incident = html.INPUT(type="submit", value="Soumettre l'incident")
+    input_submit_incident = html.INPUT(type="submit", value="Soumettre l'incident", Class='btn-inside')
     input_submit_incident.bind("click", submit_incident_callback)
     form <= input_submit_incident
 
@@ -996,7 +996,7 @@ def show_faq():
 
     for question_txt, answer_txt in faq.FAQ_CONTENT_TABLE.items():
 
-        reveal_button = html.INPUT(type="submit", value=question_txt)
+        reveal_button = html.INPUT(type="submit", value=question_txt, Class='btn-inside')
         reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
         FAQ_CONTENT <= reveal_button
 
@@ -1027,7 +1027,7 @@ def show_tips():
 
     for question_txt, answer_txt in tips.TIPS_CONTENT_TABLE.items():
 
-        reveal_button = html.INPUT(type="submit", value=question_txt)
+        reveal_button = html.INPUT(type="submit", value=question_txt, Class='btn-inside')
         reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
         TIPS_CONTENT <= reveal_button
 
@@ -1060,7 +1060,7 @@ def frequentation_evolution():
     # load frequentation directly
 
     # use button
-    button = html.BUTTON("Lancement du calcul de fréquentation", id='frequentation_link')
+    button = html.BUTTON("Lancement du calcul de fréquentation", id='frequentation_link', Class='btn-inside')
     MY_SUB_PANEL <= button
     button.bind("click", lambda e: window.open("https://diplomania-gen.fr/frequentation"))
     document['frequentation_link'].click()
@@ -1072,7 +1072,7 @@ def social():
     # load social directly
 
     # use button
-    button = html.BUTTON("Lancement de la brique sociale", id='social_link')
+    button = html.BUTTON("Lancement de la brique sociale", id='social_link', Class='btn-inside')
     MY_SUB_PANEL <= button
     button.bind("click", lambda e: window.open("https://www.diplomania.fr/"))
     document['social_link'].click()

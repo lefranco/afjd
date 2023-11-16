@@ -132,7 +132,7 @@ def select_event():
     fieldset = html.FIELDSET()
     legend_event = html.LEGEND("nom", title="Sélection de l'événement")
     fieldset <= legend_event
-    input_event = html.SELECT(type="select-one", value="")
+    input_event = html.SELECT(type="select-one", value="", Class='btn-inside')
     event_list = sorted([g['name'] for g in events_data.values()], key=lambda n: n.upper())
     for event_name in event_list:
         option = html.OPTION(event_name)
@@ -145,7 +145,7 @@ def select_event():
 
     form <= html.BR()
 
-    input_select_event = html.INPUT(type="submit", value="Sélectionner cet événement")
+    input_select_event = html.INPUT(type="submit", value="Sélectionner cet événement", Class='btn-inside')
     input_select_event.bind("click", lambda e, ie=input_event: select_event_callback(e, ie))
     form <= input_select_event
 
@@ -408,11 +408,11 @@ def registrations():
 
         register_form = html.FORM()
         if player_joined:
-            input_unregister_event = html.INPUT(type="submit", value="Sans moi !")
+            input_unregister_event = html.INPUT(type="submit", value="Sans moi !", Class='btn-inside')
             input_unregister_event.bind("click", lambda e: register_event_callback(e, False))
             register_form <= input_unregister_event
         else:
-            input_register_event = html.INPUT(type="submit", value="Mettez moi dedans !")
+            input_register_event = html.INPUT(type="submit", value="Mettez moi dedans !", Class='btn-inside')
             input_register_event.bind("click", lambda e: register_event_callback(e, True))
             register_form <= input_register_event
     else:
@@ -428,7 +428,7 @@ def registrations():
     fieldset <= input_comment
     detail_form <= fieldset
 
-    input_store_comment = html.INPUT(type="submit", value="Enregistrer")
+    input_store_comment = html.INPUT(type="submit", value="Enregistrer", Class='btn-inside')
     input_store_comment.bind("click", store_comment_callback)
     detail_form <= input_store_comment
 
@@ -444,7 +444,7 @@ def registrations():
     contact_form <= html.DIV("Votre message lui parviendra par courriel, il pourra y répondre en utilisant votre adresse déclarée sur le site.")
     contact_form <= html.BR()
 
-    input_send_message = html.INPUT(type="submit", value="Envoyer le courriel")
+    input_send_message = html.INPUT(type="submit", value="Envoyer le courriel", Class='btn-inside')
     input_send_message.bind("click", sendmail_callback)
     contact_form <= input_send_message
 
@@ -500,7 +500,7 @@ def registrations():
     account_button = None
     if 'PSEUDO' not in storage:
         # shortcut to create account
-        account_button = html.BUTTON("Je n'ai pas de compte, je veux le créer !", Class='btn-menu')
+        account_button = html.BUTTON("Je n'ai pas de compte, je veux le créer !", Class='btn-inside')
         account_button.bind("click", create_account_callback)
 
     MY_SUB_PANEL <= html.H3(f"Inscription à l'événement {name}")
@@ -661,7 +661,7 @@ def create_event(json_dict):
     fieldset = html.FIELDSET()
     legend_name = html.LEGEND("nom", title="Nom de l'événement (faites court et simple)")
     fieldset <= legend_name
-    input_name = html.INPUT(type="text", value=name if name is not None else "", size=MAX_LEN_EVENT_NAME)
+    input_name = html.INPUT(type="text", value=name if name is not None else "", size=MAX_LEN_EVENT_NAME, Class='btn-inside')
     fieldset <= input_name
     form <= fieldset
 
@@ -670,35 +670,35 @@ def create_event(json_dict):
     fieldset = html.FIELDSET()
     legend_start_date = html.LEGEND("date de début", title="Date de début de l'événement")
     fieldset <= legend_start_date
-    input_start_date = html.INPUT(type="date", value=start_date if start_date is not None else "")
+    input_start_date = html.INPUT(type="date", value=start_date if start_date is not None else "", Class='btn-inside')
     fieldset <= input_start_date
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
     fieldset <= legend_start_hour
-    input_start_hour = html.INPUT(type="time", value=start_hour if start_hour is not None else "", step=1)
+    input_start_hour = html.INPUT(type="time", value=start_hour if start_hour is not None else "", step=1, Class='btn-inside')
     fieldset <= input_start_hour
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_end_date = html.LEGEND("date de fin", title="Date de fin de l'événement")
     fieldset <= legend_end_date
-    input_end_date = html.INPUT(type="date", value=end_date if end_date is not None else "")
+    input_end_date = html.INPUT(type="date", value=end_date if end_date is not None else "", Class='btn-inside')
     fieldset <= input_end_date
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_location = html.LEGEND("lieu", title="Lieu de l'événement")
     fieldset <= legend_location
-    input_location = html.INPUT(type="text", value=location if location is not None else DEFAULT_EVENT_LOCATION, size=MAX_LEN_EVENT_LOCATION)
+    input_location = html.INPUT(type="text", value=location if location is not None else DEFAULT_EVENT_LOCATION, size=MAX_LEN_EVENT_LOCATION, Class='btn-inside')
     fieldset <= input_location
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_external = html.LEGEND("externe", title="L'événement est-il externe au site")
     fieldset <= legend_external
-    input_external = html.INPUT(type="checkbox", checked=False)
+    input_external = html.INPUT(type="checkbox", checked=False, Class='btn-inside')
     fieldset <= input_external
     form <= fieldset
 
@@ -724,7 +724,7 @@ def create_event(json_dict):
 
     form <= html.BR()
 
-    input_create_event = html.INPUT(type="submit", value="Créer l'événement")
+    input_create_event = html.INPUT(type="submit", value="Créer l'événement", Class='btn-inside')
     input_create_event.bind("click", create_event_callback)
     form <= input_create_event
 
@@ -842,7 +842,7 @@ def edit_event():
     fieldset = html.FIELDSET()
     legend_name = html.LEGEND("nom", title="Nom de l'événement (faites court et simple)")
     fieldset <= legend_name
-    input_name = html.INPUT(type="text", value=event_name, size=MAX_LEN_EVENT_NAME)
+    input_name = html.INPUT(type="text", value=event_name, size=MAX_LEN_EVENT_NAME, Class='btn-inside')
     fieldset <= input_name
     form <= fieldset
 
@@ -851,28 +851,28 @@ def edit_event():
     fieldset = html.FIELDSET()
     legend_start_date = html.LEGEND("date de début", title="Date de début de l'événement")
     fieldset <= legend_start_date
-    input_start_date = html.INPUT(type="date", value=start_date)
+    input_start_date = html.INPUT(type="date", value=start_date, Class='btn-inside')
     fieldset <= input_start_date
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
     fieldset <= legend_start_hour
-    input_start_hour = html.INPUT(type="time", value=start_hour, step=1)
+    input_start_hour = html.INPUT(type="time", value=start_hour, step=1, Class='btn-inside')
     fieldset <= input_start_hour
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_end_date = html.LEGEND("date de fin", title="Date de fin de l'événement")
     fieldset <= legend_end_date
-    input_end_date = html.INPUT(type="date", value=end_date)
+    input_end_date = html.INPUT(type="date", value=end_date, Class='btn-inside')
     fieldset <= input_end_date
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_location = html.LEGEND("lieu", title="Lieu de l'événement")
     fieldset <= legend_location
-    input_location = html.INPUT(type="text", value=location, size=MAX_LEN_EVENT_LOCATION)
+    input_location = html.INPUT(type="text", value=location, size=MAX_LEN_EVENT_LOCATION, Class='btn-inside')
     fieldset <= input_location
     form <= fieldset
 
@@ -896,7 +896,7 @@ def edit_event():
 
     form <= html.BR()
 
-    input_edit_event = html.INPUT(type="submit", value="Modifier l'événement")
+    input_edit_event = html.INPUT(type="submit", value="Modifier l'événement", Class='btn-inside')
     input_edit_event.bind("click", edit_event_callback)
     form <= input_edit_event
 
@@ -1023,7 +1023,7 @@ def handle_joiners():
                 row2 = html.TR()
                 if data['status'] != -1:
                     form = html.FORM()
-                    input_event_reject = html.INPUT(type="image", src="./images/event_reject.jpg")
+                    input_event_reject = html.INPUT(type="image", src="./images/event_reject.jpg", Class='btn-inside')
                     input_event_reject.bind("click", lambda e, pi=player_id: registration_action_callback(e, pi, -1))
                     form <= input_event_reject
                     col2 = html.TD()
@@ -1031,7 +1031,7 @@ def handle_joiners():
                     row2 <= col2
                 if data['status'] != 0:
                     form = html.FORM()
-                    input_event_wait = html.INPUT(type="image", src="./images/event_wait.jpg")
+                    input_event_wait = html.INPUT(type="image", src="./images/event_wait.jpg", Class='btn-inside')
                     input_event_wait.bind("click", lambda e, pi=player_id: registration_action_callback(e, pi, 0))
                     form <= input_event_wait
                     col2 = html.TD()
@@ -1039,7 +1039,7 @@ def handle_joiners():
                     row2 <= col2
                 if data['status'] != 1:
                     form = html.FORM()
-                    input_event_accept = html.INPUT(type="image", src="./images/event_accept.jpg")
+                    input_event_accept = html.INPUT(type="image", src="./images/event_accept.jpg", Class='btn-inside')
                     input_event_accept.bind("click", lambda e, pi=player_id: registration_action_callback(e, pi, 1))
                     form <= input_event_accept
                     col2 = html.TD()
@@ -1134,7 +1134,7 @@ def delete_event():
 
     form = html.FORM()
 
-    input_delete_event = html.INPUT(type="submit", value="Supprimer l'événement")
+    input_delete_event = html.INPUT(type="submit", value="Supprimer l'événement", Class='btn-inside')
     input_delete_event.bind("click", delete_event_callback_confirm)
     form <= input_delete_event
 

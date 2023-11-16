@@ -257,7 +257,7 @@ def change_news_modo():
 
     form <= html.BR()
 
-    input_change_news_content = html.INPUT(type="submit", value="Mettre à jour")
+    input_change_news_content = html.INPUT(type="submit", value="Mettre à jour", Class='btn-inside')
     input_change_news_content.bind("click", change_news_modo_callback)
     form <= input_change_news_content
     form <= html.BR()
@@ -343,7 +343,7 @@ def prepare_mailing():
         row <= col
 
         form = html.FORM()
-        input_patch_account = html.INPUT(type="image", src="./images/refuses.png")
+        input_patch_account = html.INPUT(type="image", src="./images/refuses.png", Class='btn-inside')
         input_patch_account.bind("click", lambda e, p=pseudo: patch_account_callback(e, p))
         form <= input_patch_account
 
@@ -483,7 +483,7 @@ def sendmail():
     fieldset = html.FIELDSET()
     legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par courriel")
     fieldset <= legend_addressee
-    input_addressed = html.SELECT(type="select-one", value="")
+    input_addressed = html.SELECT(type="select-one", value="", Class='btn-inside')
     for addressee_pseudo in sorted(possible_addressed, key=lambda pu: pu.upper()):
         option = html.OPTION(addressee_pseudo)
         input_addressed <= option
@@ -499,7 +499,7 @@ def sendmail():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="Envoyer le courriel")
+    input_select_player = html.INPUT(type="submit", value="Envoyer le courriel", Class='btn-inside')
     input_select_player.bind("click", sendmail_callback)
     form <= input_select_player
 
@@ -821,7 +821,7 @@ def general_announce():
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Déclarer dans toutes les parties en cours")
+    input_declare_in_game = html.INPUT(type="submit", value="Déclarer dans toutes les parties en cours", Class='btn-inside')
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
 
@@ -994,7 +994,7 @@ def game_announce():
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Déclarer (annoncer) dans la partie")
+    input_declare_in_game = html.INPUT(type="submit", value="Déclarer (annoncer) dans la partie", Class='btn-inside')
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
 
@@ -1182,7 +1182,7 @@ def display_personal_info():
     fieldset = html.FIELDSET()
     legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur dont on veut les informations personnelles")
     fieldset <= legend_contact
-    input_contact = html.SELECT(type="select-one", value="")
+    input_contact = html.SELECT(type="select-one", value="", Class='btn-inside')
     for contact_pseudo in sorted(possible_contacts, key=lambda pu: pu.upper()):
         option = html.OPTION(contact_pseudo)
         input_contact <= option
@@ -1191,7 +1191,7 @@ def display_personal_info():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="Récupérer ses informations personnelles")
+    input_select_player = html.INPUT(type="submit", value="Récupérer ses informations personnelles", Class='btn-inside')
     input_select_player.bind("click", display_personal_info_callback)
     form <= input_select_player
 
@@ -1353,7 +1353,7 @@ def all_missing_orders():
             if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                     form <= input_jump_game
                     value = form
@@ -1623,7 +1623,7 @@ def show_player_games(pseudo_player, game_list):
     fieldset = html.FIELDSET()
     legend_player = html.LEGEND("Joueur", title="Sélectionner le joueur dont on veut la liste des parties")
     fieldset <= legend_player
-    input_player = html.SELECT(type="select-one", value="")
+    input_player = html.SELECT(type="select-one", value="", Class='btn-inside')
     for player_pseudo in sorted(possible_players, key=lambda pu: pu.upper()):
         option = html.OPTION(player_pseudo)
         input_player <= option
@@ -1632,7 +1632,7 @@ def show_player_games(pseudo_player, game_list):
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="Récupérer la liste de ses parties")
+    input_select_player = html.INPUT(type="submit", value="Récupérer la liste de ses parties", Class='btn-inside')
     input_select_player.bind("click", display_all_games_callback)
     form <= input_select_player
 
@@ -1699,7 +1699,7 @@ def show_player_games(pseudo_player, game_list):
                 if field == 'go_game':
                     if storage['GAME_ACCESS_MODE'] == 'button':
                         form = html.FORM()
-                        input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                        input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
                         input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                         form <= input_jump_game
                         value = form
@@ -2163,7 +2163,7 @@ def revoke_master():
 
     form = html.FORM()
 
-    input_revoke_master = html.INPUT(type="submit", value="Destituer l'arbitre de la partie sélectionnée")
+    input_revoke_master = html.INPUT(type="submit", value="Destituer l'arbitre de la partie sélectionnée", Class='btn-inside')
     input_revoke_master.bind("click", revoke_master_callback)
     form <= input_revoke_master
 
@@ -2251,7 +2251,7 @@ def change_director():
     fieldset = html.FIELDSET()
     legend_director = html.LEGEND("Responsable", title="Sélectionner le nouveau responsable")
     fieldset <= legend_director
-    input_director = html.SELECT(type="select-one", value="")
+    input_director = html.SELECT(type="select-one", value="", Class='btn-inside')
     for director_pseudo in sorted(possible_directors, key=lambda pu: pu.upper()):
         option = html.OPTION(director_pseudo)
         input_director <= option
@@ -2260,7 +2260,7 @@ def change_director():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="Promouvoir responsable")
+    input_select_player = html.INPUT(type="submit", value="Promouvoir responsable", Class='btn-inside')
     input_select_player.bind("click", promote_directors_callback)
     form <= input_select_player
 
@@ -2350,7 +2350,7 @@ def change_manager():
     fieldset = html.FIELDSET()
     legend_manager = html.LEGEND("Responsable", title="Sélectionner le nouveau responsable")
     fieldset <= legend_manager
-    input_manager = html.SELECT(type="select-one", value="")
+    input_manager = html.SELECT(type="select-one", value="", Class='btn-inside')
     for manager_pseudo in sorted(possible_managers, key=lambda pu: pu.upper()):
         option = html.OPTION(manager_pseudo)
         input_manager <= option
@@ -2359,7 +2359,7 @@ def change_manager():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="Promouvoir responsable")
+    input_select_player = html.INPUT(type="submit", value="Promouvoir responsable", Class='btn-inside')
     input_select_player.bind("click", promote_managers_callback)
     form <= input_select_player
 

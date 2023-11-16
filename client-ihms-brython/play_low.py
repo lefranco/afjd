@@ -450,7 +450,7 @@ def load_special_stuff():
 def stack_last_moves_button(frame):
     """ stack_last_moves_button """
 
-    input_last_moves = html.INPUT(type="submit", value="Derniers mouvements")
+    input_last_moves = html.INPUT(type="submit", value="Derniers mouvements", Class='btn-inside')
     input_last_moves.bind("click", lambda e: play.load_option(e, 'Consulter', True))
     frame <= input_last_moves
     frame <= html.BR()
@@ -569,7 +569,7 @@ def get_game_status():
 
     # variant + link
     form = html.FORM()
-    input_show_variant = html.INPUT(type="submit", value=game_variant)
+    input_show_variant = html.INPUT(type="submit", value=game_variant, Class='btn-inside')
     input_show_variant.attrs['style'] = 'font-size: 10px'
     input_show_variant.bind("click", lambda e, v=game_variant: show_variant_callback(e, v))
     form <= input_show_variant
@@ -581,7 +581,7 @@ def get_game_status():
     if game_fog:
         game_option_name = "brouillard"
         form = html.FORM()
-        input_show_option = html.INPUT(type="submit", value=game_option_name)
+        input_show_option = html.INPUT(type="submit", value=game_option_name, Class='btn-inside')
         input_show_option.attrs['style'] = 'font-size: 10px'
         input_show_option.bind("click", lambda e, o=game_option_name: show_option_callback(e, o))
         form <= input_show_option
@@ -592,7 +592,7 @@ def get_game_status():
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
     game_scoring_name = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[game_scoring]
     form = html.FORM()
-    input_show_scoring = html.INPUT(type="submit", value=game_scoring_name)
+    input_show_scoring = html.INPUT(type="submit", value=game_scoring_name, Class='btn-inside')
     input_show_scoring.attrs['style'] = 'font-size: 10px'
     input_show_scoring.bind("click", lambda e, v=game_scoring: show_scoring_callback(e, v))
     form <= input_show_scoring

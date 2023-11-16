@@ -143,7 +143,7 @@ def change_glorious():
 
     form <= html.BR()
 
-    input_change_glory_content = html.INPUT(type="submit", value="Mettre à jour")
+    input_change_glory_content = html.INPUT(type="submit", value="Mettre à jour", Class='btn-inside')
     input_change_glory_content.bind("click", change_glorious_callback)
     form <= input_change_glory_content
     form <= html.BR()
@@ -545,12 +545,12 @@ def create_many_games():
     # need to make this global to keep it (only way it seems)
     global INPUT_FILE
     if INPUT_FILE is None:
-        INPUT_FILE = html.INPUT(type="file", accept='.csv')
+        INPUT_FILE = html.INPUT(type="file", accept='.csv', Class='btn-inside')
     form <= INPUT_FILE
     form <= html.BR()
     form <= html.BR()
 
-    input_create_games = html.INPUT(type="submit", value="Créer les parties")
+    input_create_games = html.INPUT(type="submit", value="Créer les parties", Class='btn-inside')
     input_create_games.bind("click", create_games_callback)
     form <= input_create_games
 
