@@ -144,7 +144,7 @@ def show_whynot():
 
     for question_txt, answer_txt in whynot.WHYNOT_CONTENT_TABLE.items():
 
-        reveal_button = html.INPUT(type="submit", value=question_txt)
+        reveal_button = html.INPUT(type="submit", value=question_txt, Class='btn-inside')
         reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
         WHYNOT_CONTENT <= reveal_button
 
@@ -215,7 +215,7 @@ def select_interface():
 
         form <= html.BR()
 
-        input_select_interface = html.INPUT(type="submit", value="Sélectionner cette interface")
+        input_select_interface = html.INPUT(type="submit", value="Sélectionner cette interface", Class='btn-inside')
         input_select_interface.bind("click", lambda e, i=user_interface: select_interface_callback(e, i))
         form <= input_select_interface
 
