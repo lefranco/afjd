@@ -37,7 +37,7 @@ a:visited{
 
 .btn-menu:active {
     background-color: #CCC;
-    border-color: rgba(0,0,0,0.9);
+    border-color: rgba(0,0,0,0.8);
 }
 
 
@@ -48,12 +48,12 @@ a:visited{
     color: #222;
     background-color: #ffffff;
     border-radius: 5px;
-    border: 1px solid rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,0,0,0.4);
 }
 
 .btn-inside:hover {
     background-color: #f4f4f4;
-    border-color: rgba(0,0,0,0.5);
+    border-color: rgba(0,0,0,0.6);
 }
 
 .btn-inside:active {
