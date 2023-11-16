@@ -783,6 +783,18 @@ def my_games(state_name):
         alert("Erreur chargement dictionnaire parties")
         return
 
+    # if state is current (arrival) we add the awaiting games
+    if state == 1:
+
+        state2 = 0
+        games_dict2 = common.get_games_data(state2)
+        if not games_dict2:
+            alert("Erreur chargement dictionnaire parties (2)")
+            return
+
+        # join both dicts
+        games_dict.update(games_dict2)
+
     dict_submitted_data = get_all_player_games_roles_submitted_orders()
     if not dict_submitted_data:
         alert("Erreur chargement des soumissions dans les parties")
@@ -813,37 +825,35 @@ def my_games(state_name):
 
     # is there a startable game ?
 
-    if state == 1:
+    suffering_games = []
 
-        suffering_games = []
+    ready_games_list = get_ready_games()
+    # there can be no message (if no game of failed to load)
 
-        ready_games_list = get_ready_games()
-        # there can be no message (if no game of failed to load)
+    for game_id_str, data in games_dict.items():
 
-        for game_id_str, data in games_dict.items():
+        if data['current_state'] != 0:
+            continue
 
-            if data['current_state'] != 0:
-                continue
+        # do not display games players does not participate into
+        game_id = int(game_id_str)
+        if game_id not in games_id_player:
+            continue
 
-            # do not display games players does not participate into
-            game_id = int(game_id_str)
-            if game_id not in games_id_player:
-                continue
+        # must be game master
+        role_id = dict_role_id[str(game_id)]
+        if role_id != 0:
+            continue
 
-            # must be game master
-            role_id = dict_role_id[str(game_id)]
-            if role_id != 0:
-                continue
+        # game must not need players
+        if game_id not in ready_games_list:
+            continue
 
-            # game must not need players
-            if game_id not in ready_games_list:
-                continue
+        game_name = data['name']
+        suffering_games.append(game_name)
 
-            game_name = data['name']
-            suffering_games.append(game_name)
-
-        if suffering_games:
-            alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
+    if suffering_games:
+        alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
 
     time_stamp_now = time.time()
 
@@ -978,6 +988,7 @@ def my_games(state_name):
 
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
+        # can happen because we added awaiting games
         if data['current_state'] != state:
             continue
 
@@ -1050,7 +1061,12 @@ def my_games(state_name):
             game_name = data['name']
 
             if field == 'name':
+
                 value = game_name
+
+                # highlite free available position
+                if game_name in suffering_games:
+                    colour = config.NEED_START
 
             if field == 'go_game':
 
