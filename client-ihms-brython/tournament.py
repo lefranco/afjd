@@ -152,9 +152,9 @@ def show_games():
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
-        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-inside')
     else:
-        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-inside')
     button.bind("click", change_button_mode_callback)
     MY_SUB_PANEL <= button
     MY_SUB_PANEL <= html.BR()
@@ -180,7 +180,7 @@ def show_games():
             if field == 'name':
 
                 # button for sorting by creation date
-                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-inside')
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
@@ -188,13 +188,13 @@ def show_games():
                 buttons <= " "
 
                 # button for sorting by name
-                button = html.BUTTON("&lt;Nom&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Nom&gt;", Class='btn-inside')
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
                 buttons <= button
 
             else:
 
-                button = html.BUTTON("<>", Class='btn-menu')
+                button = html.BUTTON("<>", Class='btn-inside')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
 
@@ -306,7 +306,7 @@ def show_games():
             if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                     form <= input_jump_game
                     value = form
@@ -924,13 +924,13 @@ def create_tournament():
     fieldset = html.FIELDSET()
     legend_name = html.LEGEND("nom", title="Nom du tournoi (faites court et simple)")
     fieldset <= legend_name
-    input_name = html.INPUT(type="text", value="", size=MAX_LEN_TOURNAMENT_NAME)
+    input_name = html.INPUT(type="text", value="", size=MAX_LEN_TOURNAMENT_NAME, Class='btn-inside')
     fieldset <= input_name
     form <= fieldset
 
     form <= html.BR()
 
-    input_create_tournament = html.INPUT(type="submit", value="Créer le tournoi")
+    input_create_tournament = html.INPUT(type="submit", value="Créer le tournoi", Class='btn-inside')
     input_create_tournament.bind("click", create_tournament_callback)
     form <= input_create_tournament
 
@@ -1091,7 +1091,7 @@ def edit_tournament():
     # not those already in a tournament
     possible_incomers -= set(games_grouped_list)
 
-    input_incomer = html.SELECT(type="select-one", value="")
+    input_incomer = html.SELECT(type="select-one", value="", Class='btn-inside')
     for game_name in sorted(map(lambda i: id2name[i], possible_incomers), key=lambda g: g.upper()):
         option = html.OPTION(game_name)
         input_incomer <= option
@@ -1101,7 +1101,7 @@ def edit_tournament():
 
     form <= html.BR()
 
-    input_put_in_tournament = html.INPUT(type="submit", value="Mettre dans le tournoi")
+    input_put_in_tournament = html.INPUT(type="submit", value="Mettre dans le tournoi", Class='btn-inside')
     input_put_in_tournament.bind("click", put_in_tournament_callback)
     form <= input_put_in_tournament
 
@@ -1125,7 +1125,7 @@ def edit_tournament():
     # put the games in the tournament
     possible_outcomers = games_in
 
-    input_outcomer = html.SELECT(type="select-one", value="")
+    input_outcomer = html.SELECT(type="select-one", value="", Class='btn-inside')
     for game_name in sorted(map(lambda i: id2name[i], possible_outcomers), key=lambda g: g.upper()):
         option = html.OPTION(game_name)
         input_outcomer <= option
@@ -1135,7 +1135,7 @@ def edit_tournament():
 
     form <= html.BR()
 
-    input_remove_from_tournament = html.INPUT(type="submit", value="Retirer du tournoi")
+    input_remove_from_tournament = html.INPUT(type="submit", value="Retirer du tournoi", Class='btn-inside')
     input_remove_from_tournament.bind("click", remove_from_tournament_callback)
     form <= input_remove_from_tournament
 
@@ -1220,7 +1220,7 @@ def delete_tournament():
 
     form = html.FORM()
 
-    input_delete_tournament = html.INPUT(type="submit", value="Supprimer le tournoi")
+    input_delete_tournament = html.INPUT(type="submit", value="Supprimer le tournoi", Class='btn-inside')
     input_delete_tournament.bind("click", delete_tournament_callback_confirm)
     form <= input_delete_tournament
 
@@ -1305,7 +1305,7 @@ def show_tournaments_data():
                 games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
                 game_name = games_names[0]
                 form = html.FORM()
-                input_jump_game = html.INPUT(type="image", src="./images/look.png")
+                input_jump_game = html.INPUT(type="image", src="./images/look.png", Class='btn-inside')
                 input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                 form <= input_jump_game
                 value = form
