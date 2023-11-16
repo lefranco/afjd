@@ -256,84 +256,84 @@ def create_account(json_dict):
     fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("pseudo", title="Votre identifiant sur le site")
     fieldset <= legend_pseudo
-    input_pseudo = html.INPUT(type="text", value=pseudo if pseudo is not None else "")
+    input_pseudo = html.INPUT(type="text", value=pseudo if pseudo is not None else "", Class='btn-inside')
     fieldset <= input_pseudo
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_password = html.LEGEND("mot de passe", title="Pour empêcher les autres de jouer à votre place;-)")
     fieldset <= legend_password
-    input_password = html.INPUT(type="password", value=password if password is not None else "")
+    input_password = html.INPUT(type="password", value=password if password is not None else "", Class='btn-inside')
     fieldset <= input_password
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_password_again = html.LEGEND("confirmation mot de passe", title="Pour éviter une faute de frappe sur le mot de passe")
     fieldset <= legend_password_again
-    input_password_again = html.INPUT(type="password", value=password_again if password_again is not None else "")
+    input_password_again = html.INPUT(type="password", value=password_again if password_again is not None else "", Class='btn-inside')
     fieldset <= input_password_again
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_email = html.LEGEND("courriel (privé)", title="Le site vous notifiera de quelques très rares événements (sauf si vous demandez les notifications)")
     fieldset <= legend_email
-    input_email = html.INPUT(type="email", value=email if email is not None else "", size=MAX_LEN_EMAIL)
+    input_email = html.INPUT(type="email", value=email if email is not None else "", size=MAX_LEN_EMAIL, Class='btn-inside')
     fieldset <= input_email
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_telephone = html.LEGEND("téléphone (privé et facultatif)", title="En cas d'urgence")
     fieldset <= legend_telephone
-    input_telephone = html.INPUT(type="tel", value=telephone if telephone is not None else "")
+    input_telephone = html.INPUT(type="tel", value=telephone if telephone is not None else "", Class='btn-inside')
     fieldset <= input_telephone
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_notify_adjudication = html.LEGEND("notification avancement parties", title="Envoyez moi un courriel sur chaque résolution de mes parties")
     fieldset <= legend_notify_adjudication
-    input_notify_adjudication = html.INPUT(type="checkbox", checked=bool(notify_adjudication) if notify_adjudication is not None else True)
+    input_notify_adjudication = html.INPUT(type="checkbox", checked=bool(notify_adjudication) if notify_adjudication is not None else True, Class='btn-inside')
     fieldset <= input_notify_adjudication
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_notify_message = html.LEGEND("notification messages et presses parties", title="Envoyez moi un courriel sur chaque message ou presse de mes parties")
     fieldset <= legend_notify_message
-    input_notify_message = html.INPUT(type="checkbox", checked=bool(notify_message) if notify_message is not None else True)
+    input_notify_message = html.INPUT(type="checkbox", checked=bool(notify_message) if notify_message is not None else True, Class='btn-inside')
     fieldset <= input_notify_message
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_replace = html.LEGEND("notification remplacement", title="Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
     fieldset <= legend_replace
-    input_notify_replace = html.INPUT(type="checkbox", checked=bool(notify_replace) if notify_replace is not None else False)
+    input_notify_replace = html.INPUT(type="checkbox", checked=bool(notify_replace) if notify_replace is not None else False, Class='btn-inside')
     fieldset <= input_notify_replace
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_newsletter = html.LEGEND("abonnement newsletter", title="Envoyez moi la newsletter de l'association A.F.J.D.")
     fieldset <= legend_newsletter
-    input_newsletter = html.INPUT(type="checkbox", checked=bool(newsletter) if newsletter is not None else True)
+    input_newsletter = html.INPUT(type="checkbox", checked=bool(newsletter) if newsletter is not None else True, Class='btn-inside')
     fieldset <= input_newsletter
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_family_name = html.LEGEND("nom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     fieldset <= legend_family_name
-    input_family_name = html.INPUT(type="text", value=family_name if family_name is not None else False)
+    input_family_name = html.INPUT(type="text", value=family_name if family_name is not None else False, Class='btn-inside')
     fieldset <= input_family_name
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_first_name = html.LEGEND("prénom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     fieldset <= legend_first_name
-    input_first_name = html.INPUT(type="text", value=first_name if first_name is not None else False)
+    input_first_name = html.INPUT(type="text", value=first_name if first_name is not None else False, Class='btn-inside')
     fieldset <= input_first_name
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_residence = html.LEGEND("résidence (public)", title="Mettez votre lieu de résidence")
     fieldset <= legend_residence
-    input_residence = html.SELECT(type="select-one", value="")
+    input_residence = html.SELECT(type="select-one", value="", Class='btn-inside')
 
     for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
@@ -347,7 +347,7 @@ def create_account(json_dict):
     fieldset = html.FIELDSET()
     legend_nationality = html.LEGEND("nationalité (public)", title="Mettez votre nationalité")
     fieldset <= legend_nationality
-    input_nationality = html.SELECT(type="select-one", value="")
+    input_nationality = html.SELECT(type="select-one", value="", Class='btn-inside')
 
     for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
@@ -361,7 +361,7 @@ def create_account(json_dict):
     fieldset = html.FIELDSET()
     legend_timezone = html.LEGEND("fuseau horaire (public)", title="Pour mieux comprendre vos heures d'éveil")
     fieldset <= legend_timezone
-    input_timezone = html.SELECT(type="select-one", value="")
+    input_timezone = html.SELECT(type="select-one", value="", Class='btn-inside')
 
     for timezone_cities in config.TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
@@ -374,7 +374,7 @@ def create_account(json_dict):
 
     form <= html.BR()
 
-    input_create_account = html.INPUT(type="submit", value="Créer le compte")
+    input_create_account = html.INPUT(type="submit", value="Créer le compte", Class='btn-inside')
     input_create_account.bind("click", create_account_callback)
     form <= input_create_account
 
@@ -563,77 +563,77 @@ def edit_account():
     fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("pseudo", title="(pour rappel)")
     fieldset <= legend_pseudo
-    input_pseudo = html.INPUT(type="text", readonly=True, value=pseudo)
+    input_pseudo = html.INPUT(type="text", readonly=True, value=pseudo, Class='btn-inside')
     fieldset <= input_pseudo
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_email = html.LEGEND("courriel (privé)", title="Le site vous notifiera de quelques très rares événements (sauf si vous demandez les notifications)")
     fieldset <= legend_email
-    input_email = html.INPUT(type="email", value=email_loaded, size=MAX_LEN_EMAIL)
+    input_email = html.INPUT(type="email", value=email_loaded, size=MAX_LEN_EMAIL, Class='btn-inside')
     fieldset <= input_email
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_email_confirmed = html.LEGEND("courriel confirmé", title="(pour information)")
     fieldset <= legend_email_confirmed
-    input_email_confirmed = html.INPUT(type="checkbox", disabled=True, checked=email_confirmed_loaded)
+    input_email_confirmed = html.INPUT(type="checkbox", disabled=True, checked=email_confirmed_loaded, Class='btn-inside')
     fieldset <= input_email_confirmed
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_telephone = html.LEGEND("téléphone (privé et facultatif)", title="En cas d'urgence")
     fieldset <= legend_telephone
-    input_telephone = html.INPUT(type="tel", value=telephone_loaded)
+    input_telephone = html.INPUT(type="tel", value=telephone_loaded, Class='btn-inside')
     fieldset <= input_telephone
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_notify_adjudication = html.LEGEND("notification avancement parties", title="Envoyez moi un courriel sur chaque résolution de mes parties")
     fieldset <= legend_notify_adjudication
-    input_notify_adjudication = html.INPUT(type="checkbox", checked=notify_adjudication_loaded)
+    input_notify_adjudication = html.INPUT(type="checkbox", checked=notify_adjudication_loaded, Class='btn-inside')
     fieldset <= input_notify_adjudication
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_notify_message = html.LEGEND("notification messages et presses parties", title="Envoyez moi un courriel sur chaque message ou presse de mes parties")
     fieldset <= legend_notify_message
-    input_notify_message = html.INPUT(type="checkbox", checked=notify_message_loaded)
+    input_notify_message = html.INPUT(type="checkbox", checked=notify_message_loaded, Class='btn-inside')
     fieldset <= input_notify_message
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_notify_replace = html.LEGEND("notification remplacement", title="Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
     fieldset <= legend_notify_replace
-    input_notify_replace = html.INPUT(type="checkbox", checked=notify_replace_loaded)
+    input_notify_replace = html.INPUT(type="checkbox", checked=notify_replace_loaded, Class='btn-inside')
     fieldset <= input_notify_replace
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_newsletter = html.LEGEND("abonnement newsletter", title="Envoyez moi par courriel la newsletter de l'association A.F.J.D.")
     fieldset <= legend_newsletter
-    input_newsletter = html.INPUT(type="checkbox", checked=newsletter_loaded)
+    input_newsletter = html.INPUT(type="checkbox", checked=newsletter_loaded, Class='btn-inside')
     fieldset <= input_newsletter
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_family_name = html.LEGEND("nom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     fieldset <= legend_family_name
-    input_family_name = html.INPUT(type="text", value=family_name_loaded)
+    input_family_name = html.INPUT(type="text", value=family_name_loaded, Class='btn-inside')
     fieldset <= input_family_name
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_first_name = html.LEGEND("prénom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     fieldset <= legend_first_name
-    input_first_name = html.INPUT(type="text", value=first_name_loaded)
+    input_first_name = html.INPUT(type="text", value=first_name_loaded, Class='btn-inside')
     fieldset <= input_first_name
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_residence = html.LEGEND("résidence (public)", title="Mettez votre lieu de résidence")
     fieldset <= legend_residence
-    input_residence = html.SELECT(type="select-one", value="")
+    input_residence = html.SELECT(type="select-one", value="", Class='btn-inside')
 
     for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
@@ -647,7 +647,7 @@ def edit_account():
     fieldset = html.FIELDSET()
     legend_nationality = html.LEGEND("nationalité (public)", title="Mettez votre nationalité")
     fieldset <= legend_nationality
-    input_nationality = html.SELECT(type="select-one", value="")
+    input_nationality = html.SELECT(type="select-one", value="", Class='btn-inside')
 
     for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
@@ -661,7 +661,7 @@ def edit_account():
     fieldset = html.FIELDSET()
     legend_timezone = html.LEGEND("fuseau horaire (public)", title="Pour mieux comprendre vos heures d'éveil")
     fieldset <= legend_timezone
-    input_timezone = html.SELECT(type="select-one", value="")
+    input_timezone = html.SELECT(type="select-one", value="", Class='btn-inside')
 
     for timezone_cities in config.TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
@@ -674,7 +674,7 @@ def edit_account():
 
     form <= html.BR()
 
-    input_change_account = html.INPUT(type="submit", value="Changer le compte")
+    input_change_account = html.INPUT(type="submit", value="Changer le compte", Class='btn-inside')
     input_change_account.bind("click", change_account_callback)
     form <= input_change_account
 
@@ -787,13 +787,13 @@ def validate_email():
     fieldset = html.FIELDSET()
     legend_confirmation_code = html.LEGEND("code de confirmation", title="Le code reçu par courriel")
     fieldset <= legend_confirmation_code
-    input_confirmation_code = html.INPUT(type="number", value="", required=True)
+    input_confirmation_code = html.INPUT(type="number", value="", required=True, Class='btn-inside')
     fieldset <= input_confirmation_code
     form <= fieldset
 
     form <= html.BR()
 
-    input_validate_email = html.INPUT(type="submit", value="Valider le courriel")
+    input_validate_email = html.INPUT(type="submit", value="Valider le courriel", Class='btn-inside')
     input_validate_email.bind("click", validate_email_callback)
     form <= input_validate_email
     form <= html.BR()
@@ -804,7 +804,7 @@ def validate_email():
 
     form2 = html.FORM()
 
-    input_send_new_code = html.INPUT(type="submit", value="Me renvoyer un nouveau code")
+    input_send_new_code = html.INPUT(type="submit", value="Me renvoyer un nouveau code", Class='btn-inside')
     input_send_new_code.bind("click", send_new_code_callback)
     form2 <= input_send_new_code
     form2 <= html.BR()
@@ -880,20 +880,20 @@ def change_password():
     fieldset = html.FIELDSET()
     legend_new_password = html.LEGEND("nouveau mot de passe", title="Le nouveau mot de passe")
     fieldset <= legend_new_password
-    input_new_password = html.INPUT(type="password", value="")
+    input_new_password = html.INPUT(type="password", value="", Class='btn-inside')
     fieldset <= input_new_password
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_new_password_again = html.LEGEND("nouveau mot de passe encore", title="Le nouveau mot de passe")
     fieldset <= legend_new_password_again
-    input_new_password_again = html.INPUT(type="password", value="")
+    input_new_password_again = html.INPUT(type="password", value="", Class='btn-inside')
     fieldset <= input_new_password_again
     form <= fieldset
 
     form <= html.BR()
 
-    input_change_password = html.INPUT(type="submit", value="Changer le mot de passe")
+    input_change_password = html.INPUT(type="submit", value="Changer le mot de passe", Class='btn-inside')
     input_change_password.bind("click", change_password_callback)
     form <= input_change_password
 
@@ -987,7 +987,7 @@ def delete_account():
 
     MY_SUB_PANEL <= form
 
-    input_delete_account = html.INPUT(type="submit", value="Supprimer le compte")
+    input_delete_account = html.INPUT(type="submit", value="Supprimer le compte", Class='btn-inside')
     input_delete_account.bind("click", delete_account_callback_confirm)
     form <= input_delete_account
     form <= html.BR()

@@ -201,7 +201,7 @@ def show_rating_performance(classic, role_id):
             if field in ['player', 'elo', 'change', 'role', 'game', 'number']:
 
                 # button for sorting
-                button = html.BUTTON("<>", Class='btn-menu')
+                button = html.BUTTON("<>", Class='btn-inside')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
 
@@ -291,7 +291,7 @@ def show_rating_performance(classic, role_id):
         switch_mode_button.bind("click", switch_mode_callback)
 
         # button for going global
-        switch_global_button = html.BUTTON("Classement global", Class='btn-menu')
+        switch_global_button = html.BUTTON("Classement global", Class='btn-inside')
         switch_global_button.bind("click", lambda e: switch_role_callback(e, None))
 
         # buttons for selecting role
@@ -437,7 +437,7 @@ def show_rating_reliability():
             if field in ['player', 'reliability', 'number_delays', 'number_dropouts', 'number']:
 
                 # button for sorting
-                button = html.BUTTON("<>", Class='btn-menu')
+                button = html.BUTTON("<>", Class='btn-inside')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
 
@@ -597,7 +597,7 @@ def show_rating_regularity():
             if field in ['player', 'regularity', 'seniority', 'non_obsolesence', 'continuity', 'number']:
 
                 # button for sorting
-                button = html.BUTTON("<>", Class='btn-menu')
+                button = html.BUTTON("<>", Class='btn-inside')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
 

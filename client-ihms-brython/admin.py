@@ -286,7 +286,7 @@ def change_news_admin():
 
     form <= html.BR()
 
-    input_change_news_content = html.INPUT(type="submit", value="Mettre à jour")
+    input_change_news_content = html.INPUT(type="submit", value="Mettre à jour", Class='btn-inside')
     input_change_news_content.bind("click", change_news_admin_callback)
     form <= input_change_news_content
     form <= html.BR()
@@ -390,7 +390,7 @@ def change_site_image():
     # need to make this global to keep it (only way it seems)
     global INPUT_FILE
     if INPUT_FILE is None:
-        INPUT_FILE = html.INPUT(type="file", accept='.jpg')
+        INPUT_FILE = html.INPUT(type="file", accept='.jpg', Class='btn-inside')
     form <= INPUT_FILE
     form <= html.BR()
 
@@ -406,7 +406,7 @@ def change_site_image():
     fieldset <= input_legend_content
     form <= fieldset
 
-    input_put_picture = html.INPUT(type="submit", value="Mettre cette image avec cette légende")
+    input_put_picture = html.INPUT(type="submit", value="Mettre cette image avec cette légende", Class='btn-inside')
     input_put_picture.bind("click", put_site_picture_callback)
     form <= input_put_picture
 
@@ -473,7 +473,7 @@ def usurp():
     fieldset = html.FIELDSET()
     legend_usurped = html.LEGEND("Usurpé", title="Sélectionner le joueur à usurper")
     fieldset <= legend_usurped
-    input_usurped = html.SELECT(type="select-one", value="")
+    input_usurped = html.SELECT(type="select-one", value="", Class='btn-inside')
     for usurped_pseudo in sorted(possible_usurped, key=lambda pu: pu.upper()):
         option = html.OPTION(usurped_pseudo)
         input_usurped <= option
@@ -482,7 +482,7 @@ def usurp():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="Usurper")
+    input_select_player = html.INPUT(type="submit", value="Usurper", Class='btn-inside')
     input_select_player.bind("click", usurp_callback)
     form <= input_select_player
 
@@ -604,34 +604,34 @@ def rectify_parameters():
     fieldset = html.FIELDSET()
     legend_used_for_elo = html.LEGEND("utilisée pour le élo", title="Partie sérieuse - les résultats de la partie comptent pour le calcul du élo sur le site")
     fieldset <= legend_used_for_elo
-    input_used_for_elo = html.INPUT(type="checkbox", checked=used_for_elo_loaded)
+    input_used_for_elo = html.INPUT(type="checkbox", checked=used_for_elo_loaded, Class='btn-inside')
     fieldset <= input_used_for_elo
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_fast = html.LEGEND("en direct", title="Partie en direct - jouée en temps réel comme sur un plateau")
     fieldset <= legend_fast
-    input_fast = html.INPUT(type="checkbox", checked=fast_loaded)
+    input_fast = html.INPUT(type="checkbox", checked=fast_loaded, Class='btn-inside')
     fieldset <= input_fast
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_nomessage = html.LEGEND("pas de message privé", title="Les joueurs ne peuvent pas communiquer (négocier) par message privé avant la fin de la partie")
     fieldset <= legend_nomessage
-    input_nomessage = html.INPUT(type="checkbox", checked=nomessage_loaded)
+    input_nomessage = html.INPUT(type="checkbox", checked=nomessage_loaded, Class='btn-inside')
     fieldset <= input_nomessage
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_nopress = html.LEGEND("pas de message public", title="Les joueurs ne peuvent pas communiquer (déclarer) par message public avant la fin de la partie")
     fieldset <= legend_nopress
-    input_nopress = html.INPUT(type="checkbox", checked=nopress_loaded)
+    input_nopress = html.INPUT(type="checkbox", checked=nopress_loaded, Class='btn-inside')
     fieldset <= input_nopress
     form <= fieldset
 
     form <= html.BR()
 
-    input_change_used_for_elo_game = html.INPUT(type="submit", value="Changer les paramètres de la partie")
+    input_change_used_for_elo_game = html.INPUT(type="submit", value="Changer les paramètres de la partie", Class='btn-inside')
     input_change_used_for_elo_game.bind("click", change_parameters_game_callback)
     form <= input_change_used_for_elo_game
 
@@ -825,7 +825,7 @@ def rectify_position():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="Rectifier la position")
+        input_submit = html.INPUT(type="submit", value="Rectifier la position", Class='btn-inside')
         input_submit.bind("click", submit_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -1437,7 +1437,7 @@ def edit_creators():
     # not those already in
     possible_incomers -= set(creators_list)
 
-    input_incomer = html.SELECT(type="select-one", value="")
+    input_incomer = html.SELECT(type="select-one", value="", Class='btn-inside')
     for play_pseudo in sorted(possible_incomers, key=lambda pi: pi.upper()):
         option = html.OPTION(play_pseudo)
         input_incomer <= option
@@ -1447,7 +1447,7 @@ def edit_creators():
 
     form <= html.BR()
 
-    input_put_in_game = html.INPUT(type="submit", value="Mettre dans les créateurs")
+    input_put_in_game = html.INPUT(type="submit", value="Mettre dans les créateurs", Class='btn-inside')
     input_put_in_game.bind("click", add_creator_callback)
     form <= input_put_in_game
 
@@ -1471,7 +1471,7 @@ def edit_creators():
     # players can come out are the ones not assigned
     possible_outcomers = creators_list
 
-    input_outcomer = html.SELECT(type="select-one", value="")
+    input_outcomer = html.SELECT(type="select-one", value="", Class='btn-inside')
     for play_pseudo in sorted(possible_outcomers):
         option = html.OPTION(play_pseudo)
         input_outcomer <= option
@@ -1481,7 +1481,7 @@ def edit_creators():
 
     form <= html.BR()
 
-    input_remove_from_game = html.INPUT(type="submit", value="Retirer des créateurs")
+    input_remove_from_game = html.INPUT(type="submit", value="Retirer des créateurs", Class='btn-inside')
     input_remove_from_game.bind("click", remove_creator_callback)
     form <= input_remove_from_game
 
@@ -1603,7 +1603,7 @@ def edit_moderators():
     # not those already in
     possible_incomers -= set(moderators_list)
 
-    input_incomer = html.SELECT(type="select-one", value="")
+    input_incomer = html.SELECT(type="select-one", value="", Class='btn-inside')
     for play_pseudo in sorted(possible_incomers, key=lambda pi: pi.upper()):
         option = html.OPTION(play_pseudo)
         input_incomer <= option
@@ -1613,7 +1613,7 @@ def edit_moderators():
 
     form <= html.BR()
 
-    input_put_in_game = html.INPUT(type="submit", value="Mettre dans les modérateurs")
+    input_put_in_game = html.INPUT(type="submit", value="Mettre dans les modérateurs", Class='btn-inside')
     input_put_in_game.bind("click", add_moderator_callback)
     form <= input_put_in_game
 
@@ -1637,7 +1637,7 @@ def edit_moderators():
     # players can come out are the ones not assigned
     possible_outcomers = moderators_list
 
-    input_outcomer = html.SELECT(type="select-one", value="")
+    input_outcomer = html.SELECT(type="select-one", value="", Class='btn-inside')
     for play_pseudo in sorted(possible_outcomers):
         option = html.OPTION(play_pseudo)
         input_outcomer <= option
@@ -1647,7 +1647,7 @@ def edit_moderators():
 
     form <= html.BR()
 
-    input_remove_from_game = html.INPUT(type="submit", value="Retirer des modérateurs")
+    input_remove_from_game = html.INPUT(type="submit", value="Retirer des modérateurs", Class='btn-inside')
     input_remove_from_game.bind("click", remove_moderator_callback)
     form <= input_remove_from_game
 
@@ -1790,7 +1790,7 @@ def update_elo():
 
     # ---
 
-    input_maintain = html.INPUT(type="submit", value="Extraire et calculer")
+    input_maintain = html.INPUT(type="submit", value="Extraire et calculer", Class='btn-inside')
     input_maintain.bind("click", extract_elo_data_callback)
     form <= input_maintain
 
@@ -1920,7 +1920,7 @@ def update_reliability():
 
     # ---
 
-    input_maintain = html.INPUT(type="submit", value="Extraire et calculer")
+    input_maintain = html.INPUT(type="submit", value="Extraire et calculer", Class='btn-inside')
     input_maintain.bind("click", extract_reliability_data_callback)
     form <= input_maintain
 
@@ -2050,7 +2050,7 @@ def update_regularity():
 
     # ---
 
-    input_maintain = html.INPUT(type="submit", value="Extraire et calculer")
+    input_maintain = html.INPUT(type="submit", value="Extraire et calculer", Class='btn-inside')
     input_maintain.bind("click", extract_regularity_data_callback)
     form <= input_maintain
 
@@ -2108,7 +2108,7 @@ def clear_old_delays():
 
     form = html.FORM()
 
-    input_clear_old_delays = html.INPUT(type="submit", value="Effacer les anciens retards")
+    input_clear_old_delays = html.INPUT(type="submit", value="Effacer les anciens retards", Class='btn-inside')
     input_clear_old_delays.bind("click", clear_old_delays_callback)
     form <= input_clear_old_delays
 
@@ -2320,14 +2320,14 @@ def show_idle_data():
 
             if field == 'recall':
                 form = html.FORM()
-                input_delete_account = html.INPUT(type="image", src="./images/recall.jpg")
+                input_delete_account = html.INPUT(type="image", src="./images/recall.jpg", Class='btn-inside')
                 input_delete_account.bind("click", lambda e, p=player: recall_account_callback(e, p))
                 form <= input_delete_account
                 value = form
 
             if field == 'delete':
                 form = html.FORM()
-                input_delete_account = html.INPUT(type="image", src="./images/delete.png")
+                input_delete_account = html.INPUT(type="image", src="./images/delete.png", Class='btn-inside')
                 input_delete_account.bind("click", lambda e, p=player: delete_account_callback(e, p))
                 form <= input_delete_account
                 value = form
@@ -2401,7 +2401,7 @@ def show_scheduler_logs():
 
     # ---
 
-    input_get_logs = html.INPUT(type="submit", value="Récupérer")
+    input_get_logs = html.INPUT(type="submit", value="Récupérer", Class='btn-inside')
     input_get_logs.bind("click", get_logs_callback)
     form <= input_get_logs.bind("click", get_logs_callback)
 
@@ -2465,7 +2465,7 @@ def maintain():
 
     # ---
 
-    input_maintain = html.INPUT(type="submit", value="Déclencher")
+    input_maintain = html.INPUT(type="submit", value="Déclencher", Class='btn-inside')
     input_maintain.bind("click", maintain_callback)
     form <= input_maintain
 

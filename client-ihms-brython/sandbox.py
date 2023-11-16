@@ -475,7 +475,7 @@ def sandbox():
 
                 for order_type in mapping.OrderTypeEnum.inventory():
                     if mapping.OrderTypeEnum.compatible(order_type, mapping.SeasonEnum.AUTUMN_SEASON):
-                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.order_name_table[order_type])
+                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.order_name_table[order_type], Class='btn-inside')
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
@@ -803,7 +803,7 @@ def sandbox():
     def put_erase_all(buttons_right):
         """ put_erase_all """
 
-        input_erase_all = html.INPUT(type="submit", value="Effacer tout")
+        input_erase_all = html.INPUT(type="submit", value="Effacer tout", Class='btn-inside')
         input_erase_all.bind("click", erase_all_callback)
         buttons_right <= html.BR()
         buttons_right <= input_erase_all
@@ -812,7 +812,7 @@ def sandbox():
     def put_rest_hold(buttons_right):
         """ put_rest_hold """
 
-        input_rest_hold = html.INPUT(type="submit", value="Tout le reste tient")
+        input_rest_hold = html.INPUT(type="submit", value="Tout le reste tient", Class='btn-inside')
         input_rest_hold.bind("click", rest_hold_callback)
         buttons_right <= html.BR()
         buttons_right <= input_rest_hold
@@ -821,7 +821,7 @@ def sandbox():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="Soumettre au simulateur")
+        input_submit = html.INPUT(type="submit", value="Soumettre au simulateur", Class='btn-inside')
         input_submit.bind("click", submit_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -830,7 +830,7 @@ def sandbox():
     def put_download(buttons_right):
         """ put_export """
 
-        input_export = html.INPUT(type="submit", value="Télécharger cette position")
+        input_export = html.INPUT(type="submit", value="Télécharger cette position", Class='btn-inside')
         input_export.bind("click", download_callback)
         buttons_right <= html.BR()
         buttons_right <= input_export

@@ -261,7 +261,7 @@ def my_opportunities():
     # button for creating account
     if 'PSEUDO' not in storage:
         # shortcut to create account
-        button = html.BUTTON("Je n'ai pas de compte, je veux le créer !", Class='btn-menu')
+        button = html.BUTTON("Je n'ai pas de compte, je veux le créer !", Class='btn-inside')
         button.bind("click", create_account_callback)
         MY_SUB_PANEL <= button
         MY_SUB_PANEL <= html.BR()
@@ -270,9 +270,9 @@ def my_opportunities():
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
-        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-inside')
     else:
-        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-inside')
     button.bind("click", change_button_mode_callback)
     MY_SUB_PANEL <= button
     MY_SUB_PANEL <= html.BR()
@@ -298,7 +298,7 @@ def my_opportunities():
             if field == 'name':
 
                 # button for sorting by creation date
-                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-inside')
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
@@ -306,13 +306,13 @@ def my_opportunities():
                 buttons <= " "
 
                 # button for sorting by name
-                button = html.BUTTON("&lt;Nom&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Nom&gt;", Class='btn-inside')
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
                 buttons <= button
 
             else:
 
-                button = html.BUTTON("<>", Class='btn-menu')
+                button = html.BUTTON("<>", Class='btn-inside')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
         col = html.TD(buttons)
@@ -426,14 +426,14 @@ def my_opportunities():
                 elif game_id_str in player_games:
                     game_name = data['name']
                     form = html.FORM()
-                    input_quit_game = html.INPUT(type="image", src="./images/leave.png")
+                    input_quit_game = html.INPUT(type="image", src="./images/leave.png", Class='btn-inside')
                     input_quit_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: quit_and_select_game_callback(e, gn, gds))
                     form <= input_quit_game
                     value = form
                 else:
                     game_name = data['name']
                     form = html.FORM()
-                    input_join_game = html.INPUT(type="image", src="./images/join.png")
+                    input_join_game = html.INPUT(type="image", src="./images/join.png", Class='btn-inside')
                     input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
                     form <= input_join_game
                     value = form
@@ -443,7 +443,7 @@ def my_opportunities():
             if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                     form <= input_jump_game
                     value = form
@@ -621,7 +621,7 @@ def select_game(selected_variant, selected_state):
     # list the variants we have
     variant_list = {d['variant'] for d in games_dict.values()}
 
-    input_variant = html.SELECT(type="select-one", value="")
+    input_variant = html.SELECT(type="select-one", value="", Class='btn-inside')
     for variant in variant_list:
         option = html.OPTION(variant)
         if variant == selected_variant:
@@ -630,7 +630,7 @@ def select_game(selected_variant, selected_state):
     fieldset <= input_variant
     form <= fieldset
 
-    input_select_variant = html.INPUT(type="submit", value="Sélectionner")
+    input_select_variant = html.INPUT(type="submit", value="Sélectionner", Class='btn-inside')
     input_select_variant.bind("click", lambda e, i=input_variant: select_variant_callback(e, i))
     form <= input_select_variant
 
@@ -652,7 +652,7 @@ def select_game(selected_variant, selected_state):
 
     rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
 
-    input_state = html.SELECT(type="select-one", value="")
+    input_state = html.SELECT(type="select-one", value="", Class='btn-inside')
     for current_state in state_list:
         current_state_str = rev_state_code_table[current_state]
         option = html.OPTION(current_state_str)
@@ -662,7 +662,7 @@ def select_game(selected_variant, selected_state):
     fieldset <= input_state
     form <= fieldset
 
-    input_select_state = html.INPUT(type="submit", value="Sélectionner")
+    input_select_state = html.INPUT(type="submit", value="Sélectionner", Class='btn-inside')
     input_select_state.bind("click", lambda e, i=input_state: select_state_callback(e, i))
     form <= input_select_state
 
@@ -681,7 +681,7 @@ def select_game(selected_variant, selected_state):
     # list the games we have
     game_list = sorted([g['name'] for g in games_dict.values() if g['variant'] == selected_variant and g['current_state'] == selected_state], key=lambda n: n.upper())
 
-    input_game = html.SELECT(type="select-one", value="")
+    input_game = html.SELECT(type="select-one", value="", Class='btn-inside')
     for game in game_list:
         option = html.OPTION(game)
         if 'GAME' in storage:
@@ -694,7 +694,7 @@ def select_game(selected_variant, selected_state):
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
-    input_select_game = html.INPUT(type="submit", value="Sélectionner")
+    input_select_game = html.INPUT(type="submit", value="Sélectionner", Class='btn-inside')
     input_select_game.bind("click", lambda e, ig=input_game, gds=game_data_sel: select_game_callback(e, ig, gds))
     form <= input_select_game
 
@@ -817,9 +817,9 @@ def all_games(state_name):
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
-        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-inside')
     else:
-        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-inside')
     button.bind("click", change_button_mode_callback)
     MY_SUB_PANEL <= button
     MY_SUB_PANEL <= html.BR()
@@ -845,7 +845,7 @@ def all_games(state_name):
             if field == 'name':
 
                 # button for sorting by creation date
-                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-inside')
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
@@ -853,13 +853,13 @@ def all_games(state_name):
                 buttons <= " "
 
                 # button for sorting by name
-                button = html.BUTTON("&lt;Nom&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Nom&gt;", Class='btn-inside')
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
                 buttons <= button
 
             else:
 
-                button = html.BUTTON("<>", Class='btn-menu')
+                button = html.BUTTON("<>", Class='btn-inside')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
 
@@ -961,7 +961,7 @@ def all_games(state_name):
             if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                     form <= input_jump_game
                     value = form
@@ -1077,7 +1077,7 @@ def all_games(state_name):
 
         if other_state_name != state_name:
 
-            input_change_state = html.INPUT(type="submit", value=other_state_name)
+            input_change_state = html.INPUT(type="submit", value=other_state_name, Class='btn-inside')
             input_change_state.bind("click", lambda _, s=other_state_name: again(s))
             MY_SUB_PANEL <= input_change_state
             MY_SUB_PANEL <= "    "
@@ -1187,7 +1187,7 @@ def show_no_game_masters_data():
         if pseudo:
             game_name = data['name']
             form = html.FORM()
-            input_take_game = html.INPUT(type="image", src="./images/take.png")
+            input_take_game = html.INPUT(type="image", src="./images/take.png", Class='btn-inside')
             input_take_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: take_mastering_this_game_callback(e, gn, gds))
             form <= input_take_game
             value = form

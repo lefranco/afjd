@@ -384,7 +384,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
                 if storage['GAME_ACCESS_MODE'] == 'button':
 
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
@@ -569,7 +569,7 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
                 if storage['GAME_ACCESS_MODE'] == 'button':
 
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
@@ -851,9 +851,9 @@ def my_games(state_name):
     if 'GAME_SHOW_MODE' not in storage:
         storage['GAME_SHOW_MODE'] = 'complete'
     if storage['GAME_SHOW_MODE'] == 'complete':
-        button = html.BUTTON("Mode restreint (affiche moins de colonnes)", Class='btn-menu')
+        button = html.BUTTON("Mode restreint (affiche moins de colonnes)", Class='btn-inside')
     else:
-        button = html.BUTTON("Mode complet (affiche toutes les colonnes)", Class='btn-menu')
+        button = html.BUTTON("Mode complet (affiche toutes les colonnes)", Class='btn-inside')
     button.bind("click", change_show_mode_callback)
     MY_PANEL <= button
 
@@ -864,9 +864,9 @@ def my_games(state_name):
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
-        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-inside')
     else:
-        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-inside')
     button.bind("click", change_button_mode_callback)
     MY_PANEL <= button
 
@@ -877,9 +877,9 @@ def my_games(state_name):
     if 'ACTION_COLUMN_MODE' not in storage:
         storage['ACTION_COLUMN_MODE'] = 'not_displayed'
     if storage['ACTION_COLUMN_MODE'] == 'not_displayed':
-        button = html.BUTTON("Mode avec les colonnes d'action (éditer+arrêter/démarrer)", Class='btn-menu')
+        button = html.BUTTON("Mode avec les colonnes d'action (éditer+arrêter/démarrer)", Class='btn-inside')
     else:
-        button = html.BUTTON("Mode sans les colonnes d'action (éditer+arrêter/démarrer)", Class='btn-menu')
+        button = html.BUTTON("Mode sans les colonnes d'action (éditer+arrêter/démarrer)", Class='btn-inside')
     button.bind("click", change_action_mode_callback)
     MY_PANEL <= button
 
@@ -918,7 +918,7 @@ def my_games(state_name):
             if field == 'name':
 
                 # button for sorting by creation date
-                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-inside')
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
@@ -926,13 +926,13 @@ def my_games(state_name):
                 buttons <= " "
 
                 # button for sorting by name
-                button = html.BUTTON("&lt;Nom&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Nom&gt;", Class='btn-inside')
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
                 buttons <= button
 
             else:
 
-                button = html.BUTTON("<>", Class='btn-menu')
+                button = html.BUTTON("<>", Class='btn-inside')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
         col = html.TD(buttons)
@@ -1057,7 +1057,7 @@ def my_games(state_name):
                 if storage['GAME_ACCESS_MODE'] == 'button':
 
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
@@ -1205,7 +1205,7 @@ def my_games(state_name):
                         arrival = "declarations"
                         if storage['GAME_ACCESS_MODE'] == 'button':
                             form = html.FORM()
-                            input_jump_game = html.INPUT(type="image", src="./images/press_published.jpg")
+                            input_jump_game = html.INPUT(type="image", src="./images/press_published.jpg", Class='btn-inside')
                             input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=arrival: select_game_callback(e, gn, gds, a))
                             form <= input_jump_game
                             value = form
@@ -1223,7 +1223,7 @@ def my_games(state_name):
                         arrival = "messages"
                         if storage['GAME_ACCESS_MODE'] == 'button':
                             form = html.FORM()
-                            input_jump_game = html.INPUT(type="image", src="./images/messages_received.jpg")
+                            input_jump_game = html.INPUT(type="image", src="./images/messages_received.jpg", Class='btn-inside')
                             input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=arrival: select_game_callback(e, gn, gds, a))
                             form <= input_jump_game
                             value = form
@@ -1262,7 +1262,7 @@ def my_games(state_name):
                     if role_id == 0:
                         if storage['GAME_ACCESS_MODE'] == 'button':
                             form = html.FORM()
-                            input_edit_game = html.INPUT(type="image", src="./images/edit_game.png")
+                            input_edit_game = html.INPUT(type="image", src="./images/edit_game.png", Class='btn-inside')
                             input_edit_game.bind("click", lambda e, g=game_name: edit_game_callback(e, g))
                             form <= input_edit_game
                             value = form
@@ -1278,14 +1278,14 @@ def my_games(state_name):
                     if role_id == 0:
                         if state == 0:
                             form = html.FORM()
-                            input_start_game = html.INPUT(type="image", src="./images/start_game.jpg")
+                            input_start_game = html.INPUT(type="image", src="./images/start_game.jpg", Class='btn-inside')
                             input_start_game.bind("click", lambda e, g=game_name: start_game_callback(e, g))
                             form <= input_start_game
                             value = form
                             startable_game_present = True
                         if state == 1:
                             form = html.FORM()
-                            input_stop_game = html.INPUT(type="image", src="./images/stop_game.png")
+                            input_stop_game = html.INPUT(type="image", src="./images/stop_game.png", Class='btn-inside')
                             input_stop_game.bind("click", lambda e, g=game_name: stop_game_callback(e, g))
                             form <= input_stop_game
                             value = form
@@ -1334,20 +1334,20 @@ def my_games(state_name):
 
         if other_state_name != state_name:
 
-            input_change_state = html.INPUT(type="submit", value=other_state_name)
+            input_change_state = html.INPUT(type="submit", value=other_state_name, Class='btn-inside')
             input_change_state.bind("click", lambda _, s=other_state_name: again(s))
             MY_PANEL <= input_change_state
             MY_PANEL <= "    "
 
     MY_PANEL <= html.BR()
     MY_PANEL <= html.BR()
-    input_my_delays = html.INPUT(type="submit", value="Consulter la liste de tous mes retards")
+    input_my_delays = html.INPUT(type="submit", value="Consulter la liste de tous mes retards", Class='btn-inside')
     input_my_delays.bind("click", my_delays)
     MY_PANEL <= input_my_delays
 
     MY_PANEL <= html.BR()
     MY_PANEL <= html.BR()
-    input_my_dropouts = html.INPUT(type="submit", value="Consulter la liste de tous mes abandons")
+    input_my_dropouts = html.INPUT(type="submit", value="Consulter la liste de tous mes abandons", Class='btn-inside')
     input_my_dropouts.bind("click", my_dropouts)
     MY_PANEL <= input_my_dropouts
 

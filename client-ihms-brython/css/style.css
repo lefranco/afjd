@@ -25,13 +25,13 @@ a:visited{
     width: 100%;
     display: inline-block;
     color: #111;
-    background-color: #eeeeee;
+    background-color: #dddddd;
     border-radius: 5px;
     border: 1px solid rgba(0,0,0,0.3);
 }
 
 .btn-menu:hover {
-    background-color: #e3e3e3;
+    background-color: #c2c2c2;
     border-color: rgba(0,0,0,0.5);
 }
 
@@ -39,6 +39,29 @@ a:visited{
     background-color: #CCC;
     border-color: rgba(0,0,0,0.9);
 }
+
+
+
+.btn-inside {
+   /* width: 100%; */
+    display: inline-block;
+    color: #222;
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid rgba(0,0,0,0.3);
+}
+
+.btn-inside:hover {
+    background-color: #f4f4f4;
+    border-color: rgba(0,0,0,0.5);
+}
+
+.btn-inside:active {
+    background-color: #DDD;
+    border-color: rgba(0,0,0,0.9);
+}
+
+
 
 .code_failed{
     color: grey;

@@ -836,7 +836,7 @@ def game_master():
         input_send_welcome_email = ""
         if str(role_id) not in play_low.VARIANT_CONTENT_LOADED['disorder']:
             if pseudo_there:
-                input_send_welcome_email = html.INPUT(type="submit", value="Courriel bienvenue", title="Ceci enverra un courriel de bienvenue au joueur. A utiliser pour un nouveau joueur ou au démarrage de la partie")
+                input_send_welcome_email = html.INPUT(type="submit", value="Courriel bienvenue", title="Ceci enverra un courriel de bienvenue au joueur. A utiliser pour un nouveau joueur ou au démarrage de la partie", Class='btn-inside')
                 input_send_welcome_email.bind("click", lambda e, r=role_id: send_welcome_email_callback(e, r))
         col <= input_send_welcome_email
         row <= col
@@ -860,7 +860,7 @@ def game_master():
         if role_id in needed_roles_list:
             if role_id not in submitted_roles_list:
                 if pseudo_there:
-                    input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel ordres", title="Ceci enverra un courriel pour rappeler au joueur d'entrer des ordres dans le système")
+                    input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel ordres", title="Ceci enverra un courriel pour rappeler au joueur d'entrer des ordres dans le système", Class='btn-inside')
                     input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_orders_email_callback(e, r))
         col <= input_send_recall_email
         row <= col
@@ -870,7 +870,7 @@ def game_master():
         if role_id in needed_roles_list:
             if role_id not in submitted_roles_list:
                 if pseudo_there:
-                    input_civil_disorder = html.INPUT(type="submit", value="Désordre civil", title="Ceci forcera des ordres de désordre civil pour le joueur dans le système")
+                    input_civil_disorder = html.INPUT(type="submit", value="Désordre civil", title="Ceci forcera des ordres de désordre civil pour le joueur dans le système", Class='btn-inside')
                     input_civil_disorder.bind("click", lambda e, r=role_id: civil_disorder_callback(e, r))
         col <= input_civil_disorder
         row <= col
@@ -898,7 +898,7 @@ def game_master():
             if role_id in submitted_roles_list:
                 if role_id not in agreed_now_roles_list and role_id not in agreed_after_roles_list:
                     if pseudo_there:
-                        input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel accord", title="Ceci enverra un courriel demandant au joueur de manifester son accord pour résoudre la partie")
+                        input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel accord", title="Ceci enverra un courriel demandant au joueur de manifester son accord pour résoudre la partie", Class='btn-inside')
                         input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_agreed_email_callback(e, r))
         col <= input_send_recall_email
         row <= col
@@ -909,7 +909,7 @@ def game_master():
             if role_id in submitted_roles_list:
                 if role_id not in agreed_now_roles_list and role_id not in agreed_after_roles_list:
                     if pseudo_there:
-                        input_force_agreement = html.INPUT(type="submit", value="Forcer accord", title="Ceci forcera l'accord pour résoudre du joueur, déclenchant éventuellement la résolution")
+                        input_force_agreement = html.INPUT(type="submit", value="Forcer accord", title="Ceci forcera l'accord pour résoudre du joueur, déclenchant éventuellement la résolution", Class='btn-inside')
                         input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
         col <= input_force_agreement
         row <= col
@@ -935,7 +935,7 @@ def game_master():
             # gm must be able to clear vote
             col2 = html.TD()
             form = html.FORM()
-            clear_vote = html.INPUT(type="submit", value="X")
+            clear_vote = html.INPUT(type="submit", value="X", Class='btn-inside')
             clear_vote.bind("click", lambda ev, r=role_id: clear_vote_callback(ev, r))
             form <= clear_vote
             col2 <= form
@@ -953,7 +953,7 @@ def game_master():
         input_unallocate_role = ""
         if str(role_id) not in play_low.VARIANT_CONTENT_LOADED['disorder']:
             if pseudo_there:
-                input_unallocate_role = html.INPUT(type="submit", value="Retirer le rôle", title="Ceci enlèvera le rôle au joueur")
+                input_unallocate_role = html.INPUT(type="submit", value="Retirer le rôle", title="Ceci enlèvera le rôle au joueur", Class='btn-inside')
                 input_unallocate_role.bind("click", lambda e, p=pseudo_there, r=role_id: unallocate_role_callback(e, p, r))
         col <= input_unallocate_role
         row <= col
@@ -965,20 +965,20 @@ def game_master():
             if not possible_given_role:
 
                 form = html.FORM()
-                input_contact_replacers = html.INPUT(type="submit", value="Contacter les remplaçants", title="Ceci contactera tous les remplaçants déclarés volontaires du site", display='inline')
+                input_contact_replacers = html.INPUT(type="submit", value="Contacter les remplaçants", title="Ceci contactera tous les remplaçants déclarés volontaires du site", display='inline', Class='btn-inside')
                 input_contact_replacers.bind("click", lambda e, r=role_id: send_need_replacement_callback(e, r))
                 form <= input_contact_replacers
 
             elif not (play_low.GAME_PARAMETERS_LOADED['current_state'] == 0 and not play_low.GAME_PARAMETERS_LOADED['manual']):
 
                 form = html.FORM()
-                input_for_role = html.SELECT(type="select-one", value="", display='inline')
+                input_for_role = html.SELECT(type="select-one", value="", display='inline', Class='btn-inside')
                 for play_role_pseudo in sorted(possible_given_role, key=lambda p: p.upper()):
                     option = html.OPTION(play_role_pseudo)
                     input_for_role <= option
                 form <= input_for_role
                 form <= " "
-                input_put_in_role = html.INPUT(type="submit", value="Attribuer le rôle", title="Ceci attribuera le rôle au joueur", display='inline')
+                input_put_in_role = html.INPUT(type="submit", value="Attribuer le rôle", title="Ceci attribuera le rôle au joueur", display='inline', Class='btn-inside')
                 input_put_in_role.bind("click", lambda e, i=input_for_role, r=role_id: allocate_role_callback(e, i, r))
                 form <= input_put_in_role
 
@@ -1012,18 +1012,18 @@ def game_master():
     fieldset = html.FIELDSET()
     legend_deadline_day = html.LEGEND("Jour de la date limite (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
     fieldset <= legend_deadline_day
-    input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day)
+    input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day, Class='btn-inside')
     fieldset <= input_deadline_day
     deadline_form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_deadline_hour = html.LEGEND("Heure de la date limite (hh:mm ou selon les réglages du navigateur)", title="La date limite. Dernière heure du jour pour soumettre les ordres. Après le joueur est en retard.")
     fieldset <= legend_deadline_hour
-    input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour, step=1)
+    input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour, step=1, Class='btn-inside')
     fieldset <= input_deadline_hour
     deadline_form <= fieldset
 
-    input_change_deadline_game = html.INPUT(type="submit", value="Changer la date limite de la partie à cette valeur")
+    input_change_deadline_game = html.INPUT(type="submit", value="Changer la date limite de la partie à cette valeur", Class='btn-inside')
     input_change_deadline_game.bind("click", change_deadline_game_callback)
     deadline_form <= input_change_deadline_game
 
@@ -1031,7 +1031,7 @@ def game_master():
     deadline_form <= html.BR()
     deadline_form <= html.BR()
 
-    input_push_deadline_game = html.INPUT(type="submit", value="Reporter la date limite de 24 heures (une minute pour une partie en direct)")
+    input_push_deadline_game = html.INPUT(type="submit", value="Reporter la date limite de 24 heures (une minute pour une partie en direct)", Class='btn-inside')
     input_push_deadline_game.bind("click", push_deadline_game_callback)
     deadline_form <= input_push_deadline_game
 
@@ -1039,7 +1039,7 @@ def game_master():
     deadline_form <= html.BR()
     deadline_form <= html.BR()
 
-    input_push_deadline_game = html.INPUT(type="submit", value="Mettre la date limite à maintenant")
+    input_push_deadline_game = html.INPUT(type="submit", value="Mettre la date limite à maintenant", Class='btn-inside')
     input_push_deadline_game.bind("click", sync_deadline_game_callback)
     deadline_form <= input_push_deadline_game
 
@@ -1052,7 +1052,7 @@ def game_master():
     debrief_form <= special_legend
 
     debrief_form <= html.BR()
-    input_debrief_game = html.INPUT(type="submit", value="Debrief !")
+    input_debrief_game = html.INPUT(type="submit", value="Debrief !", Class='btn-inside')
     input_debrief_game.bind("click", debrief_game_callback)
     debrief_form <= input_debrief_game
 

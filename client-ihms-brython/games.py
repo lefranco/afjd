@@ -364,14 +364,14 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_name = html.LEGEND("nom", title="Nom de la partie (faites court et simple)")
     fieldset <= legend_name
-    input_name = html.INPUT(type="text", value=name if name is not None else "", size=MAX_LEN_GAME_NAME)
+    input_name = html.INPUT(type="text", value=name if name is not None else "", size=MAX_LEN_GAME_NAME, Class='btn-inside')
     fieldset <= input_name
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_variant = html.LEGEND("variante", title="La variante de la partie")
     fieldset <= legend_variant
-    input_variant = html.SELECT(type="select-one", value="")
+    input_variant = html.SELECT(type="select-one", value="", Class='btn-inside')
 
     for variant_name in config.VARIANT_NAMES_LIST:
         option = html.OPTION(variant_name)
@@ -385,35 +385,35 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_fog = html.LEGEND("brouillard de guerre !", title="Brouillard de guerre : on ne voit que les unités voisines de ses unités et ses centres")
     fieldset <= legend_fog
-    input_fog = html.INPUT(type="checkbox", checked=bool(fog) if fog is not None else False)
+    input_fog = html.INPUT(type="checkbox", checked=bool(fog) if fog is not None else False, Class='btn-inside')
     fieldset <= input_fog
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_archive = html.LEGEND("archive", title="ATTENTION ! Ne cocher que pour une partie pour les archives du site - la partie n'est pas jouée - l'arbitre passe tous les ordres et tout le monde pourra en regarder le déroulement")
     fieldset <= legend_archive
-    input_archive = html.INPUT(type="checkbox", checked=bool(archive) if archive is not None else False)
+    input_archive = html.INPUT(type="checkbox", checked=bool(archive) if archive is not None else False, Class='btn-inside')
     fieldset <= input_archive
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_used_for_elo = html.LEGEND("utilisée pour le élo", title="Partie sérieuse - les résultats de la partie comptent pour le calcul du élo sur le site (forcé à faux pour les parties non standard)")
     fieldset <= legend_used_for_elo
-    input_used_for_elo = html.INPUT(type="checkbox", checked=bool(used_for_elo) if used_for_elo is not None else True)
+    input_used_for_elo = html.INPUT(type="checkbox", checked=bool(used_for_elo) if used_for_elo is not None else True, Class='btn-inside')
     fieldset <= input_used_for_elo
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_manual = html.LEGEND("casting manuel", title="L'arbitre attribue les rôles dans la partie et non le système")
     fieldset <= legend_manual
-    input_manual = html.INPUT(type="checkbox", checked=bool(manual) if manual is not None else False)
+    input_manual = html.INPUT(type="checkbox", checked=bool(manual) if manual is not None else False, Class='btn-inside')
     fieldset <= input_manual
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_fast = html.LEGEND("en direct", title="ATTENTION ! Ne cocher que pour une partie comme sur un plateau - qui se joue en temps réel comme sur un plateau ! Le calcul des dates limites se fait en minutes au lieu d'heures.")
     fieldset <= legend_fast
-    input_fast = html.INPUT(type="checkbox", checked=bool(fast) if fast is not None else False)
+    input_fast = html.INPUT(type="checkbox", checked=bool(fast) if fast is not None else False, Class='btn-inside')
     fieldset <= input_fast
     form <= fieldset
 
@@ -423,21 +423,21 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
     fieldset <= legend_anonymous
-    input_anonymous = html.INPUT(type="checkbox", checked=bool(anonymous) if anonymous is not None else False)
+    input_anonymous = html.INPUT(type="checkbox", checked=bool(anonymous) if anonymous is not None else False, Class='btn-inside')
     fieldset <= input_anonymous
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_nomessage_game = html.LEGEND("pas de message privé", title="Les joueurs ne peuvent pas communiquer (négocier) par message privé avant la fin de la partie")
     fieldset <= legend_nomessage_game
-    input_nomessage_game = html.INPUT(type="checkbox", checked=bool(nomessage_game) if nomessage_game is not None else False)
+    input_nomessage_game = html.INPUT(type="checkbox", checked=bool(nomessage_game) if nomessage_game is not None else False, Class='btn-inside')
     fieldset <= input_nomessage_game
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_nopress_game = html.LEGEND("pas de message public", title="Les joueurs ne peuvent pas communiquer (déclarer) par message public avant la fin de la partie")
     fieldset <= legend_nopress_game
-    input_nopress_game = html.INPUT(type="checkbox", checked=bool(nopress_game) if nopress_game is not None else False)
+    input_nopress_game = html.INPUT(type="checkbox", checked=bool(nopress_game) if nopress_game is not None else False, Class='btn-inside')
     fieldset <= input_nopress_game
     form <= fieldset
 
@@ -451,7 +451,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_scoring = html.LEGEND("scorage", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
     fieldset <= legend_scoring
-    input_scoring = html.SELECT(type="select-one", value="")
+    input_scoring = html.SELECT(type="select-one", value="", Class='btn-inside')
 
     for scoring_name in config.SCORING_CODE_TABLE:
         option = html.OPTION(scoring_name)
@@ -470,21 +470,21 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_deadline_hour = html.LEGEND("heure de date limite", title="Heure GMT de la journée à laquelle placer les dates limites")
     fieldset <= legend_deadline_hour
-    input_deadline_hour = html.INPUT(type="number", value=deadline_hour if deadline_hour is not None else DEFAULT_DEADLINE_TIME)
+    input_deadline_hour = html.INPUT(type="number", value=deadline_hour if deadline_hour is not None else DEFAULT_DEADLINE_TIME, Class='btn-inside')
     fieldset <= input_deadline_hour
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_deadline_sync = html.LEGEND("synchronisation des dates limites", title="Faut-il synchroniser les dates limites à une heure donnée")
     fieldset <= legend_deadline_sync
-    input_deadline_sync = html.INPUT(type="checkbox", checked=bool(deadline_sync) if deadline_sync is not None else True)
+    input_deadline_sync = html.INPUT(type="checkbox", checked=bool(deadline_sync) if deadline_sync is not None else True, Class='btn-inside')
     fieldset <= input_deadline_sync
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre d'heures (minutes pour une partie en direct) alloués avant fin de la grâce")
     fieldset <= legend_grace_duration
-    input_grace_duration = html.INPUT(type="number", value=grace_duration if grace_duration is not None else DEFAULT_GRACE_DURATION)
+    input_grace_duration = html.INPUT(type="number", value=grace_duration if grace_duration is not None else DEFAULT_GRACE_DURATION, Class='btn-inside')
     fieldset <= input_grace_duration
     form <= fieldset
 
@@ -493,14 +493,14 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite de mouvements")
     fieldset <= legend_speed_moves
-    input_speed_moves = html.INPUT(type="number", value=speed_moves if speed_moves is not None else DEFAULT_SPEED_MOVES)
+    input_speed_moves = html.INPUT(type="number", value=speed_moves if speed_moves is not None else DEFAULT_SPEED_MOVES, Class='btn-inside')
     fieldset <= input_speed_moves
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
     fieldset <= legend_cd_possible_moves
-    input_cd_possible_moves = html.INPUT(type="checkbox", checked=bool(cd_possible_moves) if cd_possible_moves is not None else False)
+    input_cd_possible_moves = html.INPUT(type="checkbox", checked=bool(cd_possible_moves) if cd_possible_moves is not None else False, Class='btn-inside')
     fieldset <= input_cd_possible_moves
     form <= fieldset
 
@@ -509,14 +509,14 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite de retraites")
     fieldset <= legend_speed_retreats
-    input_speed_retreats = html.INPUT(type="number", value=speed_retreats if speed_retreats is not None else DEFAULT_SPEED_OTHERS)
+    input_speed_retreats = html.INPUT(type="number", value=speed_retreats if speed_retreats is not None else DEFAULT_SPEED_OTHERS, Class='btn-inside')
     fieldset <= input_speed_retreats
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
     fieldset <= legend_cd_possible_retreats
-    input_cd_possible_retreats = html.INPUT(type="checkbox", checked=bool(cd_possible_retreats) if cd_possible_retreats is not None else False)
+    input_cd_possible_retreats = html.INPUT(type="checkbox", checked=bool(cd_possible_retreats) if cd_possible_retreats is not None else False, Class='btn-inside')
     fieldset <= input_cd_possible_retreats
     form <= fieldset
 
@@ -525,7 +525,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite d'ajustements")
     fieldset <= legend_speed_adjustments
-    input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments if speed_adjustments is not None else DEFAULT_SPEED_OTHERS)
+    input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments if speed_adjustments is not None else DEFAULT_SPEED_OTHERS, Class='btn-inside')
     fieldset <= input_speed_adjustments
     form <= fieldset
 
@@ -534,7 +534,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_cd_possible_builds = html.LEGEND("DC possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
     fieldset <= legend_cd_possible_builds
-    input_cd_possible_builds = html.INPUT(type="checkbox", checked=bool(cd_possible_builds) if cd_possible_builds is not None else False)
+    input_cd_possible_builds = html.INPUT(type="checkbox", checked=bool(cd_possible_builds) if cd_possible_builds is not None else False, Class='btn-inside')
     fieldset <= input_cd_possible_builds
     form <= fieldset
 
@@ -543,7 +543,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_play_weekend = html.LEGEND("jeu weekend", title="La date limite peut elle se trouver en fin de semaine")
     fieldset <= legend_play_weekend
-    input_play_weekend = html.INPUT(type="checkbox", checked=bool(play_weekend) if play_weekend is not None else False)
+    input_play_weekend = html.INPUT(type="checkbox", checked=bool(play_weekend) if play_weekend is not None else False, Class='btn-inside')
     fieldset <= input_play_weekend
     form <= fieldset
 
@@ -553,21 +553,21 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
     fieldset <= legend_access_restriction_reliability
-    input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability if access_restriction_reliability is not None else "")
+    input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability if access_restriction_reliability is not None else "", Class='btn-inside')
     fieldset <= input_access_restriction_reliability
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_access_restriction_regularity = html.LEGEND("restriction régularité", title="Sélectionne les joueurs sur leur régularité")
     fieldset <= legend_access_restriction_regularity
-    input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity if access_restriction_regularity is not None else "")
+    input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity if access_restriction_regularity is not None else "", Class='btn-inside')
     fieldset <= input_access_restriction_regularity
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_access_restriction_performance = html.LEGEND("restriction performance", title="Sélectionne les joueurs sur leur niveau de performance")
     fieldset <= legend_access_restriction_performance
-    input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance if access_restriction_performance is not None else "")
+    input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance if access_restriction_performance is not None else "", Class='btn-inside')
     fieldset <= input_access_restriction_performance
     form <= fieldset
 
@@ -577,7 +577,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_nb_max_cycles_to_play = html.LEGEND("maximum de cycles (années)", title="Combien d'années à jouer au plus ?")
     fieldset <= legend_nb_max_cycles_to_play
-    input_nb_max_cycles_to_play = html.INPUT(type="number", value=nb_max_cycles_to_play if nb_max_cycles_to_play is not None else DEFAULT_NB_CYCLES)
+    input_nb_max_cycles_to_play = html.INPUT(type="number", value=nb_max_cycles_to_play if nb_max_cycles_to_play is not None else DEFAULT_NB_CYCLES, Class='btn-inside')
     fieldset <= input_nb_max_cycles_to_play
     form <= fieldset
 
@@ -587,13 +587,13 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_just_play_game = html.LEGEND("Je veux juste jouer la partie", title="L'administrateur du site sera mis arbitre")
     fieldset <= legend_just_play_game
-    input_just_play_game = html.INPUT(type="checkbox", checked=False)
+    input_just_play_game = html.INPUT(type="checkbox", checked=False, Class='btn-inside')
     fieldset <= input_just_play_game
     form <= fieldset
 
     form <= html.BR()
 
-    input_create_game = html.INPUT(type="submit", value="Créer la partie")
+    input_create_game = html.INPUT(type="submit", value="Créer la partie", Class='btn-inside')
     input_create_game.bind("click", create_game_callback)
     form <= input_create_game
 
@@ -703,13 +703,13 @@ def change_anonymity_game():
     fieldset = html.FIELDSET()
     legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
     fieldset <= legend_anonymous
-    input_anonymous = html.INPUT(type="checkbox", checked=anonymity_loaded)
+    input_anonymous = html.INPUT(type="checkbox", checked=anonymity_loaded, Class='btn-inside')
     fieldset <= input_anonymous
     form <= fieldset
 
     form <= html.BR()
 
-    input_change_anonymity_game = html.INPUT(type="submit", value="Changer l'anonymat de la partie")
+    input_change_anonymity_game = html.INPUT(type="submit", value="Changer l'anonymat de la partie", Class='btn-inside')
     input_change_anonymity_game.bind("click", change_anonymity_games_callback)
     form <= input_change_anonymity_game
 
@@ -823,7 +823,7 @@ def change_access_messages_game():
     fieldset = html.FIELDSET()
     legend_nopress = html.LEGEND("pas de message public", title="Les joueurs ne peuvent pas communiquer (déclarer) par message public avant la fin de la partie")
     fieldset <= legend_nopress
-    input_nopress = html.INPUT(type="checkbox", checked=access_nopress_loaded)
+    input_nopress = html.INPUT(type="checkbox", checked=access_nopress_loaded, Class='btn-inside')
     fieldset <= input_nopress
     form <= fieldset
 
@@ -832,13 +832,13 @@ def change_access_messages_game():
     fieldset = html.FIELDSET()
     legend_nomessage = html.LEGEND("pas de message privé", title="Les joueurs ne peuvent pas communiquer (négocier) par message privé avant la fin de la partie")
     fieldset <= legend_nomessage
-    input_nomessage = html.INPUT(type="checkbox", checked=access_nomessage_loaded)
+    input_nomessage = html.INPUT(type="checkbox", checked=access_nomessage_loaded, Class='btn-inside')
     fieldset <= input_nomessage
     form <= fieldset
 
     form <= html.BR()
 
-    input_change_message_game = html.INPUT(type="submit", value="Changer l'accès aux messages publics et privés de la partie")
+    input_change_message_game = html.INPUT(type="submit", value="Changer l'accès aux messages publics et privés de la partie", Class='btn-inside')
     input_change_message_game.bind("click", change_access_messages_games_callback)
     form <= input_change_message_game
 
@@ -956,7 +956,7 @@ def change_description_game():
 
     form <= html.BR()
 
-    input_change_description_game = html.INPUT(type="submit", value="Changer la description de la partie")
+    input_change_description_game = html.INPUT(type="submit", value="Changer la description de la partie", Class='btn-inside')
     input_change_description_game.bind("click", change_description_game_callback)
     form <= input_change_description_game
 
@@ -1067,7 +1067,7 @@ def change_scoring_game():
     fieldset = html.FIELDSET()
     legend_scoring = html.LEGEND("scoring", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
     fieldset <= legend_scoring
-    input_scoring = html.SELECT(type="select-one", value="")
+    input_scoring = html.SELECT(type="select-one", value="", Class='btn-inside')
 
     for scoring_name in config.SCORING_CODE_TABLE:
         option = html.OPTION(scoring_name)
@@ -1080,7 +1080,7 @@ def change_scoring_game():
 
     form <= html.BR()
 
-    input_change_scoring_game = html.INPUT(type="submit", value="Changer le scorage de la partie")
+    input_change_scoring_game = html.INPUT(type="submit", value="Changer le scorage de la partie", Class='btn-inside')
     input_change_scoring_game.bind("click", change_scoring_game_callback)
     form <= input_change_scoring_game
 
@@ -1201,27 +1201,27 @@ def change_access_parameters_game():
     fieldset = html.FIELDSET()
     legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
     fieldset <= legend_access_restriction_reliability
-    input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability_loaded)
+    input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability_loaded, Class='btn-inside')
     fieldset <= input_access_restriction_reliability
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_access_restriction_regularity = html.LEGEND("restriction régularité", title="Sélectionne les joueurs sur leur régularité")
     fieldset <= legend_access_restriction_regularity
-    input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity_loaded)
+    input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity_loaded, Class='btn-inside')
     fieldset <= input_access_restriction_regularity
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_access_restriction_performance = html.LEGEND("restriction performance", title="Sélectionne les joueurs sur leur niveau de performance")
     fieldset <= legend_access_restriction_performance
-    input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance_loaded)
+    input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance_loaded, Class='btn-inside')
     fieldset <= input_access_restriction_performance
     form <= fieldset
 
     form <= html.BR()
 
-    input_change_access_game = html.INPUT(type="submit", value="Changer les paramètres d'accès à la partie")
+    input_change_access_game = html.INPUT(type="submit", value="Changer les paramètres d'accès à la partie", Class='btn-inside')
     input_change_access_game.bind("click", change_access_parameters_game_callback)
     form <= input_change_access_game
 
@@ -1402,21 +1402,21 @@ def change_pace_parameters_game():
     fieldset = html.FIELDSET()
     legend_deadline_hour = html.LEGEND("heure de date limite", title="Heure GMT de la journée à laquelle placer les dates limites")
     fieldset <= legend_deadline_hour
-    input_deadline_hour = html.INPUT(type="number", value=deadline_hour_loaded)
+    input_deadline_hour = html.INPUT(type="number", value=deadline_hour_loaded, Class='btn-inside')
     fieldset <= input_deadline_hour
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_deadline_sync = html.LEGEND("synchronisation des date limites", title="Faut-il synchroniser les dates limites à une heure donnée")
     fieldset <= legend_deadline_sync
-    input_deadline_sync = html.INPUT(type="checkbox", checked=deadline_sync_loaded)
+    input_deadline_sync = html.INPUT(type="checkbox", checked=deadline_sync_loaded, Class='btn-inside')
     fieldset <= input_deadline_sync
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre d'heures (minutes pour une partie en direct) alloués avant fin de la grâce")
     fieldset <= legend_grace_duration
-    input_grace_duration = html.INPUT(type="number", value=grace_duration_loaded)
+    input_grace_duration = html.INPUT(type="number", value=grace_duration_loaded, Class='btn-inside')
     fieldset <= input_grace_duration
     form <= fieldset
 
@@ -1425,14 +1425,14 @@ def change_pace_parameters_game():
     fieldset = html.FIELDSET()
     legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite de mouvements")
     fieldset <= legend_speed_moves
-    input_speed_moves = html.INPUT(type="number", value=speed_moves_loaded)
+    input_speed_moves = html.INPUT(type="number", value=speed_moves_loaded, Class='btn-inside')
     fieldset <= input_speed_moves
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
     fieldset <= legend_cd_possible_moves
-    input_cd_possible_moves = html.INPUT(type="checkbox", checked=cd_possible_moves_loaded)
+    input_cd_possible_moves = html.INPUT(type="checkbox", checked=cd_possible_moves_loaded, Class='btn-inside')
     fieldset <= input_cd_possible_moves
     form <= fieldset
 
@@ -1441,14 +1441,14 @@ def change_pace_parameters_game():
     fieldset = html.FIELDSET()
     legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite de retraites")
     fieldset <= legend_speed_retreats
-    input_speed_retreats = html.INPUT(type="number", value=speed_retreats_loaded)
+    input_speed_retreats = html.INPUT(type="number", value=speed_retreats_loaded, Class='btn-inside')
     fieldset <= input_speed_retreats
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
     fieldset <= legend_cd_possible_retreats
-    input_cd_possible_retreats = html.INPUT(type="checkbox", checked=cd_possible_retreats_loaded)
+    input_cd_possible_retreats = html.INPUT(type="checkbox", checked=cd_possible_retreats_loaded, Class='btn-inside')
     fieldset <= input_cd_possible_retreats
     form <= fieldset
 
@@ -1457,7 +1457,7 @@ def change_pace_parameters_game():
     fieldset = html.FIELDSET()
     legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite d'ajustements")
     fieldset <= legend_speed_adjustments
-    input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments_loaded)
+    input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments_loaded, Class='btn-inside')
     fieldset <= input_speed_adjustments
     form <= fieldset
 
@@ -1466,7 +1466,7 @@ def change_pace_parameters_game():
     fieldset = html.FIELDSET()
     legend_cd_possible_builds = html.LEGEND("DC possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
     fieldset <= legend_cd_possible_builds
-    input_cd_possible_builds = html.INPUT(type="checkbox", checked=cd_possible_builds_loaded)
+    input_cd_possible_builds = html.INPUT(type="checkbox", checked=cd_possible_builds_loaded, Class='btn-inside')
     fieldset <= input_cd_possible_builds
     form <= fieldset
 
@@ -1475,13 +1475,13 @@ def change_pace_parameters_game():
     fieldset = html.FIELDSET()
     legend_play_weekend = html.LEGEND("jeu weekend", title="La date limite peut elle se trouver en fin de semaine")
     fieldset <= legend_play_weekend
-    input_play_weekend = html.INPUT(type="checkbox", checked=play_weekend_loaded)
+    input_play_weekend = html.INPUT(type="checkbox", checked=play_weekend_loaded, Class='btn-inside')
     fieldset <= input_play_weekend
     form <= fieldset
 
     form <= html.BR()
 
-    input_change_pace_game = html.INPUT(type="submit", value="Changer le rythme de la partie")
+    input_change_pace_game = html.INPUT(type="submit", value="Changer le rythme de la partie", Class='btn-inside')
     input_change_pace_game.bind("click", change_pace_parameters_game_callback)
     form <= input_change_pace_game
 
@@ -1612,22 +1612,22 @@ def change_state_game():
     fieldset <= legend_state
 
     if state_loaded == 0:
-        input_start_game = html.INPUT(type="submit", value="Démarrer la partie")
+        input_start_game = html.INPUT(type="submit", value="Démarrer la partie", Class='btn-inside')
         input_start_game.bind("click", lambda e, s=1: change_state_game_callback(e, None, s))
         form <= input_start_game
 
     if state_loaded == 1:
-        input_stop_game = html.INPUT(type="submit", value="Arrêter la partie")
+        input_stop_game = html.INPUT(type="submit", value="Arrêter la partie", Class='btn-inside')
         input_stop_game.bind("click", lambda e, s=2: change_state_game_callback_confirm(e, s))
         form <= input_stop_game
 
     if state_loaded == 2:
-        input_stop_game = html.INPUT(type="submit", value="Distinguer la partie")
+        input_stop_game = html.INPUT(type="submit", value="Distinguer la partie", Class='btn-inside')
         input_stop_game.bind("click", lambda e, s=3: change_state_game_callback(e, None, s))
         form <= input_stop_game
 
     if state_loaded == 3:
-        input_stop_game = html.INPUT(type="submit", value="Ne plus distinguer la partie")
+        input_stop_game = html.INPUT(type="submit", value="Ne plus distinguer la partie", Class='btn-inside')
         input_stop_game.bind("click", lambda e, s=2: change_state_game_callback(e, None, s))
         form <= input_stop_game
 
@@ -1783,7 +1783,7 @@ def move_players_in_game():
     # not the gm of the game
     possible_incomers -= set([game_master_id])
 
-    input_incomer = html.SELECT(type="select-one", value="")
+    input_incomer = html.SELECT(type="select-one", value="", Class='btn-inside')
     for play_pseudo in sorted(possible_incomers, key=lambda pi: pi.upper()):
         option = html.OPTION(play_pseudo)
         input_incomer <= option
@@ -1793,7 +1793,7 @@ def move_players_in_game():
 
     form <= html.BR()
 
-    input_put_in_game = html.INPUT(type="submit", value="Mettre dans la partie sélectionnée")
+    input_put_in_game = html.INPUT(type="submit", value="Mettre dans la partie sélectionnée", Class='btn-inside')
     input_put_in_game.bind("click", put_in_game_callback)
     form <= input_put_in_game
 
@@ -1824,7 +1824,7 @@ def move_players_in_game():
     # players can come out are the ones not assigned
     possible_outcomers = players_allocated_list
 
-    input_outcomer = html.SELECT(type="select-one", value="")
+    input_outcomer = html.SELECT(type="select-one", value="", Class='btn-inside')
     for play_pseudo in sorted(possible_outcomers):
         option = html.OPTION(play_pseudo)
         input_outcomer <= option
@@ -1834,7 +1834,7 @@ def move_players_in_game():
 
     form <= html.BR()
 
-    input_remove_from_game = html.INPUT(type="submit", value="Retirer de la partie sélectionnée")
+    input_remove_from_game = html.INPUT(type="submit", value="Retirer de la partie sélectionnée", Class='btn-inside')
     input_remove_from_game.bind("click", remove_from_game_callback)
     form <= input_remove_from_game
 
@@ -1908,7 +1908,7 @@ def delete_game():
 
     form = html.FORM()
 
-    input_delete_game = html.INPUT(type="submit", value="Supprimer la partie")
+    input_delete_game = html.INPUT(type="submit", value="Supprimer la partie", Class='btn-inside')
     input_delete_game.bind("click", delete_game_callback_confirm)
     form <= input_delete_game
 

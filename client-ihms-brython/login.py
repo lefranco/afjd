@@ -241,7 +241,7 @@ def login():
     fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("Pseudo", title="Attention la casse est importante")
     fieldset <= legend_pseudo
-    input_pseudo = html.INPUT(type="text", value=proposed_pseudo)
+    input_pseudo = html.INPUT(type="text", value=proposed_pseudo, Class='btn-inside')
     fieldset <= input_pseudo
     form <= fieldset
     form <= html.BR()
@@ -249,7 +249,7 @@ def login():
     fieldset = html.FIELDSET()
     legend_password = html.LEGEND("Mot de passe", title="Notez le dans un coin !")
     fieldset <= legend_password
-    input_password = html.INPUT(type="password", value="")
+    input_password = html.INPUT(type="password", value="", Class='btn-inside')
     fieldset <= input_password
     form <= fieldset
     form <= html.BR()
@@ -257,7 +257,7 @@ def login():
     # detect caps lock
     input_password.bind("keypress", detect_caps_lock_callback)
 
-    input_login = html.INPUT(type="submit", value="Connexion")
+    input_login = html.INPUT(type="submit", value="Connexion", Class='btn-inside')
     input_login.bind("click", login_callback)
     form <= input_login
     form <= html.BR()
@@ -265,7 +265,7 @@ def login():
 
     # --
 
-    input_forgot = html.INPUT(type="submit", value="Mot de passe oublié")
+    input_forgot = html.INPUT(type="submit", value="Mot de passe oublié", Class='btn-inside')
     input_forgot.bind("click", forgot_callback)
     form <= input_forgot
     form <= html.BR()
@@ -274,7 +274,7 @@ def login():
     # --
 
     if 'PSEUDO' in storage:
-        input_logout = html.INPUT(type="submit", value="Déconnexion")
+        input_logout = html.INPUT(type="submit", value="Déconnexion", Class='btn-inside')
         input_logout.bind("click", logout_callback)
         form <= input_logout
         form <= html.BR()
@@ -284,7 +284,7 @@ def login():
 
     if 'PSEUDO' not in storage:
         # shortcut to create account
-        input_create_account = html.INPUT(type="submit", value="Je n'ai pas de compte, je veux le créer !")
+        input_create_account = html.INPUT(type="submit", value="Je n'ai pas de compte, je veux le créer !", Class='btn-inside')
         input_create_account.bind("click", create_account_callback)
         form <= input_create_account
         form <= html.BR()
