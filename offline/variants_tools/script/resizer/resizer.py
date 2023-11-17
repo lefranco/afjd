@@ -45,6 +45,10 @@ def main() -> None:
     for zone_areas_data in json_data['zone_areas'].values():
         zone_areas_data['area'] = [[round(x*scale), round(y*scale)] for x,y in zone_areas_data['area']]
 
+    map_data = json_data["map"]
+    map_data["width"] = round(map_data["width"] * scale)
+    map_data["height"] = round(map_data["height"] * scale)
+
     output = json.dumps(json_data, indent=4, ensure_ascii=False)
     with open(json_output, 'w', encoding='utf-8') as file_ptr:
         file_ptr.write(output)
