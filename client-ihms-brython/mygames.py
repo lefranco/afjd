@@ -24,13 +24,13 @@ MY_PANEL = html.DIV(id="mygames")
 MY_PANEL.attrs['style'] = 'display: table-row'
 
 
-def get_ready_games():
-    """ get_ready_games : returns empty list if error or no game"""
+def get_incomplete_games():
+    """ get_incomplete_games : returns empty list if error or no game"""
 
-    ready_games_list = []
+    incomplete_games_list = []
 
     def reply_callback(req):
-        nonlocal ready_games_list
+        nonlocal incomplete_games_list
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -41,18 +41,18 @@ def get_ready_games():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        ready_games_list = req_result
+        incomplete_games_list = req_result
 
     json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games-ready"
+    url = f"{host}:{port}/games-incomplete"
 
-    # getting ready games list : no need for token
+    # getting incomplete games list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    return ready_games_list
+    return incomplete_games_list
 
 
 def get_all_roles_allocated_to_player():
@@ -827,7 +827,7 @@ def my_games(state_name):
 
     suffering_games = []
 
-    ready_games_list = get_ready_games()
+    incomplete_games_list = get_incomplete_games()
     # there can be no message (if no game of failed to load)
 
     for game_id_str, data in games_dict.items():
@@ -846,7 +846,7 @@ def my_games(state_name):
             continue
 
         # game must not need players
-        if game_id not in ready_games_list:
+        if game_id in incomplete_games_list:
             continue
 
         game_name = data['name']

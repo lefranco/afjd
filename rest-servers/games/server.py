@@ -1966,17 +1966,17 @@ class AllocationPlayer2Ressource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/games-ready')
-class GamesReadyRessource(flask_restful.Resource):  # type: ignore
-    """ GamesReadyRessource """
+@API.resource('/games-incomplete')
+class GamesIncompleteRessource(flask_restful.Resource):  # type: ignore
+    """ GamesIncompleteRessource """
 
     def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:
         """
-        Gets all  games that have all players
+        Gets all  games that do not have all players
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/games-ready - GET - get getting all games ready")
+        mylogger.LOGGER.info("/games-incomplete - GET - get getting all games not ready")
 
         sql_executor = database.SqlExecutor()
         full_games_data = sql_executor.execute("select games.identifier, count(*) as filled_count, capacities.value from games join allocations on allocations.game_id=games.identifier join capacities on capacities.game_id=games.identifier group by identifier", need_result=True)
@@ -1984,7 +1984,7 @@ class GamesReadyRessource(flask_restful.Resource):  # type: ignore
 
         # keep only the ones where no role is missing
         assert full_games_data is not None
-        data = [tr[0] for tr in full_games_data if tr[1] >= tr[2]]
+        data = [tr[0] for tr in full_games_data if tr[1] < tr[2]]
 
         return data, 200
 
