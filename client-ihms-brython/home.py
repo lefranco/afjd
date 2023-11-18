@@ -698,7 +698,7 @@ def live_chat():
         thead <= col
     chats_table <= thead
 
-    for time_stamp, author, content in chats:
+    for time_stamp, author, content in sorted(chats, key=lambda t:t[0], reverse=True):
 
         row = html.TR()
 
