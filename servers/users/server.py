@@ -47,7 +47,7 @@ LOGIN_TOKEN_DURATION_DAY = 20
 RESCUE_TOKEN_DURATION_MIN = 15
 
 # how long token is valid - beware they say no more than several hours...
-USURP_TOKEN_DURATION_MIN = 10
+USURP_TOKEN_DURATION_MIN = 60
 
 # Seems JWT variable is not used in this implementation but could be later on...
 JWT = flask_jwt_extended.JWTManager(APP)
