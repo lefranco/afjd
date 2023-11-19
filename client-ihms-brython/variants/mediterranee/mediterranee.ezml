@@ -13,66 +13,73 @@ _
 $ Particularités de la carte
 
 
-(Atlantic Sea)
-Cette zone est hors-jeu et inaccessible
+(La mer Atlantique)
+La mer Atlantique est hors-jeu et inaccessible. Du fait de la mise hors-jeu de la Mer Atlantique, les deux régions suivantes sont en fait des terres :
+- Gaul (Gau)
+- Lusitania (Lus)
 
-(Gaul et Lusitania)
-Du fait de la mise hors-jeu de la Mer Atlantique, ces deux régions sont en fait des terres
 
-(Iles)
+(Les îles)
 Ce sont des côtes qui peuvent être occupées pas des armées ou des flottes :
-- Sardinia
-- Corsica
-- Sicilia
-- Crete
-- Cyprus
+- Sardinia (Sad)
+- Corsica (Cor)
+- Sicilia (Sic)
+- Crete (Cre)
+- Cyprus (Cyp)
 
 
 (Lien fléchés - détroits)
-L'accès est possible, pour une flotte ou une armée entre:
-- Saguntum et Mauretania
-- Neapolis et Sicilia
-- Corsica et Sardinia
+L'accès est possible, pour une flotte ou une armée entre :
+- Saguntum (Sag) et Mauretania (Mau)
+- Neapolis (Nea) et Sicilia (Sic)
+- Corsica (Cor) et Sardinia (Sad)
 
 
-(Byzantium)
-Cette côte fonctionne de la même manière que Constantinople sur la carte standard.
+(Byzance)
+La côte Byzantium (Byz) fonctionne de la même manière que Constantinople sur la carte standard.
 
 (Baléares)
 Dans la version officielle, les Baléares dévient de la règle en étant à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Ici, les Baléares sont une mer et sont donc inaccessibles aux armées. *C'est la seule différence avec la version officielle*
 
 (Intersection dans les hautes mers)
 L'accès est possible, pour une flotte, de n'importe quelle des mers suivantes vers une autre :
-- Ausonian Sea
-- Messenian Sea
-- Gulf of Tacape
-- Libyan Sea
+- Ausonian Sea (Aus)
+- Messenian Sea (Mes)
+- Gulf of Tacape (GoT)
+- Libyan Sea (Lyb)
 
 
 (Les Diokos)
-Une flotte peut passer de  Aegean Sea à Athens et ensuite en Ionian Sea.
+Une flotte peut passer de  Aegean Sea (Aeg) à Athens (Ath) et ensuite en Ionian Sea (Ion).
 
 (Le Delta du Nil)
 L'accès est possible, pour une unité, de n'importe quelle des régions suivantes vers une autre :
-- Alexandria
-- Thebes
-- Sinai 
-- Gulf of Pelusium (flotte seulement)
+- Alexandria (Ale)
+- Thebes (The)
+- Sinai (Sii)
+- Gulf of Pelusium (GoP) - flotte seulement
 
 
-(Memphis)
-C'est une côte (par le Nil)
+(Le cas particulier de Memphis)
+Memphis (Mem) est une côte . Pour Memphis, le Nil joue le rôle d'une mer.
+Une unité à Memphis donc peut aller ou venir de :
+- Alexandria (Ale)
+- Cyrene (Cyr) - armée seulement
+- Marmarica (Mar) - armée seulement
+- Bayuda (Bay) - armée seulement
+- Thebes (The)
+
 
 (Le canal de Suez)
 L'accès est possible, pour une flotte  entre :
-- Red Sea et Gulf of Pelusimu
+- Red Sea (Red) et Gulf of Pelusimu (GoP)
 
 
 _
 $ Datation
 
-La partie commence en *1*. 
-Chaque tour représente *1* années 
+La partie commence en *1*.
+Chaque tour représente *1* années
 "en temps réel".
 
 _
@@ -190,7 +197,7 @@ Constructions sur les centres de départ.
 
 
 _
-$ Source 
+$ Source
 
 [[https://www.vdiplomacy.com/variants.php?variantID=9]]
 .
