@@ -276,6 +276,7 @@ static void creeconstructions(_PAYS *pays, int souhaites) {
 	_ZONE *zonedest;
 	_CENTREDEPART *p, *centredepart;
 	_UNITE *q, *unite;
+	_CENTRE *r, *centre;
 
 	/* on va se limiter a des armees */
 	typeajustement = AJOUTE;
@@ -286,25 +287,41 @@ static void creeconstructions(_PAYS *pays, int souhaites) {
 
 		for (zonedest = ZONE.t; zonedest < ZONE.t + ZONE.n; zonedest++) {
 
-			/* la zone doit etre un centre */
-			centredepart = NULL;
-			for (p = CENTREDEPART.t; p < CENTREDEPART.t + CENTREDEPART.n; p++) {
-				if(p->centre->region == zonedest->region) {
-					centredepart = p;
+			/* la zone doit etre un centre de depart*/
+			centre = NULL;
+			for (r = CENTRE.t; r < CENTRE.t + CENTRE.n; r++) {
+				if(r->region == zonedest->region) {
+					centre = r;
 					break;
 				}
 			}
-			if(centredepart == NULL) {
+			if(centre == NULL) {
 				continue;
 			}
 
-			/* la zone doit etre un centre du pays */
-			if (centredepart->pays != pays) {
-				continue;
+			/* la zone doit etre un centre de depart du pays sauf expansionisme */
+			if(!OPTIONE) {
+
+				/* la zone doit etre un centre de depart*/
+				centredepart = NULL;
+				for (p = CENTREDEPART.t; p < CENTREDEPART.t + CENTREDEPART.n; p++) {
+					if(p->centre == centre) {
+						centredepart = p;
+						break;
+					}
+				}
+				if(centredepart == NULL) {
+					continue;
+				}
+
+				/* Standard rules : we worry about the center being a start center */
+				if (centredepart->pays != pays) {
+					continue;
+				}
 			}
 
-			/* la zone doit etre possede */
-			if (!possede(pays, centredepart->centre)) {
+			/* le centre doit etre possede */
+			if (!possede(pays, centre)) {
 				continue;
 			}
 
