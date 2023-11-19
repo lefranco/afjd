@@ -50,6 +50,7 @@ class Ezml:
         def fail(mess: str) -> None:
             """ fail """
             print(f"ERROR: {mess} line {num_line}")
+            #  assert False
 
         #  def debug(mess: str) -> None:
             #  """ debug """
@@ -140,7 +141,7 @@ class Ezml:
             _ = stack.pop()
             cur_block = stack[-1]
 
-        def stack_push(name: str, child, attributes, must_push: bool, must_update: bool) -> None:
+        def stack_push(name: str, child, attributes, must_push: bool, must_update: bool, no_inline: bool = False) -> None:
             """ stack_pop """
 
             nonlocal cur_block
@@ -148,7 +149,10 @@ class Ezml:
             new_block = Block(name)
             if child:
                 if isinstance(child, str):
-                    inline_stuff(new_block, child)
+                    if no_inline:
+                        new_block.childs.append(child)
+                    else:
+                        inline_stuff(new_block, child)
                 else:
                     new_block.childs.append(child)
             if attributes:
@@ -429,11 +433,11 @@ class Ezml:
                     if item == '[[':
                         # link
                         attributes = {'href': link, 'target': "_blank"}
-                        stack_push('<a>', text, attributes, False, False)
+                        stack_push('<a>', text, attributes, False, False, True)
                     else:
                         # image
                         attributes = {'src': f"{link}", 'alt': f"{text}"}
-                        stack_push('<img>', None, attributes, False, False)
+                        stack_push('<img>', None, attributes, False, False, True)
                     inline_stuff(cur_block, after)
                     continue
 
