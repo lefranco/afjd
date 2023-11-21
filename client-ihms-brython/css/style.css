@@ -139,13 +139,15 @@ a:visited{
   border: 1px solid #333;
   box-shadow: 8px 8px 5px #444;
   padding: 8px 12px;
-  background-image: linear-gradient(180deg, #98E4ED, #83B9CC 40%, #EDE585);
+  background-image: linear-gradient(180deg, #989898, #838383 40%, #EDEDED);
 }
 
 
 /* Chat sample */
 .chat_sample {
-  color: red;
+  color: blue;
+  font-family: Verdana;
+  font-weight: bold;
 }
 
 /* faq, whynot, tip */
@@ -212,7 +214,7 @@ legend{
 /* color of austria in diplomania map EDA89E */
 .important{
     font-weight: bold;
-    background-color: #EDA89E;
+    background-color: #A8EDA5;
 }
 
 /* xxx */
@@ -250,25 +252,25 @@ figure {
 table{
     border: 1px solid black;
     border-collapse: collapse;
-    background-color: #838383;
+    background-color: #9C9C9C;
 }
 
 tr{
     border: 1px solid black;
-    background-color: #838383;
+    background-color: #9C9C9C;
 }
 
 td{
     font-size: 12px;
     border: 1px solid black;
-    background-color: #838383;
+    background-color: #9C9C9C;
 }
 
 thead{
     font-weight:bold;
     border: 1px solid black;
     text-align: center;
-    background-color: #838383;
+    background-color: #9C9C9C;
 }
 
 fieldset{

@@ -91,36 +91,6 @@ def get_teaser_content():
     return teaser_content
 
 
-def get_chat_messages():
-    """ get_chat_messages """
-
-    chat_messages = {}
-
-    def reply_callback(req):
-        nonlocal chat_messages
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des messages chat : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des messages chat : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        chat_messages = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/chats"
-
-    # get chats : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return chat_messages
-
-
 def formatted_news(news_content_loaded, admin, class_):
     """ formatted_news """
 
