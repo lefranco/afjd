@@ -19,9 +19,10 @@ import play
 import allgames
 import games
 
-
-MY_PANEL = html.DIV(id="mygames")
-MY_PANEL.attrs['style'] = 'display: table-row'
+MY_PANEL = html.DIV()
+MY_SUB_PANEL = html.DIV(id="page")
+MY_SUB_PANEL.attrs['style'] = 'display: table-row'
+MY_PANEL <= MY_SUB_PANEL
 
 
 def get_incomplete_games():
@@ -413,15 +414,15 @@ def my_delays(ev):  # pylint: disable=invalid-name
 
         delays_table <= row
 
-    MY_PANEL.clear()
-    MY_PANEL <= html.H2("Tous mes retards sur toutes mes parties")
-    MY_PANEL <= delays_table
-    MY_PANEL <= html.BR()
+    MY_SUB_PANEL.clear()
+    MY_SUB_PANEL <= html.H2("Tous mes retards sur toutes mes parties")
+    MY_SUB_PANEL <= delays_table
+    MY_SUB_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) a réalisé la transition 'pas d'accord pour la résolution' -> 'd'accord pour résoudre' après la date limite", Class='note')
-    MY_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) a réalisé la transition 'pas d'accord pour la résolution' -> 'd'accord pour résoudre' après la date limite", Class='note')
+    MY_SUB_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
+    MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
 
 
 def get_my_dropouts():
@@ -591,10 +592,10 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
 
         dropouts_table <= row
 
-    MY_PANEL.clear()
-    MY_PANEL <= html.H2("Tous mes abandons sur toutes mes parties")
-    MY_PANEL <= dropouts_table
-    MY_PANEL <= html.BR()
+    MY_SUB_PANEL.clear()
+    MY_SUB_PANEL <= html.H2("Tous mes abandons sur toutes mes parties")
+    MY_SUB_PANEL <= dropouts_table
+    MY_SUB_PANEL <= html.BR()
 
 
 def my_games(state_name):
@@ -672,7 +673,7 @@ def my_games(state_name):
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        MY_PANEL.clear()
+        MY_SUB_PANEL.clear()
         my_games(state_name)
 
     def stop_game_callback(ev, game):  # pylint: disable=invalid-name
@@ -706,12 +707,12 @@ def my_games(state_name):
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        MY_PANEL.clear()
+        MY_SUB_PANEL.clear()
         my_games(state_name)
 
     def again(state_name):
         """ again """
-        MY_PANEL.clear()
+        MY_SUB_PANEL.clear()
         my_games(state_name)
 
     def change_show_mode_callback(_):
@@ -719,7 +720,7 @@ def my_games(state_name):
             storage['GAME_SHOW_MODE'] = 'reduced'
         else:
             storage['GAME_SHOW_MODE'] = 'complete'
-        MY_PANEL.clear()
+        MY_SUB_PANEL.clear()
         my_games(state_name)
 
     def change_button_mode_callback(_):
@@ -727,7 +728,7 @@ def my_games(state_name):
             storage['GAME_ACCESS_MODE'] = 'link'
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
-        MY_PANEL.clear()
+        MY_SUB_PANEL.clear()
         my_games(state_name)
 
     def change_action_mode_callback(_):
@@ -735,7 +736,7 @@ def my_games(state_name):
             storage['ACTION_COLUMN_MODE'] = 'not_displayed'
         else:
             storage['ACTION_COLUMN_MODE'] = 'displayed'
-        MY_PANEL.clear()
+        MY_SUB_PANEL.clear()
         my_games(state_name)
 
     def sort_by_callback(_, new_sort_by):
@@ -747,13 +748,13 @@ def my_games(state_name):
         else:
             storage['REVERSE_NEEDED_MYGAMES'] = str(not bool(storage['REVERSE_NEEDED_MYGAMES'] == 'True'))
 
-        MY_PANEL.clear()
+        MY_SUB_PANEL.clear()
         my_games(state_name)
 
     overall_time_before = time.time()
 
     # title
-    MY_PANEL <= html.H2(f"Parties que je joue dans l'état : {state_name}")
+    MY_SUB_PANEL <= html.H2(f"Parties que je joue dans l'état : {state_name}")
 
     state = config.STATE_CODE_TABLE[state_name]
 
@@ -865,10 +866,10 @@ def my_games(state_name):
     else:
         button = html.BUTTON("Mode complet (affiche toutes les colonnes)", Class='btn-inside')
     button.bind("click", change_show_mode_callback)
-    MY_PANEL <= button
+    MY_SUB_PANEL <= button
 
     # separator
-    MY_PANEL <= " "
+    MY_SUB_PANEL <= " "
 
     # button for switching mode
     if 'GAME_ACCESS_MODE' not in storage:
@@ -878,10 +879,10 @@ def my_games(state_name):
     else:
         button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-inside')
     button.bind("click", change_button_mode_callback)
-    MY_PANEL <= button
+    MY_SUB_PANEL <= button
 
     # separator
-    MY_PANEL <= " "
+    MY_SUB_PANEL <= " "
 
     # button for switching mode (action)
     if 'ACTION_COLUMN_MODE' not in storage:
@@ -891,10 +892,10 @@ def my_games(state_name):
     else:
         button = html.BUTTON("Mode sans les colonnes d'action (éditer+arrêter/démarrer)", Class='btn-inside')
     button.bind("click", change_action_mode_callback)
-    MY_PANEL <= button
+    MY_SUB_PANEL <= button
 
-    MY_PANEL <= html.BR()
-    MY_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     games_table = html.TABLE()
 
@@ -1315,26 +1316,26 @@ def my_games(state_name):
 
         games_table <= row
 
-    MY_PANEL <= games_table
-    MY_PANEL <= html.BR()
+    MY_SUB_PANEL <= games_table
+    MY_SUB_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
-    MY_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
-    MY_PANEL <= " "
-    MY_PANEL <= html.IMG(src="./images/messages_received.jpg", title="Pour aller voir les nouveaux messages privés")
-    MY_PANEL <= " "
-    MY_PANEL <= html.IMG(src="./images/press_published.jpg", title="Pour aller voir les nouvelles presses")
-    MY_PANEL <= " "
-    MY_PANEL <= html.IMG(src="./images/edit_game.png", title="Pour éditer les paramètres de la partie")
-    MY_PANEL <= " "
-    MY_PANEL <= html.IMG(src="./images/start_game.jpg", title="Pour démarrer la partie")
-    MY_PANEL <= " "
-    MY_PANEL <= html.IMG(src="./images/stop_game.png", title="Pour arrêter la partie")
+    MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
+    MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
+    MY_SUB_PANEL <= " "
+    MY_SUB_PANEL <= html.IMG(src="./images/messages_received.jpg", title="Pour aller voir les nouveaux messages privés")
+    MY_SUB_PANEL <= " "
+    MY_SUB_PANEL <= html.IMG(src="./images/press_published.jpg", title="Pour aller voir les nouvelles presses")
+    MY_SUB_PANEL <= " "
+    MY_SUB_PANEL <= html.IMG(src="./images/edit_game.png", title="Pour éditer les paramètres de la partie")
+    MY_SUB_PANEL <= " "
+    MY_SUB_PANEL <= html.IMG(src="./images/start_game.jpg", title="Pour démarrer la partie")
+    MY_SUB_PANEL <= " "
+    MY_SUB_PANEL <= html.IMG(src="./images/stop_game.png", title="Pour arrêter la partie")
     if startable_game_present:
-        MY_PANEL <= html.BR()
-        MY_PANEL <= html.BR()
-        MY_PANEL <= html.DIV("Si une partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !", Class='important')
-    MY_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("Si une partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !", Class='important')
+    MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
@@ -1343,8 +1344,8 @@ def my_games(state_name):
     if number_games:
         stats += f" soit {elapsed/number_games} par partie"
 
-    MY_PANEL <= html.DIV(stats, Class='load')
-    MY_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(stats, Class='load')
+    MY_SUB_PANEL <= html.BR()
 
     for other_state_name in config.STATE_CODE_TABLE:
 
@@ -1352,20 +1353,20 @@ def my_games(state_name):
 
             input_change_state = html.INPUT(type="submit", value=other_state_name, Class='btn-inside')
             input_change_state.bind("click", lambda _, s=other_state_name: again(s))
-            MY_PANEL <= input_change_state
-            MY_PANEL <= "    "
+            MY_SUB_PANEL <= input_change_state
+            MY_SUB_PANEL <= "    "
 
-    MY_PANEL <= html.BR()
-    MY_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
     input_my_delays = html.INPUT(type="submit", value="Consulter la liste de tous mes retards", Class='btn-inside')
     input_my_delays.bind("click", my_delays)
-    MY_PANEL <= input_my_delays
+    MY_SUB_PANEL <= input_my_delays
 
-    MY_PANEL <= html.BR()
-    MY_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
     input_my_dropouts = html.INPUT(type="submit", value="Consulter la liste de tous mes abandons", Class='btn-inside')
     input_my_dropouts.bind("click", my_dropouts)
-    MY_PANEL <= input_my_dropouts
+    MY_SUB_PANEL <= input_my_dropouts
 
 
 PANEL_MIDDLE = None
@@ -1377,6 +1378,6 @@ def render(panel_middle):
     global PANEL_MIDDLE
     PANEL_MIDDLE = panel_middle
 
-    MY_PANEL.clear()
+    MY_SUB_PANEL.clear()
     my_games('en cours')
-    panel_middle <= MY_PANEL
+    panel_middle <= MY_SUB_PANEL

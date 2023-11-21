@@ -13,8 +13,10 @@ import config
 import common
 import index  # circular import
 
-MY_PANEL = html.DIV(id="login")
-MY_PANEL.attrs['style'] = 'display: table-row'
+MY_PANEL = html.DIV()
+MY_SUB_PANEL = html.DIV(id="login")
+MY_SUB_PANEL.attrs['style'] = 'display: table-row'
+MY_PANEL <= MY_SUB_PANEL
 
 
 def email_confirmed(pseudo):
@@ -381,12 +383,12 @@ def render(panel_middle):
     global PANEL_MIDDLE
     PANEL_MIDDLE = panel_middle
 
-    MY_PANEL.clear()
+    MY_SUB_PANEL.clear()
 
     login_panel = login()
 
     if login_panel:
-        MY_PANEL <= html.H2("Identifiez-vous pour accéder aux ressources protégées")
-        MY_PANEL <= login_panel
+        MY_SUB_PANEL <= html.H2("Identifiez-vous pour accéder aux ressources protégées")
+        MY_SUB_PANEL <= login_panel
 
-    PANEL_MIDDLE <= MY_PANEL
+    PANEL_MIDDLE <= MY_SUB_PANEL

@@ -285,55 +285,7 @@ fieldset{
   background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
-#account {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#mygames {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#allgames {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#games {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#play {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#tournament {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#events {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#forum {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#ratings {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#sandbox {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#technical {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#variants {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
-}
-
-#scorings {
+#page {
   background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
