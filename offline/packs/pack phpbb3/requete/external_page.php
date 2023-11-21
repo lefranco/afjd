@@ -45,7 +45,7 @@ $posts_ary = array(
         ),
 
         'WHERE'     => $db->sql_in_set('t.forum_id', array_keys($auth->acl_getf('f_read', true))) . '
-                        AND t.topic_status <> ' . ITEM_MOVED ,
+                        AND t.topic_visibility = ' . ITEM_APPROVED . ' AND t.topic_status <> ' . ITEM_MOVED ,
 
         'ORDER_BY'  => 'p.post_id DESC',
     );
