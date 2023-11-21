@@ -271,7 +271,7 @@ MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
-MY_SUB_PANEL = html.DIV(id='technical')
+MY_SUB_PANEL = html.DIV(id='page')
 MY_PANEL <= MY_SUB_PANEL
 
 

@@ -803,5 +803,5 @@ MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
 
-MY_SUB_PANEL = html.DIV(id="play")
+MY_SUB_PANEL = html.DIV(id="page")
 MY_PANEL <= MY_SUB_PANEL
