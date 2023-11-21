@@ -160,9 +160,9 @@ def load_game(game_name):
     return True
 
 
-def set_flag(_, value):
-    """ set_flag """
-    storage['flag'] = value
+def set_site_image(_, value):
+    """ set_site_image """
+    storage['SITE_IMAGE'] = value
     load_option(_, ITEM_NAME_SELECTED)
 
 
@@ -276,7 +276,7 @@ def load_option(_, item_name):
     document.unbind("keypress")
 
     if ITEM_NAME_SELECTED == 'Accueil':
-        if ('flag' not in storage or storage['flag'] == 'True') and SITE_IMAGE_DICT:
+        if ('SITE_IMAGE' not in storage or storage['SITE_IMAGE'] == 'True') and SITE_IMAGE_DICT:
 
             # build site image and legend
             figure = html.FIGURE()
@@ -287,12 +287,12 @@ def load_option(_, item_name):
 
             MENU_LEFT <= figure
             button = html.BUTTON("-", Class='btn-menu')
-            button.bind("click", lambda e: set_flag(e, 'False'))
+            button.bind("click", lambda e: set_site_image(e, 'False'))
 
         else:
 
             button = html.BUTTON("+", Class='btn-menu')
-            button.bind("click", lambda e: set_flag(e, 'True'))
+            button.bind("click", lambda e: set_site_image(e, 'True'))
 
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
