@@ -205,11 +205,6 @@ def show_games():
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
-    # get advancement scale
-    advancements = [data['current_advancement'] for game_id_str, data in games_dict.items() if int(game_id_str) in games_in]
-    min_advancement = min(advancements)
-    max_advancement = max(advancements)
-
     rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
 
     number_games = 0
