@@ -297,7 +297,6 @@ def show_games():
 
             value = data[field]
             colour = None
-            fg_colour = None
             game_name = data['name']
 
             if field == 'name':
@@ -358,12 +357,6 @@ def show_games():
                 nb_max_cycles_to_play = data['nb_max_cycles_to_play']
                 value = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
 
-                # special : a colour to see how far games have got (cannot go up to 255 - not readable)
-                delta = max(1, max_advancement - min_advancement)
-                col_val_red = round(((max_advancement - advancement_loaded) / delta) * 168)
-                col_val_green = round(((advancement_loaded - min_advancement) / delta) * 168)
-                fg_colour = f"#{col_val_red:02x}{col_val_green:02x}00"
-
             if field == 'current_state':
                 state_name = data[field]
                 value = rev_state_code_table[state_name]
@@ -402,10 +395,6 @@ def show_games():
                 col.style = {
                     'background-color': colour
                 }
-            if fg_colour is not None:
-                col.style = {
-                    'color': fg_colour
-                }
 
             row <= col
 
@@ -422,7 +411,7 @@ def show_games():
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
 
-    stats = f"Temps de chargement de la page {elapsed} avec {number_games} partie(s)"
+    stats = f"Temps de chargement de la page {elapsed:.2f} avec {number_games} partie(s)"
     if number_games:
         stats += f" soit {elapsed/number_games} par partie"
 
@@ -622,7 +611,7 @@ def show_ratings():
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
 
-    stats = f"Temps de chargement de la page {elapsed}"
+    stats = f"Temps de chargement de la page {elapsed:.2f}"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
 
@@ -828,7 +817,7 @@ def show_incidents():
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
 
-    stats = f"Temps de chargement de la page {elapsed}"
+    stats = f"Temps de chargement de la page {elapsed:.2f}"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
 

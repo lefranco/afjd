@@ -72,7 +72,7 @@ FAQ_CONTENT_TABLE = {
     "Comment ameuter les remplaçants pour un remplacement ?":
     "Il faut enlever le rôle au joueur et le retirer de la partie (cf les deux questions précédentes). Un bouton est alors disponible dans la console d'arbitrage.",
 
-    "Sur ma partie il y a un joueur bizarre. Depuis qu'un autre l'a stabbé, il passe son temps à lui donner du “l'autre abruti“ et j'en passe et des meilleures. L'arbitre ne fait rien. Que dois-je faire  ?":
+    "Sur ma partie il y a un joueur qui insulte un autre depuis un stab. L'arbitre ne fait rien. Que dois-je faire  ?":
     "C'est à l'arbitre de le rappeler à l'ordre en principe. Si sa manière de traiter la chose ne vous plait pas, il faut déclarer un incident. Nous voulons une atmosphère cordiale sur le site.",
 
     "Que peut faire l'arbitre ?":
