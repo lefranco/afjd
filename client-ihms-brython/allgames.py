@@ -548,7 +548,7 @@ def my_opportunities():
 
     stats = f"Temps de chargement de la page {elapsed:.2f}"
     if number_games:
-        stats += f" soit {elapsed/number_games} par partie"
+        stats += f" soit {elapsed/number_games:.2f} par partie"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()
@@ -766,11 +766,11 @@ def all_games(state_name):
     def sort_by_callback(_, new_sort_by):
 
         # if same sort criterion : inverse order otherwise back to normal order
-        if new_sort_by != storage['SORT_BY_HOME']:
-            storage['SORT_BY_HOME'] = new_sort_by
-            storage['REVERSE_NEEDED_HOME'] = str(False)
+        if new_sort_by != storage['SORT_BY_ALL_GAMES']:
+            storage['SORT_BY_ALL_GAMES'] = new_sort_by
+            storage['REVERSE_NEEDED_ALL_GAMES'] = str(False)
         else:
-            storage['REVERSE_NEEDED_HOME'] = str(not bool(storage['REVERSE_NEEDED_HOME'] == 'True'))
+            storage['REVERSE_NEEDED_ALL_GAMES'] = str(not bool(storage['REVERSE_NEEDED_ALL_GAMES'] == 'True'))
 
         MY_SUB_PANEL.clear()
         all_games(state_name)
@@ -873,13 +873,13 @@ def all_games(state_name):
     number_games = 0
 
     # default
-    if 'SORT_BY_HOME' not in storage:
-        storage['SORT_BY_HOME'] = 'creation'
-    if 'REVERSE_NEEDED_HOME' not in storage:
-        storage['REVERSE_NEEDED_HOME'] = str(False)
+    if 'SORT_BY_ALL_GAMES' not in storage:
+        storage['SORT_BY_ALL_GAMES'] = 'creation'
+    if 'REVERSE_NEEDED_ALL_GAMES' not in storage:
+        storage['REVERSE_NEEDED_ALL_GAMES'] = str(False)
 
-    sort_by = storage['SORT_BY_HOME']
-    reverse_needed = bool(storage['REVERSE_NEEDED_HOME'] == 'True')
+    sort_by = storage['SORT_BY_ALL_GAMES']
+    reverse_needed = bool(storage['REVERSE_NEEDED_ALL_GAMES'] == 'True')
 
     gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
 
@@ -1068,7 +1068,7 @@ def all_games(state_name):
 
     stats = f"Temps de chargement de la page {elapsed:.2f} avec {number_games} partie(s)"
     if number_games:
-        stats += f" soit {elapsed/number_games} par partie"
+        stats += f" soit {elapsed/number_games:.2f} par partie"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()
