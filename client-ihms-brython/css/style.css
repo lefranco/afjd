@@ -250,53 +250,80 @@ figure {
 table{
     border: 1px solid black;
     border-collapse: collapse;
-    background-color: #83B9CC;
+    background-color: #838383;
 }
 
 tr{
     border: 1px solid black;
-    background-color: #83B9CC;
+    background-color: #838383;
 }
 
 td{
     font-size: 12px;
     border: 1px solid black;
-    background-color: #83B9CC;
+    background-color: #838383;
 }
 
 thead{
     font-weight:bold;
     border: 1px solid black;
     text-align: center;
-    background-color: #83B9CC;
+    background-color: #838383;
 }
 
 fieldset{
     border: 0;
 }
 
-/* color of sea in diplomania map BBD9DC */
 
 #home {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
+    background: linear-gradient(-45deg, #eeeeee, #e7e7e7e7, #a6a6a6, #232323);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
 
+
 #login {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
+    background: linear-gradient(-45deg, #a0a0a0, #e7e7e7, #a6a6a6, #222222);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
 
 #page {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
+    background: linear-gradient(-45deg, #b0b0b0, #d7d7d7, #a6a6a6, #333333);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
 
 #create {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
+    background: linear-gradient(-45deg, #c0c0c0, #c7c7c7, #a6a6a6, #444444);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
 
 #moderate {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
+    background: linear-gradient(-45deg, #d0d0d0, #b7b7b7, #a6a6a6, #555555);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
 
 #admin {
-  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
+    background: linear-gradient(-45deg, #dddddd, #e7e7e7e7, #a6a6a6, #232323);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+}
+
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
