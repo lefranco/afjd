@@ -426,14 +426,14 @@ def my_opportunities():
                 elif game_id_str in player_games:
                     game_name = data['name']
                     form = html.FORM()
-                    input_quit_game = html.INPUT(type="image", src="./images/leave.png", Class='btn-inside')
+                    input_quit_game = html.INPUT(type="image", src="./images/leave.png", title="Pour s'enlever de la partie (ne plus y jouer)", Class='btn-inside')
                     input_quit_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: quit_and_select_game_callback(e, gn, gds))
                     form <= input_quit_game
                     value = form
                 else:
                     game_name = data['name']
                     form = html.FORM()
-                    input_join_game = html.INPUT(type="image", src="./images/join.png", Class='btn-inside')
+                    input_join_game = html.INPUT(type="image", src="./images/join.png", title="Pour se mettre dans la partie (y jouer)", Class='btn-inside')
                     input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
                     form <= input_join_game
                     value = form
@@ -443,12 +443,12 @@ def my_opportunities():
             if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                     form <= input_jump_game
                     value = form
                 else:
-                    img = html.IMG(src="./images/play.png")
+                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
@@ -532,15 +532,6 @@ def my_opportunities():
         games_table <= row
 
     MY_SUB_PANEL <= games_table
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
-    MY_SUB_PANEL <= html.IMG(src="./images/join.png", title="Pour se mettre dans la partie")
-    MY_SUB_PANEL <= " "
-    MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller visiter la partie")
-    MY_SUB_PANEL <= " "
-    MY_SUB_PANEL <= html.IMG(src="./images/leave.png", title="Pour s'enlever de la partie")
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time.time()
@@ -961,12 +952,12 @@ def all_games(state_name):
             if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                     form <= input_jump_game
                     value = form
                 else:
-                    img = html.IMG(src="./images/play.png")
+                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
@@ -1056,11 +1047,6 @@ def all_games(state_name):
         games_table <= row
 
     MY_SUB_PANEL <= games_table
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
-    MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time.time()
@@ -1187,7 +1173,7 @@ def show_no_game_masters_data():
         if pseudo:
             game_name = data['name']
             form = html.FORM()
-            input_take_game = html.INPUT(type="image", src="./images/take.png", Class='btn-inside')
+            input_take_game = html.INPUT(type="image", src="./images/take.png", title="Pour prendre l'arbitrage de la partie (sans sélectionner la partie)", Class='btn-inside')
             input_take_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: take_mastering_this_game_callback(e, gn, gds))
             form <= input_take_game
             value = form
@@ -1199,9 +1185,6 @@ def show_no_game_masters_data():
     MY_SUB_PANEL <= html.H3("Les parties sans arbitre")
     MY_SUB_PANEL <= no_game_masters_table
     MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
-    MY_SUB_PANEL <= html.IMG(src="./images/take.png", title="Pour prendre l'arbitrage de la partie (sans sélectionner la partie)")
 
 
 def show_no_tournaments_data():

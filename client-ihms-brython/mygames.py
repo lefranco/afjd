@@ -385,12 +385,12 @@ def my_delays(ev):  # pylint: disable=invalid-name
                 if storage['GAME_ACCESS_MODE'] == 'button':
 
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
                 else:
-                    img = html.IMG(src="./images/play.png")
+                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
@@ -570,12 +570,12 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
                 if storage['GAME_ACCESS_MODE'] == 'button':
 
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
                 else:
-                    img = html.IMG(src="./images/play.png")
+                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
@@ -1074,12 +1074,12 @@ def my_games(state_name):
                 if storage['GAME_ACCESS_MODE'] == 'button':
 
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
                 else:
-                    img = html.IMG(src="./images/play.png")
+                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
@@ -1222,12 +1222,12 @@ def my_games(state_name):
                         arrival = "declarations"
                         if storage['GAME_ACCESS_MODE'] == 'button':
                             form = html.FORM()
-                            input_jump_game = html.INPUT(type="image", src="./images/press_published.jpg", Class='btn-inside')
+                            input_jump_game = html.INPUT(type="image", src="./images/press_published.jpg", title="Pour aller voir les nouvelles presses", Class='btn-inside')
                             input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=arrival: select_game_callback(e, gn, gds, a))
                             form <= input_jump_game
                             value = form
                         else:
-                            img = html.IMG(src="./images/press_published.jpg")
+                            img = html.IMG(src="./images/press_published.jpg", title="Pour aller voir les nouvelles presses")
                             link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
                             link <= img
                             value = link
@@ -1240,12 +1240,12 @@ def my_games(state_name):
                         arrival = "messages"
                         if storage['GAME_ACCESS_MODE'] == 'button':
                             form = html.FORM()
-                            input_jump_game = html.INPUT(type="image", src="./images/messages_received.jpg", Class='btn-inside')
+                            input_jump_game = html.INPUT(type="image", src="./images/messages_received.jpg", title="Pour aller voir les nouveaux messages privés", Class='btn-inside')
                             input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=arrival: select_game_callback(e, gn, gds, a))
                             form <= input_jump_game
                             value = form
                         else:
-                            img = html.IMG(src="./images/messages_received.jpg")
+                            img = html.IMG(src="./images/messages_received.jpg", title="Pour aller voir les nouveaux messages privés")
                             link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
                             link <= img
                             value = link
@@ -1279,12 +1279,12 @@ def my_games(state_name):
                     if role_id == 0:
                         if storage['GAME_ACCESS_MODE'] == 'button':
                             form = html.FORM()
-                            input_edit_game = html.INPUT(type="image", src="./images/edit_game.png", Class='btn-inside')
+                            input_edit_game = html.INPUT(type="image", src="./images/edit_game.png", title="Pour éditer les paramètres de la partie", Class='btn-inside')
                             input_edit_game.bind("click", lambda e, g=game_name: edit_game_callback(e, g))
                             form <= input_edit_game
                             value = form
                         else:
-                            img = html.IMG(src="./images/edit_game.png")
+                            img = html.IMG(src="./images/edit_game.png", title="Pour éditer les paramètres de la partie")
                             link = html.A(href=f"?edit_game={game_name}", target="_blank")
                             link <= img
                             value = link
@@ -1295,14 +1295,14 @@ def my_games(state_name):
                     if role_id == 0:
                         if state == 0:
                             form = html.FORM()
-                            input_start_game = html.INPUT(type="image", src="./images/start_game.jpg", Class='btn-inside')
+                            input_start_game = html.INPUT(type="image", src="./images/start_game.jpg", title="Pour démarrer la partie", Class='btn-inside')
                             input_start_game.bind("click", lambda e, g=game_name: start_game_callback(e, g))
                             form <= input_start_game
                             value = form
                             startable_game_present = True
                         if state == 1:
                             form = html.FORM()
-                            input_stop_game = html.INPUT(type="image", src="./images/stop_game.png", Class='btn-inside')
+                            input_stop_game = html.INPUT(type="image", src="./images/stop_game.png", title="Pour arrêter la partie", Class='btn-inside')
                             input_stop_game.bind("click", lambda e, g=game_name: stop_game_callback(e, g))
                             form <= input_stop_game
                             value = form
@@ -1318,19 +1318,6 @@ def my_games(state_name):
 
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
-    MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
-    MY_SUB_PANEL <= " "
-    MY_SUB_PANEL <= html.IMG(src="./images/messages_received.jpg", title="Pour aller voir les nouveaux messages privés")
-    MY_SUB_PANEL <= " "
-    MY_SUB_PANEL <= html.IMG(src="./images/press_published.jpg", title="Pour aller voir les nouvelles presses")
-    MY_SUB_PANEL <= " "
-    MY_SUB_PANEL <= html.IMG(src="./images/edit_game.png", title="Pour éditer les paramètres de la partie")
-    MY_SUB_PANEL <= " "
-    MY_SUB_PANEL <= html.IMG(src="./images/start_game.jpg", title="Pour démarrer la partie")
-    MY_SUB_PANEL <= " "
-    MY_SUB_PANEL <= html.IMG(src="./images/stop_game.png", title="Pour arrêter la partie")
     if startable_game_present:
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
