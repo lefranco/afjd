@@ -1353,12 +1353,12 @@ def all_missing_orders():
             if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                     form <= input_jump_game
                     value = form
                 else:
-                    img = html.IMG(src="./images/play.png")
+                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
@@ -1699,12 +1699,12 @@ def show_player_games(pseudo_player, game_list):
                 if field == 'go_game':
                     if storage['GAME_ACCESS_MODE'] == 'button':
                         form = html.FORM()
-                        input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
+                        input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
                         input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                         form <= input_jump_game
                         value = form
                     else:
-                        img = html.IMG(src="./images/play.png")
+                        img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
                         link = html.A(href=f"?game={game_name}", target="_blank")
                         link <= img
                         value = link

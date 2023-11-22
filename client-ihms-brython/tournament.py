@@ -300,12 +300,12 @@ def show_games():
             if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", Class='btn-inside')
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                     form <= input_jump_game
                     value = form
                 else:
-                    img = html.IMG(src="./images/play.png")
+                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
@@ -396,11 +396,6 @@ def show_games():
         games_table <= row
 
     MY_SUB_PANEL <= games_table
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
-    MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time.time()
@@ -1289,7 +1284,7 @@ def show_tournaments_data():
                 games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
                 game_name = games_names[0]
                 form = html.FORM()
-                input_jump_game = html.INPUT(type="image", src="./images/look.png", Class='btn-inside')
+                input_jump_game = html.INPUT(type="image", src="./images/look.png",  title="Pour aller dans le tournoi (en sélectionnant une partie du tournoi)", Class='btn-inside')
                 input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                 form <= input_jump_game
                 value = form
@@ -1309,8 +1304,6 @@ def show_tournaments_data():
 
     MY_SUB_PANEL <= html.H3("Les tournois du site")
     MY_SUB_PANEL <= tournaments_table
-    MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans les tournois :", Class='note')
-    MY_SUB_PANEL <= html.IMG(src="./images/look.png", title="Pour aller dans le tournoi (en sélectionnant une partie du tournoi)")
     MY_SUB_PANEL <= html.P(f"Il y a {count} tournois")
 
 

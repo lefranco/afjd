@@ -2320,14 +2320,14 @@ def show_idle_data():
 
             if field == 'recall':
                 form = html.FORM()
-                input_delete_account = html.INPUT(type="image", src="./images/recall.jpg", Class='btn-inside')
+                input_delete_account = html.INPUT(type="image", src="./images/recall.jpg", title="Pour lui envoyer un rappel", Class='btn-inside')
                 input_delete_account.bind("click", lambda e, p=player: recall_account_callback(e, p))
                 form <= input_delete_account
                 value = form
 
             if field == 'delete':
                 form = html.FORM()
-                input_delete_account = html.INPUT(type="image", src="./images/delete.png", Class='btn-inside')
+                input_delete_account = html.INPUT(type="image", src="./images/delete.png", title="Pour supprimer le compte", Class='btn-inside')
                 input_delete_account.bind("click", lambda e, p=player: delete_account_callback(e, p))
                 form <= input_delete_account
                 value = form

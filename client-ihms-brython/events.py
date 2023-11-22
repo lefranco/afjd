@@ -1023,7 +1023,7 @@ def handle_joiners():
                 row2 = html.TR()
                 if data['status'] != -1:
                     form = html.FORM()
-                    input_event_reject = html.INPUT(type="image", src="./images/event_reject.jpg", Class='btn-inside')
+                    input_event_reject = html.INPUT(type="image", src="./images/event_reject.jpg", title="Pour rejeter cette inscription", Class='btn-inside')
                     input_event_reject.bind("click", lambda e, pi=player_id: registration_action_callback(e, pi, -1))
                     form <= input_event_reject
                     col2 = html.TD()
@@ -1031,7 +1031,7 @@ def handle_joiners():
                     row2 <= col2
                 if data['status'] != 0:
                     form = html.FORM()
-                    input_event_wait = html.INPUT(type="image", src="./images/event_wait.jpg", Class='btn-inside')
+                    input_event_wait = html.INPUT(type="image", src="./images/event_wait.jpg", title="Pour réinitialiser cette inscription", Class='btn-inside')
                     input_event_wait.bind("click", lambda e, pi=player_id: registration_action_callback(e, pi, 0))
                     form <= input_event_wait
                     col2 = html.TD()
@@ -1039,7 +1039,7 @@ def handle_joiners():
                     row2 <= col2
                 if data['status'] != 1:
                     form = html.FORM()
-                    input_event_accept = html.INPUT(type="image", src="./images/event_accept.jpg", Class='btn-inside')
+                    input_event_accept = html.INPUT(type="image", src="./images/event_accept.jpg", title="Pour accepter cette inscription", Class='btn-inside')
                     input_event_accept.bind("click", lambda e, pi=player_id: registration_action_callback(e, pi, 1))
                     form <= input_event_accept
                     col2 = html.TD()
