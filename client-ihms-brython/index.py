@@ -41,7 +41,7 @@ MAIN_TITLE = html.H1("Diplomania - le site de l'Association Francophone des Joue
 document <= MAIN_TITLE
 
 
-OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Retourner dans la partie', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Bac à sable', 'Technique', 'Variantes', 'Scorages', 'Création', 'Modération', 'Wiki', 'Forum', 'Administration']
+OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Retourner dans la partie', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Bac à sable', 'Technique', 'Variantes', 'Scorages', 'Wiki', 'Forum', 'Création', 'Modération', 'Administration']
 
 
 # overall_top
@@ -206,14 +206,14 @@ def load_option(_, item_name):
         variants.render(PANEL_MIDDLE)
     if item_name == 'Scorages':
         scorings.render(PANEL_MIDDLE)
-    if item_name == 'Création':
-        create.render(PANEL_MIDDLE)
-    if item_name == 'Modération':
-        moderate.render(PANEL_MIDDLE)
     if item_name == 'Wiki':
         wiki.render(PANEL_MIDDLE)
     if item_name == 'Forum':
         forum.render(PANEL_MIDDLE)
+    if item_name == 'Création':
+        create.render(PANEL_MIDDLE)
+    if item_name == 'Modération':
+        moderate.render(PANEL_MIDDLE)
     if item_name == 'Administration':
         if common.check_admin():
             import admin  # pylint: disable=import-outside-toplevel
