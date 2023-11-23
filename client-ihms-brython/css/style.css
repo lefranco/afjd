@@ -25,7 +25,8 @@ a:visited{
     width: 100%;
     display: inline-block;
     color: #111;
-    background-color: #dddddd;
+/*    background-color: #dddddd; */
+    background-color: #A19CD6;
     border-radius: 5px;
     border: 1px solid rgba(0,0,0,0.3);
 }
@@ -45,13 +46,16 @@ a:visited{
 .btn-inside {
    /* width: 100%; */
     display: inline-block;
-    color: #222;
-    background-color: #ffffff;
+/*    color: #222;*/
+    color: white;
+/*    background-color: #ffffff;*/
+    background-color: #CA35DD; /* rose */
     border-radius: 5px;
     border: 1px solid rgba(0,0,0,0.4);
 }
 
 .btn-inside:hover {
+	color: black;
     background-color: #f4f4f4;
     border-color: rgba(0,0,0,0.6);
 }
@@ -252,25 +256,29 @@ figure {
 table{
     border: 1px solid black;
     border-collapse: collapse;
-    background-color: #9C9C9C;
+    background-color: #D10305;
+/*    background-color: #9C9C9C;*/
 }
 
 tr{
     border: 1px solid black;
+/*    background-color: #D10305;*/
     background-color: #9C9C9C;
 }
 
 td{
     font-size: 12px;
     border: 1px solid black;
-    background-color: #9C9C9C;
+/*    background-color: #D10305;
+    background-color: #9C9C9C;*/
+/*    background-color: #809954;*/ /* vert */
+    background-color: #99B577;
 }
 
 thead{
     font-weight:bold;
     border: 1px solid black;
     text-align: center;
-    background-color: #9C9C9C;
 }
 
 fieldset{
@@ -292,9 +300,10 @@ fieldset{
 }
 
 #page {
-    background: linear-gradient(-45deg, #b0b0b0, #d7d7d7, #a6a6a6, #333333);
+    background: #E5BCC3; /* rose */
     background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+/*    background: linear-gradient(-45deg, #b0b0b0, #d7d7d7, #a6a6a6, #333333);
+    animation: gradient 15s ease infinite;*/
 }
 
 #create {
