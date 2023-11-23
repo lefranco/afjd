@@ -31,6 +31,7 @@ import variants
 import scorings
 import create
 import moderate
+import wiki
 import forum
 
 # TITLE is in index.html
@@ -40,7 +41,7 @@ MAIN_TITLE = html.H1("Diplomania - le site de l'Association Francophone des Joue
 document <= MAIN_TITLE
 
 
-OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Retourner dans la partie', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Bac à sable', 'Technique', 'Variantes', 'Scorages', 'Création', 'Modération', 'Forum', 'Administration']
+OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Retourner dans la partie', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Bac à sable', 'Technique', 'Variantes', 'Scorages', 'Création', 'Modération', 'Wiki', 'Forum', 'Administration']
 
 
 # overall_top
@@ -209,6 +210,8 @@ def load_option(_, item_name):
         create.render(PANEL_MIDDLE)
     if item_name == 'Modération':
         moderate.render(PANEL_MIDDLE)
+    if item_name == 'Wiki':
+        wiki.render(PANEL_MIDDLE)
     if item_name == 'Forum':
         forum.render(PANEL_MIDDLE)
     if item_name == 'Administration':

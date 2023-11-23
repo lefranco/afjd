@@ -16,10 +16,10 @@ def render(panel_middle):
     MY_SUB_PANEL.clear()
     panel_middle <= MY_SUB_PANEL
 
-    # load forum directly
+    # load wiki directly
 
     # use button
-    button = html.BUTTON("Lancement du forum (phpbb3 forum)", id='forum_link', Class='btn-inside')
+    button = html.BUTTON("Lancement du wiki (DokuWiki)", id='wiki_link', Class='btn-inside')
     MY_SUB_PANEL <= button
-    button.bind("click", lambda e: window.open("https://diplomania-gen.fr/forum/phpBB3"))
-    document['forum_link'].click()
+    button.bind("click", lambda e: window.open("https://diplomania-gen.fr/dokuwiki/"))
+    document['wiki_link'].click()
