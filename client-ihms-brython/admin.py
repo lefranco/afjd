@@ -495,6 +495,7 @@ def rectify_parameters():
     # declare the values
     used_for_elo_loaded = None
     fast_loaded = None
+    archive_loaded = None
     nomessage_loaded = None
     nopress_loaded = None
 
@@ -513,6 +514,7 @@ def rectify_parameters():
             nonlocal status
             nonlocal used_for_elo_loaded
             nonlocal fast_loaded
+            nonlocal archive_loaded
             nonlocal nomessage_loaded
             nonlocal nopress_loaded
             req_result = json.loads(req.text)
@@ -528,6 +530,7 @@ def rectify_parameters():
 
             used_for_elo_loaded = req_result['used_for_elo']
             fast_loaded = req_result['fast']
+            archive_loaded = req_result['archive']
             nomessage_loaded = req_result['nomessage_game']
             nopress_loaded = req_result['nopress_game']
 
@@ -562,12 +565,14 @@ def rectify_parameters():
 
         used_for_elo = int(input_used_for_elo.checked)
         fast = int(input_fast.checked)
+        archive = int(input_archive.checked)
         nomessage_game = int(input_nomessage.checked)
         nopress_game = int(input_nopress.checked)
 
         json_dict = {
             'used_for_elo': used_for_elo,
             'fast': fast,
+            'archive': archive,
             'nomessage_game': nomessage_game,
             'nopress_game': nopress_game,
         }
@@ -613,6 +618,13 @@ def rectify_parameters():
     fieldset <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=fast_loaded, Class='btn-inside')
     fieldset <= input_fast
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_archive = html.LEGEND("archive", title="Partie archive - la partie n'est pas jouée - l'arbitre passe tous les ordres et tout le monde pourra en regarder le déroulement")
+    fieldset <= legend_archive
+    input_archive = html.INPUT(type="checkbox", checked=archive_loaded, Class='btn-inside')
+    fieldset <= input_archive
     form <= fieldset
 
     fieldset = html.FIELDSET()
