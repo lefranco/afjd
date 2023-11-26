@@ -17,10 +17,6 @@ import geometry
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = {
-    'Bac à sable': "Le fameux bac à sable pour tester le moteur de résolution !"
-}
-
 
 ARRIVAL = None
 
@@ -35,6 +31,11 @@ INTERFACE_CHOSEN = None
 VARIANT_DATA = None
 POSITION_DATA = None
 ORDERS_DATA = None
+
+MY_PANEL = html.DIV()
+MY_SUB_PANEL = html.DIV(id="page")
+MY_SUB_PANEL.attrs['style'] = 'display: table-row'
+MY_PANEL <= MY_SUB_PANEL
 
 
 def set_arrival(arrival, variant_requested_name=None):
@@ -1102,64 +1103,12 @@ def sandbox():
     MY_SUB_PANEL <= my_sub_panel2
 
 
-MY_PANEL = html.DIV()
-MY_PANEL.attrs['style'] = 'display: table-row'
-
-# menu-left
-MENU_LEFT = html.DIV()
-MENU_LEFT.attrs['style'] = 'display: table-cell; width:15%; vertical-align: top;'
-MY_PANEL <= MENU_LEFT
-
-# menu-selection
-MENU_SELECTION = html.UL()
-MENU_LEFT <= MENU_SELECTION
-
-ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
-
-MY_SUB_PANEL = html.DIV(id='page')
-MY_PANEL <= MY_SUB_PANEL
-
-
-def load_option(_, item_name):
-    """ load_option """
-
-    MY_SUB_PANEL.clear()
-    window.scroll(0, 0)
-
-    if item_name == 'Bac à sable':
-        sandbox()
-
-    global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = item_name
-
-    MENU_LEFT.clear()
-
-    # items in menu
-    for possible_item_name in OPTIONS:
-
-        if possible_item_name == ITEM_NAME_SELECTED:
-            item_name_bold_or_not = html.B(possible_item_name)
-        else:
-            item_name_bold_or_not = possible_item_name
-
-        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
-        button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
-        menu_item = html.LI(button)
-        menu_item.attrs['style'] = 'list-style-type: none'
-        MENU_LEFT <= menu_item
-
-
 def render(panel_middle):
     """ render """
 
-    # always back to top
-    global ITEM_NAME_SELECTED
+    global PANEL_MIDDLE
+    PANEL_MIDDLE = panel_middle
 
-    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
-
-    # this means user wants to join game
-    if ARRIVAL == 'sandbox':
-        ITEM_NAME_SELECTED = 'Bac à sable'
-
-    load_option(None, ITEM_NAME_SELECTED)
-    panel_middle <= MY_PANEL
+    MY_SUB_PANEL.clear()
+    sandbox()
+    panel_middle <= MY_SUB_PANEL
