@@ -43,7 +43,7 @@ def show_technical():
     title1 = html.H3("Règles du jeu officielles")
     MY_SUB_PANEL <= title1
 
-    link1 = html.A(href="https://media.wizards.com/2015/rules/diplomacy_rules.pdf", target="_blank")
+    link1 = html.A(href="./docs/DiplomacyRGS_Rulebook_v6_LR.pdf", target="_blank")
     MY_SUB_PANEL <= link1
     link1 <= "Lien vers les règles officielles du jeu"
 
