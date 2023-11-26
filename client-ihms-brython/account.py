@@ -12,7 +12,13 @@ import config
 import common
 import login
 
-OPTIONS = ['Editer', 'Valider mon courriel', 'Mot de passe', 'Mon code forum', 'Supprimer']
+OPTIONS = {
+    'Editer': "Modifier une information personnelle",
+    'Valider mon courriel': "Valider mon adresse courriel",
+    'Mot de passe': "Changer mon mot de passe",
+    'Mon code forum': "Visualiser mon code de vérification pour le forum",
+    'Supprimer': "Supprimer mon compte sur le site",
+}
 
 
 MIN_LEN_PSEUDO = 3
@@ -1005,7 +1011,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id="page")
 MY_PANEL <= MY_SUB_PANEL
@@ -1045,7 +1051,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -1056,14 +1062,13 @@ def render(panel_middle):
     """ render """
 
     global ITEM_NAME_SELECTED
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     if 'PSEUDO' not in storage:
         ITEM_NAME_SELECTED = 'Créer un compte'
     else:
         if RESCUE:
             ITEM_NAME_SELECTED = 'Mot de passe'
-        else:
-            ITEM_NAME_SELECTED = OPTIONS[0]
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

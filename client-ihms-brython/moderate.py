@@ -20,13 +20,29 @@ import play
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = [
+OPTIONS = {
     # communication
-    'Changer nouvelles', 'Préparer un publipostage', 'Envoyer un courriel', 'Résultats du tournoi', 'Annoncer dans toutes les parties', 'Annoncer dans la partie', 'Récupérer un courriel et téléphone',
+    'Changer nouvelles': "Changer nouvelles du site pour le modérateur",
+    'Préparer un publipostage': "Préparer un publipostage vers tous les utilisateurs du site",
+    'Envoyer un courriel': "Envoyer un courriel à un utilisateur du site",
+    'Résultats du tournoi': "Résultats détaillé du tournoi de la partie sélectionnée en passant l'anonymat",
+    'Annoncer dans toutes les parties': "Annoncer dans toutes les parties en cours du site",
+    'Annoncer dans la partie': "Annoncer dans la partie séléctionnée",
+    'Récupérer un courriel et téléphone': "Récupérer un courriel et téléphone d'un utilisateur du site",
     # surveillance
-    'Tous les ordres manquants', 'Pires récidivistes retard et abandon', 'Toutes les parties d\'un joueur', 'Dernières soumissions d\'ordres', 'Vérification adresses IP', 'Vérification courriels', 'Courriels non confirmés', 'Codes de vérification',
+    'Tous les ordres manquants': "Tous les ordres manquants sur les parties en cours",
+    'Pires récidivistes retard et abandon': "Pires récidivistes retard et abandon sur les parties en cours",
+    'Toutes les parties d\'un joueur': "Toutes les parties d\'un joueur du site",
+    'Dernières soumissions d\'ordres': "Dernières soumissions d\'ordres sur les parties du site",
+    'Vérification adresses IP': "Détecter les doubons d'adresses IP des utilisateurs du site",
+    'Vérification courriels': "Détecter les doubons de courriels des utilisateurs du site",
+    'Courriels non confirmés': "Courriels non confirmés des utilisateurs du site",
+    'Codes de vérification': "Codes de vérification pour le forum",
     # management
-    'Destituer arbitre partie', 'Changer responsable tournoi', 'Changer responsable événement']
+    'Destituer arbitre partie': "Destituer l'arbitre de la partie sélectionnée",
+    'Changer responsable tournoi': "Changer le responsable tournoi de la partie sélectionnée",
+    'Changer responsable événement': "Changer le responsable de l'événement séléctionné"
+}
 
 
 def check_modo(pseudo):
@@ -2378,7 +2394,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id="moderate")
 MY_PANEL <= MY_SUB_PANEL
@@ -2443,7 +2459,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -2462,7 +2478,7 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = OPTIONS[0]
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

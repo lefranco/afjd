@@ -19,8 +19,13 @@ import play
 import index  # circular import
 
 
-# sandbox must stay first
-OPTIONS = ['Rejoindre une partie', 'Sélectionner une partie', 'Toutes les parties', 'Parties sans arbitres', 'Parties sans tournoi']
+OPTIONS = {
+    'Rejoindre une partie': "Pour rejoindre (I.e. se mettre dans) un partie afin d'y jouer",
+    'Sélectionner une partie': "Séléction d'une partie sur des critères éléborés",
+    'Toutes les parties': "Liste de toutes les parties",
+    'Parties sans arbitres': "Liste des parties qui n'ont pas d'arbitre alloué",
+    'Parties sans tournoi': "Liste des parties qui ne sont pas dans un tournoi"
+}
 
 
 def get_recruiting_games():
@@ -1246,7 +1251,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id='page')
 MY_PANEL <= MY_SUB_PANEL
@@ -1282,7 +1287,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -1300,7 +1305,7 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = OPTIONS[0]
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

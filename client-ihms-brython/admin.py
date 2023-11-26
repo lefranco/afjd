@@ -21,7 +21,25 @@ import elo
 
 import index
 
-OPTIONS = ['Changer nouvelles', 'Changer image', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Récupérations demandées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Effacement des anciens retard', 'Comptes oisifs', 'Logs du scheduler', 'Maintenance']
+OPTIONS = {
+    'Changer nouvelles': "Changer nouvelles du site pour l'administrateur",
+    'Changer image': "Changer l'image du site",
+    'Usurper': "Usurper le compte d'un untilisateur",
+    'Rectifier les paramètres': "Rectifier les paramètres de la partie sélectionnée",
+    'Rectifier la position': "Rectifier la position de la partie sélectionnée",
+    'Dernières connexions': "Les connexions réussies sur le site",
+    'Connexions manquées': "Les connexions manquées sur le site",
+    'Récupérations demandées': "Les récupérations demandées sur le site",
+    'Editer les créateurs': "Editer les comptes créateurs du site",
+    'Editer les modérateurs': "Editer les comptes modérateurs du site",
+    'Mise à jour du elo': "Mettre à jour le classement ELO (amené à disparaître)",
+    'Mise à jour de la fiabilité': "Mettre à jour le classement de fiabilité (amené à disparaître)",
+    'Mise à jour de la régularité': "Mettre à jour le classement de régularité (amené à disparaître)",
+    'Effacement des anciens retard': "Effacer tous les anciens retards",
+    'Comptes oisifs': "Lister les comptes oisifs pour les avertir ou les supprimer",
+    'Logs du scheduler': "Consulter les logs du scheduleur",
+    'Maintenance': "Opération de maintenance à définir"
+}
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -2496,7 +2514,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id="admin")
 MY_PANEL <= MY_SUB_PANEL
@@ -2556,7 +2574,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -2571,7 +2589,7 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = OPTIONS[0]
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

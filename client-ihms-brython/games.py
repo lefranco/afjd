@@ -17,7 +17,18 @@ import allgames
 
 import index  # circular import
 
-OPTIONS = ['Créer', 'Changer anonymat', 'Changer accès messagerie', 'Changer description', 'Changer scorage', 'Changer paramètres accès', 'Changer paramètres cadence', 'Changer état', 'Déplacer des joueurs', 'Supprimer']
+OPTIONS = {
+    'Créer': "Créer une partie (pour y jouer ou l'arbitrer)",
+    'Changer anonymat': "Changer le paramètre d'anonymat sur la partie séléctionnée",
+    'Changer accès messagerie': "Changer les paramètres d'acccès aux messageries sur la partie séléctionnée",
+    'Changer description': "Changer la description de la partie séléctionnée",
+    'Changer scorage': "Changer le paramètre système de scorage de la partie séléctionnée",
+    'Changer paramètres accès': "Changer les paramètres d'accès de la partie séléctionnée",
+    'Changer paramètres cadence': "Changer les paramètres de cadence la partie séléctionnée",
+    'Changer état': "Changer l'état la partie séléctionnée (la démarrer ou l'arrêter)",
+    'Déplacer des joueurs': "Mettre des joueurs dans ou retirer des joueurs de la partie séléctionnée",
+    'Supprimer': "Supprimer la partie séléctionnée"
+}
 
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_VARIANT_NAME = 50
@@ -1931,7 +1942,7 @@ MY_SUB_PANEL = html.DIV(id="page")
 MY_PANEL <= MY_SUB_PANEL
 
 
-ITEM_NAME_SELECTED = None
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 
 def load_option(_, item_name):
@@ -1975,7 +1986,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -1990,7 +2001,7 @@ def render(panel_middle):
     if 'GAME' in storage:
         ITEM_NAME_SELECTED = 'Changer état'
     else:
-        ITEM_NAME_SELECTED = OPTIONS[0]
+        ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     # always back to top
     load_option(None, ITEM_NAME_SELECTED)

@@ -21,7 +21,16 @@ import mydatetime
 THRESHOLD_DRIFT_ALERT_SEC = 59
 
 
-OPTIONS = ['Vue d\'ensemble', 'Chatter en direct', 'Déclarer un incident', 'Foire aux questions', 'Les petits tuyaux', 'Charte du bon diplomate', 'Evolution de la fréquentation', 'Brique sociale']
+OPTIONS = {
+    'Vue d\'ensemble': "Vue d'ensemble du site",
+    'Chatter en direct': "Echanger des messages volatiles à court terme",
+    'Déclarer un incident': "Déclarer un incident par courriel à l'administrateur",
+    'Foire aux questions': "Foire Aux Questions du site",
+    'Les petits tuyaux': "Différentes petites choses à savoir pour mieux jouer sur le site",
+    'Charte du bon diplomate': "Document indiquant les règles de bonne conduite en jouant les parties",
+    'Evolution de la fréquentation': "Evolution sous forme graphique du nombre de joueurs actifs sur le site",
+    'Brique sociale': "Lien vers un autre site de l'Association ne permettant pas le jeu"
+}
 
 
 # for safety
@@ -1060,7 +1069,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id="home")
 MY_PANEL <= MY_SUB_PANEL
@@ -1102,7 +1111,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -1120,7 +1129,7 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = OPTIONS[0]
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

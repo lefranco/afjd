@@ -12,7 +12,7 @@ import mapping
 import interface
 import ezml_render
 
-OPTIONS = config.VARIANT_NAMES_LIST
+OPTIONS = {n: f"La variante {n}" for n in config.VARIANT_NAMES_LIST}
 
 
 ARRIVAL = None
@@ -284,7 +284,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id='page')
 MY_PANEL <= MY_SUB_PANEL
@@ -314,7 +314,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -328,7 +328,7 @@ def render(panel_middle):
     global ITEM_NAME_SELECTED
     global ARRIVAL
 
-    ITEM_NAME_SELECTED = OPTIONS[0]
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     # this means user wants to see variant
     if ARRIVAL == 'variant':

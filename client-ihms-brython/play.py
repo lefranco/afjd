@@ -17,7 +17,21 @@ import play_play
 import play_master
 import play_other
 
-OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Imaginer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Appariement', 'Paramètres', 'Retards', 'Superviser']
+OPTIONS = {
+    'Consulter': "Consulter la position et l'historique des résolutions de la partie",
+    'Ordonner': "Passer ses ordres sur la partie",
+    'Taguer': "Passer des ordres de communication pour une partie sans négocitation",
+    'Imaginer': "Imaginer des unités des autre joueurs pour interagir avec pour une partie à visibilité réstreinte",
+    'Négocier': "Utiliser la messagerie privée",
+    'Déclarer': "Utiliser la messagerie publique",
+    'Voter': "Voter pour ou contre l'arrêt de la partie",
+    'Noter': "Prendre des notes sur la partie",
+    'Arbitrer': "Réaliser toutes les opérations d'arbitrage",
+    'Appariement': "Se mettre dans la partie ou la quitter",
+    'Paramètres': "Consulter tous les paramètres de la partie",
+    'Retards': "Consulter les incidents sur la partiue (retards, abandons, désordres civils)",
+    'Superviser': "Observer une partie en direct"
+}
 
 ARRIVAL = None
 
@@ -145,7 +159,7 @@ def load_option(_, item_name, direct_last_moves=False):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
