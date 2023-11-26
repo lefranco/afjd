@@ -41,7 +41,27 @@ MAIN_TITLE = html.H1("Diplomania - le site de l'Association Francophone des Joue
 document <= MAIN_TITLE
 
 
-OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Retourner dans la partie', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Bac à sable', 'Technique', 'Variantes', 'Scorages', 'Wiki', 'Forum', 'Création', 'Modération', 'Administration']
+OPTIONS = {
+    'Accueil': "L'accueil du site et les fonctionnalité élémentaires d'un site web",
+    'Connexion': "Se connecter au site par mot de passe",
+    'Mon compte': "Pour éditer les paramètres de son compte sur le site (il faut être connecté)",
+    'Rejoindre une partie': "Pour se mettre dans une partie qui va bientôt commencer (ou obtenir une liste de parties)",
+    'Retourner dans la partie': "Revient dans la partie sélectionnée pout y jouer",
+    'Mes parties': "La liste des parties dans laquelle vous jouez (il faut être connecté)",
+    'Editer partie': "Pour modifier la partie (il faut être un arbitre) ou créer une partie",
+    'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
+    'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
+    'Classements': "Différents classements sur les joueurs du site (obtenir une liste de joueurs)",
+    'Bac à sable': "Pour essayer le moteur de résolution hors d'une parte sur un cas concret",
+    'Technique': "Différents articles techniques (pour les joueurs chevronnés)",
+    'Variantes': "Explications sur les variantes de jeu pratiquées sur le site",
+    'Scorages': "Explications sur les systèmes de scorages pratiqués sur le site",
+    'Wiki': "Un wiki de partage de contenu sur le jeu en général",
+    'Forum': "Un forum de discusion sur beaucoup de sujets",
+    'Création': "Ce menu réservé aux créateurs de tournois",
+    'Modération': "Ce menu réservé aux modérateurs du site",
+    'Administration': "Ce menu réservé à l'administrateur du site"
+}
 
 
 # overall_top
@@ -64,7 +84,7 @@ MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 IP_TIMEOUT_SEC = 7
 
@@ -264,7 +284,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -289,12 +309,12 @@ def load_option(_, item_name):
             figure <= legend
 
             MENU_LEFT <= figure
-            button = html.BUTTON("-", Class='btn-menu')
+            button = html.BUTTON("-", title="Cacher l'image", Class='btn-menu')
             button.bind("click", lambda e: set_site_image(e, 'False'))
 
         else:
 
-            button = html.BUTTON("+", Class='btn-menu')
+            button = html.BUTTON("+", title="Remettre l'image", Class='btn-menu')
             button.bind("click", lambda e: set_site_image(e, 'True'))
 
         MENU_LEFT <= html.BR()

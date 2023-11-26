@@ -20,7 +20,16 @@ import allgames
 import play
 
 
-OPTIONS = ['Parties du tournoi', 'Joueurs du tournoi', 'Classement du tournoi', 'Incidents du tournoi', 'Créer un tournoi', 'Editer le tournoi', 'Supprimer le tournoi', 'Les tournois du site']
+OPTIONS = {
+    'Parties du tournoi': "Les parties du tournoi de la partie sélectionnée",
+    'Joueurs du tournoi': "Les joueurs du tournoi de la partie sélectionnée",
+    'Classement du tournoi': "Le classement du tournoi de la partie sélectionnée",
+    'Incidents du tournoi': "La liste des incidents sur le tournoi de la partie sélectionnée",
+    'Créer un tournoi': "Créer un tournoi contenant la partie sélectionnée",
+    'Editer le tournoi': "Editer le tournoi de la partie sélectionnée",
+    'Supprimer le tournoi': "Supprimer le tournoi de la partie sélectionnée",
+    'Les tournois du site': "Liste complète des tournois sur le site"
+}
 
 MAX_LEN_TOURNAMENT_NAME = 50
 
@@ -1319,7 +1328,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id="page")
 MY_PANEL <= MY_SUB_PANEL
@@ -1361,7 +1370,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -1380,7 +1389,7 @@ def render(panel_middle):
     # always back to top
     global ITEM_NAME_SELECTED
 
-    ITEM_NAME_SELECTED = 'Les tournois du site'
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     if 'GAME' in storage:
         game = storage['GAME']

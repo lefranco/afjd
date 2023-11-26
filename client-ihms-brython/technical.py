@@ -14,7 +14,13 @@ import ezml_render
 LONG_DURATION_LIMIT_SEC = 1.0
 
 # sandbox must stay first
-OPTIONS = ['Documents', 'Pourquoi yapa', 'Choix d\'interface', 'Calcul du ELO', 'brouillard']
+OPTIONS = {
+    'Documents': "Lien vers différents documents techniques sur le jeu",
+    'Pourquoi yapa': "Complément à la Foire Aux Questions du site",
+    'Choix d\'interface': "Choisir une interface différente de celle par défaut pour voir les parties",
+    'Calcul du ELO': "Détail de la méthode de calcul du E.L.O. utilisé sur le site",
+    'Le brouillard': "Des informations sur l'option 'Brouillard de Guerre' pour une partie"
+}
 
 
 ARRIVAL = None
@@ -269,7 +275,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id='page')
 MY_PANEL <= MY_SUB_PANEL
@@ -289,7 +295,7 @@ def load_option(_, item_name):
         select_interface()
     if item_name == 'Calcul du ELO':
         show_elo_calculation()
-    if item_name == 'brouillard':
+    if item_name == 'Le brouillard':
         show_fog_of_war()
 
     global ITEM_NAME_SELECTED
@@ -305,7 +311,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -319,7 +325,7 @@ def render(panel_middle):
     global ITEM_NAME_SELECTED
     global ARRIVAL
 
-    ITEM_NAME_SELECTED = OPTIONS[0]
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     # this means user wants to see option
     if ARRIVAL in ['option']:

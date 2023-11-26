@@ -16,7 +16,12 @@ import interface
 import mapping
 
 
-OPTIONS = ['Editer les glorieux', 'Créer plusieurs parties', 'Explications', 'Mur de la honte']
+OPTIONS = {
+    'Editer les glorieux': "Changer nouvelles du site pour le createur (les glorieux)",
+    'Créer plusieurs parties': "Créer des parties à partir d'un fichier CSV",
+    'Explications': "Explications sur la création de parties à partir d'un fichier CSV",
+    'Mur de la honte': "Les joueurs qui ont abandonné une partie"
+}
 
 MAX_NUMBER_GAMES = 200
 
@@ -699,7 +704,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id="create")
 MY_PANEL <= MY_SUB_PANEL
@@ -737,7 +742,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -752,7 +757,7 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = OPTIONS[0]
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

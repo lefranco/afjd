@@ -13,7 +13,14 @@ import config
 import mydatetime
 import index  # circular import
 
-OPTIONS = ['Sélectionner un événement', 'Inscription', 'Créer un événement', 'Editer l\'événement', 'Gérer les participations', 'Supprimer l\'événement']
+OPTIONS = {
+    'Sélectionner un événement': "Sélectionner un événement sur le site",
+    'Inscription à l\'événement': "S'inscrire et/ou consulter la liste des inscrits à l'événement sélectionné",
+    'Créer un événement': "Créer un événement sur le site",
+    'Editer l\'événement': "Editer l'événement sélectionné",
+    'Gérer les participations': "Gérer les participations de l'événement sélectionné",
+    'Supprimer l\'événement': "Supprimer l'événement sélectionné"
+}
 
 
 MAX_LEN_EVENT_NAME = 50
@@ -1157,7 +1164,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id="page")
 MY_PANEL <= MY_SUB_PANEL
@@ -1171,7 +1178,7 @@ def load_option(_, item_name):
 
     if item_name == 'Sélectionner un événement':
         select_event()
-    if item_name == 'Inscription':
+    if item_name == 'Inscription à l\'événement':
         registrations()
     if item_name == 'Créer un événement':
         create_event(None)
@@ -1195,7 +1202,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -1209,11 +1216,11 @@ def render(panel_middle):
     global ITEM_NAME_SELECTED
     global ARRIVAL
 
-    ITEM_NAME_SELECTED = OPTIONS[0]
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     # this means user wants to join game
     if ARRIVAL:
-        ITEM_NAME_SELECTED = 'Inscription'
+        ITEM_NAME_SELECTED = 'Inscription à l\'événement'
 
     ARRIVAL = False
     load_option(None, ITEM_NAME_SELECTED)

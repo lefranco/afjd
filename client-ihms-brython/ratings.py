@@ -16,7 +16,17 @@ import mapping
 DEFAULT_ELO = 1500
 
 
-OPTIONS = ['Classement performance', 'Classement fiabilité', 'Classement régularité', 'Liste inscrits', 'Liste joueurs', 'Liste arbitres', 'Abonnés remplaçants', 'Groupe créateurs', 'Groupe modérateurs']
+OPTIONS = {
+    'Classement performance': "Classement selon la performance, c'est à dire le E.L.O.",
+    'Classement fiabilité': "Classement selon la fiabilité, c'est à dire pas de retard ni d'abandon",
+    'Classement régularité': "Classement selon la régularité, c'est à dire jouer souvent et sans interruption",
+    'Liste inscrits': "Les inscrits sur le site",
+    'Liste joueurs': "Les inscrits dans des parties sur le site",
+    'Liste arbitres': "Les arbitres de parties sur le site",
+    'Abonnés remplaçants': "Les utilisateurs abonnés au demandes de remplacement",
+    'Groupe créateurs': "Liste des utilisateurs disposant du droit de création",
+    'Groupe modérateurs': "Liste des utilisateurs disposant du droit de modération"
+}
 
 
 def get_detailed_elo_rating(classic, role_id):
@@ -1043,7 +1053,7 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
+ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 MY_SUB_PANEL = html.DIV(id="page")
 MY_PANEL <= MY_SUB_PANEL
@@ -1087,7 +1097,7 @@ def load_option(_, item_name):
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
@@ -1099,7 +1109,7 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = OPTIONS[0]
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
