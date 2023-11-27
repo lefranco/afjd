@@ -13,7 +13,7 @@ import scoring
 import interface
 import ezml_render
 
-OPTIONS = {n : f"Scorage {n}" for n in (config.SCORING_CODE_TABLE.keys())}
+OPTIONS = {n: f"Scorage {n}" for n in (config.SCORING_CODE_TABLE.keys())}
 
 ARRIVAL = None
 
