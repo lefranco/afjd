@@ -1,4 +1,4 @@
-""" technical """
+""" scorings """
 
 # pylint: disable=pointless-statement, expression-not-assigned
 

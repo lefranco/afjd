@@ -11,9 +11,7 @@ import interface
 import whynot
 import ezml_render
 
-LONG_DURATION_LIMIT_SEC = 1.0
 
-# sandbox must stay first
 OPTIONS = {
     'Documents': "Lien vers différents documents techniques sur le jeu",
     'Pourquoi yapa': "Complément à la Foire Aux Questions du site",
@@ -79,15 +77,6 @@ def show_technical():
     link41 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
     link41 <= "Comment créer les fichiers nécessaire pour une variante"
     MY_SUB_PANEL <= link41
-
-    # --
-
-    title5 = html.H3("Règles simplifiées")
-    MY_SUB_PANEL <= title5
-
-    link5 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
-    link5 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
-    MY_SUB_PANEL <= link5
 
     # --
 

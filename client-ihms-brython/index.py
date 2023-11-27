@@ -27,6 +27,7 @@ import events
 import ratings
 import sandbox
 import technical
+import discovery
 import variants
 import scorings
 import create
@@ -43,6 +44,7 @@ document <= MAIN_TITLE
 
 OPTIONS = {
     'Accueil': "L'accueil du site et les fonctionnalité élémentaires d'un site web",
+    'Découverte': "Pour découvrir simplement le jeu et le site par des tutoriels",
     'Connexion': "Se connecter au site par mot de passe",
     'Mon compte': "Pour éditer les paramètres de son compte sur le site (il faut être connecté)",
     'Rejoindre une partie': "Pour se mettre dans une partie qui va bientôt commencer (ou obtenir une liste de parties)",
@@ -200,6 +202,8 @@ def load_option(_, item_name):
     PANEL_MIDDLE.clear()
     if item_name == 'Accueil':
         home.render(PANEL_MIDDLE)
+    if item_name == 'Découverte':
+        discovery.render(PANEL_MIDDLE)
     if item_name == 'Connexion':
         login.render(PANEL_MIDDLE)
     if item_name == 'Mon compte':
