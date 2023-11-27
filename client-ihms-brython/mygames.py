@@ -312,12 +312,12 @@ def my_delays(ev):  # pylint: disable=invalid-name
     delays_table = html.TABLE()
 
     # the display order
-    fields = ['date', 'name', 'used_for_elo', 'go_game', 'current_advancement', 'role_played', 'duration']
+    fields = ['date', 'name', 'go_game', 'current_advancement', 'role_played', 'duration']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'date': 'date', 'name': 'nom', 'used_for_elo': 'elo', 'go_game': 'aller dans la partie', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'duration': 'durée'}[field]
+        field_fr = {'date': 'date', 'name': 'nom', 'go_game': 'aller dans la partie', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'duration': 'durée'}[field]
         col = html.TD(field_fr)
         thead <= col
     delays_table <= thead
@@ -376,9 +376,6 @@ def my_delays(ev):  # pylint: disable=invalid-name
             if field == 'name':
                 game_name = data['name']
                 value = game_name
-
-            if field == 'used_for_elo':
-                value = "Oui" if data['used_for_elo'] else "Non"
 
             if field == 'go_game':
 
@@ -497,12 +494,12 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
     dropouts_table = html.TABLE()
 
     # the display order
-    fields = ['date', 'name', 'used_for_elo', 'go_game', 'role_played']
+    fields = ['date', 'name', 'go_game', 'role_played']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'date': 'date', 'name': 'nom', 'used_for_elo': 'elo', 'go_game': 'aller dans la partie', 'role_played': 'rôle joué'}[field]
+        field_fr = {'date': 'date', 'name': 'nom', 'go_game': 'aller dans la partie', 'role_played': 'rôle joué'}[field]
         col = html.TD(field_fr)
         thead <= col
     dropouts_table <= thead
@@ -561,9 +558,6 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
             if field == 'name':
                 game_name = data['name']
                 value = game_name
-
-            if field == 'used_for_elo':
-                value = "Oui" if data['used_for_elo'] else "Non"
 
             if field == 'go_game':
 
