@@ -1,4 +1,4 @@
-""" technical """
+""" variants """
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
