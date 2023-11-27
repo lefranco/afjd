@@ -1293,7 +1293,7 @@ def show_tournaments_data():
                 games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
                 game_name = games_names[0]
                 form = html.FORM()
-                input_jump_game = html.INPUT(type="image", src="./images/look.png",  title="Pour aller dans le tournoi (en sélectionnant une partie du tournoi)", Class='btn-inside')
+                input_jump_game = html.INPUT(type="image", src="./images/look.png", title="Pour aller dans le tournoi (en sélectionnant une partie du tournoi)", Class='btn-inside')
                 input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                 form <= input_jump_game
                 value = form
