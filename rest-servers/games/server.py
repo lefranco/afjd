@@ -2249,8 +2249,8 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
         for _, _, type_num, zone_num, role_num in imagined_game_units:
             imagined_unit_dict[str(role_num)].append([type_num, zone_num])
 
-        # game not ongoing or game master or game actually finished : you get get a clear picture
-        if game.current_state != 1 or int(role_id) == 0 or (game.current_advancement % 5 == 4 and (game.current_advancement + 1) // 5 >= game.nb_max_cycles_to_play):
+        # game not ongoing or game master or game actually finished or soloed: you get get a clear picture
+        if game.current_state != 1 or int(role_id) == 0 or game.game_finished() or game.game_soloed(sql_executor):
             del sql_executor
             data = {
                 'ownerships': ownership_dict,
@@ -2520,8 +2520,8 @@ class GameFogOfWarReportRessource(flask_restful.Resource):  # type: ignore
 
         assert report is not None
 
-        # game not ongoing or game master or game actually finished : you get get a clear picture
-        if game.current_state != 1 or int(role_id) == 0 or (game.current_advancement % 5 == 4 and (game.current_advancement + 1) // 5 >= game.nb_max_cycles_to_play):
+        # game not ongoing or game master or game actually finished or soloed: you get get a clear picture
+        if game.current_state != 1 or int(role_id) == 0 or game.game_finished() or game.game_soloed(sql_executor):
             # extract report data
             content = report.content
             del sql_executor
@@ -2657,8 +2657,8 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         the_orders = json.loads(transition.orders_json)
         report_txt = transition.report_txt
 
-        # game not ongoing or game master or game actually finished : you get get a clear picture
-        if game.current_state != 1 or int(role_id) == 0 or (game.current_advancement % 5 == 4 and (game.current_advancement + 1) // 5 >= game.nb_max_cycles_to_play):
+        # game not ongoing or game master or game actually finished or soloed: you get get a clear picture
+        if game.current_state != 1 or int(role_id) == 0 or game.game_finished() or game.game_soloed(sql_executor):
             del sql_executor
             data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
             return data, 200
@@ -2990,13 +2990,18 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="Game does not seem to be ongoing")
 
-        # game must not be actually finished
-        if game.current_advancement % 5 == 4 and (game.current_advancement + 1) // 5 >= game.nb_max_cycles_to_play:
-            del sql_executor
-            flask_restful.abort(403, msg="Game seems to be actually finished")
-
         # begin of protected section
         with MOVE_GAME_LOCK_TABLE[game.name]:
+
+            # game must not be actually finished
+            if game.game_finished():
+                del sql_executor
+                flask_restful.abort(403, msg="Game seems to be actually finished")
+
+            # game must not be actually finished
+            if game.game_soloed(sql_executor):
+                del sql_executor
+                flask_restful.abort(403, msg="Game seems to be actually soloed")
 
             # check orders are required
             actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
@@ -3166,10 +3171,15 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # begin of protected section
         with MOVE_GAME_LOCK_TABLE[game.name]:
 
-            # must not be finished or soloed
-            if game.game_finished() or game.game_soloed(sql_executor):
+            # must not be finished
+            if game.game_finished():
                 del sql_executor
-                flask_restful.abort(403, msg="Game is finished or soloed!")
+                flask_restful.abort(403, msg="Game is finished!")
+
+            # must not be soloed
+            if game.game_soloed(sql_executor):
+                del sql_executor
+                flask_restful.abort(403, msg="Game is soloed!")
 
             # check orders are required
             # needed list : those who need to submit orders
