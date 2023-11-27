@@ -1676,7 +1676,7 @@ def show_player_games(pseudo_player, game_list):
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'current_state': 'état', 'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
+            field_fr = {'current_state': 'état', 'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics', 'nomessage_game': 'privés'}[field]
             col = html.TD(field_fr)
             thead <= col
         games_table <= thead
