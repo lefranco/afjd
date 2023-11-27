@@ -913,7 +913,7 @@ def my_games(state_name):
 
         content = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics', 'nomessage_game': 'privés', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
 
-        legend = {'name': "Le nom de la partie", 'go_game': "Un bouton aller se promener dans la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombrte de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse (déclaration) non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message privé (de négociation) non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_game': "Est-ce que la messagerie est autorisée entre les joueurs (la valeur entre parenthèse est celle utilisée pendant la partie si différente de celle actuelle)", 'nomessage_game': "Est-ce que la presse est autorisée pour les joueurs (la valeur entre parenthèse est celle utilisée pendant la partie si différente de celle actuelle)", 'edit': "Pour éditer les paramètres de la partie", 'startstop': "Pour arrêter ou démarrer la partie"}[field]
+        legend = {'name': "Le nom de la partie", 'go_game': "Un bouton aller se promener dans la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombrte de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse (déclaration) non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message privé (de négociation) non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_game': "Est-ce que la messagerie est autorisée entre les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'nomessage_game': "Est-ce que la presse est autorisée pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'edit': "Pour éditer les paramètres de la partie", 'startstop': "Pour arrêter ou démarrer la partie"}[field]
 
         field = html.DIV(content, title=legend)
         col = html.TD(field)
@@ -1267,29 +1267,29 @@ def my_games(state_name):
                 value = html.DIV(stats, title="Indique si la partie compte pour le classement E.L.O. sur le site")
 
             if field == 'nopress_game':
-                stats1 = value
+                value1 = value
                 explanation = "Indique si les joueurs peuvent utiliser la messagerie publique"
-                stats2 = data['nopress_current']
-                if stats2 == stats1:
-                    value = "Non" if stats1 else "Oui"
+                value2 = data['nopress_current']
+                if value2 == value1:
+                    stats = "Non" if value1 else "Oui"
                 else:
-                    stats1 = "Non" if stats1 else "Oui"
-                    stats2 = "Non" if stats2 else "Oui"
+                    stats1 = "Non" if value1 else "Oui"
+                    stats2 = "Non" if value2 else "Oui"
                     stats = f"{stats1} ({stats2})"
-                    explanation += " - La valeur indiquée est celle applicable en ce moment, celle entre parenthèses éventuellement est celle utilisée pour la partie"
+                    explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
                 value = html.DIV(stats, title=explanation)
 
             if field == 'nomessage_game':
-                stats1 = value
+                value1 = value
                 explanation = "Indique si les joueurs peuvent utiliser la messagerie privée"
-                stats2 = data['nomessage_current']
-                if stats2 == stats1:
-                    value = "Non" if stats1 else "Oui"
+                value2 = data['nomessage_current']
+                if value2 == value1:
+                    stats = "Non" if value1 else "Oui"
                 else:
-                    stats1 = "Non" if stats1 else "Oui"
-                    stats2 = "Non" if stats2 else "Oui"
+                    stats1 = "Non" if value1 else "Oui"
+                    stats2 = "Non" if value2 else "Oui"
                     stats = f"{stats1} ({stats2})"
-                    explanation += " - La valeur indiquée est celle applicable en ce moment, celle entre parenthèses éventuellement est celle utilisée pour la partie"
+                    explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
                 value = html.DIV(stats, title=explanation)
 
             if field == 'edit':
