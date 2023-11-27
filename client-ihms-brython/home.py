@@ -359,12 +359,6 @@ def show_news():
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/explain.png")
-    col <= img
-    row <= col
-
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
     img = html.IMG(src="./images/pay.png")
     col <= img
     row <= col
@@ -387,19 +381,13 @@ def show_news():
     note_bene_content_table <= row
 
     col = html.TD()
-    link3 = html.A(href="https://youtu.be/luOiAz9i7Ls", target="_blank")
-    link3 <= "Je comprend rien à ce site, je veux des explications claires avec un tutorial Youtube !"
-    col <= link3
-    row <= col
-
-    col = html.TD()
     link4 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy", target="_blank")
-    link4 <= "Je souhaite contribuer au financement du site !"
+    link4 <= "Je souhaite contribuer au financement de l'association qui gère le site !"
     col <= link4
     row <= col
 
     col = html.TD()
-    link5 = html.A(href="https://discord.gg/7wpBanK6", target="_blank")
+    link5 = html.A(href="https://discord.com/invite/wAHgMWQG4Z", target="_blank")
     link5 <= "Feedback et support du site diplomania sur Discord !"
     col <= link5
     row <= col
@@ -427,12 +415,6 @@ def show_news():
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/learn.png")
-    col <= img
-    row <= col
-
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
     img = html.IMG(src="./images/abydos.jpeg")
     col <= img
     row <= col
@@ -451,12 +433,6 @@ def show_news():
     col = html.TD()
     link5 = html.A(href="https://www.facebook.com/groups/104700706277433", target="_blank")
     link5 <= "La page Facebook de l'association"
-    col <= link5
-    row <= col
-
-    col = html.TD()
-    link5 = html.A(href="https://youtu.be/d-ddAqTNDzA?si=Raf-hKFpgjMgdmf0", target="_blank")
-    link5 <= "Je veux apprendre à jouer à Diplomatie avec un tutorial Youtube"
     col <= link5
     row <= col
 

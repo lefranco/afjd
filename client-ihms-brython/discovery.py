@@ -2,11 +2,13 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import html, window  # pylint: disable=import-error
+from browser import html, document, window  # pylint: disable=import-error
 
 
 OPTIONS = {
     'Documents': "Lien vers différents documents d'initiation sur le jeu",
+    'Vidéo Youtube Diplomacy': "Lien une vidéo Youtube qui présente simplement les règles du jeu avec humour",
+    'Vidéo Youtube Diplomania': "Lien une vidéo Youtube qui présente simplement comment jouer sur ce site",
 }
 
 
@@ -21,6 +23,30 @@ def show_discovery():
     link5 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
     link5 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
     MY_SUB_PANEL <= link5
+
+
+def tutorial_game():
+    """ tutorial_game """
+
+    # load tutorial_game directly
+
+    # use button
+    button = html.BUTTON("Lancement du tutoriel youtube pour le jeu", id='tutorial_game', Class='btn-inside')
+    MY_SUB_PANEL <= button
+    button.bind("click", lambda e: window.open("https://youtu.be/d-ddAqTNDzA?si=Raf-hKFpgjMgdmf0"))
+    document['tutorial_game'].click()
+
+
+def tutorial_site():
+    """ tutorial_site """
+
+    # load tutorial_site directly
+
+    # use button
+    button = html.BUTTON("Lancement du tutoriel youtube pour le site", id='tutorial_link', Class='btn-inside')
+    MY_SUB_PANEL <= button
+    button.bind("click", lambda e: window.open("https://youtu.be/luOiAz9i7Ls"))
+    document['tutorial_link'].click()
 
 
 MY_PANEL = html.DIV()
@@ -49,6 +75,10 @@ def load_option(_, item_name):
 
     if item_name == 'Documents':
         show_discovery()
+    if item_name == 'Vidéo Youtube Diplomacy':
+        tutorial_game()
+    if item_name == 'Vidéo Youtube Diplomania':
+        tutorial_site()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
@@ -78,6 +108,5 @@ def render(panel_middle):
 
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
-    ARRIVAL = None
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
