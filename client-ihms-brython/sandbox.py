@@ -5,7 +5,7 @@
 import json
 import time
 
-from browser import html, alert, document, window, ajax  # pylint: disable=import-error
+from browser import html, alert, document, ajax  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
