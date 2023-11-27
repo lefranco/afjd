@@ -385,12 +385,12 @@ def my_delays(ev):  # pylint: disable=invalid-name
                 if storage['GAME_ACCESS_MODE'] == 'button':
 
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Cliquer pour aller dans la partie", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
                 else:
-                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
+                    img = html.IMG(src="./images/play.png", title="Cliquer pour aller dans la partie")
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
@@ -570,12 +570,12 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
                 if storage['GAME_ACCESS_MODE'] == 'button':
 
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Cliquer pour aller dans la partie", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
                 else:
-                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
+                    img = html.IMG(src="./images/play.png", title="Cliquer pour aller dans la partie")
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
@@ -1074,12 +1074,12 @@ def my_games(state_name):
                 if storage['GAME_ACCESS_MODE'] == 'button':
 
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Cliquer pour aller dans la partie", Class='btn-inside')
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
                 else:
-                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
+                    img = html.IMG(src="./images/play.png", title="Cliquer pour aller dans la partie")
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
@@ -1088,12 +1088,13 @@ def my_games(state_name):
 
                 deadline_loaded = value
                 value = ""
+                explanation = ""
 
                 if int(data['current_state']) == 1:
 
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
                     datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
-                    value = datetime_deadline_loaded_str
+                    stats = datetime_deadline_loaded_str
 
                     if data['fast']:
                         factor = 60
@@ -1105,23 +1106,33 @@ def my_games(state_name):
                         colour = config.GAMEOVER_COLOUR
                         # keep value only for game master
                         if role_id is None or role_id != 0:
-                            value = "(terminée)"
+                            stats = "(terminée)"
+                            explanation = "Pas de date limite : la partie est terminée parce qu'arrivée à échéance"
+                        else:
+                            explanation = "La date indiquée n'est pas une date limite, mais plutôt une date à laquelle il faudra agir sur cette partie que vous arbitrez"
 
                     # we are after everything !
                     elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
                         colour = config.CRITICAL_COLOUR
+                        explanation = "La date limite est fortement dépassée"
                     # we are after deadline + grace
                     elif time_stamp_now > deadline_loaded + factor * data['grace_duration']:
                         colour = config.PASSED_GRACE_COLOUR
+                        explanation = "La date limite est dépassée"
                     # we are after deadline + slight
                     elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
                         colour = config.PASSED_DEADLINE_COLOUR
+                        explanation = "La date limite est légèrement dépassée"
                     # we are slightly after deadline
                     elif time_stamp_now > deadline_loaded:
                         colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
+                        explanation = "La date limite est tout juste dépassée"
                     # deadline is today
                     elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
                         colour = config.APPROACHING_DEADLINE_COLOUR
+                        explanation = "La date limite est bientôt"
+
+                    value = html.DIV(stats, title=explanation)
 
             if field == 'current_advancement':
                 advancement_loaded = value
@@ -1150,7 +1161,7 @@ def my_games(state_name):
                             needed_roles_list = submitted_data['needed']
                             nb_needed = len(needed_roles_list)
                             stats = f"{nb_submitted}/{nb_needed}"
-                            value = stats
+                            value = html.DIV(stats, title="Combien de jeux d'ordres soumis / combien nécessaires")
                             if nb_submitted >= nb_needed:
                                 # we have all orders : green
                                 colour = config.ALL_ORDERS_IN_COLOUR
@@ -1167,7 +1178,7 @@ def my_games(state_name):
                             agreed_after_roles_list = submitted_data['agreed_after']
                             nb_agreed_after = len(agreed_after_roles_list)
                             stats = f"{nb_agreed_now} ma. {nb_agreed_after} dl"
-                            value = stats
+                            value = html.DIV(stats, title="Abbréviations : ma : les accords pour résoudre maintenant, dl : les accords pour résoudre à la date limite")
 
             if field == 'orders_submitted':
                 value = ""
@@ -1212,7 +1223,8 @@ def my_games(state_name):
             if field == 'votes':
                 value = ""
                 if str(game_id) in dict_voted_data['dict_voted'] and dict_voted_data['dict_voted'][str(game_id)]:
-                    value = dict_voted_data['dict_voted'][str(game_id)]
+                    stats = dict_voted_data['dict_voted'][str(game_id)]
+                    value = html.DIV(stats, title="Compte les votes exprimés sur le vote d'arrêt de la partie (qu'ils soient pour ou contre)")
 
             if field == 'new_declarations':
                 value = ""
@@ -1222,12 +1234,12 @@ def my_games(state_name):
                         arrival = "declarations"
                         if storage['GAME_ACCESS_MODE'] == 'button':
                             form = html.FORM()
-                            input_jump_game = html.INPUT(type="image", src="./images/press_published.jpg", title="Pour aller voir les nouvelles presses", Class='btn-inside')
+                            input_jump_game = html.INPUT(type="image", src="./images/press_published.jpg", title="Cliquer pour aller voir les nouvelles presses", Class='btn-inside')
                             input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=arrival: select_game_callback(e, gn, gds, a))
                             form <= input_jump_game
                             value = form
                         else:
-                            img = html.IMG(src="./images/press_published.jpg", title="Pour aller voir les nouvelles presses")
+                            img = html.IMG(src="./images/press_published.jpg", title="Cliquer pour aller voir les nouvelles presses")
                             link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
                             link <= img
                             value = link
@@ -1240,38 +1252,45 @@ def my_games(state_name):
                         arrival = "messages"
                         if storage['GAME_ACCESS_MODE'] == 'button':
                             form = html.FORM()
-                            input_jump_game = html.INPUT(type="image", src="./images/messages_received.jpg", title="Pour aller voir les nouveaux messages privés", Class='btn-inside')
+                            input_jump_game = html.INPUT(type="image", src="./images/messages_received.jpg", title="Cliquer pour aller voir les nouveaux messages privés", Class='btn-inside')
                             input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=arrival: select_game_callback(e, gn, gds, a))
                             form <= input_jump_game
                             value = form
                         else:
-                            img = html.IMG(src="./images/messages_received.jpg", title="Pour aller voir les nouveaux messages privés")
+                            img = html.IMG(src="./images/messages_received.jpg", title="Cliquer pour aller voir les nouveaux messages privés")
                             link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
                             link <= img
                             value = link
 
             if field == 'used_for_elo':
-                value = "Oui" if value else "Non"
+                stats = "Oui" if value else "Non"
+                value = html.DIV(stats, title="Indique si la partie compte pour le classement E.L.O. sur le site")
 
             if field == 'nopress_game':
-                value1 = value
-                value2 = data['nopress_current']
-                if value2 == value1:
-                    value = "Non" if value1 else "Oui"
+                stats1 = value
+                explanation = "Indique si les joueurs peuvent utiliser la messagerie publique"
+                stats2 = data['nopress_current']
+                if stats2 == stats1:
+                    value = "Non" if stats1 else "Oui"
                 else:
-                    value1 = "Non" if value1 else "Oui"
-                    value2 = "Non" if value2 else "Oui"
-                    value = f"{value1} ({value2})"
+                    stats1 = "Non" if stats1 else "Oui"
+                    stats2 = "Non" if stats2 else "Oui"
+                    stats = f"{stats1} ({stats2})"
+                    explanation += " - La valeur indiquée est celle applicable en ce moment, celle entre parenthèses éventuellement est celle utilisée pour la partie"
+                value = html.DIV(stats, title=explanation)
 
             if field == 'nomessage_game':
-                value1 = value
-                value2 = data['nomessage_current']
-                if value2 == value1:
-                    value = "Non" if value1 else "Oui"
+                stats1 = value
+                explanation = "Indique si les joueurs peuvent utiliser la messagerie privée"
+                stats2 = data['nomessage_current']
+                if stats2 == stats1:
+                    value = "Non" if stats1 else "Oui"
                 else:
-                    value1 = "Non" if value1 else "Oui"
-                    value2 = "Non" if value2 else "Oui"
-                    value = f"{value1} ({value2})"
+                    stats1 = "Non" if stats1 else "Oui"
+                    stats2 = "Non" if stats2 else "Oui"
+                    stats = f"{stats1} ({stats2})"
+                    explanation += " - La valeur indiquée est celle applicable en ce moment, celle entre parenthèses éventuellement est celle utilisée pour la partie"
+                value = html.DIV(stats, title=explanation)
 
             if field == 'edit':
                 value = ""
@@ -1295,14 +1314,14 @@ def my_games(state_name):
                     if role_id == 0:
                         if state == 0:
                             form = html.FORM()
-                            input_start_game = html.INPUT(type="image", src="./images/start_game.jpg", title="Pour démarrer la partie", Class='btn-inside')
+                            input_start_game = html.INPUT(type="image", src="./images/start_game.jpg", title="Cliquer pour démarrer la partie", Class='btn-inside')
                             input_start_game.bind("click", lambda e, g=game_name: start_game_callback(e, g))
                             form <= input_start_game
                             value = form
                             startable_game_present = True
                         if state == 1:
                             form = html.FORM()
-                            input_stop_game = html.INPUT(type="image", src="./images/stop_game.png", title="Pour arrêter la partie", Class='btn-inside')
+                            input_stop_game = html.INPUT(type="image", src="./images/stop_game.png", title="Cliquer pour arrêter la partie", Class='btn-inside')
                             input_stop_game.bind("click", lambda e, g=game_name: stop_game_callback(e, g))
                             form <= input_stop_game
                             value = form
