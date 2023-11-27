@@ -398,7 +398,7 @@ document <= html.I(f"Vous utilisez la version du {VERSION_VALUE}")
 document <= html.BR()
 END_TIME = time.time()
 ELAPSED = END_TIME - START_TIME
-document <= html.I(f"Temps de chargement de la page d'accueil : {ELAPSED:.2f}")
+document <= html.I(f"Temps de chargement de la page d'accueil : {ELAPSED:.2f}secs")
 
 # spinner dies
 spinner = document['spinner']

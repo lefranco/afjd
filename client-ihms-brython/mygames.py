@@ -1340,7 +1340,7 @@ def my_games(state_name):
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
 
-    stats = f"Temps de chargement de la page {elapsed:.2f} avec {number_games} partie(s)"
+    stats = f"Temps de chargement de la page {elapsed:.2f}secs avec {number_games} partie(s)"
     if number_games:
         stats += f" soit {elapsed/number_games:.2f} par partie"
 
