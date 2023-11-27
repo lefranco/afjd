@@ -1103,6 +1103,9 @@ def sandbox():
     MY_SUB_PANEL <= my_sub_panel2
 
 
+PANEL_MIDDLE = None
+
+
 def render(panel_middle):
     """ render """
 
