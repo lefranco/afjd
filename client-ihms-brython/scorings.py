@@ -157,14 +157,14 @@ def load_option(_, item_name):
     MENU_LEFT.clear()
 
     # items in menu
-    for possible_item_name in OPTIONS:
+    for possible_item_name, legend in OPTIONS.items():
 
         if possible_item_name == ITEM_NAME_SELECTED:
             item_name_bold_or_not = html.B(possible_item_name)
         else:
             item_name_bold_or_not = possible_item_name
 
-        button = html.BUTTON(item_name_bold_or_not, title=OPTIONS[possible_item_name], Class='btn-menu')
+        button = html.BUTTON(item_name_bold_or_not, title=legend, Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
