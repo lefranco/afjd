@@ -2379,10 +2379,13 @@ def show_idle_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
 
 
+LINES_SCHEDULER_LOGS = 100
+
+
 def show_scheduler_logs():
     """ show_scheduler_logs """
 
-    def get_logs_callback(ev):  # pylint: disable=invalid-name
+    def get_logs():  # pylint: disable=invalid-name
         """ get_logs_callback """
 
         def reply_callback(req):
@@ -2395,28 +2398,18 @@ def show_scheduler_logs():
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
 
-                # failed but refresh
-                MY_SUB_PANEL.clear()
-                show_scheduler_logs()
-
                 return
 
-            # TODO display correctly
-            logs = "<br>".join(req_result['msg'].split('\n'))
-            print(logs)
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            show_scheduler_logs()
-
-        ev.preventDefault()
+            for log in req_result:
+                MY_SUB_PANEL <= log
+                MY_SUB_PANEL <= html.BR()
 
         json_dict = {
         }
 
         host = config.SERVER_CONFIG['SCHEDULER']['HOST']
         port = config.SERVER_CONFIG['SCHEDULER']['PORT']
-        url = f"{host}:{port}/access-logs"
+        url = f"{host}:{port}/access-logs/{LINES_SCHEDULER_LOGS}"
 
         # get logs : do not need token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -2427,15 +2420,7 @@ def show_scheduler_logs():
         alert("Pas le bon compte (pas admin)")
         return
 
-    form = html.FORM()
-
-    # ---
-
-    input_get_logs = html.INPUT(type="submit", value="Récupérer", Class='btn-inside')
-    input_get_logs.bind("click", get_logs_callback)
-    form <= input_get_logs.bind("click", get_logs_callback)
-
-    MY_SUB_PANEL <= form
+    get_logs()
 
 
 def maintain():
