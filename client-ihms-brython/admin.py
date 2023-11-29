@@ -336,7 +336,14 @@ def change_site_image():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                common.info_dialog(f"L'image du site a été changée (recharger la page pour la voir) : {messages}")
+                common.info_dialog(f"L'image du site a été changée : {messages}")
+
+                index.SITE_IMAGE_DICT['image'] = image_str
+                index.SITE_IMAGE_DICT['legend'] = legend_content
+
+                # back to where we started
+                MY_SUB_PANEL.clear()
+                change_site_image()
 
             # get the image content
             image_bytes = bytes(window.Array["from"](window.Uint8Array.new(reader.result)))
@@ -387,10 +394,6 @@ def change_site_image():
         # Read the file content as text
         reader.bind("load", onload_callback)
         reader.readAsArrayBuffer(file_name)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        change_site_image()
 
     MY_SUB_PANEL <= html.H3("Changer l'image du site")
 
