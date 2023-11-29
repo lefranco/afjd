@@ -22,5 +22,5 @@ echo "check solver"
 curl -s https://solver.diplomania.fr/command -H "Content-Type: application/json" -d '{"command":"ls"}' -X POST
 
 echo "------------------------------"
-echo "check scheduler NOT READY YET"
-## curl -s https://scheduler.diplomania.fr/logs -X GET
+echo "check scheduler"
+curl -s https://scheduler.diplomania.fr/access-logs -X GET
