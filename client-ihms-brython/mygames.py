@@ -1374,6 +1374,27 @@ def my_games(state_name):
     input_my_dropouts.bind("click", my_dropouts)
     MY_SUB_PANEL <= input_my_dropouts
 
+    # display shift with server
+    delta_time_sec = int(storage['DELTA_TIME_SEC'])
+    abs_delta_time_sec = abs(delta_time_sec)
+
+    if abs_delta_time_sec > 0:
+
+        if delta_time_sec > 0:
+            status = "en avance"
+        else:
+            status = "en retard"
+
+        if abs_delta_time_sec > 60:
+            abs_delta_time_sec //= 60
+            unit = "minutes"
+        else:
+            unit = "secondes"
+
+        # display
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV(f"Votre horloge locale est {status} de {abs_delta_time_sec} {unit} sur celle du serveur", Class='note')
+
 
 PANEL_MIDDLE = None
 
