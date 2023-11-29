@@ -80,6 +80,15 @@ def show_technical():
 
     # --
 
+    title5 = html.H3("Les sources du site")
+    MY_SUB_PANEL <= title5
+
+    link5 = html.A(href="https://github.com/lefranco/afjd", target="_blank")
+    link5 <= "Lien vers l'espace GITHUB qui archive tous les sources de la brique jeu (Diplomania v1 'front-end' et 'back-end')"
+    MY_SUB_PANEL <= link5
+
+    # --
+
     title6 = html.H3("Création de fichier de tournoi")
     MY_SUB_PANEL <= title6
 
