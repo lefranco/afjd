@@ -2400,7 +2400,9 @@ def show_scheduler_logs():
 
                 return
 
-            for log in req_result:
+            req_result2 = req_result.copy()
+            req_result2.reverse()
+            for log in req_result2:
                 MY_SUB_PANEL <= log
                 MY_SUB_PANEL <= html.BR()
 
