@@ -23,4 +23,4 @@ curl -s https://solver.diplomania.fr/command -H "Content-Type: application/json"
 
 echo "------------------------------"
 echo "check scheduler"
-curl -s https://scheduler.diplomania.fr/access-logs -X GET
+curl -s https://scheduler.diplomania.fr/access-logs/10 -X GET
