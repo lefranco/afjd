@@ -16,6 +16,9 @@ import collections
 
 import flask_restful  # type: ignore
 
+SOLVER_INVOCATION_TIMEOUT_SEC = 2
+
+
 SEASON_NAME_TABLE = ["PRINTEMPS", "ETE", "AUTOMNE", "HIVER", "BILAN"]
 
 
@@ -536,10 +539,14 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
             ]
 
         # run solver
-        result = subprocess.run(
-            call_list,
-            check=False,
-            capture_output=True)
+        try:
+            result = subprocess.run(
+                call_list,
+                timeout=SOLVER_INVOCATION_TIMEOUT_SEC,
+                check=False,
+                capture_output=True)
+        except subprocess.TimeoutExpired:
+            return -1, "Timeout calling solver ;-(", "", None, None, None
 
         if result.returncode != 0:
             return result.returncode, result.stderr.decode(), result.stdout.decode(), None, None, None
@@ -600,10 +607,14 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
         ]
 
         # run solver
-        result = subprocess.run(
-            call_list,
-            check=False,
-            capture_output=True)
+        try:
+            result = subprocess.run(
+                call_list,
+                timeout=SOLVER_INVOCATION_TIMEOUT_SEC,
+                check=False,
+                capture_output=True)
+        except subprocess.TimeoutExpired:
+            return -1, "Timeout calling solver ;-(", "", None
 
         if result.returncode != 0:
             return result.returncode, result.stderr.decode(), result.stdout.decode(), None
