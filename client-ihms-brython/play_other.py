@@ -1051,9 +1051,9 @@ def pairing():
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"Vous avez pris l'arbitrage de la partie : {messages}")
 
-            # back to where we started
-            play_low.MY_SUB_PANEL.clear()
-            pairing()
+            # action of going to game page
+            play_low.PANEL_MIDDLE.clear()
+            play.render(play_low.PANEL_MIDDLE)
 
         ev.preventDefault()
 
@@ -1092,9 +1092,9 @@ def pairing():
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"Vous avez quitté l'arbitrage de la partie : {messages}")
 
-            # back to where we started
-            play_low.MY_SUB_PANEL.clear()
-            pairing()
+            # action of going to game page
+            play_low.PANEL_MIDDLE.clear()
+            play.render(play_low.PANEL_MIDDLE)
 
         ev.preventDefault()
 
