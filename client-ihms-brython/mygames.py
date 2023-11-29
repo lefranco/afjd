@@ -24,6 +24,8 @@ MY_SUB_PANEL = html.DIV(id="page")
 MY_SUB_PANEL.attrs['style'] = 'display: table-row'
 MY_PANEL <= MY_SUB_PANEL
 
+# warn because difference
+DELTA_WARNING_THRESHOLD_SEC = 10
 
 def get_incomplete_games():
     """ get_incomplete_games : returns empty list if error or no game"""
@@ -1335,6 +1337,35 @@ def my_games(state_name):
 
         games_table <= row
 
+    # get GMT date and time
+    time_stamp_now = time.time()
+    date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
+    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+
+    MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
+    MY_SUB_PANEL <= html.BR()
+
+    # display shift with server
+    delta_time_sec = int(storage['DELTA_TIME_SEC'])
+    abs_delta_time_sec = abs(delta_time_sec)
+
+    if abs_delta_time_sec > DELTA_WARNING_THRESHOLD_SEC:
+
+        if delta_time_sec > 0:
+            status = "en avance"
+        else:
+            status = "en retard"
+
+        if abs_delta_time_sec > 60:
+            abs_delta_time_sec //= 60
+            unit = "minutes"
+        else:
+            unit = "secondes"
+
+        # display
+        MY_SUB_PANEL <= html.DIV(f"Attention ! Votre horloge locale est {status} de {abs_delta_time_sec} {unit} sur celle du serveur", Class='important')
+        MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
     if startable_game_present:
@@ -1346,7 +1377,7 @@ def my_games(state_name):
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
 
-    stats = f"Temps de chargement de la page {elapsed:.2f}secs avec {number_games} partie(s)"
+    stats = f"Temps de chargement de la page {elapsed:.2f} secs avec {number_games} partie(s)"
     if number_games:
         stats += f" soit {elapsed/number_games:.2f} par partie"
 
@@ -1373,27 +1404,6 @@ def my_games(state_name):
     input_my_dropouts = html.INPUT(type="submit", value="Consulter la liste de tous mes abandons", Class='btn-inside')
     input_my_dropouts.bind("click", my_dropouts)
     MY_SUB_PANEL <= input_my_dropouts
-
-    # display shift with server
-    delta_time_sec = int(storage['DELTA_TIME_SEC'])
-    abs_delta_time_sec = abs(delta_time_sec)
-
-    if abs_delta_time_sec > 0:
-
-        if delta_time_sec > 0:
-            status = "en avance"
-        else:
-            status = "en retard"
-
-        if abs_delta_time_sec > 60:
-            abs_delta_time_sec //= 60
-            unit = "minutes"
-        else:
-            unit = "secondes"
-
-        # display
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV(f"Votre horloge locale est {status} de {abs_delta_time_sec} {unit} sur celle du serveur", Class='note')
 
 
 PANEL_MIDDLE = None
