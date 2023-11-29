@@ -27,6 +27,7 @@ MY_PANEL <= MY_SUB_PANEL
 # warn because difference
 DELTA_WARNING_THRESHOLD_SEC = 10
 
+
 def get_incomplete_games():
     """ get_incomplete_games : returns empty list if error or no game"""
 
