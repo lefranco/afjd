@@ -505,7 +505,7 @@ def show_news():
     title8 = html.H4("Date sur le serveur")
     div_a0 <= title8
 
-    # time shift
+    # calculate and store time shift with server
 
     # time on server
     server_time = news_content_table_loaded['server_time']
@@ -514,31 +514,10 @@ def show_news():
     local_time = time.time()
 
     # difference
-    delta_time = round(local_time - server_time)
-    if delta_time > 0:
-        status = "en avance"
-    else:
-        status = "en retard"
-    abs_delta_time = abs(delta_time)
-    if abs_delta_time > 60:
-        abs_delta_time //= 60
-        unit = "minutes"
-    else:
-        unit = "secondes"
+    delta_time_sec = round(local_time - server_time)
 
-    server_time_gmt = mydatetime.fromtimestamp(server_time)
-    server_time_gmt_str = mydatetime.strftime(*server_time_gmt)
-    div_a0 <= server_time_gmt_str
-    div_a0 <= html.BR()
-
-    # do not always display
-    if abs(delta_time) > THRESHOLD_DRIFT_ALERT_SEC:
-        div_a0 <= html.DIV(f"Votre horloge locale est {status} de {abs_delta_time} {unit} sur celle du serveur", Class='note')
-        div_a0 <= html.BR()
-
-    div_a0_tip = html.SPAN("Plus de détail dans le menu “Accueil” sous menu “Foire aux question”", Class='tooltiptext')
-    div_a0 <= div_a0_tip
-    div_homepage <= div_a0
+    # store to be used later on
+    storage['DELTA_TIME_SEC'] = str(delta_time_sec)
 
     # ----
 
