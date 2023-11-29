@@ -491,10 +491,12 @@ class DebriefGameRessource(flask_restful.Resource):  # type: ignore
 
         # game must be ongoing
         if game.current_state != 1:
+            del sql_executor
             flask_restful.abort(404, msg="Game is not ongoing")
 
         # game must be finished or soloed
         if not (game.game_finished() or game.game_soloed(sql_executor)):
+            del sql_executor
             flask_restful.abort(404, msg="Game is not finished or soloed")
 
         # debrief
@@ -959,6 +961,7 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
+            del sql_executor
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
         admin_pseudo = req_result.json()
@@ -1185,6 +1188,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             req_result = SESSION.get(url)
             if req_result.status_code != 200:
                 print(f"ERROR from server  : {req_result.text}")
+                del sql_executor
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                 flask_restful.abort(404, msg=f"Failed to get id from pseudo for {passive_pseudo} : {message}")
             passive_user_id = req_result.json()
@@ -2056,6 +2060,7 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
         url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('AccessToken')
         if not jwt_token:
+            del sql_executor
             flask_restful.abort(400, msg="Missing authentication!")
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
         if req_result.status_code != 200:
@@ -2177,6 +2182,7 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
         url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('AccessToken')
         if not jwt_token:
+            del sql_executor
             flask_restful.abort(400, msg="Missing authentication!")
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
         if req_result.status_code != 200:
@@ -2210,6 +2216,7 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
+            del sql_executor
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
         admin_pseudo = req_result.json()
@@ -2341,6 +2348,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
+            del sql_executor
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
         admin_pseudo = req_result.json()
@@ -2613,6 +2621,7 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('AccessToken')
         if not jwt_token:
+            del sql_executor
             flask_restful.abort(400, msg="Missing authentication!")
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
         if req_result.status_code != 200:
@@ -4898,6 +4907,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         url = f"{host}:{port}/moderators"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
+            del sql_executor
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
         the_moderators = req_result.json()
@@ -5643,7 +5653,6 @@ class AllGamesDropoutsRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
         late_list = dropouts.Dropout.inventory(sql_executor)
-        sql_executor = database.SqlExecutor()
         del sql_executor
 
         data = {'dropouts': late_list}
@@ -5974,6 +5983,7 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
         # no tournament for that game : legal (return empty dict)
         if not game_tournaments:
             data = None
+            del sql_executor
             return data, 200
 
         # more than one tournament for that game : internal error actually
@@ -6521,6 +6531,7 @@ class RevokeRessource(flask_restful.Resource):  # type: ignore
         url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('AccessToken')
         if not jwt_token:
+            del sql_executor
             flask_restful.abort(400, msg="Missing authentication!")
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
         if req_result.status_code != 200:

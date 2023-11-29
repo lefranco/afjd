@@ -1039,6 +1039,7 @@ class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
         moderators_list = moderators.Moderator.inventory(sql_executor)
         the_moderators = [m[0] for m in moderators_list]
         if pseudo not in the_moderators:
+            del sql_executor
             flask_restful.abort(403, msg="You are not allowed to get list of emails (need to be moderator)!")
 
         players_list = players.Player.inventory(sql_executor)
@@ -1077,10 +1078,12 @@ class CheckEmailRessource(flask_restful.Resource):  # type: ignore
 
         email = emails.Email.find_by_value(sql_executor, email_player)
         if email is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Email {email_player} does not exists")
 
         assert email is not None
         if email.code != code:
+            del sql_executor
             flask_restful.abort(401, msg="Code is incorrect")
 
         player.email_confirmed = True
@@ -1838,6 +1841,7 @@ class EventManagerRessource(flask_restful.Resource):  # type: ignore
         moderators_list = moderators.Moderator.inventory(sql_executor)
         the_moderators = [m[0] for m in moderators_list]
         if pseudo not in the_moderators:
+            del sql_executor
             flask_restful.abort(403, msg="You are not allowed to change event manager (need to be moderator)")
 
         # update event here
@@ -1979,6 +1983,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
         if player is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
         assert player is not None
         user_id = player.identifier
@@ -2042,6 +2047,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
         if player is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
         assert player is not None
         user_id = player.identifier
@@ -2138,6 +2144,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
         if player is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
         assert player is not None
         user_id = player.identifier
@@ -2223,6 +2230,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
         if player is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
         assert player is not None
         user_id = player.identifier
@@ -2296,6 +2304,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
         if player is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
         assert player is not None
         user_id = player.identifier
@@ -2498,6 +2507,7 @@ class RescuePlayerRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg=f"Failed to send email to {email_rescued_player} : {message}")
 
+        del sql_executor
         data = {'msg': "rescue message sent"}
         return data, 200
 
