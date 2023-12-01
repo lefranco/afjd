@@ -39,7 +39,7 @@ $ Données de navigation
 Ce sont les données conservées dans le tableau du navigateur de l'utlisateur du site. 
 .
 
-Ce ne sont pas techniquement des fammeux "cookies" mais des "local storage"
+Ce ne sont pas techniquement des fameux "cookies" mais des "local storage"
 .
 [[https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage] Plus de détails sur les local storage]
 
