@@ -16,6 +16,7 @@ import tips
 import variants
 import ezml_render
 import mydatetime
+import mydialog
 
 
 THRESHOLD_DRIFT_ALERT_SEC = 59
@@ -26,6 +27,7 @@ OPTIONS = {
     'Chatter en direct': "Echanger des messages volatiles à court terme",
     'Déclarer un incident': "Déclarer un incident par courriel à l'administrateur",
     'Foire aux questions': "Foire Aux Questions du site",
+    'Données personnelles': "Explications sur la manière dont le site gère les données personnelles",
     'Les petits tuyaux': "Différentes petites choses à savoir pour mieux jouer sur le site",
     'Charte du bon diplomate': "Document indiquant les règles de bonne conduite en jouant les parties",
     'Evolution de la fréquentation': "Evolution sous forme graphique du nombre de joueurs actifs sur le site",
@@ -36,8 +38,8 @@ OPTIONS = {
 # for safety
 if 'ANNOUNCEMENT' not in storage:
     storage['ANNOUNCEMENT'] = ""
-if 'ALREADY_SPAMMED' not in storage:
-    storage['ALREADY_SPAMMED'] = 'no'
+if 'ANNOUNCEMENT_DISPLAYED' not in storage:
+    storage['ANNOUNCEMENT_DISPLAYED'] = 'no'
 
 
 def get_stats_content():
@@ -115,7 +117,7 @@ def formatted_news(news_content_loaded, admin, class_):
                     previous_announcement = storage['ANNOUNCEMENT']
                     storage['ANNOUNCEMENT'] = announcement
                     if announcement != previous_announcement:
-                        storage['ALREADY_SPAMMED'] = 'no'
+                        storage['ANNOUNCEMENT_DISPLAYED'] = 'no'
             elif line.startswith(".HR"):
                 separator = html.HR()
                 news_content <= separator
@@ -524,11 +526,16 @@ def show_news():
     MY_SUB_PANEL <= div_homepage
 
     # announce
-    if storage['ALREADY_SPAMMED'] == 'no':
+    if storage['ANNOUNCEMENT_DISPLAYED'] == 'no':
         announcement = storage['ANNOUNCEMENT']
         if announcement:
             alert(announcement)
-        storage['ALREADY_SPAMMED'] = 'yes'
+        storage['ANNOUNCEMENT_DISPLAYED'] = 'yes'
+
+    # RGPD
+    if 'RGPD_ACCEPTED' not in storage:
+        mydialog.InfoDialog("Règlement général sur la protection des données", "Vous êtes d'accord avec la manière dont le site utilise et conserve vos données personnelles. Si vous ne l'êtes pas, n'utilisez pas le site ! Plus de détail dans la page 'Données personnelles' accessible depuis le menu Accueil.",remove_after=None, ok="Ok")
+        storage['RGPD_ACCEPTED'] = 'yes'
 
 
 RANDOM = common.Random()
@@ -944,6 +951,19 @@ def show_faq():
     MY_SUB_PANEL <= FAQ_CONTENT
 
 
+def show_personal_data():
+    """ show_personal_data """
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    ezml_file = "./docs/rgpd.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
+
+
 def show_tips():
     """ show_tips """
 
@@ -1044,6 +1064,8 @@ def load_option(_, item_name):
         declare_incident(None)
     if item_name == 'Foire aux questions':
         show_faq()
+    if item_name == 'Données personnelles':
+        show_personal_data()
     if item_name == 'Les petits tuyaux':
         show_tips()
     if item_name == 'Charte du bon diplomate':

@@ -1,0 +1,88 @@
+Utilisations des données personnelles par le site
+
+La loi "Réglementation Générale sur la Protection des Données" s'applique depuis le 25 Mai 2018 à l'Union Européenne.
+.
+Elle oblige à communiquer les informations mémorisée les concernant aux utilisateurs du site et recueillir leur consentement pour utiliser le site
+
+[[https://www.cnil.fr/fr/reglement-europeen-protection-donnees] Plus de détails sur le R.G.P.D.]
+
+$ Données persistantes
+
+Ce sont les données conservées dans la base de données liées à la création d'un compte
+.
+
+= Données persistantes
+| Nom | Facultatif | Modifiable | Finalité|
+| pseudo | non | non | identification de l'utilisateur |
+| mot de passe | non | oui | authentification de l'utilisateur |
+| courriel | non |oui | messages de notification, recrutement pour des événements |
+| téléphone | non |oui | inutilisée |
+| notification avancement parties | oui |oui | explicite, permet d'évbiter certains courriels |
+| notification remplacement | oui |oui | explicite, permet d'évbiter certains courriels |
+| abonnement newsletter | oui |oui | explicite, permet d'évbiter certains courriels |
+| nom | non |oui | explicite |
+| prénom | non |oui | explicite |
+| pays de résidence | oui |oui | explicite |
+| nationalité | oui |oui | explicite |
+| fuseau horaire | oui |oui | explicite |
+=
+
+(Suppression du compte)
+Un compte ne peut être supprimé que si'il n'est lié à aucune partie. Un compte est lié à une partie s'il y a un rôle, un retard ou un abandon.
+
+(Suppression des incidents)
+Les incidents (retards et abandons) sont automatiquement supprimés après un délai de deux ans.
+
+
+$ Données de navigation
+
+Ce sont les données conservées dans le tableau du navigateur de l'utlisateur du site. 
+.
+
+Ce ne sont pas techniquement des fammeux "cookies" mais des "local storage"
+.
+[[https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage] Plus de détails sur les local storage]
+
+.
+
+$$ Identification
+
+= Local storage pour l'identification
+| Nom | Finalité |
+| _PSEUDO_ | pseudo de l'utilisateur |
+| _JWT TOKEN_ | le jeton d'authenfication obtenu au login et utilisé pour les accès protégés (très important)|
+| _LOGIN TIME_ | date du login |
+| _LOGIN EXPIRATION TIME_ | date d'expitation  login |
+| _IP ADDRESS_ | adresse IP de l'utilisateur. Elle est transmise sur login, sur oubli de mot de passe et sur envoi des ordres sur une partie |
+=
+$$ Présentation
+
+= Local storage pour la mémorisation des préférences de présentation
+| Nom | Finalité |
+| _SORT BY x_ | critère de tri des parties ou des classements pour l'élement x |
+| _REVERSE ORDER NEEDED_ | ordre inversé pour les parties |
+| _DISPLAY x_ | interface sélectionnée pour la variante x |
+| _GAME ACCESS MODE_ | mode d'accès aux parties par bouton ou par lien pour la page 'mes parties'  |
+| _GAME SHOW MODE_ | souhait d'afficher plus ou moins de colonnes page 'mes parties'  |
+| _ACTION COLUMN MODE_ | souhait d'afficher ou non la colonne action page 'mes parties'  |
+| _SITE IMAGE_ | souhait d'afficher ou non l'image du site  |
+=
+$$ Sélection
+
+= Local storage pour la mémorisation de sélection
+| Nom | Finalité |
+| _GAME_ | nom de la partie sélectionnée |
+| _GAME ID_ | identificant de la partie sélectionnée |
+| _GAME VARIANT_ | variante de partie sélectionnée |
+| _EVENT_ | événement sélectionné |
+=
+$$ Interne
+
+= Local storage a but interne
+| Nom | Finalité |
+| _RGPD ACCEPTED_ | acceptation de l'utilisation des données personnelles pratiquées sur le site |
+| _ANNOUNCEMENT_ | contenu de l'aannonce spéciale ("popup") |
+| _ANNOUNCEMENT DISPLAYED_ | le contenu de l'annonce spéciale ("popup") déjà montrée |
+| _DELTA TIME SEC_ | différence temps local et temps serveur |
+| _VERSION_ | version du front end (logiciel dans le navigateur) utilisé |
+=
