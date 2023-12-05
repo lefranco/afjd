@@ -513,7 +513,7 @@ class ColourRecord:
 
     def highlite_colour(self) -> 'ColourRecord':
         """ highlite_colour """
-        return ColourRecord(self.red // 2, self.green // 2, self.blue // 2)
+        return ColourRecord(self.red // 1.2, self.green // 1.2, self.blue // 1.2)
 
     def str_value(self) -> str:
         """ str_value """
