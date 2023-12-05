@@ -257,7 +257,7 @@ def create_game(json_dict):
 
         specific_data = ""
         if fog:
-            specific_data += "brouillard de guerre"
+            specific_data += "brouillard de guerre "
         if archive:
             specific_data += "archive "
         if manual:
