@@ -35,6 +35,9 @@ import moderate
 import wiki
 import forum
 
+
+SITE_IMAGE_DISPLAY_SIZE = 100
+
 # TITLE is in index.html
 
 # H1
@@ -307,12 +310,15 @@ def load_option(_, item_name):
 
             # build site image and legend
             figure = html.FIGURE()
-            image = html.IMG(src=f"data:image/jpeg;base64,{SITE_IMAGE_DICT['image']}", alt="Image du site")
+            image = html.IMG(src=f"data:image/jpeg;base64,{SITE_IMAGE_DICT['image']}", width=SITE_IMAGE_DISPLAY_SIZE, height=SITE_IMAGE_DISPLAY_SIZE, alt="Image du site", title="Cliquer sur l'image pour l'agrandir et bien la visualiser")
             figure <= image
             legend = html.FIGCAPTION(SITE_IMAGE_DICT['legend'])
             figure <= legend
 
-            MENU_LEFT <= figure
+            link = html.A(href=f"data:image/jpeg;base64,{SITE_IMAGE_DICT['image']}", target="_blank")
+            link <= figure
+            MENU_LEFT <= link
+
             button = html.BUTTON("-", title="Cacher l'image", Class='btn-menu')
             button.bind("click", lambda e: set_site_image(e, 'False'))
 
