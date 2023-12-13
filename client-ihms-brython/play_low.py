@@ -550,13 +550,15 @@ def get_game_status():
     row <= col
 
     # type of game
-    game_type, explanation = common.get_game_type(GAME_PARAMETERS_LOADED['nopress_game'], GAME_PARAMETERS_LOADED['nomessage_game'])
-    game_type_info = html.DIV(game_type, title=explanation)
-    col = html.TD(game_type_info)
+    game_type, _ = common.get_game_type(GAME_PARAMETERS_LOADED['nopress_game'], GAME_PARAMETERS_LOADED['nomessage_game'])
+    col = html.TD(f"Type {game_type}")
     row <= col
 
+    # state
     col = html.TD(f"Etat {game_state_readable}")
     row <= col
+
+    # season
     col = html.TD(f"Saison {game_season}")
     row <= col
 
