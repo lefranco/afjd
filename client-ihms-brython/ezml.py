@@ -202,6 +202,10 @@ class Ezml:
                         header = False
                         continue
 
+                    if within_code:
+                        stack_push('<br>', None, None, False, False)
+                        continue
+
                     # list terminator
                     if cur_block.name == '<li>':
                         while cur_block.name in ('<li>', '<ol>', '<ul>'):
@@ -244,6 +248,7 @@ class Ezml:
                     if line != '</code>':
                         # all is taken as raw
                         cur_block.childs.append(line)
+                        stack_push('<br>', None, None, False, False)
                         continue
 
                 # chapters

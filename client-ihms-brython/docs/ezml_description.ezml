@@ -1,0 +1,203 @@
+Les possibilités du EZML
+Jérémie Lefrançois
+Déc 2023
+
+Ce document récapitule les possibilités du langage de description utilisé pour générer du code HTML.
+
+$ Encodage
+
+Utiliser *UTF-8*
+
+$ Entête
+
+(première ligne)
+Obligatoire, titre du document
+
+(deuxième ligne)
+Facultative, auteur du document
+
+(troisième ligne)
+Facultative, date du document
+
+$ Echappement
+
+Utiliser le caractère *\\* pour échapper un quelconque caractère
+
+$ Commentaire
+
+Commenter une ligne en la commençant par *//*
+
+$ Inliners
+
+Les inliners suivants sont possibles :
+.
+.
+= Table des inliners
+|Caractère| Balise HTML | Description |
+| \* | strong | *Gras* |
+| \_ | em | _Italique_ |
+| \" | q | "Citation" |
+| \+ | code | +Code+ |
+| \^ | sup | ^Exposant^ |
+=
+.
+Les "inliners" se placent avant et après le texte concerné.
+
+$ Structuration du document
+
+Utiliser des lignes préfixées par le caractère \$
+.
+Le nombre de \$ indique la profondeur.
+.
+Les lignes deviendront des balises header ne niveau 2 de plus que le nombre de \$
+.
+<code>
+$$ titre niveau 2
+$$$ titre niveau 3
+$$$$ titre niveau 4
+$$$ rien
+$$ rien
+</code>
+.
+deviendra :
+.
+$$ titre niveau 2
+$$$ titre niveau 3
+$$$$ titre niveau 4
+$$$ rien
+$$ rien
+
+$ Saut de ligne et séparateur
+
+Pour forcer à aller à la ligne, mettre une ligne avec seulement le caractère *\.*
+.
+Pour un séparateur horizontal (un trait), mettre une ligne avec seulement le caractère *\_*
+.
+Exemple
+.
+_
+
+$ Listes
+
+On peut utiliser des listes numérotées ou non.
+.
+Utiliser des lignes préfixées par le caractère *\#* \(numérotées\) et *\-* \(non numérotées\)
+.
+Le nombre de \# ou \- indique la profondeur.
+.
+La numérotation utilisera les chiffres, puis les lettres minusctules, puis les chiffres romains en minuscules.
+.
+<code>
+# niveau un
+## niveau 2
+### niveau 3
+</code>
+.
+donnera :
+.
+# niveau un
+## niveau 2
+### niveau 3
+
+<code>
+- niveau un
+-- niveau 2
+--- niveau 3
+</code>
+.
+donnera :
+.
+- niveau un
+-- niveau 2
+--- niveau 3
+
+
+$ Descriptions
+
+Chaque nom d'élément est à placer entre parenthèse, puis à la ligne, puis la description terminée par une ligne vide.
+.
+<code>
+(nom1)
+description
+
+(nom 2)
+description 2
+</code>
+.
+donnera :
+.
+(nom1)
+description
+
+(nom 2)
+description 2
+
+$ Tableaux
+
+Débuter un tableau par le caractère *\=* suivi par la description du tableau
+.
+Chaque ligne sera décrite par une ligne débutant par le caractère *\|* et terminée par une ligne finissant par le caractère *\|*
+.
+Il est possible d'aller à la ligne dans une colonne du tableau.
+.
+La première ligne est l'entête du tableau
+.
+Il faut terminer le tableau par une ligne avec le caractère *\=* seul.
+.
+
+<code>
+= Légende
+|Titre 1| Titre 2 | Titre 3 |
+|  Contenu | Contenu | Contenu |
+|  Contenu | Contenu | Contenu |
+=
+</code>
+.
+donnera :
+.
+= Légende
+|Titre 1| Titre 2 | Titre 3 |
+|  Contenu | Contenu | Contenu |
+|  Contenu | Contenu | Contenu |
+=
+
+$ Balises telles quelles
+
+Ces balises sont copiées en l'état dans le résultat html
+.
+.
+= Table des balsie
+| Balise HTML | Description |
+| center | pour centrer du texte |
+| blockquote | pour citer du texte |
+=
+
+$ Lien hypertexte
+
+Utiliser les crochets  :
+.
+<code>
+[[ lien hypertexte ] légende facultative du lien hypertexte ]
+</code>
+.
+donnera :
+.
+[[ lien hypertexte ] légende facultative du lien hypertexte ]
+
+$ Lien vers une image
+
+Utiliser les accolades :
+.
+<code>
+[[ lien vers image ] légende facultative du lien vers image ]
+</code>
+.
+donnera :
+.
+[[ lien vers image ] légende facultative du lien vers image ]
+
+.
+$ Source
+
+[[https://www.cs.rochester.edu/~ferguson/ezml/] La réalisation originale de George Ferguson]
+_
