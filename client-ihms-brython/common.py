@@ -355,6 +355,19 @@ def get_full_season(advancement, variant, nb_max_cycles_to_play, full_info):
     return full_season
 
 
+def get_game_type(no_press, no_message):
+    """ get_game_type """
+
+    if no_press:
+        if no_message:
+            return "Blitz", "Rien n'est permis"
+        return "Goofy", "Ne devrait pas se produire"
+
+    if no_message:
+        return "Négo Publique", "Seules les déclarations publiques sont permises"
+    return "Négo", "Tout est permis"
+
+
 def get_role_allocated_to_player_in_game(game_id):
     """ get_role the player has in this game """
 
