@@ -3,7 +3,7 @@ Utilisations des données personnelles par le site
 La loi "Réglementation Générale sur la Protection des Données" s'applique depuis le 25 Mai 2018 à l'Union Européenne.
 .
 Elle oblige à communiquer les informations mémorisée les concernant aux utilisateurs du site et recueillir leur consentement pour utiliser le site
-
+.
 [[https://www.cnil.fr/fr/reglement-europeen-protection-donnees] Plus de détails sur le R.G.P.D.]
 
 $ Données persistantes
@@ -36,7 +36,7 @@ Les incidents (retards et abandons) sont automatiquement supprimés après un d�
 
 $ Données de navigation
 
-Ce sont les données conservées dans le tableau du navigateur de l'utlisateur du site. 
+Ce sont les données conservées dans le tableau du navigateur de l'utlisateur du site.
 .
 
 Ce ne sont pas techniquement des fameux "cookies" mais des "local storage"
@@ -83,6 +83,7 @@ $$ Interne
 | _RGPD ACCEPTED_ | acceptation de l'utilisation des données personnelles pratiquées sur le site |
 | _ANNOUNCEMENT_ | contenu de l'aannonce spéciale ("popup") |
 | _ANNOUNCEMENT DISPLAYED_ | le contenu de l'annonce spéciale ("popup") déjà montrée |
+| _SUFFERING NOTIFIED_ | les parties à démarrer déjà indiquées |
 | _DELTA TIME SEC_ | différence temps local et temps serveur |
 | _VERSION_ | version du front end (logiciel dans le navigateur) utilisé |
 =
