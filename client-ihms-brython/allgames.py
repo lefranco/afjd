@@ -285,15 +285,15 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'join', 'go_game', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_game', 'nomessage_game']
+    fields = ['name', 'join', 'go_game', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_game', 'nomessage_game', 'game_type']
 
     # header
     thead = html.THEAD()
     for field in fields:
 
-        content = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics', 'nomessage_game': 'privés'}[field]
+        content = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics', 'nomessage_game': 'privés', 'game_type': 'type de partie'}[field]
 
-        legend = {'name': "Le nom de la partie", 'join': "Un bouton pour rejoindre la partie (pour jouer dedans)", 'go_game': "Un bouton pour aller dans la partie (permet d'en savoir plus)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_game': "Est-ce que la presse est autorisée pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'nomessage_game': "Est-ce que la messagerie est autorisée pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)"}[field]
+        legend = {'name': "Le nom de la partie", 'join': "Un bouton pour rejoindre la partie (pour jouer dedans)", 'go_game': "Un bouton pour aller dans la partie (permet d'en savoir plus)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_game': "Est-ce que la presse est autorisée pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'nomessage_game': "Est-ce que la messagerie est autorisée pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'game_type': "Synthèse de ce qui est autorisé en termes de communication"}[field]
 
         field = html.DIV(content, title=legend)
         col = html.TD(field)
@@ -419,6 +419,7 @@ def my_opportunities():
         data['master'] = None
         data['join'] = None
         data['allocated'] = None
+        data['game_type'] = None
 
         row = html.TR()
         for field in fields:
@@ -539,6 +540,10 @@ def my_opportunities():
                     stats = f"{stats1} ({stats2})"
                     explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
                 value = html.DIV(stats, title=explanation)
+
+            if field == 'game_type':
+                game_type, explanation = common.get_game_type(data['nopress_game'], data['nomessage_game'])
+                value = html.DIV(game_type, title=explanation)
 
             col = html.TD(value)
             if colour is not None:
@@ -837,12 +842,12 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'id', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master', 'nopress_game', 'nomessage_game']
+    fields = ['name', 'go_game', 'id', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master', 'nopress_game', 'nomessage_game', 'game_type']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics', 'nomessage_game': 'privés'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics', 'nomessage_game': 'privés', 'game_type': 'type de partie'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -957,6 +962,7 @@ def all_games(state_name):
         data['go_game'] = None
         data['id'] = None
         data['master'] = None
+        data['game_type'] = None
 
         row = html.TR()
         for field in fields:
@@ -1054,6 +1060,10 @@ def all_games(state_name):
                     value1 = "Non" if value1 else "Oui"
                     value2 = "Non" if value2 else "Oui"
                     value = f"{value1} ({value2})"
+
+            if field == 'game_type':
+                game_type, explanation = common.get_game_type(data['nopress_game'], data['nomessage_game'])
+                value = html.DIV(game_type, title=explanation)
 
             col = html.TD(value)
             if colour is not None:
