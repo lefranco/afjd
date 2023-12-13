@@ -290,9 +290,15 @@ def my_opportunities():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics', 'nomessage_game': 'privés'}[field]
-        col = html.TD(field_fr)
+
+        content = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics', 'nomessage_game': 'privés'}[field]
+
+        legend = {'name': "Le nom de la partie", 'join': "Un bouton pour rejoindre la partie (pour jouer dedans)", 'go_game': "Un bouton pour aller dans la partie (permet d'en savoir plus)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_game': "Est-ce que la presse est autorisée pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'nomessage_game': "Est-ce que la messagerie est autorisée pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)"}[field]
+
+        field = html.DIV(content, title=legend)
+        col = html.TD(field)
         thead <= col
+
     games_table <= thead
 
     row = html.TR()
@@ -493,12 +499,14 @@ def my_opportunities():
             if field == 'allocated':
                 allocated = recruiting_games_dict[int(game_id_str)]['allocated']
                 capacity = recruiting_games_dict[int(game_id_str)]['capacity']
-                value = f"{allocated}/{capacity}"
+                stats = f"{allocated}/{capacity}"
+                value = html.DIV(stats, title="L'arbitre est compté dans le calcul")
                 if allocated >= capacity:
                     colour = config.ALL_ORDERS_IN_COLOUR
 
             if field == 'used_for_elo':
-                value = "Oui" if value else "Non"
+                stats = "Oui" if value else "Non"
+                value = html.DIV(stats, title="Indique si la partie compte pour le classement E.L.O. sur le site")
 
             if field == 'master':
                 game_name = data['name']
@@ -508,23 +516,29 @@ def my_opportunities():
 
             if field == 'nopress_game':
                 value1 = value
+                explanation = "Indique si les joueurs peuvent utiliser la messagerie publique"
                 value2 = data['nopress_current']
                 if value2 == value1:
-                    value = "Non" if value1 else "Oui"
+                    stats = "Non" if value1 else "Oui"
                 else:
-                    value1 = "Non" if value1 else "Oui"
-                    value2 = "Non" if value2 else "Oui"
-                    value = f"{value1} ({value2})"
+                    stats1 = "Non" if value1 else "Oui"
+                    stats2 = "Non" if value2 else "Oui"
+                    stats = f"{stats1} ({stats2})"
+                    explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
+                value = html.DIV(stats, title=explanation)
 
             if field == 'nomessage_game':
                 value1 = value
+                explanation = "Indique si les joueurs peuvent utiliser la messagerie privée"
                 value2 = data['nomessage_current']
                 if value2 == value1:
-                    value = "Non" if value1 else "Oui"
+                    stats = "Non" if value1 else "Oui"
                 else:
-                    value1 = "Non" if value1 else "Oui"
-                    value2 = "Non" if value2 else "Oui"
-                    value = f"{value1} ({value2})"
+                    stats1 = "Non" if value1 else "Oui"
+                    stats2 = "Non" if value2 else "Oui"
+                    stats = f"{stats1} ({stats2})"
+                    explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
+                value = html.DIV(stats, title=explanation)
 
             col = html.TD(value)
             if colour is not None:
