@@ -17,7 +17,8 @@ OPTIONS = {
     'Pourquoi yapa': "Complément à la Foire Aux Questions du site",
     'Choix d\'interface': "Choisir une interface différente de celle par défaut pour voir les parties",
     'Calcul du ELO': "Détail de la méthode de calcul du E.L.O. utilisé sur le site",
-    'Le brouillard': "Des informations sur l'option 'Brouillard de Guerre' pour une partie"
+    'Le brouillard': "Des informations sur l'option 'Brouillard de Guerre' pour une partie",
+    'Langage Markup Facile' : "Des informations sur un langage de construction facile de pages HTML pour les descriptions techniques"
 }
 
 
@@ -113,18 +114,27 @@ def show_technical():
 
     # --
 
-    title8 = html.H3("Remerciements")
+    title8 = html.H3("EZML: The Easy Markup Language")
     MY_SUB_PANEL <= title8
 
-    link81 = html.A(href="https://brython.info/", target="_blank")
-    link81 <= "Outil utilisé pour ce site web"
+    link81 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
+    link81 <= "Possibiltés du langage inspiré par George Ferguson"
+    MY_SUB_PANEL <= link81
+
+    # --
+
+    title9 = html.H3("Remerciements")
+    MY_SUB_PANEL <= title9
+
+    link91 = html.A(href="https://brython.info/", target="_blank")
+    link91 <= "Outil utilisé pour ce site web"
     MY_SUB_PANEL <= link81
 
     MY_SUB_PANEL <= html.P()
 
-    link82 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link82 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link82
+    link92 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link92 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link92
 
 
 WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
@@ -261,6 +271,19 @@ def show_fog_of_war():
     my_ezml.render(MY_SUB_PANEL)
 
 
+def show_ezml_spec():
+    """ show_ezml_spec """
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    ezml_file = "./docs/ezml_description.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -295,6 +318,8 @@ def load_option(_, item_name):
         show_elo_calculation()
     if item_name == 'Le brouillard':
         show_fog_of_war()
+    if item_name == 'Langage Markup Facile':
+        show_ezml_spec()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
