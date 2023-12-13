@@ -850,8 +850,18 @@ def my_games(state_name):
         game_name = data['name']
         suffering_games.append(game_name)
 
+    # make sure we have a previous SUFFERING_NOTIFIED
+    if 'SUFFERING_NOTIFIED' not in storage:
+        storage['SUFFERING_NOTIFIED'] = ""
+
     if suffering_games:
-        alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
+        notified_suffering_games = storage['SUFFERING_NOTIFIED'].split(' ')
+        # only if something new
+        if not set(suffering_games) <= set(notified_suffering_games):
+            alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
+
+    # keep note of SUFFERING_NOTIFIED
+    storage['SUFFERING_NOTIFIED'] = ' '.join(suffering_games)
 
     time_stamp_now = time.time()
 
