@@ -18,7 +18,7 @@ OPTIONS = {
     'Choix d\'interface': "Choisir une interface différente de celle par défaut pour voir les parties",
     'Calcul du ELO': "Détail de la méthode de calcul du E.L.O. utilisé sur le site",
     'Le brouillard': "Des informations sur l'option 'Brouillard de Guerre' pour une partie",
-    'Langage Markup Facile' : "Des informations sur un langage de construction facile de pages HTML pour les descriptions techniques"
+    'Langage Markup Facile': "Des informations sur un langage de construction facile de pages HTML pour les descriptions techniques"
 }
 
 
