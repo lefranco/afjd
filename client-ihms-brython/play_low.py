@@ -554,6 +554,13 @@ def get_game_status():
     col = html.TD(f"Type {game_type}")
     row <= col
 
+    # DC
+    civil_disorder_possible = GAME_PARAMETERS_LOADED['cd_possible_moves'] or GAME_PARAMETERS_LOADED['cd_possible_retreats'] or GAME_PARAMETERS_LOADED['cd_possible_builds']
+    col = html.TD(f"D.C. {'Oui' if civil_disorder_possible else 'Non'}")
+    if civil_disorder_possible:
+        col.style = {'color': 'red'}
+    row <= col
+
     # state
     col = html.TD(f"Etat {game_state_readable}")
     row <= col
@@ -618,28 +625,28 @@ def get_game_status():
 
     row = html.TR()
 
-    col = html.TD(game_description, colspan="11")
+    col = html.TD(game_description, colspan="12")
     row <= col
     game_status_table <= row
 
     if GAME_PARAMETERS_LOADED['fast']:
         row = html.TR()
         specific_information = html.DIV("Partie en direct : utiliser le bouton 'recharger la partie' du menu 'Consulter' en attendant la résolution (puis retourner aux ordres)", Class='important')
-        col = html.TD(specific_information, colspan="11")
+        col = html.TD(specific_information, colspan="12")
         row <= col
         game_status_table <= row
 
     if GAME_PARAMETERS_LOADED['nomessage_current']:
         row = html.TR()
         specific_information = html.DIV("Partie sans messages : La communication privée entre les joueurs est strictement interdite !", Class='important')
-        col = html.TD(specific_information, colspan="11")
+        col = html.TD(specific_information, colspan="12")
         row <= col
         game_status_table <= row
 
     if GAME_PARAMETERS_LOADED['fog']:
         row = html.TR()
         specific_information = html.DIV("Partie brouillard : Pour soutenir offensivement ou convoyer une unité non vue, utiliser l'interface 'Imaginer'", Class='important')
-        col = html.TD(specific_information, colspan="11")
+        col = html.TD(specific_information, colspan="12")
         row <= col
         game_status_table <= row
 
