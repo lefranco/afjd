@@ -523,8 +523,8 @@ class ColourRecord:
 # position
 DISLODGED_TEXT_BACKGROUND_COLOUR = ColourRecord(255, 255, 255)  # white
 DISLODGED_COLOUR = ColourRecord(255, 127, 0)  # orange
-DISLODGED_SHIFT_X = -5
-DISLODGED_SHIFT_Y = -5
+DISLODGED_SHIFT_X = -9
+DISLODGED_SHIFT_Y = -7
 
 
 def dislodged_font() -> str:
