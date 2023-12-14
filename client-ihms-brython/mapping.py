@@ -1479,6 +1479,8 @@ class Position(Renderable):
             forbidden = Forbidden(self, region)
             self._forbiddens.append(forbidden)
 
+        real_occupants_table = self._occupant_table.copy()
+
         # dislodged_units
         dislodged_ones = server_dict['dislodged_ones']
         self._dislodged_units = []
@@ -1498,6 +1500,13 @@ class Position(Renderable):
                 # the dislodger occupying the region is forgotten
                 region = zone.region
                 self._occupant_table[region] = dislodged_unit
+
+        # dislodging_table
+        self._dislodging_table = {}
+        for dislodged_unit in self._dislodged_units:
+            region = dislodged_unit.zone.region
+            dislodging_unit = real_occupants_table[region]
+            self._dislodging_table[dislodging_unit] = dislodged_unit
 
     def erase_centers(self) -> None:
         """ erase all centers """
@@ -1779,6 +1788,11 @@ class Position(Renderable):
     def units(self):
         """ property """
         return self._units
+
+    @property
+    def dislodging_table(self):
+        """ property """
+        return self._dislodging_table
 
 
 DASH_PATTERN = [5, 5]
