@@ -428,8 +428,29 @@ def create_game(json_dict):
     fieldset <= input_fast
     form <= fieldset
 
-    title_terms = html.H3("Modalités de la partie - peuvent être changées la partie créée")
+    title_terms = html.H3("Modalités de la partie - ne peuvent plus être changées la partie créée")
     form <= title_terms
+
+    fieldset = html.FIELDSET()
+    legend_nopress_game = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
+    fieldset <= legend_nopress_game
+    input_nopress_game = html.INPUT(type="checkbox", checked=bool(nopress_game) if nopress_game is not None else False, Class='btn-inside')
+    fieldset <= input_nopress_game
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_nomessage_game = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
+    fieldset <= legend_nomessage_game
+    input_nomessage_game = html.INPUT(type="checkbox", checked=bool(nomessage_game) if nomessage_game is not None else False, Class='btn-inside')
+    fieldset <= input_nomessage_game
+    form <= fieldset
+
+    form <= html.DIV("Les paramètres 'pas de déclaration/négociation' sont fixés pour déterminer le type de la partie et l'exportation des modalités de la partie", Class='note')
+    form <= html.BR()
+    form <= html.DIV("Leur version applicable reste toutefois modifiable à tout moment par l'arbitre...", Class='note')
+
+    title_anonimity = html.H3("Anonymat de la partie - peut être changé la partie créée")
+    form <= title_anonimity
 
     fieldset = html.FIELDSET()
     legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
@@ -438,23 +459,7 @@ def create_game(json_dict):
     fieldset <= input_anonymous
     form <= fieldset
 
-    fieldset = html.FIELDSET()
-    legend_nomessage_game = html.LEGEND("pas de message privé", title="Les joueurs ne peuvent pas communiquer (négocier) par message privé avant la fin de la partie")
-    fieldset <= legend_nomessage_game
-    input_nomessage_game = html.INPUT(type="checkbox", checked=bool(nomessage_game) if nomessage_game is not None else False, Class='btn-inside')
-    fieldset <= input_nomessage_game
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_nopress_game = html.LEGEND("pas de message public", title="Les joueurs ne peuvent pas communiquer (déclarer) par message public avant la fin de la partie")
-    fieldset <= legend_nopress_game
-    input_nopress_game = html.INPUT(type="checkbox", checked=bool(nopress_game) if nopress_game is not None else False, Class='btn-inside')
-    fieldset <= input_nopress_game
-    form <= fieldset
-
-    form <= html.DIV("Les paramètres 'pas de message public/privé' sont fixés pour l'exportation des modalités de la partie, il restent toutefois modifiables à tout moment par l'arbitre dans leur version applicable...", Class='note')
-
-    title_scoring = html.H3("Système de marque")
+    title_scoring = html.H3("Système de marque - peut être changé la partie créée")
     form <= title_scoring
 
     # special : la marque
@@ -473,7 +478,7 @@ def create_game(json_dict):
     fieldset <= input_scoring
     form <= fieldset
 
-    title_pace = html.H3("Cadence de la partie")
+    title_pace = html.H3("Cadence de la partie - peut être changé la partie créée")
     form <= title_pace
 
     # deadline
@@ -582,7 +587,7 @@ def create_game(json_dict):
     fieldset <= input_access_restriction_performance
     form <= fieldset
 
-    title_access = html.H3("Fin de la partie - ne peuvent plus être changés la partie créée")
+    title_access = html.H3("Fin de la partie - ne peut plus être changé la partie créée")
     form <= title_access
 
     fieldset = html.FIELDSET()
@@ -810,7 +815,7 @@ def change_access_messages_game():
         MY_SUB_PANEL.clear()
         change_access_messages_game()
 
-    MY_SUB_PANEL <= html.H3("Changement de l'accès aux messagerie")
+    MY_SUB_PANEL <= html.H3("Changement de l'accès aux messagerie (Attention il s'agit du paramètre courant, qui s'applique réellement pour autoriser ou interdire, pas celui qui détermine le type de la partie)")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -832,7 +837,7 @@ def change_access_messages_game():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_nopress = html.LEGEND("pas de message public", title="Les joueurs ne peuvent pas communiquer (déclarer) par message public avant la fin de la partie")
+    legend_nopress = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
     fieldset <= legend_nopress
     input_nopress = html.INPUT(type="checkbox", checked=access_nopress_loaded, Class='btn-inside')
     fieldset <= input_nopress
@@ -841,7 +846,7 @@ def change_access_messages_game():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_nomessage = html.LEGEND("pas de message privé", title="Les joueurs ne peuvent pas communiquer (négocier) par message privé avant la fin de la partie")
+    legend_nomessage = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
     fieldset <= legend_nomessage
     input_nomessage = html.INPUT(type="checkbox", checked=access_nomessage_loaded, Class='btn-inside')
     fieldset <= input_nomessage
@@ -849,7 +854,7 @@ def change_access_messages_game():
 
     form <= html.BR()
 
-    input_change_message_game = html.INPUT(type="submit", value="Changer l'accès aux messages publics et privés de la partie", Class='btn-inside')
+    input_change_message_game = html.INPUT(type="submit", value="Changer l'accès aux déclarations et négociations de la partie", Class='btn-inside')
     input_change_message_game.bind("click", change_access_messages_games_callback)
     form <= input_change_message_game
 

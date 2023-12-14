@@ -171,12 +171,12 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_game', 'nomessage_game']
+    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_game', 'nomessage_game', 'game_type']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics', 'nomessage_game': 'privés', }[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'déclarations', 'nomessage_game': 'négociations', 'game_type': 'type de partie'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -295,6 +295,7 @@ def show_games():
         data['master'] = None
         data['all_orders_submitted'] = None
         data['all_agreed'] = None
+        data['game_type'] = None
 
         row = html.TR()
         for field in fields:
@@ -393,6 +394,10 @@ def show_games():
                     value1 = "Non" if value1 else "Oui"
                     value2 = "Non" if value2 else "Oui"
                     value = f"{value1} ({value2})"
+
+            if field == 'game_type':
+                game_type, explanation = common.get_game_type(data['nopress_game'], data['nomessage_game'])
+                value = html.DIV(game_type, title=explanation)
 
             col = html.TD(value)
             if colour is not None:
