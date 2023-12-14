@@ -1066,6 +1066,8 @@ def submit_orders():
             if selected_hovered_object is not None:
                 selected_hovered_object.highlite(ctx, True)
                 helper <= selected_hovered_object.description()
+            else:
+                helper <= "_"
 
             # redraw all arrows
             if prev_selected_hovered_object is not None or selected_hovered_object is not None:
@@ -1110,6 +1112,7 @@ def submit_orders():
                         dislodged.highlite(ctx, False)
 
         helper.clear()
+        helper <= "_"
 
     def callback_keypress(event):
         """ callback_keypress """
@@ -2003,6 +2006,8 @@ def submit_communication_orders():
             if selected_hovered_object is not None:
                 selected_hovered_object.highlite(ctx, True)
                 helper <= selected_hovered_object.description()
+            else:
+                helper <= "_"
 
             # redraw all arrows
             if prev_selected_hovered_object is not None or selected_hovered_object is not None:
@@ -2047,6 +2052,7 @@ def submit_communication_orders():
                         dislodged.highlite(ctx, False)
 
         helper.clear()
+        helper <= "_"
 
     def callback_keypress(event):
         """ callback_keypress """

@@ -833,6 +833,8 @@ def rectify_position():
             if selected_hovered_object is not None:
                 selected_hovered_object.highlite(ctx, True)
                 helper <= selected_hovered_object.description()
+            else:
+                helper <= "_"
 
     def callback_canvas_mouse_enter(event):
         """ callback_canvas_mouse_enter """
@@ -855,6 +857,7 @@ def rectify_position():
             selected_hovered_object.highlite(ctx, False)
 
         helper.clear()
+        helper <= "_"
 
     def callback_render(_):
         """ callback_render """

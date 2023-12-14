@@ -727,6 +727,8 @@ def sandbox():
             if selected_hovered_object is not None:
                 selected_hovered_object.highlite(ctx, True)
                 helper <= selected_hovered_object.description()
+            else:
+                helper <= "_"
 
             # redraw all arrows
             if prev_selected_hovered_object is not None or selected_hovered_object is not None:
@@ -755,6 +757,7 @@ def sandbox():
             ORDERS_DATA.render(ctx)
 
         helper.clear()
+        helper <= "_"
 
     def callback_keypress(event):
         """ callback_keypress """
