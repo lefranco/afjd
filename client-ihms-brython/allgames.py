@@ -291,9 +291,9 @@ def my_opportunities():
     thead = html.THEAD()
     for field in fields:
 
-        content = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics', 'nomessage_game': 'privés', 'game_type': 'type de partie'}[field]
+        content = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'déclarations', 'nomessage_game': 'négociations', 'game_type': 'type de partie'}[field]
 
-        legend = {'name': "Le nom de la partie", 'join': "Un bouton pour rejoindre la partie (pour jouer dedans)", 'go_game': "Un bouton pour aller dans la partie (permet d'en savoir plus)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_game': "Est-ce que la presse est autorisée pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'nomessage_game': "Est-ce que la messagerie est autorisée pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'game_type': "Synthèse de ce qui est autorisé en termes de communication"}[field]
+        legend = {'name': "Le nom de la partie", 'join': "Un bouton pour rejoindre la partie (pour jouer dedans)", 'go_game': "Un bouton pour aller dans la partie (permet d'en savoir plus)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_game': "Est-ce que les messages publics (déclarations) sont autorisés pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'nomessage_game': "Est-ce que les messages privés (négociations) sont autorisés pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'game_type': "Synthèse de ce qui est autorisé en termes de communication"}[field]
 
         field = html.DIV(content, title=legend)
         col = html.TD(field)
@@ -847,7 +847,7 @@ def all_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics', 'nomessage_game': 'privés', 'game_type': 'type de partie'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'déclarations', 'nomessage_game': 'négociations', 'game_type': 'type de partie'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead

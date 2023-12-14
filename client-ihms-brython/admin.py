@@ -649,17 +649,17 @@ def rectify_parameters():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_nomessage = html.LEGEND("pas de message privé", title="Les joueurs ne peuvent pas communiquer (négocier) par message privé avant la fin de la partie")
-    fieldset <= legend_nomessage
-    input_nomessage = html.INPUT(type="checkbox", checked=nomessage_loaded, Class='btn-inside')
-    fieldset <= input_nomessage
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_nopress = html.LEGEND("pas de message public", title="Les joueurs ne peuvent pas communiquer (déclarer) par message public avant la fin de la partie")
+    legend_nopress = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
     fieldset <= legend_nopress
     input_nopress = html.INPUT(type="checkbox", checked=nopress_loaded, Class='btn-inside')
     fieldset <= input_nopress
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_nomessage = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
+    fieldset <= legend_nomessage
+    input_nomessage = html.INPUT(type="checkbox", checked=nomessage_loaded, Class='btn-inside')
+    fieldset <= input_nomessage
     form <= fieldset
 
     form <= html.BR()
