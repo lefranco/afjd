@@ -782,6 +782,9 @@ def game_master():
         thead <= col
     game_admin_table <= thead
 
+    deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
+    time_stamp_now = time.time()
+
     for role_id in play_low.VARIANT_DATA.roles:
 
         # discard game master
@@ -860,8 +863,9 @@ def game_master():
         if role_id in needed_roles_list:
             if role_id not in submitted_roles_list:
                 if pseudo_there:
-                    input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel ordres", title="Ceci enverra un courriel pour rappeler au joueur d'entrer des ordres dans le système", Class='btn-inside')
-                    input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_orders_email_callback(e, r))
+                    if time_stamp_now > deadline_loaded:
+                        input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel ordres", title="Ceci enverra un courriel pour rappeler au joueur d'entrer des ordres dans le système", Class='btn-inside')
+                        input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_orders_email_callback(e, r))
         col <= input_send_recall_email
         row <= col
 
@@ -870,8 +874,9 @@ def game_master():
         if role_id in needed_roles_list:
             if role_id not in submitted_roles_list:
                 if pseudo_there:
-                    input_civil_disorder = html.INPUT(type="submit", value="Désordre civil", title="Ceci forcera des ordres de désordre civil pour le joueur dans le système", Class='btn-inside')
-                    input_civil_disorder.bind("click", lambda e, r=role_id: civil_disorder_callback(e, r))
+                    if time_stamp_now > deadline_loaded:
+                        input_civil_disorder = html.INPUT(type="submit", value="Désordre civil", title="Ceci forcera des ordres de désordre civil pour le joueur dans le système", Class='btn-inside')
+                        input_civil_disorder.bind("click", lambda e, r=role_id: civil_disorder_callback(e, r))
         col <= input_civil_disorder
         row <= col
 
@@ -898,8 +903,9 @@ def game_master():
             if role_id in submitted_roles_list:
                 if role_id not in agreed_now_roles_list and role_id not in agreed_after_roles_list:
                     if pseudo_there:
-                        input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel accord", title="Ceci enverra un courriel demandant au joueur de manifester son accord pour résoudre la partie", Class='btn-inside')
-                        input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_agreed_email_callback(e, r))
+                        if time_stamp_now > deadline_loaded:
+                            input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel accord", title="Ceci enverra un courriel demandant au joueur de manifester son accord pour résoudre la partie", Class='btn-inside')
+                            input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_agreed_email_callback(e, r))
         col <= input_send_recall_email
         row <= col
 
@@ -909,8 +915,9 @@ def game_master():
             if role_id in submitted_roles_list:
                 if role_id not in agreed_now_roles_list and role_id not in agreed_after_roles_list:
                     if pseudo_there:
-                        input_force_agreement = html.INPUT(type="submit", value="Forcer accord", title="Ceci forcera l'accord pour résoudre du joueur, déclenchant éventuellement la résolution", Class='btn-inside')
-                        input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
+                        if time_stamp_now > deadline_loaded:
+                            input_force_agreement = html.INPUT(type="submit", value="Forcer accord", title="Ceci forcera l'accord pour résoudre du joueur, déclenchant éventuellement la résolution", Class='btn-inside')
+                            input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
         col <= input_force_agreement
         row <= col
 
