@@ -832,17 +832,29 @@ def rectify_position():
             # hightlite object where mouse is
             if selected_hovered_object is not None:
                 selected_hovered_object.highlite(ctx, True)
-                if isinstance(selected_hovered_object, mapping.Highliteable):
-                    helper <= selected_hovered_object.description()
-                else:
-                    helper <= "."
-            else:
-                helper <= "."
+                helper <= selected_hovered_object.description()
+
+    def callback_canvas_mouse_enter(event):
+        """ callback_canvas_mouse_enter """
+
+        nonlocal selected_hovered_object
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        selected_hovered_object = position_data.closest_object(pos)
+
+        # hightlite object where mouse is
+        if selected_hovered_object is not None:
+            selected_hovered_object.highlite(ctx, True)
+            helper <= selected_hovered_object.description()
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
+
         if selected_hovered_object is not None:
             selected_hovered_object.highlite(ctx, False)
+
+        helper.clear()
 
     def callback_render(_):
         """ callback_render """
@@ -1130,6 +1142,7 @@ def rectify_position():
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
+    canvas.bind("mouseenter", callback_canvas_mouse_enter)
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
@@ -1141,9 +1154,10 @@ def rectify_position():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    helper = html.DIV(".")
-    display_left <= helper
     display_left <= canvas
+
+    helper = html.DIV(Class='helper')
+    display_left <= helper
 
     # right side
 

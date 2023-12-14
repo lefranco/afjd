@@ -726,16 +726,25 @@ def sandbox():
             # hightlite object where mouse is
             if selected_hovered_object is not None:
                 selected_hovered_object.highlite(ctx, True)
-                if isinstance(selected_hovered_object, mapping.Highliteable):
-                    helper <= selected_hovered_object.description()
-                else:
-                    helper <= "."
-            else:
-                helper <= "."
+                helper <= selected_hovered_object.description()
 
             # redraw all arrows
             if prev_selected_hovered_object is not None or selected_hovered_object is not None:
                 ORDERS_DATA.render(ctx)
+
+    def callback_canvas_mouse_enter(event):
+        """ callback_canvas_mouse_enter """
+
+        nonlocal selected_hovered_object
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        selected_hovered_object = POSITION_DATA.closest_object(pos)
+
+        # hightlite object where mouse is
+        if selected_hovered_object is not None:
+            selected_hovered_object.highlite(ctx, True)
+            helper <= selected_hovered_object.description()
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
@@ -744,6 +753,8 @@ def sandbox():
             selected_hovered_object.highlite(ctx, False)
             # redraw all arrows
             ORDERS_DATA.render(ctx)
+
+        helper.clear()
 
     def callback_keypress(event):
         """ callback_keypress """
@@ -1054,6 +1065,7 @@ def sandbox():
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
+    canvas.bind("mouseenter", callback_canvas_mouse_enter)
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
@@ -1065,9 +1077,10 @@ def sandbox():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    helper = html.DIV(".")
-    display_left <= helper
     display_left <= canvas
+
+    helper = html.DIV(Class='helper')
+    display_left <= helper
 
     # need to be one there
     display_left <= html.BR()
