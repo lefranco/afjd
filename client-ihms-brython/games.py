@@ -128,6 +128,12 @@ def create_game(json_dict):
     # conversion
     scoring = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[scoring_code]
 
+    def show_game_type_callback(_):
+        """ show_game_type_callback """
+
+        game_type, _ = common.get_game_type(input_nopress_game.checked, input_nomessage_game.checked)
+        alert(f"Partie de type {game_type} !")
+
     def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
 
@@ -366,7 +372,7 @@ def create_game(json_dict):
 
     form = html.FORM()
 
-    legend_title_main = html.H3("Paramètres principaux de la partie - ne peuvent plus être changés la partie créée")
+    legend_title_main = html.H4("Paramètres principaux de la partie - ne peuvent plus être changés une fois la partie créée")
     form <= legend_title_main
 
     form <= html.DIV("Pas d'accents, d'espaces ni de tirets dans le nom de la partie", Class='note')
@@ -428,13 +434,14 @@ def create_game(json_dict):
     fieldset <= input_fast
     form <= fieldset
 
-    title_terms = html.H3("Modalités de la partie - ne peuvent plus être changées la partie créée")
+    title_terms = html.H4("Modalités de la partie - ne peuvent plus être changées une fois la partie créée")
     form <= title_terms
 
     fieldset = html.FIELDSET()
     legend_nopress_game = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
     fieldset <= legend_nopress_game
     input_nopress_game = html.INPUT(type="checkbox", checked=bool(nopress_game) if nopress_game is not None else False, Class='btn-inside')
+    input_nopress_game.bind("click", show_game_type_callback)
     fieldset <= input_nopress_game
     form <= fieldset
 
@@ -442,6 +449,7 @@ def create_game(json_dict):
     legend_nomessage_game = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
     fieldset <= legend_nomessage_game
     input_nomessage_game = html.INPUT(type="checkbox", checked=bool(nomessage_game) if nomessage_game is not None else False, Class='btn-inside')
+    input_nomessage_game.bind("click", show_game_type_callback)
     fieldset <= input_nomessage_game
     form <= fieldset
 
@@ -449,7 +457,7 @@ def create_game(json_dict):
     form <= html.BR()
     form <= html.DIV("Leur version applicable reste toutefois modifiable à tout moment par l'arbitre...", Class='note')
 
-    title_anonimity = html.H3("Anonymat de la partie - peut être changé la partie créée")
+    title_anonimity = html.H4("Anonymat de la partie")
     form <= title_anonimity
 
     fieldset = html.FIELDSET()
@@ -459,7 +467,7 @@ def create_game(json_dict):
     fieldset <= input_anonymous
     form <= fieldset
 
-    title_scoring = html.H3("Système de marque - peut être changé la partie créée")
+    title_scoring = html.H4("Système de marque")
     form <= title_scoring
 
     # special : la marque
@@ -478,7 +486,7 @@ def create_game(json_dict):
     fieldset <= input_scoring
     form <= fieldset
 
-    title_pace = html.H3("Cadence de la partie - peut être changé la partie créée")
+    title_pace = html.H4("Cadence de la partie")
     form <= title_pace
 
     # deadline
@@ -563,7 +571,7 @@ def create_game(json_dict):
     fieldset <= input_play_weekend
     form <= fieldset
 
-    title_access = html.H3("Accès à la partie - ne peuvent plus être changés la partie démarrée")
+    title_access = html.H4("Accès à la partie - ne peuvent plus être changés une fois la partie démarrée")
     form <= title_access
 
     fieldset = html.FIELDSET()
@@ -587,7 +595,7 @@ def create_game(json_dict):
     fieldset <= input_access_restriction_performance
     form <= fieldset
 
-    title_access = html.H3("Fin de la partie - ne peut plus être changé la partie créée")
+    title_access = html.H4("Fin de la partie - ne peut plus être changé une fois la partie créée")
     form <= title_access
 
     fieldset = html.FIELDSET()
@@ -597,7 +605,7 @@ def create_game(json_dict):
     fieldset <= input_nb_max_cycles_to_play
     form <= fieldset
 
-    title_access = html.H3("Spécial : rôle dans la partie")
+    title_access = html.H4("Spécial : rôle du créateur dans la partie")
     form <= title_access
 
     fieldset = html.FIELDSET()
