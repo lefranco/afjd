@@ -1071,6 +1071,13 @@ def submit_orders():
             if prev_selected_hovered_object is not None or selected_hovered_object is not None:
                 orders_data.render(ctx)
 
+            # redraw dislodged if applicable
+            if isinstance(prev_selected_hovered_object, mapping.Unit):
+                if prev_selected_hovered_object in play_low.POSITION_DATA.dislodging_table:
+                    dislodged = play_low.POSITION_DATA.dislodging_table[prev_selected_hovered_object]
+                    if dislodged is not selected_hovered_object:
+                        dislodged.highlite(ctx, False)
+
     def callback_canvas_mouse_enter(event):
         """ callback_canvas_mouse_enter """
 
@@ -1089,9 +1096,18 @@ def submit_orders():
         """ callback_canvas_mouse_leave """
 
         if selected_hovered_object is not None:
+
             selected_hovered_object.highlite(ctx, False)
+
             # redraw all arrows
             orders_data.render(ctx)
+
+            # redraw dislodged if applicable
+            if isinstance(selected_hovered_object, mapping.Unit):
+                if selected_hovered_object in play_low.POSITION_DATA.dislodging_table:
+                    dislodged = play_low.POSITION_DATA.dislodging_table[selected_hovered_object]
+                    if dislodged is not selected_hovered_object:
+                        dislodged.highlite(ctx, False)
 
         helper.clear()
 
@@ -1992,6 +2008,13 @@ def submit_communication_orders():
             if prev_selected_hovered_object is not None or selected_hovered_object is not None:
                 orders_data.render(ctx)
 
+            # redraw dislodged if applicable
+            if isinstance(prev_selected_hovered_object, mapping.Unit):
+                if prev_selected_hovered_object in play_low.POSITION_DATA.dislodging_table:
+                    dislodged = play_low.POSITION_DATA.dislodging_table[prev_selected_hovered_object]
+                    if dislodged is not selected_hovered_object:
+                        dislodged.highlite(ctx, False)
+
     def callback_canvas_mouse_enter(event):
         """ callback_canvas_mouse_enter """
 
@@ -2010,9 +2033,18 @@ def submit_communication_orders():
         """ callback_canvas_mouse_leave """
 
         if selected_hovered_object is not None:
+
             selected_hovered_object.highlite(ctx, False)
+
             # redraw all arrows
             orders_data.render(ctx)
+
+            # redraw dislodged if applicable
+            if isinstance(selected_hovered_object, mapping.Unit):
+                if selected_hovered_object in play_low.POSITION_DATA.dislodging_table:
+                    dislodged = play_low.POSITION_DATA.dislodging_table[selected_hovered_object]
+                    if dislodged is not selected_hovered_object:
+                        dislodged.highlite(ctx, False)
 
         helper.clear()
 
