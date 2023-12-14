@@ -251,8 +251,6 @@ def show_variant():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    helper = html.DIV(".")
-    display_left <= helper
     display_left <= canvas
 
     # overall
