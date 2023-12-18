@@ -587,9 +587,9 @@ def authors_font() -> str:
 
 AUTHORS_FONT = authors_font()
 VARIANT_AUTHOR_X_POS = 10
-VARIANT_AUTHOR_Y_POS = 20
+VARIANT_AUTHOR_Y_POS = 10
 MAP_AUTHOR_X_POS = 10
-MAP_AUTHOR_Y_POS = 35
+MAP_AUTHOR_Y_POS = 25
 
 # center
 CENTER_COLOUR = ColourRecord(red=200, green=200, blue=200)  # light grey
@@ -2106,7 +2106,7 @@ class Order(Renderable):
 # comm witness
 
 # rectangle
-COMMUNICATION_ORDER_PATH = geometry.Polygon([geometry.PositionRecord(*t) for t in [(30, 15), (60, 15), (60, 30), (30, 30), (30, 15)]])
+COMMUNICATION_ORDER_PATH = geometry.Polygon([geometry.PositionRecord(*t) for t in [(10, 30), (40, 30), (40, 45), (10, 45), (10, 30)]])
 # magenta (like text)
 COMMUNICATION_ORDER_COLOR = ColourRecord(red=255, green=0, blue=255)
 
