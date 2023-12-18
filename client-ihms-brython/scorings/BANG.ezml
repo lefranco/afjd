@@ -1,0 +1,56 @@
+BANGKOK
+
+$ Histoire
+
+SDU
+
+
+$ Philosophie
+
+SDU
+
+$ Description
+
+(Note)
+Cette version :
+- ne prend pas en compte les bonus de temps de survivance (elle réalise une approximation en donnant la moitié des points à un joueur éliminé sans savoir à quel moment il a été éliminé).
+- ramène le score entre 0 et 100 pour être homogène avec les autres scorages. (les valeurs ont été divisées par 40)
+- ne différencie pas le scorage en fonction de la variante. (version pour la variante Standard)
+
+
+
+$$ Cas général
+
+Chaque joueur marque :
+- des points de centres
+- des points de participation
+- des points de survie
+- des points de domination
+
+(points de centres)
+Chaque centre rapporte 2.625 points
+
+(points de participation)
+Tous les participants à la partie reçoivent 2.625 points de participation
+
+(points de survie)
+Tous les survivants reçoivent 5.25 \+ 2.625 soit 7.875 points de survie.
+
+(points de domination)
+10.5 points sont partagés entre le ou les premiers.
+.
+10.5 points sont partagés entre ceux qui sont à zéro ou un centre du ou des premiers.
+.
+10.5 points sont partagés entre ceux qui sont à zéro, un ou deux centres du ou des premiers.
+
+$$ Elimination
+
+Un joueur éliminé marque 2.625 points de participation (sauf en cas de solo)
+
+$$ Solo
+
+Un joueur qui réalise un solo marque *100* points, et les autres *zéro*.
+
+$ Utilisé dans les tournois
+
+SDU
