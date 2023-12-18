@@ -1,138 +1,141 @@
 """ unit_design """
 
-# pylint: disable=multiple-statements
-
 import math
 
 
 class Point:
-    """ Point for easier compatbility with old C software (do not use a record here) """
-    def __init__(self) -> None:
-        self.x = 0  # pylint: disable=invalid-name
-        self.y = 0  # pylint: disable=invalid-name
+    """ Point """
+
+    def __init__(self, x: int, y: int) -> None:  # pylint: disable=invalid-name
+        self.x = x  # pylint: disable=invalid-name
+        self.y = y  # pylint: disable=invalid-name
+
+    def transpose(self):
+        """ turns 45 degrees """
+        return Point(- self.y, self.x)
 
 
-def stabbeur_army(x: int, y: int, ctx):  # pylint: disable=invalid-name
+def draw_poly(x_pos: int, y_pos: int, p_stuff, transpose: bool, fill: True, ctx):
+    """ draw_poly """
+
+    # transpose if necessary
+    if transpose:
+        p_stuff = [p.transpose() for p in p_stuff]
+
+    # draw
+    ctx.beginPath()
+    for num, point in enumerate(p_stuff):
+        if not num:
+            ctx.moveTo(x_pos + point.x, y_pos + point.y)
+        else:
+            ctx.lineTo(x_pos + point.x, y_pos + point.y)
+    if fill:
+        ctx.fill()
+    ctx.stroke()
+    ctx.closePath()
+
+
+def draw_circle(x_pos: int, y_pos: int, ray: int, ctx):
+    """ draw_circle """
+
+    ctx.beginPath()
+    ctx.arc(x_pos, y_pos, ray, 0, 2 * math.pi, False)
+    ctx.fill()
+    ctx.stroke()
+    ctx.closePath()
+
+
+def stabbeur_army(x_pos: int, y_pos: int, transpose: bool, ctx):
     """ display an army the stabbeur way """
 
-    # the ctx.strokeStyle and ctx.fillStyle should be defined
+    # the ctx.strokeStyle and ctx.fillStyle should be defined beforehand
 
-    # socle
-    p1 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
-    p1[0].x = x - 15; p1[0].y = y + 6
-    p1[1].x = x - 15; p1[1].y = y + 9
-    p1[2].x = x + 6; p1[2].y = y + 9
-    p1[3].x = x + 6; p1[3].y = y + 6
-    ctx.beginPath()
-    for n, p in enumerate(p1):  # pylint: disable=invalid-name
-        if not n:
-            ctx.moveTo(p.x, p.y)
-        else:
-            ctx.lineTo(p.x, p.y)
-    ctx.fill(); ctx.stroke(); ctx.closePath()
+    # basement
+    p_basement = [
+        Point(-15, 6),
+        Point(-15, 9),
+        Point(6, 9),
+        Point(6, 6)
+    ]
+    draw_poly(x_pos, y_pos, p_basement, transpose, True, ctx)
 
-    # coin
-    p2 = [Point() for _ in range(3)]  # pylint: disable=invalid-name
-    p2[0].x = x - 9; p2[0].y = y + 6
-    p2[1].x = x - 4; p2[1].y = y + 6
-    p2[2].x = x - 7; p2[2].y = y + 3
-    ctx.beginPath()
-    for n, p in enumerate(p2):  # pylint: disable=invalid-name
-        if not n:
-            ctx.moveTo(p.x, p.y)
-        else:
-            ctx.lineTo(p.x, p.y)
-    ctx.fill(); ctx.stroke(); ctx.closePath()
+    # corner
+    p_corner = [
+        Point(-9, 6),
+        Point(-4, 6),
+        Point(-7, 3)
+    ]
+    draw_poly(x_pos, y_pos, p_corner, transpose, True, ctx)
 
-    # canon
-    p3 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
-    p3[0].x = x - 2; p3[0].y = y - 7
-    p3[1].x = x + 3; p3[1].y = y - 14
-    p3[2].x = x + 4; p3[2].y = y - 12
-    p3[3].x = x; p3[3].y = y - 7
-    ctx.beginPath()
-    for n, p in enumerate(p3):  # pylint: disable=invalid-name
-        if not n:
-            ctx.moveTo(p.x, p.y)
-        else:
-            ctx.lineTo(p.x, p.y)
-    ctx.fill(); ctx.stroke(); ctx.closePath()
+    # cannon
+    p_cannon = [
+        Point(-2, -7),
+        Point(3, -14),
+        Point(4, -12),
+        Point(0, -7)
+    ]
+    draw_poly(x_pos, y_pos, p_cannon, transpose, True, ctx)
 
-    # cercle autour roue exterieure
-    # simplified
-    ctx.beginPath()
-    ctx.arc(x, y, 6, 0, 2 * math.pi, False)
-    ctx.fill(); ctx.stroke(); ctx.closePath()
+    # circle around external wheel
+    draw_circle(x_pos, y_pos, 6, ctx)
 
-    # roue interieure
-    # simplified
-    ctx.beginPath()
-    ctx.arc(x, y, 2, 0, 2 * math.pi, False)
-    ctx.fill(); ctx.stroke(); ctx.closePath()
+    # internal wheel
+    draw_circle(x_pos, y_pos, 2, ctx)
 
-    # exterieur coin
-    p4 = [Point() for _ in range(2)]  # pylint: disable=invalid-name
-    p4[0].x = x - 7; p4[0].y = y + 3
-    p4[1].x = x - 9; p4[1].y = y + 6
-    ctx.beginPath()
-    for n, p in enumerate(p4):  # pylint: disable=invalid-name
-        if not n:
-            ctx.moveTo(p.x, p.y)
-        else:
-            ctx.lineTo(p.x, p.y)
-    ctx.stroke(); ctx.closePath()  # no fill
+    # external corner
+    p_ext_corner = [
+        Point(-7, 3),
+        Point(-9, 6)
+    ]
+    draw_poly(x_pos, y_pos, p_ext_corner, transpose, False, ctx)
 
 
-def stabbeur_fleet(x: int, y: int, ctx):  # pylint: disable=invalid-name
+def stabbeur_fleet(x_pos: int, y_pos: int, transpose: bool, ctx):
     """ display a fleet the stabbeur way """
 
-    # the ctx.strokeStyle and ctx.fillStyle should be defined
+    # the ctx.strokeStyle and ctx.fillStyle should be defined beforehand
 
-    # gros oeuvre
-    p1 = [Point() for _ in range(33)]  # pylint: disable=invalid-name
-    p1[0].x = x - 15; p1[0].y = y + 4
-    p1[1].x = x + 16; p1[1].y = y + 4
-    p1[2].x = x + 15; p1[2].y = y
-    p1[3].x = x + 10; p1[3].y = y
-    p1[4].x = x + 10; p1[4].y = y - 3
-    p1[5].x = x + 7; p1[5].y = y - 3
-    p1[6].x = x + 7; p1[6].y = y - 2
-    p1[7].x = x + 4; p1[7].y = y - 2
-    p1[8].x = x + 4; p1[8].y = y - 9
-    p1[9].x = x + 3; p1[9].y = y - 9
-    p1[10].x = x + 3; p1[10].y = y - 6
-    p1[11].x = x - 1; p1[11].y = y - 6
-    p1[12].x = x - 1; p1[12].y = y - 9
-    p1[13].x = x - 2; p1[13].y = y - 9
-    p1[14].x = x - 2; p1[14].y = y - 13
-    p1[15].x = x - 3; p1[15].y = y - 13
-    p1[16].x = x - 3; p1[16].y = y - 6
-    p1[17].x = x - 6; p1[17].y = y - 6
-    p1[18].x = x - 6; p1[18].y = y - 5
-    p1[19].x = x - 3; p1[19].y = y - 5
-    p1[20].x = x - 3; p1[20].y = y - 4
-    p1[21].x = x - 4; p1[21].y = y - 3
-    p1[22].x = x - 4; p1[22].y = y - 2
-    p1[23].x = x - 5; p1[23].y = y - 2
-    p1[24].x = x - 5; p1[24].y = y - 3
-    p1[25].x = x - 9; p1[25].y = y - 3
-    p1[26].x = x - 9; p1[26].y = y
-    p1[27].x = x - 12; p1[27].y = y
-    p1[28].x = x - 12; p1[28].y = y - 1
-    p1[29].x = x - 13; p1[29].y = y - 1
-    p1[30].x = x - 13; p1[30].y = y
-    p1[31].x = x - 12; p1[31].y = y
-    p1[32].x = x - 15; p1[32].y = y + 4
-    ctx.beginPath()
-    for n, p in enumerate(p1):  # pylint: disable=invalid-name
-        if not n:
-            ctx.moveTo(p.x, p.y)
-        else:
-            ctx.lineTo(p.x, p.y)
-    ctx.fill(); ctx.stroke(); ctx.closePath()
+    # big work
+    p_big_work = [
+        Point(- 15, 4),
+        Point(16, 4),
+        Point(15, 0),
+        Point(10, 0),
+        Point(10, - 3),
+        Point(7, - 3),
+        Point(7, - 2),
+        Point(4, - 2),
+        Point(4, - 9),
+        Point(3, - 9),
+        Point(3, - 6),
+        Point(- 1, - 6),
+        Point(- 1, - 9),
+        Point(- 2, - 9),
+        Point(- 2, - 13),
+        Point(- 3, - 13),
+        Point(- 3, - 6),
+        Point(- 6, - 6),
+        Point(- 6, - 5),
+        Point(- 3, - 5),
+        Point(- 3, - 4),
+        Point(- 4, - 3),
+        Point(- 4, - 2),
+        Point(- 5, - 2),
+        Point(- 5, - 3),
+        Point(- 9, - 3),
+        Point(- 9, 0),
+        Point(- 12, 0),
+        Point(- 12, - 1),
+        Point(- 13, - 1),
+        Point(- 13, 0),
+        Point(- 12, 0),
+        Point(- 15, 4)
+    ]
+    draw_poly(x_pos, y_pos, p_big_work, transpose, True, ctx)
 
-    # hublots
-    for i in range(5):
-        ctx.beginPath()
-        ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2 * math.pi, False)
-        ctx.stroke(); ctx.closePath()  # no fill
+    # porthole
+    p_porthole = [Point(- 8 + 5 * i + 1, 1) for i in range(5)]
+    if transpose:
+        p_porthole = [p.transpose() for p in p_porthole]
+    for point in p_porthole:
+        draw_circle(x_pos + point.x, y_pos + point.y, 1, ctx)

@@ -1155,15 +1155,17 @@ class Unit(Highliteable, Renderable):
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         # shift for dislodged units
+        transpose = False
         if self._dislodged_origin is not None:
             x += DISLODGED_SHIFT_X  # pylint: disable=invalid-name
             y += DISLODGED_SHIFT_Y  # pylint: disable=invalid-name
+            transpose = True
 
         # actual display of unit
         if isinstance(self, Army):
-            unit_design.stabbeur_army(x, y, ctx)
+            unit_design.stabbeur_army(x, y, transpose, ctx)
         if isinstance(self, Fleet):
-            unit_design.stabbeur_fleet(x, y, ctx)
+            unit_design.stabbeur_fleet(x, y, transpose, ctx)
 
         # more stuff if dislodged
         if self._dislodged_origin is not None:
@@ -1976,7 +1978,7 @@ class Order(Renderable):
             from_point = geometry.PositionRecord(x_pos=unit_position.x_pos + DISLODGED_SHIFT_X, y_pos=unit_position.y_pos + DISLODGED_SHIFT_Y)
             dest_point = self._position.variant.position_table[self._destination_zone]
             dest_point_closer_x, dest_point_closer_y = shorten_arrow(from_point.x_pos + DISLODGED_SHIFT_X, from_point.y_pos + DISLODGED_SHIFT_Y, dest_point.x_pos, dest_point.y_pos)
-            draw_arrow(from_point.x_pos + DISLODGED_SHIFT_X, from_point.y_pos + DISLODGED_SHIFT_Y, dest_point_closer_x, dest_point_closer_y, ctx)
+            draw_arrow(from_point.x_pos, from_point.y_pos, dest_point_closer_x, dest_point_closer_y, ctx)
             # -- end
 
             # put back
