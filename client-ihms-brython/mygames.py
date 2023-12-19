@@ -966,8 +966,6 @@ def my_games(state_name):
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
-    number_games = 0
-
     # default
     if 'SORT_BY_MYGAMES' not in storage:
         storage['SORT_BY_MYGAMES'] = 'creation'
@@ -999,6 +997,8 @@ def my_games(state_name):
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
     startable_game_present = False
+
+    games_list = []
 
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
@@ -1043,7 +1043,9 @@ def my_games(state_name):
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
 
-        number_games += 1
+        # add to game list
+        game_name = data['name']
+        games_list.append(game_name)
 
         role_id = dict_role_id[str(game_id)]
         if role_id == -1:
@@ -1073,7 +1075,6 @@ def my_games(state_name):
 
             value = data[field]
             colour = None
-            game_name = data['name']
 
             if field == 'name':
 
@@ -1353,6 +1354,9 @@ def my_games(state_name):
 
         games_table <= row
 
+    # store the list of games
+    storage['GAME_LIST'] = ' '.join(games_list)
+
     # get GMT date and time
     time_stamp_now = time.time()
     date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
@@ -1393,6 +1397,7 @@ def my_games(state_name):
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
 
+    number_games = len(games_list)
     stats = f"Temps de chargement de la page {elapsed:.2f} secs avec {number_games} partie(s)"
     if number_games:
         stats += f" soit {elapsed/number_games:.2f} par partie"
