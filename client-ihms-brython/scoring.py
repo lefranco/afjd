@@ -260,7 +260,9 @@ def c_diplo_namur(solo_threshold, ratings):
 def butcher(solo_threshold, ratings):
     """ the butcher scoring system """
 
-    solo_reward = 60
+    solo_reward = 7
+    no_elimination_reward = 0.5
+    elimination_reward = 1
 
     # default score
     score = {role_name: 0 for role_name in ratings}
@@ -275,7 +277,7 @@ def butcher(solo_threshold, ratings):
     nb_eliminated = len([s for s in ratings.values() if s == 0])
 
     # calculate reward
-    reward = nb_eliminated * 10 if nb_eliminated else 1
+    reward = elimination_reward * nb_eliminated if nb_eliminated else no_elimination_reward
 
     # give points
     for role_name in ratings:
@@ -289,11 +291,11 @@ def butcher(solo_threshold, ratings):
 def bangkok(solo_threshold, ratings):
     """ the bangkok scoring system """
 
-    solo_reward = 100.
-    center_points = 2.625
-    participation_points = 5.25
-    survival_points = 5.25
-    wave_bonus = 10.5
+    solo_reward = 4000.
+    center_points = 105
+    participation_points = 210
+    survival_points = 210
+    wave_bonus = 420
 
     # default score
     score = {role_name: 0 for role_name in ratings}

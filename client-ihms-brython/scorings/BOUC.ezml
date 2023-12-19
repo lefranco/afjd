@@ -13,11 +13,10 @@ $ Description
 $$ Cas général
 
 Chaque joueur marque :
-- *dix* point par joueur éliminé
+- *un* point par joueur éliminé
 
 (Cas particulier)
-Si aucun joueur n’est éliminé chaque joueur marque *un* point (pour éviter une
-marque nulle pour pout le monde.)
+Si aucun joueur n’est éliminé chaque joueur marque *un demi* point (pour éviter une marque nulle pour pout le monde.)
 
 $$ Elimination
 
@@ -25,7 +24,7 @@ Un joueur éliminé marque *zéro*
 
 $$ Solo
 
-Un joueur qui réalise un solo marque *60* points, et les autres *zéro*.
+Un joueur qui réalise un solo marque *sept* points, et les autres *zéro*.
 
 $ Utilisé dans les tournois
 
