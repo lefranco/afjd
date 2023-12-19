@@ -287,7 +287,6 @@ def butcher(solo_threshold, ratings):
     return score
 
 
-
 def bangkok(solo_threshold, ratings):
     """ the bangkok scoring system """
 
