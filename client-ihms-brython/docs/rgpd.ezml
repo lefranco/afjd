@@ -65,6 +65,7 @@ $$ Présentation
 | _GAME ACCESS MODE_ | mode d'accès aux parties par bouton ou par lien pour la page 'mes parties'  |
 | _GAME SHOW MODE_ | souhait d'afficher plus ou moins de colonnes page 'mes parties'  |
 | _ACTION COLUMN MODE_ | souhait d'afficher ou non la colonne action page 'mes parties'  |
+| _GAME LIST_ | la liste des parties affichées dans la page 'mes parties' pour naviguer |
 | _SITE IMAGE_ | souhait d'afficher ou non l'image du site  |
 =
 $$ Sélection

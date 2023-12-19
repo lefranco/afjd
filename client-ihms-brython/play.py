@@ -16,6 +16,9 @@ import play_low
 import play_play
 import play_master
 import play_other
+import allgames
+import index
+
 
 OPTIONS = {
     'Consulter': "Consulter la position et l'historique des résolutions de la partie",
@@ -30,7 +33,9 @@ OPTIONS = {
     'Appariement': "Se mettre dans la partie ou la quitter",
     'Paramètres': "Consulter tous les paramètres de la partie",
     'Retards': "Consulter les incidents sur la partiue (retards, abandons, désordres civils)",
-    'Superviser': "Observer une partie en direct"
+    'Superviser': "Observer une partie en direct",
+    'Précédente': "Aller dans la partie précédente (avec retour à la dernière)",
+    'Suivante': "Aller dans la partie suivante (avec retour à la première)"
 }
 
 ARRIVAL = None
@@ -40,6 +45,36 @@ def set_arrival(arrival):
     """ set_arrival """
     global ARRIVAL
     ARRIVAL = arrival
+
+
+def next_previous_game(previous: bool):
+    """ next_game """
+
+    if 'GAME_LIST' not in storage:
+        alert("Pas de liste de parties, allez dans la page 'mes parties', désolé")
+        return False
+
+    games_list = storage['GAME_LIST'].split(' ')
+
+    if play_low.GAME not in games_list:
+        alert(f"La partie en cours {play_low.GAME} n'est pas dans la liste de vos parties, choisissez parmi celles de la page 'mes parties', désolé")
+        return False
+
+    game_position = games_list.index(play_low.GAME)
+
+    delta = -1 if previous else 1
+    new_name = games_list[(game_position + delta) % len(games_list)]
+
+    if not index.load_game(new_name):
+        alert(f"La partie destination '{new_name}' n'existe pas, elle a du être supprimée, désolé")
+        return False
+
+    allgames.show_game_selected()
+
+    # action of going to game page
+    render(index.PANEL_MIDDLE)
+
+    return True
 
 
 ITEM_NAME_SELECTED = None
@@ -82,6 +117,10 @@ def load_option(_, item_name, direct_last_moves=False):
         status = play_other.show_events_in_game()
     if item_name == 'Superviser':
         status = play_master.supervise()
+    if item_name == 'Précédente':
+        status = next_previous_game(True)
+    if item_name == 'Suivante':
+        status = next_previous_game(False)
 
     if not status:
         return
