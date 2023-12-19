@@ -1188,25 +1188,13 @@ class Unit(Highliteable, Renderable):
 
         dislodger_back_colour = DISLODGED_TEXT_BACKGROUND_COLOUR
         ctx.fillStyle = dislodger_back_colour.str_value()  # for background
-        ctx.rect(x_pos + 12, y_pos - 17, 18, 10)
+        ctx.rect(x_pos + 12, y_pos - 17, 20, 10)
         ctx.fill()
 
         dislodger_colour = DISLODGED_COLOUR
         ctx.fillStyle = dislodger_colour.str_value()  # for text
         ctx.font = DISLODGED_FONT
         ctx.fillText(dislodger_legend, x_pos + 14, y_pos - 9)
-
-        ctx.lineWidth = 2
-
-        # circle
-        ctx.beginPath()
-        circle_colour = DISLODGED_COLOUR
-        ctx.strokeStyle = circle_colour.str_value()
-        ctx.arc(x_pos, y_pos, 12, 0, 2 * math.pi, False)
-        ctx.stroke(); ctx.closePath()  # no fill
-
-        # put back
-        ctx.lineWidth = 1
 
     def save_json(self):
         """ Save to  dict """
