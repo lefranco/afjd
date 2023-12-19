@@ -260,7 +260,9 @@ def c_diplo_namur(solo_threshold, ratings):
 def butcher(solo_threshold, ratings):
     """ the butcher scoring system """
 
-    solo_reward = 60
+    solo_reward = 7
+    no_elimination_reward = 0.5
+    elimination_reward = 1
 
     # default score
     score = {role_name: 0 for role_name in ratings}
@@ -275,12 +277,56 @@ def butcher(solo_threshold, ratings):
     nb_eliminated = len([s for s in ratings.values() if s == 0])
 
     # calculate reward
-    reward = nb_eliminated * 10 if nb_eliminated else 1
+    reward = elimination_reward * nb_eliminated if nb_eliminated else no_elimination_reward
 
     # give points
     for role_name in ratings:
         if ratings[role_name]:
             score[role_name] = reward
+
+    return score
+
+
+def bangkok(solo_threshold, ratings):
+    """ the bangkok scoring system """
+
+    solo_reward = 4000.
+    center_points = 105
+    participation_points = 210
+    survival_points = 210
+    wave_bonus = 420
+
+    # default score
+    score = {role_name: 0 for role_name in ratings}
+
+    # detect solo
+    best_role_name = list(ratings.keys())[0]
+    if ratings[best_role_name] > solo_threshold:
+        score[best_role_name] = solo_reward
+        return score
+
+    # center points
+    for role_name in score:
+        center_num = ratings[role_name]
+        score[role_name] += center_points * center_num
+
+    # participation points (if you participate you get first half participation)
+    for role_name in score:
+        score[role_name] += participation_points / 2
+
+    # survival points (if you survive you get survival + second half participation)
+    survivers = [r for r in ratings if ratings[r]]
+    for role_name in survivers:
+        score[role_name] += survival_points
+        score[role_name] += participation_points / 2
+
+    # domination points (similar to wave points)
+    best_centers = max(ratings.values())
+    for wave_distance in range(3):
+        wave_sharers = [r for r in ratings if ratings[r] >= best_centers - wave_distance]
+        # give points
+        for role_name in wave_sharers:
+            score[role_name] += wave_bonus / len(wave_sharers)
 
     return score
 
@@ -303,5 +349,7 @@ def scoring(game_scoring, solo_threshold, ratings):
         score_table = c_diplo_namur(solo_threshold, ratings)
     if game_scoring == 'BOUC':
         score_table = butcher(solo_threshold, ratings)
+    if game_scoring == 'BANG':
+        score_table = bangkok(solo_threshold, ratings)
 
     return score_table
