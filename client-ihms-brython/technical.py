@@ -114,27 +114,18 @@ def show_technical():
 
     # --
 
-    title8 = html.H3("EZML: The Easy Markup Language")
+    title8 = html.H3("Remerciements")
     MY_SUB_PANEL <= title8
 
-    link81 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
-    link81 <= "Possibiltés du langage inspiré par George Ferguson"
-    MY_SUB_PANEL <= link81
-
-    # --
-
-    title9 = html.H3("Remerciements")
-    MY_SUB_PANEL <= title9
-
-    link91 = html.A(href="https://brython.info/", target="_blank")
-    link91 <= "Outil utilisé pour ce site web"
+    link81 = html.A(href="https://brython.info/", target="_blank")
+    link81 <= "Outil utilisé pour ce site web"
     MY_SUB_PANEL <= link81
 
     MY_SUB_PANEL <= html.P()
 
-    link92 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link92 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link92
+    link82 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link82 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link82
 
 
 WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
