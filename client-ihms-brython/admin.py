@@ -519,12 +519,6 @@ def rectify_parameters():
     nomessage_loaded = None
     nopress_loaded = None
 
-    def show_game_type_callback(_):
-        """ show_game_type_callback """
-
-        game_type, _ = common.get_game_type(input_nopress.checked, input_nomessage.checked)
-        alert(f"Partie de type {game_type} !")
-
     def change_parameters_reload():
         """ change_parameters_reload """
 
@@ -657,7 +651,6 @@ def rectify_parameters():
     legend_nopress = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
     fieldset <= legend_nopress
     input_nopress = html.INPUT(type="checkbox", checked=nopress_loaded, Class='btn-inside')
-    input_nopress.bind("click", show_game_type_callback)
     fieldset <= input_nopress
     form <= fieldset
 
@@ -665,7 +658,6 @@ def rectify_parameters():
     legend_nomessage = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
     fieldset <= legend_nomessage
     input_nomessage = html.INPUT(type="checkbox", checked=nomessage_loaded, Class='btn-inside')
-    input_nomessage.bind("click", show_game_type_callback)
     fieldset <= input_nomessage
     form <= fieldset
 
