@@ -185,9 +185,10 @@ def time_to_wait() -> float:
 def acting_threaded_procedure() -> None:
     """ does the actual scheduled work """
 
-    with APP.app_context():
 
-        # get a token
+    def get_token():
+        """ get a token """
+
         pseudo = COMMUTER_ACCOUNT
         password = COMMUTER_PASSWORD
         external_ip = "(commuter)"
@@ -208,9 +209,15 @@ def acting_threaded_procedure() -> None:
             return
         req_result = json.loads(req_result.text)
         jwt_token = req_result['AccessToken']  # type: ignore
+        return jwt_token
+
+    with APP.app_context():
 
         # No, we do not wait, we go straight, because there are probably some pending...
         mylogger.LOGGER.info("Ok, go straight, make a first round...")
+
+        # get initial token
+        jwt_token = get_token()
 
         while True:
 
@@ -232,6 +239,10 @@ def acting_threaded_procedure() -> None:
 
             if hour_now == 1:
                 pass  # TODO
+
+            # renew token every day
+            if hour_now == 23:
+                jwt_token = get_token()
 
             # go to sleep
             wait_time = time_to_wait()
