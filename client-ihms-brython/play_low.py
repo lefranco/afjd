@@ -634,13 +634,22 @@ def get_game_status():
     # calculate it
     explanations = []
     if GAME_PARAMETERS_LOADED['nopress_game']:
-        explanations.append("Les déclarations des joueurs sont interdites sur la partie")
+        explanations.append("Les déclarations publiques des joueurs sont interdites sur la partie")
         if not GAME_PARAMETERS_LOADED['nopress_current']:
-            explanations.append("Toutefois l'arbitre a ouvert le canal des déclarations (pour le debrief ou une autre raison hors jeu)")
+            explanations.append("Toutefois l'arbitre a ouvert le canal des déclarations publiques pour le moment (pour le debrief ou une autre raison hors jeu)")
+    else:
+        if GAME_PARAMETERS_LOADED['nopress_current']:
+            explanations.append("Les déclarations publiques des joueurs sont autorisées sur la partie")
+            explanations.append("Toutefois ces déclarations sont interdites par l'arbitre pour le moment")
+
     if GAME_PARAMETERS_LOADED['nomessage_game']:
         explanations.append("Les négociations privées entre joueurs sont interdites sur la partie")
         if not GAME_PARAMETERS_LOADED['nomessage_current']:
-            explanations.append("Toutefois l'arbitre a ouvert le canal des négociations privées (pour le debrief ou une autre raison hors jeu)")
+            explanations.append("Toutefois l'arbitre a ouvert le canal des négociations privées pour le moment (pour le debrief ou une autre raison hors jeu)")
+    else:
+        if GAME_PARAMETERS_LOADED['nomessage_current']:
+            explanations.append("Les négociations privées entre joueurs sont autorisées sur la partie")
+            explanations.append("Toutefois ces négociations sont interdites par l'arbitre pour le moment")
 
     # display it
     if explanations:
