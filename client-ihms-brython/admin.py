@@ -32,7 +32,6 @@ OPTIONS = {
     'Récupérations demandées': "Les récupérations demandées sur le site",
     'Editer les créateurs': "Editer les comptes créateurs du site",
     'Editer les modérateurs': "Editer les comptes modérateurs du site",
-    'Mise à jour du elo': "Mettre à jour le classement ELO (amené à disparaître)",
     'Mise à jour de la fiabilité': "Mettre à jour le classement de fiabilité (amené à disparaître)",
     'Mise à jour de la régularité': "Mettre à jour le classement de régularité (amené à disparaître)",
     'Effacement des anciens retard': "Effacer tous les anciens retards",
@@ -1712,149 +1711,6 @@ def edit_moderators():
     MY_SUB_PANEL <= form
 
 
-def update_elo():
-    """ update_elo """
-
-    def cancel_update_database_callback(_, dialog):
-        """ cancel_update_database_callback """
-        dialog.close(None)
-
-    def update_database_callback(_, dialog, elo_raw_list, teaser_text):
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la mise à jour du ELO : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la mise à jour du ELO : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La mise à jour du ELO a été réalisée : {messages}")
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            update_elo()
-
-        dialog.close(None)
-
-        elo_raw_list_json = json.dumps(elo_raw_list)
-
-        json_dict = {
-            'elo_list': elo_raw_list_json,
-            'teaser': teaser_text
-        }
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/elo_rating"
-
-        # update database : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    def update_database_confirm(elo_raw_list, teaser_text):
-        """ update_database_confirm """
-
-        dialog = mydialog.Dialog("On met à jour la base de données ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog, erl=elo_raw_list, tt=teaser_text: update_database_callback(e, d, erl, tt))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
-
-    def extract_elo_data_callback(ev):  # pylint: disable=invalid-name
-        """ extract_elo_data_callback """
-
-        def reply_callback(req):
-
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur au calcul du ELO : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème au calcul du ELO : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-
-                # failed but refresh
-                MY_SUB_PANEL.clear()
-                update_elo()
-
-                return
-
-            games_results_dict = req_result['games_dict']
-            elo_information = html.DIV()
-            elo_raw_list, teaser_text = elo.process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information)
-
-            if DOWNLOAD_LOG:
-                alert("Télechargement automatique des logs du calcul")
-
-                # exportation of logs
-                log_html = elo_information.innerHTML
-
-                # needed too for some reason
-                MY_SUB_PANEL <= html.A(id='download_link')
-
-                # perform actual exportation
-                text_file_as_blob = window.Blob.new([log_html], {'type': 'text/plain'})
-                download_link = document['download_link']
-                time_stamp_now = int(time.time())
-                download_link.download = f"diplomania_elo_{time_stamp_now}.html"
-                download_link.href = window.URL.createObjectURL(text_file_as_blob)
-                document['download_link'].click()
-
-            # display result
-            MY_SUB_PANEL.clear()
-            MY_SUB_PANEL <= elo_information
-
-            # offer update
-            update_database_confirm(elo_raw_list, teaser_text)
-
-        ev.preventDefault()
-
-        json_dict = {
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/extract_elo_data"
-
-        # extract_elo_data : need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    MY_SUB_PANEL <= html.H3("Mettre à jour le ELO")
-
-    if not common.check_admin():
-        alert("Pas le bon compte (pas admin)")
-        return
-
-    players_dict = common.get_players()
-    if not players_dict:
-        return
-
-    games_dict = common.get_games_data()
-    if not games_dict:
-        return
-
-    variant_name = config.FORCED_VARIANT_NAME
-
-    variant_content = common.game_variant_content_reload(variant_name)
-    interface_chosen = interface.get_interface_from_variant(variant_name)
-    interface_parameters = common.read_parameters(variant_name, interface_chosen)
-
-    variant_data = mapping.Variant(variant_name, variant_content, interface_parameters)
-
-    form = html.FORM()
-
-    # ---
-
-    input_maintain = html.INPUT(type="submit", value="Extraire et calculer", Class='btn-inside')
-    input_maintain.bind("click", extract_elo_data_callback)
-    form <= input_maintain
-
-    MY_SUB_PANEL <= form
-
-
 def update_reliability():
     """ update_reliability """
 
@@ -2561,8 +2417,6 @@ def load_option(_, item_name):
         edit_moderators()
     if item_name == 'Editer les créateurs':
         edit_creators()
-    if item_name == 'Mise à jour du elo':
-        update_elo()
     if item_name == 'Mise à jour de la fiabilité':
         update_reliability()
     if item_name == 'Mise à jour de la régularité':

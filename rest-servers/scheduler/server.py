@@ -25,6 +25,7 @@ import requests
 import mylogger
 import lowdata
 import mapping
+import elo_scheduler
 
 
 SESSION = requests.Session()
@@ -44,22 +45,6 @@ EPSILON_SEC = 5
 # to take it easy on server
 INTER_COMMUTATION_TIME_SEC = 2
 
-# where to get logs
-FILE = './logdir/scheduler.log'
-
-
-# simplest is to hard code displays of variants here
-INTERFACE_TABLE = {
-    'standard': ['diplomania', 'diplomania_daltoniens', 'hasbro'],
-    'standard_pds': ['diplomania'],
-    'grandeguerre': ['diplomania'],
-    'grandeguerreexpansionniste': ['diplomania'],
-    'hundred': ['diplomania'],
-    'moderne': ['diplomania'],
-    'egeemonie': ['diplomania'],
-    'mediterranee': ['diplomania'],
-}
-
 
 def load_credentials_config() -> None:
     """ read credentials config """
@@ -75,23 +60,6 @@ def load_credentials_config() -> None:
 
         COMMUTER_ACCOUNT = credentials_data['COMMUTER_ACCOUNT']
         COMMUTER_PASSWORD = credentials_data['COMMUTER_PASSWORD']
-
-
-def get_inforced_interface_from_variant(variant: str) -> str:
-    """ get_inforced_interface_from_variant """
-
-    # takes the first
-    return INTERFACE_TABLE[variant][0]
-
-
-def read_parameters(variant_name_loaded: str, interface_chosen: str) -> typing.Any:
-    """ read_parameters """
-
-    parameters_file_name = f"./variants/{variant_name_loaded}/{interface_chosen}/parameters.json"
-    with open(parameters_file_name, "r", encoding="utf-8") as read_file2:
-        parameters_read = json.load(read_file2)
-
-    return parameters_read
 
 
 def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_name: str) -> bool:
@@ -110,10 +78,10 @@ def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_na
     variant_content_loaded = req_result.json()
 
     # selected interface (forced)
-    interface_inforced = get_inforced_interface_from_variant(variant_name_loaded)
+    interface_inforced = lowdata.get_inforced_interface_from_variant(variant_name_loaded)
 
     # from interface chose get display parameters
-    parameters_read = read_parameters(variant_name_loaded, interface_inforced)
+    parameters_read = lowdata.read_parameters(variant_name_loaded, interface_inforced)
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
@@ -254,8 +222,16 @@ def acting_threaded_procedure() -> None:
             # log that adjudications are done
             mylogger.LOGGER.info("Done for adjudications...")
 
-            # TODO : insert here all scheduled tasks
-            time.sleep(10)
+            # Now scheduled tasks
+            timestamp_now = time.time()
+            hour_now = (int(timestamp_now) // 3600) % 24
+
+            if hour_now == 0:
+                mylogger.LOGGER.info("ELO Scheduler...")
+                elo_scheduler.run(jwt_token)
+
+            if hour_now == 1:
+                pass  # TODO
 
             # go to sleep
             wait_time = time_to_wait()
@@ -276,7 +252,7 @@ class AccessLogsRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/access-logs - GET - accessing logs lines=%s", lines)
 
         # extract from log file
-        with open(FILE, encoding='UTF-8') as file:
+        with open(lowdata.FILE, encoding='UTF-8') as file:
             log_lines = file.readlines()
 
         # remove trailing '\n'

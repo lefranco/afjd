@@ -142,6 +142,10 @@ LEN_EVENT_MAX = 50
 MAX_SIZE_IMAGE = (4 / 3) * 1000000
 
 
+# account allowed to update ratings
+COMMUTER_ACCOUNT = "TheCommuter"
+
+
 def email_rescue_message(pseudo: str, access_token: str) -> typing.Tuple[str, str]:
     """ email_rescue_message """
 
@@ -1625,10 +1629,9 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
-        if pseudo != admin_pseudo:
+        if pseudo != COMMUTER_ACCOUNT:
             del sql_executor
-            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update ELO data")
+            flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to update ELO data")
 
         try:
             elo_list = json.loads(elo_list_submitted)
@@ -1700,10 +1703,9 @@ class ReliabilityRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
-        if pseudo != admin_pseudo:
+        if pseudo != COMMUTER_ACCOUNT:
             del sql_executor
-            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update reliability data")
+            flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to update reliability data")
 
         try:
             reliability_list = json.loads(reliability_list_submitted)
@@ -1771,10 +1773,9 @@ class RegularityRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
-        if pseudo != admin_pseudo:
+        if pseudo != COMMUTER_ACCOUNT:
             del sql_executor   # noqa: F821
-            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update regularity data")
+            flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to update regularity data")
 
         try:
             regularity_list = json.loads(regularity_list_submitted)

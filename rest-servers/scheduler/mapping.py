@@ -402,3 +402,17 @@ class Variant:
         coast_names = {k: self._coast_name_table[v] for k, v in self._coast_types.items()}
 
         return {'roles': role_names, 'zones': zone_names, 'coasts': coast_names}
+
+    def number_centers(self) -> int:
+        """ number_centers """
+        return len(self._centers)
+
+    @property
+    def role_name_table(self) -> typing.Dict[Role, str]:
+        """ property """
+        return self._role_name_table
+
+    @property
+    def roles(self) -> typing.Dict[int, Role]:
+        """ property """
+        return self._roles
