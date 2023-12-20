@@ -128,11 +128,12 @@ def create_game(json_dict):
     # conversion
     scoring = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[scoring_code]
 
-    def show_game_type_callback(_):
-        """ show_game_type_callback """
+    def display_game_type_callback(_):
+        """ display_game_type_callback """
 
-        game_type, _ = common.get_game_type(input_nopress_game.checked, input_nomessage_game.checked)
-        alert(f"Partie de type {game_type} !")
+        game_type, explanation = common.get_game_type(input_nopress_game.checked, input_nomessage_game.checked)
+        game_type_info.clear()
+        game_type_info <= f"Sélection en cours : partie de type {game_type} - {explanation} !"
 
     def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
@@ -437,11 +438,15 @@ def create_game(json_dict):
     title_terms = html.H4("Modalités de la partie - ne peuvent plus être changées une fois la partie créée")
     form <= title_terms
 
+    game_type_info = html.DIV(Class='important')
+    form <= game_type_info
+    form <= html.BR()
+
     fieldset = html.FIELDSET()
     legend_nopress_game = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
     fieldset <= legend_nopress_game
     input_nopress_game = html.INPUT(type="checkbox", checked=bool(nopress_game) if nopress_game is not None else False, Class='btn-inside')
-    input_nopress_game.bind("click", show_game_type_callback)
+    input_nopress_game.bind("click", display_game_type_callback)
     fieldset <= input_nopress_game
     form <= fieldset
 
@@ -449,9 +454,12 @@ def create_game(json_dict):
     legend_nomessage_game = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
     fieldset <= legend_nomessage_game
     input_nomessage_game = html.INPUT(type="checkbox", checked=bool(nomessage_game) if nomessage_game is not None else False, Class='btn-inside')
-    input_nomessage_game.bind("click", show_game_type_callback)
+    input_nomessage_game.bind("click", display_game_type_callback)
     fieldset <= input_nomessage_game
     form <= fieldset
+
+    # init
+    display_game_type_callback(None)
 
     form <= html.DIV("Les paramètres 'pas de déclaration/négociation' sont fixés pour déterminer le type de la partie et l'exportation des modalités de la partie. Leur version applicable reste toutefois modifiable à tout moment par l'arbitre.", Class='note')
     form <= html.BR()
