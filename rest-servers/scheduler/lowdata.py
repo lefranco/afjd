@@ -8,6 +8,11 @@ File : lowdata.py
 import typing
 import configparser
 import collections
+import json
+
+
+# where to get logs
+FILE = './logdir/scheduler.log'
 
 
 class ConfigFile:
@@ -41,6 +46,36 @@ def load_servers_config() -> None:
         server_data = servers_config.section(server)
         SERVER_CONFIG[server]['HOST'] = server_data['HOST']
         SERVER_CONFIG[server]['PORT'] = int(server_data['PORT'])
+
+
+# simplest is to hard code displays of variants here
+INTERFACE_TABLE = {
+    'standard': ['diplomania', 'diplomania_daltoniens', 'hasbro'],
+    'standard_pds': ['diplomania'],
+    'grandeguerre': ['diplomania'],
+    'grandeguerreexpansionniste': ['diplomania'],
+    'hundred': ['diplomania'],
+    'moderne': ['diplomania'],
+    'egeemonie': ['diplomania'],
+    'mediterranee': ['diplomania'],
+}
+
+
+def get_inforced_interface_from_variant(variant: str) -> str:
+    """ get_inforced_interface_from_variant """
+
+    # takes the first
+    return INTERFACE_TABLE[variant][0]
+
+
+def read_parameters(variant_name_loaded: str, interface_chosen: str) -> typing.Any:
+    """ read_parameters """
+
+    parameters_file_name = f"./variants/{variant_name_loaded}/{interface_chosen}/parameters.json"
+    with open(parameters_file_name, "r", encoding="utf-8") as read_file2:
+        parameters_read = json.load(read_file2)
+
+    return parameters_read
 
 
 if __name__ == '__main__':
