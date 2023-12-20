@@ -453,9 +453,9 @@ def create_game(json_dict):
     fieldset <= input_nomessage_game
     form <= fieldset
 
-    form <= html.DIV("Les paramètres 'pas de déclaration/négociation' sont fixés pour déterminer le type de la partie et l'exportation des modalités de la partie", Class='note')
+    form <= html.DIV("Les paramètres 'pas de déclaration/négociation' sont fixés pour déterminer le type de la partie et l'exportation des modalités de la partie. Leur version applicable reste toutefois modifiable à tout moment par l'arbitre.", Class='note')
     form <= html.BR()
-    form <= html.DIV("Leur version applicable reste toutefois modifiable à tout moment par l'arbitre...", Class='note')
+    form <= html.DIV("Attention : il est donc tout à fait possible de créer une partie pour laquelle le canal déclaration est \"hors-jeu\", pour ce faire créer la partie en Blitz et ouvrir le canal de déclaration après la création de la partie", Class='important')
 
     title_anonimity = html.H4("Anonymat de la partie")
     form <= title_anonimity

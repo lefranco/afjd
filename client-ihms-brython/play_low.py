@@ -629,16 +629,33 @@ def get_game_status():
     row <= col
     game_status_table <= row
 
-    if GAME_PARAMETERS_LOADED['fast']:
+    # a few things need to be made clear
+
+    # calculate it
+    explanations = []
+    if GAME_PARAMETERS_LOADED['nopress_game']:
+        explanations.append("Les déclarations des joueurs sont interdites sur la partie")
+        if not GAME_PARAMETERS_LOADED['nopress_current']:
+            explanations.append("Toutefois l'arbitre a ouvert le canal des déclarations (pour le debrief ou une autre raison hors jeu)")
+    if GAME_PARAMETERS_LOADED['nomessage_game']:
+        explanations.append("Les négociations privées entre joueurs sont interdites sur la partie")
+        if not GAME_PARAMETERS_LOADED['nomessage_current']:
+            explanations.append("Toutefois l'arbitre a ouvert le canal des négociations privées (pour le debrief ou une autre raison hors jeu)")
+
+    # display it
+    if explanations:
         row = html.TR()
-        specific_information = html.DIV("Partie en direct : utiliser le bouton 'recharger la partie' du menu 'Consulter' en attendant la résolution (puis retourner aux ordres)", Class='important')
+        specific_information = html.DIV(Class='important')
+        specific_information <= "Communication sur la partie : "
+        for num, explanations in enumerate(explanations):
+            specific_information <= f"{num+1}) {explanations} "
         col = html.TD(specific_information, colspan="12")
         row <= col
         game_status_table <= row
 
-    if GAME_PARAMETERS_LOADED['nomessage_current']:
+    if GAME_PARAMETERS_LOADED['fast']:
         row = html.TR()
-        specific_information = html.DIV("Partie sans messages : La communication privée entre les joueurs est strictement interdite !", Class='important')
+        specific_information = html.DIV("Partie en direct : utiliser le bouton 'recharger la partie' du menu 'Consulter' en attendant la résolution (puis retourner aux ordres)", Class='important')
         col = html.TD(specific_information, colspan="12")
         row <= col
         game_status_table <= row
