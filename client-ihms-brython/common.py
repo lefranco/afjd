@@ -361,7 +361,7 @@ def get_game_type(no_press, no_message):
     if no_press:
         if no_message:
             return "Blitz", "Rien n'est permis"
-        return "Goofy", "Ne devrait pas se produire"
+        return "Goofy !!!", "Ne devrait pas se produire"
 
     if no_message:
         return "Négo Publique", "Seules les déclarations publiques sont permises"

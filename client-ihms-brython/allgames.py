@@ -526,6 +526,8 @@ def my_opportunities():
                     stats2 = "Non" if value2 else "Oui"
                     stats = f"{stats1} ({stats2})"
                     explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
+                    if stats1 == "Oui" and stats2 == "Non":
+                        stats += " !!!"
                 value = html.DIV(stats, title=explanation)
 
             if field == 'nomessage_game':
@@ -539,6 +541,8 @@ def my_opportunities():
                     stats2 = "Non" if value2 else "Oui"
                     stats = f"{stats1} ({stats2})"
                     explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
+                    if stats1 == "Oui" and stats2 == "Non":
+                        stats += " !!!"
                 value = html.DIV(stats, title=explanation)
 
             if field == 'game_type':
