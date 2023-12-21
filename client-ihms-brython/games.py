@@ -128,12 +128,44 @@ def create_game(json_dict):
     # conversion
     scoring = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[scoring_code]
 
+    # alert will be shown once
+    information_displayed_archive = False
+    information_displayed_fast = False
+    information_displayed_game_type = False
+
+    def display_archive_callback(_):
+        """ display_archive_callback """
+
+        nonlocal information_displayed_archive
+
+        if input_archive.checked:
+            if not information_displayed_archive:
+                alert("Ne cochez ce paramètre que si vous savez vraiment ce qu'il signifie. La partie est saisie par l'arbitre et destinée à être consultée par le public - ce n'est pas une partie jouée sur le site")
+                information_displayed_archive = True
+
+    def display_fast_callback(_):
+        """ display_fast_callback """
+
+        nonlocal information_displayed_fast
+
+        if input_fast.checked:
+            if not information_displayed_fast:
+                alert("Ne cochez ce paramètre que si vous savez vraiment ce qu'il signifie. La partie est jouée en temps réel (pendant plusieurs heures) comme sur un plateau en utilisant pour communiquer un logiciel de communication.")
+                information_displayed_fast = True
+
     def display_game_type_callback(_):
         """ display_game_type_callback """
+
+        nonlocal information_displayed_game_type
 
         game_type, explanation = common.get_game_type(input_nopress_game.checked, input_nomessage_game.checked)
         game_type_info.clear()
         game_type_info <= f"Sélection en cours : partie de type {game_type} - {explanation} !"
+
+        if input_nopress_game.checked or input_nomessage_game.checked:
+            if not information_displayed_game_type:
+                alert("Les paramètres 'pas de déclaration/négociation' sont fixés pour déterminer le type de la partie et l'exportation des modalités de la partie. Leur version applicable reste toutefois modifiable à tout moment par l'arbitre. Attention : il est donc tout à fait possible de créer une partie pour laquelle le canal déclaration est \"hors-jeu\", pour ce faire créer la partie en Blitz et ouvrir le canal de déclaration après la création de la partie")
+                information_displayed_game_type = True
 
     def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
@@ -411,6 +443,7 @@ def create_game(json_dict):
     legend_archive = html.LEGEND("archive", title="ATTENTION ! Ne cocher que pour une partie pour les archives du site - la partie n'est pas jouée - l'arbitre passe tous les ordres et tout le monde pourra en regarder le déroulement")
     fieldset <= legend_archive
     input_archive = html.INPUT(type="checkbox", checked=bool(archive) if archive is not None else False, Class='btn-inside')
+    input_archive.bind("click", display_archive_callback)
     fieldset <= input_archive
     form <= fieldset
 
@@ -432,6 +465,7 @@ def create_game(json_dict):
     legend_fast = html.LEGEND("en direct", title="ATTENTION ! Ne cocher que pour une partie comme sur un plateau - qui se joue en temps réel comme sur un plateau ! Le calcul des dates limites se fait en minutes au lieu d'heures.")
     fieldset <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=bool(fast) if fast is not None else False, Class='btn-inside')
+    input_fast.bind("click", display_fast_callback)
     fieldset <= input_fast
     form <= fieldset
 
@@ -461,9 +495,6 @@ def create_game(json_dict):
     # init
     display_game_type_callback(None)
 
-    form <= html.DIV("Les paramètres 'pas de déclaration/négociation' sont fixés pour déterminer le type de la partie et l'exportation des modalités de la partie. Leur version applicable reste toutefois modifiable à tout moment par l'arbitre.", Class='note')
-    form <= html.BR()
-    form <= html.DIV("Attention : il est donc tout à fait possible de créer une partie pour laquelle le canal déclaration est \"hors-jeu\", pour ce faire créer la partie en Blitz et ouvrir le canal de déclaration après la création de la partie", Class='important')
 
     title_anonimity = html.H4("Anonymat de la partie")
     form <= title_anonimity
