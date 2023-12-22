@@ -441,7 +441,7 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
     # date to teaser
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp)
-    date_now_gmt_str = date_now_gmt.strftime("%Y-%m-%d %H:%M:%S %f")
+    date_now_gmt_str = date_now_gmt.strftime("%Y-%m-%d %H:%M:%S %f GMT")
     teaser_text += f"{date_now_gmt_str}"
 
     # how long it took
