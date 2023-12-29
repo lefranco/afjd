@@ -10,6 +10,8 @@ import config
 import common
 import mapping
 import interface
+import sandbox
+import index
 import ezml_render
 
 OPTIONS = {n: f"La variante {n}" for n in config.VARIANT_NAMES_LIST}
@@ -193,6 +195,18 @@ def show_variant():
     global VARIANT_NAME
     global VARIANT_REQUESTED_NAME
 
+    def callback_export_sandbox(_):
+        """ callback_export_sandbox """
+
+        # action on importing game
+        sandbox.import_position(POSITION_DATA)
+
+        # action on importing game
+        sandbox.set_arrival("sandbox")
+
+        # action of going to sandbox page
+        index.load_option(None, 'Bac à sable')
+
     def callback_render(refresh):
         """ callback_render """
 
@@ -257,6 +271,14 @@ def show_variant():
     my_sub_panel2 = html.DIV()
     my_sub_panel2.attrs['style'] = 'display:table-row'
     my_sub_panel2 <= display_left
+
+    buttons_right = html.DIV(id='buttons_right')
+    buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+    input_export_sandbox = html.INPUT(type="submit", value="Exporter la position vers le bac à sable", Class='btn-inside')
+    input_export_sandbox.bind("click", callback_export_sandbox)
+    buttons_right <= input_export_sandbox
+    my_sub_panel2 <= buttons_right
 
     MY_SUB_PANEL <= html.H2(f"La variante {VARIANT_NAME}")
     MY_SUB_PANEL <= my_sub_panel2
