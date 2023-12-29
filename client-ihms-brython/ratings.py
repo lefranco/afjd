@@ -388,7 +388,7 @@ def show_rating_performance(classic, role_id):
     num2pseudo = {v: k for k, v in players_dict.items()}
 
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -782,7 +782,7 @@ def show_players_data():
 
     # get the games
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -847,7 +847,7 @@ def show_game_masters_data():
 
     # get the games
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -911,7 +911,7 @@ def show_replacement_data():
 
     # get the games
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 

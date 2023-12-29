@@ -308,7 +308,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
     delays_list = get_my_delays()
 
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -490,7 +490,7 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
     dropouts_list = get_my_dropouts()
 
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -777,7 +777,7 @@ def my_games(state_name):
 
     # little optim : we pass the state so front will only request games in that state
     games_dict = common.get_games_data(state)
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -786,7 +786,7 @@ def my_games(state_name):
 
         state2 = 0
         games_dict2 = common.get_games_data(state2)
-        if not games_dict2:
+        if games_dict2 is None:
             alert("Erreur chargement dictionnaire parties (2)")
             return
 
