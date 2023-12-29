@@ -198,6 +198,7 @@ def show_site_image(_):
     image_full = html.IMG(src=f"data:image/jpeg;base64,{SITE_IMAGE_DICT['image']}")
     document <= image_full
 
+
 def load_option(_, item_name):
     """ load_option """
 

@@ -495,7 +495,6 @@ def create_game(json_dict):
     # init
     display_game_type_callback(None)
 
-
     title_anonimity = html.H4("Anonymat de la partie")
     form <= title_anonimity
 
