@@ -644,7 +644,7 @@ def show_game_quitters():
 
     # get the games
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 

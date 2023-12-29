@@ -557,7 +557,7 @@ def tournament_result():
     MY_SUB_PANEL <= html.BR()
 
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -1245,7 +1245,7 @@ def all_missing_orders():
         return
 
     games_dict = common.get_games_data(1)
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -1464,7 +1464,7 @@ def current_worst_annoyers():
         return
 
     games_dict = common.get_games_data(1)
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -1630,7 +1630,7 @@ def show_player_games(pseudo_player, game_list):
     possible_players = set(players_dict.keys())
 
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 

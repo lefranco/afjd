@@ -129,7 +129,7 @@ def show_games():
     games_in = TOURNAMENT_DICT['games']
 
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -494,7 +494,7 @@ def show_ratings():
     games_in = TOURNAMENT_DICT['games']
 
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -641,7 +641,7 @@ def show_incidents():
     tournament_id = TOURNAMENT_DICT['identifier']
 
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -1055,7 +1055,7 @@ def edit_tournament():
 
     # get the games
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -1244,7 +1244,7 @@ def show_tournaments_data():
 
     # get the games
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 

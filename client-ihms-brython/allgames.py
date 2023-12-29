@@ -222,13 +222,13 @@ def my_opportunities():
 
     state = 0
     games_dict = common.get_games_data(state)
-    if not games_dict:
+    if games_dict is None:
         alert(f"Erreur chargement dictionnaire parties etat {state}")
         return
 
     state = 1
     games_dict2 = common.get_games_data(state)
-    if not games_dict2:
+    if games_dict2 is None:
         alert(f"Erreur chargement dictionnaire parties etat {state}")
         return
 
@@ -624,7 +624,7 @@ def select_game(selected_variant, selected_state):
         select_game(selected_variant, selected_state)
 
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -803,7 +803,7 @@ def all_games(state_name):
     state = config.STATE_CODE_TABLE[state_name]
 
     games_dict = common.get_games_data(state)
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -1155,7 +1155,7 @@ def show_no_game_masters_data():
 
     # get the games
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -1225,7 +1225,7 @@ def show_no_tournaments_data():
 
     # get the games
     games_dict = common.get_games_data()
-    if not games_dict:
+    if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
 
