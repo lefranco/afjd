@@ -192,6 +192,12 @@ def set_site_image(_, value):
     load_option(_, ITEM_NAME_SELECTED)
 
 
+def show_site_image(_):
+    """ show_site_image """
+    document.clear()
+    image_full = html.IMG(src=f"data:image/jpeg;base64,{SITE_IMAGE_DICT['image']}")
+    document <= image_full
+
 def load_option(_, item_name):
     """ load_option """
 
@@ -314,10 +320,9 @@ def load_option(_, item_name):
             figure <= image
             legend = html.FIGCAPTION(SITE_IMAGE_DICT['legend'])
             figure <= legend
+            figure.bind("click", show_site_image)
 
-            link = html.A(href=f"data:image/jpeg;base64,{SITE_IMAGE_DICT['image']}", target="_blank")
-            link <= figure
-            MENU_LEFT <= link
+            MENU_LEFT <= figure
 
             button = html.BUTTON("-", title="Cacher l'image", Class='btn-menu')
             button.bind("click", lambda e: set_site_image(e, 'False'))
