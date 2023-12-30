@@ -725,11 +725,9 @@ def game_master():
         play.load_option(None, 'Consulter')
         return False
 
-    # game needs to be waiting or ongoing - not finished or distinguished
-    if play_low.GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
-        alert("La partie est déjà terminée")
-        play.load_option(None, 'Consulter')
-        return False
+    # warning if game not waiting or ongoing
+    if play_low.GAME_PARAMETERS_LOADED['current_state'] not in [0, 1]:
+        alert("Attention : la partie est terminée !")
 
     advancement_loaded = play_low.GAME_PARAMETERS_LOADED['current_advancement']
     advancement_season, _ = common.get_short_season(advancement_loaded, play_low.VARIANT_DATA)
@@ -1081,19 +1079,21 @@ def game_master():
 
     play_low.MY_SUB_PANEL <= game_admin_table
 
-    play_low.MY_SUB_PANEL <= html.H3("Date limite")
+    if play_low.GAME_PARAMETERS_LOADED['current_state'] in [0, 1]:
 
-    play_low.MY_SUB_PANEL <= deadline_form
-    play_low.MY_SUB_PANEL <= html.BR()
+        play_low.MY_SUB_PANEL <= html.H3("Date limite")
 
-    play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
+        play_low.MY_SUB_PANEL <= deadline_form
+        play_low.MY_SUB_PANEL <= html.BR()
 
-    play_low.MY_SUB_PANEL <= html.H3("Debrief de la partie")
+        play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
 
-    if (play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']) or play_low.POSITION_DATA.solo_detected():
-        play_low.MY_SUB_PANEL <= debrief_form
-    else:
-        play_low.MY_SUB_PANEL <= "Partie en cours..."
+        play_low.MY_SUB_PANEL <= html.H3("Debrief de la partie")
+
+        if (play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']) or play_low.POSITION_DATA.solo_detected():
+            play_low.MY_SUB_PANEL <= debrief_form
+        else:
+            play_low.MY_SUB_PANEL <= "Partie en cours..."
 
     play_low.MY_SUB_PANEL <= html.H3("Aide memoire")
 
