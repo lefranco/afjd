@@ -2255,7 +2255,7 @@ def show_idle_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
 
 
-LINES_SCHEDULER_LOGS = 100
+LINES_SCHEDULER_LOGS = 300
 
 
 def show_scheduler_logs():
