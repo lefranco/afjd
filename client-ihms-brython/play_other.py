@@ -186,10 +186,10 @@ def show_position(direct_last_moves):
         """ callback_export_sandbox """
 
         # action on importing game
-        sandbox.import_position(play_low.POSITION_DATA)
+        sandbox.set_arrival("play")
 
         # action on importing game
-        sandbox.set_arrival("sandbox")
+        sandbox.import_position(play_low.POSITION_DATA)
 
         # action of going to sandbox page
         index.load_option(None, 'Bac à sable')
