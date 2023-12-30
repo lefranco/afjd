@@ -199,10 +199,10 @@ def show_variant():
         """ callback_export_sandbox """
 
         # action on importing game
-        sandbox.import_position(POSITION_DATA)
+        sandbox.set_arrival("variant", VARIANT_NAME)
 
         # action on importing game
-        sandbox.set_arrival("sandbox")
+        sandbox.import_position(POSITION_DATA)
 
         # action of going to sandbox page
         index.load_option(None, 'Bac à sable')

@@ -964,15 +964,27 @@ def sandbox():
     # starts here
 
     # make sure we have a variant name
-    if 'GAME_VARIANT' in storage:
-        VARIANT_NAME = storage['GAME_VARIANT']
-    else:
-        VARIANT_NAME = config.FORCED_VARIANT_NAME
 
-    # make sure we are ready
-    if ARRIVAL == "sandbox":
+    # coming fom a game page
+    if ARRIVAL == "play":
+
+        VARIANT_NAME = storage['GAME_VARIANT']
         ARRIVAL = None
+
+    # coming fom a variant page
+    elif ARRIVAL == "variant":
+
+        VARIANT_NAME = VARIANT_REQUESTED_NAME
+        ARRIVAL = None
+
+    # just arriving
     else:
+
+        if 'GAME_VARIANT' in storage:
+            VARIANT_NAME = storage['GAME_VARIANT']
+        else:
+            VARIANT_NAME = config.FORCED_VARIANT_NAME
+
         create_empty_position()
 
     # finds data about the dragged unit
