@@ -1248,6 +1248,7 @@ def all_missing_orders():
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     players_dict = common.get_players_data()
     if not players_dict:
@@ -1467,6 +1468,7 @@ def current_worst_annoyers():
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     players_dict = common.get_players_data()
     if not players_dict:

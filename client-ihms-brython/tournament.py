@@ -132,6 +132,7 @@ def show_games():
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     # get the players (masters)
     players_dict = common.get_players_data()
@@ -644,6 +645,7 @@ def show_incidents():
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     # get the actual incidents (civil disorders) of the tournament
     tournament_incidents2 = common.tournament_incidents2_reload(tournament_id)
@@ -1247,6 +1249,7 @@ def show_tournaments_data():
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     # get the players (masters)
     players_dict = common.get_players_data()

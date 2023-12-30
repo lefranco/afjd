@@ -391,6 +391,7 @@ def show_rating_performance(classic, role_id):
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     # default
     if 'SORT_BY_ELO_RATINGS' not in storage:
@@ -785,6 +786,7 @@ def show_players_data():
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     players_dict = common.get_players_data()
 
@@ -850,6 +852,7 @@ def show_game_masters_data():
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     # get the players
     players_dict = common.get_players_data()
@@ -914,6 +917,7 @@ def show_replacement_data():
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     players_dict = common.get_players_data()
 
