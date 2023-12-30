@@ -412,9 +412,11 @@ document <= html.BR()
 VERSION_VALUE = storage['VERSION']
 document <= html.I(f"Vous utilisez la version du {VERSION_VALUE}")
 document <= html.BR()
+
+# home page loading time
 END_TIME = time.time()
 ELAPSED = END_TIME - START_TIME
-document <= html.I(f"Temps de chargement de la page d'accueil : {ELAPSED:.2f} secs")
+home.show_load_time(ELAPSED)
 
 # spinner dies
 spinner = document['spinner']
