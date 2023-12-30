@@ -311,6 +311,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     delays_table = html.TABLE()
 
@@ -493,6 +494,7 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     dropouts_table = html.TABLE()
 

@@ -225,12 +225,14 @@ def my_opportunities():
     if games_dict is None:
         alert(f"Erreur chargement dictionnaire parties etat {state}")
         return
+    games_dict = dict(games_dict)
 
     state = 1
     games_dict2 = common.get_games_data(state)
     if games_dict2 is None:
         alert(f"Erreur chargement dictionnaire parties etat {state}")
         return
+    games_dict2 = dict(games_dict2)
 
     # join both dicts
     games_dict.update(games_dict2)
@@ -806,6 +808,7 @@ def all_games(state_name):
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
 
     # get the players (masters)
     players_dict = common.get_players_data()
