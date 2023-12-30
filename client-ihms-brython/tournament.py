@@ -663,7 +663,7 @@ def show_incidents():
         thead <= col
     tournament_incidents2_table <= thead
 
-    for game_id, role_num, advancement, time_stamp in sorted(tournament_incidents2, key=lambda i: i[3]):
+    for game_id, role_num, advancement, time_stamp in sorted(tournament_incidents2, key=lambda i: i[3], reverse=True):
 
         data = games_dict[str(game_id)]
 
@@ -739,7 +739,7 @@ def show_incidents():
         thead <= col
     tournament_incidents_table <= thead
 
-    for game_id, role_num, advancement, duration, time_stamp in sorted(tournament_incidents, key=lambda i: i[4]):
+    for game_id, role_num, advancement, duration, time_stamp in sorted(tournament_incidents, key=lambda i: i[4], reverse=True):
 
         data = games_dict[str(game_id)]
 
