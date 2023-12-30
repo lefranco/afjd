@@ -592,7 +592,7 @@ def get_game_status():
     row <= col
 
     # option + link
-    col = ""
+    col = html.TD("")
     if game_fog:
         game_option_name = "brouillard"
         form = html.FORM()
@@ -633,7 +633,7 @@ def get_game_status():
     col = html.TD(form)
     row <= col
 
-    col = html.TD(game_description, colspan="9")
+    col = html.TD(game_description, colspan="10")
     row <= col
 
     form = html.FORM()
