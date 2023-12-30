@@ -625,8 +625,25 @@ def get_game_status():
 
     row = html.TR()
 
-    col = html.TD(game_description, colspan="12")
+    form = html.FORM()
+    input_previous_game = html.INPUT(type="submit", value="partie précédente", Class='btn-inside')
+    input_previous_game.attrs['style'] = 'font-size: 10px'
+    input_previous_game.bind("click", lambda e: play.next_previous_game(True))
+    form <= input_previous_game
+    col = html.TD(form)
     row <= col
+
+    col = html.TD(game_description, colspan="9")
+    row <= col
+
+    form = html.FORM()
+    input_next_game = html.INPUT(type="submit", value="partie suivante", Class='btn-inside')
+    input_next_game.attrs['style'] = 'font-size: 10px'
+    input_next_game.bind("click", lambda e: play.next_previous_game(False))
+    form <= input_next_game
+    col = html.TD(form)
+    row <= col
+
     game_status_table <= row
 
     # a few things need to be made clear

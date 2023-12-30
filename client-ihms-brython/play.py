@@ -33,9 +33,7 @@ OPTIONS = {
     'Appariement': "Se mettre dans la partie ou la quitter",
     'Paramètres': "Consulter tous les paramètres de la partie",
     'Retards': "Consulter les incidents sur la partiue (retards, abandons, désordres civils)",
-    'Superviser': "Observer une partie en direct",
-    'Précédente': "Aller dans la partie précédente (avec retour à la dernière)",
-    'Suivante': "Aller dans la partie suivante (avec retour à la première)"
+    'Superviser': "Observer une partie en direct"
 }
 
 ARRIVAL = None
@@ -117,10 +115,6 @@ def load_option(_, item_name, direct_last_moves=False):
         status = play_other.show_events_in_game()
     if item_name == 'Superviser':
         status = play_master.supervise()
-    if item_name == 'Précédente':
-        status = next_previous_game(True)
-    if item_name == 'Suivante':
-        status = next_previous_game(False)
 
     if not status:
         return
