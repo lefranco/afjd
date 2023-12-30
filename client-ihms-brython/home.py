@@ -1032,6 +1032,13 @@ def social():
     document['social_link'].click()
 
 
+def show_load_time(load_time):
+    """ show_load_time """
+
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.I(f"Temps de chargement de la page d'accueil : {load_time:.2f} secs")
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
