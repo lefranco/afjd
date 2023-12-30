@@ -12,22 +12,30 @@ SDU
 $ Description
 
 (Note)
-Cette version :
-- ne prend pas en compte les bonus de temps de survivance (elle réalise une approximation en donnant la moitié des points à un joueur éliminé sans savoir à quel moment il a été éliminé).
-- ne différencie pas le scorage en fonction de la variante. (version pour la variante Standard)
-
+Cette version ne prend pas en compte les bonus de temps de survivance (elle réalise une approximation en donnant la moitié des points à un joueur éliminé sans savoir à quel moment il a été éliminé).
 
 
 $$ Cas général
 
 Chaque joueur marque :
+- des points de domination
 - des points de centres
 - des points de participation
 - des points de survie
-- des points de domination
+
+(points de domination)
+Le nombre de points de domination est fixé à 420 \+ \( _nombre de joueurs de la variante_ - _nombre de joueurs standard_ \) \* 30
+.
+Ces points sont partagés entre :
+- le ou les premiers,
+- ceux qui sont à zéro ou un centre du ou des premiers,
+- ceux qui sont à zéro, un ou deux centres du ou des premiers.
+
 
 (points de centres)
-Chaque centre rapporte 105 points
+La valeur du centre est fixée à  _nombre de joueurs de la variante_ / _nombre de centres de la variante_ 
+.
+Le nombre de points par centres est fixé à \( _points de dominations de la variante_ / 4 \) \* \( _valeur du centre de la variante_ / _valeur du centre standard_ \)
 
 (points de participation)
 Tous les participants à la partie reçoivent 105 points de participation
@@ -35,12 +43,6 @@ Tous les participants à la partie reçoivent 105 points de participation
 (points de survie)
 Tous les survivants reçoivent 210 \+ 105 soit 315 points de survie.
 
-(points de domination)
-420 points sont partagés entre le ou les premiers.
-.
-420 points sont partagés entre ceux qui sont à zéro ou un centre du ou des premiers.
-.
-420 points sont partagés entre ceux qui sont à zéro, un ou deux centres du ou des premiers.
 
 $$ Elimination
 
@@ -48,7 +50,9 @@ Un joueur éliminé marque 105 points de participation (sauf en cas de solo)
 
 $$ Solo
 
-Un joueur qui réalise un solo marque *400* points, et les autres *zéro*.
+La valeur du solo est fixée à 4000 \* \( _points de domination de la variante_  / _points de domination standard_  \)
+.
+Un joueur qui réalise un solo marque la valeur du solo, et les autres *zéro*.
 
 $ Utilisé dans les tournois
 
