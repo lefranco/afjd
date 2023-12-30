@@ -336,7 +336,7 @@ def show_news():
     # ----
     div_a2 = html.DIV(Class='tooltip')
 
-    title7 = html.H4("Les glorieux", Class='news3')
+    title7 = html.H4("Les glorieux (face à face)", Class='news3')
     div_a2 <= title7
     hall_content_loaded = news_content_table_loaded['glory']
     hall_content = formatted_news(hall_content_loaded, False, 'glory_news')
