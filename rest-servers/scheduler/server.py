@@ -26,6 +26,8 @@ import mylogger
 import lowdata
 import mapping
 import elo_scheduler
+import regularity_scheduler
+import reliability_scheduler
 
 
 SESSION = requests.Session()
@@ -185,8 +187,7 @@ def time_to_wait() -> float:
 def acting_threaded_procedure() -> None:
     """ does the actual scheduled work """
 
-
-    def get_token():
+    def get_token() -> str:
         """ get a token """
 
         pseudo = COMMUTER_ACCOUNT
@@ -206,10 +207,10 @@ def acting_threaded_procedure() -> None:
             if 'msg' in req_result.json():
                 mylogger.LOGGER.error(req_result.json()['msg'])
             mylogger.LOGGER.error("ERROR: Failed to get token")
-            return
+            return ""
         req_result = json.loads(req_result.text)
         jwt_token = req_result['AccessToken']  # type: ignore
-        return jwt_token
+        return str(jwt_token)
 
     with APP.app_context():
 
@@ -238,7 +239,12 @@ def acting_threaded_procedure() -> None:
                 elo_scheduler.run(jwt_token)
 
             if hour_now == 1:
-                pass  # TODO
+                mylogger.LOGGER.info("Reliability Scheduler...")
+                reliability_scheduler.run(jwt_token)
+
+            if hour_now == 2:
+                mylogger.LOGGER.info("Regularity Scheduler...")
+                regularity_scheduler.run(jwt_token)
 
             # renew token every day
             if hour_now == 23:

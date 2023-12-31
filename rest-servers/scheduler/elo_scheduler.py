@@ -30,39 +30,15 @@ K_SLOPE = 2.
 
 VERIFY = False
 
-LAST_TIME = 0.
-
 FORCED_VARIANT_NAME = 'standard'
 
 SESSION = requests.Session()
 
 
-def elapsed_then(elo_information: typing.List[str], desc: str) -> None:
-    """ elapsed_then """
-
-    global LAST_TIME
-
-    # elapsed
-    now_time = time.time()
-    elapsed = now_time - LAST_TIME
-
-    # update last time
-    LAST_TIME = now_time
-
-    # display
-    elo_information.append("\n")
-    elo_information.append(f"{desc} : {elapsed}")
-    elo_information.append("\n")
-
-
 def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, typing.Any], games_results_dict: typing.Dict[str, typing.Dict[str, typing.Any]], games_dict: typing.Dict[str, typing.Any], elo_information: typing.List[str]) -> typing.Tuple[typing.List[typing.List[typing.Any]], str]:
     """ returns elo_raw_list, teaser_text """
 
-    global LAST_TIME
-
-    # this to know how long it takes
-    start_time = time.time()
-    LAST_TIME = start_time
+    lowdata.start()
 
     # index is (player, role_name, classic)
     elo_table = {}
@@ -304,7 +280,7 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
     elo_information.append(f"Variation calculation time : {variation_calculation_time}")
     elo_information.append("\n")
 
-    elapsed_then(elo_information, "Parsing games time")
+    lowdata.elapsed_then(elo_information, "Parsing games time")
 
     # ------------------
     # 2 Make recap
@@ -383,7 +359,9 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
                     elo_information.append("\n")
                 elo_information.append("\n")
 
-        elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'} time")
+        lowdata.elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'} time")
+
+    lowdata.elapsed_then(elo_information, "Recap made")
 
     # ------------------
     # 3 Make elo_raw_list (returned)
@@ -444,12 +422,7 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
     date_now_gmt_str = date_now_gmt.strftime("%Y-%m-%d %H:%M:%S %f GMT")
     teaser_text += f"{date_now_gmt_str}"
 
-    # how long it took
-    done_time = time.time()
-    elapsed = done_time - start_time
-    elo_information.append("\n")
-    elo_information.append(f"Time elapsed : {elapsed}")
-    elo_information.append("\n")
+    lowdata.elapsed_then(elo_information, "list built")
 
     return elo_raw_list_sorted, teaser_text
 
@@ -513,7 +486,7 @@ def run(jwt_token: str) -> None:
     variant_data = mapping.Variant(FORCED_VARIANT_NAME, variant_content_loaded, parameters_read)
 
     # ========================
-    # extract ELO data
+    # extract game results data
     # ========================
 
     host = lowdata.SERVER_CONFIG['GAME']['HOST']
@@ -535,7 +508,7 @@ def run(jwt_token: str) -> None:
     elo_information: typing.List[str] = []
     elo_raw_list, teaser_text = process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information)
 
-    # dump elo_information into a log file
+    # dump ELO logs into a log file
     for line in elo_information:
         print(line, file=sys.stderr)
 
