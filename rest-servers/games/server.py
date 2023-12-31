@@ -72,10 +72,8 @@ GAME_PARSER.add_argument('variant', type=str, required=False)
 GAME_PARSER.add_argument('fog', type=int, required=False)
 GAME_PARSER.add_argument('archive', type=int, required=False)
 GAME_PARSER.add_argument('anonymous', type=int, required=False)
-GAME_PARSER.add_argument('nomessage_game', type=int, required=False)
 GAME_PARSER.add_argument('nomessage_current', type=int, required=False)
-GAME_PARSER.add_argument('nopress_game', type=int, required=False)  # TODO REMOVE
-GAME_PARSER.add_argument('nopress_current', type=int, required=False)  # TODO REMOVE
+GAME_PARSER.add_argument('nopress_current', type=int, required=False)
 GAME_PARSER.add_argument('fast', type=int, required=False)
 GAME_PARSER.add_argument('scoring', type=str, required=False)
 GAME_PARSER.add_argument('deadline', type=int, required=False)
@@ -106,8 +104,6 @@ GAME_PARSER2 = flask_restful.reqparse.RequestParser()
 GAME_PARSER2.add_argument('used_for_elo', type=int, required=False)
 GAME_PARSER2.add_argument('fast', type=int, required=False)
 GAME_PARSER2.add_argument('archive', type=int, required=False)
-GAME_PARSER2.add_argument('nomessage_game', type=int, required=False)  # TODO REMOVE
-GAME_PARSER2.add_argument('nopress_game', type=int, required=False)  # TODO REMOVE
 GAME_PARSER2.add_argument('game_type', type=int, required=False)
 
 GAMES_SELECT_PARSER = flask_restful.reqparse.RequestParser()
@@ -1012,8 +1008,7 @@ class GameStateListRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        # TODO REMOVE nomessage_game / nopress_game
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_game': g.nopress_game, 'nomessage_game': g.nomessage_game, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type} for g in games_list if g.current_state == int(current_state)}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type} for g in games_list if g.current_state == int(current_state)}
 
         return data, 200
 
@@ -1036,8 +1031,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        # TODO REMOVE nomessage_game / nopress_game
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_game': g.nopress_game, 'nomessage_game': g.nomessage_game, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type} for g in games_list}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type} for g in games_list}
 
         return data, 200
 
@@ -1101,23 +1095,15 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         # set several parameters from game_type
         if args['game_type'] == 0:  # Nego
-            args['nopress_game'] = 0  # TODO REMOVE
-            args['nomessage_game'] = 0  # TODO REMOVE
             args['nopress_current'] = 0
             args['nomessage_current'] = 0
         elif args['game_type'] == 1:  # Blitz
-            args['nopress_game'] = 1  # TODO REMOVE
-            args['nomessage_game'] = 1  # TODO REMOVE
             args['nopress_current'] = 1
             args['nomessage_current'] = 1
         elif args['game_type'] == 2:  # Nego publique
-            args['nopress_game'] = 0  # TODO REMOVE
-            args['nomessage_game'] = 1  # TODO REMOVE
             args['nopress_current'] = 0
             args['nomessage_current'] = 1
         elif args['game_type'] == 3:  # Blitz ouverte
-            args['nopress_game'] = 0  # TODO REMOVE
-            args['nomessage_game'] = 0  # TODO REMOVE
             args['nopress_current'] = 0
             args['nomessage_current'] = 1
 
@@ -1154,7 +1140,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
             # create game here
             identifier = games.Game.free_identifier(sql_executor)
-            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0)
+            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0)
             _ = game.load_json(args)
             game.update_database(sql_executor)
 
@@ -7400,14 +7386,11 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
-        sql_executor = database.SqlExecutor()
+        #  sql_executor = database.SqlExecutor()
 
         # TODO : insert specific code here
-        for game in games.Game.inventory(sql_executor):
-            game.update_database(sql_executor)
-            print(f"updated {game.name}", file=sys.stderr)
 
-        sql_executor.commit()
+        #  sql_executor.commit()
 
         #  del sql_executor
         print("MAINTENANCE - done !!!", file=sys.stderr)
