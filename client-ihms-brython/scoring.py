@@ -6,8 +6,11 @@
 # mypy: ignore-errors
 
 
-def c_diplo(solo_threshold, ratings):
+def c_diplo(centers_variant, ratings):
     """ the c-diplo scoring system """
+
+    # solo
+    solo_threshold = centers_variant // 2
 
     rank_points_list = [38, 14, 7]
     solo_reward = 73
@@ -49,8 +52,11 @@ def c_diplo(solo_threshold, ratings):
     return score
 
 
-def win_namur(solo_threshold, ratings):
+def win_namur(centers_variant, ratings):
     """ the win namur scoring system """
+
+    # solo
+    solo_threshold = centers_variant // 2
 
     center_bonus_list = [0, 5, 9, 12, 14, 16, 18]
     rank_points_list = [18]
@@ -141,8 +147,11 @@ def diplo_league(_, ratings):
     return score
 
 
-def nexus_omg(solo_threshold, ratings):
+def nexus_omg(centers_variant, ratings):
     """ the nexus_omg scoring system """
+
+    # solo
+    solo_threshold = centers_variant // 2
 
     solo_reward = 100
     center_worth = 1.5
@@ -208,8 +217,11 @@ def nexus_omg(solo_threshold, ratings):
     return score
 
 
-def c_diplo_namur(solo_threshold, ratings):
+def c_diplo_namur(centers_variant, ratings):
     """ the c-diplo namur scoring system """
+
+    # solo
+    solo_threshold = centers_variant // 2
 
     rank_points_list = [38, 14, 7]
     center_bonus_list = [0, 5, 9, 12, 14, 16, 18]
@@ -257,8 +269,11 @@ def c_diplo_namur(solo_threshold, ratings):
     return score
 
 
-def butcher(solo_threshold, ratings):
+def butcher(centers_variant, ratings):
     """ the butcher scoring system """
+
+    # solo
+    solo_threshold = centers_variant // 2
 
     solo_reward = 7
     no_elimination_reward = 0.5
@@ -287,14 +302,25 @@ def butcher(solo_threshold, ratings):
     return score
 
 
-def bangkok(solo_threshold, ratings):
+def bangkok(centers_variant, ratings):
     """ the bangkok scoring system """
 
-    solo_reward = 4000.
-    center_points = 105
-    participation_points = 210
-    survival_points = 210
-    wave_bonus = 420
+    # solo
+    solo_threshold = centers_variant // 2
+
+    nb_players = len(ratings)
+
+    domination_points = 420 + (nb_players - 7) * 30
+    std_domination_points = 420
+
+    center_value = nb_players / centers_variant
+    std_center_value = 7 / 34
+    center_points = (domination_points / 4) * (center_value / std_center_value)
+
+    participation_points = 105
+    survival_points = 315
+
+    solo_reward = 4000 * (domination_points / std_domination_points)
 
     # default score
     score = {role_name: 0 for role_name in ratings}
@@ -305,51 +331,50 @@ def bangkok(solo_threshold, ratings):
         score[best_role_name] = solo_reward
         return score
 
-    # center points
-    for role_name in score:
-        center_num = ratings[role_name]
-        score[role_name] += center_points * center_num
-
-    # participation points (if you participate you get first half participation)
-    for role_name in score:
-        score[role_name] += participation_points / 2
-
-    # survival points (if you survive you get survival + second half participation)
-    survivers = [r for r in ratings if ratings[r]]
-    for role_name in survivers:
-        score[role_name] += survival_points
-        score[role_name] += participation_points / 2
-
     # domination points (similar to wave points)
     best_centers = max(ratings.values())
     for wave_distance in range(3):
         wave_sharers = [r for r in ratings if ratings[r] >= best_centers - wave_distance]
         # give points
         for role_name in wave_sharers:
-            score[role_name] += wave_bonus / len(wave_sharers)
+            score[role_name] += domination_points / len(wave_sharers)
+
+    # center points
+    for role_name in score:
+        center_num = ratings[role_name]
+        score[role_name] += center_points * center_num
+
+    # participation points
+    for role_name in score:
+        score[role_name] += participation_points
+
+    # survival points (if you survive you get survival + second half participation)
+    survivers = [r for r in ratings if ratings[r]]
+    for role_name in survivers:
+        score[role_name] += survival_points
 
     return score
 
 
-def scoring(game_scoring, solo_threshold, ratings):
+def scoring(game_scoring, centers_variant, ratings):
     """ scoring """
 
     score_table = {}
 
     # selected scoring game parameter
     if game_scoring == 'CDIP':
-        score_table = c_diplo(solo_threshold, ratings)
+        score_table = c_diplo(centers_variant, ratings)
     if game_scoring == 'WNAM':
-        score_table = win_namur(solo_threshold, ratings)
+        score_table = win_namur(centers_variant, ratings)
     if game_scoring == 'DLIG':
-        score_table = diplo_league(solo_threshold, ratings)
+        score_table = diplo_league(centers_variant, ratings)
     if game_scoring == 'NOMG':
-        score_table = nexus_omg(solo_threshold, ratings)
+        score_table = nexus_omg(centers_variant, ratings)
     if game_scoring == 'CNAM':
-        score_table = c_diplo_namur(solo_threshold, ratings)
+        score_table = c_diplo_namur(centers_variant, ratings)
     if game_scoring == 'BOUC':
-        score_table = butcher(solo_threshold, ratings)
+        score_table = butcher(centers_variant, ratings)
     if game_scoring == 'BANG':
-        score_table = bangkok(solo_threshold, ratings)
+        score_table = bangkok(centers_variant, ratings)
 
     return score_table

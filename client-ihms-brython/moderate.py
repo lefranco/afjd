@@ -634,8 +634,8 @@ def tournament_result():
 
         # scoring
         game_scoring = data['scoring']
-        solo_threshold = variant_data.number_centers() // 2
-        score_table = scoring.scoring(game_scoring, solo_threshold, ratings)
+        centers_variant = variant_data.number_centers()
+        score_table = scoring.scoring(game_scoring, centers_variant, ratings)
 
         rolename2num = {variant_data.role_name_table[r]: n for n, r in variant_data.roles.items()}
 
