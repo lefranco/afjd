@@ -517,10 +517,8 @@ def show_game_parameters():
             'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de courriel de notification aux joueurs"),
             'used_for_elo': ("utilisée pour le calcul du élo", "oui ou non", "Le résultat de la partie est pris en compte dans le calcul du élo des joueurs du site"),
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie - cette valeur est modifiable pendant la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres  - effacé à la fin de la partie"),
-            'nomessage_game': ("blocage des négociations pour la partie", "si oui on ne peut pas négocier - sauf avec l'arbitre", "Toute négociation joueur vers joueur est impossible"),
-            'nopress_game': ("blocage des déclarations pour la partie", "si oui on ne peut pas déclarer - sauf l'arbitre", "Toute déclaration de joueur est impossible"),
-            'nomessage_current': ("blocage des négociations pour le moment", "si oui on ne peut pas négocier - valeur utilisée pour accorder l'accès ou pas - cette valeur est modifiable pendant la partie", "effacé en fin de partie"),
-            'nopress_current': ("blocage des déclarations pour le moment", "si oui on ne peut pas déclarer - valeur utilisée pour accorder l'accès ou pas - cette valeur est modifiable pendant la partie", "effacé en fin de partie"),
+            'nomessage_current': ("blocage des négociations", "si oui empêche l'utilisation des négociations - cette valeur est modifiable pendant la partie", "effacé en fin de partie"),
+            'nopress_current': ("blocage des déclarations", "si oui empêche l'utilisation des déclarations - cette valeur est modifiable pendant la partie", "effacé en fin de partie"),
             'fast': ("en direct", "la partie est jouée en temps réel comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie"),
             'scoring': ("code du scorage", "le système de scorage appliqué", "Se reporter à Accueil/Technique/Documents pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface"),
@@ -537,7 +535,11 @@ def show_game_parameters():
             'access_restriction_reliability': ("restriction d'accès sur la fiabilité", "(valeur)", "Un seuil de fiabilité est exigé pour rejoindre la partie"),
             'access_restriction_regularity': ("restriction d'accès sur la régularité", "(valeur)", "Un seuil de régularité est exigé pour rejoindre la partie"),
             'access_restriction_performance': ("restriction d'accès sur la performance", "(valeur)", "Un seuil de performance est exigé pour rejoindre la partie"),
-            'nb_max_cycles_to_play': ("nombre maximum de cycles (années) à jouer", "(valeur)", "Le système déclare la partie terminée si autant de cycles ont été joués")
+            'nb_max_cycles_to_play': ("nombre maximum de cycles (années) à jouer", "(valeur)", "Le système déclare la partie terminée si autant de cycles ont été joués"),
+            'game_type': ("type de la partie", "(valeur)", "Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : communication publique uniquement... BlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) qui est hors jeu"),
+            'nomessage_game': (".", ".", "."),  # TODO REMOVE
+            'nopress_game': (".", ".", "."),  # TODO REMOVE
+
         }[key]
 
         col1 = html.TD(html.B(parameter_name))

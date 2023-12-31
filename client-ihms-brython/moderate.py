@@ -1668,17 +1668,20 @@ def show_player_games(pseudo_player, game_list):
 
         gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
 
+        # conversion
+        game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
+
         time_stamp_now = time.time()
 
         games_table = html.TABLE()
 
         # the display order
-        fields = ['current_state', 'name', 'go_game', 'deadline', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
+        fields = ['current_state', 'name', 'go_game', 'deadline', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'current_state': 'état', 'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'déclarations', 'nomessage_game': 'négociations'}[field]
+            field_fr = {'current_state': 'état', 'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie'}[field]
             col = html.TD(field_fr)
             thead <= col
         games_table <= thead
@@ -1762,25 +1765,14 @@ def show_player_games(pseudo_player, game_list):
                 if field == 'used_for_elo':
                     value = "Oui" if value else "Non"
 
-                if field == 'nopress_game':
-                    value1 = value
-                    value2 = data['nopress_current']
-                    if value2 == value1:
-                        value = "Non" if value1 else "Oui"
-                    else:
-                        value1 = "Non" if value1 else "Oui"
-                        value2 = "Non" if value2 else "Oui"
-                        value = f"{value1} ({value2})"
+                if field == 'nopress_current':
+                    value = "Non" if data['nopress_current'] else "Oui"
 
-                if field == 'nomessage_game':
-                    value1 = value
-                    value2 = data['nomessage_current']
-                    if value2 == value1:
-                        value = "Non" if value1 else "Oui"
-                    else:
-                        value1 = "Non" if value1 else "Oui"
-                        value2 = "Non" if value2 else "Oui"
-                        value = f"{value1} ({value2})"
+                if field == 'nomessage_current':
+                    value = "Non" if data['nomessage_current'] else "Oui"
+
+                if field == 'game_type':
+                    value = game_type_conv[value]
 
                 col = html.TD(value)
                 if colour is not None:

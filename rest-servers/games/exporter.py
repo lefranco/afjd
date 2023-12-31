@@ -142,11 +142,11 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
     result['ScoringSystem'] = SCORING_CONVERSION_TABLE[game_scoring]
 
     # communication
-    if game.nomessage_game and game.nopress_game:
+    if game.game_type in [1, 3]:  # 1: Blitz 3: BlitzOuverte
         result['CommunicationType'] = 'None'
-    elif game.nomessage_game and game.nopress_game:
+    elif game.game_type == 2:  # 2: NegoPublique
         result['CommunicationType'] = 'PublicOnly'
-    else:
+    else:  # O: Nego
         result['CommunicationType'] = 'Full'
 
     # deadline

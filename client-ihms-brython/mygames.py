@@ -909,15 +909,15 @@ def my_games(state_name):
     games_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'votes', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'game_type']
+    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'votes', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type']
 
     if storage['GAME_SHOW_MODE'] == 'reduced':
         fields.remove('all_orders_submitted')
         fields.remove('all_agreed')
         fields.remove('votes')
         fields.remove('used_for_elo')
-        fields.remove('nopress_game')
-        fields.remove('nomessage_game')
+        fields.remove('nopress_current')
+        fields.remove('nomessage_current')
 
     if storage['ACTION_COLUMN_MODE'] == 'displayed':
         fields.extend(['edit', 'startstop'])
@@ -926,9 +926,9 @@ def my_games(state_name):
     thead = html.THEAD()
     for field in fields:
 
-        content = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'déclarations', 'nomessage_game': 'négociations', 'game_type': 'type de partie', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
+        content = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
 
-        legend = {'name': "Le nom de la partie", 'go_game': "Un bouton aller se promener dans la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombrte de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse (déclaration) non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message de négociation non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_game': "Est-ce que les messages publics (déclarations) sont autorisés entre les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'nomessage_game': "Est-ce que les messages privés (négociations) sont autorisés pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'game_type': "Synthèse de ce qui est autorisé en termes de communication", 'edit': "Pour éditer les paramètres de la partie", 'startstop': "Pour arrêter ou démarrer la partie"}[field]
+        legend = {'name': "Le nom de la partie", 'go_game': "Un bouton aller se promener dans la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombrte de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse (déclaration) non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message de négociation non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_current': "Est-ce que les messages publics (déclarations) sont autorisés entre les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (négociations) sont autorisés pour les joueurs actuellement", 'game_type': "Type de partie pour la communication en jeu", 'edit': "Pour éditer les paramètres de la partie", 'startstop': "Pour arrêter ou démarrer la partie"}[field]
 
         field = html.DIV(content, title=legend)
         col = html.TD(field)
@@ -939,7 +939,7 @@ def my_games(state_name):
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'deadline', 'current_advancement', 'role_played', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']:
+        if field in ['name', 'deadline', 'current_advancement', 'role_played', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type']:
 
             if field == 'name':
 
@@ -979,6 +979,9 @@ def my_games(state_name):
 
     gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
 
+    # conversion
+    game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
+
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'name':
@@ -987,10 +990,12 @@ def my_games(state_name):
         def key_function(g): return g[1]['variant']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'used_for_elo':
         def key_function(g): return int(g[1]['used_for_elo'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'nopress_game':
-        def key_function(g): return (int(g[1]['nopress_game']), int(g[1]['nopress_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'nomessage_game':
-        def key_function(g): return (int(g[1]['nomessage_game']), int(g[1]['nomessage_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'nopress_current':
+        def key_function(g): return int(g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'nomessage_current':
+        def key_function(g): return int(g[1]['nomessage_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'game_type':
+        def key_function(g): return int(g[1]['game_type'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'role_played':
         def key_function(g): return int(dict_role_id.get(g[0], -1))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'deadline':
@@ -1068,7 +1073,6 @@ def my_games(state_name):
         data['votes'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
-        data['game_type'] = None
         data['edit'] = None
         data['startstop'] = None
 
@@ -1283,39 +1287,18 @@ def my_games(state_name):
                 stats = "Oui" if value else "Non"
                 value = html.DIV(stats, title="Indique si la partie compte pour le classement E.L.O. sur le site")
 
-            if field == 'nopress_game':
-                value1 = value
-                explanation = "Indique si les joueurs peuvent utiliser la messagerie publique"
-                value2 = data['nopress_current']
-                if value2 == value1:
-                    stats = "Non" if value1 else "Oui"
-                else:
-                    stats1 = "Non" if value1 else "Oui"
-                    stats2 = "Non" if value2 else "Oui"
-                    stats = f"{stats1} ({stats2})"
-                    explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
-                    if stats1 == "Oui" and stats2 == "Non":
-                        stats += " !!!"
+            if field == 'nopress_current':
+                explanation = "Indique si les joueurs peuvent actuellement utiliser la messagerie publique"
+                stats = "Non" if data['nopress_current'] else "Oui"
                 value = html.DIV(stats, title=explanation)
 
-            if field == 'nomessage_game':
-                value1 = value
-                explanation = "Indique si les joueurs peuvent utiliser la messagerie privée"
-                value2 = data['nomessage_current']
-                if value2 == value1:
-                    stats = "Non" if value1 else "Oui"
-                else:
-                    stats1 = "Non" if value1 else "Oui"
-                    stats2 = "Non" if value2 else "Oui"
-                    stats = f"{stats1} ({stats2})"
-                    explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
-                    if stats1 == "Oui" and stats2 == "Non":
-                        stats += " !!!"
+            if field == 'nomessage_current':
+                explanation = "Indique si les joueurs peuvent actuellement utiliser la messagerie privée"
+                stats = "Non" if data['nomessage_current'] else "Oui"
                 value = html.DIV(stats, title=explanation)
 
             if field == 'game_type':
-                game_type, explanation = common.get_game_type(data['nopress_game'], data['nomessage_game'])
-                value = html.DIV(game_type, title=explanation)
+                value = game_type_conv[value]
 
             if field == 'edit':
                 value = ""
