@@ -839,7 +839,7 @@ def change_access_messages_game():
         MY_SUB_PANEL.clear()
         change_access_messages_game()
 
-    MY_SUB_PANEL <= html.H3("Changement de l'accès aux messagerie (Attention il s'agit du paramètre courant, qui s'applique réellement pour autoriser ou interdire, pas celui qui détermine le type de la partie)")
+    MY_SUB_PANEL <= html.H3("Changement de l'accès aux messagerie")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")

@@ -57,9 +57,6 @@ FAQ_CONTENT_TABLE = {
     "Où trouver des explications sur les paramètres des parties ?":
     "Soit en survolant les titres à la création de la partie, soit en consultant le menu “Paramètres“ d'une partie existante.",
 
-    "Dans les paramètres des parties, la notion de déclarations et négociations est dupliquée. Pourquoi  ?":
-    "Ces deux paramètres ont une version “pour la partie“ et une version “en ce moment“ La première est celle entrée par le créateur de la partie. La deuxième est celle qui s'applique actuellement, elle est initialisée à la valeur de la première. A la fin de la partie, la deuxième est effacée. L'arbitre peut également jouer avec l'autorisation des déclarations et négociations pendant la partie. Les exportations de partie (pour savoir comment elle a été jouée) se baseront sur la première. Une partie se joue en principe selon les modalités de la première, mais à la fin de la partie, il faut pouvoir débriefer, d'où l'intérêt de la seconde...",
-
     "Comment démarrer/arrêter une partie dont je suis l'arbitre ?":
     "Se connecter et sélectionner la partie comme d'habitude. Utiliser le menu “Editer partie“ puis le sous menu “Changer état“ et enfin le bouton “Démarrer la partie“ (ou “Arrêter la partie“) puis confirmer. Il est également possible de passer par le menu “Mes parties“ en se mettant en mode “avec colonnes d'action“",
 
