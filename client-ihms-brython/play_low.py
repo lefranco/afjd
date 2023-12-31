@@ -550,8 +550,10 @@ def get_game_status():
     row <= col
 
     # type of game
-    game_type, _ = common.get_game_type(GAME_PARAMETERS_LOADED['nopress_game'], GAME_PARAMETERS_LOADED['nomessage_game'])
-    col = html.TD(f"Type {game_type}")
+    game_type = GAME_PARAMETERS_LOADED['game_type']
+    game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
+    game_type_name = game_type_conv[game_type]
+    col = html.TD(f"Type {game_type_name}")
     row <= col
 
     # DC
@@ -650,23 +652,12 @@ def get_game_status():
 
     # calculate it
     explanations = []
-    if GAME_PARAMETERS_LOADED['nopress_game']:
-        explanations.append("Les déclarations publiques des joueurs sont interdites sur la partie")
-        if not GAME_PARAMETERS_LOADED['nopress_current']:
-            explanations.append("Toutefois l'arbitre a ouvert le canal des déclarations publiques pour le moment (pour le debrief ou une autre raison hors jeu)")
-    else:
-        if GAME_PARAMETERS_LOADED['nopress_current']:
-            explanations.append("Les déclarations publiques des joueurs sont autorisées sur la partie")
-            explanations.append("Toutefois ces déclarations sont interdites par l'arbitre pour le moment")
 
-    if GAME_PARAMETERS_LOADED['nomessage_game']:
-        explanations.append("Les négociations privées entre joueurs sont interdites sur la partie")
-        if not GAME_PARAMETERS_LOADED['nomessage_current']:
-            explanations.append("Toutefois l'arbitre a ouvert le canal des négociations privées pour le moment (pour le debrief ou une autre raison hors jeu)")
-    else:
-        if GAME_PARAMETERS_LOADED['nomessage_current']:
-            explanations.append("Les négociations privées entre joueurs sont autorisées sur la partie")
-            explanations.append("Toutefois ces négociations sont interdites par l'arbitre pour le moment")
+    if GAME_PARAMETERS_LOADED['nopress_current']:
+        explanations.append("Les déclarations publiques des joueurs sont actuellement interdites sur la partie")
+
+    if GAME_PARAMETERS_LOADED['nomessage_current']:
+        explanations.append("Les négociations privées entre joueurs sont actuellement interdites sur la partie")
 
     # display it
     if explanations:

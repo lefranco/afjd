@@ -516,8 +516,7 @@ def rectify_parameters():
     used_for_elo_loaded = None
     fast_loaded = None
     archive_loaded = None
-    nomessage_loaded = None
-    nopress_loaded = None
+    game_type_loaded = None
 
     def change_parameters_reload():
         """ change_parameters_reload """
@@ -535,8 +534,7 @@ def rectify_parameters():
             nonlocal used_for_elo_loaded
             nonlocal fast_loaded
             nonlocal archive_loaded
-            nonlocal nomessage_loaded
-            nonlocal nopress_loaded
+            nonlocal game_type_loaded
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -551,8 +549,9 @@ def rectify_parameters():
             used_for_elo_loaded = req_result['used_for_elo']
             fast_loaded = req_result['fast']
             archive_loaded = req_result['archive']
-            nomessage_loaded = req_result['nomessage_game']
-            nopress_loaded = req_result['nopress_game']
+            game_type_loaded = req_result['game_type']
+
+            print(f"{game_type_loaded=}")
 
         json_dict = {}
 
@@ -586,15 +585,15 @@ def rectify_parameters():
         used_for_elo = int(input_used_for_elo.checked)
         fast = int(input_fast.checked)
         archive = int(input_archive.checked)
-        nomessage_game = int(input_nomessage.checked)
-        nopress_game = int(input_nopress.checked)
+
+        game_type = input_game_type.value
+        game_type_code = config.GAME_TYPES_CODE_TABLE[game_type]
 
         json_dict = {
             'used_for_elo': used_for_elo,
             'fast': fast,
             'archive': archive,
-            'nomessage_game': nomessage_game,
-            'nopress_game': nopress_game,
+            'game_type': game_type_code,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -648,17 +647,17 @@ def rectify_parameters():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_nopress = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
-    fieldset <= legend_nopress
-    input_nopress = html.INPUT(type="checkbox", checked=nopress_loaded, Class='btn-inside')
-    fieldset <= input_nopress
-    form <= fieldset
+    legend_variant = html.LEGEND("type de partie", title="Type de partie pour la communication en jeu")
+    fieldset <= legend_variant
+    input_game_type = html.SELECT(type="select-one", value="", Class='btn-inside')
 
-    fieldset = html.FIELDSET()
-    legend_nomessage = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
-    fieldset <= legend_nomessage
-    input_nomessage = html.INPUT(type="checkbox", checked=nomessage_loaded, Class='btn-inside')
-    fieldset <= input_nomessage
+    for game_type_name in config.GAME_TYPES_CODE_TABLE:
+        option = html.OPTION(game_type_name)
+        if config.GAME_TYPES_CODE_TABLE[game_type_name] == game_type_loaded:
+            option.selected = True
+        input_game_type <= option
+
+    fieldset <= input_game_type
     form <= fieldset
 
     form <= html.BR()

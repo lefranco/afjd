@@ -287,15 +287,15 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'join', 'go_game', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_game', 'nomessage_game', 'game_type']
+    fields = ['name', 'join', 'go_game', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_current', 'nomessage_current', 'game_type']
 
     # header
     thead = html.THEAD()
     for field in fields:
 
-        content = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'déclarations', 'nomessage_game': 'négociations', 'game_type': 'type de partie'}[field]
+        content = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie'}[field]
 
-        legend = {'name': "Le nom de la partie", 'join': "Un bouton pour rejoindre la partie (pour jouer dedans)", 'go_game': "Un bouton pour aller dans la partie (permet d'en savoir plus)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_game': "Est-ce que les messages publics (déclarations) sont autorisés pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'nomessage_game': "Est-ce que les messages privés (négociations) sont autorisés pour les joueurs (la valeur entre parenthèse est celle utilisée actuellement si différente de celle utilisée pendant la partie)", 'game_type': "Synthèse de ce qui est autorisé en termes de communication"}[field]
+        legend = {'name': "Le nom de la partie", 'join': "Un bouton pour rejoindre la partie (pour jouer dedans)", 'go_game': "Un bouton pour aller dans la partie (permet d'en savoir plus)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_current': "Est-ce que les messages publics (déclarations) sont autorisés pour les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (négociations) sont autorisés pour les joueurs actuellement", 'game_type': "Type de partie pour la communication en jeu"}[field]
 
         field = html.DIV(content, title=legend)
         col = html.TD(field)
@@ -306,7 +306,7 @@ def my_opportunities():
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'master', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']:
+        if field in ['name', 'master', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type']:
 
             if field == 'name':
 
@@ -348,6 +348,9 @@ def my_opportunities():
 
     gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
 
+    # conversion
+    game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
+
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'name':
@@ -358,10 +361,12 @@ def my_opportunities():
         def key_function(g): return int(g[1]['used_for_elo'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'master':
         def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'nopress_game':
-        def key_function(g): return (int(g[1]['nopress_game']), int(g[1]['nopress_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'nomessage_game':
-        def key_function(g): return (int(g[1]['nomessage_game']), int(g[1]['nomessage_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'nopress_current':
+        def key_function(g): return int(g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'nomessage_current':
+        def key_function(g): return int(g[1]['nomessage_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'game_type':
+        def key_function(g): return int(g[1]['game_type'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'last_season':
         def key_function(g): return g[1]['nb_max_cycles_to_play']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'allocated':
@@ -421,7 +426,6 @@ def my_opportunities():
         data['master'] = None
         data['join'] = None
         data['allocated'] = None
-        data['game_type'] = None
 
         row = html.TR()
         for field in fields:
@@ -517,39 +521,18 @@ def my_opportunities():
                 master_name = game_master_dict.get(game_name, '')
                 value = master_name
 
-            if field == 'nopress_game':
-                value1 = value
-                explanation = "Indique si les joueurs peuvent utiliser la messagerie publique"
-                value2 = data['nopress_current']
-                if value2 == value1:
-                    stats = "Non" if value1 else "Oui"
-                else:
-                    stats1 = "Non" if value1 else "Oui"
-                    stats2 = "Non" if value2 else "Oui"
-                    stats = f"{stats1} ({stats2})"
-                    explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
-                    if stats1 == "Oui" and stats2 == "Non":
-                        stats += " !!!"
+            if field == 'nopress_current':
+                explanation = "Indique si les joueurs peuvent actuellement utiliser la messagerie publique"
+                stats = "Non" if data['nopress_current'] else "Oui"
                 value = html.DIV(stats, title=explanation)
 
-            if field == 'nomessage_game':
-                value1 = value
-                explanation = "Indique si les joueurs peuvent utiliser la messagerie privée"
-                value2 = data['nomessage_current']
-                if value2 == value1:
-                    stats = "Non" if value1 else "Oui"
-                else:
-                    stats1 = "Non" if value1 else "Oui"
-                    stats2 = "Non" if value2 else "Oui"
-                    stats = f"{stats1} ({stats2})"
-                    explanation += " - La valeur indiquée est celle utilisée pour la partie, celle entre parenthèses celle applicable en ce moment"
-                    if stats1 == "Oui" and stats2 == "Non":
-                        stats += " !!!"
+            if field == 'nomessage_current':
+                explanation = "Indique si les joueurs peuvent actuellement utiliser la messagerie privée"
+                stats = "Non" if data['nomessage_current'] else "Oui"
                 value = html.DIV(stats, title=explanation)
 
             if field == 'game_type':
-                game_type, explanation = common.get_game_type(data['nopress_game'], data['nomessage_game'])
-                value = html.DIV(game_type, title=explanation)
+                value = game_type_conv[value]
 
             col = html.TD(value)
             if colour is not None:
@@ -849,12 +832,12 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'id', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master', 'nopress_game', 'nomessage_game', 'game_type']
+    fields = ['name', 'go_game', 'id', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'game_type']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'déclarations', 'nomessage_game': 'négociations', 'game_type': 'type de partie'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -862,7 +845,7 @@ def all_games(state_name):
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master', 'nopress_game', 'nomessage_game']:
+        if field in ['name', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'game_type']:
 
             if field == 'name':
 
@@ -905,6 +888,9 @@ def all_games(state_name):
 
     gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
 
+    # conversion
+    game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
+
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'name':
@@ -915,10 +901,12 @@ def all_games(state_name):
         def key_function(g): return int(g[1]['used_for_elo'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'master':
         def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'nopress_game':
-        def key_function(g): return (int(g[1]['nopress_game']), int(g[1]['nopress_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'nomessage_game':
-        def key_function(g): return (int(g[1]['nomessage_game']), int(g[1]['nomessage_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'nopress_current':
+        def key_function(g): return int(g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'nomessage_current':
+        def key_function(g): return int(g[1]['nomessage_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'game_type':
+        def key_function(g): return int(g[1]['game_type'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'deadline':
         def key_function(g): return int(gameover[int(g[0])]), int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     else:
@@ -969,7 +957,6 @@ def all_games(state_name):
         data['go_game'] = None
         data['id'] = None
         data['master'] = None
-        data['game_type'] = None
 
         row = html.TR()
         for field in fields:
@@ -1048,29 +1035,14 @@ def all_games(state_name):
                 master_name = game_master_dict.get(game_name, '')
                 value = master_name
 
-            if field == 'nopress_game':
-                value1 = value
-                value2 = data['nopress_current']
-                if value2 == value1:
-                    value = "Non" if value1 else "Oui"
-                else:
-                    value1 = "Non" if value1 else "Oui"
-                    value2 = "Non" if value2 else "Oui"
-                    value = f"{value1} ({value2})"
+            if field == 'nopress_current':
+                value = "Non" if data['nopress_current'] else "Oui"
 
-            if field == 'nomessage_game':
-                value1 = value
-                value2 = data['nomessage_current']
-                if value2 == value1:
-                    value = "Non" if value1 else "Oui"
-                else:
-                    value1 = "Non" if value1 else "Oui"
-                    value2 = "Non" if value2 else "Oui"
-                    value = f"{value1} ({value2})"
+            if field == 'nomessage_current':
+                value = "Non" if data['nomessage_current'] else "Oui"
 
             if field == 'game_type':
-                game_type, explanation = common.get_game_type(data['nopress_game'], data['nomessage_game'])
-                value = html.DIV(game_type, title=explanation)
+                value = game_type_conv[value]
 
             col = html.TD(value)
             if colour is not None:

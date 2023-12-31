@@ -106,8 +106,7 @@ def create_game(json_dict):
     used_for_elo = json_dict['used_for_elo'] if json_dict and 'used_for_elo' in json_dict else None
     manual = json_dict['manual'] if json_dict and 'manual' in json_dict else None
     anonymous = json_dict['anonymous'] if json_dict and 'anonymous' in json_dict else None
-    nomessage_game = json_dict['nomessage_game'] if json_dict and 'nomessage_game' in json_dict else None
-    nopress_game = json_dict['nopress_game'] if json_dict and 'nopress_game' in json_dict else None
+    game_type_code = json_dict['game_type'] if json_dict and 'game_type' in json_dict else list(config.GAME_TYPES_CODE_TABLE.values())[0]
     fast = json_dict['fast'] if json_dict and 'fast' in json_dict else None
     scoring_code = json_dict['scoring'] if json_dict and 'scoring' in json_dict else list(config.SCORING_CODE_TABLE.values())[0]
     deadline_hour = json_dict['deadline_hour'] if json_dict and 'deadline_hour' in json_dict else None
@@ -127,6 +126,7 @@ def create_game(json_dict):
 
     # conversion
     scoring = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[scoring_code]
+    game_type = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}[game_type_code]
 
     # alert will be shown once
     information_displayed_archive = False
@@ -158,14 +158,9 @@ def create_game(json_dict):
 
         nonlocal information_displayed_game_type
 
-        game_type, explanation = common.get_game_type(input_nopress_game.checked, input_nomessage_game.checked)
-        game_type_info.clear()
-        game_type_info <= f"Sélection en cours : partie de type {game_type} - {explanation} !"
-
-        if input_nopress_game.checked or input_nomessage_game.checked:
-            if not information_displayed_game_type:
-                alert("Les paramètres 'pas de déclaration/négociation' sont fixés pour déterminer le type de la partie et l'exportation des modalités de la partie. Leur version applicable reste toutefois modifiable à tout moment par l'arbitre. Attention : il est donc tout à fait possible de créer une partie pour laquelle le canal déclaration est \"hors-jeu\", pour ce faire créer la partie en Blitz et ouvrir le canal de déclaration après la création de la partie")
-                information_displayed_game_type = True
+        if not information_displayed_game_type:
+            alert("Négo : pas de restriction, tout est possible !\nBlitz : pas de communication, tout est fermé !\nNégoPublique : communication publique uniquement...\nBlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) qui est hors jeu")
+            information_displayed_game_type = True
 
     def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
@@ -177,8 +172,7 @@ def create_game(json_dict):
         nonlocal used_for_elo
         nonlocal manual
         nonlocal anonymous
-        nonlocal nomessage_game
-        nonlocal nopress_game
+        nonlocal game_type
         nonlocal fast
         nonlocal scoring
         nonlocal deadline_hour
@@ -230,9 +224,9 @@ def create_game(json_dict):
         used_for_elo = int(input_used_for_elo.checked)
         manual = int(input_manual.checked)
         anonymous = int(input_anonymous.checked)
-        nomessage_game = int(input_nomessage_game.checked)
-        nopress_game = int(input_nopress_game.checked)
         fast = int(input_fast.checked)
+
+        game_type = input_game_type.value
         scoring = input_scoring.value
 
         try:
@@ -303,20 +297,18 @@ def create_game(json_dict):
             specific_data += "manuelle "
         if anonymous:
             specific_data += "anonyme "
-        if nomessage_game:
-            specific_data += "sans message "
-        if nopress_game:
-            specific_data += "sans presse "
         if fast:
             specific_data += "en direct "
+
         if not specific_data:
             specific_data = "(sans particularité) "
 
-        description = f"Partie créée le {time_creation_str} par {pseudo} variante {variant}. Cette partie est {specific_data}. Scorage {scoring}."
+        description = f"Partie créée le {time_creation_str} par {pseudo} variante {variant}. Cette partie est {specific_data}. Type {game_type}. Scorage {scoring}."
         state = 0
 
         # conversion
         scoring_code = config.SCORING_CODE_TABLE[scoring]
+        game_type_code = config.GAME_TYPES_CODE_TABLE[game_type]
 
         # make data structure
         json_dict = {
@@ -327,8 +319,6 @@ def create_game(json_dict):
             'used_for_elo': used_for_elo,
             'manual': manual,
             'anonymous': anonymous,
-            'nomessage_game': nomessage_game,
-            'nopress_game': nopress_game,
             'fast': fast,
             'scoring': scoring_code,
             'deadline_hour': deadline_hour,
@@ -346,7 +336,8 @@ def create_game(json_dict):
             'access_restriction_performance': access_restriction_performance,
             'nb_max_cycles_to_play': nb_max_cycles_to_play,
             'description': description,
-            'current_state': state
+            'current_state': state,
+            'game_type': game_type_code
         }
 
         just_play = int(input_just_play_game.checked)
@@ -469,31 +460,20 @@ def create_game(json_dict):
     fieldset <= input_fast
     form <= fieldset
 
-    title_terms = html.H4("Modalités de la partie - ne peuvent plus être changées une fois la partie créée")
-    form <= title_terms
-
-    game_type_info = html.DIV(Class='important')
-    form <= game_type_info
-    form <= html.BR()
-
     fieldset = html.FIELDSET()
-    legend_nopress_game = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
-    fieldset <= legend_nopress_game
-    input_nopress_game = html.INPUT(type="checkbox", checked=bool(nopress_game) if nopress_game is not None else False, Class='btn-inside')
-    input_nopress_game.bind("click", display_game_type_callback)
-    fieldset <= input_nopress_game
-    form <= fieldset
+    legend_variant = html.LEGEND("type de partie", title="Type de partie pour la communication en jeu")
+    fieldset <= legend_variant
+    input_game_type = html.SELECT(type="select-one", value="", Class='btn-inside')
+    input_game_type.bind("click", display_game_type_callback)
 
-    fieldset = html.FIELDSET()
-    legend_nomessage_game = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
-    fieldset <= legend_nomessage_game
-    input_nomessage_game = html.INPUT(type="checkbox", checked=bool(nomessage_game) if nomessage_game is not None else False, Class='btn-inside')
-    input_nomessage_game.bind("click", display_game_type_callback)
-    fieldset <= input_nomessage_game
-    form <= fieldset
+    for game_type_name in config.GAME_TYPES_CODE_TABLE:
+        option = html.OPTION(game_type_name)
+        if game_type_name == game_type:
+            option.selected = True
+        input_game_type <= option
 
-    # init
-    display_game_type_callback(None)
+    fieldset <= input_game_type
+    form <= fieldset
 
     title_anonimity = html.H4("Anonymat de la partie")
     form <= title_anonimity
@@ -507,8 +487,6 @@ def create_game(json_dict):
 
     title_scoring = html.H4("Système de marque")
     form <= title_scoring
-
-    # special : la marque
 
     fieldset = html.FIELDSET()
     legend_scoring = html.LEGEND("scorage", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
@@ -1127,7 +1105,7 @@ def change_scoring_game():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_scoring = html.LEGEND("scoring", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
+    legend_scoring = html.LEGEND("scorage", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
     fieldset <= legend_scoring
     input_scoring = html.SELECT(type="select-one", value="", Class='btn-inside')
 

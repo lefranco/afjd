@@ -35,6 +35,10 @@ with open("./data/timezone_list.json", "r", encoding="utf-8") as read_file:
 with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
     SCORING_CODE_TABLE = json.load(read_file)
 
+# load game types list from json data file
+with open("./data/game_type_list.json", "r", encoding="utf-8") as read_file:
+    GAME_TYPES_CODE_TABLE = json.load(read_file)
+
 # default is first one
 VARIANT_NAMES_LIST = ['standard', 'standard_pds', 'grandeguerre', 'grandeguerreexpansionniste', 'hundred', 'moderne', 'egeemonie', 'mediterranee']
 
