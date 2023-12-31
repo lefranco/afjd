@@ -180,7 +180,7 @@ def run(jwt_token: str) -> None:
     if req_result.status_code != 200:
         if 'msg' in req_result.json():
             mylogger.LOGGER.error(req_result.json()['msg'])
-        mylogger.LOGGER.error("ERROR: Failed to get extract ELO data")
+        mylogger.LOGGER.error("ERROR: Failed to get extract game results data")
         return
     res_dict = req_result.json()
     games_results_dict = res_dict['games_dict']
