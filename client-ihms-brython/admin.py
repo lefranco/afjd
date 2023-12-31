@@ -10,14 +10,12 @@ from browser import document, html, ajax, alert, window  # pylint: disable=impor
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
-import mydialog
 import config
 import common
 import interface
 import login
 import mapping
 import geometry
-import elo
 
 import index
 
@@ -32,8 +30,6 @@ OPTIONS = {
     'Récupérations demandées': "Les récupérations demandées sur le site",
     'Editer les créateurs': "Editer les comptes créateurs du site",
     'Editer les modérateurs': "Editer les comptes modérateurs du site",
-    'Mise à jour de la fiabilité': "Mettre à jour le classement de fiabilité (amené à disparaître)",
-    'Mise à jour de la régularité': "Mettre à jour le classement de régularité (amené à disparaître)",
     'Effacement des anciens retard': "Effacer tous les anciens retards",
     'Comptes oisifs': "Lister les comptes oisifs pour les avertir ou les supprimer",
     'Logs du scheduler': "Consulter les logs du scheduleur",
@@ -1702,266 +1698,6 @@ def edit_moderators():
     MY_SUB_PANEL <= form
 
 
-def update_reliability():
-    """ update_reliability """
-
-    def cancel_update_database_callback(_, dialog):
-        """ cancel_update_database_callback """
-        dialog.close(None)
-
-    def update_database_callback(_, dialog, reliability_list):
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la mise à jour de la fiabilité : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la mise à jour de la fiabilité : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La mise à jour de la fiabilité a été réalisée : {messages}")
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            update_reliability()
-
-        dialog.close(None)
-
-        reliability_list_json = json.dumps(reliability_list)
-
-        json_dict = {
-            'reliability_list': reliability_list_json,
-        }
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/reliability_rating"
-
-        # update database : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    def update_database_confirm(reliability_list):
-        """ update_database_confirm """
-
-        dialog = mydialog.Dialog("On met à jour la base de données ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog, rl=reliability_list: update_database_callback(e, d, rl))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
-
-    def extract_reliability_data_callback(ev):  # pylint: disable=invalid-name
-        """ extract_reliability_data_callback """
-
-        def reply_callback(req):
-
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur au calcul de la fiabilité : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème au calcul de la fiabilité : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-
-                # failed but refresh
-                MY_SUB_PANEL.clear()
-                update_reliability()
-
-                return
-
-            games_results_dict = req_result['games_dict']
-            reliability_information = html.DIV()
-            reliability_list = elo.process_reliability(players_dict, games_results_dict, reliability_information)
-
-            if DOWNLOAD_LOG:
-                alert("Télechargement automatique des logs du calcul")
-
-                # exportation of logs
-                log_html = reliability_information.innerHTML
-
-                # needed too for some reason
-                MY_SUB_PANEL <= html.A(id='download_link')
-
-                # perform actual exportation
-                text_file_as_blob = window.Blob.new([log_html], {'type': 'text/plain'})
-                download_link = document['download_link']
-                time_stamp_now = int(time.time())
-                download_link.download = f"diplomania_reliability_{time_stamp_now}.html"
-                download_link.href = window.URL.createObjectURL(text_file_as_blob)
-                document['download_link'].click()
-
-            # display result
-            MY_SUB_PANEL.clear()
-            MY_SUB_PANEL <= reliability_information
-
-            # offer update
-            update_database_confirm(reliability_list)
-
-        ev.preventDefault()
-
-        json_dict = {
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/extract_elo_data"
-
-        # extract_elo_data : need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    MY_SUB_PANEL <= html.H3("Mettre à jour la fiabilité")
-
-    if not common.check_admin():
-        alert("Pas le bon compte (pas admin)")
-        return
-
-    players_dict = common.get_players()
-    if not players_dict:
-        return
-
-    form = html.FORM()
-
-    # ---
-
-    input_maintain = html.INPUT(type="submit", value="Extraire et calculer", Class='btn-inside')
-    input_maintain.bind("click", extract_reliability_data_callback)
-    form <= input_maintain
-
-    MY_SUB_PANEL <= form
-
-
-def update_regularity():
-    """ update_regularity """
-
-    def cancel_update_database_callback(_, dialog):
-        """ cancel_update_database_callback """
-        dialog.close(None)
-
-    def update_database_callback(_, dialog, regularity_list):
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la mise à jour de la régularité : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la mise à jour de la régularité : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La mise à jour de la régularité a été réalisée : {messages}")
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            update_regularity()
-
-        dialog.close(None)
-
-        regularity_list_json = json.dumps(regularity_list)
-
-        json_dict = {
-            'regularity_list': regularity_list_json,
-        }
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/regularity_rating"
-
-        # update database : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    def update_database_confirm(regularity_list):
-        """ update_database_confirm """
-
-        dialog = mydialog.Dialog("On met à jour la base de données ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog, rl=regularity_list: update_database_callback(e, d, rl))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
-
-    def extract_regularity_data_callback(ev):  # pylint: disable=invalid-name
-        """ extract_regularity_data_callback """
-
-        def reply_callback(req):
-
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur au calcul de la régularité : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème au calcul de la régularité : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-
-                # failed but refresh
-                MY_SUB_PANEL.clear()
-                update_regularity()
-
-                return
-
-            games_results_dict = req_result['games_dict']
-            regularity_information = html.DIV()
-            regularity_list = elo.process_regularity(players_dict, games_results_dict, regularity_information)
-
-            if DOWNLOAD_LOG:
-                alert("Télechargement automatique des logs du calcul")
-
-                # exportation of logs
-                log_html = regularity_information.innerHTML
-
-                # needed too for some reason
-                MY_SUB_PANEL <= html.A(id='download_link')
-
-                # perform actual exportation
-                text_file_as_blob = window.Blob.new([log_html], {'type': 'text/plain'})
-                download_link = document['download_link']
-                time_stamp_now = int(time.time())
-                download_link.download = f"diplomania_regularity_{time_stamp_now}.html"
-                download_link.href = window.URL.createObjectURL(text_file_as_blob)
-                document['download_link'].click()
-
-            # display result
-            MY_SUB_PANEL.clear()
-            MY_SUB_PANEL <= regularity_information
-
-            # offer update
-            update_database_confirm(regularity_list)
-
-        ev.preventDefault()
-
-        json_dict = {
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/extract_elo_data"
-
-        # extract_elo_data : need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    MY_SUB_PANEL <= html.H3("Mettre à jour la régularité")
-
-    if not common.check_admin():
-        alert("Pas le bon compte (pas admin)")
-        return
-
-    players_dict = common.get_players()
-    if not players_dict:
-        return
-
-    form = html.FORM()
-
-    # ---
-
-    input_maintain = html.INPUT(type="submit", value="Extraire et calculer", Class='btn-inside')
-    input_maintain.bind("click", extract_regularity_data_callback)
-    form <= input_maintain
-
-    MY_SUB_PANEL <= form
-
-
 def clear_old_delays():
     """ clear_old_delays """
 
@@ -2408,10 +2144,6 @@ def load_option(_, item_name):
         edit_moderators()
     if item_name == 'Editer les créateurs':
         edit_creators()
-    if item_name == 'Mise à jour de la fiabilité':
-        update_reliability()
-    if item_name == 'Mise à jour de la régularité':
-        update_regularity()
     if item_name == 'Effacement des anciens retard':
         clear_old_delays()
     if item_name == 'Comptes oisifs':
