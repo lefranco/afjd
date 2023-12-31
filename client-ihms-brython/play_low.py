@@ -120,8 +120,8 @@ def make_rating_colours_window(variant_data, position_data, interface_, game_sco
         rating_centers_row <= col
 
     # scoring
-    solo_threshold = variant_data.number_centers() // 2
-    score_table = scoring.scoring(game_scoring, solo_threshold, ratings)
+    centers_variant = variant_data.number_centers()
+    score_table = scoring.scoring(game_scoring, centers_variant, ratings)
 
     # get scoring name
     name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}

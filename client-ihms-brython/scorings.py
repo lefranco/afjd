@@ -53,8 +53,8 @@ def show_scoring():
             RATING_TABLE[name] = val
 
         # scoring
-        solo_threshold = variant_data.number_centers() // 2
-        score_table = scoring.scoring(SCORING_REQUESTED, solo_threshold, RATING_TABLE)
+        centers_variant = variant_data.number_centers()
+        score_table = scoring.scoring(SCORING_REQUESTED, centers_variant, RATING_TABLE)
 
         score_desc = "\n".join([f"{k} : {v} points" for k, v in score_table.items()])
         alert(f"Dans cette configuration la marque est :\n{score_desc}")

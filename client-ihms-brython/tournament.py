@@ -546,8 +546,8 @@ def show_ratings():
 
         # scoring
         game_scoring = data['scoring']
-        solo_threshold = variant_data.number_centers() // 2
-        score_table = scoring.scoring(game_scoring, solo_threshold, ratings)
+        centers_variant = variant_data.number_centers()
+        score_table = scoring.scoring(game_scoring, centers_variant, ratings)
 
         # get scoring name
         scoring_name = name2code[game_scoring]
