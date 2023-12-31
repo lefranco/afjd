@@ -9,6 +9,7 @@ import typing
 import configparser
 import collections
 import json
+import time
 
 
 # where to get logs
@@ -76,6 +77,37 @@ def read_parameters(variant_name_loaded: str, interface_chosen: str) -> typing.A
         parameters_read = json.load(read_file2)
 
     return parameters_read
+
+
+LAST_TIME = 0.
+
+
+def start() -> None:
+    """ start """
+
+    global LAST_TIME
+
+    # this to know how long it takes
+    now_time = time.time()
+    LAST_TIME = now_time
+
+
+def elapsed_then(information: typing.List[str], desc: str) -> None:
+    """ elapsed_then """
+
+    global LAST_TIME
+
+    # elapsed
+    now_time = time.time()
+    elapsed = now_time - LAST_TIME
+
+    # update last time
+    LAST_TIME = now_time
+
+    # display
+    information.append("\n")
+    information.append(f"{desc} : {elapsed}")
+    information.append("\n")
 
 
 if __name__ == '__main__':
