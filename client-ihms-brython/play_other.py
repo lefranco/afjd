@@ -539,7 +539,7 @@ def show_game_parameters():
             'access_restriction_regularity': ("restriction d'accès sur la régularité", "(valeur)", "Un seuil de régularité est exigé pour rejoindre la partie"),
             'access_restriction_performance': ("restriction d'accès sur la performance", "(valeur)", "Un seuil de performance est exigé pour rejoindre la partie"),
             'nb_max_cycles_to_play': ("nombre maximum de cycles (années) à jouer", "(valeur)", "Le système déclare la partie terminée si autant de cycles ont été joués"),
-            'game_type': ("type de la partie", "(valeur)", "Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : communication publique uniquement... BlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) qui est hors jeu")
+            'game_type': ("type de la partie", "(valeur)", "Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : communication publique uniquement... BlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) pour parler d'autre chose que la partie")
 
         }[key]
 

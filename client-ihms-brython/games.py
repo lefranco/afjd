@@ -159,7 +159,7 @@ def create_game(json_dict):
         nonlocal information_displayed_game_type
 
         if not information_displayed_game_type:
-            alert("Négo : pas de restriction, tout est possible !\nBlitz : pas de communication, tout est fermé !\nNégoPublique : communication publique uniquement...\nBlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) qui est hors jeu")
+            alert("Négo : pas de restriction, tout est possible !\nBlitz : pas de communication, tout est fermé !\nNégoPublique : communication publique uniquement...\nBlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) pour parler d'autre chose que la partie")
             information_displayed_game_type = True
 
     def create_game_callback(ev):  # pylint: disable=invalid-name
