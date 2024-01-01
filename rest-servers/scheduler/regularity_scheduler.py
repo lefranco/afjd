@@ -11,7 +11,6 @@ Regularity update
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import typing
-import sys
 import time
 import json
 
@@ -62,7 +61,6 @@ def process_regularity(players_dict: typing.Dict[str, typing.Any], games_results
         game_players = list(map(int, game_players_dict.keys()))
 
         regularity_information.append(f"{game_name=} {list(map(lambda n: num2pseudo[n], game_players))}")
-        regularity_information.append("\n")
 
         for player_id in game_players:
 
@@ -89,8 +87,6 @@ def process_regularity(players_dict: typing.Dict[str, typing.Any], games_results
             if player_id not in number_games_table:
                 number_games_table[player_id] = 0
             number_games_table[player_id] += 1
-
-    regularity_information.append("\n")
 
     lowdata.elapsed_then(regularity_information, "Games parsed")
 
@@ -143,7 +139,6 @@ def process_regularity(players_dict: typing.Dict[str, typing.Any], games_results
 
         # to check
         regularity_information.append(f"{num2pseudo[player_id]} -> {number_games=} {started_playing_days=} {finished_playing_days=} {activity_days=}")
-        regularity_information.append("\n")
 
     lowdata.elapsed_then(regularity_information, "list built")
 
@@ -193,8 +188,8 @@ def run(jwt_token: str) -> None:
     regularity_list = process_regularity(players_dict, games_results_dict, regularity_information)
 
     # dump Regularity logs into a log file
-    for line in regularity_information:
-        print(line, file=sys.stderr)
+    with open("./logdir/regularity.log", "w", encoding='utf-8') as file_ptr:
+        file_ptr.write('\n'.join(regularity_information))
 
     # ========================
     # load Regularity in database

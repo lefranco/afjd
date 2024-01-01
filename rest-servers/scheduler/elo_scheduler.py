@@ -8,7 +8,6 @@ ELO update
 """
 
 import typing
-import sys
 import json
 import time
 import datetime
@@ -20,6 +19,8 @@ import lowdata
 import mapping
 import scoring
 
+VERIFY = True
+
 ALPHA = 1.5
 D_CONSTANT = 600.
 DEFAULT_ELO = 1500.
@@ -27,8 +28,6 @@ MINIMUM_ELO = 1000.
 
 K_MAX_CONSTANT = 40
 K_SLOPE = 2.
-
-VERIFY = False
 
 FORCED_VARIANT_NAME = 'standard'
 
@@ -88,7 +87,6 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
 
         if len(game_players_dict) != len(effective_roles):
             elo_information.append(f"WARNING {game_name}: ignored because missing player(s) !!!!")
-            elo_information.append("\n")
             continue
 
         # convert time
@@ -112,7 +110,6 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
         # check
         if not any(map(lambda s: s > 0, score_table.values())):
             elo_information.append(f"WARNING {game_name}: ignored because no positive score !!!!")
-            elo_information.append("\n")
             continue
 
         relevant_score_table = {r: s for r, s in score_table.items() if s > 0}
@@ -185,31 +182,20 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
 
         if VERIFY:
             elo_information.append(f"{time_creation_str=} {game_name=} {classic=}")
-            elo_information.append("\n")
             elo_information.append(f"{game_scoring_name=}")
-            elo_information.append("\n")
             elo_information.append(f"{solo_threshold=}")
-            elo_information.append("\n")
             elo_information.append(f"{ratings=}")
-            elo_information.append("\n")
             elo_information.append(f"{pseudo_table=}")
-            elo_information.append("\n")
             elo_information.append(f"{score_table=}")
-            elo_information.append("\n")
             elo_information.append(f"{relevant_score_table=}")
-            elo_information.append("\n")
             elo_information.append(f"{ranking_table=}")
-            elo_information.append("\n")
             elo_information.append(f"{expected_table=}")
-            elo_information.append("\n")
             elo_information.append(f"{performed_table=}")
-            elo_information.append("\n")
 
         # elo variation
 
         if VERIFY:
             elo_information.append("Effect :")
-            elo_information.append("\n")
 
         # calculate effect on ELO
         before = time.time()
@@ -225,10 +211,8 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
             # just a little check
             if role_name in loosers and delta > 0:
                 elo_information.append(f"WARNING {game_name}: {player} as {role_name} looses but gains points !!!!")
-                elo_information.append("\n")
             if role_name in winners and delta < 0:
                 elo_information.append(f"WARNING {game_name}: {player} as {role_name} wins but looses points !!!!")
-                elo_information.append("\n")
 
             if VERIFY:
                 prev_elo = elo_table[(player, role_name, classic)]
@@ -239,46 +223,26 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
             if VERIFY:
                 new_elo = elo_table[(player, role_name, classic)]
                 elo_information.append(f"{player}({role_name}) -> delta = {delta} so elo changes from {prev_elo} to {new_elo}")
-                elo_information.append("\n")
 
             if elo_table[(player, role_name, classic)] < MINIMUM_ELO:
                 elo_table[(player, role_name, classic)] = MINIMUM_ELO
                 elo_information.append(f"INFORMATION {game_name}: {player}({role_name}) would have less than {MINIMUM_ELO} so forced to this value")
-                elo_information.append("\n")
 
         after = time.time()
         variation_calculation_time += (after - before)
 
         if VERIFY:
             elo_information.append("-------------------")
-            elo_information.append("\n")
 
     elo_information.append(f"Number of games processed : {len(games_results_dict)}")
-    elo_information.append("\n")
-
     elo_information.append(f"Dating calculation time : {dating_calculation_time}")
-    elo_information.append("\n")
-
     elo_information.append(f"Scoring calculation time : {scoring_calculation_time}")
-    elo_information.append("\n")
-
     elo_information.append(f"Pseudo calculation time : {pseudo_calculation_time}")
-    elo_information.append("\n")
-
     elo_information.append(f"Performance calculation time : {performance_calculation_time}")
-    elo_information.append("\n")
-
     elo_information.append(f"Count calculation time : {count_calculation_time}")
-    elo_information.append("\n")
-
     elo_information.append(f"Extract calculation time : {extract_calculation_time}")
-    elo_information.append("\n")
-
     elo_information.append(f"Expected calculation time : {expected_calculation_time}")
-    elo_information.append("\n")
-
     elo_information.append(f"Variation calculation time : {variation_calculation_time}")
-    elo_information.append("\n")
 
     lowdata.elapsed_then(elo_information, "Parsing games time")
 
@@ -289,13 +253,9 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
     for classic in (True, False):
 
         elo_information.append("-------------------")
-        elo_information.append("\n")
         elo_information.append("-------------------")
-        elo_information.append("\n")
         elo_information.append(f"RATINGS FOR {'CLASSIC' if classic else 'BLITZ'} MODE")
-        elo_information.append("\n")
         elo_information.append("-------------------")
-        elo_information.append("\n")
 
         # ------------
         # global recap
@@ -320,7 +280,6 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
 
         # display
         elo_information.append("-------------------")
-        elo_information.append("\n")
         for rank, (player, elo) in enumerate(final_elo_table.items()):
 
             # make detail for player
@@ -328,7 +287,6 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
 
             # display rankings
             elo_information.append(f"{rank + 1} {player} -> {elo} ({player_detail})")
-            elo_information.append("\n")
 
         if VERIFY:
 
@@ -340,10 +298,8 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
 
                 # display role name
                 elo_information.append("-------------------")
-                elo_information.append("\n")
                 role_name = num2rolename[num]
                 elo_information.append(role_name)
-                elo_information.append("\n")
 
                 # make table
                 final_raw_role_elo_table = {p: elo_table[(p, rn, c)] for (p, rn, c) in elo_table if rn == role_name and c == classic}
@@ -356,8 +312,6 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
                     sample_size = number_games_table[(player, role_name, classic)]
                     game_name, last_change = elo_change_table[(player, role_name, classic)]
                     elo_information.append(f"{rank + 1} {player} -> {elo} (last change {last_change:+f} in game {game_name} & played {sample_size} times)")
-                    elo_information.append("\n")
-                elo_information.append("\n")
 
         lowdata.elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'} time")
 
@@ -509,8 +463,8 @@ def run(jwt_token: str) -> None:
     elo_raw_list, teaser_text = process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information)
 
     # dump ELO logs into a log file
-    for line in elo_information:
-        print(line, file=sys.stderr)
+    with open("./logdir/ELO.log", "w", encoding='utf-8') as file_ptr:
+        file_ptr.write('\n'.join(elo_information))
 
     # ========================
     # load ELO in database

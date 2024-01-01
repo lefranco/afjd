@@ -105,9 +105,9 @@ def elapsed_then(information: typing.List[str], desc: str) -> None:
     LAST_TIME = now_time
 
     # display
-    information.append("\n")
+    information.append("--")
     information.append(f"{desc} : {elapsed}")
-    information.append("\n")
+    information.append("--")
 
 
 if __name__ == '__main__':

@@ -9,7 +9,6 @@ Reliability update
 
 
 import typing
-import sys
 import json
 
 import requests
@@ -57,31 +56,30 @@ def process_reliability(players_dict: typing.Dict[str, typing.Any], games_result
         # display stuff
 
         reliability_information.append(f"{game_name=} {list(map(lambda n: num2pseudo[n], game_players))}")
-        reliability_information.append("\n")
 
-        reliability_information.append("delays from this game: ")
+        delays_info = "delays from this game: "
         for key, value in delays_number_dict.items():
             if int(key) in num2pseudo:
                 player_pseudo = num2pseudo[int(key)]
-                reliability_information.append(f"{player_pseudo} ")
+                delays_info += f" {player_pseudo} "
             else:
-                reliability_information.append(f"({key}???) ")
-            reliability_information.append(f"-> {value} ")
+                delays_info += f" ({key}???) "
+            delays_info += f" -> {value} "
             if int(key) not in game_players:
-                reliability_information.append("(outside) ")
-        reliability_information.append("\n")
+                delays_info += " (outside) "
+        reliability_information.append(delays_info)
 
-        reliability_information.append("dropouts from this game: ")
+        dropouts_info = "dropouts from this game: "
         for key, value in dropouts_number_dict.items():
             if int(key) in num2pseudo:
                 player_pseudo = num2pseudo[int(key)]
-                reliability_information.append(f"{player_pseudo} ")
+                dropouts_info += f" {player_pseudo} "
             else:
-                reliability_information.append(f"({key}???) ")
-            reliability_information.append(f"-> {value} ")
+                dropouts_info += (f" ({key}???) ")
+            dropouts_info += f" -> {value} "
             if int(key) not in game_players:
-                reliability_information.append("(outside) ")
-        reliability_information.append("\n")
+                dropouts_info += " (outside) "
+        reliability_information.append(dropouts_info)
 
         # update over all player_set
         extended_game_players = game_players.copy()
@@ -132,7 +130,6 @@ def process_reliability(players_dict: typing.Dict[str, typing.Any], games_result
 
         # to check
         reliability_information.append(f"{num2pseudo[player_id]} -> {number_delays=} {number_dropouts=} {number_advancements=} ")
-        reliability_information.append("\n")
 
     lowdata.elapsed_then(reliability_information, "list built")
 
@@ -182,8 +179,8 @@ def run(jwt_token: str) -> None:
     reliability_list = process_reliability(players_dict, games_results_dict, reliability_information)
 
     # dump Reliability logs into a log file
-    for line in reliability_list:
-        print(line, file=sys.stderr)
+    with open("./logdir/reliability.log", "w", encoding='utf-8') as file_ptr:
+        file_ptr.write('\n'.join(reliability_information))
 
     # ========================
     # load Reliability in database
