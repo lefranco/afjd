@@ -28,7 +28,7 @@ import mapping
 import elo_scheduler
 import regularity_scheduler
 import reliability_scheduler
-
+import forgiver_scheduler
 
 SESSION = requests.Session()
 
@@ -245,6 +245,10 @@ def acting_threaded_procedure() -> None:
             if hour_now == 2:
                 mylogger.LOGGER.info("Regularity Scheduler...")
                 regularity_scheduler.run(jwt_token)
+
+            if hour_now == 3:
+                mylogger.LOGGER.info("Forgiver Scheduler...")
+                forgiver_scheduler.run(jwt_token)
 
             # renew token every day
             if hour_now == 23:
