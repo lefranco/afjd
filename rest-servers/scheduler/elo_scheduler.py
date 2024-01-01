@@ -87,6 +87,8 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
 
         if len(game_players_dict) != len(effective_roles):
             elo_information.append(f"WARNING {game_name}: ignored because missing player(s) !!!!")
+            if VERIFY:
+                elo_information.append("-------------------")
             continue
 
         # convert time
@@ -105,11 +107,14 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
 
         # use clone of unit in front end (scoring)
         # no typing in this code from front end
-        score_table = scoring.scoring(game_scoring_name, solo_threshold, ratings)  # type: ignore
+        centers_variant = variant_data.number_centers()
+        score_table = scoring.scoring(game_scoring_name, centers_variant, ratings)  # type: ignore
 
         # check
         if not any(map(lambda s: s > 0, score_table.values())):
             elo_information.append(f"WARNING {game_name}: ignored because no positive score !!!!")
+            if VERIFY:
+                elo_information.append("-------------------")
             continue
 
         relevant_score_table = {r: s for r, s in score_table.items() if s > 0}
