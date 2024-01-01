@@ -27,7 +27,7 @@ import scoring
 
 SESSION = requests.Session()
 
-SOLO_THRESHOLD = 17
+CENTER_NUMBER = 34
 IMPOSED_VARIANT = 'standard'
 
 POWER_NAME = [
@@ -40,7 +40,7 @@ CENTER_NAME = [
     'Mun', 'Nap', 'Nwy', 'Par', 'Por', 'Rom', 'Rum', 'Ser', 'Sev', 'Smy', 'Spa', 'Stp', 'Swe', 'Tri', 'Tun', 'Ven',
     'Vie', 'War'
 ]
-assert len(CENTER_NAME) == 34, "Bad number of centers"
+assert len(CENTER_NAME) == CENTER_NUMBER, "Bad number of centers"
 
 TYPE_NAME = ['A', 'F']
 assert len(TYPE_NAME) == 2, "Bad number of types of units"
@@ -215,7 +215,7 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
     ratings = dict(sorted(center_table.items(), key=lambda i: i[1], reverse=True))
 
     # use clone of unit in front end (scoring)
-    score_table = scoring.scoring(game_scoring, SOLO_THRESHOLD, ratings)  # type: ignore
+    score_table = scoring.scoring(game_scoring, CENTER_NUMBER, ratings)  # type: ignore
 
     # need ranking
     ranking = {}
