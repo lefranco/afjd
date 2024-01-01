@@ -30,7 +30,6 @@ OPTIONS = {
     'Récupérations demandées': "Les récupérations demandées sur le site",
     'Editer les créateurs': "Editer les comptes créateurs du site",
     'Editer les modérateurs': "Editer les comptes modérateurs du site",
-    'Effacement des anciens retard': "Effacer tous les anciens retards",
     'Comptes oisifs': "Lister les comptes oisifs pour les avertir ou les supprimer",
     'Logs du scheduler': "Consulter les logs du scheduleur",
     'Maintenance': "Opération de maintenance à définir"
@@ -1698,64 +1697,6 @@ def edit_moderators():
     MY_SUB_PANEL <= form
 
 
-def clear_old_delays():
-    """ clear_old_delays """
-
-    def clear_old_delays_callback(ev):  # pylint: disable=invalid-name
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à l'effacement des anciens retards : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Erreur à l'effacement des anciens retards : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-
-                # failed but refresh
-                MY_SUB_PANEL.clear()
-                clear_old_delays()
-
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez effacé les anciens incidents : {messages}")
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            clear_old_delays()
-
-        ev.preventDefault()
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/clear-old-delays"
-
-        # clear old delays : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    MY_SUB_PANEL <= html.H3("Effacer les anciens retards")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    if not common.check_admin():
-        alert("Pas le bon compte (pas admin)")
-        return
-
-    form = html.FORM()
-
-    input_clear_old_delays = html.INPUT(type="submit", value="Effacer les anciens retards", Class='btn-inside')
-    input_clear_old_delays.bind("click", clear_old_delays_callback)
-    form <= input_clear_old_delays
-
-    MY_SUB_PANEL <= form
-
-
 def show_idle_data():
     """ show_idle_data """
 
@@ -2144,8 +2085,6 @@ def load_option(_, item_name):
         edit_moderators()
     if item_name == 'Editer les créateurs':
         edit_creators()
-    if item_name == 'Effacement des anciens retard':
-        clear_old_delays()
     if item_name == 'Comptes oisifs':
         show_idle_data()
     if item_name == 'Logs du scheduler':

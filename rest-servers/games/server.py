@@ -218,6 +218,9 @@ MOVE_GAME_LOCK_TABLE: typing.Dict[str, threading.Lock] = {}
 # to avoid repeat messages/declarations
 NO_REPEAT_DELAY_SEC = 15
 
+# account allowed to clear old ratings
+COMMUTER_ACCOUNT = "TheCommuter"
+
 
 def apply_supported(complete_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], orders_list: typing.List[typing.List[int]]) -> None:
     """ apply_supported
@@ -6630,20 +6633,9 @@ class ClearOldDelaysRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # get admin pseudo
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/pseudo-admin"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
-        admin_pseudo = req_result.json()
-
-        # check user is admin
-        if pseudo != admin_pseudo:
-            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to clear old delays")
+        if pseudo != COMMUTER_ACCOUNT:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to clear old delays")
 
         sql_executor = database.SqlExecutor()
         incidents.Incident.purge_old(sql_executor)
