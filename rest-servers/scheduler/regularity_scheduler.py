@@ -123,7 +123,7 @@ def process_regularity(players_dict: typing.Dict[str, typing.Any], games_results
     # 4 Make regularity_list (returned)
     # ------------------
 
-    ref_time = time.time()
+    ref_time = int(time.time())
 
     regularity_list = []
 
