@@ -992,7 +992,7 @@
  "y_legend_pos": 554
  },
 "100": {
- "name": "Skagerrak",
+ "name": "SKA",
  "full_name": "Atlantique Exterieur",
  "x_pos": 466,
  "y_pos": 568,
@@ -1270,6 +1270,8 @@
         "9": {
             "name": "Supprimer"
         }
-    }
+    },
+   
+    "zone_areas": {}
 
 }
