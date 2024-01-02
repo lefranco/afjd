@@ -65,12 +65,12 @@ Il y a neuf puissances dont les unités de départ sont les suivantes :
 |Autriche | 5 |Vienne, Budapest, Croatie | | Silesie, Milan|
 |Bavière | 3 |Munich, Regensburg | | Westphalie|
 |Angleterre | 4 |Bristol | Ecosse, Londres| Irlande|
-|Espagne | 5 |Aragon | | Sicile, Naples|
+|Espagne | 5 |Andalousie, Castille |Aragon | |
 |France | 4 |Bordeaux, Picardie | Brest| Paris|
 |Ottoman | 3 |Bulgarie, Constantinople | Grèce| |
-|Piedmont | 3 |Savoie, Sardaigne | Piedmont| |
+|Piémont | 3 |Savoie, Sardaigne | Piémont| |
 |Prusse | 3 |Berlin, Stettin | | Prusse|
-|Russie | 3 |StPetersburg, Moscou, Kiev | | |
+|Russie | 3 |Moscou, Kiev | Saint-Pétersbourg| |
 =
 
 _
@@ -78,8 +78,9 @@ $ Nomenclature
 
 = Régions et abbréviations de la variante
 | Abbréviation | Nom complet |
+| Abbréviation | Nom complet |
 | ALB | Albanie |
-| ALG | Algerie |
+| ALG | Algérie |
 | ANA | Anatolie |
 | AND | Andalousie |
 | APU | Apulie |
@@ -87,7 +88,7 @@ $ Nomenclature
 | ARA | Aragon |
 | BEL | Belgrade |
 | BER | Berlin |
-| BOH | Boheme |
+| BOH | Bohème |
 | BOR | Bordeaux |
 | BOS | Bosnie |
 | BOU | Bourgogne |
@@ -107,9 +108,9 @@ $ Nomenclature
 | ECO | Ecosse |
 | FIN | Finlande |
 | FLA | Flandres |
-| GAL | Gallicie |
-| GRE | Grece |
-| HAN | Hannovre |
+| GAL | Galicie |
+| GRE | Grèce |
+| HAN | Hanovre |
 | HES | Hesse |
 | HOL | Hollande |
 | IRL | Irlande |
@@ -126,60 +127,60 @@ $ Nomenclature
 | MOS | Moscou |
 | MUN | Munich |
 | NAP | Naples |
-| NOR | Norvege |
+| NOR | Norvège |
 | PAL | Palatinat |
 | PAP | Papauté |
 | PAR | Paris |
 | PIC | Picardie |
-| PIE | Piedmont |
+| PIE | Piémont |
 | POR | Portugal |
 | POS | Posnanie |
 | PRO | Provence |
 | PRU | Prusse |
 | PSK | Pinsk |
 | REG | Regensburg |
-| RHE | Rhenanie |
+| RHE | Rhénanie |
 | RIG | Riga |
-| RUT | Ruthenie Blanche |
+| RUT | Ruthénie Blanche |
 | SAR | Sardaigne |
 | SAV | Savoie |
 | SAX | Saxe |
 | SER | Serbie |
 | SIC | Sicile |
-| SIL | Silesie |
+| SIL | Silésie |
 | STE | Stettin |
-| STP | Saint-Petersbourg |
-| SUE | Suede |
+| STP | Saint-Pétersbourg |
+| SUE | Suède |
 | TOS | Toscane |
 | TSY | Transylvanie |
 | TUN | Tunisie |
 | TYR | Tyrol |
 | VAL | Valachie |
 | VAR | Varsovie |
-| VEN | Venetie |
+| VEN | Vénétie |
 | VIE | Vienne |
 | VLY | Volhynie |
 | WES | Westphalie |
 | YOR | York |
-| bHEL | Baie de Heligolande |
-| cSTG | Mer Egee |
+| bHEL | Baie de Héligoland |
+| cSTG | Canal Saint Georges |
 | dMAN | La Manche |
 | dSKA | Détroit de Skaggerak |
 | gBOT | Golfe de Botnie |
-| gGAS | Mer Egee |
-| gLIO | Mer Egee |
+| gGAS | Golfe de Gascogne |
+| gLIO | Golfe de Lyon |
 | mADR | Mer Adriatique |
 | mBAL | Mer Baltique |
-| mEGE | Mer Egee |
+| mEGE | Mer Egée |
 | mION | Mer Ionienne |
 | mNOI | Mer Noire |
 | mNRD | Mer du Nord |
-| mNVG | Mer de Norvege |
-| mOCC | Mediteranee Occidentale |
-| mORI | Mediteranee Orientale |
-| mTYR | Mer Tyrrhenienne |
+| mNVG | Mer de Norvège |
+| mOCC | Mediteranée Occidentale |
+| mORI | Mediteranée Orientale |
+| mTYR | Mer Tyrrhénienne |
 | oATL | Atlantique Moyen |
-| oEXT | Atlantique Exterieur |
+| oEXT | Atlantique Extérieur |
 =
 
 
