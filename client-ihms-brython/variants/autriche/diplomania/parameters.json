@@ -216,7 +216,8 @@
             "x_pos": 916,
             "y_pos": 609,
             "x_legend_pos": 916,
-            "y_legend_pos": 595
+            "y_legend_pos": 595,
+            "display": 6
         },
         "2": {
             "name": "CON",
@@ -240,7 +241,8 @@
             "x_pos": 639,
             "y_pos": 628,
             "x_legend_pos": 639,
-            "y_legend_pos": 614
+            "y_legend_pos": 614,
+            "display": 6
         },
         "5": {
             "name": "BOS",
@@ -248,7 +250,8 @@
             "x_pos": 597,
             "y_pos": 546,
             "x_legend_pos": 597,
-            "y_legend_pos": 532
+            "y_legend_pos": 532,
+            "display": 6
         },
         "6": {
             "name": "SER",
@@ -256,7 +259,8 @@
             "x_pos": 664,
             "y_pos": 571,
             "x_legend_pos": 652,
-            "y_legend_pos": 559
+            "y_legend_pos": 559,
+            "display": 6
         },
         "7": {
             "name": "BUL",
@@ -296,7 +300,8 @@
             "x_pos": 798,
             "y_pos": 430,
             "x_legend_pos": 798,
-            "y_legend_pos": 416
+            "y_legend_pos": 416,
+            "display": 6
         },
         "12": {
             "name": "KIV",
@@ -328,7 +333,8 @@
             "x_pos": 667,
             "y_pos": 172,
             "x_legend_pos": 667,
-            "y_legend_pos": 158
+            "y_legend_pos": 158,
+            "display": 9
         },
         "16": {
             "name": "LIT",
@@ -456,7 +462,8 @@
             "x_pos": 534,
             "y_pos": 405,
             "x_legend_pos": 534,
-            "y_legend_pos": 391
+            "y_legend_pos": 391,
+            "display": 1
         },
         "32": {
             "name": "REG",
@@ -480,7 +487,8 @@
             "x_pos": 475,
             "y_pos": 480,
             "x_legend_pos": 457,
-            "y_legend_pos": 475
+            "y_legend_pos": 475,
+            "display": 1
         },
         "35": {
             "name": "VIE",
@@ -496,7 +504,8 @@
             "x_pos": 525,
             "y_pos": 503,
             "x_legend_pos": 539,
-            "y_legend_pos": 495
+            "y_legend_pos": 495,
+            "display": 1
         },
         "37": {
             "name": "CRO",
@@ -520,7 +529,8 @@
             "x_pos": 670,
             "y_pos": 466,
             "x_legend_pos": 670,
-            "y_legend_pos": 452
+            "y_legend_pos": 452,
+            "display": 1
         },
         "40": {
             "name": "DAL",
@@ -568,7 +578,8 @@
             "x_pos": 366,
             "y_pos": 386,
             "x_legend_pos": 366,
-            "y_legend_pos": 372
+            "y_legend_pos": 372,
+            "display": 1
         },
         "46": {
             "name": "RHE",
@@ -584,7 +595,8 @@
             "x_pos": 384,
             "y_pos": 433,
             "x_legend_pos": 379,
-            "y_legend_pos": 420
+            "y_legend_pos": 420,
+            "display": 5
         },
         "48": {
             "name": "SAV",
@@ -640,7 +652,8 @@
             "x_pos": 538,
             "y_pos": 611,
             "x_legend_pos": 515,
-            "y_legend_pos": 594
+            "y_legend_pos": 594,
+            "display": 4
         },
         "55": {
             "name": "NAP",
@@ -728,7 +741,8 @@
             "y_pos": 552,
             "x_legend_pos": 258,
             "y_legend_pos": 538,
-            "x_pos": 258
+            "x_pos": 258,
+            "display": 5
         },
         "66": {
             "name": "LAN",
@@ -736,7 +750,8 @@
             "x_pos": 304,
             "y_pos": 564,
             "x_legend_pos": 304,
-            "y_legend_pos": 550
+            "y_legend_pos": 550,
+            "display": 5
         },
         "67": {
             "name": "PRO",
@@ -744,7 +759,8 @@
             "x_pos": 358,
             "y_pos": 538,
             "x_legend_pos": 358,
-            "y_legend_pos": 524
+            "y_legend_pos": 524,
+            "display": 5
         },
         "68": {
             "name": "BOR",
@@ -760,7 +776,8 @@
             "x_pos": 344,
             "y_pos": 493,
             "x_legend_pos": 344,
-            "y_legend_pos": 479
+            "y_legend_pos": 479,
+            "display": 5
         },
         "70": {
             "name": "CHA",
@@ -768,7 +785,8 @@
             "x_pos": 352,
             "y_pos": 438,
             "x_legend_pos": 352,
-            "y_legend_pos": 424
+            "y_legend_pos": 424,
+            "display": 5
         },
         "71": {
             "name": "PAR",
@@ -824,7 +842,8 @@
             "x_pos": 273,
             "y_pos": 304,
             "x_legend_pos": 273,
-            "y_legend_pos": 290
+            "y_legend_pos": 290,
+            "display": 3
         },
         "78": {
             "name": "ECO",
