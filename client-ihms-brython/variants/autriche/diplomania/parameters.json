@@ -1,0 +1,1015 @@
+{
+
+"regions": {
+        "1": {
+            "name": "Cote"
+        },
+        "2": {
+            "name": "Terre"
+        },
+        "3": {
+            "name": "Mer"
+        }
+    },
+    "units": {
+        "1": {
+            "name": "Armee"
+        },
+        "2": {
+            "name": "Flotte"
+        }
+    },
+
+
+"roles": {
+	"0": {
+		"name": "Arbitre",
+		"adjective_name": "Arbitre",
+		"letter_name": "X",
+		"red": [
+			0,
+			0
+		],
+		"green": [
+			0,
+			0
+		],
+		"blue": [
+			0,
+			0
+		]
+		},
+	"1": {
+		"name": "Autriche",
+		"adjective_name": "Autrichiene",
+		"letter_name": "A",
+		"red": [
+			204,
+			231
+		],
+		"green": [
+			183,
+			207
+		],
+		"blue": [
+			76,
+			83
+		]
+	},
+	"2": {
+		"name": "Baviere",
+		"adjective_name": "Bavaroise",
+		"letter_name": "B",
+		"red": [
+			54,
+			77
+		],
+		"green": [
+			79,
+			113
+		],
+		"blue": [
+			114,
+			163
+		]
+	},
+	"3": {
+		"name": "Angleterre",
+		"adjective_name": "Anglaise",
+		"letter_name": "E",
+		"red": [
+			227,
+			216
+		],
+		"green": [
+			52,
+			100
+		],
+		"blue": [
+			17,
+			77
+		]
+	},
+	"4": {
+		"name": "Espagne",
+		"adjective_name": "Espagnole",
+		"letter_name": "S",
+		"red": [
+			54,
+			77
+		],
+		"green": [
+			79,
+			113
+		],
+		"blue": [
+			114,
+			163
+		]
+	},
+	"5": {
+		"name": "France",
+		"adjective_name": "Francaise",
+		"letter_name": "F",
+		"red": [
+			31,
+			121
+		],
+		"green": [
+			202,
+			199
+		],
+		"blue": [
+			231,
+			212
+		]
+	},
+	"6": {
+		"name": "Ottoman",
+		"adjective_name": "Ottomane",
+		"letter_name": "O",
+		"red": [
+			209,
+			153
+		],
+		"green": [
+			101,
+			88
+		],
+		"blue": [
+			67,
+			68
+		]
+	},
+	"7": {
+		"name": "Piemont",
+		"adjective_name": "Piemontaise",
+		"letter_name": "I",
+		"red": [
+			61,
+			66
+		],
+		"green": [
+			250,
+			197
+		],
+		"blue": [
+			17,
+			138
+		]
+	},
+	"8": {
+		"name": "Prusse",
+		"adjective_name": "Prussienne",
+		"letter_name": "P",
+		"red": [
+			212,
+			251
+		],
+		"green": [
+			113,
+			165
+		],
+		"blue": [
+			7,
+			0
+		]
+	},
+	"9": {
+		"name": "Russie",
+		"adjective_name": "Russe",
+		"letter_name": "R",
+		"red": [
+			186,
+			224
+		],
+		"green": [
+			150,
+			177
+		],
+		"blue": [
+			156,
+			185
+		]
+	}
+},
+
+"zones": {
+ "1": {
+ "name": "ANA",
+ "full_name": "Anatolie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "2": {
+ "name": "CON",
+ "full_name": "Constantinople",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "3": {
+ "name": "GRE",
+ "full_name": "Grece",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "4": {
+ "name": "ALB",
+ "full_name": "Albanie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "5": {
+ "name": "BOS",
+ "full_name": "Bosnie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "6": {
+ "name": "SER",
+ "full_name": "Serbie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "7": {
+ "name": "BUL",
+ "full_name": "Bulgarie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "8": {
+ "name": "BEL",
+ "full_name": "Belgrade",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "9": {
+ "name": "VAL",
+ "full_name": "Valachie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "10": {
+ "name": "Mol",
+ "full_name": "Moldavie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "11": {
+ "name": "CRI",
+ "full_name": "Crimée",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "12": {
+ "name": "KIV",
+ "full_name": "Kiev",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "13": {
+ "name": "MOS",
+ "full_name": "Moscou",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "14": {
+ "name": "STP",
+ "full_name": "Saint-Petersbourg",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "15": {
+ "name": "RIG",
+ "full_name": "Riga",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "16": {
+ "name": "LIT",
+ "full_name": "Lituanie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "17": {
+ "name": "RUT",
+ "full_name": "Ruthenie Blanche",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "18": {
+ "name": "VLY",
+ "full_name": "Volhynie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "19": {
+ "name": "GAL",
+ "full_name": "Gallicie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "20": {
+ "name": "LUB",
+ "full_name": "Lublin",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "21": {
+ "name": "PSK",
+ "full_name": "Pinsk",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "22": {
+ "name": "VAR",
+ "full_name": "Varsovie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "23": {
+ "name": "PRU",
+ "full_name": "Prusse",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "24": {
+ "name": "POS",
+ "full_name": "Posnanie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "25": {
+ "name": "STE",
+ "full_name": "Stettin",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "26": {
+ "name": "MEK",
+ "full_name": "Mecklemburg",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "27": {
+ "name": "HAN",
+ "full_name": "Hannovre",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "28": {
+ "name": "BER",
+ "full_name": "Berlin",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "29": {
+ "name": "SAX",
+ "full_name": "Saxe",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "30": {
+ "name": "SIL",
+ "full_name": "Silesie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "31": {
+ "name": "BOH",
+ "full_name": "Boheme",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "32": {
+ "name": "REG",
+ "full_name": "Regensburg",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "33": {
+ "name": "MUN",
+ "full_name": "Munich",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "34": {
+ "name": "TYR",
+ "full_name": "Tyrol",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "35": {
+ "name": "VIE",
+ "full_name": "Vienne",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "36": {
+ "name": "CAR",
+ "full_name": "Carinthie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "37": {
+ "name": "CRO",
+ "full_name": "Croatie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "38": {
+ "name": "BUD",
+ "full_name": "Budapest",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "39": {
+ "name": "TSY",
+ "full_name": "Transylvanie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"40": {
+ "name": "DAL",
+ "full_name": "Dalmatie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"41": {
+ "name": "PAL",
+ "full_name": "Palatinat",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"42": {
+ "name": "HES",
+ "full_name": "Hesse",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"43": {
+ "name": "WES",
+ "full_name": "Westphalie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"44": {
+ "name": "HOL",
+ "full_name": "Hollande",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"45": {
+ "name": "FLA",
+ "full_name": "Flandres",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"46": {
+ "name": "RHE",
+ "full_name": "Rhenanie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"47": {
+ "name": "LOR",
+ "full_name": "Lorraine",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"48": {
+ "name": "SAV",
+ "full_name": "Savoie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"49": {
+ "name": "PIE",
+ "full_name": "Piedmont",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"50": {
+ "name": "MIL",
+ "full_name": "Milan",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"51": {
+ "name": "VEN",
+ "full_name": "Venetie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"52": {
+ "name": "TOS",
+ "full_name": "Toscane",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"53": {
+ "name": "PAP",
+ "full_name": "Papauté",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"54": {
+ "name": "APU",
+ "full_name": "Apulie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"55": {
+ "name": "NAP",
+ "full_name": "Naples",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"56": {
+ "name": "SAR",
+ "full_name": "Sardaigne",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"57": {
+ "name": "SIC",
+ "full_name": "Sicile",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"58": {
+ "name": "TUN",
+ "full_name": "Tunisie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"59": {
+ "name": "ALG",
+ "full_name": "Algerie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"60": {
+ "name": "MAR",
+ "full_name": "Maroc",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"61": {
+ "name": "AND",
+ "full_name": "Andalousie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"62": {
+ "name": "POR",
+ "full_name": "Portugal",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"63": {
+ "name": "CAS",
+ "full_name": "Castille",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"64": {
+ "name": "ARA",
+ "full_name": "Aragon",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"65": {
+ "name": "AQU",
+ "full_name": "Aquitaine",
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"66": {
+ "name": "LAN",
+ "full_name": "Languedoc",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"67": {
+ "name": "PRO",
+ "full_name": "Provence",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"68": {
+ "name": "BOR",
+ "full_name": "Bordeaux",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"69": {
+ "name": "BOU",
+ "full_name": "Bourgogne",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"70": {
+ "name": "CHA",
+ "full_name": "Champagne",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"71": {
+ "name": "PAR",
+ "full_name": "Paris",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"72": {
+ "name": "BRE",
+ "full_name": "Brest",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"73": {
+ "name": "PIC",
+ "full_name": "Picardie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"74": {
+ "name": "LON",
+ "full_name": "Londres",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"75": {
+ "name": "BRI",
+ "full_name": "Bristol",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"76": {
+ "name": "IRL",
+ "full_name": "Irlande",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"77": {
+ "name": "YOR",
+ "full_name": "York",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"78": {
+ "name": "ECO",
+ "full_name": "Ecosse",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"79": {
+ "name": "DAN",
+ "full_name": "Danemark",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"80": {
+ "name": "SUE",
+ "full_name": "Suede",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"81": {
+ "name": "NOR",
+ "full_name": "Norvege",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"82": {
+ "name": "FIN",
+ "full_name": "Finlande",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"83": {
+ "name": "COR",
+ "full_name": "Corse",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"84": {
+ "name": "mNOI",
+ "full_name": "Mer Noire",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"85": {
+ "name": "mEGE",
+ "full_name": "Mer Egee",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"86": {
+ "name": "mORI",
+ "full_name": "Mediteranee Orientale",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"87": {
+ "name": "mION",
+ "full_name": "Mer Ionienne",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"88": {
+ "name": "mADR",
+ "full_name": "Mer Adriatique",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"89": {
+ "name": "mTYR",
+ "full_name": "Mer Tyrrhenienne",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"90": {
+ "name": "mOCC",
+ "full_name": "Mediteranee Occidentale",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"91": {
+ "name": "gLIO",
+ "full_name": "Mer Egee",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"92": {
+ "name": "oATL",
+ "full_name": "Atlantique Moyen",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"93": {
+ "name": "gGAS",
+ "full_name": "Mer Egee",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"94": {
+ "name": "dMAN",
+ "full_name": "La Manche",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"95": {
+ "name": "cSTG",
+ "full_name": "Mer Egee",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"96": {
+ "name": "oEXT",
+ "full_name": "Atlantique Exterieur",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"97": {
+ "name": "mNVG",
+ "full_name": "Mer de Norvege",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"98": {
+ "name": "mNRD",
+ "full_name": "Mer du Nord",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"99": {
+ "name": "bHEL",
+ "full_name": "Baie de Heligolande",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"100": {
+ "name": "Skagerrak",
+ "full_name": "Atlantique Exterieur",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"101": {
+ "name": "mBAL",
+ "full_name": "Mer Baltique",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"102": {
+ "name": "gBOT",
+ "full_name": "Golfe de Botnie",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ }
+}
+
+}
