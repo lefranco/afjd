@@ -199,6 +199,21 @@
 	}
 },
 
+    "coasts": {
+        "1": {
+            "name": "ce"
+        },
+        "2": {
+            "name": "cn"
+        },
+        "3": {
+            "name": "cs"
+        },
+        "4": {
+            "name": "co"
+        }
+    },
+
 "zones": {
  "1": {
  "name": "ANA",
@@ -1014,7 +1029,61 @@
  "y_pos": 568,
  "x_legend_pos": 466,
  "y_legend_pos": 554
+ },
+ 
+ 
+"103": {
+ "name": "",
+ "full_name": "",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+"104": {
+ "name": "",
+ "full_name": "",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "105": {
+ "name": "",
+ "full_name": "",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "106": {
+ "name": "",
+ "full_name": "",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "107": {
+ "name": "",
+ "full_name": "",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
+ },
+ "108": {
+ "name": "",
+ "full_name": "",
+ "x_pos": 466,
+ "y_pos": 568,
+ "x_legend_pos": 466,
+ "y_legend_pos": 554
  }
+
+ 
+ 
+ 
 },
 
     "centers": {
