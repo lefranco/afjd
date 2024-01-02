@@ -396,6 +396,7 @@ class Application(tkinter.Frame):
 
         self._export_zone_button_table = {}
 
+        export_buttons_table = {}
         for number, zone in json_parameters_data['zones'].items():
 
             if zone['name']:
@@ -408,23 +409,32 @@ class Application(tkinter.Frame):
                 legend = f"{region_name}{coast_name}"
 
             export_button = tkinter.Button(frame_export_zones, text=legend, command=lambda number=number: export_zone_callback(int(number)))  # type: ignore
-            export_button.grid(row=(int(number) - 1) % BUTTONS_PER_COLUMN + 1, column=(int(number) - 1) // BUTTONS_PER_COLUMN + 1, sticky='we')
-
             self._export_zone_button_table[int(number)] = export_button
+
+            export_buttons_table[legend] = export_button
+
+        # display sorted (easier)
+        for num, (_, export_button) in enumerate(sorted(export_buttons_table.items(), key = lambda t: t[0])):
+            export_button.grid(row=num % BUTTONS_PER_COLUMN + 1, column=num // BUTTONS_PER_COLUMN + 1, sticky='we')
 
         frame_export_centers = tkinter.LabelFrame(main_frame, text="Export centers (click)")
         frame_export_centers.grid(row=2, column=4, sticky='nw')
 
         self._export_center_button_table = {}
 
+        export_buttons_table = {}
         for number in json_parameters_data['centers']:
 
             num_zone = json_variant_data['centers'][int(number) - 1]
             legend = json_parameters_data['zones'][str(num_zone)]['name']
             export_button = tkinter.Button(frame_export_centers, text=legend, command=lambda number=number: export_center_callback(int(number)))  # type: ignore
-            export_button.grid(row=(int(number) - 1) % BUTTONS_PER_COLUMN + 1, column=(int(number) - 1) // BUTTONS_PER_COLUMN + 1, sticky='we')
-
             self._export_center_button_table[int(number)] = export_button
+
+            export_buttons_table[legend] = export_button
+
+        # display sorted (easier)
+        for num, (_, export_button) in enumerate(sorted(export_buttons_table.items(), key = lambda t: t[0])):
+            export_button.grid(row=num % BUTTONS_PER_COLUMN + 1, column=num // BUTTONS_PER_COLUMN + 1, sticky='we')
 
     def menu_complete_quit(self) -> None:
         """ as it says """
