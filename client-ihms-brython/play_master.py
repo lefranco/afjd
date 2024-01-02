@@ -1090,12 +1090,14 @@ def game_master():
 
         play_low.MY_SUB_PANEL <= html.H3("Debrief de la partie")
 
-        if (play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']) or play_low.POSITION_DATA.solo_detected():
-            play_low.MY_SUB_PANEL <= debrief_form
+        if play_low.GAME_PARAMETERS_LOADED['current_state'] != 1:
+            play_low.MY_SUB_PANEL <= "Partie en attente ou terminée..."
+        elif not((play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']) or play_low.POSITION_DATA.solo_detected()):
+            play_low.MY_SUB_PANEL <= "Partie toujours en cours..."
         else:
-            play_low.MY_SUB_PANEL <= "Partie en cours..."
+            play_low.MY_SUB_PANEL <= debrief_form
 
-    play_low.MY_SUB_PANEL <= html.H3("Aide memoire")
+    play_low.MY_SUB_PANEL <= html.H3("Aide mémoire")
 
     help_table = html.TABLE()
     for question_txt, answer_txt in HELP_CONTENT_TABLE.items():
