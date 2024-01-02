@@ -1,4 +1,10 @@
 {
+"author": "(Inconnu)",
+
+"map": {
+    "width": 1000,
+    "height": 784
+},
 
 "regions": {
         "1": {
@@ -19,7 +25,6 @@
             "name": "Flotte"
         }
     },
-
 
 "roles": {
 	"0": {
