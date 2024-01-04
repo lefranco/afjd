@@ -496,9 +496,9 @@ class DebriefGameRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg="Game is not ongoing")
 
         # game must be finished or soloed
-        if not (game.game_finished() or game.game_soloed(sql_executor)):
+        if not (game.soloed or game.finished):
             del sql_executor
-            flask_restful.abort(404, msg="Game is not finished or soloed")
+            flask_restful.abort(404, msg="Game is not soloed or finished")
 
         # debrief
         game.debrief()
@@ -1011,7 +1011,7 @@ class GameStateListRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type} for g in games_list if g.current_state == int(current_state)}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'finished': g.finished, 'soloed': g.soloed} for g in games_list if g.current_state == int(current_state)}
 
         return data, 200
 
@@ -1034,7 +1034,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type} for g in games_list}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'finished': g.finished, 'soloed': g.soloed} for g in games_list}
 
         return data, 200
 
@@ -1143,7 +1143,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
             # create game here
             identifier = games.Game.free_identifier(sql_executor)
-            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0)
+            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0)
             _ = game.load_json(args)
             game.update_database(sql_executor)
 
@@ -2280,7 +2280,7 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
             imagined_unit_dict[str(role_num)].append([type_num, zone_num])
 
         # game not ongoing or game master or game actually finished or soloed: you get get a clear picture
-        if game.current_state != 1 or int(role_id) == 0 or game.game_finished() or game.game_soloed(sql_executor):
+        if game.current_state != 1 or int(role_id) == 0 or game.soloed or game.finished:
             del sql_executor
             data = {
                 'ownerships': ownership_dict,
@@ -2552,7 +2552,7 @@ class GameFogOfWarReportRessource(flask_restful.Resource):  # type: ignore
         assert report is not None
 
         # game not ongoing or game master or game actually finished or soloed: you get get a clear picture
-        if game.current_state != 1 or int(role_id) == 0 or game.game_finished() or game.game_soloed(sql_executor):
+        if game.current_state != 1 or int(role_id) == 0 or game.soloed or game.finished:
             # extract report data
             content = report.content
             del sql_executor
@@ -2690,7 +2690,7 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         report_txt = transition.report_txt
 
         # game not ongoing or game master or game actually finished or soloed: you get get a clear picture
-        if game.current_state != 1 or int(role_id) == 0 or game.game_finished() or game.game_soloed(sql_executor):
+        if game.current_state != 1 or int(role_id) == 0 or game.soloed or game.finished:
             del sql_executor
             data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
             return data, 200
@@ -3026,14 +3026,14 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         with MOVE_GAME_LOCK_TABLE[game.name]:
 
             # game must not be actually finished
-            if game.game_finished():
-                del sql_executor
-                flask_restful.abort(403, msg="Game seems to be actually finished")
-
-            # game must not be actually finished
-            if game.game_soloed(sql_executor):
+            if game.soloed:
                 del sql_executor
                 flask_restful.abort(403, msg="Game seems to be actually soloed")
+
+            # game must not be actually finished
+            if game.finished:
+                del sql_executor
+                flask_restful.abort(403, msg="Game seems to be actually finished")
 
             # check orders are required
             actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
@@ -3203,15 +3203,15 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # begin of protected section
         with MOVE_GAME_LOCK_TABLE[game.name]:
 
-            # must not be finished
-            if game.game_finished():
-                del sql_executor
-                flask_restful.abort(403, msg="Game is finished!")
-
             # must not be soloed
-            if game.game_soloed(sql_executor):
+            if game.soloed:
                 del sql_executor
                 flask_restful.abort(403, msg="Game is soloed!")
+
+            # must not be finished
+            if game.finished:
+                del sql_executor
+                flask_restful.abort(403, msg="Game is finished!")
 
             # check orders are required
             # needed list : those who need to submit orders

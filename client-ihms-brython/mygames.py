@@ -977,7 +977,7 @@ def my_games(state_name):
     sort_by = storage['SORT_BY_MYGAMES']
     reverse_needed = bool(storage['REVERSE_NEEDED_MYGAMES'] == 'True')
 
-    gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
+    gameover_table = {int(game_id_str): data['soloed'] or data['finished'] for game_id_str, data in games_dict.items()}
 
     # conversion
     game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
@@ -999,7 +999,7 @@ def my_games(state_name):
     elif sort_by == 'role_played':
         def key_function(g): return int(dict_role_id.get(g[0], -1))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'deadline':
-        def key_function(g): return int(gameover[int(g[0])]), int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        def key_function(g): return int(gameover_table[int(g[0])]), int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
@@ -1123,11 +1123,15 @@ def my_games(state_name):
                         factor = 60 * 60
 
                     # game over
-                    if gameover[game_id]:
-                        colour = config.GAMEOVER_COLOUR
+                    if gameover_table[game_id]:
+                        if data['soloed']:
+                            stats = "(solo)"
+                            colour = config.SOLOED_COLOUR
+                        elif data['finished']:
+                            stats = "(terminée)"
+                            colour = config.FINISHED_COLOUR
                         # keep value only for game master
                         if role_id is None or role_id != 0:
-                            stats = "(terminée)"
                             explanation = "Pas de date limite : la partie est terminée parce qu'arrivée à échéance"
                         else:
                             explanation = "La date indiquée n'est pas une date limite, mais plutôt une date à laquelle il faudra agir sur cette partie que vous arbitrez"
@@ -1172,7 +1176,7 @@ def my_games(state_name):
 
             if field == 'all_orders_submitted':
                 value = "-"
-                if gameover[game_id]:
+                if gameover_table[game_id]:
                     value = "-"
                 else:
                     if role_id is not None:
@@ -1189,7 +1193,7 @@ def my_games(state_name):
 
             if field == 'all_agreed':
                 value = "-"
-                if gameover[game_id]:
+                if gameover_table[game_id]:
                     value = "-"
                 else:
                     if role_id is not None:
@@ -1203,7 +1207,7 @@ def my_games(state_name):
 
             if field == 'orders_submitted':
                 value = ""
-                if gameover[game_id]:
+                if gameover_table[game_id]:
                     value = "-"
                 else:
                     if role_id is not None:
@@ -1221,7 +1225,7 @@ def my_games(state_name):
 
             if field == 'agreed':
                 value = ""
-                if gameover[game_id]:
+                if gameover_table[game_id]:
                     value = "-"
                 else:
                     if role_id is not None:

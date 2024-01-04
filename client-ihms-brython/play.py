@@ -232,8 +232,10 @@ def countdown():
         factor = 60 * 60
 
     # game finished or solo
-    if play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']:
-        colour = config.GAMEOVER_COLOUR
+    if play_low.GAME_PARAMETERS_LOADED['soloed']:
+        colour = config.SOLOED_COLOUR
+    elif play_low.GAME_PARAMETERS_LOADED['finished']:
+        colour = config.FINISHED_COLOUR
     # we are after everything !
     elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
         colour = config.CRITICAL_COLOUR
@@ -336,9 +338,6 @@ def render(panel_middle):
     play_low.load_static_stuff()
     play_low.load_dynamic_stuff()
     play_low.load_special_stuff()
-
-    if play_low.POSITION_DATA.solo_detected():
-        alert("Attention : solo sur cette partie !")
 
     # initiates new countdown
     countdown()
