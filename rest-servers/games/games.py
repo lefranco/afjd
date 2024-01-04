@@ -133,7 +133,7 @@ class Game:
         sql_executor.execute("CREATE TABLE games (identifier INTEGER UNIQUE PRIMARY KEY, name STR, game_data game)")
         sql_executor.execute("CREATE UNIQUE INDEX name_game ON games (name)")
 
-    def __init__(self, identifier: int, name: str, description: str, variant: str, fog: bool, archive: bool, anonymous: bool, nomessage_current: bool, nopress_current: bool, fast: bool, scoring: str, deadline: int, deadline_hour: int, deadline_sync: bool, grace_duration: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, used_for_elo: bool, play_weekend: bool, manual: bool, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, current_state: int, game_type: int) -> None:
+    def __init__(self, identifier: int, name: str, description: str, variant: str, fog: bool, archive: bool, anonymous: bool, finished: bool, soloed: bool, nomessage_current: bool, nopress_current: bool, fast: bool, scoring: str, deadline: int, deadline_hour: int, deadline_sync: bool, grace_duration: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, used_for_elo: bool, play_weekend: bool, manual: bool, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, current_state: int, game_type: int) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -146,6 +146,8 @@ class Game:
         self._fog = fog
         self._archive = archive
         self._anonymous = anonymous
+        self._finished = finished
+        self._soloed = soloed
         self._nomessage_current = nomessage_current
         self._nopress_current = nopress_current
         self._fast = fast
@@ -211,6 +213,10 @@ class Game:
         if 'anonymous' in json_dict and json_dict['anonymous'] is not None and json_dict['anonymous'] != self._anonymous:
             self._anonymous = json_dict['anonymous']
             changed = True
+
+        # finished cannot be changed directly
+
+        # soloed cannot be changed directly
 
         if 'nomessage_current' in json_dict and json_dict['nomessage_current'] is not None and json_dict['nomessage_current'] != self._nomessage_current:
             self._nomessage_current = json_dict['nomessage_current']
@@ -339,13 +345,6 @@ class Game:
                 self._current_state = 0
             changed = True
 
-        if 'current_state' in json_dict and json_dict['current_state'] is not None and json_dict['current_state'] != self._current_state:
-            self._current_state = json_dict['current_state']
-            # safety
-            if self._current_state not in [0, 1, 2, 3]:
-                self._current_state = 0
-            changed = True
-
         if 'game_type' in json_dict and json_dict['game_type'] is not None and json_dict['game_type'] != self._game_type:
             self._game_type = json_dict['game_type']
             changed = True
@@ -386,6 +385,8 @@ class Game:
             'nb_max_cycles_to_play': self._nb_max_cycles_to_play,
             'current_state': self._current_state,
             'game_type': self._game_type,
+            'finished': self._finished,
+            'soloed': self._soloed,
         }
         return json_dict
 
@@ -536,11 +537,60 @@ class Game:
             num += 1
             self.put_role(sql_executor, player_id, role_id)
 
-    def advance(self) -> None:
+    def detect_finished(self) -> bool:
+        """ detect_finished """
+
+        # game over when adjustments to play
+        if self._current_advancement % 5 != 4:
+            return False
+
+        # game over when last year
+        if (self._current_advancement + 1) // 5 < self._nb_max_cycles_to_play:
+            return False
+
+        return True
+
+    def detect_soloed(self, sql_executor: database.SqlExecutor) -> bool:
+        """ detect_soloed """
+
+        # get variant
+        variant_name = self.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+
+        # some variants ignore solo
+        if variant_data['ignore_solo']:
+            return False
+
+        game_id = self.identifier
+
+        # situation: get ownerships
+        game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
+        list_owners = [r for _, _, r in game_ownerships]
+        counter = collections.Counter(list_owners)
+        _, ncentersmax = counter.most_common(1)[0]
+
+        # game over when adjustments to play
+        if ncentersmax > len(variant_data['centers']) // 2:
+            return True
+
+        return False
+
+    def advance(self, sql_executor: database.SqlExecutor) -> None:
         """ advance the game """
 
         # advancement
         self._current_advancement += 1
+
+        # solo
+        if not self._soloed:
+            if self.detect_soloed(sql_executor):
+                self._soloed = True
+
+        # end of the game
+        if not self._finished:
+            if self.detect_finished():
+                self._finished = True
 
     def push_deadline(self) -> None:
         """ push_deadline """
@@ -658,45 +708,6 @@ class Game:
         """ last_season """
         return self._current_advancement == (self._nb_max_cycles_to_play - 1) * 5 + 2
 
-    def game_finished(self) -> bool:
-        """ game_finished """
-
-        # game over when adjustments to play
-        if self._current_advancement % 5 != 4:
-            return False
-
-        # game over when last year
-        if (self._current_advancement + 1) // 5 < self._nb_max_cycles_to_play:
-            return False
-
-        return True
-
-    def game_soloed(self, sql_executor: database.SqlExecutor) -> bool:
-        """ game_soloed """
-
-        # get variant
-        variant_name = self.variant
-        variant_data = variants.Variant.get_by_name(variant_name)
-        assert variant_data is not None
-
-        # some variants ignore solo
-        if variant_data['ignore_solo']:
-            return False
-
-        game_id = self.identifier
-
-        # situation: get ownerships
-        game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
-        list_owners = [r for _, _, r in game_ownerships]
-        counter = collections.Counter(list_owners)
-        _, ncentersmax = counter.most_common(1)[0]
-
-        # game over when adjustments to play
-        if ncentersmax > len(variant_data['centers']) // 2:
-            return True
-
-        return False
-
     def debrief(self) -> None:
         """ debrief the game """
 
@@ -809,16 +820,24 @@ class Game:
         """ property """
         return self._game_type
 
+    @property
+    def finished(self) -> bool:
+        """ property """
+        return self._finished
+
+    @property
+    def soloed(self) -> bool:
+        """ property """
+        return self._soloed
+
     def __str__(self) -> str:
-        return f"name={self._name} variant={self._variant} fog={self._fog} description={self._description} archive={self._archive} anonymous={self._anonymous} nomessage_current={self._nomessage_current} nopress_current={self._nopress_current} fast={self._fast} scoring={self._scoring} deadline={self._deadline} deadline_hour={self._deadline_hour} deadline_sync={self._deadline_sync} grace_duration={self._grace_duration} speed_moves={self._speed_moves} cd_possible_moves={self._cd_possible_moves} speed_retreats={self._speed_retreats} cd_possible_retreats={self._cd_possible_retreats} speed_adjustments={self._speed_adjustments} cd_possible_builds={self._cd_possible_builds} used_for_elo={self._used_for_elo} play_weekend={self._play_weekend} manual={self._manual} access_restriction_reliability={self._access_restriction_reliability} access_restriction_regularity={self._access_restriction_regularity} access_restriction_performance={self._access_restriction_performance} current_advancement={self._current_advancement} nb_max_cycles_to_play={self._nb_max_cycles_to_play} current_state={self._current_state} game_type={self._game_type}"
+        return f"name={self._name} variant={self._variant} fog={self._fog} description={self._description} archive={self._archive} anonymous={self._anonymous} finished={self._finished} soloed={self._soloed} nomessage_current={self._nomessage_current} nopress_current={self._nopress_current} fast={self._fast} scoring={self._scoring} deadline={self._deadline} deadline_hour={self._deadline_hour} deadline_sync={self._deadline_sync} grace_duration={self._grace_duration} speed_moves={self._speed_moves} cd_possible_moves={self._cd_possible_moves} speed_retreats={self._speed_retreats} cd_possible_retreats={self._cd_possible_retreats} speed_adjustments={self._speed_adjustments} cd_possible_builds={self._cd_possible_builds} used_for_elo={self._used_for_elo} play_weekend={self._play_weekend} manual={self._manual} access_restriction_reliability={self._access_restriction_reliability} access_restriction_regularity={self._access_restriction_regularity} access_restriction_performance={self._access_restriction_performance} current_advancement={self._current_advancement} nb_max_cycles_to_play={self._nb_max_cycles_to_play} current_state={self._current_state} game_type={self._game_type}"
 
     def adapt_game(self) -> bytes:
         """ To put an object in database """
 
         compressed_description = database.compress_text(self._description)
-        filler1 = 0  # slot is available
-        filler2 = 0  # slot is available
-        return (f"{self._identifier}{database.STR_SEPARATOR}{self._name}{database.STR_SEPARATOR}{compressed_description}{database.STR_SEPARATOR}{self._variant}{database.STR_SEPARATOR}{int(bool(self._archive))}{database.STR_SEPARATOR}{int(bool(self._anonymous))}{database.STR_SEPARATOR}{filler1}{database.STR_SEPARATOR}{filler2}{database.STR_SEPARATOR}{int(bool(self._nomessage_current))}{database.STR_SEPARATOR}{int(bool(self._nopress_current))}{database.STR_SEPARATOR}{int(bool(self._fast))}{database.STR_SEPARATOR}{self._scoring}{database.STR_SEPARATOR}{self._deadline}{database.STR_SEPARATOR}{self._deadline_hour}{database.STR_SEPARATOR}{int(bool(self._deadline_sync))}{database.STR_SEPARATOR}{self._grace_duration}{database.STR_SEPARATOR}{self._speed_moves}{database.STR_SEPARATOR}{int(bool(self._cd_possible_moves))}{database.STR_SEPARATOR}{self._speed_retreats}{database.STR_SEPARATOR}{int(bool(self._cd_possible_retreats))}{database.STR_SEPARATOR}{self._speed_adjustments}{database.STR_SEPARATOR}{int(bool(self._cd_possible_builds))}{database.STR_SEPARATOR}{int(bool(self._used_for_elo))}{database.STR_SEPARATOR}{int(bool(self._play_weekend))}{database.STR_SEPARATOR}{int(bool(self._manual))}{database.STR_SEPARATOR}{self._access_restriction_reliability}{database.STR_SEPARATOR}{self._access_restriction_regularity}{database.STR_SEPARATOR}{self._access_restriction_performance}{database.STR_SEPARATOR}{self._current_advancement}{database.STR_SEPARATOR}{self._nb_max_cycles_to_play}{database.STR_SEPARATOR}{int(bool(self._fog))}{database.STR_SEPARATOR}{self._current_state}{database.STR_SEPARATOR}{self._game_type}").encode('ascii')
+        return (f"{self._identifier}{database.STR_SEPARATOR}{self._name}{database.STR_SEPARATOR}{compressed_description}{database.STR_SEPARATOR}{self._variant}{database.STR_SEPARATOR}{int(bool(self._archive))}{database.STR_SEPARATOR}{int(bool(self._anonymous))}{database.STR_SEPARATOR}{int(bool(self._finished))}{database.STR_SEPARATOR}{int(bool(self._soloed))}{database.STR_SEPARATOR}{int(bool(self._nomessage_current))}{database.STR_SEPARATOR}{int(bool(self._nopress_current))}{database.STR_SEPARATOR}{int(bool(self._fast))}{database.STR_SEPARATOR}{self._scoring}{database.STR_SEPARATOR}{self._deadline}{database.STR_SEPARATOR}{self._deadline_hour}{database.STR_SEPARATOR}{int(bool(self._deadline_sync))}{database.STR_SEPARATOR}{self._grace_duration}{database.STR_SEPARATOR}{self._speed_moves}{database.STR_SEPARATOR}{int(bool(self._cd_possible_moves))}{database.STR_SEPARATOR}{self._speed_retreats}{database.STR_SEPARATOR}{int(bool(self._cd_possible_retreats))}{database.STR_SEPARATOR}{self._speed_adjustments}{database.STR_SEPARATOR}{int(bool(self._cd_possible_builds))}{database.STR_SEPARATOR}{int(bool(self._used_for_elo))}{database.STR_SEPARATOR}{int(bool(self._play_weekend))}{database.STR_SEPARATOR}{int(bool(self._manual))}{database.STR_SEPARATOR}{self._access_restriction_reliability}{database.STR_SEPARATOR}{self._access_restriction_regularity}{database.STR_SEPARATOR}{self._access_restriction_performance}{database.STR_SEPARATOR}{self._current_advancement}{database.STR_SEPARATOR}{self._nb_max_cycles_to_play}{database.STR_SEPARATOR}{int(bool(self._fog))}{database.STR_SEPARATOR}{self._current_state}{database.STR_SEPARATOR}{self._game_type}").encode('ascii')
 
 
 def convert_game(buffer: bytes) -> Game:
@@ -834,10 +853,8 @@ def convert_game(buffer: bytes) -> Game:
     variant = tab[3].decode()
     archive = bool(int(tab[4].decode()))
     anonymous = bool(int(tab[5].decode()))
-
-    # slot 6 is available
-    # slot 7 is available
-
+    finished = bool(int(tab[6].decode()))
+    soloed = bool(int(tab[7].decode()))
     nomessage_current = bool(int(tab[8].decode()))
     nopress_current = bool(int(tab[9].decode()))
     fast = bool(int(tab[10].decode()))
@@ -864,7 +881,7 @@ def convert_game(buffer: bytes) -> Game:
     current_state = int(tab[31].decode())
     game_type = int(tab[32].decode())
 
-    game = Game(identifier, name, description, variant, fog, archive, anonymous, nomessage_current, nopress_current, fast, scoring, deadline, deadline_hour, deadline_sync, grace_duration, speed_moves, cd_possible_moves, speed_retreats, cd_possible_retreats, speed_adjustments, cd_possible_builds, used_for_elo, play_weekend, manual, access_restriction_reliability, access_restriction_regularity, access_restriction_performance, current_advancement, nb_max_cycles_to_play, current_state, game_type)
+    game = Game(identifier, name, description, variant, fog, archive, anonymous, finished, soloed, nomessage_current, nopress_current, fast, scoring, deadline, deadline_hour, deadline_sync, grace_duration, speed_moves, cd_possible_moves, speed_retreats, cd_possible_retreats, speed_adjustments, cd_possible_builds, used_for_elo, play_weekend, manual, access_restriction_reliability, access_restriction_regularity, access_restriction_performance, current_advancement, nb_max_cycles_to_play, current_state, game_type)
     return game
 
 

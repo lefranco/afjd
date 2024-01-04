@@ -1298,7 +1298,7 @@ def all_missing_orders():
 
     time_stamp_now = time.time()
 
-    gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
+    gameover_table = {int(game_id_str): data['soloed'] or data['finished'] for game_id_str, data in games_dict.items()}
 
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
@@ -1317,7 +1317,7 @@ def all_missing_orders():
         game_id = int(game_id_str)
 
         # must not be game over
-        if gameover[game_id]:
+        if gameover_table[game_id]:
             continue
 
         # must be late
@@ -1404,10 +1404,14 @@ def all_missing_orders():
                     factor = 60 * 60
 
                 # game over
-                if gameover[game_id]:
+                if gameover_table[game_id]:
                     # should not happen here
-                    colour = config.GAMEOVER_COLOUR
-                    value = "(terminée)"
+                    if data['soloed']:
+                        colour = config.SOLOED_COLOUR
+                        value = "(solo)"
+                    elif data['finished']:
+                        colour = config.FINISHED_COLOUR
+                        value = "(terminée)"
 
                 # we are after everything !
                 elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
@@ -1666,7 +1670,7 @@ def show_player_games(pseudo_player, game_list):
 
     if game_list:
 
-        gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
+        gameover_table = {int(game_id_str): data['soloed'] or data['finished'] for game_id_str, data in games_dict.items()}
 
         # conversion
         game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
@@ -1742,9 +1746,13 @@ def show_player_games(pseudo_player, game_list):
                         factor = 60 * 60
 
                     # game over
-                    if gameover[game_id]:
-                        colour = config.GAMEOVER_COLOUR
-                        value = "(terminée)"
+                    if gameover_table[game_id]:
+                        if data['soloed']:
+                            colour = config.SOLOED_COLOUR
+                            value = "(solo)"
+                        elif data['finished']:
+                            colour = config.FINISHED_COLOUR
+                            value = "(terminée)"
 
                     # we are after everything !
                     elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:

@@ -579,10 +579,6 @@ def game_master():
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
 
-            # warn if solo appeared
-            if play_low.POSITION_DATA.solo_detected():
-                alert("Attention : solo sur cette partie !")
-
             play_low.load_special_stuff()
             game_master()
 
@@ -729,7 +725,6 @@ def game_master():
         alert("Attention : la partie est terminée !")
 
     advancement_loaded = play_low.GAME_PARAMETERS_LOADED['current_advancement']
-    advancement_season, _ = common.get_short_season(advancement_loaded, play_low.VARIANT_DATA)
 
     # now we can display
 
@@ -1084,9 +1079,7 @@ def game_master():
 
         play_low.MY_SUB_PANEL <= html.H3("Debrief de la partie")
 
-        if play_low.GAME_PARAMETERS_LOADED['current_state'] != 1:
-            play_low.MY_SUB_PANEL <= "Partie en attente ou terminée..."
-        elif not ((play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']) or play_low.POSITION_DATA.solo_detected()):
+        if not (play_low.GAME_PARAMETERS_LOADED['finished'] or play_low.GAME_PARAMETERS_LOADED['soloed']):
             play_low.MY_SUB_PANEL <= "Partie toujours en cours..."
         else:
             play_low.MY_SUB_PANEL <= debrief_form

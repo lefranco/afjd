@@ -1705,13 +1705,6 @@ class Position(Renderable):
         """ units_list """
         return self._units
 
-    def solo_detected(self):
-        """ Is a solo detected ? """
-        if self._variant.ignore_solo:
-            return False
-        raw_list = [len([o for o in self._ownerships if o.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0]
-        return max(raw_list) > len(self._variant.centers) // 2
-
     def role_ratings(self):
         """ a rating of roles """
         raw_dict = {self._variant.role_name_table[self._variant.roles[i]]: len([o for o in self._ownerships if o.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0}
