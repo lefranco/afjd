@@ -90,11 +90,11 @@ def show_technical():
 
     # --
 
-    title6 = html.H3("Création de fichier de tournoi")
+    title6 = html.H3("Problème de l'allocation des pays pour les très gros tournois")
     MY_SUB_PANEL <= title6
 
     link61 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
-    link61 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
+    link61 <= "Comment allouer les joueurs dans les parties d'un très gros tournoi"
     MY_SUB_PANEL <= link61
 
     MY_SUB_PANEL <= html.P()
