@@ -51,7 +51,7 @@ OPTIONS = {
     'Connexion': "Se connecter au site par mot de passe",
     'Mon compte': "Pour éditer les paramètres de son compte sur le site (il faut être connecté)",
     'Rejoindre une partie': "Pour se mettre dans une partie qui va bientôt commencer (ou obtenir une liste de parties)",
-    'Retourner dans la partie': "Revient dans la partie sélectionnée pout y jouer",
+    'Retourner dans la partie': "Revient dans la partie sélectionnée pour y jouer",
     'Mes parties': "La liste des parties dans laquelle vous jouez (il faut être connecté)",
     'Editer partie': "Pour modifier la partie (il faut être un arbitre) ou créer une partie",
     'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
