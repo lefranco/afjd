@@ -330,7 +330,17 @@ def show_games():
                 deadline_loaded = value
                 value = ""
 
-                if int(data['current_state']) == 1:
+                # game over
+                if gameover_table[game_id]:
+
+                    if data['soloed']:
+                        colour = config.SOLOED_COLOUR
+                        value = "(solo)"
+                    elif data['finished']:
+                        colour = config.FINISHED_COLOUR
+                        value = "(terminée)"
+
+                elif int(data['current_state']) == 1:
 
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
                     datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
@@ -341,17 +351,8 @@ def show_games():
                     else:
                         factor = 60 * 60
 
-                    # game over
-                    if gameover_table[game_id]:
-                        if data['soloed']:
-                            colour = config.SOLOED_COLOUR
-                            value = "(solo)"
-                        elif data['finished']:
-                            colour = config.FINISHED_COLOUR
-                            value = "(terminée)"
-
                     # we are after everything !
-                    elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
+                    if time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
                         colour = config.CRITICAL_COLOUR
                     # we are after deadline + grace
                     elif time_stamp_now > deadline_loaded + factor * data['grace_duration']:
