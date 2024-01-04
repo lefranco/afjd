@@ -409,14 +409,11 @@ allgames.show_game_selected()
 
 document <= html.B("Contactez le support par courriel en cas de problème (cf. page d'accueil / onglet 'déclarer un incident'). Merci !")
 document <= html.BR()
-VERSION_VALUE = storage['VERSION']
-document <= html.I(f"Vous utilisez la version du {VERSION_VALUE}")
-document <= html.BR()
 
 # home page loading time
 END_TIME = time.time()
 ELAPSED = END_TIME - START_TIME
-home.show_load_time(ELAPSED)
+home.show_load_time_version(ELAPSED)
 
 # spinner dies
 spinner = document['spinner']
