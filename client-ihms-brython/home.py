@@ -1032,8 +1032,12 @@ def social():
     document['social_link'].click()
 
 
-def show_load_time(load_time):
-    """ show_load_time """
+def show_load_time_version(load_time):
+    """ show_load_time_version """
+
+    MY_SUB_PANEL <= html.BR()
+    version_value = storage['VERSION']
+    MY_SUB_PANEL <= html.I(f"Vous utilisez la version du {version_value}")
 
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.I(f"Temps de chargement de la page d'accueil : {load_time:.2f} secs")
