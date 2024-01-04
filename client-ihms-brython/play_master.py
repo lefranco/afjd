@@ -1092,7 +1092,7 @@ def game_master():
 
         if play_low.GAME_PARAMETERS_LOADED['current_state'] != 1:
             play_low.MY_SUB_PANEL <= "Partie en attente ou terminée..."
-        elif not((play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']) or play_low.POSITION_DATA.solo_detected()):
+        elif not ((play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']) or play_low.POSITION_DATA.solo_detected()):
             play_low.MY_SUB_PANEL <= "Partie toujours en cours..."
         else:
             play_low.MY_SUB_PANEL <= debrief_form
