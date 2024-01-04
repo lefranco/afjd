@@ -6634,7 +6634,6 @@ class ClearOldDelaysRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         if pseudo != COMMUTER_ACCOUNT:
-            del sql_executor
             flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to clear old delays")
 
         sql_executor = database.SqlExecutor()
