@@ -1111,7 +1111,23 @@ def my_games(state_name):
                 value = ""
                 explanation = ""
 
-                if int(data['current_state']) == 1:
+                # game over
+                if gameover_table[game_id]:
+
+                    if data['soloed']:
+                        stats = "(solo)"
+                        colour = config.SOLOED_COLOUR
+                    elif data['finished']:
+                        stats = "(terminée)"
+                        colour = config.FINISHED_COLOUR
+
+                    # keep value only for game master
+                    if role_id is None or role_id != 0:
+                        explanation = "Pas de date limite : la partie est terminée parce qu'arrivée à échéance"
+                    else:
+                        explanation = "La date indiquée n'est pas une date limite, mais plutôt une date à laquelle il faudra agir sur cette partie que vous arbitrez"
+
+                elif int(data['current_state']) == 1:
 
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
                     datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
@@ -1122,22 +1138,8 @@ def my_games(state_name):
                     else:
                         factor = 60 * 60
 
-                    # game over
-                    if gameover_table[game_id]:
-                        if data['soloed']:
-                            stats = "(solo)"
-                            colour = config.SOLOED_COLOUR
-                        elif data['finished']:
-                            stats = "(terminée)"
-                            colour = config.FINISHED_COLOUR
-                        # keep value only for game master
-                        if role_id is None or role_id != 0:
-                            explanation = "Pas de date limite : la partie est terminée parce qu'arrivée à échéance"
-                        else:
-                            explanation = "La date indiquée n'est pas une date limite, mais plutôt une date à laquelle il faudra agir sur cette partie que vous arbitrez"
-
                     # we are after everything !
-                    elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
+                    if time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
                         colour = config.CRITICAL_COLOUR
                         explanation = "La date limite est fortement dépassée"
                     # we are after deadline + grace
@@ -1176,9 +1178,7 @@ def my_games(state_name):
 
             if field == 'all_orders_submitted':
                 value = "-"
-                if gameover_table[game_id]:
-                    value = "-"
-                else:
+                if not gameover_table[game_id]:
                     if role_id is not None:
                         if not data['anonymous'] or role_id == 0:
                             submitted_roles_list = submitted_data['submitted']
@@ -1193,9 +1193,7 @@ def my_games(state_name):
 
             if field == 'all_agreed':
                 value = "-"
-                if gameover_table[game_id]:
-                    value = "-"
-                else:
+                if not gameover_table[game_id]:
                     if role_id is not None:
                         if not data['anonymous'] or role_id == 0:
                             agreed_now_roles_list = submitted_data['agreed_now']
@@ -1206,14 +1204,10 @@ def my_games(state_name):
                             value = html.DIV(stats, title="Abbréviations : ma : les accords pour résoudre maintenant, dl : les accords pour résoudre à la date limite")
 
             if field == 'orders_submitted':
-                value = ""
-                if gameover_table[game_id]:
-                    value = "-"
-                else:
+                value = "-"
+                if not gameover_table[game_id]:
                     if role_id is not None:
-                        if role_id == 0:
-                            value = "-"
-                        else:
+                        if role_id != 0:
                             submitted_roles_list = submitted_data['submitted']
                             needed_roles_list = submitted_data['needed']
                             if role_id in submitted_roles_list:
@@ -1224,14 +1218,10 @@ def my_games(state_name):
                                 value = flag
 
             if field == 'agreed':
-                value = ""
-                if gameover_table[game_id]:
-                    value = "-"
-                else:
+                value = "-"
+                if not gameover_table[game_id]:
                     if role_id is not None:
-                        if role_id == 0:
-                            value = "-"
-                        else:
+                        if role_id != 0:
                             submitted_roles_list = submitted_data['submitted']
                             agreed_now_roles_list = submitted_data['agreed_now']
                             agreed_after_roles_list = submitted_data['agreed_after']

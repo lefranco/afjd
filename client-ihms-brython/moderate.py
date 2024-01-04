@@ -1413,22 +1413,24 @@ def all_missing_orders():
                         colour = config.FINISHED_COLOUR
                         value = "(terminée)"
 
-                # we are after everything !
-                elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
-                    colour = config.CRITICAL_COLOUR
-                # we are after deadline + grace
-                elif time_stamp_now > deadline_loaded + factor * data['grace_duration']:
-                    colour = config.PASSED_GRACE_COLOUR
-                # we are after deadline + slight
-                elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
-                    colour = config.PASSED_DEADLINE_COLOUR
-                # we are slightly after deadline
-                elif time_stamp_now > deadline_loaded:
-                    colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
-                # deadline is today
-                elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
-                    # should not happen here
-                    colour = config.APPROACHING_DEADLINE_COLOUR
+                elif int(data['current_state']) == 1:
+
+                    # we are after everything !
+                    if time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
+                        colour = config.CRITICAL_COLOUR
+                    # we are after deadline + grace
+                    elif time_stamp_now > deadline_loaded + factor * data['grace_duration']:
+                        colour = config.PASSED_GRACE_COLOUR
+                    # we are after deadline + slight
+                    elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
+                        colour = config.PASSED_DEADLINE_COLOUR
+                    # we are slightly after deadline
+                    elif time_stamp_now > deadline_loaded:
+                        colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
+                    # deadline is today
+                    elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
+                        # should not happen here
+                        colour = config.APPROACHING_DEADLINE_COLOUR
 
             if field == 'current_advancement':
                 advancement_loaded = value
@@ -1754,21 +1756,23 @@ def show_player_games(pseudo_player, game_list):
                             colour = config.FINISHED_COLOUR
                             value = "(terminée)"
 
-                    # we are after everything !
-                    elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
-                        colour = config.CRITICAL_COLOUR
-                    # we are after deadline + grace
-                    elif time_stamp_now > deadline_loaded + factor * data['grace_duration']:
-                        colour = config.PASSED_GRACE_COLOUR
-                    # we are after deadline + slight
-                    elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
-                        colour = config.PASSED_DEADLINE_COLOUR
-                    # we are slightly after deadline
-                    elif time_stamp_now > deadline_loaded:
-                        colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
-                    # deadline is today
-                    elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
-                        colour = config.APPROACHING_DEADLINE_COLOUR
+                    elif int(data['current_state']) == 1:
+
+                        # we are after everything !
+                        if time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
+                            colour = config.CRITICAL_COLOUR
+                        # we are after deadline + grace
+                        elif time_stamp_now > deadline_loaded + factor * data['grace_duration']:
+                            colour = config.PASSED_GRACE_COLOUR
+                        # we are after deadline + slight
+                        elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
+                            colour = config.PASSED_DEADLINE_COLOUR
+                        # we are slightly after deadline
+                        elif time_stamp_now > deadline_loaded:
+                            colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
+                        # deadline is today
+                        elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
+                            colour = config.APPROACHING_DEADLINE_COLOUR
 
                 if field == 'used_for_elo':
                     value = "Oui" if value else "Non"
