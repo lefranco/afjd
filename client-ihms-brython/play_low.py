@@ -469,6 +469,22 @@ def stack_role_flag(frame):
     frame <= html.BR()
 
 
+def civil_disorder_allowed(advancement_loaded):
+    """ civil_disorder_allowed """
+
+    advancement_season, _ = common.get_short_season(advancement_loaded, VARIANT_DATA)
+
+    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+        return GAME_PARAMETERS_LOADED['cd_possible_moves']
+    if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+        return GAME_PARAMETERS_LOADED['cd_possible_retreats']
+    if advancement_season in [mapping.SeasonEnum.ADJUST_SEASON]:
+        return GAME_PARAMETERS_LOADED['cd_possible_builds']
+
+    # should not happen
+    return False
+
+
 DEADLINE_COL = None
 COUNTDOWN_COL = None
 
@@ -557,9 +573,9 @@ def get_game_status():
     row <= col
 
     # DC
-    civil_disorder_possible = GAME_PARAMETERS_LOADED['cd_possible_moves'] or GAME_PARAMETERS_LOADED['cd_possible_retreats'] or GAME_PARAMETERS_LOADED['cd_possible_builds']
-    col = html.TD(f"D.C. {'Oui' if civil_disorder_possible else 'Non'}")
-    if civil_disorder_possible:
+    allowed = civil_disorder_allowed(advancement_loaded)
+    col = html.TD(f"D.C. {'Oui' if allowed else 'Non'}")
+    if allowed:
         col.style = {'color': 'red'}
     row <= col
 

@@ -12,7 +12,6 @@ import mydatetime
 import mydialog
 import config
 import common
-import mapping
 
 import play  # circular import
 import play_low
@@ -878,12 +877,7 @@ def game_master():
                 if pseudo_there:
                     if time_stamp_now > deadline_loaded:
 
-                        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
-                            allowed = play_low.GAME_PARAMETERS_LOADED['cd_possible_moves']
-                        if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                            allowed = play_low.GAME_PARAMETERS_LOADED['cd_possible_retreats']
-                        if advancement_season in [mapping.SeasonEnum.ADJUST_SEASON]:
-                            allowed = play_low.GAME_PARAMETERS_LOADED['cd_possible_builds']
+                        allowed = play_low.civil_disorder_allowed(advancement_loaded)
 
                         if allowed:
                             input_civil_disorder = html.INPUT(type="submit", value="Désordre civil", title="Ceci forcera des ordres de désordre civil pour le joueur dans le système", Class='btn-inside')
