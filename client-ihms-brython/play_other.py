@@ -499,48 +499,51 @@ def show_game_parameters():
 
     # table header
     thead = html.THEAD()
-    for field_name in "Nom du paramètre", "Valeur pour la partie", "Explication sommaire", "Effet (ce qui change concrètement)":
+    for field_name in "Nom du paramètre", "Type", "Valeur pour la partie", "Explication":
         col = html.TD(field_name)
         thead <= col
     game_params_table <= thead
 
     for key, value in play_low.GAME_PARAMETERS_LOADED.items():
 
-        if key in ['name', 'description', 'variant', 'deadline', 'current_state', 'current_advancement']:
+        if key in ['name', 'description', 'variant', 'deadline', 'current_state', 'current_advancement', 'finished', 'soloed']:
             continue
 
         row = html.TR()
 
-        parameter_name, explanation, effect = {
-            'fog': ("brouillard", "la visibilité des unités est restreinte", "Les joueurs ne voient que les unités voisines de leurs centres et leurs unités"),
-            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de courriel de notification aux joueurs"),
-            'used_for_elo': ("utilisée pour le calcul du élo", "oui ou non", "Le résultat de la partie est pris en compte dans le calcul du élo des joueurs du site"),
-            'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres - effacé à la fin de la partie"),
-            'nomessage_current': ("blocage des négociations", "oui ou non", "Si oui empêche l'utilisation des négociations - cette valeur est modifiable pendant la partie et effacée en fin de partie"),
-            'nopress_current': ("blocage des déclarations", "oui ou non", "Si oui empêche l'utilisation des déclarations - cette valeur est modifiable pendant la partie et effacée en fin de partie"),
-            'fast': ("en direct", "La partie est jouée en temps réel comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs"),
-            'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie"),
-            'scoring': ("code du scorage", "le système de scorage appliqué", "Se reporter à Accueil/Technique/Documents pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface"),
-            'deadline_hour': ("heure de la date limite", "entre 0 et 23", "Heure à laquelle le système placera la date limite dans la journée si la synchronisation est souhaitée"),
-            'deadline_sync': ("synchronisation de la date limite", "oui ou non", "Le système synchronise la date limite à une heure précise dans la journée"),
-            'grace_duration': ("durée de la grâce", "en heures", "L'arbitre tolère un retard d'autant d'heures avant de placer des désordres civils"),
-            'speed_moves': ("vitesse pour les mouvements", "en heures", "Le système ajoute autant d'heures avant une résolution de mouvement pour une date limite"),
-            'speed_retreats': ("vitesse pour les retraites", "en heures", "Le système ajoute autant d'heures avant une résolution de retraites pour une date limite"),
-            'speed_adjustments': ("vitesse pour les ajustements", "en heures", "Le système ajoute autant d'heures avant une résolution d'ajustements pour une date limite"),
-            'cd_possible_moves': ("désordre civil possible pour les mouvements", "oui ou non", "L'arbitre est en mesure d'imposer un désordre civil pour une phase de mouvements"),
-            'cd_possible_retreats': ("désordre civil possible pour les retraites", "oui ou non", "L'arbitre est en mesure d'imposer un désordre civil pour une phase de retraites"),
-            'cd_possible_builds': ("désordre civil possible pour les constructions", "oui ou non", "L'arbitre est en mesure d'imposer un désordre civil pour une phase d'ajustements"),
-            'play_weekend': ("on joue le week-end", "oui ou non", "Le système pourra placer une date limite pendant le week-end"),
-            'access_restriction_reliability': ("restriction d'accès sur la fiabilité", "(valeur)", "Un seuil de fiabilité est exigé pour rejoindre la partie"),
-            'access_restriction_regularity': ("restriction d'accès sur la régularité", "(valeur)", "Un seuil de régularité est exigé pour rejoindre la partie"),
-            'access_restriction_performance': ("restriction d'accès sur la performance", "(valeur)", "Un seuil de performance est exigé pour rejoindre la partie"),
-            'nb_max_cycles_to_play': ("nombre maximum de cycles (années) à jouer", "(valeur)", "Le système déclare la partie terminée si autant de cycles ont été joués"),
-            'game_type': ("type de la partie", "(valeur)", "Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : communication publique uniquement... BlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) pour parler d'autre chose que la partie")
+        parameter_name, parameter_type, parameter_explanation = {
+            'fog':                            ("brouillard",                                     "oui ou non", "Si oui, la visibilité des unités est restreinte, Les joueurs ne voient que les unités voisines de leurs centres et leurs unités"),
+            'archive':                        ("archive",                                        "oui ou non", "Si oui, la partie n'est pas jouée, elle est juste consultable, L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de courriel de notification aux joueurs"),
+            'used_for_elo':                   ("utilisée pour le calcul du élo",                 "oui ou non", "Si oui, Le résultat de la partie est pris en compte dans le calcul du élo des joueurs du site"),
+            'anonymous':                      ("anonyme",                                        "oui ou non", "Si oui, Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres - effacé à la fin de la partie"),
+            'nomessage_current':              ("blocage des négociations",                       "oui ou non", "Si oui le système empêche l'utilisation des négociations - cette valeur est modifiable pendant la partie et effacée en fin de partie"),
+            'nopress_current':                ("blocage des déclarations",                       "oui ou non", "Si oui le système empêche l'utilisation des déclarations - cette valeur est modifiable pendant la partie et effacée en fin de partie"),
+            'fast':                           ("en direct",                                      "oui ou non", "Si oui, La partie est jouée en temps réel comme sur un plateau, Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs"),
+            'manual':                         ("attribution manuelle des rôles",                 "oui ou non", "L'arbitre doit attribuer lui-même les roles, Le système ne réalise pas l'attribution des roles au démarrage de la partie"),
+            'scoring':                        ("scorage",                                        "choix sur liste", "Le système de scorage appliqué - Se reporter à Accueil/Technique/Documents pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface"),
+            'deadline_hour':                  ("heure de la date limite",                        "entier entre 0 et 23", "Heure à laquelle le système placera la date limite dans la journée si la synchronisation est souhaitée"),
+            'deadline_sync':                  ("synchronisation de la date limite",              "oui ou non", "Si oui, Le système synchronise la date limite à une heure précise dans la journée"),
+            'grace_duration':                 ("durée de la grâce",                              "entier en heures", "Décoratif : passé un retard d'autant d'heure la date limite change de couleur..."),
+            'speed_moves':                    ("vitesse pour les mouvements",                    "entier en heures", "Le système ajoute autant d'heures avant une résolution de mouvement pour une date limite"),
+            'speed_retreats':                 ("vitesse pour les retraites",                     "entier en heures", "Le système ajoute autant d'heures avant une résolution de retraites pour une date limite"),
+            'speed_adjustments':              ("vitesse pour les ajustements",                   "entier en heures", "Le système ajoute autant d'heures avant une résolution d'ajustements pour une date limite"),
+            'cd_possible_moves':              ("désordre civil possible pour les mouvements",    "oui ou non", "Si oui, L'arbitre est en mesure d'imposer un désordre civil pour une phase de mouvements"),
+            'cd_possible_retreats':           ("désordre civil possible pour les retraites",     "oui ou non", "Si oui, L'arbitre est en mesure d'imposer un désordre civil pour une phase de retraites"),
+            'cd_possible_builds':             ("désordre civil possible pour les constructions", "oui ou non", "Si oui, L'arbitre est en mesure d'imposer un désordre civil pour une phase d'ajustements"),
+            'play_weekend':                   ("jeu le week-end",                                "oui ou non", "Si oui, on joue le week-end et Le système pourra placer une date limite pendant le week-end"),
+            'access_restriction_reliability': ("restriction d'accès sur la fiabilité",           "entier", "Un minimum de fiabilité est exigé pour rejoindre la partie"),
+            'access_restriction_regularity':  ("restriction d'accès sur la régularité",          "entier", "Un minimum de régularité est exigé pour rejoindre la partie"),
+            'access_restriction_performance': ("restriction d'accès sur la performance",         "entier", "Un minimum de performance est exigé pour rejoindre la partie"),
+            'nb_max_cycles_to_play':          ("nombre maximum de cycles (années) à jouer",      "entier", "Durée de la partie : Le système déclare la partie terminée si autant de cycles ont été joués"),
+            'game_type':                      ("type de la partie",                              "choix sur liste", "Type de la partie : Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : communication publique uniquement... BlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) pour parler d'autre chose que la partie"),
 
         }[key]
 
-        col1 = html.TD(html.B(parameter_name))
-        row <= col1
+        col = html.TD(html.B(parameter_name))
+        row <= col
+
+        col = html.TD(parameter_type)
+        row <= col
 
         if key == 'game_type':
             parameter_value = game_type_conv[value]
@@ -551,16 +554,12 @@ def show_game_parameters():
         else:
             parameter_value = value
 
-        col2 = html.TD(html.B(parameter_value), Class='important')
-        row <= col2
+        col = html.TD(html.B(parameter_value), Class='important')
+        row <= col
 
-        # some more info
 
-        col3 = html.TD(explanation)
-        row <= col3
-
-        col4 = html.TD(effect)
-        row <= col4
+        col = html.TD(parameter_explanation)
+        row <= col
 
         game_params_table <= row
 
