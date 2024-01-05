@@ -546,8 +546,6 @@ def rectify_parameters():
             archive_loaded = req_result['archive']
             game_type_loaded = req_result['game_type']
 
-            print(f"{game_type_loaded=}")
-
         json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
