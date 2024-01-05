@@ -720,6 +720,14 @@ def game_master():
         play.load_option(None, 'Consulter')
         return False
 
+    # check game soloed
+    if play_low.GAME_PARAMETERS_LOADED['soloed']:
+        alert("La partie est terminée parce qu'un solo a été réalisé !")
+
+    # check game finished (if not soloed)
+    elif play_low.GAME_PARAMETERS_LOADED['finished']:
+        alert("La partie est arrivée à échéance")
+
     # warning if game not waiting or ongoing
     if play_low.GAME_PARAMETERS_LOADED['current_state'] not in [0, 1]:
         alert("Attention : la partie est terminée !")
