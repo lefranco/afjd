@@ -1338,7 +1338,7 @@ def submit_orders():
         return False
 
     # check game finished (if not soloed)
-    elif play_low.GAME_PARAMETERS_LOADED['finished']:
+    if play_low.GAME_PARAMETERS_LOADED['finished']:
         alert("La partie est terminée parce qu'arrivée à échéance")
         play.load_option(None, 'Consulter')
         return False
@@ -2189,7 +2189,7 @@ def submit_communication_orders():
         return False
 
     # check game finished (if not soloed)
-    elif play_low.GAME_PARAMETERS_LOADED['finished']:
+    if play_low.GAME_PARAMETERS_LOADED['finished']:
         alert("La partie est arrivée à échéance")
         play.load_option(None, 'Consulter')
         return False
@@ -2657,7 +2657,7 @@ def imagine_units():
         return False
 
     # check game finished (if not soloed)
-    elif play_low.GAME_PARAMETERS_LOADED['finished']:
+    if play_low.GAME_PARAMETERS_LOADED['finished']:
         alert("La partie est arrivée à échéance")
         play.load_option(None, 'Consulter')
         return False
