@@ -27,8 +27,6 @@ MAX_NUMBER_GAMES = 200
 
 MAX_LEN_GAME_NAME = 50
 
-INPUT_FILE = None
-
 
 def check_creator(pseudo):
     """ check_creator """
@@ -235,6 +233,8 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
 
             create_status = True
 
+            alert(f"Partie {game_to_create_name} créé..")
+
         parameters_loaded = common.game_parameters_reload(current_game_name)
         if not parameters_loaded:
             alert("Impossible de récupérer les paramètres de la partie modèle")
@@ -412,15 +412,15 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
 
 
 # so that we do not too much repeat the selected game
-PREV_GAME = ""
+WARNED = False
 
 
 def create_many_games():
     """ create_many_games """
 
-    global PREV_GAME
+    global WARNED
 
-    def create_games_callback(ev):  # pylint: disable=invalid-name
+    def create_games_callback(ev, input_file):  # pylint: disable=invalid-name
         """ create_games_callback """
 
         def onload_callback(_):
@@ -500,7 +500,7 @@ def create_many_games():
 
         ev.preventDefault()
 
-        if not INPUT_FILE.files:
+        if not input_file.files:
             alert("Pas de fichier")
 
             # back to where we started
@@ -511,7 +511,7 @@ def create_many_games():
         # Create a new DOM FileReader instance
         reader = window.FileReader.new()
         # Extract the file
-        file_name = INPUT_FILE.files[0]
+        file_name = input_file.files[0]
         # Read the file content as text
         reader.bind("load", onload_callback)
         reader.readAsText(file_name)
@@ -538,9 +538,9 @@ def create_many_games():
 
     game = storage['GAME']
 
-    if game != PREV_GAME:
+    if not WARNED:
         alert(f"La partie modèle est le partie '{game}'. Vérifiez que cela convient !")
-        PREV_GAME = game
+        WARNED = True
 
     form = html.FORM()
 
@@ -549,16 +549,13 @@ def create_many_games():
     fieldset <= legend_name
     form <= fieldset
 
-    # need to make this global to keep it (only way it seems)
-    global INPUT_FILE
-    if INPUT_FILE is None:
-        INPUT_FILE = html.INPUT(type="file", accept='.csv', Class='btn-inside')
-    form <= INPUT_FILE
+    input_file = html.INPUT(type="file", accept='.csv', Class='btn-inside')
+    form <= input_file
     form <= html.BR()
     form <= html.BR()
 
     input_create_games = html.INPUT(type="submit", value="Créer les parties", Class='btn-inside')
-    input_create_games.bind("click", create_games_callback)
+    input_create_games.bind("click", lambda e, i=input_file: create_games_callback(e, i))
     form <= input_create_games
 
     MY_SUB_PANEL <= form
@@ -716,12 +713,8 @@ MY_PANEL <= MY_SUB_PANEL
 def load_option(_, item_name):
     """ load_option """
 
-    global PREV_GAME
-
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
-
-    PREV_GAME = ""
 
     if item_name == 'Editer les glorieux':
         change_glorious()
@@ -757,6 +750,9 @@ def load_option(_, item_name):
 
 def render(panel_middle):
     """ render """
+
+    global WARNED
+    WARNED = False
 
     # always back to top
     global ITEM_NAME_SELECTED
