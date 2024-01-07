@@ -15,7 +15,7 @@ INTERFACE_TABLE = {
     'moderne': ['diplomania'],
     'egeemonie': ['diplomania'],
     'mediterranee': ['diplomania'],
-    'autriche': ['diplomania'],
+    'successionautriche': ['diplomania'],
 }
 
 
