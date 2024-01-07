@@ -5,7 +5,7 @@
 import json
 import time
 
-from browser import html, alert, ajax, window  # pylint: disable=import-error
+from browser import html, alert, ajax, window, timer  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -210,7 +210,11 @@ def check_batch(current_pseudo, games_to_create):
     return not error
 
 
-def perform_batch(current_pseudo, current_game_name, games_to_create_data, progress_bar):
+# timer for repeating attemps to create game
+CREATE_RETRY_PERIOD_MILLISEC = 500
+
+
+def perform_batch(current_pseudo, current_game_name, games_to_create_data):
     """ perform_batch """
 
     games_created_so_far = 0
@@ -367,21 +371,27 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, progr
 
         return status
 
-    # just to display role correctly
-    variant_name_loaded = storage['GAME_VARIANT']
-    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
-    parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
-    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+    def create_one():
+        """ will create a game : called on timer """
 
-    # do the work using the three previous functions
+        nonlocal games_created_so_far
 
-    for game_to_create_name, game_to_create_data in games_to_create_data.items():
+        # no more game : done
+        if not games_to_create_data:
+            alert(f"Les {number_games} parties du tournoi ont bien été créée.\nTout s'est bien passé.\nIncroyable, non ?")
+            timer.clear_interval(create_refresh_timer)
+            return
 
-        # create game
+        # pop a game
+        game_to_create_name = list(games_to_create_data.keys())[0]
+        game_to_create_data = games_to_create_data[game_to_create_name]
+        del games_to_create_data[game_to_create_name]
+
+        # create this game
         status = create_game(current_game_name, game_to_create_name)
         if not status:
             alert(f"Echec à la création de la partie {game_to_create_name}")
+            timer.clear_interval(create_refresh_timer)
             return
 
         # put players in
@@ -393,6 +403,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, progr
             status = put_player_in_game(game_to_create_name, player_name)
             if not status:
                 alert(f"Echec à l'appariement de {player_name} dans la partie {game_to_create_name}")
+                timer.clear_interval(create_refresh_timer)
                 return
 
         # allocate roles to players
@@ -405,15 +416,26 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, progr
                 role = variant_data.roles[role_id]
                 role_name = variant_data.role_name_table[role]
                 alert(f"Echec à l'attribution du role {role_name} à {player_name} dans la partie {game_to_create_name}")
+                timer.clear_interval(create_refresh_timer)
                 return
 
-        # alert(f"Partie {game_to_create_name} créé..")
+        # update progress bar
         games_created_so_far += 1
-        progress_bar.value = games_created_so_far
-        print(f"Partie {game_to_create_name} créé..")
+        # was not possible to have a progress bar for some reason
+        common.info_dialog(f"Partie {game_to_create_name} ({games_created_so_far}/{number_games}) créé..")
 
-    nb_parties = len(games_to_create_data)
-    alert(f"Les {nb_parties} parties du tournoi ont bien été créée. Tout s'est bien passé. Incroyable, non ?")
+    # just to display role correctly
+    variant_name_loaded = storage['GAME_VARIANT']
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+    parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
+    # will increment
+    games_created_so_far = 0
+
+    number_games = len(games_to_create_data)
+    create_refresh_timer = timer.set_interval(create_one, CREATE_RETRY_PERIOD_MILLISEC)
 
 
 # so that we do not too much repeat the selected game
@@ -424,7 +446,6 @@ def create_many_games():
     """ create_many_games """
 
     global WARNED
-    progress_bar = None
 
     def create_games_callback(ev, input_file):  # pylint: disable=invalid-name
         """ create_games_callback """
@@ -439,7 +460,7 @@ def create_many_games():
             def create_games_callback2(_, dialog):
                 """ create_games_callback2 """
                 dialog.close(None)
-                perform_batch(pseudo, game, games_to_create, progress_bar)
+                perform_batch(pseudo, game, games_to_create)
 
             games_to_create = {}
 
@@ -498,8 +519,6 @@ def create_many_games():
                 alert("Aucune partie dans le fichier")
                 return
 
-            progress_bar.max = len(games_to_create)
-
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create):
                 dialog = mydialog.Dialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
@@ -525,8 +544,8 @@ def create_many_games():
         reader.readAsText(file_name)
 
         # back to where we started
-        ##### MY_SUB_PANEL.clear()
-        ##### create_many_games()
+        MY_SUB_PANEL.clear()
+        create_many_games()
 
     MY_SUB_PANEL <= html.H3("Création des parties")
 
@@ -567,14 +586,6 @@ def create_many_games():
     form <= input_create_games
 
     MY_SUB_PANEL <= form
-    MY_SUB_PANEL <= html.BR()
-
-    label = html.LABEL("Progression de la création des parties")
-    MY_SUB_PANEL <= label
-    MY_SUB_PANEL <= html.BR()
-
-    progress_bar = html.PROGRESS(value=0)
-    MY_SUB_PANEL <= progress_bar
 
 
 def explain_stuff():
