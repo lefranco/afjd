@@ -210,8 +210,10 @@ def check_batch(current_pseudo, games_to_create):
     return not error
 
 
-def perform_batch(current_pseudo, current_game_name, games_to_create_data):
+def perform_batch(current_pseudo, current_game_name, games_to_create_data, progress_bar):
     """ perform_batch """
+
+    games_created_so_far = 0
 
     def create_game(current_game_name, game_to_create_name):
         """ create_game """
@@ -232,8 +234,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
                 return
 
             create_status = True
-
-            alert(f"Partie {game_to_create_name} créé..")
 
         parameters_loaded = common.game_parameters_reload(current_game_name)
         if not parameters_loaded:
@@ -407,6 +407,11 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
                 alert(f"Echec à l'attribution du role {role_name} à {player_name} dans la partie {game_to_create_name}")
                 return
 
+        # alert(f"Partie {game_to_create_name} créé..")
+        games_created_so_far += 1
+        progress_bar.value = games_created_so_far
+        print(f"Partie {game_to_create_name} créé..")
+
     nb_parties = len(games_to_create_data)
     alert(f"Les {nb_parties} parties du tournoi ont bien été créée. Tout s'est bien passé. Incroyable, non ?")
 
@@ -419,6 +424,7 @@ def create_many_games():
     """ create_many_games """
 
     global WARNED
+    progress_bar = None
 
     def create_games_callback(ev, input_file):  # pylint: disable=invalid-name
         """ create_games_callback """
@@ -433,7 +439,7 @@ def create_many_games():
             def create_games_callback2(_, dialog):
                 """ create_games_callback2 """
                 dialog.close(None)
-                perform_batch(pseudo, game, games_to_create)
+                perform_batch(pseudo, game, games_to_create, progress_bar)
 
             games_to_create = {}
 
@@ -492,6 +498,8 @@ def create_many_games():
                 alert("Aucune partie dans le fichier")
                 return
 
+            progress_bar.max = len(games_to_create)
+
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create):
                 dialog = mydialog.Dialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
@@ -517,8 +525,8 @@ def create_many_games():
         reader.readAsText(file_name)
 
         # back to where we started
-        MY_SUB_PANEL.clear()
-        create_many_games()
+        ##### MY_SUB_PANEL.clear()
+        ##### create_many_games()
 
     MY_SUB_PANEL <= html.H3("Création des parties")
 
@@ -559,6 +567,14 @@ def create_many_games():
     form <= input_create_games
 
     MY_SUB_PANEL <= form
+    MY_SUB_PANEL <= html.BR()
+
+    label = html.LABEL("Progression de la création des parties")
+    MY_SUB_PANEL <= label
+    MY_SUB_PANEL <= html.BR()
+
+    progress_bar = html.PROGRESS(value=0)
+    MY_SUB_PANEL <= progress_bar
 
 
 def explain_stuff():
