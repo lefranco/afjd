@@ -3,7 +3,7 @@
 # pylint: disable=wrong-import-order, wrong-import-position
 
 
-import json
+from json import load
 
 
 # timeout for server requests
@@ -21,23 +21,23 @@ IDLE_DAY_TIMEOUT = 2 * 365
 
 # load servers list from json data file
 with open("./config/servers.json", "r", encoding="utf-8") as read_file:
-    SERVER_CONFIG = json.load(read_file)
+    SERVER_CONFIG = load(read_file)
 
 # load country list from json data file
 with open("./data/country_list.json", "r", encoding="utf-8") as read_file:
-    COUNTRY_CODE_TABLE = json.load(read_file)
+    COUNTRY_CODE_TABLE = load(read_file)
 
 # load timezone list from json data file
 with open("./data/timezone_list.json", "r", encoding="utf-8") as read_file:
-    TIMEZONE_CODE_TABLE = json.load(read_file)
+    TIMEZONE_CODE_TABLE = load(read_file)
 
 # load scoring list from json data file
 with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
-    SCORING_CODE_TABLE = json.load(read_file)
+    SCORING_CODE_TABLE = load(read_file)
 
 # load game types list from json data file
 with open("./data/game_type_list.json", "r", encoding="utf-8") as read_file:
-    GAME_TYPES_CODE_TABLE = json.load(read_file)
+    GAME_TYPES_CODE_TABLE = load(read_file)
 
 # default is first one
 VARIANT_NAMES_LIST = ['standard', 'standard_pds', 'grandeguerre', 'grandeguerreexpansionniste', 'hundred', 'moderne', 'egeemonie', 'mediterranee', 'successionautriche']

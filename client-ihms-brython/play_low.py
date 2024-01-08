@@ -2,7 +2,7 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
-import json
+from json import loads, dumps
 
 from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -168,7 +168,7 @@ def game_votes_reload(game_id):
 
     def reply_callback(req):
         nonlocal votes
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des votes d'arrêt de la partie : {req_result['message']}")
@@ -187,7 +187,7 @@ def game_votes_reload(game_id):
     url = f"{host}:{port}/game-votes/{game_id}"
 
     # extracting vote from a game : need token (or not?)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return votes
 
@@ -199,7 +199,7 @@ def get_roles_submitted_orders(game_id):
 
     def reply_callback(req):
         nonlocal submitted_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour la partie : {req_result['message']}")
@@ -217,7 +217,7 @@ def get_roles_submitted_orders(game_id):
     url = f"{host}:{port}/game-orders-submitted/{game_id}"
 
     # get roles that submitted orders : need token (but may change)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return submitted_data
 
@@ -229,7 +229,7 @@ def game_transition_fog_of_war_reload(game_id, advancement, role_id):
 
     def reply_callback(req):
         nonlocal transition_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement de la transition (brouillard) de la partie : {req_result['message']}")
@@ -248,7 +248,7 @@ def game_transition_fog_of_war_reload(game_id, advancement, role_id):
     url = f"{host}:{port}/game-fog-of-war-transitions/{game_id}/{advancement}/{role_id}"
 
     # getting variant : need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return transition_loaded
 
@@ -260,7 +260,7 @@ def game_transition_reload(game_id, advancement):
 
     def reply_callback(req):
         nonlocal transition_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement de la transition de la partie : {req_result['message']}")
@@ -279,7 +279,7 @@ def game_transition_reload(game_id, advancement):
     url = f"{host}:{port}/game-transitions/{game_id}/{advancement}"
 
     # getting variant : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return transition_loaded
 
@@ -773,7 +773,7 @@ def game_fog_of_war_report_reload(game_id, role_id):
 
     def reply_callback(req):
         nonlocal report_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement du rapport de résolution (brouillard) de la partie : {req_result['message']}")
@@ -792,7 +792,7 @@ def game_fog_of_war_report_reload(game_id, role_id):
     url = f"{host}:{port}/game-fog-of-war-reports/{game_id}/{role_id}"
 
     # getting variant : need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return report_loaded
 
@@ -804,7 +804,7 @@ def game_report_reload(game_id):
 
     def reply_callback(req):
         nonlocal report_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement du rapport de résolution de la partie : {req_result['message']}")
@@ -823,7 +823,7 @@ def game_report_reload(game_id):
     url = f"{host}:{port}/game-reports/{game_id}"
 
     # getting variant : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return report_loaded
 
@@ -835,7 +835,7 @@ def game_incidents_reload(game_id):
 
     def reply_callback(req):
         nonlocal incidents
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des incidents retards de la partie : {req_result['message']}")
@@ -854,7 +854,7 @@ def game_incidents_reload(game_id):
     url = f"{host}:{port}/game-incidents/{game_id}"
 
     # extracting incidents from a game : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return incidents
 

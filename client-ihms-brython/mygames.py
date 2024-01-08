@@ -3,8 +3,8 @@
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
 
-import json
-import time
+from json import loads, dumps
+from time import time
 
 from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -35,7 +35,7 @@ def get_incomplete_games():
 
     def reply_callback(req):
         nonlocal incomplete_games_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des parties qui sont prêtes : {req_result['message']}")
@@ -54,7 +54,7 @@ def get_incomplete_games():
     url = f"{host}:{port}/games-incomplete"
 
     # getting incomplete games list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return incomplete_games_list
 
@@ -66,7 +66,7 @@ def get_all_roles_allocated_to_player():
 
     def reply_callback(req):
         nonlocal dict_role_id
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des rôles alloué au joueur dans toutes les parties : {req_result['message']}")
@@ -85,7 +85,7 @@ def get_all_roles_allocated_to_player():
     url = f"{host}:{port}/all-games-roles"
 
     # get players allocated to game : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict_role_id
 
@@ -97,7 +97,7 @@ def date_last_visit_load_all_games(visit_type):
 
     def reply_callback(req):
         nonlocal dict_time_stamp
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la dernière visite de la partie : ({visit_type}): {req_result['message']}")
@@ -116,7 +116,7 @@ def date_last_visit_load_all_games(visit_type):
     url = f"{host}:{port}/all-game-visits/{visit_type}"
 
     # getting last visit in a game : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict_time_stamp
 
@@ -128,7 +128,7 @@ def date_last_declarations():
 
     def reply_callback(req):
         nonlocal dict_time_stamp
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des dates de dernières déclarations des parties jouées : {req_result['message']}")
@@ -147,7 +147,7 @@ def date_last_declarations():
     url = f"{host}:{port}/date-last-declarations"
 
     # getting last game declaration : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict_time_stamp
 
@@ -159,7 +159,7 @@ def date_last_messages():
 
     def reply_callback(req):
         nonlocal dict_time_stamp
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des dates des derniers messages des parties jouées : {req_result['message']}")
@@ -178,7 +178,7 @@ def date_last_messages():
     url = f"{host}:{port}/date-last-game-messages"
 
     # getting last game message role : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict_time_stamp
 
@@ -190,7 +190,7 @@ def get_all_player_ongoing_votes():
 
     def reply_callback(req):
         nonlocal dict_voted_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération votes en cours pour toutes mes parties : {req_result['message']}")
@@ -208,7 +208,7 @@ def get_all_player_ongoing_votes():
     url = f"{host}:{port}/all-player-games-ongoing-votes"
 
     # get games with ongoing vote : need token (but may change)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict_voted_data
 
@@ -220,7 +220,7 @@ def get_all_player_games_roles_submitted_orders():
 
     def reply_callback(req):
         nonlocal dict_submitted_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour toutes mes parties : {req_result['message']}")
@@ -238,7 +238,7 @@ def get_all_player_games_roles_submitted_orders():
     url = f"{host}:{port}/all-player-games-orders-submitted"
 
     # get roles that submitted orders : need token (but may change)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict_submitted_data
 
@@ -250,7 +250,7 @@ def get_my_delays():
 
     def reply_callback(req):
         nonlocal delays_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des retards pour toutes mes parties : {req_result['message']}")
@@ -269,7 +269,7 @@ def get_my_delays():
     url = f"{host}:{port}/player-game-incidents"
 
     # get roles that submitted orders : need token (but may change)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return delays_list
 
@@ -433,7 +433,7 @@ def get_my_dropouts():
 
     def reply_callback(req):
         nonlocal dropouts_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des abandons pour toutes mes parties : {req_result['message']}")
@@ -452,7 +452,7 @@ def get_my_dropouts():
     url = f"{host}:{port}/player-game-dropouts"
 
     # get roles that submitted orders : need token (but may change)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dropouts_list
 
@@ -644,7 +644,7 @@ def my_games(state_name):
     def start_game_callback(ev, game):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur au démarrage de la partie {game}: {req_result['message']}")
@@ -669,7 +669,7 @@ def my_games(state_name):
         url = f"{host}:{port}/games/{game}"
 
         # changing game state : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -678,7 +678,7 @@ def my_games(state_name):
     def stop_game_callback(ev, game):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à l'arrêt de la partie {game}: {req_result['message']}")
@@ -703,7 +703,7 @@ def my_games(state_name):
         url = f"{host}:{port}/games/{game}"
 
         # changing game state : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -750,7 +750,7 @@ def my_games(state_name):
         MY_SUB_PANEL.clear()
         my_games(state_name)
 
-    overall_time_before = time.time()
+    overall_time_before = time()
 
     # title
     MY_SUB_PANEL <= html.H2(f"Parties que je joue dans l'état : {state_name}")
@@ -865,7 +865,7 @@ def my_games(state_name):
     # keep note of SUFFERING_NOTIFIED
     storage['SUFFERING_NOTIFIED'] = ' '.join(suffering_games)
 
-    time_stamp_now = time.time()
+    time_stamp_now = time()
 
     # button for switching mode (display)
     if 'GAME_SHOW_MODE' not in storage:
@@ -1341,7 +1341,7 @@ def my_games(state_name):
     storage['GAME_LIST'] = ' '.join(games_list)
 
     # get GMT date and time
-    time_stamp_now = time.time()
+    time_stamp_now = time()
     date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
 
@@ -1377,7 +1377,7 @@ def my_games(state_name):
         MY_SUB_PANEL <= html.DIV("Si une partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !", Class='important')
     MY_SUB_PANEL <= html.BR()
 
-    overall_time_after = time.time()
+    overall_time_after = time()
     elapsed = overall_time_after - overall_time_before
 
     number_games = len(games_list)

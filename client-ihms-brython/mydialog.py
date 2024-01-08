@@ -3,7 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 
-from browser import aio, document, html, window  # pylint: disable=import-error
+from browser import document, html, window  # pylint: disable=import-error
 
 # pylint: disable=invalid-name
 style_sheet = """
@@ -193,16 +193,6 @@ class EntryDialog(Dialog):
         if evt.target == self.entry and evt.key != "Enter":
             return
         self.dispatchEvent(window.Event.new("entry"))
-
-
-# NOT USED - RESERVE
-async def Input(message=None):
-    """ Input """
-    dialog = EntryDialog('Enter', message)
-    event = await aio.event(dialog, 'entry')
-    result = event.target.value
-    dialog.close(event)
-    return result
 
 
 class InfoDialog(Dialog):

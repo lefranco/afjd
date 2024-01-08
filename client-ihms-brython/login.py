@@ -2,8 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
-import time
+from json import loads, dumps
+from time import time
 
 from browser import document, html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -26,7 +26,7 @@ def email_confirmed(pseudo):
 
     def reply_callback(req):
         nonlocal email_confirmed_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement des informations du compte : {req_result['message']}")
@@ -46,7 +46,7 @@ def email_confirmed(pseudo):
     url = f"{host}:{port}/players/{pseudo}"
 
     # reading data about account : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return email_confirmed_loaded
 
@@ -70,7 +70,7 @@ def login():
         global PREVIOUS_PSEUDO
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la connexion : {req_result['message']}")
@@ -95,7 +95,7 @@ def login():
             # the token itself
             storage['JWT_TOKEN'] = access_token
             # the login time
-            time_stamp_now = time.time()
+            time_stamp_now = time()
             storage['LOGIN_TIME'] = str(time_stamp_now)
             # token expiration time
             login_expiration_time = time_stamp_now + token_duration_days * 24 * 3600
@@ -156,13 +156,13 @@ def login():
         }
 
         # login (getting token) : no need for token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def forgot_callback(ev):  # pylint: disable=invalid-name
         """ forgot_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur au sauvetage : {req_result['message']}")
@@ -203,7 +203,7 @@ def login():
         }
 
         # rescue (getting token) : no need for token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def logout_callback(ev):  # pylint: disable=invalid-name
         """ logout_callback """
@@ -340,7 +340,7 @@ def check_token():
         return
 
     # fast imprecise method
-    time_stamp_now = time.time()
+    time_stamp_now = time()
     time_stamp_expiration = float(storage['LOGIN_EXPIRATION_TIME'])
     if time_stamp_now > time_stamp_expiration:
         alert("Votre jeton d'authentification a expiré... Vous devez juste vous loguer à nouveau !")
