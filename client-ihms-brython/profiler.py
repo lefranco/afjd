@@ -26,19 +26,19 @@ profiler.PROFILER.send_report(pseudo, version, destination, timeout)
 
 import time
 
-START_TIME = time.time()
+START_TIME = time()
 
-before_json = time.time()
-import json
-after_json = time.time()
+before_json = time()
+from json import dumps
+after_json = time()
 import_json_time = after_json - before_json
 
 from browser import ajax  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-before_user_config = time.time()
+before_user_config = time()
 import user_config
-after_user_config = time.time()
+after_user_config = time()
 import_user_config_time = after_user_config - before_user_config
 
 ADDRESS_ADMIN = "1"
@@ -53,14 +53,14 @@ class Measure:
 
     def __init__(self, legend, parent):
         self._legend = legend
-        self._start_time = time.time()
+        self._start_time = time()
         self._stop_time = None
         self._parent_measure = parent
         self._sub_measures = []
 
     def terminate(self):
         """ terminate """
-        self._stop_time = time.time()
+        self._stop_time = time()
 
     def insert_sub_measure(self, sub_measure):
         """ insert_sub_measure """
@@ -168,7 +168,7 @@ class Profiler:
         url = f"{host}:{port}/mail-players"
 
         # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=timeout, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=timeout, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
         # reset
         self._main_measure = None
@@ -193,5 +193,5 @@ class Profiler:
 
 PROFILER = Profiler()
 
-END_TIME = time.time()
+END_TIME = time()
 ELAPSED = END_TIME - START_TIME

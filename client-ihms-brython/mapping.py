@@ -3,8 +3,9 @@
 # pylint: disable=pointless-statement, expression-not-assigned, multiple-statements, wrong-import-order, wrong-import-position
 
 
-import abc
-import math
+from abc import abstractmethod
+from math import atan2, sqrt, pi, inf
+
 import geometry
 import center_design
 import unit_design
@@ -30,7 +31,7 @@ def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
 
     delta_x = x_dest - x_start
     delta_y = y_dest - y_start
-    dist = math.sqrt(delta_x**2 + delta_y**2)
+    dist = sqrt(delta_x**2 + delta_y**2)
     if dist < 2 * epsilon:
         return x_dest, y_dest
     new_dist = dist - epsilon
@@ -56,7 +57,7 @@ def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx) -> Non
     ctx.save()
 
     ctx.translate(x_dest, y_dest)
-    angle = - math.atan2(x_start - x_dest, y_start - y_dest)
+    angle = - atan2(x_start - x_dest, y_start - y_dest)
     ctx.rotate(angle)
     ctx.beginPath()
     ctx.moveTo(0, 0)
@@ -92,7 +93,7 @@ def fill_zone(ctx, zone_area, fill_colour):
 class Renderable:
     """ Renderable """
 
-    @abc.abstractmethod
+    @abstractmethod
     def render(self, ctx, active=False) -> None:
         """ render = display """
 
@@ -100,11 +101,11 @@ class Renderable:
 class Highliteable(Renderable):
     """ Highliteable """
 
-    @abc.abstractmethod
+    @abstractmethod
     def highlite(self, ctx, active) -> None:
         """ highlited when mouses passes over """
 
-    @abc.abstractmethod
+    @abstractmethod
     def description(self) -> str:
         """ text to display when mouses passes over """
 
@@ -250,13 +251,13 @@ class Center(Renderable):
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         ctx.beginPath()
-        ctx.arc(x, y, center_design.CENTER_RAY, 0, 2 * math.pi, False)
+        ctx.arc(x, y, center_design.CENTER_RAY, 0, 2 * pi, False)
         ctx.fill(); ctx.stroke(); ctx.closePath()
 
         # distinguish start centers
         if self._owner_start:
             ctx.beginPath()
-            ctx.arc(x, y, center_design.CENTER_RAY + 2, 0, 2 * math.pi, False)
+            ctx.arc(x, y, center_design.CENTER_RAY + 2, 0, 2 * pi, False)
             ctx.stroke(); ctx.closePath()
 
     @property
@@ -871,7 +872,7 @@ class Variant(Renderable):
         """ closest_center  """
 
         closest_center = None
-        distance_closest = math.inf
+        distance_closest = inf
 
         for center in self._centers.values():
             center_pos = self.position_table[center]
@@ -886,7 +887,7 @@ class Variant(Renderable):
         """ closest_zone """
 
         closest_zone = None
-        distance_closest = math.inf
+        distance_closest = inf
 
         # sort them by distance
         zones_sorted = sorted(self.zones.values(), key=lambda z: designated_pos.distance(self.position_table[z]))
@@ -1565,7 +1566,7 @@ class Position(Renderable):
         """ closest_ownership  """
 
         closest_ownership = None
-        distance_closest = math.inf
+        distance_closest = inf
 
         for ownership in self._ownerships:
             center = ownership.center
@@ -1581,7 +1582,7 @@ class Position(Renderable):
         """ closest_unit (pass dislodged = None for all dislodged and not dislodged)  """
 
         closest_unit = None
-        distance_closest = math.inf
+        distance_closest = inf
 
         # what list do we use ?
         if dislodged is None:
@@ -1608,7 +1609,7 @@ class Position(Renderable):
         """ closest_object : unit, center, region  """
 
         closest_object = None
-        distance_closest = math.inf
+        distance_closest = inf
 
         # what list do we use ?
         search_list = self._units + self._dislodged_units
@@ -1872,7 +1873,7 @@ class Order(Renderable):
             center_point = self._position.variant.position_table[self._passive_unit.zone]
             center_point_shifted = center_point.shift(next_direction, 3)
             ctx.beginPath()
-            ctx.arc(center_point_shifted.x_pos, center_point_shifted.y_pos, 12, 0, 2 * math.pi, False)
+            ctx.arc(center_point_shifted.x_pos, center_point_shifted.y_pos, 12, 0, 2 * pi, False)
             ctx.stroke(); ctx.closePath()
 
             # put back
@@ -1899,7 +1900,7 @@ class Order(Renderable):
 
             # put a circle (stand) around unit
             ctx.beginPath()
-            ctx.arc(center_point.x_pos, center_point.y_pos, 12, 0, 2 * math.pi, False)
+            ctx.arc(center_point.x_pos, center_point.y_pos, 12, 0, 2 * pi, False)
             ctx.stroke(); ctx.closePath()
 
             # put back
@@ -2191,7 +2192,7 @@ class Orders(Renderable):
         """ closest_unit_or_built_unit """
 
         closest_unit = None
-        distance_closest = math.inf
+        distance_closest = inf
 
         # search units from position (make a copy)
         search_list = list(self._position.units_list())

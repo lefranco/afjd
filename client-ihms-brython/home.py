@@ -2,8 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
-import json
-import time
+from json import loads, dumps
+from time import time
 
 from browser import html, ajax, alert, document, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -49,7 +49,7 @@ def get_stats_content():
 
     def reply_callback(req):
         nonlocal stats_content
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération du contenu des statistiques : {req_result['message']}")
@@ -67,7 +67,7 @@ def get_stats_content():
     url = f"{host}:{port}/statistics"
 
     # get news : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return stats_content
 
@@ -79,7 +79,7 @@ def get_teaser_content():
 
     def reply_callback(req):
         nonlocal teaser_content
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération du contenu du teaser elo : {req_result['message']}")
@@ -97,7 +97,7 @@ def get_teaser_content():
     url = f"{host}:{port}/elo_rating"
 
     # get teaser elo : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return teaser_content
 
@@ -513,7 +513,7 @@ def show_news():
     server_time = news_content_table_loaded['server_time']
 
     # time locally
-    local_time = time.time()
+    local_time = time()
 
     # difference
     delta_time_sec = round(local_time - server_time)
@@ -550,7 +550,7 @@ def live_chat():
         """ add_chat_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'ajout de message chat : {req_result['message']}")
@@ -589,7 +589,7 @@ def live_chat():
         url = f"{host}:{port}/chat-messages"
 
         # adding a chat : do not need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def chats_reload_callback(ev):  # pylint: disable=invalid-name
         """ chats_reload_callback """
@@ -601,7 +601,7 @@ def live_chat():
 
         def reply_callback(req):
             nonlocal chat_messages
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération des messages chats : {req_result['message']}")
@@ -621,7 +621,7 @@ def live_chat():
 
         # extracting chats : do not need token
         chat_messages = []
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return chat_messages
 
@@ -716,7 +716,7 @@ def declare_incident(json_dict_params):
 
     def get_email_reply_callback(req):
         nonlocal email
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement courriel du compte : {req_result['message']}")
@@ -732,7 +732,7 @@ def declare_incident(json_dict_params):
         """ submit_incident_callback """
 
         def submit_incident_reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à l'envoi de courrier électronique : {req_result['message']}")
@@ -811,7 +811,7 @@ def declare_incident(json_dict_params):
         url = f"{host}:{port}/send-email-support"
 
         # sending email to support : do not need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=submit_incident_reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=submit_incident_reply_callback, ontimeout=common.noreply_callback)
 
         alert("Votre incident va être examiné dans les plus brefs délais")
 
@@ -838,7 +838,7 @@ def declare_incident(json_dict_params):
                 url = f"{host}:{port}/players/{pseudo}"
 
                 # reading data about account : need token
-                ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=get_email_reply_callback, ontimeout=common.noreply_callback)
+                ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=get_email_reply_callback, ontimeout=common.noreply_callback)
 
     title4 = html.H3("Déclarer un incident")
     MY_SUB_PANEL <= title4

@@ -2,8 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
-import time
+from json import loads, dumps
+from time import time
 
 from browser import html, ajax, alert, document, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -85,7 +85,7 @@ def get_all_games_roles_missing_orders():
 
     def reply_callback(req):
         nonlocal dict_missing_orders_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des rôles dont il manque les ordres pour toutes les parties en cours : {req_result['message']}")
@@ -103,7 +103,7 @@ def get_all_games_roles_missing_orders():
     url = f"{host}:{port}/all-games-missing-orders"
 
     # get roles that submitted orders : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict_missing_orders_data
 
@@ -115,7 +115,7 @@ def get_current_worst_annoyers():
 
     def reply_callback(req):
         nonlocal dict_current_worst_annoyers_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des pires recidivistes du retard : {req_result['message']}")
@@ -133,7 +133,7 @@ def get_current_worst_annoyers():
     url = f"{host}:{port}/current-worst-annoyers"
 
     # get roles that submitted orders : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict_current_worst_annoyers_data
 
@@ -145,7 +145,7 @@ def get_tournament_players_data(tournament_id):
 
     def reply_callback(req):
         nonlocal tournament_players_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des joueurs des parties du tournoi : {req_result['message']}")
@@ -164,7 +164,7 @@ def get_tournament_players_data(tournament_id):
     url = f"{host}:{port}/tournament-allocations/{tournament_id}"
 
     # getting tournament allocation : need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return tournament_players_dict
 
@@ -176,7 +176,7 @@ def get_this_player_games_playing_in(player_id):
 
     def reply_callback(req):
         nonlocal player_games_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récuperation de la liste des parties du joueur : {req_result['message']}")
@@ -195,7 +195,7 @@ def get_this_player_games_playing_in(player_id):
     url = f"{host}:{port}/player-allocations2/{player_id}"
 
     # getting player games playing in list : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict(player_games_dict)
 
@@ -207,7 +207,7 @@ def change_news_modo():
         """ change_news_modo_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la modification du contenu des nouvelles (modo) : {req_result['message']}")
@@ -237,7 +237,7 @@ def change_news_modo():
         url = f"{host}:{port}/news"
 
         # changing news : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -289,7 +289,7 @@ def prepare_mailing():
 
         def reply_callback(req):
 
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur au patch {player_pseudo} : {req_result['message']}")
@@ -312,7 +312,7 @@ def prepare_mailing():
         url = f"{host}:{port}/remove-newsletter/{player_pseudo}"
 
         # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     MY_SUB_PANEL <= html.H3("Préparation d'un publipostage")
 
@@ -424,7 +424,7 @@ def sendmail():
         """ sendmail_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à l'envoi de courrier électronique : {req_result['message']}")
@@ -469,7 +469,7 @@ def sendmail():
         url = f"{host}:{port}/mail-players"
 
         # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -773,7 +773,7 @@ def general_announce():
         """ add_declaration_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'ajout annonce générale dans la partie : {req_result['message']}")
@@ -809,7 +809,7 @@ def general_announce():
         url = f"{host}:{port}/announce-games"
 
         # adding a declaration in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     MY_SUB_PANEL <= html.H3("Annoncer dans toutes la partie en cours")
 
@@ -851,7 +851,7 @@ def game_announce():
         """ add_declaration_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'ajout de déclaration (annonce) dans la partie : {req_result['message']}")
@@ -902,7 +902,7 @@ def game_announce():
         url = f"{host}:{port}/game-declarations/{game_id}"
 
         # adding a declaration in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def declarations_reload(game_id):
         """ declarations_reload """
@@ -911,7 +911,7 @@ def game_announce():
 
         def reply_callback(req):
             nonlocal declarations
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération de déclarations dans la partie : {req_result['message']}")
@@ -930,7 +930,7 @@ def game_announce():
         url = f"{host}:{port}/game-declarations/{game_id}"
 
         # extracting declarations from a game : need token (or not?)
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return declarations
 
@@ -1140,7 +1140,7 @@ def display_personal_info():
         """ display_personal_info_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération des informations personnelles : {req_result['message']}")
@@ -1168,7 +1168,7 @@ def display_personal_info():
         url = f"{host}:{port}/player-information/{contact_user_name}"
 
         # getting email: need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -1296,7 +1296,7 @@ def all_missing_orders():
         thead <= col
     delays_table <= thead
 
-    time_stamp_now = time.time()
+    time_stamp_now = time()
 
     gameover_table = {int(game_id_str): data['soloed'] or data['finished'] for game_id_str, data in games_dict.items()}
 
@@ -1677,7 +1677,7 @@ def show_player_games(pseudo_player, game_list):
         # conversion
         game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
 
-        time_stamp_now = time.time()
+        time_stamp_now = time()
 
         games_table = html.TABLE()
 
@@ -2110,7 +2110,7 @@ def revoke_master():
     def revoke_master_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la destitution de l'arbitre : {req_result['message']}")
@@ -2143,7 +2143,7 @@ def revoke_master():
         url = f"{host}:{port}/revoke/{game_id}"
 
         # revoking master : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     MY_SUB_PANEL <= html.H3("Destituer l'arbitre")
 
@@ -2192,7 +2192,7 @@ def change_director():
         """ promote_directors_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la promotion responsable tournoi : {req_result['message']}")
@@ -2218,7 +2218,7 @@ def change_director():
         url = f"{host}:{port}/tournaments_manager/{tournament_id}"
 
         # updating a tournament : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -2289,7 +2289,7 @@ def change_manager():
         """ promote_managers_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la promotion responsable événement : {req_result['message']}")
@@ -2315,7 +2315,7 @@ def change_manager():
         url = f"{host}:{port}/events_manager/{event_id}"
 
         # updating an event : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()

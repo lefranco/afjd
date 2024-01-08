@@ -2,9 +2,9 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
-import time
-import base64
+from json import loads, dumps
+from time import time
+from base64 import standard_b64encode
 
 from browser import document, html, ajax, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -51,7 +51,7 @@ def get_active_data():
 
     def reply_callback(req):
         nonlocal active_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement des actifs : {req_result['message']}")
@@ -70,7 +70,7 @@ def get_active_data():
     url = f"{host}:{port}/active_players"
 
     # getting active data : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return active_data
 
@@ -82,7 +82,7 @@ def get_creators():
 
     def reply_callback(req):
         nonlocal creators_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des créateurs : {req_result['message']}")
@@ -100,7 +100,7 @@ def get_creators():
     url = f"{host}:{port}/creators"
 
     # getting moderators list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return creators_list
 
@@ -112,7 +112,7 @@ def get_moderators():
 
     def reply_callback(req):
         nonlocal moderators_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des modérateurs : {req_result['message']}")
@@ -130,7 +130,7 @@ def get_moderators():
     url = f"{host}:{port}/moderators"
 
     # getting moderators list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return moderators_list
 
@@ -142,7 +142,7 @@ def get_last_logins():
 
     def reply_callback(req):
         nonlocal logins_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des connexions : {req_result['message']}")
@@ -162,7 +162,7 @@ def get_last_logins():
 
     # logins list : need token
     # note : since we access directly to the user server, we present the token in a slightly different way
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return logins_list
 
@@ -174,7 +174,7 @@ def get_last_failures():
 
     def reply_callback(req):
         nonlocal failures_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des connexions manquées : {req_result['message']}")
@@ -194,7 +194,7 @@ def get_last_failures():
 
     # failures_list list : need token
     # note : since we access directly to the user server, we present the token in a slightly different way
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return failures_list
 
@@ -206,7 +206,7 @@ def get_last_rescues():
 
     def reply_callback(req):
         nonlocal rescues_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des demandes de récupération : {req_result['message']}")
@@ -226,7 +226,7 @@ def get_last_rescues():
 
     # failures_list list : need token
     # note : since we access directly to the user server, we present the token in a slightly different way
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return rescues_list
 
@@ -238,7 +238,7 @@ def change_news_admin():
         """ change_news_admin_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la modification du contenu des nouvelles : {req_result['message']}")
@@ -268,7 +268,7 @@ def change_news_admin():
         url = f"{host}:{port}/news"
 
         # changing news : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -319,7 +319,7 @@ def change_site_image():
             """ onload_callback """
 
             def reply_callback(req):
-                req_result = json.loads(req.text)
+                req_result = loads(req.text)
                 if req.status != 201:
                     if 'message' in req_result:
                         alert(f"Erreur à la modification de l'image du site : {req_result['message']}")
@@ -348,7 +348,7 @@ def change_site_image():
 
             # b64 encode to pass it on server
             try:
-                image_str = base64.standard_b64encode(image_bytes).decode()
+                image_str = standard_b64encode(image_bytes).decode()
             except:  # noqa: E722 pylint: disable=bare-except
                 alert("Problème à l'encodage pour le web... ")
                 return
@@ -368,7 +368,7 @@ def change_site_image():
             url = f"{host}:{port}/site_image"
 
             # changing site image : need token
-            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         ev.preventDefault()
 
@@ -435,7 +435,7 @@ def usurp():
         """ usurp_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à l'usurpation : {req_result['message']}")
@@ -447,7 +447,7 @@ def usurp():
 
             storage['PSEUDO'] = usurped_user_name
             storage['JWT_TOKEN'] = req_result['AccessToken']
-            time_stamp_now = time.time()
+            time_stamp_now = time()
             storage['LOGIN_TIME'] = str(time_stamp_now)
 
             common.info_dialog(f"Vous usurpez maintenant : {usurped_user_name}")
@@ -468,7 +468,7 @@ def usurp():
 
         # usurping : need token
         # note : since we access directly to the user server, we present the token in a slightly different way
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     MY_SUB_PANEL <= html.H3("Usurper un inscrit")
 
@@ -530,7 +530,7 @@ def rectify_parameters():
             nonlocal fast_loaded
             nonlocal archive_loaded
             nonlocal game_type_loaded
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération des paramètres de la partie : {req_result['message']}")
@@ -553,14 +553,14 @@ def rectify_parameters():
         url = f"{host}:{port}/games/{game}"
 
         # getting game data : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
 
         return status
 
     def change_parameters_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la modification des paramètres de la partie : {req_result['message']}")
@@ -594,7 +594,7 @@ def rectify_parameters():
         url = f"{host}:{port}/alter_games/{game}"
 
         # altering game used for elo : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -673,7 +673,7 @@ def rectify_position():
         """ submit_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la soumission de rectification de position : {req_result['message']}")
@@ -688,11 +688,11 @@ def rectify_position():
 
         # units
         units_list_dict = position_data.save_json()
-        units_list_dict_json = json.dumps(units_list_dict)
+        units_list_dict_json = dumps(units_list_dict)
 
         # ownerships
         ownerships_list_dict = position_data.save_json2()
-        ownerships_list_dict_json = json.dumps(ownerships_list_dict)
+        ownerships_list_dict_json = dumps(ownerships_list_dict)
 
         json_dict = {
             'units': units_list_dict_json,
@@ -704,7 +704,7 @@ def rectify_position():
         url = f"{host}:{port}/game-positions/{game_id}"
 
         # submitting position (units ownerships) for rectification : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def callback_canvas_short_click(event):
         """ callback_canvas_short_click """
@@ -769,7 +769,7 @@ def rectify_position():
         nonlocal stored_event
         nonlocal down_click_time
 
-        down_click_time = time.time()
+        down_click_time = time()
         stored_event = event
 
     def callback_canvas_mouseup(_):
@@ -781,7 +781,7 @@ def rectify_position():
             return
 
         # get click duration
-        up_click_time = time.time()
+        up_click_time = time()
         click_duration = up_click_time - down_click_time
         down_click_time = None
 
@@ -1370,7 +1370,7 @@ def edit_creators():
         """ add_creator_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la mise d'un créateur : {req_result['message']}")
@@ -1407,13 +1407,13 @@ def edit_creators():
         url = f"{host}:{port}/creators"
 
         # putting a moderator : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def remove_creator_callback(ev):  # pylint: disable=invalid-name
         """remove_creator_callback"""
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur au retrait d'un créateur : {req_result['message']}")
@@ -1450,7 +1450,7 @@ def edit_creators():
         url = f"{host}:{port}/creators"
 
         # removing a moderator : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     MY_SUB_PANEL <= html.H3("Editer les modérateurs")
 
@@ -1536,7 +1536,7 @@ def edit_moderators():
         """ add_moderator_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la mise d'un modérateur : {req_result['message']}")
@@ -1573,13 +1573,13 @@ def edit_moderators():
         url = f"{host}:{port}/moderators"
 
         # putting a moderator : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def remove_moderator_callback(ev):  # pylint: disable=invalid-name
         """remove_moderator_callback"""
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur au retrait d'un modérateur : {req_result['message']}")
@@ -1616,7 +1616,7 @@ def edit_moderators():
         url = f"{host}:{port}/moderators"
 
         # removing a moderator : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     MY_SUB_PANEL <= html.H3("Editer les modérateurs")
 
@@ -1707,7 +1707,7 @@ def show_idle_data():
         def reply_callback1(req):
 
             def reply_callback2(req):
-                req_result = json.loads(req.text)
+                req_result = loads(req.text)
                 if req.status != 200:
                     if 'message' in req_result:
                         alert(f"Erreur à la suppression du compte {player_pseudo}: {req_result['message']}")
@@ -1724,7 +1724,7 @@ def show_idle_data():
                 MY_SUB_PANEL.clear()
                 show_idle_data()
 
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à l'usurpation {player_pseudo} : {req_result['message']}")
@@ -1743,7 +1743,7 @@ def show_idle_data():
             url = f"{host}:{port}/players/{player_pseudo}"
 
             # deleting account : need token (of player or of admin)
-            ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': token}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback2, ontimeout=common.noreply_callback)
+            ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': token}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback2, ontimeout=common.noreply_callback)
 
         ev.preventDefault()
 
@@ -1757,13 +1757,13 @@ def show_idle_data():
 
         # usurping : need token
         # note : since we access directly to the user server, we present the token in a slightly different way
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback1, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback1, ontimeout=common.noreply_callback)
 
     def recall_account_callback(ev, player_pseudo):  # pylint: disable=invalid-name
         """ recall_account_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à l'envoi du rappel: {req_result['message']}")
@@ -1807,7 +1807,7 @@ def show_idle_data():
         url = f"{host}:{port}/mail-players"
 
         # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -1865,7 +1865,7 @@ def show_idle_data():
 
     emails_dict = common.get_all_emails()
 
-    time_stamp_now = time.time()
+    time_stamp_now = time()
 
     count = 0
     for player in sorted(idle_set, key=lambda p: int(last_login_time[p]) if p in last_login_time else 0, reverse=False):
@@ -1939,7 +1939,7 @@ def show_scheduler_logs():
         """ get_logs_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération des logs : {req_result['message']}")
@@ -1964,7 +1964,7 @@ def show_scheduler_logs():
         url = f"{host}:{port}/access-logs/{LINES_SCHEDULER_LOGS}"
 
         # get logs : do not need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     MY_SUB_PANEL <= html.H3("Logs scheduler")
 
@@ -1982,7 +1982,7 @@ def maintain():
         """ maintain_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la maintenance : {req_result['message']}")
@@ -2020,7 +2020,7 @@ def maintain():
         url = f"{host}:{port}/maintain"
 
         # maintain : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     MY_SUB_PANEL <= html.H3("Maintenance")
 

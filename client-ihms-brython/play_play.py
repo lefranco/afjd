@@ -2,8 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
-import time
-import json
+from json import loads, dumps
+from time import time
 
 from browser import html, ajax, alert, document   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -87,7 +87,7 @@ def game_orders_reload(game_id):
 
     def reply_callback(req):
         nonlocal orders_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement des ordres de la partie : {req_result['message']}")
@@ -106,7 +106,7 @@ def game_orders_reload(game_id):
     url = f"{host}:{port}/game-orders/{game_id}"
 
     # getting orders : need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return orders_loaded
 
@@ -118,7 +118,7 @@ def game_communication_orders_reload(game_id):
 
     def reply_callback(req):
         nonlocal orders_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement des ordres de communication la partie : {req_result['message']}")
@@ -137,7 +137,7 @@ def game_communication_orders_reload(game_id):
     url = f"{host}:{port}/game-communication-orders/{game_id}"
 
     # getting orders : need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return orders_loaded
 
@@ -196,7 +196,7 @@ def submit_orders():
 
             nonlocal orders_in
 
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la soumission d'ordres : {req_result['message']}")
@@ -270,13 +270,13 @@ def submit_orders():
             dialog2.close()
 
         names_dict = play_low.VARIANT_DATA.extract_names()
-        names_dict_json = json.dumps(names_dict)
+        names_dict_json = dumps(names_dict)
 
         inforced_names_dict = play_low.INFORCED_VARIANT_DATA.extract_names()
-        inforced_names_dict_json = json.dumps(inforced_names_dict)
+        inforced_names_dict_json = dumps(inforced_names_dict)
 
         orders_list_dict = orders_data.save_json()
-        orders_list_dict_json = json.dumps(orders_list_dict)
+        orders_list_dict_json = dumps(orders_list_dict)
 
         if input_never.checked:
             definitive_value = 0
@@ -298,7 +298,7 @@ def submit_orders():
         url = f"{host}:{port}/game-orders/{play_low.GAME_ID}"
 
         # submitting orders : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def rest_hold_callback(_):
         """ rest_hold_callback """
@@ -1015,7 +1015,7 @@ def submit_orders():
         nonlocal down_click_time
         nonlocal stored_event
 
-        down_click_time = time.time()
+        down_click_time = time()
         stored_event = event
 
     def callback_canvas_mouseup(_):
@@ -1027,7 +1027,7 @@ def submit_orders():
             return
 
         # get click duration
-        up_click_time = time.time()
+        up_click_time = time()
         click_duration = up_click_time - down_click_time
         down_click_time = None
 
@@ -1250,7 +1250,7 @@ def submit_orders():
 
         # warning for this button if after deadline
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
-        time_stamp_now = time.time()
+        time_stamp_now = time()
         if time_stamp_now > deadline_loaded:
             option_never += " (ATTENTION : retard !)"
 
@@ -1529,7 +1529,7 @@ def submit_communication_orders():
         """ submit_orders_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la soumission d'ordres de communication : {req_result['message']}")
@@ -1543,7 +1543,7 @@ def submit_communication_orders():
             common.info_dialog(f"Vous avez déposé les ordres de communication : {messages}", True)
 
         orders_list_dict = orders_data.save_json()
-        orders_list_dict_json = json.dumps(orders_list_dict)
+        orders_list_dict_json = dumps(orders_list_dict)
 
         json_dict = {
             'role_id': play_low.ROLE_ID,
@@ -1555,7 +1555,7 @@ def submit_communication_orders():
         url = f"{host}:{port}/game-communication-orders/{play_low.GAME_ID}"
 
         # submitting orders : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def erase_all_callback(_):
         """ erase_all_callback """
@@ -1951,7 +1951,7 @@ def submit_communication_orders():
         nonlocal down_click_time
         nonlocal stored_event
 
-        down_click_time = time.time()
+        down_click_time = time()
         stored_event = event
 
     def callback_canvas_mouseup(_):
@@ -1963,7 +1963,7 @@ def submit_communication_orders():
             return
 
         # get click duration
-        up_click_time = time.time()
+        up_click_time = time()
         click_duration = up_click_time - down_click_time
         down_click_time = None
 
@@ -2292,7 +2292,7 @@ def imagine_units():
         """ imagine_unit_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur imagine d'unité {delete=}: {req_result['message']}")
@@ -2327,7 +2327,7 @@ def imagine_units():
         url = f"{host}:{port}/game-imagine-unit/{play_low.GAME_ID}/{play_low.ROLE_ID}"
 
         # showing units : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def reset_callback(_):
         """ reset_callback """
@@ -2752,7 +2752,7 @@ def vote():
         """ add_vote_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'ajout de vote d'arrêt dans la partie : {req_result['message']}")
@@ -2783,7 +2783,7 @@ def vote():
         url = f"{host}:{port}/game-votes/{play_low.GAME_ID}"
 
         # adding a vote in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()

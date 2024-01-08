@@ -2,8 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import time
-import json
+from json import loads, dumps
+from time import time
 
 from browser import html, alert, document, ajax, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -35,7 +35,7 @@ def get_recruiting_games():
 
     def reply_callback(req):
         nonlocal recruiting_games_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des parties qui recrutent : {req_result['message']}")
@@ -54,7 +54,7 @@ def get_recruiting_games():
     url = f"{host}:{port}/games-recruiting"
 
     # getting recruiting games list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return recruiting_games_list
 
@@ -94,7 +94,7 @@ def my_opportunities():
 
             def reply_callback(req):
 
-                req_result = json.loads(req.text)
+                req_result = loads(req.text)
                 if req.status != 200:
                     if 'message' in req_result:
                         alert(f"Erreur à la désinscription à la partie : {req_result['message']}")
@@ -120,7 +120,7 @@ def my_opportunities():
             url = f"{host}:{port}/allocations"
 
             # adding allocation : need a token
-            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         ev.preventDefault()
 
@@ -137,7 +137,7 @@ def my_opportunities():
 
             def reply_callback(req):
 
-                req_result = json.loads(req.text)
+                req_result = loads(req.text)
                 if req.status != 201:
                     if 'message' in req_result:
                         alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
@@ -163,7 +163,7 @@ def my_opportunities():
             url = f"{host}:{port}/allocations"
 
             # adding allocation : need a token
-            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         ev.preventDefault()
 
@@ -193,7 +193,7 @@ def my_opportunities():
         MY_SUB_PANEL.clear()
         my_opportunities()
 
-    overall_time_before = time.time()
+    overall_time_before = time()
 
     # declared by safety but could be not used
     pseudo = None
@@ -552,7 +552,7 @@ def my_opportunities():
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
 
-    overall_time_after = time.time()
+    overall_time_after = time()
     elapsed = overall_time_after - overall_time_before
 
     stats = f"Temps de chargement de la page {elapsed:.2f} secs"
@@ -784,7 +784,7 @@ def all_games(state_name):
         MY_SUB_PANEL.clear()
         all_games(state_name)
 
-    overall_time_before = time.time()
+    overall_time_before = time()
 
     # title
     title = html.H3(f"Parties dans l'état: {state_name}")
@@ -821,7 +821,7 @@ def all_games(state_name):
                 game = games_dict[str(game_id)]['name']
                 game_master_dict[game] = master
 
-    time_stamp_now = time.time()
+    time_stamp_now = time()
 
     # button for switching mode
     if 'GAME_ACCESS_MODE' not in storage:
@@ -1067,7 +1067,7 @@ def all_games(state_name):
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
 
-    overall_time_after = time.time()
+    overall_time_after = time()
     elapsed = overall_time_after - overall_time_before
 
     stats = f"Temps de chargement de la page {elapsed:.2f} secs avec {number_games} partie(s)"
@@ -1094,7 +1094,7 @@ def show_no_game_masters_data():
 
         def reply_callback(req):
 
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la prise de l'arbitrage de la partie : {req_result['message']}")
@@ -1132,7 +1132,7 @@ def show_no_game_masters_data():
         url = f"{host}:{port}/role-allocations"
 
         # taking game mastering : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     pseudo = None
     if 'PSEUDO' in storage:

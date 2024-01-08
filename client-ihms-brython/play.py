@@ -2,7 +2,7 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
-import time
+from time import time
 
 from browser import document, html, alert, timer, window   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -224,7 +224,7 @@ def countdown():
     # calculate display colour for deadline and countdown
 
     colour = None
-    time_stamp_now = time.time()
+    time_stamp_now = time()
 
     if play_low.GAME_PARAMETERS_LOADED['fast']:
         factor = 60
@@ -260,7 +260,7 @@ def countdown():
 
     # calculate text value of countdown
 
-    time_stamp_now = time.time()
+    time_stamp_now = time()
     remains = int(deadline_loaded - time_stamp_now)
 
     if remains < 0:

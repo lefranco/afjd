@@ -2,8 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
-import time
-import json
+from json import loads, dumps
+from time import time
 
 from browser import html, ajax, alert, timer   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -41,7 +41,7 @@ class Logger(list):
         """ insert """
 
         # insert datation
-        time_stamp_now = time.time()
+        time_stamp_now = time()
         date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
         date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
 
@@ -74,7 +74,7 @@ def game_master():
         """ clear_vote_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'effacement de vote d'arrêt dans la partie : {req_result['message']}")
@@ -103,7 +103,7 @@ def game_master():
         url = f"{host}:{port}/game-votes/{play_low.GAME_ID}"
 
         # adding a vote in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
@@ -112,7 +112,7 @@ def game_master():
     def debrief_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur au debrief de la partie : {req_result['message']}")
@@ -139,12 +139,12 @@ def game_master():
         url = f"{host}:{port}/debrief-game/{play_low.GAME}"
 
         # debrief : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def change_deadline_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la modification de la date limite à la partie : {req_result['message']}")
@@ -173,7 +173,7 @@ def game_master():
 
         deadline_timestamp = mydatetime.totimestamp(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
 
-        time_stamp_now = time.time()
+        time_stamp_now = time()
         if deadline_timestamp < time_stamp_now:
             alert("Désolé, il est interdit de positionner une date limite dans le passé")
             # back to where we were
@@ -191,12 +191,12 @@ def game_master():
         url = f"{host}:{port}/games/{play_low.GAME}"
 
         # changing game deadline : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def push_deadline_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur au poussage de date limite à la partie : {req_result['message']}")
@@ -234,12 +234,12 @@ def game_master():
         url = f"{host}:{port}/games/{play_low.GAME}"
 
         # changing game deadline : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def sync_deadline_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la synchro de date limite à la partie : {req_result['message']}")
@@ -270,7 +270,7 @@ def game_master():
         url = f"{host}:{port}/games/{play_low.GAME}"
 
         # changing game deadline : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def send_recall_orders_email_callback(ev, role_id):  # pylint: disable=invalid-name
         """ send_recall_orders_email_callback """
@@ -279,7 +279,7 @@ def game_master():
 
         def reply_callback(req):
             nonlocal pseudo_there
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à l'envoi de courrier électronique message de rappel (ordres manquants) : {req_result['message']}")
@@ -294,7 +294,7 @@ def game_master():
         ev.preventDefault()
 
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
-        time_stamp_now = time.time()
+        time_stamp_now = time()
         if not time_stamp_now > deadline_loaded:
             alert("Attendez que la date limite soit passée pour réclamer les ordres, sinon le joueur va crier à l'injustice :-)")
             return
@@ -332,7 +332,7 @@ def game_master():
         url = f"{host}:{port}/mail-players"
 
         # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def send_recall_agreed_email_callback(ev, role_id):  # pylint: disable=invalid-name
         """ send_recall_agreed_email_callback """
@@ -341,7 +341,7 @@ def game_master():
 
         def reply_callback(req):
             nonlocal pseudo_there
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à l'envoi de courrier électronique message de rappel (manque accord pour résoudre) : {req_result['message']}")
@@ -356,7 +356,7 @@ def game_master():
         ev.preventDefault()
 
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
-        time_stamp_now = time.time()
+        time_stamp_now = time()
         if not time_stamp_now > deadline_loaded:
             alert("Attendez que la date limite soit passée pour réclamer l'accord, sinon le joueur va crier à l'injustice :-)")
             return
@@ -394,7 +394,7 @@ def game_master():
         url = f"{host}:{port}/mail-players"
 
         # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def send_welcome_email_callback(ev, role_id):  # pylint: disable=invalid-name
         """ send_welcome_email_callback """
@@ -403,7 +403,7 @@ def game_master():
 
         def reply_callback(req):
             nonlocal pseudo_there
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à l'envoi de courrier électronique message de bienvenue : {req_result['message']}")
@@ -450,7 +450,7 @@ def game_master():
         url = f"{host}:{port}/mail-players"
 
         # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def send_need_replacement_callback(ev, role_id):  # pylint: disable=invalid-name
         """ send_need_replacement_callback """
@@ -459,7 +459,7 @@ def game_master():
 
         def reply_callback(req):
             nonlocal pseudo_there
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à l'envoi de courrier électronique message de demande de remplacement : {req_result['message']}")
@@ -514,13 +514,13 @@ def game_master():
         url = f"{host}:{port}/mail-players"
 
         # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def civil_disorder_callback(ev, role_id):  # pylint: disable=invalid-name
         """ civil_disorder_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la soumission d'ordres de désordre civil dans la partie : {req_result['message']}")
@@ -540,7 +540,7 @@ def game_master():
         ev.preventDefault()
 
         names_dict = play_low.VARIANT_DATA.extract_names()
-        names_dict_json = json.dumps(names_dict)
+        names_dict_json = dumps(names_dict)
 
         json_dict = {
             'role_id': role_id,
@@ -552,13 +552,13 @@ def game_master():
         url = f"{host}:{port}/game-force-no-orders/{play_low.GAME_ID}"
 
         # submitting civil disorder : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def force_agreement_callback(ev, role_id):  # pylint: disable=invalid-name
         """ force_agreement_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la soumission d'accord forcé pour résoudre dans la partie : {req_result['message']}")
@@ -585,7 +585,7 @@ def game_master():
         ev.preventDefault()
 
         inforced_names_dict = play_low.INFORCED_VARIANT_DATA.extract_names()
-        inforced_names_dict_json = json.dumps(inforced_names_dict)
+        inforced_names_dict_json = dumps(inforced_names_dict)
 
         json_dict = {
             'role_id': role_id,
@@ -597,13 +597,13 @@ def game_master():
         url = f"{host}:{port}/game-force-agree-solve/{play_low.GAME_ID}"
 
         # submitting force agreement : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def unallocate_role_callback(ev, pseudo_removed, role_id):  # pylint: disable=invalid-name
         """ unallocate_role_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la désallocation de rôle dans la partie : {req_result['message']}")
@@ -635,13 +635,13 @@ def game_master():
         url = f"{host}:{port}/role-allocations"
 
         # put role : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def allocate_role_callback(ev, input_for_role, role_id):  # pylint: disable=invalid-name
         """ allocate_role_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'allocation de rôle dans la partie : {req_result['message']}")
@@ -675,7 +675,7 @@ def game_master():
         url = f"{host}:{port}/role-allocations"
 
         # put role : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def get_list_pseudo_allocatable_game():
         """ get_list_pseudo_allocatable_game """
@@ -684,7 +684,7 @@ def game_master():
 
         def reply_callback(req):
             nonlocal pseudo_list
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération de la liste des joueurs allouables dans la partie : {req_result['message']}")
@@ -704,7 +704,7 @@ def game_master():
         url = f"{host}:{port}/game-allocations/{play_low.GAME_ID}"
 
         # get roles that are allocated to game : do not need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return pseudo_list
 
@@ -787,7 +787,7 @@ def game_master():
     game_admin_table <= thead
 
     deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
-    time_stamp_now = time.time()
+    time_stamp_now = time()
 
     for role_id in play_low.VARIANT_DATA.roles:
 
@@ -1015,7 +1015,7 @@ def game_master():
     deadline_form <= html.BR()
 
     # get GMT date and time
-    time_stamp_now = time.time()
+    time_stamp_now = time()
     date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
 
@@ -1124,7 +1124,7 @@ def supervise():
         """ civil_disorder_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la soumission d'ordres de désordre civil dans la partie : {req_result['message']}")
@@ -1138,7 +1138,7 @@ def supervise():
             ev.preventDefault()
 
         names_dict = play_low.VARIANT_DATA.extract_names()
-        names_dict_json = json.dumps(names_dict)
+        names_dict_json = dumps(names_dict)
 
         json_dict = {
             'role_id': role_id,
@@ -1150,13 +1150,13 @@ def supervise():
         url = f"{host}:{port}/game-force-no-orders/{play_low.GAME_ID}"
 
         # submitting civil disorder : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def force_agreement_callback(ev, role_id):  # pylint: disable=invalid-name
         """ force_agreement_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la soumission d'accord forcé pour résoudre dans la partie : {req_result['message']}")
@@ -1176,7 +1176,7 @@ def supervise():
             ev.preventDefault()
 
         inforced_names_dict = play_low.INFORCED_VARIANT_DATA.extract_names()
-        inforced_names_dict_json = json.dumps(inforced_names_dict)
+        inforced_names_dict_json = dumps(inforced_names_dict)
 
         json_dict = {
             'role_id': role_id,
@@ -1188,7 +1188,7 @@ def supervise():
         url = f"{host}:{port}/game-force-agree-solve/{play_low.GAME_ID}"
 
         # submitting force agreement : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def reload_game_admin_table(submitted_data, votes):
         """ reload_game_admin_table """
@@ -1318,7 +1318,7 @@ def supervise():
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
         grace_duration_loaded = play_low.GAME_PARAMETERS_LOADED['grace_duration']
         force_point = deadline_loaded + time_unit * grace_duration_loaded
-        time_stamp_now = time.time()
+        time_stamp_now = time()
 
         # are we past ?
         if time_stamp_now > force_point:

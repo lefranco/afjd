@@ -2,8 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
-import math
+from json import loads, dumps
+from math import exp
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -36,7 +36,7 @@ def get_detailed_elo_rating(classic, role_id):
 
     def reply_callback(req):
         nonlocal rating_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération du classement ELO détaillé : {req_result['message']}")
@@ -54,7 +54,7 @@ def get_detailed_elo_rating(classic, role_id):
     url = f"{host}:{port}/elo_rating/{int(classic)}/{role_id}"
 
     # getting rating list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return list(rating_list)
 
@@ -66,7 +66,7 @@ def get_global_elo_rating(classic):
 
     def reply_callback(req):
         nonlocal rating_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération du classement ELO  global : {req_result['message']}")
@@ -84,7 +84,7 @@ def get_global_elo_rating(classic):
     url = f"{host}:{port}/elo_rating/{int(classic)}"
 
     # getting rating list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return list(rating_list)
 
@@ -96,7 +96,7 @@ def get_reliability_rating():
 
     def reply_callback(req):
         nonlocal rating_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération du classement fiabilité : {req_result['message']}")
@@ -114,7 +114,7 @@ def get_reliability_rating():
     url = f"{host}:{port}/reliability_rating"
 
     # getting rating list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return list(rating_list)
 
@@ -126,7 +126,7 @@ def get_regularity_rating():
 
     def reply_callback(req):
         nonlocal rating_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération du classement regularité : {req_result['message']}")
@@ -144,7 +144,7 @@ def get_regularity_rating():
     url = f"{host}:{port}/regularity_rating"
 
     # getting rating list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return list(rating_list)
 
@@ -577,7 +577,7 @@ def show_rating_regularity():
             seniority = round(started_playing_days / 7)
 
             # how recent is the activity - that is a ratio
-            non_obsolesence = round(math.exp(- finished_playing_days / 365.2), 3)
+            non_obsolesence = round(exp(- finished_playing_days / 365.2), 3)
 
             # how continuous (there must a few gaps as possible)
             play_duration = max(started_playing_days - finished_playing_days, 0.5)

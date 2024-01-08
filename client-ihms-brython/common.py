@@ -3,8 +3,8 @@
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
 
-import json
-import time
+from json import load, loads, dumps
+from time import time
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -54,7 +54,7 @@ class Random:
     """ Random provider """
 
     def __init__(self):
-        self._next = int(time.time())
+        self._next = int(time())
 
     def choice(self, values):
         """ chooses an element """
@@ -83,7 +83,7 @@ def get_players():
 
     def reply_callback(req):
         nonlocal players_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des joueurs : {req_result['message']}")
@@ -101,7 +101,7 @@ def get_players():
     url = f"{host}:{port}/players-short"
 
     # getting players list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return players_dict
 
@@ -113,7 +113,7 @@ def get_players_data():
 
     def reply_callback(req):
         nonlocal players_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des joueurs et leurs données : {req_result['message']}")
@@ -131,7 +131,7 @@ def get_players_data():
     url = f"{host}:{port}/players"
 
     # getting players list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return dict(players_dict)
 
@@ -143,7 +143,7 @@ def get_games_data(current_state=None):
 
     def reply_callback(req):
         nonlocal games_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des parties : {req_result['message']}")
@@ -165,7 +165,7 @@ def get_games_data(current_state=None):
         url = f"{host}:{port}/games"
 
     # getting games list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return games_dict
 
@@ -177,7 +177,7 @@ def game_variant_content_reload(variant_name):
 
     def reply_callback(req):
         nonlocal variant_content_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement du contenu de la variante de la partie : {req_result['message']}")
@@ -196,7 +196,7 @@ def game_variant_content_reload(variant_name):
     url = f"{host}:{port}/variants/{variant_name}"
 
     # getting variant : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return variant_content_loaded
 
@@ -208,7 +208,7 @@ def game_position_reload(game_id):
 
     def reply_callback(req):
         nonlocal position_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement de la position de la partie : {req_result['message']}")
@@ -227,7 +227,7 @@ def game_position_reload(game_id):
     url = f"{host}:{port}/game-positions/{game_id}"
 
     # getting game position : do not need a token if not fog_of_war
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return position_loaded
 
@@ -251,7 +251,7 @@ def game_position_fog_of_war_reload(game_id, role_id):
 
     def reply_callback(req):
         nonlocal position_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement de la position (brouillard) de la partie  : {req_result['message']}")
@@ -270,7 +270,7 @@ def game_position_fog_of_war_reload(game_id, role_id):
     url = f"{host}:{port}/game-fog-of-war-positions/{game_id}/{role_id}"
 
     # getting game position : need a token if fog_of_war
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return position_loaded
 
@@ -282,7 +282,7 @@ def tournament_position_reload(tournament_id):
 
     def reply_callback(req):
         nonlocal positions_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement des positions des parties du tournoi : {req_result['message']}")
@@ -301,7 +301,7 @@ def tournament_position_reload(tournament_id):
     url = f"{host}:{port}/tournament-positions/{tournament_id}"
 
     # getting game position : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return positions_loaded
 
@@ -362,7 +362,7 @@ def get_role_allocated_to_player_in_game(game_id):
 
     def reply_callback(req):
         nonlocal role_id
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération du rôle alloué au joueur dans la partie : {req_result['message']}")
@@ -383,7 +383,7 @@ def get_role_allocated_to_player_in_game(game_id):
     url = f"{host}:{port}/game-role/{game_id}"
 
     # get players allocated to game : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return role_id
 
@@ -395,7 +395,7 @@ def date_last_visit_load(game_id, visit_type):
 
     def reply_callback(req):
         nonlocal time_stamp
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la dernière visite de la partie : ({visit_type}): {req_result['message']}")
@@ -414,7 +414,7 @@ def date_last_visit_load(game_id, visit_type):
     url = f"{host}:{port}/game-visits/{game_id}/{visit_type}"
 
     # getting last visit in a game : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return time_stamp
 
@@ -464,7 +464,7 @@ def read_parameters(variant_name_loaded, interface_chosen):
 
     parameters_file_name = f"./variants/{variant_name_loaded}/{interface_chosen}/parameters.json"
     with open(parameters_file_name, "r", encoding="utf-8") as read_file2:
-        parameters_read = json.load(read_file2)
+        parameters_read = load(read_file2)
 
     return parameters_read
 
@@ -489,7 +489,7 @@ def get_allocations_data():
 
     def reply_callback(req):
         nonlocal allocation_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des allocations : {req_result['message']}")
@@ -508,7 +508,7 @@ def get_allocations_data():
     url = f"{host}:{port}/allocations"
 
     # getting allocations : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return allocation_data
 
@@ -520,7 +520,7 @@ def get_game_data(game):
 
     def reply_callback(req):
         nonlocal game_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement des données de la partie : {req_result['message']}")
@@ -539,7 +539,7 @@ def get_game_data(game):
     url = f"{host}:{port}/games/{game}"
 
     # getting game data : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return game_data
 
@@ -551,7 +551,7 @@ def get_game_id(name):
 
     def reply_callback(req):
         nonlocal game_id
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de l'identifiant de partie : {req_result['message']}")
@@ -569,7 +569,7 @@ def get_game_id(name):
     url = f"{host}:{port}/game-identifiers/{name}"
 
     # getting a game identifier : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return game_id
 
@@ -581,7 +581,7 @@ def get_tournaments_data():
 
     def reply_callback(req):
         nonlocal tournaments_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des tournois : {req_result['message']}")
@@ -599,7 +599,7 @@ def get_tournaments_data():
     url = f"{host}:{port}/tournaments"
 
     # getting tournaments list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return tournaments_dict
 
@@ -611,7 +611,7 @@ def get_assignments_data():
 
     def reply_callback(req):
         nonlocal assignment_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des assignations : {req_result['message']}")
@@ -630,7 +630,7 @@ def get_assignments_data():
     url = f"{host}:{port}/assignments"
 
     # getting allocations : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return assignment_data
 
@@ -642,7 +642,7 @@ def get_groupings_data():
 
     def reply_callback(req):
         nonlocal grouping_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des regroupements : {req_result['message']}")
@@ -661,7 +661,7 @@ def get_groupings_data():
     url = f"{host}:{port}/groupings"
 
     # getting allocations : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return grouping_data
 
@@ -673,7 +673,7 @@ def game_parameters_reload(game):
 
     def reply_callback(req):
         nonlocal game_parameters_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement des paramètres de la partie : {req_result['message']}")
@@ -692,7 +692,7 @@ def game_parameters_reload(game):
     url = f"{host}:{port}/games/{game}"
 
     # getting game data : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return game_parameters_loaded
 
@@ -704,7 +704,7 @@ def get_tournament_data(game):
 
     def reply_callback(req):
         nonlocal tournament_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des informations du tournoi : {req_result['message']}")
@@ -723,7 +723,7 @@ def get_tournament_data(game):
     url = f"{host}:{port}/tournaments/{game}"
 
     # getting tournament data : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return tournament_dict
 
@@ -735,7 +735,7 @@ def tournament_incidents_reload(tournament_id):
 
     def reply_callback(req):
         nonlocal incidents
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des incidents retards du tournoi : {req_result['message']}")
@@ -754,7 +754,7 @@ def tournament_incidents_reload(tournament_id):
     url = f"{host}:{port}/tournament-incidents/{tournament_id}"
 
     # extracting incidents from a tournament : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return incidents
 
@@ -766,7 +766,7 @@ def tournament_incidents2_reload(tournament_id):
 
     def reply_callback(req):
         nonlocal incidents
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des incidents désordres civils du tournoi : {req_result['message']}")
@@ -785,7 +785,7 @@ def tournament_incidents2_reload(tournament_id):
     url = f"{host}:{port}/tournament-incidents2/{tournament_id}"
 
     # extracting incidents from a tournament : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return incidents
 
@@ -797,7 +797,7 @@ def get_player_id(pseudo):
 
     def reply_callback(req):
         nonlocal player_id
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération d'identifiant de joueur : {req_result['message']}")
@@ -815,7 +815,7 @@ def get_player_id(pseudo):
     url = f"{host}:{port}/player-identifiers/{pseudo}"
 
     # get player id : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return player_id
 
@@ -827,7 +827,7 @@ def get_player_games_playing_in(player_id):
 
     def reply_callback(req):
         nonlocal player_games_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récuperation de la liste des parties du joueur : {req_result['message']}")
@@ -846,7 +846,7 @@ def get_player_games_playing_in(player_id):
     url = f"{host}:{port}/player-allocations/{player_id}"
 
     # getting player games playing in list : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return player_games_dict
 
@@ -858,7 +858,7 @@ def get_events_data():
 
     def reply_callback(req):
         nonlocal events_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des événements : {req_result['message']}")
@@ -876,7 +876,7 @@ def get_events_data():
     url = f"{host}:{port}/events"
 
     # getting tournaments list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return events_dict
 
@@ -888,7 +888,7 @@ def get_all_emails():
 
     def reply_callback(req):
         nonlocal emails_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des courriels : {req_result['message']}")
@@ -907,7 +907,7 @@ def get_all_emails():
     url = f"{host}:{port}/players-emails"
 
     # changing news : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return emails_dict
 
@@ -916,7 +916,7 @@ def send_ip_address():
     """ send_ip_address """
 
     def reply_callback(req):
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à l'envoi de l'adresse IP : {req_result['message']}")
@@ -944,7 +944,7 @@ def send_ip_address():
     url = f"{host}:{port}/ip_address"
 
     # store ip : do need token
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
 
 def get_ip_submission_table():
@@ -954,7 +954,7 @@ def get_ip_submission_table():
 
     def reply_callback(req):
         nonlocal ip_sub_list
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des addresses IP et dernières soumissions : {req_result['message']}")
@@ -973,7 +973,7 @@ def get_ip_submission_table():
     url = f"{host}:{port}/ip_address"
 
     # getting ip addresses or last submissions : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return dict(ip_sub_list)
 
@@ -991,7 +991,7 @@ def get_priviledged():
 
     def reply_callback(req):
         nonlocal priviledged
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des privilégiés : {req_result['message']}")
@@ -1009,7 +1009,7 @@ def get_priviledged():
     url = f"{host}:{port}/priviledged"
 
     # getting moderators list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return priviledged
 
@@ -1021,7 +1021,7 @@ def get_news_content():
 
     def reply_callback(req):
         nonlocal news_content
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération du contenu des nouvelles : {req_result['message']}")
@@ -1039,7 +1039,7 @@ def get_news_content():
     url = f"{host}:{port}/news"
 
     # get news : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return news_content
 
@@ -1051,7 +1051,7 @@ def get_game_players_data(game_id):
 
     def reply_callback(req):
         nonlocal game_players_dict
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des joueurs de la partie : {req_result['message']}")
@@ -1070,7 +1070,7 @@ def get_game_players_data(game_id):
     url = f"{host}:{port}/game-allocations/{game_id}"
 
     # getting game allocation : need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return game_players_dict
 
@@ -1082,7 +1082,7 @@ def get_game_master(game_id):
 
     def reply_callback(req):
         nonlocal master_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement de l'arbitre de la partie : {req_result['message']}")
@@ -1101,7 +1101,7 @@ def get_game_master(game_id):
     url = f"{host}:{port}/game-master/{game_id}"
 
     # getting master : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return master_loaded
 
@@ -1113,7 +1113,7 @@ def game_dropouts_reload(game_id):
 
     def reply_callback(req):
         nonlocal dropouts
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des abandons de la partie : {req_result['message']}")
@@ -1132,7 +1132,7 @@ def game_dropouts_reload(game_id):
     url = f"{host}:{port}/game-dropouts/{game_id}"
 
     # extracting dropouts from a game : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return dropouts
 
@@ -1144,7 +1144,7 @@ def game_transitions_reload(game_id):
 
     def reply_callback(req):
         nonlocal transitions_loaded
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur au chargement des transitions de la partie : {req_result['message']}")
@@ -1163,7 +1163,7 @@ def game_transitions_reload(game_id):
     url = f"{host}:{port}/game-transitions/{game_id}"
 
     # getting transitions : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return transitions_loaded
 
@@ -1175,7 +1175,7 @@ def game_note_reload(game_id):
 
     def reply_callback(req):
         nonlocal content
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des notes de la partie : {req_result['message']}")
@@ -1194,7 +1194,7 @@ def game_note_reload(game_id):
     url = f"{host}:{port}/game-notes/{game_id}"
 
     # extracting vote from a game : need token (or not?)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return content
 

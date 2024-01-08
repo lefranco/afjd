@@ -1,6 +1,6 @@
 """ unit_design """
 
-import math
+from math import pi
 
 
 class Point:
@@ -39,7 +39,7 @@ def draw_circle(x_pos: int, y_pos: int, ray: int, ctx):
     """ draw_circle """
 
     ctx.beginPath()
-    ctx.arc(x_pos, y_pos, ray, 0, 2 * math.pi, False)
+    ctx.arc(x_pos, y_pos, ray, 0, 2 * pi, False)
     ctx.fill()
     ctx.stroke()
     ctx.closePath()

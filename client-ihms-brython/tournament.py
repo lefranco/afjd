@@ -2,8 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
-import time
+from json import loads, dumps
+from time import time
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -43,7 +43,7 @@ def get_tournament_players(tournament_id):
 
     def reply_callback(req):
         nonlocal tournament_players
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de la liste des joueurs du tournoi : {req_result['message']}")
@@ -62,7 +62,7 @@ def get_tournament_players(tournament_id):
     url = f"{host}:{port}/tournament-players/{tournament_id}"
 
     # getting tournament allocation : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return tournament_players
 
@@ -109,7 +109,7 @@ def show_games():
         MY_SUB_PANEL.clear()
         show_games()
 
-    overall_time_before = time.time()
+    overall_time_before = time()
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -156,7 +156,7 @@ def show_games():
             game = games_dict[str(game_id)]['name']
             game_master_dict[game] = master
 
-    time_stamp_now = time.time()
+    time_stamp_now = time()
 
     # button for switching mode
     if 'GAME_ACCESS_MODE' not in storage:
@@ -407,7 +407,7 @@ def show_games():
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
 
-    overall_time_after = time.time()
+    overall_time_after = time()
     elapsed = overall_time_after - overall_time_before
 
     stats = f"Temps de chargement de la page {elapsed:.2f} secs avec {number_games} partie(s)"
@@ -468,7 +468,7 @@ def show_players():
 def show_ratings():
     """ show_ratings """
 
-    overall_time_before = time.time()
+    overall_time_before = time()
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -607,7 +607,7 @@ def show_ratings():
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
     MY_SUB_PANEL <= html.BR()
 
-    overall_time_after = time.time()
+    overall_time_after = time()
     elapsed = overall_time_after - overall_time_before
 
     stats = f"Temps de chargement de la page {elapsed:.2f} secs"
@@ -618,7 +618,7 @@ def show_ratings():
 def show_incidents():
     """ show_incidents """
 
-    overall_time_before = time.time()
+    overall_time_before = time()
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -814,7 +814,7 @@ def show_incidents():
     MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
     MY_SUB_PANEL <= html.BR()
 
-    overall_time_after = time.time()
+    overall_time_after = time()
     elapsed = overall_time_after - overall_time_before
 
     stats = f"Temps de chargement de la page {elapsed:.2f} secs"
@@ -829,7 +829,7 @@ def create_tournament():
         """ create_tournament_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la création du tournoi : {req_result['message']}")
@@ -874,7 +874,7 @@ def create_tournament():
         url = f"{host}:{port}/tournaments"
 
         # creating a tournament : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -933,7 +933,7 @@ def edit_tournament():
         """ put_in_tournament_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la mise d'une partie dans le tournoi : {req_result['message']}")
@@ -973,13 +973,13 @@ def edit_tournament():
         url = f"{host}:{port}/groupings/{tournament_id}"
 
         # putting a game in a tournament : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def remove_from_tournament_callback(ev):  # pylint: disable=invalid-name
         """remove_from_tournament_callback"""
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur au retrait d'une partie du tournoi : {req_result['message']}")
@@ -1020,7 +1020,7 @@ def edit_tournament():
         url = f"{host}:{port}/groupings/{tournament_id}"
 
         # removing a game from a tournament : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1141,7 +1141,7 @@ def delete_tournament():
     def delete_tournament_callback(ev, dialog):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la suppression du tournoi : {req_result['message']}")
@@ -1171,7 +1171,7 @@ def delete_tournament():
         url = f"{host}:{port}/tournaments/{game}"
 
         # deleting tournament : need token
-        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def delete_tournament_callback_confirm(ev):  # pylint: disable=invalid-name
         """ delete_tournament_callback_confirm """

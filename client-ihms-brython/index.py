@@ -2,10 +2,10 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
-import time
-import json
+from json import loads, dumps
+from time import time
 
-START_TIME = time.time()
+START_TIME = time()
 
 
 from browser import document, html, alert, timer, ajax, window  # pylint: disable=import-error
@@ -138,7 +138,7 @@ def get_site_image():
 
     def reply_callback(req):
         global SITE_IMAGE_DICT
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération de l'image du site : {req_result['message']}")
@@ -156,7 +156,7 @@ def get_site_image():
     url = f"{host}:{port}/site_image"
 
     # get site image : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
 def load_game(game_name):
@@ -411,7 +411,7 @@ document <= html.B("Contactez le support par courriel en cas de problème (cf. p
 document <= html.BR()
 
 # home page loading time
-END_TIME = time.time()
+END_TIME = time()
 ELAPSED = END_TIME - START_TIME
 home.show_load_time_version(ELAPSED)
 

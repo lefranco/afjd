@@ -2,8 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
-import time
+from json import loads, dumps
+from time import time
 
 from browser import html, alert, document, ajax  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -261,7 +261,7 @@ def sandbox():
 
         def reply_callback(req):
             nonlocal report_window
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la soumission de situation et ordres de simulation : {req_result['message']}")
@@ -280,25 +280,25 @@ def sandbox():
                 display_left.removeChild(report_window)
 
                 # put new
-                time_stamp_now = time.time()
+                time_stamp_now = time()
                 report_txt = req_result['result']
                 fake_report_loaded = {'time_stamp': time_stamp_now, 'content': report_txt}
                 report_window = common.make_report_window(fake_report_loaded)
                 display_left <= report_window
 
         names_dict = VARIANT_DATA.extract_names()
-        names_dict_json = json.dumps(names_dict)
+        names_dict_json = dumps(names_dict)
 
         orders_list_dict = ORDERS_DATA.save_json()
-        orders_list_dict_json = json.dumps(orders_list_dict)
+        orders_list_dict_json = dumps(orders_list_dict)
 
         # units
         units_list_dict = POSITION_DATA.save_json()
-        units_list_dict_json = json.dumps(units_list_dict)
+        units_list_dict_json = dumps(units_list_dict)
 
         # orders
         orders_list_dict = ORDERS_DATA.save_json()
-        orders_list_dict_json = json.dumps(orders_list_dict)
+        orders_list_dict_json = dumps(orders_list_dict)
 
         json_dict = {
             'variant_name': VARIANT_NAME,
@@ -312,13 +312,13 @@ def sandbox():
         url = f"{host}:{port}/simulation"
 
         # submitting position and orders for simulation : do not need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def download_callback(_):
         """ download_callback """
 
         # make a rendom like label
-        time_stamp_now = time.time()
+        time_stamp_now = time()
         label = int(time_stamp_now) % 1000
 
         # needed too for some reason
@@ -680,7 +680,7 @@ def sandbox():
         nonlocal down_click_time
         nonlocal stored_event
 
-        down_click_time = time.time()
+        down_click_time = time()
         stored_event = event
 
     def callback_canvas_mouseup(_):
@@ -692,7 +692,7 @@ def sandbox():
             return
 
         # get click duration
-        up_click_time = time.time()
+        up_click_time = time()
         click_duration = up_click_time - down_click_time
         down_click_time = None
 
@@ -1032,7 +1032,7 @@ def sandbox():
 
         reserve_table <= row
 
-    time_stamp_now = time.time()
+    time_stamp_now = time()
     fake_report_loaded = {'time_stamp': time_stamp_now, 'content': ""}
     report_window = common.make_report_window(fake_report_loaded)
 

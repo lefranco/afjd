@@ -1,6 +1,6 @@
 """ geometry """
 
-import math
+from math import sqrt
 
 
 class DirectionEnum:
@@ -45,7 +45,7 @@ class PositionRecord:
 
     def distance(self, other: 'PositionRecord') -> float:
         """ euclidian distance """
-        return math.sqrt((other.x_pos - self.x_pos) ** 2 + (other.y_pos - self.y_pos) ** 2)
+        return sqrt((other.x_pos - self.x_pos) ** 2 + (other.y_pos - self.y_pos) ** 2)
 
     def shift(self, direction: DirectionEnum, amplitude: int) -> 'PositionRecord':
         """ shift """

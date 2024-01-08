@@ -2,8 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
-import time
+from json import loads, dumps
+from time import time
 
 from browser import html, alert, ajax, window, timer  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -48,7 +48,7 @@ def get_quitters_data():
 
     def reply_callback(req):
         nonlocal quitters_data
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des abandons : {req_result['message']}")
@@ -68,7 +68,7 @@ def get_quitters_data():
 
     # we do not really care if a hacker manages to get this information without being a creator
     # getting allocations : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return quitters_data
 
@@ -80,7 +80,7 @@ def change_glorious():
         """ change_glorious_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la modification du contenu des glorieux : {req_result['message']}")
@@ -110,7 +110,7 @@ def change_glorious():
         url = f"{host}:{port}/news"
 
         # changing news : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -226,7 +226,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
 
         def reply_callback(req):
             nonlocal create_status
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la création de la partie : {req_result['message']}")
@@ -255,7 +255,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         json_dict['name'] = game_to_create_name
 
         # obviously different deadline (set it to now)
-        time_stamp_now = time.time()
+        time_stamp_now = time()
         deadline = int(time_stamp_now)
         json_dict['deadline'] = deadline
 
@@ -264,7 +264,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         json_dict['current_advancement'] = 0
 
         # obviously different description
-        time_stamp_now = time.time()
+        time_stamp_now = time()
         time_creation = mydatetime.fromtimestamp(time_stamp_now)
         time_creation_str = mydatetime.strftime(*time_creation)
         variant = json_dict['variant']
@@ -286,7 +286,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         url = f"{host}:{port}/games"
 
         # creating a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return create_status
 
@@ -297,7 +297,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
 
         def reply_callback(req):
             nonlocal status
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la mise d'un joueur dans la partie : {req_result['message']}")
@@ -326,7 +326,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         url = f"{host}:{port}/allocations"
 
         # putting a player in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return status
 
@@ -337,7 +337,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
 
         def reply_callback(req):
             nonlocal status
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'allocation de rôle dans la partie : {req_result['message']}")
@@ -367,7 +367,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         url = f"{host}:{port}/role-allocations"
 
         # put role : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return status
 

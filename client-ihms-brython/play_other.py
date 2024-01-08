@@ -2,7 +2,7 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
-import json
+from json import loads, dumps
 
 from browser import html, ajax, alert, window, document   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -24,7 +24,7 @@ def date_last_visit_update(game_id, role_id, visit_type):
     """ date_last_visit_update """
 
     def reply_callback(req):
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 201:
             if 'message' in req_result:
                 alert(f"Erreur à la mise à jour de la dernière visite de la partie : {req_result['message']}")
@@ -43,7 +43,7 @@ def date_last_visit_update(game_id, role_id, visit_type):
     url = f"{host}:{port}/game-visits/{game_id}/{visit_type}"
 
     # putting visit in a game : need token
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
 def join_game():
@@ -51,7 +51,7 @@ def join_game():
 
     def reply_callback(req):
 
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 201:
             if 'message' in req_result:
                 alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
@@ -87,7 +87,7 @@ def join_game():
     url = f"{host}:{port}/allocations"
 
     # adding allocation : need a token
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
 def game_incidents2_reload(game_id):
@@ -97,7 +97,7 @@ def game_incidents2_reload(game_id):
 
     def reply_callback(req):
         nonlocal incidents
-        req_result = json.loads(req.text)
+        req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des incidents désordres civils  de la partie : {req_result['message']}")
@@ -116,7 +116,7 @@ def game_incidents2_reload(game_id):
     url = f"{host}:{port}/game-incidents2/{game_id}"
 
     # extracting incidents from a game : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return incidents
 
@@ -197,7 +197,7 @@ def show_position(direct_last_moves):
 
         def reply_callback(req):
             nonlocal json_return_dict
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération de l'export json de la partie : {req_result['message']}")
@@ -207,7 +207,7 @@ def show_position(direct_last_moves):
                     alert("Réponse du serveur imprévue et non documentée")
                 return
             json_return_dict = req_result['content']
-            json_text = json.dumps(json_return_dict, indent=4, ensure_ascii=False)
+            json_text = dumps(json_return_dict, indent=4, ensure_ascii=False)
 
             # needed too for some reason
             play_low.MY_SUB_PANEL <= html.A(id='download_link')
@@ -226,7 +226,7 @@ def show_position(direct_last_moves):
         url = f"{host}:{port}/game-export/{play_low.GAME_ID}"
 
         # getting game json export : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return True
 
@@ -581,7 +581,7 @@ def show_events_in_game():
     def remove_dropout_callback(_, dialog, role_id, player_id):
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la suppression de l'abandon : {req_result['message']}")
@@ -607,12 +607,12 @@ def show_events_in_game():
         url = f"{host}:{port}/game-dropouts-manage/{play_low.GAME_ID}/{role_id}/{player_id}"
 
         # deleting dropout : need token
-        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def remove_incident_callback(_, dialog, role_id, advancement):
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la suppression de l'incident : {req_result['message']}")
@@ -638,7 +638,7 @@ def show_events_in_game():
         url = f"{host}:{port}/game-incidents-manage/{play_low.GAME_ID}/{role_id}/{advancement}"
 
         # deleting incident : need token
-        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def remove_dropout_callback_confirm(ev, role_id, player_id, text):  # pylint: disable=invalid-name
         """ remove_dropout_callback_confirm """
@@ -950,7 +950,7 @@ def pairing():
     def join_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
@@ -985,12 +985,12 @@ def pairing():
         url = f"{host}:{port}/allocations"
 
         # adding allocation : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def quit_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la désinscription de la partie : {req_result['message']}")
@@ -1026,13 +1026,13 @@ def pairing():
 
         # should be a delete but body in delete requests is more or less forbidden
         # quitting a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def take_mastering_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
 
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à la prise de l'arbitrage de la partie : {req_result['message']}")
@@ -1068,12 +1068,12 @@ def pairing():
         url = f"{host}:{port}/role-allocations"
 
         # taking game mastering : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def quit_mastering_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la démission de l'arbitrage de la partie : {req_result['message']}")
@@ -1109,7 +1109,7 @@ def pairing():
         url = f"{host}:{port}/role-allocations"
 
         # giving up game mastering : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1206,7 +1206,7 @@ def negotiate(default_dest_set, def_focus_role_id):
         """ add_message_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'ajout de message dans la partie : {req_result['message']}")
@@ -1263,7 +1263,7 @@ def negotiate(default_dest_set, def_focus_role_id):
         url = f"{host}:{port}/game-messages/{play_low.GAME_ID}"
 
         # adding a message in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def messages_reload(game_id):
         """ messages_reload """
@@ -1272,7 +1272,7 @@ def negotiate(default_dest_set, def_focus_role_id):
 
         def reply_callback(req):
             nonlocal messages
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération des messages dans la partie : {req_result['message']}")
@@ -1291,7 +1291,7 @@ def negotiate(default_dest_set, def_focus_role_id):
         url = f"{host}:{port}/game-messages/{game_id}"
 
         # extracting messages from a game : need token (or not?)
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return messages
 
@@ -1569,7 +1569,7 @@ def declare():
         """ add_declaration_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'ajout de déclaration dans la partie : {req_result['message']}")
@@ -1619,7 +1619,7 @@ def declare():
         url = f"{host}:{port}/game-declarations/{play_low.GAME_ID}"
 
         # adding a declaration in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def declarations_reload(game_id):
         """ declarations_reload """
@@ -1628,7 +1628,7 @@ def declare():
 
         def reply_callback(req):
             nonlocal declarations
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération de déclarations dans la partie : {req_result['message']}")
@@ -1647,7 +1647,7 @@ def declare():
         url = f"{host}:{port}/game-declarations/{game_id}"
 
         # extracting declarations from a game : need token (or not?)
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return declarations
 
@@ -1834,7 +1834,7 @@ def note():
         """ add_note_callback """
 
         def reply_callback(req):
-            req_result = json.loads(req.text)
+            req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Erreur à l'ajout de la note dans la partie : {req_result['message']}")
@@ -1865,7 +1865,7 @@ def note():
         url = f"{host}:{port}/game-notes/{play_low.GAME_ID}"
 
         # adding a vote in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
