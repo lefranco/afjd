@@ -395,10 +395,10 @@
         "23": {
             "name": "PRU",
             "full_name": "Prusse",
-            "x_pos": 616,
-            "y_pos": 261,
+            "x_pos": 623,
+            "y_pos": 279,
             "x_legend_pos": 621,
-            "y_legend_pos": 280
+            "y_legend_pos": 261
         },
         "24": {
             "name": "POS",
