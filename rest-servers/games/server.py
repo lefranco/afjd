@@ -1451,7 +1451,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(400, msg="Error cound not find capacity of the game")
 
             assert game_capacity is not None
-            if game.current_state == 0 and len(allocations_list) >= game_capacity:
+            if game.current_state in [0, 1] and len(allocations_list) >= game_capacity:
                 # it is : send notification to game master
 
                 if game_master_id is not None:
@@ -1461,7 +1461,10 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
                     addressees = [game_master_id]
                     body = "Bonjour !\n"
                     body += "\n"
-                    body += "Vous pouvez donc démarrer cette partie !\n"
+                    if game.current_state == 0:
+                        body += "Vous pouvez donc démarrer cette partie !\n"
+                    elif game.current_state == 1:
+                        body += "Vous pouvez donc donner un rôle au remplaçant !\n"
                     body += "\n"
                     body += "Pour se rendre directement sur la partie :\n"
                     body += f"https://diplomania-gen.fr?game={game.name}"
