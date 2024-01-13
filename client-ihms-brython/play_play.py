@@ -2535,6 +2535,10 @@ def imagine_units():
 
                 legend_imagined_unit = html.DIV(f"L'unité imaginée est {imagined_unit}")
                 buttons_right <= legend_imagined_unit
+                buttons_right <= html.BR()
+
+                legend_imagined_unit2 = html.DIV(f"Sa nationalité est sans aucune importance", Class='important')
+                buttons_right <= legend_imagined_unit2
 
                 buttons_right <= html.BR()
                 put_submit(buttons_right, False)
