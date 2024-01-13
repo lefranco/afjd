@@ -24,7 +24,7 @@ profiler.PROFILER.send_report(pseudo, version, destination, timeout)
 
 # pylint: disable=wrong-import-order, wrong-import-position
 
-import time
+from time import time
 
 START_TIME = time()
 
