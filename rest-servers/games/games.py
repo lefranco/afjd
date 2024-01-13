@@ -426,7 +426,7 @@ class Game:
         assert variant_data is not None
 
         number_players = variant_data['roles']['number']
-        role_list = list(range(number_players + 1))
+        role_list = list(range(-1, number_players + 1))
 
         # role limited or extended according to variant
         if int(role) not in role_list:
