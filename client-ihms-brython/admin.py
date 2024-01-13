@@ -39,9 +39,9 @@ LONG_DURATION_LIMIT_SEC = 1.0
 
 DOWNLOAD_LOG = False
 
-# max size in bytes of image (after b64)
-# let 's say one Mo
-MAX_SIZE_IMAGE = (4 / 3) * 1000000
+# max size in bytes of image (before b64)
+# let 's say one 0.5 Mo
+MAX_SIZE_IMAGE =  500000
 
 
 def get_active_data():
