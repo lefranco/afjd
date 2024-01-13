@@ -1184,15 +1184,18 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
                 # game creator goes in the game
                 dangling_role_id = -1
-                game.put_role(sql_executor, user_id, dangling_role_id)
+                # cannot fail
+                _ = game.put_role(sql_executor, user_id, dangling_role_id)
 
                 # admin game master of the game
-                game.put_role(sql_executor, ADDRESS_ADMIN, 0)
+                # cannot fail
+                _ = game.put_role(sql_executor, ADDRESS_ADMIN, 0)
 
             else:
 
                 # game creator is game master of the game
-                game.put_role(sql_executor, user_id, 0)
+                # cannot fail
+                _ = game.put_role(sql_executor, user_id, 0)
 
         # if game has a passive role, fill it
 
@@ -1217,7 +1220,8 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             passive_user_id = req_result.json()
 
             # allocate passive to game
-            game.put_role(sql_executor, passive_user_id, role_id)
+            # cannot fail
+            _ = game.put_role(sql_executor, passive_user_id, role_id)
 
         sql_executor.commit()
         del sql_executor
@@ -1435,7 +1439,8 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         if not delete:
 
             # put in game
-            game.put_role(sql_executor, player_id, dangling_role_id)
+            # cannot fail
+            _ = game.put_role(sql_executor, player_id, dangling_role_id)
 
             # is if full now ?
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
@@ -1592,7 +1597,8 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                     flask_restful.abort(400, msg="You cannot take game mastership since you are a player in this game")
 
                 # put role
-                game.put_role(sql_executor, player_id, role_id)
+                # cannot fail
+                _ = game.put_role(sql_executor, player_id, role_id)
 
                 sql_executor.commit()
                 del sql_executor
@@ -1608,7 +1614,8 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
 
             # put dangling
             dangling_role_id = -1
-            game.put_role(sql_executor, player_id, dangling_role_id)
+            # cannot fail
+            _ = game.put_role(sql_executor, player_id, dangling_role_id)
 
             sql_executor.commit()
             del sql_executor
@@ -1644,7 +1651,10 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(403, msg="There is already a player who has this role in this game")
 
             # put role
-            game.put_role(sql_executor, player_id, role_id)
+            status = game.put_role(sql_executor, player_id, role_id)
+            if not status:
+                del sql_executor
+                flask_restful.abort(400, msg="This role is incorrect for the variant of this game")
 
             sql_executor.commit()
             del sql_executor
@@ -1665,7 +1675,8 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
 
         # put dangling
         dangling_role_id = -1
-        game.put_role(sql_executor, player_id, dangling_role_id)
+        # cannot fail
+        _ = game.put_role(sql_executor, player_id, dangling_role_id)
 
         # we have a quitter here
         dropout = dropouts.Dropout(game_id, role_id, player_id)
@@ -6597,7 +6608,8 @@ class RevokeRessource(flask_restful.Resource):  # type: ignore
         assert game_id is not None
         assert game_master_id is not None
         dangling_role_id = -1
-        game.put_role(sql_executor, game_master_id, dangling_role_id)
+        # cannot fail
+        _ = game.put_role(sql_executor, game_master_id, dangling_role_id)
 
         sql_executor.commit()
         del sql_executor

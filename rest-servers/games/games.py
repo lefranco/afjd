@@ -418,12 +418,24 @@ class Game:
         allocation = allocations.Allocation(game_id, user_id, role)
         allocation.delete_database(sql_executor)
 
-    def put_role(self, sql_executor: database.SqlExecutor, user_id: int, role: int) -> None:
+    def put_role(self, sql_executor: database.SqlExecutor, user_id: int, role: int) -> bool:
         """ put player/game master in game """
+
+        variant_name = self.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+
+        number_players = variant_data['roles']['number']
+        role_list = list(range(number_players + 1))
+
+        # role limited or extended according to variant
+        if int(role) not in role_list:
+            return False
 
         game_id = self.identifier
         allocation = allocations.Allocation(game_id, user_id, role)
         allocation.update_database(sql_executor)
+        return True
 
     def get_role(self, sql_executor: database.SqlExecutor, role: int) -> typing.Optional[int]:
         """ retrieves player/game master id of role in game """
@@ -535,7 +547,8 @@ class Game:
                 continue
             role_id = role_list[num]
             num += 1
-            self.put_role(sql_executor, player_id, role_id)
+            # should always succeed
+            _ = self.put_role(sql_executor, player_id, role_id)
 
     def detect_finished(self) -> bool:
         """ detect_finished """
