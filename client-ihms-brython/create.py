@@ -154,7 +154,7 @@ def change_glorious():
     MY_SUB_PANEL <= form
 
 
-def check_batch(current_pseudo, games_to_create):
+def check_batch(current_pseudo, games_to_create, number_players_expected):
     """ check_batch """
 
     players_dict = common.get_players_data()
@@ -183,14 +183,11 @@ def check_batch(current_pseudo, games_to_create):
                     already_warned.add(player_name)
                     error = True
 
-    # check all games have same number of roles (fatal)
-    reference_size = None
+    # check all games have same number of roles as variant expects (fatal)
     for game_name, allocations in games_to_create.items():
-        size = len(allocations)
-        if reference_size is None:
-            reference_size = size
-        elif size != reference_size:
-            alert(f"Il semble que la partie {game_name} n'a pas le même nombre de joueurs que la première partie")
+        number_players = len(allocations) - 1
+        if number_players != number_players_expected:
+            alert(f"Il semble que la partie {game_name} n'a pas le nombre de joueurs attendu par la variante")
             return False
 
     # check the players in games are not duplicated (fatal)
@@ -199,7 +196,7 @@ def check_batch(current_pseudo, games_to_create):
             alert(f"Il semble que la partie {game_name} n'a pas des joueurs tous différents")
             return False
 
-    # Note : we do not check players are in same number of games because games may be split amongst several masters
+    # Note : we do not check players are in same number of games
 
     # game master has to be pseudo
     for game_name, allocations in games_to_create.items():
@@ -423,13 +420,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # was not possible to have a progress bar for some reason
         common.info_dialog(f"Partie {game_to_create_name} ({games_created_so_far}/{number_games}) créé et peuplée..")
 
-    # just to display role correctly
-    variant_name_loaded = storage['GAME_VARIANT']
-    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
-    parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
-    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-
     # will increment
     games_created_so_far = 0
 
@@ -519,7 +509,7 @@ def create_many_games():
                 return
 
             #  actual creation of all the games
-            if check_batch(pseudo, games_to_create):
+            if check_batch(pseudo, games_to_create, number_players_expected):
                 dialog = mydialog.Dialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
                 dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
                 dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
@@ -585,6 +575,11 @@ def create_many_games():
     form <= input_create_games
 
     MY_SUB_PANEL <= form
+
+    # just to  get 'number_players_expected'
+    variant_name_loaded = storage['GAME_VARIANT']
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    number_players_expected = variant_content_loaded['roles']['number']
 
 
 def explain_stuff():
