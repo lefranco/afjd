@@ -102,7 +102,7 @@ def get_teaser_content():
     return teaser_content
 
 
-def formatted_news(news_content_loaded, admin, class_):
+def formatted_news(news_content_loaded, admin_modo, class_):
     """ formatted_news """
 
     # init
@@ -112,7 +112,7 @@ def formatted_news(news_content_loaded, admin, class_):
     if news_content_loaded is not None:
         for line in news_content_loaded.split("\n"):
             if line.startswith(".ANNONCE"):
-                if admin:
+                if admin_modo:
                     _, _, announcement = line.partition(".ANNONCE ")
                     previous_announcement = storage['ANNOUNCEMENT']
                     storage['ANNOUNCEMENT'] = announcement
@@ -315,7 +315,7 @@ def show_news():
     title5 = html.H4("Dernières nouvelles moderateur", Class='modo_news')
     div_a3 <= title5
     news_content_loaded2 = news_content_table_loaded['modo']
-    news_content2 = formatted_news(news_content_loaded2, False, 'modo_news')
+    news_content2 = formatted_news(news_content_loaded2, True, 'modo_news')
     div_a3 <= news_content2
     div_a3_tip = html.SPAN("Vous pouvez contacter le modérateur par un MP sur le forum", Class='tooltiptext')
     div_a3 <= div_a3_tip
