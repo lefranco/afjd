@@ -616,7 +616,7 @@ def get_game_status():
     # option + link
     col = html.TD("")
     if game_fog:
-        game_option_name = "brouillard"
+        game_option_name = "Le brouillard"
         form = html.FORM()
         input_show_option = html.INPUT(type="submit", value=game_option_name, Class='btn-inside')
         input_show_option.attrs['style'] = 'font-size: 10px'
