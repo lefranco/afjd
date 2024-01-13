@@ -293,10 +293,10 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
     def put_player_in_game(game_name, player_name):
         """ put_player_in_game """
 
-        status = None
+        put_player_in_game_status = None
 
         def reply_callback(req):
-            nonlocal status
+            nonlocal put_player_in_game_status
             req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -305,10 +305,10 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
                     alert(f"Problème à la mise d'un joueur dans la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
-                status = False
+                put_player_in_game_status = False
                 return
 
-            status = True
+            put_player_in_game_status = True
 
         game_id_int = common.get_game_id(game_name)
         if not game_id_int:
@@ -328,15 +328,15 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # putting a player in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-        return status
+        return put_player_in_game_status
 
     def allocate_role(game_name, player_pseudo, role_id):
         """ allocate_role """
 
-        status = None
+        allocate_role_status = None
 
         def reply_callback(req):
-            nonlocal status
+            nonlocal allocate_role_status
             req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -345,10 +345,10 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
                     alert(f"Problème à l'allocation de rôle dans la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
-                status = False
+                allocate_role_status = False
                 return
 
-            status = True
+            allocate_role_status = True
 
         game_id_int = common.get_game_id(game_name)
         if not game_id_int:
@@ -369,7 +369,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # put role : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-        return status
+        return allocate_role_status
 
     def create_one():
         """ will create a game : called on timer """
@@ -378,8 +378,9 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
 
         # no more game : done
         if not games_to_create_data:
-            alert(f"Les {number_games} parties du tournoi ont bien été créée.\nTout s'est bien passé.\nIncroyable, non ?")
             timer.clear_interval(create_refresh_timer)
+            if games_created_so_far == number_games:
+                alert(f"Les {number_games} parties du tournoi ont bien été créée(s) et peuplée(s).\nTout s'est bien passé.\nIncroyable, non ?")
             return
 
         # pop a game
@@ -388,20 +389,20 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         del games_to_create_data[game_to_create_name]
 
         # create this game
-        status = create_game(current_game_name, game_to_create_name)
-        if not status:
+        create_one_status = create_game(current_game_name, game_to_create_name)
+        if not create_one_status:
             alert(f"Echec à la création de la partie {game_to_create_name}")
             timer.clear_interval(create_refresh_timer)
             return
 
-        # put players in
+        # put players in this game
         for role_id, player_name in game_to_create_data.items():
             # game master already there
             if role_id == 0:
                 continue
             # put player
-            status = put_player_in_game(game_to_create_name, player_name)
-            if not status:
+            create_one_status = put_player_in_game(game_to_create_name, player_name)
+            if not create_one_status:
                 alert(f"Echec à l'appariement de {player_name} dans la partie {game_to_create_name}")
                 timer.clear_interval(create_refresh_timer)
                 return
@@ -411,18 +412,16 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
             # game master already has its role
             if role_id == 0:
                 continue
-            status = allocate_role(game_to_create_name, player_name, role_id)
-            if not status:
-                role = variant_data.roles[role_id]
-                role_name = variant_data.role_name_table[role]
-                alert(f"Echec à l'attribution du role {role_name} à {player_name} dans la partie {game_to_create_name}")
+            create_one_status = allocate_role(game_to_create_name, player_name, role_id)
+            if not create_one_status:
+                alert(f"Echec à l'attribution du role numéro {role_id} à {player_name} dans la partie {game_to_create_name}")
                 timer.clear_interval(create_refresh_timer)
                 return
 
         # update progress bar
         games_created_so_far += 1
         # was not possible to have a progress bar for some reason
-        common.info_dialog(f"Partie {game_to_create_name} ({games_created_so_far}/{number_games}) créé..")
+        common.info_dialog(f"Partie {game_to_create_name} ({games_created_so_far}/{number_games}) créé et peuplée..")
 
     # just to display role correctly
     variant_name_loaded = storage['GAME_VARIANT']
