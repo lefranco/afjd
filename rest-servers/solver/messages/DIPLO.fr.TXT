@@ -230,7 +230,7 @@ parse.c#139#Province (ou zone dans une province) %1 inconnue pour la destination
 parse.c#140#Il est préférable d'accoler la côte à la province
 parse.c#141#Province (ou zone dans une province) %1 inconnue pour l'unité passive (ou problème avec son type ou le pays - mettre 'pays type zone', seule la zone est obligatoire)
 parse.c#142#unité %1 passive inconnue
-parse.c#143#Pas de d'unité possible en %1%2
+parse.c#143#Pas d'unité possible en %1%2
 parse.c#144#Le pays précisé n'est pas celui de l'unité soutenue ou convoyee
 parse.c#145#Elements superflus dans un ordre de mouvement
 parse.c#146#Seules les flottes peuvent convoyer, utiliser un déplacement normal '-' pour une armée devant être convoyée
