@@ -3355,7 +3355,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     imagined_unit_dict[str(role_num)].append([type_num, zone_num])
 
                 # add them to submission
-                unit_dict.update(imagined_unit_dict)
+                for role_num1, role_units1 in unit_dict.items():
+                    if role_num1 in imagined_unit_dict:
+                        role_units1.extend(imagined_unit_dict[role_num1])
 
             situation_dict = {
                 'ownerships': ownership_dict,
