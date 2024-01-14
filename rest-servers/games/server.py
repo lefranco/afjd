@@ -2270,9 +2270,10 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
             ownership_dict[str(center_num)] = role_num
 
         # get units
-        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         game_units = units.Unit.list_by_game_id(sql_executor, game_id)
+        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        # fake_unit_dict : no
+        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
             if fake:
                 pass  # this is confidential
@@ -2287,12 +2288,6 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
 
-        # get imagined units
-        imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        imagined_game_units = imagined_units.ImaginedUnit.list_by_game_id_role_num(sql_executor, game_id, role_id)
-        for _, _, type_num, zone_num, role_num in imagined_game_units:
-            imagined_unit_dict[str(role_num)].append([type_num, zone_num])
-
         # game not ongoing or game master or game actually finished or soloed: you get get a clear picture
         if game.current_state != 1 or int(role_id) == 0 or game.soloed or game.finished:
             del sql_executor
@@ -2301,11 +2296,9 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
                 'dislodged_ones': dislodged_unit_dict,
                 'units': unit_dict,
                 'forbiddens': forbidden_list,
-                'imagined_units': imagined_unit_dict,
+                'imagined_units': {},
             }
             return data, 200
-
-        del sql_executor
 
         orders_list2: typing.List[typing.List[int]] = []
         fake_units_list2: typing.List[typing.List[int]] = []
@@ -2314,6 +2307,14 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
         # this will update last parameters
         variant_name = game.variant
         apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
+
+        # get imagined units
+        imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        imagined_game_units = imagined_units.ImaginedUnit.list_by_game_id_role_num(sql_executor, game_id, role_id)
+        for _, _, type_num, zone_num, role_num in imagined_game_units:
+            imagined_unit_dict[str(role_num)].append([type_num, zone_num])
+
+        del sql_executor
 
         data = {
             'ownerships': ownership_dict,
@@ -3337,11 +3338,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             for _, region_num in game_forbiddens:
                 forbidden_list.append(region_num)
 
-            orders_list2: typing.List[typing.List[int]] = []
-            fake_units_list2: typing.List[typing.List[int]] = []
-
             # apply visibility if the game position is protected
             if game.fog:
+
+                orders_list2: typing.List[typing.List[int]] = []
+                fake_units_list2: typing.List[typing.List[int]] = []
+
                 # now we can start hiding stuff
                 # this will update last parameters
                 apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
