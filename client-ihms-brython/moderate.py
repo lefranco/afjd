@@ -24,7 +24,6 @@ OPTIONS = {
     # communication
     'Changer nouvelles': "Changer nouvelles du site pour le modérateur",
     'Préparer un publipostage': "Préparer un publipostage vers tous les utilisateurs du site",
-    'Envoyer un courriel': "Envoyer un courriel à un utilisateur du site",
     'Résultats du tournoi': "Résultats détaillé du tournoi de la partie sélectionnée en passant l'anonymat",
     'Annoncer dans toutes les parties': "Annoncer dans toutes les parties en cours du site",
     'Annoncer dans la partie': "Annoncer dans la partie séléctionnée",
@@ -415,111 +414,6 @@ def prepare_mailing():
     MY_SUB_PANEL <= emails_table2
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les courriels en gras sont confimés, les courriels en italique ne le sont pas.", Class='note')
-
-
-def sendmail():
-    """ sendmail """
-
-    def sendmail_callback(ev):  # pylint: disable=invalid-name
-        """ sendmail_callback """
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à l'envoi de courrier électronique : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à l'envoi de courrier électronique : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            common.info_dialog(f"Message émis vers : {addressed_user_name}")
-
-        ev.preventDefault()
-
-        addressed_user_name = input_addressed.value
-        if not addressed_user_name:
-            alert("User name destinataire manquant")
-            return
-
-        subject = "Message de la part d'un modérateur du site https://diplomania-gen.fr (AFJD)"
-
-        if not input_message.value:
-            alert("Contenu du message vide")
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            sendmail()
-            return
-
-        body = input_message.value
-
-        addressed_id = players_dict[addressed_user_name]
-        addressees = [addressed_id]
-
-        json_dict = {
-            'addressees': " ".join([str(a) for a in addressees]),
-            'subject': subject,
-            'body': body,
-            'type': 'direct_message',
-        }
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/mail-players"
-
-        # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        sendmail()
-
-    MY_SUB_PANEL <= html.H3("Envoi de courriel individuel")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    players_dict = common.get_players()
-    if not players_dict:
-        return
-
-    # all players can be usurped
-    possible_addressed = set(players_dict.keys())
-
-    form = html.FORM()
-
-    fieldset = html.FIELDSET()
-    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par courriel")
-    fieldset <= legend_addressee
-    input_addressed = html.SELECT(type="select-one", value="", Class='btn-inside')
-    for addressee_pseudo in sorted(possible_addressed, key=lambda pu: pu.upper()):
-        option = html.OPTION(addressee_pseudo)
-        input_addressed <= option
-    fieldset <= input_addressed
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_message = html.LEGEND("Votre message", title="Qu'avez vous à lui dire ?")
-    fieldset <= legend_message
-    input_message = html.TEXTAREA(type="text", rows=8, cols=80)
-    fieldset <= input_message
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_select_player = html.INPUT(type="submit", value="Envoyer le courriel", Class='btn-inside')
-    input_select_player.bind("click", sendmail_callback)
-    form <= input_select_player
-
-    MY_SUB_PANEL <= form
 
 
 def tournament_result():
@@ -2410,8 +2304,6 @@ def load_option(_, item_name):
         change_news_modo()
     if item_name == 'Préparer un publipostage':
         prepare_mailing()
-    if item_name == 'Envoyer un courriel':
-        sendmail()
     if item_name == 'Résultats du tournoi':
         tournament_result()
     if item_name == 'Annoncer dans toutes les parties':
