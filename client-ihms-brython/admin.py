@@ -1759,60 +1759,6 @@ def show_idle_data():
         # note : since we access directly to the user server, we present the token in a slightly different way
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback1, ontimeout=common.noreply_callback)
 
-    def recall_account_callback(ev, player_pseudo):  # pylint: disable=invalid-name
-        """ recall_account_callback """
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à l'envoi du rappel: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à l'envoi du rappel : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            common.info_dialog(f"Message émis vers : {player_pseudo}")
-
-        ev.preventDefault()
-
-        subject = "Message de la part de l'administrateur du site https://diplomania-gen.fr (AFJD)"
-        body = ""
-        body += f"Bonjour {player_pseudo}"
-        body += "\n\n"
-        body += "Cher joueur, nous avons noté que tu n’as pas utilisé ton compte depuis longtemps."
-        body += "\n"
-        body += "Sache que de nombreuses parties (amicales, blitz, en négociation) sont disponibles sur le site https://diplomania-gen.fr/ avec un forum qui t’informera de tous les tournois en cours (en ligne et en face à face)."
-        body += "\n"
-        body += "C’est peut-être l’occasion de revenir nous voir ?"
-        body += "\n"
-        body += "Tu peux aussi nous rejoindre sur discord https://discord.gg/mUWes7yEqR. Nous sommes à ton écoute."
-        body += "\n"
-        body += "On espère te revoir bientôt"
-        body += "\n"
-        body += "Ludiquement"
-
-        addressed_id = pseudo2id[player_pseudo]
-
-        json_dict = {
-            'addressees': str(addressed_id),
-            'subject': subject,
-            'body': body,
-            'type': 'please_play',
-        }
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/mail-players"
-
-        # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        show_idle_data()
-
     players_dict = common.get_players_data()
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
@@ -1851,12 +1797,12 @@ def show_idle_data():
 
     idle_table = html.TABLE()
 
-    fields = ['player', 'id', 'last_login', 'email', 'recall', 'delete']
+    fields = ['player', 'id', 'last_login', 'email', 'delete']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'player': 'joueur', 'id': 'id', 'last_login': 'dernier login', 'email': 'courriel', 'recall': 'rappeler', 'delete': 'supprimer'}[field]
+        field_fr = {'player': 'joueur', 'id': 'id', 'last_login': 'dernier login', 'email': 'courriel', 'delete': 'supprimer'}[field]
         col = html.TD(field_fr)
         thead <= col
     idle_table <= thead
@@ -1897,13 +1843,6 @@ def show_idle_data():
                 email_link = html.A(href=f"mailto:{email}")
                 email_link <= email
                 value = email_link
-
-            if field == 'recall':
-                form = html.FORM()
-                input_delete_account = html.INPUT(type="image", src="./images/recall.jpg", title="Pour lui envoyer un rappel", Class='btn-inside')
-                input_delete_account.bind("click", lambda e, p=player: recall_account_callback(e, p))
-                form <= input_delete_account
-                value = form
 
             if field == 'delete':
                 form = html.FORM()
