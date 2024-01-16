@@ -40,6 +40,8 @@ import submissions
 import emails
 import site_image
 import database
+import contents
+import messages
 
 
 SESSION = requests.Session()
@@ -131,6 +133,10 @@ RESCUE_PLAYER_PARSER = flask_restful.reqparse.RequestParser()
 RESCUE_PLAYER_PARSER.add_argument('rescued_user', type=str, required=True)
 RESCUE_PLAYER_PARSER.add_argument('access_token', type=str, required=True)
 
+MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
+MESSAGE_PARSER.add_argument('dest_user_id', type=int, required=True)
+MESSAGE_PARSER.add_argument('content', type=str, required=True)
+
 # pseudo must be at least that size
 LEN_PSEUDO_MIN = 3
 
@@ -144,6 +150,34 @@ MAX_SIZE_IMAGE = (4 / 3) * 1000000
 
 # account allowed to update ratings
 COMMUTER_ACCOUNT = "TheCommuter"
+
+# to avoid repeat messages/declarations
+NO_REPEAT_DELAY_SEC = 15
+
+
+class RepeatPreventer(typing.Dict[int, float]):
+    """ Table """
+
+    def can(self, user_id: int) -> bool:
+        """ can """
+
+        if user_id not in self:
+            return True
+
+        now = time.time()
+        return now > self[user_id] + NO_REPEAT_DELAY_SEC
+
+    def did(self, user_id: int) -> None:
+        """ did """
+
+        # do it
+        now = time.time()
+        self[user_id] = now
+
+        # house clean
+        obsoletes = [k for (k, v) in self.items() if v < now - NO_REPEAT_DELAY_SEC]
+        for key in obsoletes:
+            del self[key]
 
 
 def email_rescue_message(pseudo: str, access_token: str) -> typing.Tuple[str, str]:
@@ -2510,6 +2544,174 @@ class RescuePlayerRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
         data = {'msg': "rescue message sent"}
+        return data, 200
+
+
+POST_MESSAGE_LOCK = threading.Lock()
+POST_MESSAGE_REPEAT_PREVENTER = RepeatPreventer()
+
+
+@API.resource('/private-messages')
+class PrivateMessagesRessource(flask_restful.Resource):  # type: ignore
+    """  PrivateMessagesRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Insert private message in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/private-messages - POST - creating new message")
+
+        args = MESSAGE_PARSER.parse_args(strict=True)
+
+        dest_user_id = args['dest_user_id']
+        payload = args['content']
+
+        # protection from "surrogates not allowed"
+        payload_safe = payload.encode('utf-8', errors='ignore').decode()
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        if not dest_user_id:
+            del sql_executor
+            flask_restful.abort(400, msg="There should be at least one destinee")
+
+        # create message here
+        with POST_MESSAGE_LOCK:
+
+            if not POST_MESSAGE_REPEAT_PREVENTER.can(int(user_id)):
+                del sql_executor
+                flask_restful.abort(400, msg="You have already messaged a very short time ago")
+
+            # create a content
+            identifier = contents.Content.free_identifier(sql_executor)  # noqa: F821
+            time_stamp = int(time.time())  # now
+            content = contents.Content(identifier, time_stamp, payload_safe)
+            content.update_database(sql_executor)  # noqa: F821
+
+            # create a message linked to the content
+            message = messages.Message(user_id, dest_user_id, identifier)
+            message.update_database(sql_executor)  # noqa: F821
+
+            POST_MESSAGE_REPEAT_PREVENTER.did(int(user_id))
+
+        subject = "Un utilisateur vous a envoyé un message privé sur le site"
+        addressees = []
+        addressees.append(dest_user_id)
+
+        body = "Bonjour !\n"
+        body += "\n"
+
+        body += f"Auteur du message : {pseudo}\n"
+        body += "\n"
+        body += "Contenu du message :\n"
+        body += "================\n"
+        body += payload_safe
+        body += "\n"
+        body += "================\n"
+
+        body += "Vous pouvez aller consulter le message et y répondre sur le site....\n"
+        body += "\n"
+        body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
+
+        json_dict = {
+            'addressees': " ".join([str(a) for a in addressees]),
+            'subject': subject,
+            'body': body,
+            'type': 'message',
+        }
+
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+        # for a rest API headers are presented differently
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+        sql_executor.commit()  # noqa: F821
+        del sql_executor  # noqa: F821
+
+        data = {'msg': "Ok message inserted"}
+        return data, 201
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Gets my private messages
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/private-messages - GET - getting back messages")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # gather messages
+        messages_extracted_list = messages.Message.list_with_content_by_player_id(sql_executor, player_id)
+
+        # get all message
+        messages_list = [(identifier, author_num, time_stamp, addressees_num, content.payload) for identifier, author_num, addressees_num, time_stamp, content in messages_extracted_list]
+
+        del sql_executor
+
+        data = {
+            'messages_list': messages_list,
+        }
         return data, 200
 
 

@@ -23,6 +23,8 @@ import addresses
 import submissions
 import emails
 import database
+import contents
+import messages
 
 
 def populate_newss(sql_executor: database.SqlExecutor) -> None:
@@ -109,6 +111,16 @@ def populate_emails(sql_executor: database.SqlExecutor) -> None:
     emails.Email.create_table(sql_executor)
 
 
+def populate_contents(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    contents.Content.create_table(sql_executor)
+
+
+def populate_messages(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    messages.Message.create_table(sql_executor)
+
+
 def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
@@ -128,6 +140,8 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_addresses(sql_executor)
     populate_submissions(sql_executor)
     populate_emails(sql_executor)
+    populate_contents(sql_executor)
+    populate_messages(sql_executor)
 
 
 if __name__ == '__main__':
