@@ -995,7 +995,6 @@ def private_messages(dest_user_id):
         ev.preventDefault()
 
         content = input_message.value
-        from_user_id = pseudo_id
         dest_user_id = players_dict[input_addressed.value]
 
         # keep a backup
@@ -1014,10 +1013,7 @@ def private_messages(dest_user_id):
             private_messages(dest_user_id)
             return
 
-        return [] #### TODO
-
         json_dict = {
-            'from_user_id': from_user_id,
             'dest_user_id': dest_user_id,
             'content': content
         }
@@ -1047,8 +1043,6 @@ def private_messages(dest_user_id):
                 return
 
             messages = req_result['messages_list']
-
-        return [] #### TODO
 
         json_dict = {}
 
