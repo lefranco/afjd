@@ -41,7 +41,7 @@ DOWNLOAD_LOG = False
 
 # max size in bytes of image (before b64)
 # let 's say one 0.5 Mo
-MAX_SIZE_IMAGE =  500000
+MAX_SIZE_IMAGE = 500000
 
 
 def get_active_data():
