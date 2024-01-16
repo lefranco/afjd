@@ -12,8 +12,6 @@ import mydatetime
 import mydialog
 import config
 import common
-import interface
-import mapping
 
 
 OPTIONS = {
