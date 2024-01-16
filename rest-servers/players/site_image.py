@@ -7,8 +7,9 @@ File : registrations.py
 Handles the site image
 """
 
-import database
 import typing
+
+import database
 
 
 class SiteImage:
