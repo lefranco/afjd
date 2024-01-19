@@ -137,6 +137,9 @@ MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
 MESSAGE_PARSER.add_argument('dest_user_id', type=int, required=True)
 MESSAGE_PARSER.add_argument('content', type=str, required=True)
 
+REMOVE_MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
+REMOVE_MESSAGE_PARSER.add_argument('message_id', type=int, required=True)
+
 # pseudo must be at least that size
 LEN_PSEUDO_MIN = 3
 
@@ -951,9 +954,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         #      'adjudication' : game has moved (from master/automatoin/player)
         #      'reminder' : please enter order/agreement or just welcome and come in to play
         # forced :
-        #      'please_play' : message from admin to player
         #      'question_event' : message from player to event organizer
-        #      'direct_message' : message from moderator to player
         #      'late' : master forced agreement and player is late
         # replacement :
         #      'replacement' : need a replacement
@@ -980,7 +981,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
             # decide if send
 
             if type_ == 'message':
-                # does not want to receive message/press notifications
+                # does not want to receive private_message/message/press notifications
                 if not pseudo_dest.notify_message:
                     continue
 
@@ -1009,7 +1010,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
                 'addressees': addressees_str,
             }
 
-            if type_ in ['please_play', 'question_event', 'direct_message']:
+            if type_ in ['question_event']:
 
                 sender = players.Player.find_by_pseudo(sql_executor, pseudo)
                 if sender is None:
@@ -2712,6 +2713,67 @@ class PrivateMessagesRessource(flask_restful.Resource):  # type: ignore
         data = {
             'messages_list': messages_list,
         }
+        return data, 200
+
+
+@API.resource('/private-messages/<message_id>')
+class PrivateMessagesDeleteRessource(flask_restful.Resource):  # type: ignore
+    """  PrivateMessagesDeleteRessource """
+
+    def delete(self, message_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Deletes a private message
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/private-messages - GET - deleting message")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # check owner
+        addressee_id = messages.Message.addressee_by_message_id(sql_executor, message_id)
+        if player_id != addressee_id:
+            flask_restful.abort(403, msg=f"Not owner of message {addressee_id=} != {player_id=}")
+
+        # remove message
+        message = messages.Message(0, 0, int(message_id))
+        message.delete_database(sql_executor)
+
+        # remove content
+        content = contents.Content(int(message_id), 0, '')
+        content.delete_database(sql_executor)
+
+        sql_executor.commit()
+
+        del sql_executor
+
+        data = {'msg': 'Ok removed'}
         return data, 200
 
 
