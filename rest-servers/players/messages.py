@@ -16,17 +16,15 @@ class Message:
     """ Class for handling a message """
 
     @staticmethod
-    def last_date_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, float]]:
-        """ class lookup : finds the object in database from fame id """
-        messages_found = sql_executor.execute("SELECT max(contents.time_stamp) as latest FROM messages, contents WHERE contents.identifier = messages.content_id AND messages.addressee_num = ?", (player_id,), need_result=True)
-        if not messages_found:
-            return []
-        return messages_found
+    def addressee_by_message_id(sql_executor: database.SqlExecutor, message_id: int) -> int:
+        """ class lookup : finds the object in database from message_id """
+        messages_found = sql_executor.execute("SELECT addressee_num FROM messages WHERE content_id = ?", (message_id,), need_result=True)
+        return messages_found[0][0]  # type: ignore
 
     @staticmethod
-    def list_with_content_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, int, int, int, int, contents.Content]]:
+    def list_with_content_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, int, int, int, contents.Content]]:
         """ class lookup : finds the object in database from fame id """
-        messages_found = sql_executor.execute("SELECT identifier, author_num, addressee_num, time_stamp, content_data FROM messages INNER JOIN contents ON contents.identifier = messages.content_id where ? in (author_num, addressee_num) ORDER BY time_stamp DESC", (player_id,), need_result=True)
+        messages_found = sql_executor.execute("SELECT identifier, author_num, addressee_num, time_stamp, content_data FROM messages INNER JOIN contents ON contents.identifier = messages.content_id WHERE ? in (author_num, addressee_num) ORDER BY time_stamp DESC", (player_id,), need_result=True)
         if not messages_found:
             return []
         return messages_found

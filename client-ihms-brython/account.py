@@ -969,6 +969,41 @@ def private_messages(dest_user_id):
         MY_SUB_PANEL.clear()
         private_messages(dest_id)
 
+    def suppress_message_callback(ev, message_id):  # pylint: disable=invalid-name
+        """ suppress_message_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la suppression de message dans les messages privés : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la suppression de message dans les messages privés : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Le message a été supprimé ! {messages}", True)
+
+            # back to where we started
+            global CONTENT_BACKUP
+            CONTENT_BACKUP = None
+            MY_SUB_PANEL.clear()
+            private_messages(None)
+
+        ev.preventDefault()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/private-messages/{message_id}"
+
+        # deleting a message in a game : need token
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
     def add_message_callback(ev):  # pylint: disable=invalid-name
         """ add_message_callback """
 
@@ -1063,11 +1098,6 @@ def private_messages(dest_user_id):
 
     pseudo = storage['PSEUDO']
 
-    # get time stamp of last visit of declarations
-    time_stamp_last_visit = 0  # TODO
-
-    # put time stamp of last visit of declarations as now
-    #### date_last_visit_update()  # TODO
 
     players_dict = common.get_players()
     if not players_dict:
@@ -1113,12 +1143,12 @@ def private_messages(dest_user_id):
     # there can be no message (if no message of failed to load)
 
     # sort with all that was added
-    messages.sort(key=lambda m: (float(m[4]), float(m[1])), reverse=True)
+    messages.sort(key=lambda m: float(m[1]), reverse=True)
 
     messages_table = html.TABLE()
 
     thead = html.THEAD()
-    for title in ['id', 'Date', 'Auteur', 'Destinataire', 'Contenu', 'Répondre']:
+    for title in ['id', 'Date', 'Auteur', 'Destinataire', 'Contenu', 'Répondre', 'Supprimer']:
         col = html.TD(html.B(title))
         thead <= col
     messages_table <= thead
@@ -1163,6 +1193,13 @@ def private_messages(dest_user_id):
         if dest_user_id2 == pseudo_id:
             button = html.BUTTON("Répondre", Class='btn-inside')
             button.bind("click", lambda e, d=from_user_id: answer_callback(e, d))
+            col <= button
+        row <= col
+
+        col = html.TD()
+        if dest_user_id2 == pseudo_id:
+            button = html.BUTTON("Supprimer", Class='btn-inside')
+            button.bind("click", lambda e, i=id_: suppress_message_callback(e, i))
             col <= button
         row <= col
 
