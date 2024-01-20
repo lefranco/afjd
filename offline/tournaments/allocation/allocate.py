@@ -21,9 +21,6 @@ import pstats
 
 PROFILE = False
 
-# this is a standard diplomacy constant
-POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
-
 # as extracted from input file
 PLAYERS_DATA: typing.List[str] = []
 MASTERS_DATA: typing.List[str] = []
@@ -56,7 +53,7 @@ class Game:
         """ puts the player in this game """
 
         assert isinstance(role, int), "Internal error: role should be an int"
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
 
         assert isinstance(player, Player), "Internal error: player should be a Player"
 
@@ -73,7 +70,7 @@ class Game:
         """ takes the player ou of this game """
 
         assert isinstance(role, int), "Internal error: role should be an int"
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
 
         assert isinstance(player, Player), "Internal error: player should be a Player"
         assert player in self._allocation.values(), "Internal error: player should be in game already"
@@ -96,16 +93,16 @@ class Game:
 
     def has_role_in_game(self, role: int) -> bool:
         """ hios the someone with this role in the game ? """
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
         return role in self._allocation
 
     def is_complete(self) -> bool:
         """ is the game complete ? """
-        return len(self._allocation) == len(POWERS)
+        return len(self._allocation) == len(ROLES_DATA)
 
     def list_players(self) -> str:
         """ display list of players of the game """
-        return ";".join([str(self._allocation[r] if r in self._allocation else "_") for r in range(len(POWERS))])
+        return ";".join([str(self._allocation[r] if r in self._allocation else "_") for r in range(len(ROLES_DATA))])
 
     @property
     def name(self) -> str:
@@ -136,7 +133,7 @@ class Player:
         """ put the player in a game """
 
         assert isinstance(role, int), "Internal error: number should be int"
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
 
         assert isinstance(game, Game)
 
@@ -147,7 +144,7 @@ class Player:
         """ remove the player from a game """
 
         assert isinstance(role, int), "Internal error: role for player should be int"
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
 
         assert isinstance(game, Game), "Internal error: game for player should be a Game"
 
@@ -160,12 +157,12 @@ class Player:
 
     def has_role(self, role: int) -> bool:
         """ does the players has this role ? """
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
         return role in self._allocation
 
     def game_where_has_role(self, role: int) -> Game:
         """ game where the players has this role ? """
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
         assert role in self._allocation, "Internal error: player should have the role"
         return self._allocation[role]
 
@@ -207,7 +204,7 @@ BEST_SWAPS: typing.List[typing.Tuple[int, Player, Player, Game, Game]] = []
 def try_and_error(depth: int) -> bool:
     """ try_and_error """
 
-    print(f"{depth // len(POWERS):5} ", end='\r', flush=True)
+    print(f"{depth // len(ROLES_DATA):5} ", end='\r', flush=True)
 
     # find a game where to fill up
     game = None
@@ -225,7 +222,7 @@ def try_and_error(depth: int) -> bool:
 
     # find a role
     role = None
-    for role_poss in range(len(POWERS)):
+    for role_poss in range(len(ROLES_DATA)):
         # game already has someone for this role
         if not game.has_role_in_game(role_poss):
             role = role_poss
@@ -324,7 +321,7 @@ def hill_climb() -> bool:
         changed = False
         for player1, player2 in couples:
 
-            roles = list(range(len(POWERS)))
+            roles = list(range(len(ROLES_DATA)))
             random.shuffle(roles)
 
             # find a swap
@@ -369,18 +366,27 @@ def main() -> None:
 
     start_time = time.time()
 
+    global ROLES_DATA
     global PLAYERS_DATA
     global MASTERS_DATA
     global SWAPS
     global BEST_SWAPS
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-r', '--roles_file', required=True, help='file with names of roles')
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
     parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
     parser.add_argument('-o', '--output_file', required=True, help='resulting file')
     parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players of the file (for testing)')
     args = parser.parse_args()
+
+    # load roles file
+    with open(args.roles_file, "r", encoding='utf-8') as read_file:
+        ROLES_DATA = [p.rstrip() for p in read_file.readlines() if p.rstrip()]
+
+    # all roles must be different
+    assert len(set(ROLES_DATA)) == len(ROLES_DATA), "There are duplicate(s) in roles list"
 
     # load players file
     with open(args.players_file, "r", encoding='utf-8') as read_file:
@@ -392,16 +398,16 @@ def main() -> None:
         PLAYERS_DATA = PLAYERS_DATA[:args.limit]
 
     # all players must be different
-    assert len(set(PLAYERS_DATA)) == len(PLAYERS_DATA), "Duplicate in players"
+    assert len(set(PLAYERS_DATA)) == len(PLAYERS_DATA), "There are duplicate(s) in players list"
 
-    # must be enough : that is at least 7
-    assert len(PLAYERS_DATA) >= len(POWERS), "You need more players than that to hope success!"
+    # must be enough : that is at least number of players per game
+    assert len(PLAYERS_DATA) >= len(ROLES_DATA), "You need more players than that to hope success!"
 
     # make it harder to guess
     random.shuffle(PLAYERS_DATA)
 
     # make players
-    for player_id, (player_id, name) in enumerate(PLAYERS_DATA.items()):
+    for player_id, name in enumerate(PLAYERS_DATA):
         player = Player(name, player_id)
         PLAYERS.append(player)
 
@@ -410,7 +416,7 @@ def main() -> None:
 
     # make games (as many as players)
     for game_id, _ in enumerate(PLAYERS):
-        name = f"{args.game_names_prefix}_{game_id+1}"
+        name = f"{args.game_names_prefix}_{game_id+1:02}"
         game = Game(name)
         GAMES.append(game)
 
@@ -418,7 +424,7 @@ def main() -> None:
     with open(args.masters_file, "r", encoding='utf-8') as read_file:
         MASTERS_DATA = [m.rstrip() for m in read_file.readlines() if m.rstrip()]
 
-    assert len(set(MASTERS_DATA)) == len(MASTERS_DATA), "Duplicate in masters"
+    assert len(set(MASTERS_DATA)) == len(MASTERS_DATA), "There are duplicate(s) in masters list"
 
     # must be more than 1
     assert len(MASTERS_DATA) >= 1, "There must be at least one master for these games"
