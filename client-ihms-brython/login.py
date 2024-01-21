@@ -19,36 +19,36 @@ MY_SUB_PANEL.attrs['style'] = 'display: table-row'
 MY_PANEL <= MY_SUB_PANEL
 
 
-def email_confirmed(pseudo):
-    """ email_confirmed """
+def new_private_messages_received():
+    """ new_private_messages_received """
 
-    email_confirmed_loaded = False
+    new_messages_loaded = 0
 
     def reply_callback(req):
-        nonlocal email_confirmed_loaded
+        nonlocal new_messages_loaded
         req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur au chargement des informations du compte : {req_result['message']}")
+                alert(f"Erreur au chargement si des messages personnels : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème au chargement des informations du compte : {req_result['msg']}")
+                alert(f"Problème au chargement si des messages personnels : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        email_confirmed_loaded = req_result['email_confirmed']
+        new_messages_loaded = req_result['new_messages']
         return
 
     json_dict = {}
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/players/{pseudo}"
+    url = f"{host}:{port}/new-private-messages-received"
 
-    # reading data about account : need token
+    # reading new private messages received : need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    return email_confirmed_loaded
+    return new_messages_loaded
 
 
 PREVIOUS_PSEUDO = None
@@ -106,8 +106,9 @@ def login():
             show_login()
 
             # request to validate email
-            if not email_confirmed(pseudo):
-                alert("Merci de penser à vérifier votre adresse courriel. Cela évite que les message du site reviennent en erreur. Pour ce faire : mon_compte/valider mon courriel - 'me renvoyer un nouveau code', recopier le code du courriel que vous avez reçu et 'valider le courriel'\n\nATTENTION : Les comptes avec une adresses courriel en erreur sont susceptibles d'être fermés pour éviter de mettre le site en liste noire")
+            new_messages = new_private_messages_received()
+            if new_messages:
+                alert(f"Vous avez {new_messages} nouveaux messages personnels !")
 
             # goto directly to page my games
             index.load_option(None, 'Mes parties')
