@@ -2618,7 +2618,8 @@ class PrivateMessagesRessource(flask_restful.Resource):  # type: ignore
             content.update_database(sql_executor)  # noqa: F821
 
             # create a message linked to the content
-            message = messages.Message(user_id, dest_user_id, identifier)
+            read = False
+            message = messages.Message(user_id, dest_user_id, read, identifier)
             message.update_database(sql_executor)  # noqa: F821
 
             POST_MESSAGE_REPEAT_PREVENTER.did(int(user_id))
@@ -2706,8 +2707,12 @@ class PrivateMessagesRessource(flask_restful.Resource):  # type: ignore
         messages_extracted_list = messages.Message.list_with_content_by_player_id(sql_executor, player_id)
 
         # get all message
-        messages_list = [(identifier, author_num, time_stamp, addressees_num, content.payload) for identifier, author_num, addressees_num, time_stamp, content in messages_extracted_list]
+        messages_list = [(identifier, author_num, time_stamp, addressees_num, read, content.payload) for identifier, author_num, addressees_num, time_stamp, read, content in messages_extracted_list]
 
+        # mark as read
+        sql_executor.execute("UPDATE messages SET read=1 WHERE addressee_num = ?", (player_id,))
+
+        sql_executor.commit()
         del sql_executor
 
         data = {
@@ -2762,7 +2767,7 @@ class PrivateMessagesDeleteRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg=f"Not owner of message {addressee_id=} != {player_id=}")
 
         # remove message
-        message = messages.Message(0, 0, int(message_id))
+        message = messages.Message(0, 0, False, int(message_id))
         message.delete_database(sql_executor)
 
         # remove content
