@@ -711,6 +711,9 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # delete player from submissions table
         submissions.Submission.delete_by_player_id(sql_executor, player_id)
 
+        # delete player from messages
+        messages.Message.delete_by_player_id(sql_executor, player_id)
+
         # delete player from users server (that will implicitly check we have rights)
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
