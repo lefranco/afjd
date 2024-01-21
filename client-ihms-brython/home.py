@@ -897,7 +897,7 @@ def private_messages(dest_user_id):
         thead <= col
     messages_table <= thead
 
-    for id_, from_user_id, time_stamp, dest_user_id2, content in messages:
+    for id_, from_user_id, time_stamp, dest_user_id2, read, content in messages:
 
         class_ = 'text'
 
@@ -926,7 +926,7 @@ def private_messages(dest_user_id):
 
         for line in content.split('\n'):
             # new so put in bold
-            if from_user_id != pseudo_id:
+            if not read:
                 line = html.B(line)
             col <= line
             col <= html.BR()
