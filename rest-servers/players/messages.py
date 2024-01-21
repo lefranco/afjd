@@ -16,6 +16,12 @@ class Message:
     """ Class for handling a message """
 
     @staticmethod
+    def delete_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> None:
+        """ deleting a player """
+        sql_executor.execute("DELETE FROM contents WHERE identifier in (SELECT content_id FROM messages WHERE ? in (author_num, addressee_num))", (player_id,))
+        sql_executor.execute("DELETE FROM messages WHERE ? in (author_num, addressee_num)", (player_id,))
+
+    @staticmethod
     def addressee_by_message_id(sql_executor: database.SqlExecutor, message_id: int) -> int:
         """ class lookup : finds the object in database from message_id """
         messages_found = sql_executor.execute("SELECT addressee_num FROM messages WHERE content_id = ?", (message_id,), need_result=True)
