@@ -30,6 +30,14 @@ class Message:
         return messages_found
 
     @staticmethod
+    def list_new_messages_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, int, int, int, int, contents.Content]]:
+        """ class lookup : finds the object in database from fame id """
+        messages_found = sql_executor.execute("SELECT count(*) as number FROM messages WHERE read=0 AND addressee_num = ?", (player_id,), need_result=True)
+        if not messages_found:
+            return []
+        return messages_found
+
+    @staticmethod
     def create_table(sql_executor: database.SqlExecutor) -> None:
         """ creation of table from scratch """
 
