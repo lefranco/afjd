@@ -872,6 +872,8 @@ def private_messages(dest_user_id):
     for addressee_pseudo in sorted(possible_addressed, key=lambda pu: pu.upper()):
         option = html.OPTION(addressee_pseudo)
         input_addressed <= option
+        if dest_user_id is not None and id2pseudo[dest_user_id] == addressee_pseudo:
+            option.selected = True
     fieldset <= input_addressed
     form <= fieldset
 
