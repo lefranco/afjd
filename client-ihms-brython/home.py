@@ -887,7 +887,7 @@ def private_messages(dest_user_id):
     # there can be no message (if no message of failed to load)
 
     # sort with all that was added
-    messages.sort(key=lambda m: float(m[1]), reverse=True)
+    messages.sort(key=lambda m: float(m[2]), reverse=True)
 
     messages_table = html.TABLE()
 
