@@ -108,7 +108,7 @@ def login():
             # request to validate email
             new_messages = new_private_messages_received()
             if new_messages:
-                alert(f"Vous avez {new_messages} nouveaux messages personnels !")
+                alert(f"Vous avez {new_messages} nouveau(x) message(s) personnel(s) !")
 
             # goto directly to page my games
             index.load_option(None, 'Mes parties')
