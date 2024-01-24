@@ -26,19 +26,6 @@ MAX_NUMBER_GAMES = 200
 MAX_LEN_GAME_NAME = 50
 
 
-def check_creator(pseudo):
-    """ check_creator """
-
-    priviledged = common.PRIVILEDGED
-    if not priviledged:
-        return False
-    creator_list = priviledged['creators']
-    if pseudo not in creator_list:
-        return False
-
-    return True
-
-
 def get_quitters_data():
     """ get_quitters_data : returns empty dict on error """
 
@@ -116,13 +103,7 @@ def change_glorious():
 
     MY_SUB_PANEL <= html.H3("Editer les glorieux")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_creator(pseudo):
+    if not common.check_creator():
         alert("Pas le bon compte (pas créateur)")
         return
 
@@ -536,15 +517,11 @@ def create_many_games():
 
     MY_SUB_PANEL <= html.H3("Création des parties")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
+    if not common.check_creator():
+        alert("Pas le bon compte (pas créateur)")
         return
 
     pseudo = storage['PSEUDO']
-
-    if not check_creator(pseudo):
-        alert("Pas le bon compte (pas créateur)")
-        return
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -583,13 +560,7 @@ def create_many_games():
 def explain_stuff():
     """ explain_stuff """
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_creator(pseudo):
+    if not common.check_creator():
         alert("Pas le bon compte (pas créateur)")
         return
 
@@ -648,13 +619,7 @@ def explain_stuff():
 def show_game_quitters():
     """ show_game_quitters """
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_creator(pseudo):
+    if not common.check_creator():
         alert("Pas le bon compte (pas créateur)")
         return
 

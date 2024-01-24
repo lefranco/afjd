@@ -13,7 +13,6 @@ import config
 import common
 import sandbox
 import mapping
-import moderate
 import index  # circular import
 
 import play  # circular import
@@ -129,7 +128,7 @@ def non_playing_information():
         return None
 
     # is game anonymous
-    if not (moderate.check_modo(play_low.PSEUDO) or play_low.ROLE_ID == 0 or not play_low.GAME_PARAMETERS_LOADED['anonymous']):
+    if not (play_low.ROLE_ID == 0 or not play_low.GAME_PARAMETERS_LOADED['anonymous']):
         return None
 
     dangling_players = [p for p, d in play_low.GAME_PLAYERS_DICT.items() if d == - 1]

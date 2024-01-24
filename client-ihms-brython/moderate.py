@@ -44,19 +44,6 @@ OPTIONS = {
 }
 
 
-def check_modo(pseudo):
-    """ check_modo """
-
-    priviledged = common.PRIVILEDGED
-    if not priviledged:
-        return False
-    moderators_list = priviledged['moderators']
-    if pseudo not in moderators_list:
-        return False
-
-    return True
-
-
 def show_game_selected():
     """  show_game_selected """
 
@@ -244,13 +231,7 @@ def change_news_modo():
 
     MY_SUB_PANEL <= html.H3("Editer les nouvelles")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -315,13 +296,7 @@ def prepare_mailing():
 
     MY_SUB_PANEL <= html.H3("Préparation d'un publipostage")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -421,13 +396,7 @@ def tournament_result():
 
     MY_SUB_PANEL <= html.H3("Résultats intermédiaires du tournoi")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -707,13 +676,7 @@ def general_announce():
 
     MY_SUB_PANEL <= html.H3("Annoncer dans toutes la partie en cours")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -830,13 +793,7 @@ def game_announce():
 
     MY_SUB_PANEL <= html.H3("Annoncer dans la partie")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -1070,13 +1027,7 @@ def display_personal_info():
 
     MY_SUB_PANEL <= html.H3("Afficher les informations personnelles d'un compte")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -1132,9 +1083,7 @@ def all_missing_orders():
 
     MY_SUB_PANEL <= html.H3("Tous les ordres manquants")
 
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -1358,9 +1307,7 @@ def current_worst_annoyers():
 
     MY_SUB_PANEL <= html.H3("Les pires récidivistes du retard ou de l'abandon dans les parties en cours")
 
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -1514,13 +1461,7 @@ def show_player_games(pseudo_player, game_list):
 
     MY_SUB_PANEL <= html.H3("Toutes les parties d'un compte")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -1698,13 +1639,7 @@ def show_last_submissions():
 
     MY_SUB_PANEL <= html.H3("Les dernières soumissions d'ordres")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -1761,13 +1696,7 @@ def show_ip_addresses():
 
     MY_SUB_PANEL <= html.H3("Vérification des doublons sur les adresses IP à la soumission d'ordres")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -1835,13 +1764,7 @@ def show_all_emails():
 
     MY_SUB_PANEL <= html.H3("Vérification des doublons des courriels")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -1900,13 +1823,7 @@ def show_non_confirmed_data():
 
     MY_SUB_PANEL <= html.H3("Les inscrits non confirmés")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -1957,13 +1874,7 @@ def show_verif_codes():
 
     MY_SUB_PANEL <= html.H3("Les codes de vérification pour le forum")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -2041,15 +1952,11 @@ def revoke_master():
 
     MY_SUB_PANEL <= html.H3("Destituer l'arbitre")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
+    if not common.check_modo():
+        alert("Pas le bon compte (pas modo)")
         return
 
     pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
-        alert("Pas le bon compte (pas modo)")
-        return
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -2120,13 +2027,7 @@ def change_director():
 
     MY_SUB_PANEL <= html.H3("Changer le responsable du tournoi")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
@@ -2217,13 +2118,7 @@ def change_manager():
 
     MY_SUB_PANEL <= html.H3("Changer le responsable de l'événement")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
+    if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
