@@ -32,6 +32,7 @@ OPTIONS = {
     'Tous les ordres manquants': "Tous les ordres manquants sur les parties en cours",
     'Pires récidivistes retard et abandon': "Pires récidivistes retard et abandon sur les parties en cours",
     'Toutes les parties d\'un joueur': "Toutes les parties d\'un joueur du site",
+    'Tous les joueurs de la partie': "Toutes les joueurs d'une partie du site",
     'Dernières soumissions d\'ordres': "Dernières soumissions d\'ordres sur les parties du site",
     'Vérification adresses IP': "Détecter les doubons d'adresses IP des utilisateurs du site",
     'Vérification courriels': "Détecter les doubons de courriels des utilisateurs du site",
@@ -1634,6 +1635,100 @@ def show_player_games(pseudo_player, game_list):
         MY_SUB_PANEL <= html.BR()
 
 
+def show_players_game():
+    """ show_player_games """
+
+    MY_SUB_PANEL <= html.H3("Les joueurs de cette partie")
+
+    if not common.check_modo():
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game_name = storage['GAME']
+    MY_SUB_PANEL <= f"Partie concernée : {game_name}"
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
+
+    players_dict = common.get_players()
+    if not players_dict:
+        alert("Erreur chargement info joueurs")
+        return
+
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
+    game_players_dict = common.get_game_players_data(game_id)
+    if not game_players_dict:
+        alert("Erreur chargement joueurs de la partie")
+        return
+
+    role2pseudo = {v: k for k, v in game_players_dict.items()}
+
+    variant_name_loaded = storage['GAME_VARIANT']
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # selected interface (user choice)
+    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+    # from interface chose get display parameters
+    parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
+    game_admin_table = html.TABLE()
+
+    for role_id in variant_data.roles:
+
+        # discard game master
+        if role_id == 0:
+            continue
+
+        row = html.TR()
+
+        role = variant_data.roles[role_id]
+        role_name = variant_data.role_name_table[role]
+
+        # flag
+        col = html.TD()
+        role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
+        col <= role_icon_img
+        row <= col
+
+        # role name
+        col = html.TD()
+        col <= role_name
+        row <= col
+
+        # player
+        col = html.TD()
+        pseudo_there = ""
+        if role_id in role2pseudo:
+            player_id_str = role2pseudo[role_id]
+            player_id = int(player_id_str)
+            pseudo_there = id2pseudo[player_id]
+        col <= pseudo_there
+        row <= col
+
+        game_admin_table <= row
+
+    MY_SUB_PANEL <= game_admin_table
+
+
 def show_last_submissions():
     """ show_last_submissions """
 
@@ -2214,6 +2309,8 @@ def load_option(_, item_name):
         current_worst_annoyers()
     if item_name == 'Toutes les parties d\'un joueur':
         show_player_games(None, [])
+    if item_name == 'Tous les joueurs de la partie':
+        show_players_game()
     if item_name == 'Dernières soumissions d\'ordres':
         show_last_submissions()
     if item_name == 'Vérification adresses IP':
