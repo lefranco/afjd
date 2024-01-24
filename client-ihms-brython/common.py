@@ -68,7 +68,6 @@ def check_modo():
     return True
 
 
-
 def check_admin():
     """ check_admin """
 
