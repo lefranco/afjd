@@ -30,8 +30,6 @@ import technical
 import discovery
 import variants
 import scorings
-import create
-import moderate
 import wiki
 import forum
 
@@ -245,9 +243,13 @@ def load_option(_, item_name):
     if item_name == 'Forum':
         forum.render(PANEL_MIDDLE)
     if item_name == 'Création':
-        create.render(PANEL_MIDDLE)
+        if common.check_creator():
+            import create  # pylint: disable=import-outside-toplevel
+            create.render(PANEL_MIDDLE)
     if item_name == 'Modération':
-        moderate.render(PANEL_MIDDLE)
+        if common.check_modo():
+            import moderate  # pylint: disable=import-outside-toplevel
+            moderate.render(PANEL_MIDDLE)
     if item_name == 'Administration':
         if common.check_admin():
             import admin  # pylint: disable=import-outside-toplevel

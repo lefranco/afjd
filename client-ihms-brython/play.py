@@ -9,7 +9,6 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 import common
-import moderate
 import login
 
 import play_low
@@ -368,13 +367,6 @@ def render(panel_middle):
             else:
                 # player
                 ITEM_NAME_SELECTED = 'Ordonner'
-
-    else:
-
-        # moderator wants to see whose orders are missing
-        if moderate.check_modo(play_low.PSEUDO):
-            # Admin
-            ITEM_NAME_SELECTED = 'Retards'
 
     ARRIVAL = None
 

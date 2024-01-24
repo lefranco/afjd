@@ -32,6 +32,43 @@ def info_dialog(mess, important=False):
         mydialog.InfoDialog("Information", mess, remove_after=PERSIST_TIME_SEC)
 
 
+def check_creator():
+    """ check_creator """
+
+    if 'PSEUDO' not in storage:
+        return False
+
+    pseudo = storage['PSEUDO']
+
+    priviledged = PRIVILEDGED
+    if not priviledged:
+        return False
+    creator_list = priviledged['creators']
+    if pseudo not in creator_list:
+        return False
+
+    return True
+
+
+def check_modo():
+    """ check_modo """
+
+    if 'PSEUDO' not in storage:
+        return False
+
+    pseudo = storage['PSEUDO']
+
+    priviledged = PRIVILEDGED
+    if not priviledged:
+        return False
+    moderators_list = priviledged['moderators']
+    if pseudo not in moderators_list:
+        return False
+
+    return True
+
+
+
 def check_admin():
     """ check_admin """
 

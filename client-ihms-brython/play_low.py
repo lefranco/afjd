@@ -17,7 +17,6 @@ import memoize
 import variants
 import scorings
 import technical
-import moderate
 
 import play  # circular import
 
@@ -436,7 +435,7 @@ def load_special_stuff():
         if content_loaded:
             common.info_dialog("Attention, vous avez pris des notes dans cette partie !")
 
-    if not (moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+    if not (ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         return
 
     # get the players of the game
