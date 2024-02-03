@@ -97,16 +97,16 @@
             "adjective_name": "Macedonienne",
             "letter_name": "M",
             "red": [
-                232,
-                253
+                123,
+                153
             ],
             "green": [
-                102,
-                127
+                0,
+                30
             ],
             "blue": [
-                4,
-                40
+                123,
+                153
             ]
         },
         "5": {
@@ -131,16 +131,16 @@
             "adjective_name": "Troyenne",
             "letter_name": "T",
             "red": [
-                255,
-                184
+                250,
+                220
             ],
             "green": [
-                174,
-                61
+                250,
+                220
             ],
             "blue": [
-                200,
-                186
+                250,
+                220
             ]
         }
     },
