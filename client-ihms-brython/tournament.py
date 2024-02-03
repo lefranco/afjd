@@ -36,6 +36,15 @@ MAX_LEN_TOURNAMENT_NAME = 50
 TOURNAMENT_DICT = None
 
 
+ARRIVAL = None
+
+
+def set_arrival(arrival):
+    """ set_arrival """
+    global ARRIVAL
+    ARRIVAL = arrival
+
+
 def get_tournament_players(tournament_id):
     """ get_tournament_players : returns empty list if problem """
 
@@ -85,7 +94,7 @@ def show_games():
         common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         allgames.show_game_selected()
 
-        # action of going to game page
+        # action of going to tournament page
         PANEL_MIDDLE.clear()
         play.render(PANEL_MIDDLE)
 
@@ -112,7 +121,7 @@ def show_games():
     overall_time_before = time()
 
     if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
+        alert("Il faut choisir la partie au préalablexx")
         return
 
     game = storage['GAME']
@@ -153,8 +162,9 @@ def show_games():
     for master_id, games_id in masters_alloc.items():
         master = players_dict[str(master_id)]['pseudo']
         for game_id in games_id:
-            game = games_dict[str(game_id)]['name']
-            game_master_dict[game] = master
+            if str(game_id) in games_dict:
+                game = games_dict[str(game_id)]['name']
+                game_master_dict[game] = master
 
     time_stamp_now = time()
 
@@ -405,6 +415,11 @@ def show_games():
         games_table <= row
 
     MY_SUB_PANEL <= games_table
+    MY_SUB_PANEL <= html.BR()
+
+    url = f"https://diplomania-gen.fr?tournament={tournament_name}"
+    MY_SUB_PANEL <= f"Pour inviter un joueur à consulter le tournoi, lui envoyer le lien : '{url}'"
+    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time()
@@ -1234,7 +1249,7 @@ def show_tournaments_data():
         common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         allgames.show_game_selected()
 
-        # action of going to game page
+        # action of going to tournament page
         PANEL_MIDDLE.clear()
         render(PANEL_MIDDLE)
 
@@ -1386,6 +1401,8 @@ def render(panel_middle):
     """ render """
 
     global PANEL_MIDDLE
+    global ARRIVAL
+    global TOURNAMENT_DICT
     PANEL_MIDDLE = panel_middle
 
     # always back to top
@@ -1393,9 +1410,58 @@ def render(panel_middle):
 
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
+    if ARRIVAL:
+
+        tournament_name = ARRIVAL
+        ARRIVAL = None
+
+        # get the tournaments
+        tournaments_dict = common.get_tournaments_data()
+        if not tournaments_dict:
+            alert("Pas de tournoi ou erreur chargement dictionnaire tournois")
+            return
+
+        tournament_name2id = {v['name']: int(k) for k, v in tournaments_dict.items()}
+
+        # get the groupings
+        groupings_dict = common.get_groupings_data()
+        if not groupings_dict:
+            alert("Pas de groupements ou erreur chargement dictionnaire groupements")
+            return
+
+        # tournament id
+        if tournament_name not in tournament_name2id:
+            alert(f"Ce tournoi '{tournament_name}' semble ne pas exister !")
+            return
+        tournament_id = tournament_name2id[tournament_name]
+
+        # games
+        games_dict = common.get_games_data()
+        if games_dict is None:
+            alert("Erreur chargement dictionnaire parties")
+            return
+        games_dict = dict(games_dict)
+
+        # games from tournament
+        games_ids = groupings_dict[str(tournament_id)]
+        games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
+        game_name = games_names[0]
+
+        # create a table to pass information about selected game
+        game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
+        # action of selecting game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
+        allgames.show_game_selected()
+
     if 'GAME' in storage:
         game = storage['GAME']
-        global TOURNAMENT_DICT
         TOURNAMENT_DICT = common.get_tournament_data(game)
         if TOURNAMENT_DICT:
             ITEM_NAME_SELECTED = 'Parties du tournoi'

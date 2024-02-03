@@ -387,6 +387,13 @@ elif 'event' in document.query:
         alert("Evénement inconnu !")
         window.history.pushState({}, document.title, "/")
         load_option(None, ITEM_NAME_SELECTED)
+elif 'tournament' in document.query:
+    query_tournament_name = document.query['tournament']
+    tournament.set_arrival(query_tournament_name)
+    window.history.pushState({}, document.title, "/")
+    load_option(None, 'Accueil')
+    PANEL_MIDDLE.clear()
+    tournament.render(PANEL_MIDDLE)
 elif 'rescue' in document.query:
     if 'pseudo' in document.query:
         passed_pseudo = document.query['pseudo']
