@@ -18,11 +18,12 @@ MAX_PROXIMITY_ITEM_UNIT = 10
 TRANSPARENCY = 0.70
 
 # how many zones considered before giving up
+# 45 required for EPE -> pEXO on egeemonie ;-(
 # 35 makes sure all goes right with standard diplomania map
 # with 30 west of moscow is no man land
 # with 20 south of sweden is no man land
 # with 10 east of atlantic is no man land
-CONSIDERED_ZONES = 35
+CONSIDERED_ZONES = 45
 
 
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
