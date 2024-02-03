@@ -1692,7 +1692,7 @@ def show_players_game():
 
     game_admin_table = html.TABLE()
 
-    for role_id in variant_data.roles:
+    for role_id, role in variant_data.roles.items():
 
         # discard game master
         if role_id == 0:
@@ -1700,7 +1700,6 @@ def show_players_game():
 
         row = html.TR()
 
-        role = variant_data.roles[role_id]
         role_name = variant_data.role_name_table[role]
 
         # flag
