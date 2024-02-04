@@ -17,14 +17,6 @@ MAX_PROXIMITY_ITEM_UNIT = 10
 # for filling zones
 TRANSPARENCY = 0.70
 
-# how many zones considered before giving up
-# 45 required for EPE -> pEXO on egeemonie ;-(
-# 35 makes sure all goes right with standard diplomania map
-# with 30 west of moscow is no man land
-# with 20 south of sweden is no man land
-# with 10 east of atlantic is no man land
-CONSIDERED_ZONES = 45
-
 
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
     """ shorten the segment a little bit (returns new x_dest, y_dest) """
@@ -897,9 +889,8 @@ class Variant(Renderable):
         zones_sorted = sorted(self.zones.values(), key=lambda z: designated_pos.distance(self.position_table[z]))
 
         # yields the closest one which point is in (because can be in two zones : specific coasts)
-        # limits the zones tested for optimization
         inside_ones = 0
-        for num, zone in enumerate(zones_sorted):
+        for zone in zones_sorted:
             zone_path = self.path_table[zone]
             if zone_path.is_inside_me(designated_pos):
                 inside_ones += 1
@@ -910,9 +901,6 @@ class Variant(Renderable):
                     distance_closest = distance
                 if inside_ones >= 2:
                     break
-            # do not want to spend too much time on this
-            if num > CONSIDERED_ZONES:
-                break
 
         # by default
         if not closest_zone:
@@ -1656,9 +1644,8 @@ class Position(Renderable):
         zones_sorted = sorted(self._variant.zones.values(), key=lambda z: designated_pos.distance(self._variant.position_table[z]))
 
         # yields the closest one which point is in (because can be in two zones : specific coasts)
-        # limits the zones tested for optimization
         inside_ones = 0
-        for num, zone in enumerate(zones_sorted):
+        for zone in zones_sorted:
             zone_path = self._variant.path_table[zone]
             if zone_path.is_inside_me(designated_pos):
                 inside_ones += 1
@@ -1669,9 +1656,6 @@ class Position(Renderable):
                     distance_closest = distance
                 if inside_ones >= 2:
                     break
-            # do not want to spend too much time on this
-            if num > CONSIDERED_ZONES:
-                break
 
         return closest_object
 
