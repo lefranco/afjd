@@ -6867,20 +6867,27 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         # games we can speak about the players
-        allowed_games = {g.identifier for g in games_list if g.current_state == 1 and not g.archive}
+        ongoing_games = {g.identifier for g in games_list if g.current_state == 1 and not g.archive}
 
         # players_dict
         game_masters_set = set()
         players_set = set()
+        active_masters: typing.Counter[int] = collections.Counter()
+        active_players: typing.Counter[int] = collections.Counter()
         for (game_id, player_id, role_id) in allocations_list:
-            if game_id not in allowed_games:
+            if game_id not in ongoing_games:
                 continue
             if role_id == 0:
                 game_masters_set.add(player_id)
+                active_masters[player_id] += 1
             else:
                 players_set.add(player_id)
+                active_players[player_id] += 1
 
-        data = {'suffering_games': suffering_games, 'ongoing_games': len(allowed_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set)}
+        most_active_master_id = active_masters.most_common(1)[0][0]
+        most_active_player_id = active_players.most_common(1)[0][0]
+
+        data = {'suffering_games': suffering_games, 'ongoing_games': len(ongoing_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set), 'most_active_master': most_active_master_id, 'most_active_player': most_active_player_id}
         return data, 200
 
 
