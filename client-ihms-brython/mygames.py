@@ -28,6 +28,38 @@ MY_PANEL <= MY_SUB_PANEL
 DELTA_WARNING_THRESHOLD_SEC = 10
 
 
+def new_private_messages_received():
+    """ new_private_messages_received """
+
+    new_messages_loaded = 0
+
+    def reply_callback(req):
+        nonlocal new_messages_loaded
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement si des messages personnels : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement si des messages personnels : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        new_messages_loaded = req_result['new_messages']
+        return
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/new-private-messages-received"
+
+    # reading new private messages received : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return new_messages_loaded
+
+
 def get_incomplete_games():
     """ get_incomplete_games : returns empty list if error or no game"""
 
@@ -762,6 +794,17 @@ def my_games(state_name):
         return
 
     pseudo = storage['PSEUDO']
+
+    # we check new private messages once a day
+    day_now = int(time()) % 24 * 3600
+    day_notified = 0
+    if 'DATE_NEW_MESSAGES_NOTIFIED' in storage:
+        day_notified = int(storage['DATE_NEW_MESSAGES_NOTIFIED'])
+    if day_now > day_notified:
+        new_messages = new_private_messages_received()
+        if new_messages:
+            alert(f"Vous avez {new_messages} nouveau(x) message(s) personnel(s) ! Pour les lire : Accueil/Messages personnels.")
+            storage['DATE_NEW_MESSAGES_NOTIFIED'] = str(day_now)
 
     dict_role_id = get_all_roles_allocated_to_player()
     if not dict_role_id:
