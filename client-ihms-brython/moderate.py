@@ -1088,7 +1088,9 @@ def all_missing_orders():
         alert("Pas le bon compte (pas modo)")
         return
 
-    games_dict = common.get_games_data(1)
+    state = 1
+
+    games_dict = common.get_games_data(state)
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1099,7 +1101,7 @@ def all_missing_orders():
         return
 
     # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
+    allocations_data = common.get_allocations_data(state)
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
