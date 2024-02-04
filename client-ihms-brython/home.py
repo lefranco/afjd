@@ -241,6 +241,7 @@ def show_news():
 
     stats_content = get_stats_content()
     news_content_table_loaded = common.get_news_content()
+    players_dict = common.get_players()
 
     # ==A5==============================
 
@@ -537,12 +538,18 @@ def show_news():
 
     div_b1 = html.DIV(Class='tooltip')
 
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
     title11 = html.H4("Statistiques")
     div_b1 <= title11
     ongoing_games = stats_content['ongoing_games']
     active_game_masters = stats_content['active_game_masters']
     active_players = stats_content['active_players']
-    information = f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
+    most_active_master_id = stats_content['most_active_master']
+    most_active_master = id2pseudo[most_active_master_id]
+    most_active_player_id = stats_content['most_active_player']
+    most_active_player = id2pseudo[most_active_player_id]
+    information = f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. L'arbitre le plus actif est {most_active_master}. Le joueur le plus actif est {most_active_player}. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
     div_b1 <= information
 
     # ----
