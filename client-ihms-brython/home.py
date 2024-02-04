@@ -239,16 +239,16 @@ def show_news():
     MY_SUB_PANEL <= title
     div_homepage = html.DIV(id='grid')
 
-    # ----
     stats_content = get_stats_content()
     news_content_table_loaded = common.get_news_content()
-    # ----
 
-    # ----
+    # ==A5==============================
+
     div_a5 = html.DIV(Class='tooltip')
-
     title1 = html.H4("Remplacements urgents et dernier chats")
     div_a5 <= title1
+
+    # ----
 
     div_a5 <= "Remplacements :"
     div_a5 <= html.BR()
@@ -271,91 +271,110 @@ def show_news():
         div_a5 <= html.BR()
         div_a5 <= html.DIV(f"{last_chat_author} : {last_chat_message}", Class='chat_sample')
 
+    # ----
+
     div_a5_tip = html.SPAN("Plus de détail dans le menu “Rejoindre une partie“ et dans le menu “Chatter en direct“", Class='tooltiptext')
     div_a5 <= div_a5_tip
     div_homepage <= div_a5
 
-    # ----
-    div_b5 = html.DIV(Class='tooltip')
+    # ==B5==============================
 
+    div_b5 = html.DIV(Class='tooltip')
     title2 = html.H4("Les meilleurs joueurs du site (d'après le classement ELO)")
     div_b5 <= title2
+
+    # ----
+
     teaser_loaded = get_teaser_content()
     teaser = formatted_teaser(teaser_loaded) if teaser_loaded else "Aucun pour le moment."
     div_b5 <= teaser
+
+    # ----
 
     div_b5_tip = html.SPAN("Plus de détail dans le menu “Classements“ sous menu “Classement performance“", Class='tooltiptext')
     div_b5 <= div_b5_tip
     div_homepage <= div_b5
 
-    # ----
-    div_a4 = html.DIV(Class='tooltip')
+    # ==A4==============================
 
+    div_a4 = html.DIV(Class='tooltip')
     title3 = html.H4("Les événements qui recrutent")
     div_a4 <= title3
+
+    # ----
+
     news_events = html.OBJECT(data="https://diplomania-gen.fr/events/", width="100%", height="400", title="Evénements", alt="Evénements")
     div_a4 <= news_events
+
+    # ----
 
     # no tip
     div_homepage <= div_a4
 
-    # ----
-    div_b4 = html.DIV(Class='tooltip')
+    # =B4==============================
 
+    div_b4 = html.DIV(Class='tooltip')
     title4 = html.H4("Dernières contributions sur les forums")
     div_b4 <= title4
+
+    # ----
+
     news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="400", title="Forums", alt="Forums")
     div_b4 <= news_forum
+
+    # ----
 
     # no tip
     div_homepage <= div_b4
 
-    # ----
-    div_a3 = html.DIV(Class='tooltip')
+    # ==A3==============================
 
+    div_a3 = html.DIV(Class='tooltip')
     title5 = html.H4("Dernières nouvelles moderateur", Class='modo_news')
     div_a3 <= title5
+
+    # ----
+
     news_content_loaded2 = news_content_table_loaded['modo']
     news_content2 = formatted_news(news_content_loaded2, True, 'modo_news')
     div_a3 <= news_content2
+
+    # ----
+
     div_a3_tip = html.SPAN("Vous pouvez contacter le modérateur par un MP sur le forum", Class='tooltiptext')
     div_a3 <= div_a3_tip
     div_homepage <= div_a3
 
-    # ----
-    div_b3 = html.DIV(Class='tooltip')
+    # ==B3==============================
 
+    div_b3 = html.DIV(Class='tooltip')
     title6 = html.H4("Dernières nouvelles administrateur", Class='admin_news')
     div_b3 <= title6
+
+    # ----
+
     news_content_loaded = news_content_table_loaded['admin']
     news_content = formatted_news(news_content_loaded, True, 'admin_news')
     div_b3 <= news_content
+
+    # ----
+
     div_b3_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu “Accueil“ sous menu “Déclarer un incident“", Class='tooltiptext')
     div_b3 <= div_b3_tip
     div_homepage <= div_b3
 
-    # ----
+    # ==A2==============================
+
     div_a2 = html.DIV(Class='tooltip')
-
-    title7 = html.H4("Les glorieux (face à face)", Class='news3')
-    div_a2 <= title7
-    hall_content_loaded = news_content_table_loaded['glory']
-    hall_content = formatted_news(hall_content_loaded, False, 'glory_news')
-    div_a2 <= hall_content
-    div_a2_tip = html.SPAN("Plus de détail sur la page wikipedia https://fr.wikipedia.org/wiki/Palmar%C3%A8s_internationaux_de_Diplomatie", Class='tooltiptext')
-    div_a2 <= div_a2_tip
-    div_homepage <= div_a2
+    title9 = html.H4("Liens très importants")
+    div_a2 <= title9
 
     # ----
-    div_b2 = html.DIV(Class='tooltip')
 
-    title9 = html.H4("Liens très importants")
-    div_b2 <= title9
     note_bene_content = html.DIV(Class='note')
-
     note_bene_content_table = html.TABLE()
 
-    # ======================
+    # -------------
 
     row = html.TR()
     note_bene_content_table <= row
@@ -378,7 +397,7 @@ def show_news():
     col <= img
     row <= col
 
-    # ----------------------
+    # ............
 
     row = html.TR()
     note_bene_content_table <= row
@@ -405,7 +424,7 @@ def show_news():
     col <= "La charte du bon diplomate - à lire absolument !"
     row <= col
 
-    # ======================
+    # -------------
 
     row = html.TR()
     note_bene_content_table <= row
@@ -428,7 +447,7 @@ def show_news():
     col <= img
     row <= col
 
-    # ----------------------
+    # ............
 
     row = html.TR()
     note_bene_content_table <= row
@@ -451,19 +470,41 @@ def show_news():
     col <= link51
     row <= col
 
-    # ======================
-
     note_bene_content <= note_bene_content_table
-    div_b2 <= note_bene_content
-    div_b2_tip = html.SPAN("Plus de détail dans le menu “Accueil“ sous menu “Brique sociale“", Class='tooltiptext')
+    div_a2 <= note_bene_content
+    div_homepage <= div_a2
+
+    # ----
+
+    div_a2_tip = html.SPAN("Plus de détail dans le menu “Accueil“ sous menu “Brique sociale“", Class='tooltiptext')
+    div_a2 <= div_a2_tip
+    div_homepage <= div_a2
+
+    # ==B2==============================
+
+    div_b2 = html.DIV(Class='tooltip')
+    title7 = html.H4("Les glorieux (face à face)", Class='news3')
+    div_b2 <= title7
+
+    # ----
+
+    hall_content_loaded = news_content_table_loaded['glory']
+    hall_content = formatted_news(hall_content_loaded, False, 'glory_news')
+    div_b2 <= hall_content
+
+    # ----
+
+    div_b2_tip = html.SPAN("Plus de détail sur la page wikipedia https://fr.wikipedia.org/wiki/Palmar%C3%A8s_internationaux_de_Diplomatie", Class='tooltiptext')
     div_b2 <= div_b2_tip
     div_homepage <= div_b2
 
-    # ----
-    div_a1 = html.DIV(Class='tooltip')
+    # ==A1==============================
 
+    div_a1 = html.DIV(Class='tooltip')
     title10 = html.H4("Aperçu des variantes possibles")
     div_a1 <= title10
+
+    # ----
 
     variants_table = html.TABLE()
     row = html.TR()
@@ -484,12 +525,16 @@ def show_news():
             row = html.TR()
 
     variants_table <= row
-    div_a1_tip = html.SPAN("Plus de détail dans le menu “Bac à sable“ sous menu “Documents“", Class='tooltiptext')
     div_a1 <= variants_table
+
+    # ----
+
+    div_a1_tip = html.SPAN("Plus de détail dans le menu “Bac à sable“ sous menu “Documents“", Class='tooltiptext')
     div_a1 <= div_a1_tip
     div_homepage <= div_a1
 
-    # ----
+    # ==B1==============================
+
     div_b1 = html.DIV(Class='tooltip')
 
     title11 = html.H4("Statistiques")
@@ -497,16 +542,16 @@ def show_news():
     ongoing_games = stats_content['ongoing_games']
     active_game_masters = stats_content['active_game_masters']
     active_players = stats_content['active_players']
-    div_b1 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
+    information = f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
+    div_b1 <= information
+
+    # ----
+
     div_b1_tip = html.SPAN("Plus de détail dans le menu “Classement“ sous menu “Joueurs“", Class='tooltiptext')
     div_b1 <= div_b1_tip
     div_homepage <= div_b1
 
-    # ----
-    div_a0 = html.DIV(Class='tooltip')
-
-    title8 = html.H4("Date sur le serveur")
-    div_a0 <= title8
+    # ================================
 
     # calculate and store time shift with server
 
