@@ -239,8 +239,8 @@ class Center(Renderable):
         # the owner at start of the game
         self._owner_start = None
 
-    def render(self, ctx, start=False):
-        """ put me on screen """
+    def render(self, ctx, active=False):
+        """ put me on screen (active means start actually for this class) """
 
         fill_color = CENTER_COLOUR
         ctx.fillStyle = fill_color.str_value()  # for a center
@@ -252,7 +252,7 @@ class Center(Renderable):
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         # distinguish start centers
-        if start:
+        if active:
             if self._owner_start:
                 ctx.beginPath()
                 ctx.arc(x, y, center_design.CENTER_RAY + 2, 0, 2 * pi, False)
