@@ -221,21 +221,34 @@ def my_opportunities():
     recruiting_games_dict = {tr[0]: {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
 
     state = 0
+
     games_dict = common.get_games_data(state)
     if games_dict is None:
         alert(f"Erreur chargement dictionnaire parties etat {state}")
         return
     games_dict = dict(games_dict)
 
+    allocations_data = common.get_allocations_data(state)
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
     state = 1
+
     games_dict2 = common.get_games_data(state)
     if games_dict2 is None:
         alert(f"Erreur chargement dictionnaire parties etat {state}")
         return
     games_dict2 = dict(games_dict2)
 
+    allocations_data2 = common.get_allocations_data(state)
+    if not allocations_data2:
+        alert("Erreur chargement allocations")
+        return
+
     # join both dicts
     games_dict.update(games_dict2)
+    allocations_data.update(allocations_data2)
 
     games_dict_recruiting = {k: v for k, v in games_dict.items() if int(k) in recruiting_games_dict}
 
@@ -243,12 +256,6 @@ def my_opportunities():
     players_dict = common.get_players_data()
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
-        return
-
-    # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
-    if not allocations_data:
-        alert("Erreur chargement allocations")
         return
 
     masters_alloc = allocations_data['game_masters_dict']
@@ -806,7 +813,7 @@ def all_games(state_name):
         return
 
     # get the link (allocations) of game masters
-    allocations_data = common.get_allocations_data()
+    allocations_data = common.get_allocations_data(state)
     if not allocations_data:
         alert("Erreur chargement allocations")
         return

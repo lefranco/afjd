@@ -518,7 +518,7 @@ def read_image(variant_name_loaded, interface_chosen):
     return image
 
 
-def get_allocations_data():
+def get_allocations_data(current_state=None):
     """ get_allocations_data : returns empty dict on error """
 
     allocation_data = {}
@@ -541,7 +541,11 @@ def get_allocations_data():
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/allocations"
+
+    if current_state is not None:
+        url = f"{host}:{port}/allocations-games-in-state/{current_state}"
+    else:
+        url = f"{host}:{port}/allocations"
 
     # getting allocations : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
