@@ -912,10 +912,10 @@
         "86": {
             "name": "mORI",
             "full_name": "Mediteranée Orientale",
-            "x_pos": 883,
-            "y_pos": 735,
-            "x_legend_pos": 883,
-            "y_legend_pos": 721
+            "x_pos": 682,
+            "y_pos": 760,
+            "x_legend_pos": 682,
+            "y_legend_pos": 746
         },
         "87": {
             "name": "mION",
@@ -992,10 +992,10 @@
         "96": {
             "name": "oEXT",
             "full_name": "Atlantique Extérieur",
-            "x_pos": 108,
-            "y_pos": 108,
-            "x_legend_pos": 108,
-            "y_legend_pos": 94
+            "x_pos": 27,
+            "y_pos": 319,
+            "x_legend_pos": 27,
+            "y_legend_pos": 305
         },
         "97": {
             "name": "mNVG",
