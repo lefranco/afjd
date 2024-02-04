@@ -28,6 +28,39 @@ MY_PANEL <= MY_SUB_PANEL
 DELTA_WARNING_THRESHOLD_SEC = 10
 
 
+def get_suffering_games(games_dict, games_id_player, dict_role_id):
+    """ get_suffering_games """
+
+    suffering_games = []
+
+    incomplete_games_list = get_incomplete_games()
+    # there can be no message (if no game of failed to load)
+
+    for game_id_str, data in games_dict.items():
+
+        if data['current_state'] != 0:
+            continue
+
+        # do not display games players does not participate into
+        game_id = int(game_id_str)
+        if game_id not in games_id_player:
+            continue
+
+        # must be game master
+        role_id = dict_role_id[str(game_id)]
+        if role_id != 0:
+            continue
+
+        # game must not need players
+        if game_id in incomplete_games_list:
+            continue
+
+        game_name = data['name']
+        suffering_games.append(game_name)
+
+    return suffering_games
+
+
 def new_private_messages_received():
     """ new_private_messages_received """
 
@@ -795,8 +828,10 @@ def my_games(state_name):
 
     pseudo = storage['PSEUDO']
 
+    # get the day
+    day_now = int(time()) // 3600
+
     # we check new private messages once a day
-    day_now = int(time()) % 24 * 3600
     day_notified = 0
     if 'DATE_NEW_MESSAGES_NOTIFIED' in storage:
         day_notified = int(storage['DATE_NEW_MESSAGES_NOTIFIED'])
@@ -866,47 +901,18 @@ def my_games(state_name):
 
     games_id_player = {int(n) for n in player_games.keys()}
 
-    # is there a startable game ?
-
+    # need a default value
     suffering_games = []
 
-    incomplete_games_list = get_incomplete_games()
-    # there can be no message (if no game of failed to load)
-
-    for game_id_str, data in games_dict.items():
-
-        if data['current_state'] != 0:
-            continue
-
-        # do not display games players does not participate into
-        game_id = int(game_id_str)
-        if game_id not in games_id_player:
-            continue
-
-        # must be game master
-        role_id = dict_role_id[str(game_id)]
-        if role_id != 0:
-            continue
-
-        # game must not need players
-        if game_id in incomplete_games_list:
-            continue
-
-        game_name = data['name']
-        suffering_games.append(game_name)
-
-    # make sure we have a previous SUFFERING_NOTIFIED
-    if 'SUFFERING_NOTIFIED' not in storage:
-        storage['SUFFERING_NOTIFIED'] = ""
-
-    if suffering_games:
-        notified_suffering_games = storage['SUFFERING_NOTIFIED'].split(' ')
-        # only if something new
-        if not set(suffering_games) <= set(notified_suffering_games):
+    # we check suffering games once a day
+    day_notified = 0
+    if 'DATE_SUFFERING_NOTIFIED' in storage:
+        day_notified = int(storage['DATE_SUFFERING_NOTIFIED'])
+    if day_now > day_notified:
+        suffering_games = get_suffering_games(games_dict, games_id_player, dict_role_id)
+        if suffering_games:
             alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
-
-    # keep note of SUFFERING_NOTIFIED
-    storage['SUFFERING_NOTIFIED'] = ' '.join(suffering_games)
+            storage['DATE_SUFFERING_NOTIFIED'] = str(day_now)
 
     time_stamp_now = time()
 

@@ -72,8 +72,8 @@ def login():
             # erased
             if 'DATE_NEW_MESSAGES_NOTIFIED' in storage:
                 del storage['DATE_NEW_MESSAGES_NOTIFIED']
-            if 'SUFFERING_NOTIFIED' in storage:
-                del storage['SUFFERING_NOTIFIED']
+            if 'DATE_SUFFERING_NOTIFIED' in storage:
+                del storage['DATE_SUFFERING_NOTIFIED']
 
             # inform user
             common.info_dialog(f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page", True)

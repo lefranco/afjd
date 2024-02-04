@@ -85,7 +85,7 @@ $$ Interne
 | _ANNOUNCEMENT_ | contenu de l'annonce spéciale ("popup") |
 | _ANNOUNCEMENT DISPLAYED_ | le contenu de l'annonce spéciale ("popup") déjà montrée |
 | _DATE NEW MESSAGES NOTIFIED_ | le dernier jour de notification de messages personnels |
-| _SUFFERING NOTIFIED_ | les parties à démarrer déjà indiquées |
+| _DATE SUFFERING NOTIFIED_ | le dernier jour de notifications de parties à démarrer |
 | _DELTA TIME SEC_ | différence temps local et temps serveur |
 | _VERSION_ | version du front end (logiciel dans le navigateur) utilisé |
 =
