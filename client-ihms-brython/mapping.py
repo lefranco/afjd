@@ -239,7 +239,7 @@ class Center(Renderable):
         # the owner at start of the game
         self._owner_start = None
 
-    def render(self, ctx, active=False):
+    def render(self, ctx, start=False):
         """ put me on screen """
 
         fill_color = CENTER_COLOUR
@@ -251,15 +251,18 @@ class Center(Renderable):
         position = self._region.zone.variant.position_table[self]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
+        # distinguish start centers
+        if start:
+            if self._owner_start:
+                ctx.beginPath()
+                ctx.arc(x, y, center_design.CENTER_RAY + 2, 0, 2 * pi, False)
+                ctx.stroke(); ctx.closePath()
+            return
+
+        # show a center
         ctx.beginPath()
         ctx.arc(x, y, center_design.CENTER_RAY, 0, 2 * pi, False)
         ctx.fill(); ctx.stroke(); ctx.closePath()
-
-        # distinguish start centers
-        if self._owner_start:
-            ctx.beginPath()
-            ctx.arc(x, y, center_design.CENTER_RAY + 2, 0, 2 * pi, False)
-            ctx.stroke(); ctx.closePath()
 
     @property
     def region(self) -> 'Region':
@@ -1548,6 +1551,10 @@ class Position(Renderable):
         # dislodged_units
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
+
+        # start centers
+        for center in self._variant.centers.values():
+            center.render(ctx, True)
 
     def save_json(self) -> str:
         """ export as list of dict """
