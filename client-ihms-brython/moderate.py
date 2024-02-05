@@ -1902,7 +1902,7 @@ def show_all_emails():
     sorted_emails = sorted([e[0] for e in emails_dict.values()])
     duplicated_emails = {sorted_emails[i] for i in range(len(sorted_emails)) if (i < len(sorted_emails) - 1 and sorted_emails[i] == sorted_emails[i + 1]) or (i > 0 and sorted_emails[i] == sorted_emails[i - 1])}
 
-    for pseudo, (email, _, _) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
+    for pseudo, (email, _, _, _, _) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
 
         row = html.TR()
         for field in fields:
