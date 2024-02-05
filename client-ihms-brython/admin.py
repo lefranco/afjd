@@ -1839,7 +1839,7 @@ def show_idle_data():
                     value = f"{date_now_gmt_str}"
 
             if field == 'email':
-                email, _, __ = emails_dict[player]
+                email, _, __, ___, ____ = emails_dict[player]
                 email_link = html.A(href=f"mailto:{email}")
                 email_link <= email
                 value = email_link
