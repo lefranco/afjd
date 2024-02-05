@@ -20,15 +20,38 @@ import flask_mail  # type: ignore
 INTERVAL = 5
 
 # mailing suject
-SUBJECT = "2023 : Les dernières nouvelles de l'association diplomatie A.F.J.D !"
+SUBJECT = "2024 : Convocation pour l'Assemblée Générale et NewsLetter !"
 
 # mailing body
 BODY = """
-Bonjour.
-Vous trouverez en pièces jointes le compte rendu de la dernière assemblée générale, ainsi que la lettre du diplomate, en vous souhaitant bonne lecture.
-Si vous ne savez pas quoi faire ce week-end, pensez au championnat du monde francophone en face à face virtuel !
-Bien amicalement.
-Le bureau.
+Bonjour à tous,
+
+Il est temps d’organiser l’assemblée générale annuelle.
+
+Elle se tiendra le samedi 10 février à 15h sur Discord.
+
+Nous vous espérons le plus nombreux possible avec les sujets suivants :
+-    Les nouvelles du site et de ses événements
+-    Les nouvelles sur les différents tournois à venir
+-    Les groupes de travail
+-    Nos relations avec les autres communautés
+-    Le bilan des comptes de l’association
+-    Et des sujets divers qui peuvent être questionnés pendant l’assemblée
+
+Ce sera également le moment d’organiser l’élection d’un nouveau conseil d’administration. Pour être candidat, il vous suffit de nous signaler votre candidature avant l’AG ou le jour même et de régler votre cotisation annuelle.
+
+Lien du hello asso :
+https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-2024
+
+Lien du serveur Discord de l'association :
+https://discord.com/invite/uEtrTWjX
+
+En cas d’indisponibilité, vous pouvez également donner votre procuration
+Le CA a besoin de se renouveler, n’hésitez pas à vous présenter. Le nouveau CA élira à son tour un nouveau bureau.
+
+A samedi 10 février à 15H !
+
+Le CA
 """
 
 # mailing official sender
@@ -38,7 +61,7 @@ SENDER = "afjd_serveur_jeu@diplomania-gen.fr"
 REPLY_TO = "afjdiplo@gmail.com"
 
 # list of attached files (must be PDF)
-PDF_ATT_FILES = ['newletter_5.docx.pdf', 'AG_28_01_2023.pptx.pdf']
+PDF_ATT_FILES = ['Newletter_Fevrier_2024.pdf']
 
 
 MAILER = None

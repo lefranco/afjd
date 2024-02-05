@@ -1,17 +1,19 @@
+A REVOIR
+
 Comment faire un publipostage
 
-1) récupérer la liste du précédent publipostage et nettoyer :
+1) récupérer les emails depuis la liste du précédent publipostage et nettoyer :
 On suppose que la liste est dans le fichier victims_before
 
 cat victims_before | sort -u | tr '[:upper:]' '[:lower:]' > victims
 
-3) récupérer les oui nettoyer :
+3) récupérer les "oui" depuis le site et nettoyer :
 liste dans le fichier current_yes (séparés par des TAB)
 (prend la 2eme colonne, trie, met en minuscules)
 
 cat current_yes | cut -f 2 | sort -u | tr '[:upper:]' '[:lower:]' > yes
 
-4) récupérer les non nettoyer :
+4) récupérer les "non" depuis le site et nettoyer :
 liste dans le fichier current_no (séparés par des TAB)
 (prend la 2eme colonne, trie, met en minuscules)
 
