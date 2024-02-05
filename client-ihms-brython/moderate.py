@@ -307,12 +307,12 @@ def prepare_mailing():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'courriel', 'confirmé', 'ne veut plus recevoir']:
+    for field in ['pseudo', 'nom', 'prénom', 'courriel', 'confirmé', 'ne veut plus recevoir']:
         col = html.TD(field)
         thead <= col
     emails_table <= thead
 
-    for pseudo, (email, confirmed, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
+    for pseudo, (email, family_name, first_name, confirmed, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
 
         if not newsletter:
             continue
@@ -320,6 +320,12 @@ def prepare_mailing():
         row = html.TR()
 
         col = html.TD(pseudo)
+        row <= col
+
+        col = html.TD(family_name)
+        row <= col
+
+        col = html.TD(first_name)
         row <= col
 
         if confirmed:
@@ -347,12 +353,12 @@ def prepare_mailing():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'courriel', 'confirmé']:
+    for field in ['pseudo', 'nom', 'prénom', 'courriel', 'confirmé']:
         col = html.TD(field)
         thead <= col
     emails_table2 <= thead
 
-    for pseudo, (email, confirmed, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
+    for pseudo, (email, family_name, first_name, confirmed, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
 
         if newsletter:
             continue
@@ -360,6 +366,18 @@ def prepare_mailing():
         row = html.TR()
 
         col = html.TD(pseudo)
+        col.style = {
+            'background-color': 'Red'
+        }
+        row <= col
+
+        col = html.TD(family_name)
+        col.style = {
+            'background-color': 'Red'
+        }
+        row <= col
+
+        col = html.TD(first_name)
         col.style = {
             'background-color': 'Red'
         }
