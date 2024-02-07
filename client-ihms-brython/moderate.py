@@ -1958,7 +1958,7 @@ def show_non_confirmed_data():
     players_table <= thead
 
     count = 0
-    for pseudo, (email, confirmed, _) in sorted(emails_dict.items(), key=lambda t: t[0].upper()):
+    for pseudo, (email, confirmed, _, _, _) in sorted(emails_dict.items(), key=lambda t: t[0].upper()):
 
         if confirmed:
             continue
