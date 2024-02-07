@@ -61,7 +61,7 @@ SENDER = "afjd_serveur_jeu@diplomania-gen.fr"
 REPLY_TO = "afjdiplo@gmail.com"
 
 # list of attached files (must be PDF)
-PDF_ATT_FILES = ['Newletter_Fevrier_2024.pdf']
+PDF_ATT_FILES = []
 
 
 MAILER = None
@@ -152,27 +152,30 @@ def main() -> None:
         already_spammed = set()
 
         with open(victim_list_file, encoding='utf-8') as filepointer:
-            for line in filepointer:
-                line = line.rstrip('\n')
-                if line and not line.startswith("#"):
-                    dest = line
-                    dest = dest.lower()  # otherwise rejected
 
-                print(f"spamming '{dest}'... ", end='')
+            victims = [l.rstrip('\n').lower() for l in filepointer if not l.startswith("#")]
+            nb_victims = len(victims)
+            print(f"We have {nb_victims} victims... ")
+
+            for rank, victim in enumerate(victims):
+
+                print(f"spamming '{victim}'... ", end='')
 
                 # check we do not send twice to same
-                if dest in already_spammed:
+                if victim in already_spammed:
                     print("=================== ALREADY SPAMMED!")
                     continue
 
+                percent = round((rank +1) / nb_victims* 100)
+
                 try:
-                    send_mail(dest)
+                    send_mail(victim)
                 except smtplib.SMTPRecipientsRefused:
                     print("=================== FAILED!")
                 else:
-                    print("DONE!")
+                    print(f"DONE! {percent}%")
 
-                already_spammed.add(dest)
+                already_spammed.add(victim)
 
                 time.sleep(INTERVAL)
 
