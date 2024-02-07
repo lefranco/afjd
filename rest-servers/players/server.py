@@ -1377,6 +1377,63 @@ class RemoveNewsletterRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/confirm-email/<pseudo_player>')
+class ConfirmEmailRessource(flask_restful.Resource):  # type: ignore
+    """ ConfirmEmailRessource """
+
+    def post(self, pseudo_player: str) -> typing.Tuple[typing.Dict[str, str], int]:
+        """
+        Patch email confirmed bit for a player (he received stuff ok !)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/confirm-email - POST - confirm email pseudo=%s", pseudo_player)
+
+        # check from user server user is pseudo
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        sql_executor = database.SqlExecutor()
+
+        requester = players.Player.find_by_pseudo(sql_executor, pseudo)
+
+        if requester is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Requesting player {pseudo} does not exist")
+
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        the_moderators = [m[0] for m in moderators_list]
+        if pseudo not in the_moderators:
+            del sql_executor
+            flask_restful.abort(403, msg="You are not allowed to changed newsletters of someone! (need to be moderator)")
+
+        received = players.Player.find_by_pseudo(sql_executor, pseudo_player)
+
+        if received is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Receiving player {pseudo_player} does not exist")
+
+        assert received is not None
+        received.email_confirmed = True
+        received.update_database(sql_executor)
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': 'Ok receiving patched'}
+        return data, 200
+
+
 @API.resource('/creators')
 class CreatorListRessource(flask_restful.Resource):  # type: ignore
     """ CreatorListRessource """
