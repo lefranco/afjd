@@ -325,6 +325,36 @@ def prepare_mailing():
         # sending email : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    def patch_account_unconfirmed_callback(ev, player_pseudo):  # pylint: disable=invalid-name
+        """ patch_account_unconfirmed_callback """
+
+        def reply_callback(req):
+
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au patch {player_pseudo} : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au patch {player_pseudo} : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            prepare_mailing()
+
+        ev.preventDefault()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/unconfirm-email/{player_pseudo}"
+
+        # sending email : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     MY_SUB_PANEL <= html.H3("Préparation d'un publipostage")
 
     if not common.check_modo():
@@ -367,7 +397,12 @@ def prepare_mailing():
         row <= col
 
         form = ""
-        if not confirmed:
+        if confirmed:
+            form = html.FORM()
+            input_patch_account_confirmed = html.INPUT(type="image", src="./images/unconfirmed.png", Class='btn-inside')
+            input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_unconfirmed_callback(e, p))
+            form <= input_patch_account_confirmed
+        else:
             form = html.FORM()
             input_patch_account_confirmed = html.INPUT(type="image", src="./images/confirmed.png", Class='btn-inside')
             input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_confirmed_callback(e, p))
@@ -432,7 +467,12 @@ def prepare_mailing():
         row <= col
 
         form = ""
-        if not confirmed:
+        if confirmed:
+            form = html.FORM()
+            input_patch_account_confirmed = html.INPUT(type="image", src="./images/unconfirmed.png", Class='btn-inside')
+            input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_unconfirmed_callback(e, p))
+            form <= input_patch_account_confirmed
+        else:
             form = html.FORM()
             input_patch_account_confirmed = html.INPUT(type="image", src="./images/confirmed.png", Class='btn-inside')
             input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_confirmed_callback(e, p))
