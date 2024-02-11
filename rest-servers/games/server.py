@@ -7102,6 +7102,11 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
 
                 end_time_stamp = end_transition.time_stamp
 
+                # would lead to assert
+                if end_time_stamp == start_time_stamp:
+                    # this game was not really played (one transition)
+                    continue
+
             games_data.append((start_time_stamp, end_time_stamp, players))
 
         del sql_executor
