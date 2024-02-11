@@ -16,6 +16,7 @@ INTERFACE_TABLE = {
     'egeemonie': ['diplomania'],
     'mediterranee': ['diplomania'],
     'successionautriche': ['diplomania'],
+    'franceautriche': ['diplomania'],
 }
 
 
