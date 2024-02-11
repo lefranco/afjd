@@ -1341,7 +1341,9 @@ def my_games(state_name):
                 value = html.DIV(stats, title=explanation)
 
             if field == 'game_type':
-                value = game_type_conv[value]
+                explanation = common.TYPE_GAME_EXPLAIN_CONV[value]
+                stats = game_type_conv[value]
+                value = html.DIV(stats, title=explanation)
 
             if field == 'edit':
                 value = ""

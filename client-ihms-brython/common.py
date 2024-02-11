@@ -18,6 +18,14 @@ import config
 PERSIST_TIME_SEC = 5
 
 
+TYPE_GAME_EXPLAIN_CONV = {
+    0: "Négo : pas de restriction, tout est possible !",
+    1: "Blitz : pas de communication, tout est fermé !",
+    2: "NégoPublique : communication publique uniquement...",
+    3: "BlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) pour parler d'autre chose que la partie"
+}
+
+
 def noreply_callback(_):
     """ noreply_callback """
     alert("Problème (pas de réponse de la part du serveur)")
