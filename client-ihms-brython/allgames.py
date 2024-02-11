@@ -544,7 +544,9 @@ def my_opportunities():
                 value = html.DIV(stats, title=explanation)
 
             if field == 'game_type':
-                value = game_type_conv[value]
+                explanation = common.TYPE_GAME_EXPLAIN_CONV[value]
+                stats = game_type_conv[value]
+                value = html.DIV(stats, title=explanation)
 
             col = html.TD(value)
             if colour is not None:
@@ -1059,7 +1061,9 @@ def all_games(state_name):
                 value = "Non" if data['nomessage_current'] else "Oui"
 
             if field == 'game_type':
-                value = game_type_conv[value]
+                explanation = common.TYPE_GAME_EXPLAIN_CONV[value]
+                stats = game_type_conv[value]
+                value = html.DIV(stats, title=explanation)
 
             col = html.TD(value)
             if colour is not None:

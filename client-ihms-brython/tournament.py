@@ -387,7 +387,8 @@ def show_games():
                 value = rev_state_code_table[state_name]
 
             if field == 'used_for_elo':
-                value = "Oui" if value else "Non"
+                stats = "Oui" if value else "Non"
+                value = html.DIV(stats, title="Indique si la partie compte pour le classement E.L.O. sur le site")
 
             if field == 'master':
                 game_name = data['name']
@@ -396,13 +397,19 @@ def show_games():
                 value = master_name
 
             if field == 'nopress_current':
-                value = "Non" if data['nopress_current'] else "Oui"
+                explanation = "Indique si les joueurs peuvent actuellement utiliser la messagerie publique"
+                stats = "Non" if data['nopress_current'] else "Oui"
+                value = html.DIV(stats, title=explanation)
 
             if field == 'nomessage_current':
-                value = "Non" if data['nomessage_current'] else "Oui"
+                explanation = "Indique si les joueurs peuvent actuellement utiliser la messagerie privée"
+                stats = "Non" if data['nomessage_current'] else "Oui"
+                value = html.DIV(stats, title=explanation)
 
             if field == 'game_type':
-                value = game_type_conv[value]
+                explanation = common.TYPE_GAME_EXPLAIN_CONV[value]
+                stats = game_type_conv[value]
+                value = html.DIV(stats, title=explanation)
 
             col = html.TD(value)
             if colour is not None:
