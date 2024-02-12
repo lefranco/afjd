@@ -1050,8 +1050,8 @@ def pairing():
             common.info_dialog(f"Vous avez pris l'arbitrage de la partie : {messages}")
 
             # action of going to game page
-            play_low.PANEL_MIDDLE.clear()
-            play.render(play_low.PANEL_MIDDLE)
+            play_low.MY_SUB_PANEL.clear()
+            pairing()
 
         ev.preventDefault()
 
@@ -1091,8 +1091,8 @@ def pairing():
             common.info_dialog(f"Vous avez quitté l'arbitrage de la partie : {messages}")
 
             # action of going to game page
-            play_low.PANEL_MIDDLE.clear()
-            play.render(play_low.PANEL_MIDDLE)
+            play_low.MY_SUB_PANEL.clear()
+            pairing()
 
         ev.preventDefault()
 
