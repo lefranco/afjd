@@ -20,38 +20,29 @@ import flask_mail  # type: ignore
 INTERVAL = 5
 
 # mailing suject
-SUBJECT = "2024 : Convocation pour l'Assemblée Générale et NewsLetter !"
+SUBJECT = "Le Vendredi 16 Février, il sera trop tard !"
 
 # mailing body
 BODY = """
-Bonjour à tous,
+Cher membre de Diplomania,
 
-Il est temps d’organiser l’assemblée générale annuelle.
+Avec la nouvelle année, c’est la saison des Tournois qui redémarre, et en particulier THE BIG ONE, le fameux Diplomania T-Blitz 2024. Ce tournoi rassemble tous les joueurs du site qui sont mélangés dans autant de parties qu’il y a de joueurs inscrits. C’est l’occasion pour chacun de se mesurer à des joueurs qu’il n’a pas l’occasion de rencontrer à priori.
 
-Elle se tiendra le samedi 10 février à 15h sur Discord.
+Pas de tchatche, on pousse les flottes et les armées, ça prend bien moins de temps que les parties négociations.
 
-Nous vous espérons le plus nombreux possible avec les sujets suivants :
--    Les nouvelles du site et de ses événements
--    Les nouvelles sur les différents tournois à venir
--    Les groupes de travail
--    Nos relations avec les autres communautés
--    Le bilan des comptes de l’association
--    Et des sujets divers qui peuvent être questionnés pendant l’assemblée
+A ce jour, je n’ai pas encore vu passer ton inscription. Il s’agit surement d’un oubli que tu peux vite réparer en te connectant sur la page d’accueil de Diplomania avant le Vendredi 16 Février 2024.
 
-Ce sera également le moment d’organiser l’élection d’un nouveau conseil d’administration. Pour être candidat, il vous suffit de nous signaler votre candidature avant l’AG ou le jour même et de régler votre cotisation annuelle.
+Si tu as encore des questions, tu peux consulter les infos publiées sur le Forum de Diplomania ou me répondre à cet e-mail.
 
-Lien du hello asso :
-https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-2024
+Nous t’attendons pour le Diplomania T-Blitz 2024 ! Viens vite !
 
-Lien du serveur Discord de l'association :
-https://discord.com/invite/uEtrTWjX
+Lien pour s'inscire au tournoi :
+https://diplomania-gen.fr/?event=T_BLITZ_2024
 
-En cas d’indisponibilité, vous pouvez également donner votre procuration
-Le CA a besoin de se renouveler, n’hésitez pas à vous présenter. Le nouveau CA élira à son tour un nouveau bureau.
+Ludiquement
+Lafouine
 
-A samedi 10 février à 15H !
-
-Le CA
+Organisateur du Diplomania T-Blitz 2024
 """
 
 # mailing official sender
