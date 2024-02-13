@@ -132,6 +132,7 @@ def create_game(json_dict):
     information_displayed_archive = False
     information_displayed_fast = False
     information_displayed_game_type = False
+    information_displayed_just_play = False
 
     def display_archive_callback(_):
         """ display_archive_callback """
@@ -162,6 +163,16 @@ def create_game(json_dict):
             explain = '\n'.join(common.TYPE_GAME_EXPLAIN_CONV.values())
             alert(explain)
             information_displayed_game_type = True
+
+    def display_just_play_callback(_):
+        """ display_just_play_callback """
+
+        nonlocal information_displayed_just_play
+
+        if not information_displayed_just_play:
+            explain = '\n'.join(["Si vous cochez vous serez mis dans les joueurs de la partie et le site trouvera un arbitre", "Si vous ne cochez pas (par défaut) vous serez arbitre de la partie et ne pourrez pas la jouer", "Ceci est modifiable par la suite !"])
+            alert(explain)
+            information_displayed_just_play = True
 
     def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
@@ -629,6 +640,7 @@ def create_game(json_dict):
     legend_just_play_game = html.LEGEND("Je veux juste jouer la partie", title="L'administrateur du site sera mis arbitre")
     fieldset <= legend_just_play_game
     input_just_play_game = html.INPUT(type="checkbox", checked=False, Class='btn-inside')
+    input_just_play_game.bind("click", display_just_play_callback)
     fieldset <= input_just_play_game
     form <= fieldset
 
