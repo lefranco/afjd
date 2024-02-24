@@ -721,8 +721,73 @@ def get_game_status_histo(variant_data, advancement_selected):
     return game_status_table
 
 
+
+def game_orders_reload(game_id):
+    """ game_orders_reload """
+
+    orders_loaded = {}
+
+    def reply_callback(req):
+        nonlocal orders_loaded
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement des ordres de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement des ordres de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        orders_loaded = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-orders/{game_id}"
+
+    # getting orders : need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return orders_loaded
+
+
+def game_communication_orders_reload(game_id):
+    """ game_communication_orders_reload """
+
+    orders_loaded = None
+
+    def reply_callback(req):
+        nonlocal orders_loaded
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement des ordres de communication la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement des ordres de communication la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        orders_loaded = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-communication-orders/{game_id}"
+
+    # getting orders : need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return orders_loaded
+
+
 def show_board(panel):
     """ map and ratings """
+
+    orders_data = None
 
     def callback_render(_):
         """ callback_render """
@@ -741,7 +806,17 @@ def show_board(panel):
         # put the legends at the end
         VARIANT_DATA.render_legends(ctx)
 
-        # do not put the orders here
+        # the orders if applicable
+        if orders_data:
+            orders_data.render(ctx)
+
+    if ROLE_ID != 0:
+
+        # load orders
+        orders_loaded = game_orders_reload(GAME_ID)
+
+        # digest the orders
+        orders_data = mapping.Orders(orders_loaded, POSITION_DATA, False)
 
     # create canvas
     map_size = VARIANT_DATA.map_size
