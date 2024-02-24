@@ -739,7 +739,7 @@ def live_chat():
     information1 <= "La première vocation du chat est de fournir une aide rapide aux nouveaux arrivants sur le site."
 
     information2 = html.DIV(Class='note')
-    information2 <= "Les messages persistent au moins 24 heures. L'auteur des messages n'est pas garanti par le système. Ce chat rustique n'a pas destination à remplacer le salon Discord"
+    information2 <= "Les messages persistent au moins 24 heures. Ce chat rustique n'a pas destination à remplacer le salon Discord"
 
     # display items
 
