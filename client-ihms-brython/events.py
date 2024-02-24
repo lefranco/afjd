@@ -215,21 +215,22 @@ def registrations():
         MY_SUB_PANEL.clear()
         registrations()
 
-    def sendmail_callback(ev):  # pylint: disable=invalid-name
-        """ sendmail_callback """
+    def sendmess_callback(ev):  # pylint: disable=invalid-name
+        """ sendmess_callback """
 
         def reply_callback(req):
             req_result = loads(req.text)
-            if req.status != 200:
+            if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Erreur à l'envoi de courrier électronique : {req_result['message']}")
+                    alert(f"Erreur à l'envoi de message dans les messages privés : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à l'envoi de courrier électronique : {req_result['msg']}")
+                    alert(f"Problème à l'envoi de message dans les messages privés : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            common.info_dialog(f"Message émis vers : {manager}")
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Le message privé a été envoyé ! {messages}", True)
 
         ev.preventDefault()
 
@@ -247,24 +248,20 @@ def registrations():
             registrations()
             return
 
-        subject = f"Message de la part du joueur {pseudo} au sujet de l'événement {name} du site https://diplomania-gen.fr (AFJD)"
+        ev.preventDefault()
 
-        body = input_message.value
-
-        addressees = [manager_id]
+        content = '\n\n'.join([f"[Evénement {event_name}]", input_message.value])
 
         json_dict = {
-            'addressees': " ".join([str(a) for a in addressees]),
-            'subject': subject,
-            'body': body,
-            'type': 'question_event',
+            'dest_user_id': manager_id,
+            'content': content
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/mail-players"
+        url = f"{host}:{port}/private-messages"
 
-        # sending email : need token
+        # sending private message : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
@@ -448,11 +445,11 @@ def registrations():
     fieldset <= input_message
     contact_form <= fieldset
 
-    contact_form <= html.DIV("Votre message lui parviendra par courriel, il pourra y répondre en utilisant votre adresse déclarée sur le site.")
+    contact_form <= html.DIV("Votre message lui parviendra par messagerie privée.")
     contact_form <= html.BR()
 
-    input_send_message = html.INPUT(type="submit", value="Envoyer le courriel", Class='btn-inside')
-    input_send_message.bind("click", sendmail_callback)
+    input_send_message = html.INPUT(type="submit", value="Envoyer le message privé", Class='btn-inside')
+    input_send_message.bind("click", sendmess_callback)
     contact_form <= input_send_message
 
     name = event_dict['name']
