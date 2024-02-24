@@ -48,10 +48,10 @@ OPTIONS = {
     'Découverte': "Pour découvrir simplement le jeu et le site par des vidéos, des tutoriels etc...",
     'Connexion': "Se connecter au site par mot de passe",
     'Mon compte': "Pour éditer les paramètres de son compte sur le site (il faut être connecté)",
-    'Rejoindre une partie': "Pour se mettre dans une partie qui va bientôt commencer (ou obtenir une liste de parties)",
-    'Retourner dans la partie': "Revient dans la partie sélectionnée pour y jouer",
+    'Les parties': "Liste des parties et se mettre dans une partie qui va bientôt commencer",
     'Mes parties': "La liste des parties dans laquelle vous jouez (il faut être connecté)",
     'Editer partie': "Pour modifier la partie (il faut être un arbitre) ou créer une partie",
+    'Retourner dans la partie': "Revient dans la partie sélectionnée pour y jouer",
     'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
     'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
     'Classements': "Différents classements sur les joueurs du site (obtenir une liste de joueurs)",
@@ -216,14 +216,14 @@ def load_option(_, item_name):
         login.render(PANEL_MIDDLE)
     if item_name == 'Mon compte':
         account.render(PANEL_MIDDLE)
-    if item_name == 'Rejoindre une partie':
+    if item_name == 'Les parties':
         allgames.render(PANEL_MIDDLE)
-    if item_name == 'Retourner dans la partie':
-        play.render(PANEL_MIDDLE)
     if item_name == 'Mes parties':
         mygames.render(PANEL_MIDDLE)
     if item_name == 'Editer partie':
         games.render(PANEL_MIDDLE)
+    if item_name == 'Retourner dans la partie':
+        play.render(PANEL_MIDDLE)
     if item_name == 'Interface tournois':
         tournament.render(PANEL_MIDDLE)
     if item_name == 'Evénements':
