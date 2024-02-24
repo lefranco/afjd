@@ -80,68 +80,6 @@ def stack_role_builds(frame):
         frame <= html.DIV(f"Vous avez {nb_ownerships} centre(s) pour {nb_units} unité(s) et {nb_free_centers} emplacement(s) libre(s). Vous {'construisez' if nb_builds > 0 else 'détruisez'} donc {abs(nb_builds)} fois.", Class='note')
 
 
-def game_orders_reload(game_id):
-    """ game_orders_reload """
-
-    orders_loaded = {}
-
-    def reply_callback(req):
-        nonlocal orders_loaded
-        req_result = loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur au chargement des ordres de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème au chargement des ordres de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        orders_loaded = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-orders/{game_id}"
-
-    # getting orders : need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return orders_loaded
-
-
-def game_communication_orders_reload(game_id):
-    """ game_communication_orders_reload """
-
-    orders_loaded = None
-
-    def reply_callback(req):
-        nonlocal orders_loaded
-        req_result = loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur au chargement des ordres de communication la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème au chargement des ordres de communication la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        orders_loaded = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-communication-orders/{game_id}"
-
-    # getting orders : need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return orders_loaded
-
-
 def submit_orders():
     """ submit_orders """
 
@@ -1366,7 +1304,7 @@ def submit_orders():
     canvas.bind("mousedown", callback_canvas_mousedown)
 
     # get the orders from server
-    orders_loaded = game_orders_reload(play_low.GAME_ID)
+    orders_loaded = play_low.game_orders_reload(play_low.GAME_ID)
     if not orders_loaded:
         alert("Erreur chargement ordres")
         play.load_option(None, 'Consulter')
@@ -2214,7 +2152,7 @@ def submit_communication_orders():
     canvas.bind("mousedown", callback_canvas_mousedown)
 
     # get the orders from server
-    communication_orders_loaded = game_communication_orders_reload(play_low.GAME_ID)
+    communication_orders_loaded = play_low.game_communication_orders_reload(play_low.GAME_ID)
     if not communication_orders_loaded:
         alert("Erreur chargement ordres communication")
         play.load_option(None, 'Consulter')
@@ -2682,7 +2620,7 @@ def imagine_units():
         return False
 
     # get the orders from server
-    orders_loaded = game_orders_reload(play_low.GAME_ID)
+    orders_loaded = play_low.game_orders_reload(play_low.GAME_ID)
     if not orders_loaded:
         alert("Erreur chargement ordres")
         play.load_option(None, 'Consulter')
