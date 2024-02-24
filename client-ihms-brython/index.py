@@ -39,7 +39,7 @@ SITE_IMAGE_DISPLAY_SIZE = 100
 # TITLE is in index.html
 
 # H1
-MAIN_TITLE = html.H1("Diplomania - le site de l'Association Francophone des Joueurs de Diplomacy.")
+MAIN_TITLE = html.H1("Diplomania - le site de l'Association Francophone des Joueurs de Diplomacy. (β)")
 document <= MAIN_TITLE
 
 
