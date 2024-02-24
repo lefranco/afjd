@@ -121,7 +121,7 @@ def show_games():
     overall_time_before = time()
 
     if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalablexx")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
