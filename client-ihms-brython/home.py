@@ -782,7 +782,7 @@ def private_messages(dest_user_id):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le message a été supprimé ! {messages}", True)
+            common.info_dialog(f"Le message privé a été supprimé ! {messages}", True)
 
             # back to where we started
             global CONTENT_BACKUP
@@ -816,7 +816,7 @@ def private_messages(dest_user_id):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le message a été envoyé ! {messages}", True)
+            common.info_dialog(f"Le message privé a été envoyé ! {messages}", True)
 
             # back to where we started
             global CONTENT_BACKUP
@@ -854,7 +854,7 @@ def private_messages(dest_user_id):
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/private-messages"
 
-        # adding a message in a game : need token
+        # sending private message : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def private_messages_reload():
