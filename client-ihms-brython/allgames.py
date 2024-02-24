@@ -20,9 +20,9 @@ import index  # circular import
 
 
 OPTIONS = {
-    'Rejoindre une partie': "Pour rejoindre (I.e. se mettre dans) un partie afin d'y jouer",
     'Sélectionner une partie': "Séléction d'une partie sur des critères éléborés",
     'Toutes les parties': "Liste de toutes les parties",
+    'Rejoindre une partie': "Pour rejoindre (I.e. se mettre dans) un partie afin d'y jouer",
     'Parties sans arbitres': "Liste des parties qui n'ont pas d'arbitre alloué",
     'Parties sans tournoi': "Liste des parties qui ne sont pas dans un tournoi"
 }
@@ -1287,10 +1287,10 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Rejoindre une partie':
-        my_opportunities()
     if item_name == 'Sélectionner une partie':
         select_game(config.FORCED_VARIANT_NAME, 1)
+    if item_name == 'Rejoindre une partie':
+        my_opportunities()
     if item_name == 'Toutes les parties':
         all_games('en cours')
     if item_name == 'Parties sans arbitres':
