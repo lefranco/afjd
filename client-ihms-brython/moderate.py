@@ -36,7 +36,6 @@ OPTIONS = {
     'Dernières soumissions d\'ordres': "Dernières soumissions d\'ordres sur les parties du site",
     'Vérification adresses IP': "Détecter les doubons d'adresses IP des utilisateurs du site",
     'Vérification courriels': "Détecter les doubons de courriels des utilisateurs du site",
-    'Courriels non confirmés': "Courriels non confirmés des utilisateurs du site",
     'Codes de vérification': "Codes de vérification pour le forum",
     # management
     'Destituer arbitre partie': "Destituer l'arbitre de la partie sélectionnée",
@@ -388,12 +387,11 @@ def prepare_mailing():
         col = html.TD(first_name)
         row <= col
 
-        if confirmed:
-            email_formatted = html.B(email)
-        else:
-            email_formatted = html.EM(email)
-
-        col = html.TD(email_formatted)
+        col = html.TD(email)
+        if not confirmed:
+            col.style = {
+                'background-color': 'red'
+            }
         row <= col
 
         form = ""
@@ -438,32 +436,19 @@ def prepare_mailing():
         row = html.TR()
 
         col = html.TD(pseudo)
-        col.style = {
-            'background-color': 'Red'
-        }
         row <= col
 
         col = html.TD(family_name)
-        col.style = {
-            'background-color': 'Red'
-        }
         row <= col
 
         col = html.TD(first_name)
-        col.style = {
-            'background-color': 'Red'
-        }
         row <= col
 
-        if confirmed:
-            email_formatted = html.B(email)
-        else:
-            email_formatted = html.EM(email)
-
-        col = html.TD(email_formatted)
-        col.style = {
-            'background-color': 'Red'
-        }
+        col = html.TD(email)
+        if not confirmed:
+            col.style = {
+                'background-color': 'red'
+            }
         row <= col
 
         form = ""
@@ -487,8 +472,6 @@ def prepare_mailing():
     MY_SUB_PANEL <= emails_table
     MY_SUB_PANEL <= html.H4("Ceux qui ne le sont pas (pour information)")
     MY_SUB_PANEL <= emails_table2
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV("Les courriels en gras sont confimés.", Class='note')
 
 
 def tournament_result():
@@ -2013,57 +1996,6 @@ def show_all_emails():
     MY_SUB_PANEL <= emails_table
 
 
-def show_non_confirmed_data():
-    """ show_non_confirmed_data """
-
-    MY_SUB_PANEL <= html.H3("Les inscrits non confirmés")
-
-    if not common.check_modo():
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    emails_dict = common.get_all_emails()
-    if not emails_dict:
-        return
-
-    players_table = html.TABLE()
-
-    fields = ['pseudo', 'email']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'email': 'courriel'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    players_table <= thead
-
-    count = 0
-    for pseudo, (email, confirmed, _, _, _) in sorted(emails_dict.items(), key=lambda t: t[0].upper()):
-
-        if confirmed:
-            continue
-
-        row = html.TR()
-        for field in fields:
-
-            if field == 'pseudo':
-                value = pseudo
-
-            if field == 'email':
-                value = email
-
-            col = html.TD(value)
-            row <= col
-
-            count += 1
-
-        players_table <= row
-
-    MY_SUB_PANEL <= players_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} comptes non confirmés")
-
-
 def show_verif_codes():
     """ show_verif_codes """
 
@@ -2417,8 +2349,6 @@ def load_option(_, item_name):
         show_ip_addresses()
     if item_name == 'Vérification courriels':
         show_all_emails()
-    if item_name == 'Courriels non confirmés':
-        show_non_confirmed_data()
     if item_name == 'Codes de vérification':
         show_verif_codes()
     # management
