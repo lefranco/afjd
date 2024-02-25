@@ -189,8 +189,8 @@ def show_position(direct_last_moves):
         # action of going to sandbox page
         index.load_option(None, 'Bac à sable')
 
-    def callback_export_game_json(_):
-        """ callback_export_game_json """
+    def callback_download_game_json(_):
+        """ callback_download_game_json """
 
         json_return_dict = None
 
@@ -446,7 +446,7 @@ def show_position(direct_last_moves):
         buttons_right <= html.BR()
 
         input_download_game_json = html.INPUT(type="submit", value="Télécharger la partie au format JSON", Class='btn-inside')
-        input_download_game_json.bind("click", callback_export_game_json)
+        input_download_game_json.bind("click", callback_download_game_json)
         buttons_right <= input_download_game_json
         buttons_right <= html.BR()
         buttons_right <= html.BR()
