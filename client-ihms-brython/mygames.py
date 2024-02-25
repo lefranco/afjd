@@ -829,7 +829,7 @@ def my_games(state_name):
     pseudo = storage['PSEUDO']
 
     # get the day
-    day_now = int(time()) // 3600
+    day_now = int(time()) // (3600 * 24)
 
     # we check new private messages once a day
     day_notified = 0
@@ -908,7 +908,11 @@ def my_games(state_name):
     day_notified = 0
     if 'DATE_SUFFERING_NOTIFIED' in storage:
         day_notified = int(storage['DATE_SUFFERING_NOTIFIED'])
-    if day_now > day_notified:
+    if state == 0:
+        # no alert : just will display in "go" colour
+        suffering_games = get_suffering_games(games_dict, games_id_player, dict_role_id)
+    elif day_now > day_notified:
+        # alert but not too often
         suffering_games = get_suffering_games(games_dict, games_id_player, dict_role_id)
         if suffering_games:
             alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
