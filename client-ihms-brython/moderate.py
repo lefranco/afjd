@@ -264,6 +264,20 @@ def change_news_modo():
 def prepare_mailing():
     """ prepare_mailing """
 
+    def download_emails_callback(ev):  # pylint: disable=invalid-name
+
+        ev.preventDefault()
+
+        # needed too for some reason
+        MY_SUB_PANEL <= html.A(id='download_link')
+
+        # perform actual exportation
+        text_file_as_blob = window.Blob.new(['\n'.join(emails_list)], {'type': 'text/plain'})
+        download_link = document['download_link']
+        download_link.download = "emails_for_mailing.txt"
+        download_link.href = window.URL.createObjectURL(text_file_as_blob)
+        document['download_link'].click()
+
     def patch_account_refuses_callback(ev, player_pseudo):  # pylint: disable=invalid-name
         """ patch_account_refuses_callback """
 
@@ -371,6 +385,8 @@ def prepare_mailing():
         thead <= col
     emails_table <= thead
 
+    emails_list = []
+
     for pseudo, (email, family_name, first_name, confirmed, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
 
         if not newsletter:
@@ -386,6 +402,8 @@ def prepare_mailing():
 
         col = html.TD(first_name)
         row <= col
+
+        emails_list.append(email)
 
         col = html.TD(email)
         if not confirmed:
@@ -470,6 +488,12 @@ def prepare_mailing():
 
     MY_SUB_PANEL <= html.H4("Ceux qui sont d'accord pour recevoir la newletter")
     MY_SUB_PANEL <= emails_table
+
+    MY_SUB_PANEL <= html.BR()
+    input_export_emails = html.INPUT(type="submit", value="Télécharger la liste des courriels", Class='btn-inside')
+    input_export_emails.bind("click", download_emails_callback)
+    MY_SUB_PANEL <= input_export_emails
+
     MY_SUB_PANEL <= html.H4("Ceux qui ne le sont pas (pour information)")
     MY_SUB_PANEL <= emails_table2
 
