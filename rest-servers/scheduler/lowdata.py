@@ -61,6 +61,7 @@ INTERFACE_TABLE = {
     'mediterranee': ['diplomania'],
     'successionautriche': ['diplomania'],
     'franceautriche': ['diplomania'],
+    'crowded': ['diplomania'],
 }
 
 
