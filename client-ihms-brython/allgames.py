@@ -21,8 +21,8 @@ import index  # circular import
 
 OPTIONS = {
     'Sélectionner une partie': "Séléction d'une partie sur des critères éléborés",
-    'Toutes les parties': "Liste de toutes les parties",
     'Rejoindre une partie': "Pour rejoindre (I.e. se mettre dans) un partie afin d'y jouer",
+    'Toutes les parties': "Liste de toutes les parties",
     'Parties sans arbitres': "Liste des parties qui n'ont pas d'arbitre alloué",
     'Parties sans tournoi': "Liste des parties qui ne sont pas dans un tournoi"
 }
