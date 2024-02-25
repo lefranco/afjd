@@ -317,7 +317,7 @@ def sandbox():
     def download_callback(_):
         """ download_callback """
 
-        # make a rendom like label
+        # make a random like label
         time_stamp_now = time()
         label = int(time_stamp_now) % 1000
 
