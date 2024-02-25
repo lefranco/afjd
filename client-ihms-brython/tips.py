@@ -16,7 +16,7 @@ TIPS_CONTENT_TABLE = {
     "Utiliser le sous menu “Taguer” depuis la page de la partie",
 
     "Pour se désinscrire d'une partie (inscrit par erreur)":
-    "Utiliser le menu “Rejoindre un partie” sous-menu “Sélectionner partie” puis option “Appariement” et enfin bouton quitter la partie",
+    "Utiliser le menu “Mes parties”, sélectionner la partie, ”Retourner dans la partie” puis option “Appariement” et enfin bouton quitter la partie",
 
     "Pour les daltoniens":
     "Une carte avec des couleurs spécifiques a été créée, menu “Bac à sable” option “Choix d'interface”",
