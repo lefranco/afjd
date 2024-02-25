@@ -259,7 +259,7 @@ def show_news():
     div_a5 <= html.BR()
     suffering_games_loaded = stats_content['suffering_games']
     if suffering_games_loaded:
-        div_a5 <= "Les parties suivantes sont en cours et ont besoin de remplaçant(s)."
+        div_a5 <= "Les parties ci-dessous sont en cours et ont besoin de remplaçant(s)."
         div_a5 <= html.BR()
         div_a5 <= html.B("Cliquez sur le lien pour relever le gant !")
         div_a5 <= html.BR()
