@@ -517,7 +517,7 @@ def registrations():
     # provide the link
     if not external:
         url = f"https://diplomania-gen.fr?event={name}"
-        MY_SUB_PANEL <= f"Pour inviter un joueur à rejoindre cet événement, lui envoyer le lien : '{url}'"
+        MY_SUB_PANEL <= f"Pour inviter un joueur à s'inscrire à cet événement, lui envoyer le lien : '{url}'"
 
     MY_SUB_PANEL <= html.H4("Votre inscription")
 
