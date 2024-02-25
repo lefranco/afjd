@@ -4,7 +4,7 @@
 
 from json import loads, dumps
 
-from browser import html, alert, ajax, window  # pylint: disable=import-error
+from browser import html, alert, ajax, document, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
@@ -174,8 +174,24 @@ def select_event():
 def registrations():
     """ registrations """
 
-    def create_account_callback(_):
+    def download_players_callback(ev):  # pylint: disable=invalid-name
+
+        ev.preventDefault()
+
+        # needed too for some reason
+        MY_SUB_PANEL <= html.A(id='download_link')
+
+        # perform actual exportation
+        text_file_as_blob = window.Blob.new(['\n'.join(pseudo_players_list)], {'type': 'text/plain'})
+        download_link = document['download_link']
+        download_link.download = f"players_event_{event_name}.txt"
+        download_link.href = window.URL.createObjectURL(text_file_as_blob)
+        document['download_link'].click()
+
+    def create_account_callback(ev):  # pylint: disable=invalid-name
         """ create_account_callback """
+
+        ev.preventDefault()
 
         # go to create account page
         index.load_option(None, 'Mon compte')
@@ -356,6 +372,8 @@ def registrations():
         joiner_data.update({'date': joiner[1], 'status': joiner[2], 'comment': joiner[3]})
         joiners_dict[joiner[0]] = joiner_data
 
+    pseudo_players_list = []
+
     # sorting is done by server
     for num, data in enumerate(joiners_dict.values()):
 
@@ -369,6 +387,9 @@ def registrations():
         row = html.TR()
         for field in fields:
             value = data[field]
+
+            if field == 'pseudo':
+                pseudo_players_list.append(value)
 
             if field == 'rank':
                 value = num + 1
@@ -551,6 +572,10 @@ def registrations():
     if not external:
         MY_SUB_PANEL <= html.H4("Ils/elles vous attendent :")
         MY_SUB_PANEL <= joiners_table
+        MY_SUB_PANEL <= html.BR()
+        input_export_players = html.INPUT(type="submit", value="Télécharger la liste des inscrits", Class='btn-inside')
+        input_export_players.bind("click", download_players_callback)
+        MY_SUB_PANEL <= input_export_players
 
 
 def create_event(json_dict):

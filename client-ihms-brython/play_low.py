@@ -721,7 +721,6 @@ def get_game_status_histo(variant_data, advancement_selected):
     return game_status_table
 
 
-
 def game_orders_reload(game_id):
     """ game_orders_reload """
 
