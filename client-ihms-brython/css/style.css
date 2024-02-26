@@ -225,17 +225,17 @@ legend{
     background-color: #A8EDA5;
 }
 
-/* xxx */
+/* color of ? */
 .admin_news{
     background-color: #FAFAD2;
 }
 
-/* xxx */
+/*  color of ? */
 .modo_news{
      background-color: #F0E68C;
 }
 
-/* xxx */
+/*  color of ? */
 .glory_news{
      background-color: #FFE4B5;
 }
@@ -298,11 +298,8 @@ fieldset{
 }
 
 #page {
-    /*background: #E5BCC3;  rose */
     background: #FFFFFF;
     background-size: 400% 400%;
-/*    background: linear-gradient(-45deg, #b0b0b0, #d7d7d7, #a6a6a6, #333333);
-    animation: gradient 15s ease infinite;*/
 }
 
 #create {
