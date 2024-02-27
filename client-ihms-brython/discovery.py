@@ -7,8 +7,9 @@ from browser import html, document, window  # pylint: disable=import-error
 
 OPTIONS = {
     'Documents': "Lien vers différents documents d'initiation sur le jeu",
-    'Vidéo Youtube Diplomacy': "Lien une vidéo Youtube qui présente simplement les règles du jeu avec humour",
-    'Vidéo Youtube Diplomania': "Lien une vidéo Youtube qui présente simplement comment jouer sur ce site",
+    'Youtube Diplomacy': "Lien une vidéo Youtube qui présente simplement les règles du jeu avec humour",
+    'Youtube Diplomania Jeu': "Lien une vidéo Youtube qui présente simplement comment jouer sur ce site",
+    'Youtube Diplomania Arbitrage': "Lien une vidéo Youtube qui présente simplement comment arbitrer sur ce site",
 }
 
 
@@ -37,16 +38,28 @@ def tutorial_game():
     document['tutorial_game'].click()
 
 
-def tutorial_site():
-    """ tutorial_site """
+def tutorial_site_play():
+    """ tutorial_site_play """
 
     # load tutorial_site directly
 
     # use button
-    button = html.BUTTON("Lancement du tutoriel youtube pour le site", id='tutorial_link', Class='btn-inside')
+    button = html.BUTTON("Lancement du tutoriel youtube pour le site", id='tutorial_link_play', Class='btn-inside')
     MY_SUB_PANEL <= button
-    button.bind("click", lambda e: window.open("https://youtu.be/luOiAz9i7Ls"))
-    document['tutorial_link'].click()
+    button.bind("click", lambda e: window.open("https://www.youtube.com/watch?v=luOiAz9i7Ls"))
+    document['tutorial_link_play'].click()
+
+
+def tutorial_site_master():
+    """ tutorial_site_master """
+
+    # load tutorial_site directly
+
+    # use button
+    button = html.BUTTON("Lancement du tutoriel youtube pour le site", id='tutorial_link_master', Class='btn-inside')
+    MY_SUB_PANEL <= button
+    button.bind("click", lambda e: window.open("https://www.youtube.com/watch?v=T4jJzCxLslc"))
+    document['tutorial_link_master'].click()
 
 
 MY_PANEL = html.DIV()
@@ -75,10 +88,12 @@ def load_option(_, item_name):
 
     if item_name == 'Documents':
         show_discovery()
-    if item_name == 'Vidéo Youtube Diplomacy':
+    if item_name == 'Youtube Diplomacy':
         tutorial_game()
-    if item_name == 'Vidéo Youtube Diplomania':
-        tutorial_site()
+    if item_name == 'Youtube Diplomania Jeu':
+        tutorial_site_play()
+    if item_name == 'Youtube Diplomania Arbitrage':
+        tutorial_site_master()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
