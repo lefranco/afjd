@@ -139,7 +139,8 @@ a:visited{
   border: 1px solid #333;
   box-shadow: 8px 8px 5px #444;
   padding: 8px 12px;
-  background-image: linear-gradient(180deg, #989898, #838383 40%, #EDEDED);
+  background-color: #EDEDED;
+/*  background-image: linear-gradient(180deg, #989898, #838383 40%, #EDEDED); */
 }
 
 
@@ -285,16 +286,18 @@ fieldset{
 
 
 #home {
-    background: linear-gradient(-45deg, #eeeeee, #e7e7e7e7, #a6a6a6, #232323);
+	background-color: #EDEDED;
+/*    background: linear-gradient(-45deg, #eeeeee, #e7e7e7e7, #a6a6a6, #232323); */
     background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+/*    animation: gradient 15s ease infinite; */
 }
 
 
 #login {
-    background: linear-gradient(-45deg, #a0a0a0, #e7e7e7, #a6a6a6, #222222);
+	background-color: #EDEDED;
+/*    background: linear-gradient(-45deg, #a0a0a0, #e7e7e7, #a6a6a6, #222222); */
     background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+/*    animation: gradient 15s ease infinite; */
 }
 
 #page {
@@ -303,24 +306,27 @@ fieldset{
 }
 
 #create {
-    background: linear-gradient(-45deg, #c0c0c0, #c7c7c7, #a6a6a6, #444444);
+	background-color: #EDEDED;
+/*    background: linear-gradient(-45deg, #c0c0c0, #c7c7c7, #a6a6a6, #444444); */
     background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+/*    animation: gradient 15s ease infinite; */
 }
 
 #moderate {
-    background: linear-gradient(-45deg, #d0d0d0, #b7b7b7, #a6a6a6, #555555);
+	background-color: #EDEDED;
+/*    background: linear-gradient(-45deg, #d0d0d0, #b7b7b7, #a6a6a6, #555555); */
     background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+/*    animation: gradient 15s ease infinite; */
 }
 
 #admin {
-    background: linear-gradient(-45deg, #dddddd, #e7e7e7e7, #a6a6a6, #232323);
+	background-color: #EDEDED;
+/*    background: linear-gradient(-45deg, #dddddd, #e7e7e7e7, #a6a6a6, #232323); */
     background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+/*    animation: gradient 15s ease infinite; */
 }
 
-
+/*
 @keyframes gradient {
     0% {
         background-position: 0% 50%;
@@ -334,3 +340,4 @@ fieldset{
         background-position: 0% 50%;
     }
 }
+*/
