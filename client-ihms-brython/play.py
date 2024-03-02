@@ -49,12 +49,14 @@ def next_previous_game(previous: bool):
 
     if 'GAME_LIST' not in storage:
         alert("Pas de liste de parties, allez dans la page 'mes parties', désolé")
+        render(index.PANEL_MIDDLE)
         return False
 
     games_list = storage['GAME_LIST'].split(' ')
 
     if play_low.GAME not in games_list:
         alert(f"La partie en cours {play_low.GAME} n'est pas dans la liste de vos parties, choisissez parmi celles de la page 'mes parties', désolé")
+        render(index.PANEL_MIDDLE)
         return False
 
     game_position = games_list.index(play_low.GAME)
@@ -64,6 +66,7 @@ def next_previous_game(previous: bool):
 
     if not index.load_game(new_name):
         alert(f"La partie destination '{new_name}' n'existe pas, elle a du être supprimée, désolé")
+        render(index.PANEL_MIDDLE)
         return False
 
     allgames.show_game_selected()
