@@ -103,46 +103,6 @@ def get_teaser_content():
     return teaser_content
 
 
-def formatted_news(news_content_loaded, admin_modo, class_):
-    """ formatted_news """
-
-    # init
-    news_content = html.DIV(Class=class_)
-
-    # format
-    if news_content_loaded is not None:
-        for line in news_content_loaded.split("\n"):
-            if line.startswith(".ANNONCE"):
-                if admin_modo:
-                    _, _, announcement = line.partition(".ANNONCE ")
-                    previous_announcement = storage['ANNOUNCEMENT']
-                    storage['ANNOUNCEMENT'] = announcement
-                    if announcement != previous_announcement:
-                        storage['ANNOUNCEMENT_DISPLAYED'] = 'no'
-            elif line.startswith(".HR"):
-                separator = html.HR()
-                news_content <= separator
-            elif line.startswith(".STRONG"):
-                _, _, extracted = line.partition(".STRONG ")
-                bold = html.STRONG(extracted)
-                news_content <= bold
-            elif line.startswith(".KBD"):
-                _, _, extracted = line.partition(".KBD ")
-                kbd = html.KBD(extracted)
-                news_content <= kbd
-            elif line.startswith(".LINK"):
-                _, _, extracted = line.partition(".LINK ")
-                link = html.A(href=extracted, target="_blank")
-                link <= extracted
-                news_content <= link
-            elif line.startswith(".BR"):
-                news_content <= html.BR()
-            else:
-                news_content <= line
-
-    return news_content
-
-
 def formatted_games(suffering_games):
     """ formatted_games """
 
@@ -343,7 +303,7 @@ def show_news():
     # ----
 
     news_content_loaded2 = news_content_table_loaded['modo']
-    news_content2 = formatted_news(news_content_loaded2, True, 'modo_news')
+    news_content2 = common.formatted_news(news_content_loaded2, True, 'modo_news')
     div_a3 <= news_content2
 
     # ----
@@ -361,7 +321,7 @@ def show_news():
     # ----
 
     news_content_loaded = news_content_table_loaded['admin']
-    news_content = formatted_news(news_content_loaded, True, 'admin_news')
+    news_content = common.formatted_news(news_content_loaded, True, 'admin_news')
     div_b3 <= news_content
 
     # ----
@@ -496,7 +456,7 @@ def show_news():
     # ----
 
     hall_content_loaded = news_content_table_loaded['glory']
-    hall_content = formatted_news(hall_content_loaded, False, 'glory_news')
+    hall_content = common.formatted_news(hall_content_loaded, False, 'glory_news')
     div_b2 <= hall_content
 
     # ----
