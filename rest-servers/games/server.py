@@ -7059,8 +7059,6 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
         games_data = []
         for game_id in concerned_games_list:
 
-            game_data: typing.Dict[str, typing.Any] = {}
-
             # get start date
             start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement)
 
@@ -7070,10 +7068,6 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
 
             assert start_transition is not None
             start_time_stamp = start_transition.time_stamp
-
-            # get players
-            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-            players = [a[1] for a in allocations_list if a[2] >= 1]
 
             # get game
             game = games.Game.find_by_identifier(sql_executor, game_id)
@@ -7088,7 +7082,6 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
 
                 # get current_advancement
                 last_advancement_played = game.current_advancement - 1
-                game_data['number_advancement_played'] = game.current_advancement
 
                 # get end date
                 end_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
@@ -7106,6 +7099,10 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
                 if end_time_stamp == start_time_stamp:
                     # this game was not really played (one transition)
                     continue
+
+            # get players (finally)
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            players = [a[1] for a in allocations_list if a[2] >= 1]
 
             games_data.append((start_time_stamp, end_time_stamp, players))
 
