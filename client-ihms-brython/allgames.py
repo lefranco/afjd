@@ -1235,12 +1235,12 @@ def show_no_tournaments_data():
 
     no_tournament_table = html.TABLE()
 
-    fields = ['game']
+    fields = ['game', 'variant']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'game': 'partie'}[field]
+        field_fr = {'game': 'partie', 'variant': 'variante'}[field]
         col = html.TD(field_fr)
         thead <= col
     no_tournament_table <= thead
@@ -1253,6 +1253,10 @@ def show_no_tournaments_data():
         row = html.TR()
 
         value = data['name']
+        col = html.TD(value)
+        row <= col
+
+        value = data['variant']
         col = html.TD(value)
         row <= col
 
