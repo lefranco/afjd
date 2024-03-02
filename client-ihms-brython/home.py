@@ -450,18 +450,17 @@ def show_news():
     # ==B2==============================
 
     div_b2 = html.DIV(Class='tooltip')
-    title7 = html.H4("Les glorieux (face à face)", Class='news3')
+    title7 = html.H4("Du nouveau sur le wiki")
     div_b2 <= title7
 
     # ----
 
-    hall_content_loaded = news_content_table_loaded['glory']
-    hall_content = common.formatted_news(hall_content_loaded, False, 'glory_news')
-    div_b2 <= hall_content
+    news_wiki = html.OBJECT(data="https://diplomania-gen.fr/dokuwiki/doku.php?id=start", width="100%", height="400", title="Wiki", alt="Wiki")
+    div_b2 <= news_wiki
 
     # ----
 
-    div_b2_tip = html.SPAN("Plus de détail sur la page wikipedia https://fr.wikipedia.org/wiki/Palmar%C3%A8s_internationaux_de_Diplomatie", Class='tooltiptext')
+    div_b2_tip = html.SPAN("Plus de détail sur le wiki https://diplomania-gen.fr/dokuwiki/doku.php?id=start", Class='tooltiptext')
     div_b2 <= div_b2_tip
     div_homepage <= div_b2
 
