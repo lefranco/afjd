@@ -120,6 +120,46 @@ class MessageTypeEnum:
     DROPOUT = 3
 
 
+def formatted_news(news_content_loaded, admin_modo, class_):
+    """ formatted_news """
+
+    # init
+    news_content = html.DIV(Class=class_)
+
+    # format
+    if news_content_loaded is not None:
+        for line in news_content_loaded.split("\n"):
+            if line.startswith(".ANNONCE"):
+                if admin_modo:
+                    _, _, announcement = line.partition(".ANNONCE ")
+                    previous_announcement = storage['ANNOUNCEMENT']
+                    storage['ANNOUNCEMENT'] = announcement
+                    if announcement != previous_announcement:
+                        storage['ANNOUNCEMENT_DISPLAYED'] = 'no'
+            elif line.startswith(".HR"):
+                separator = html.HR()
+                news_content <= separator
+            elif line.startswith(".STRONG"):
+                _, _, extracted = line.partition(".STRONG ")
+                bold = html.STRONG(extracted)
+                news_content <= bold
+            elif line.startswith(".KBD"):
+                _, _, extracted = line.partition(".KBD ")
+                kbd = html.KBD(extracted)
+                news_content <= kbd
+            elif line.startswith(".LINK"):
+                _, _, extracted = line.partition(".LINK ")
+                link = html.A(href=extracted, target="_blank")
+                link <= extracted
+                news_content <= link
+            elif line.startswith(".BR"):
+                news_content <= html.BR()
+            else:
+                news_content <= line
+
+    return news_content
+
+
 def get_players():
     """ get_players returns an empy dict on error """
 
