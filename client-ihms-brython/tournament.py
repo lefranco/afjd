@@ -1433,6 +1433,7 @@ def show_tournaments_frequentation_data():
     MY_SUB_PANEL <= html.H3("La fréquentation des tournois du site")
     MY_SUB_PANEL <= tournaments_table
 
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
