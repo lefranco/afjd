@@ -31,7 +31,7 @@ class Grouping:
         return groupings_found
 
     @staticmethod
-    def inventory(sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[int, int, int]]:
+    def inventory(sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[int, int]]:
         """ class inventory : gives a list of all objects in database """
         groupings_found = sql_executor.execute("SELECT * FROM groupings", need_result=True)
         if not groupings_found:

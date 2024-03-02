@@ -7040,7 +7040,7 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
 
     def get(self) -> typing.Tuple[typing.Dict[int, int], int]:
         """
-        Get information for historic of number of players etc...
+        Get information for historic of number of players for site etc...
         EXPOSED
         """
 
@@ -7145,6 +7145,104 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
             h_number_prec = h_number
 
         data = histo_number2
+        return data, 200
+
+
+@API.resource('/extract_histo_tournaments_data')
+class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ignore
+    """ ExtractTournamentsHistoDataRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:
+        """
+        Get information for historic of number of players for tournaments etc...
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/extract_histo_tournaments_data - GET - getting histo tournament data ")
+
+        sql_executor = database.SqlExecutor()
+
+        # dict game -> tournament
+        groupings_dict = {g: t for t, g in groupings.Grouping.inventory(sql_executor)}
+
+        # concerned_games
+        games_list = games.Game.inventory(sql_executor)
+        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.archive]
+
+        # time of spring 01
+        first_advancement = 1
+
+        # extract start_time, end_time and players from games
+        tournaments_dict: typing.Dict[int, typing.Dict[str, typing.Any]] = {}
+        for game_id in concerned_games_list:
+
+            # get start date
+            start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement)
+
+            if not start_transition:
+                # this game was not played
+                continue
+
+            assert start_transition is not None
+            start_time_stamp = start_transition.time_stamp
+
+            # get game
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+
+            # game is ongoing
+            if game.current_state == 1:
+                end_time_stamp = None
+
+            # game is finished
+            if game.current_state == 2:
+
+                # get current_advancement
+                last_advancement_played = game.current_advancement - 1
+
+                # get end date
+                end_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
+
+                assert end_transition is not None
+
+                # would lead to division by zero
+                if end_transition == start_transition:
+                    # this game was not played
+                    continue
+
+                end_time_stamp = end_transition.time_stamp
+
+                # would lead to assert
+                if end_time_stamp == start_time_stamp:
+                    # this game was not really played (one transition)
+                    continue
+
+            # get players (finally)
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            players = {a[1] for a in allocations_list if a[2] >= 1}
+
+            tournament_id = groupings_dict[game_id]
+            if tournament_id not in tournaments_dict:
+                tournaments_dict[tournament_id]: typing.Dict[str, typing.Any] = {}
+                tournaments_dict[tournament_id]['start_time'] = start_time_stamp
+                tournaments_dict[tournament_id]['end_time'] = end_time_stamp
+                tournaments_dict[tournament_id]['players'] = players
+            else:
+                tournaments_dict[tournament_id]['start_time'] = min(start_time_stamp, tournaments_dict[tournament_id]['start_time'])
+                if end_time_stamp is None:
+                    tournaments_dict[tournament_id]['end_time'] = None
+                elif tournaments_dict[tournament_id]['end_time'] is not None:
+                    tournaments_dict[tournament_id]['end_time'] = max(end_time_stamp, tournaments_dict[tournament_id]['end_time'])
+                tournaments_dict[tournament_id]['players'].update(players)
+
+        del sql_executor
+
+        # need the number of players
+        for data in tournaments_dict.values():
+            data['affluence'] = len(data['players'])
+            del data['players']
+
+        data = tournaments_dict
         return data, 200
 
 
