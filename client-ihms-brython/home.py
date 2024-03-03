@@ -450,7 +450,7 @@ def show_news():
     # ==B2==============================
 
     div_b2 = html.DIV(Class='tooltip')
-    title7 = html.H4("Du nouveau sur le wiki")
+    title7 = html.H4("Du nouveau sur le wiki (pour l'ouvrir dans une nouvelle fenêtre utiliser le menu 'Wiki')")
     div_b2 <= title7
 
     # ----
