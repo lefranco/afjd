@@ -496,7 +496,7 @@ def my_opportunities():
                 elif int(data['current_state']) == 1:
 
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                    datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                     value = datetime_deadline_loaded_str
 
             if field == 'current_state':
@@ -1016,7 +1016,7 @@ def all_games(state_name):
                 elif int(data['current_state']) == 1:
 
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                    datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                     value = datetime_deadline_loaded_str
 
                     if data['fast']:

@@ -1022,7 +1022,7 @@ def game_master():
     # convert 'deadline_loaded' to human editable format
 
     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-    datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
     deadline_loaded_day, deadline_loaded_hour, _ = datetime_deadline_loaded_str.split(' ')
 
     fieldset = html.FIELDSET()

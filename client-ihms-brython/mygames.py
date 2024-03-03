@@ -439,7 +439,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
 
             if field == 'date':
                 datetime_deadline_delay = mydatetime.fromtimestamp(date_delay)
-                datetime_deadline_delay_str = mydatetime.strftime2(*datetime_deadline_delay)
+                datetime_deadline_delay_str = mydatetime.strftime(*datetime_deadline_delay, year_first=True)
                 value = datetime_deadline_delay_str
 
             if field == 'name':
@@ -622,7 +622,7 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
 
             if field == 'date':
                 datetime_deadline_dropout = mydatetime.fromtimestamp(date_dropout)
-                datetime_deadline_dropout_str = mydatetime.strftime2(*datetime_deadline_dropout)
+                datetime_deadline_dropout_str = mydatetime.strftime(*datetime_deadline_dropout, year_first=True)
                 value = datetime_deadline_dropout_str
 
             if field == 'name':
@@ -1183,7 +1183,7 @@ def my_games(state_name):
                 elif int(data['current_state']) == 1:
 
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                    datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                     stats = datetime_deadline_loaded_str
 
                     if data['fast']:

@@ -1347,7 +1347,7 @@ def all_missing_orders():
             if field == 'deadline':
                 deadline_loaded = value
                 datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                 value = datetime_deadline_loaded_str
 
                 if data['fast']:
@@ -1683,7 +1683,7 @@ def show_player_games(pseudo_player, game_list):
                 if field == 'deadline':
                     deadline_loaded = value
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                    datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                     value = datetime_deadline_loaded_str
 
                     if data['fast']:
