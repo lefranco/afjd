@@ -455,7 +455,7 @@ def show_news():
 
     # ----
 
-    news_wiki = html.IFRAME(src="https://diplomania-gen.fr/dokuwiki/doku.php?id=start", width="100%", height="400", title="Wiki", alt="Wiki", allow="fullscreen")
+    news_wiki = html.IFRAME(src="https://diplomania-gen.fr/dokuwiki/doku.php?id=start&do=export_xhtml", width="100%", height="400", title="Wiki", alt="Wiki", allow="fullscreen")
     div_b2 <= news_wiki
 
     # ----
