@@ -1402,7 +1402,7 @@ def show_tournaments_frequentation_data():
         thead <= col
     tournaments_table <= thead
 
-    for tournament_id, data in sorted(tournaments_freq_dict.items(), key=lambda m: int(m[1]['affluence']), reverse=True):
+    for tournament_id, data in sorted(tournaments_freq_dict.items(), key=lambda m: int(m[1]['start_time']), reverse=True):
         row = html.TR()
         for field in fields:
 
@@ -1411,13 +1411,13 @@ def show_tournaments_frequentation_data():
             if field == 'start':
                 time_stamp = data['start_time']
                 date_now_gmt = mydatetime.fromtimestamp(time_stamp)
-                date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+                date_now_gmt_str = mydatetime.strftime3(*date_now_gmt)
                 value = date_now_gmt_str
             if field == 'end':
                 if data['end_time'] is not None:
                     time_stamp = data['end_time']
                     date_now_gmt = mydatetime.fromtimestamp(time_stamp)
-                    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+                    date_now_gmt_str = mydatetime.strftime3(*date_now_gmt)
                     value = date_now_gmt_str
                 else:
                     value = "..."
