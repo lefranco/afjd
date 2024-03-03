@@ -354,7 +354,7 @@ def show_games():
                 elif int(data['current_state']) == 1:
 
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                    datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                     value = datetime_deadline_loaded_str
 
                     if data['fast']:
@@ -734,7 +734,7 @@ def show_incidents():
 
         # date
         datetime_incident = mydatetime.fromtimestamp(time_stamp)
-        datetime_incident_str = mydatetime.strftime2(*datetime_incident)
+        datetime_incident_str = mydatetime.strftime(*datetime_incident, year_first=True)
         col = html.TD(datetime_incident_str)
         row <= col
 
@@ -1411,13 +1411,13 @@ def show_tournaments_frequentation_data():
             if field == 'start':
                 time_stamp = data['start_time']
                 date_now_gmt = mydatetime.fromtimestamp(time_stamp)
-                date_now_gmt_str = mydatetime.strftime3(*date_now_gmt)
+                date_now_gmt_str = mydatetime.strftime(*date_now_gmt, year_first=True, day_only=True)
                 value = date_now_gmt_str
             if field == 'end':
                 if data['end_time'] is not None:
                     time_stamp = data['end_time']
                     date_now_gmt = mydatetime.fromtimestamp(time_stamp)
-                    date_now_gmt_str = mydatetime.strftime3(*date_now_gmt)
+                    date_now_gmt_str = mydatetime.strftime(*date_now_gmt, year_first=True, day_only=True)
                     value = date_now_gmt_str
                 else:
                     value = "..."

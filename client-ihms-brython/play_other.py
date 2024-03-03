@@ -717,7 +717,7 @@ def show_events_in_game():
 
         # date
         datetime_incident = mydatetime.fromtimestamp(time_stamp)
-        datetime_incident_str = mydatetime.strftime2(*datetime_incident)
+        datetime_incident_str = mydatetime.strftime(*datetime_incident, year_first=True)
         col = html.TD(datetime_incident_str)
         row <= col
 
@@ -780,7 +780,7 @@ def show_events_in_game():
 
         # date
         datetime_incident = mydatetime.fromtimestamp(time_stamp)
-        datetime_incident_str = mydatetime.strftime2(*datetime_incident)
+        datetime_incident_str = mydatetime.strftime(*datetime_incident, year_first=True)
         col = html.TD(datetime_incident_str)
         row <= col
 
@@ -860,7 +860,7 @@ def show_events_in_game():
 
         # date
         datetime_incident = mydatetime.fromtimestamp(time_stamp)
-        datetime_incident_str = mydatetime.strftime2(*datetime_incident)
+        datetime_incident_str = mydatetime.strftime(*datetime_incident, year_first=True)
         col = html.TD(datetime_incident_str)
         row <= col
 
