@@ -6819,7 +6819,7 @@ class TournamentPlayersRessource(flask_restful.Resource):  # type: ignore
 
             # get answer
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-            players_list.update([a[1] for a in allocations_list])
+            players_list.update([a[1] for a in allocations_list if a[2] > 0])
 
         del sql_executor
 
