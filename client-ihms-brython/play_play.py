@@ -77,7 +77,7 @@ def stack_role_builds(frame):
     if play_low.ROLE_ID != 0:
         role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
         nb_builds, nb_ownerships, nb_units, nb_free_centers = play_low.POSITION_DATA.role_builds(role)
-        free_info =  f" et {nb_free_centers} emplacement(s) libre(s)" if nb_builds > 0 else ""
+        free_info = f" et {nb_free_centers} emplacement(s) libre(s)" if nb_builds > 0 else ""
         frame <= html.DIV(f"Vous avez {nb_ownerships} centre(s) pour {nb_units} unité(s){free_info}. Vous {'construisez' if nb_builds > 0 else 'détruisez'} donc {abs(nb_builds)} fois.", Class='note')
 
 
