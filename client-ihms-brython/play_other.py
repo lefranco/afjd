@@ -22,7 +22,7 @@ import play_low
 def display_special_information_callback(_):
     """ display_special_information_callback """
 
-    alert("Après un stab - réussi ou pas ou tout autre raison - la victime vous insulte ? Voici la conduite à tenir :\n 1) Contacter l'arbitre de la partie par la messagerie de la partie\n 2) Contacter un modérateur - la liste des modérateurs est dans Classement/Groupe Modérateur et la messagerie personnelle s'accède par Accueil/Messagerie personnelle\n 3) Contacter un administrateur par Accueil/Déclarer un incident.\n Ne passer à l'étape suivante qu'en cas d'échec de l'étape précédente bien sûr !")
+    alert("Après un stab - réussi ou pas ou tout autre raison - la victime vous insulte ? Voici la conduite à tenir :\n\n 1) Contacter l'arbitre de la partie par la messagerie de la partie\n\n 2) Contacter un modérateur - la liste des modérateurs est dans Classement/Groupe Modérateur et la messagerie personnelle s'accède par Accueil/Messagerie personnelle\n\n 3) Contacter un administrateur par Accueil/Déclarer un incident.\n\n Ne passer à l'étape suivante qu'en cas d'échec de l'étape précédente bien sûr !\n\nDans tous les cas, notez bien et transmettez le numéro ('id') du message ou de la déclaration incriminée pour référence !")
 
 
 def date_last_visit_update(game_id, role_id, visit_type):
