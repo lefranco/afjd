@@ -19,6 +19,12 @@ import play  # circular import
 import play_low
 
 
+def display_special_information_callback(_):
+    """ display_special_information_callback """
+
+    alert("Après un stab - réussi ou pas ou tout autre raison - la victime vous insulte ? Voici la conduite à tenir :\n 1) Contacter l'arbitre de la partie par la messagerie de la partie\n 2) Contacter un modérateur - la liste des modérateurs est dans Classement/Groupe Modérateur et la messagerie personnelle s'accède par Accueil/Messagerie personnelle\n 3) Contacter un administrateur par Accueil/Déclarer un incident.\n Ne passer à l'étape suivante qu'en cas d'échec de l'étape précédente bien sûr !")
+
+
 def date_last_visit_update(game_id, role_id, visit_type):
     """ date_last_visit_update """
 
@@ -1554,6 +1560,12 @@ def negotiate(default_dest_set, def_focus_role_id):
     play_low.MY_SUB_PANEL <= html.BR()
     play_low.MY_SUB_PANEL <= html.BR()
 
+    button = html.BUTTON("Un message avec un contenu inaproprié ?", title="xxx", Class='btn-inside')
+    button.bind("click", display_special_information_callback)
+    play_low.MY_SUB_PANEL <= button
+    play_low.MY_SUB_PANEL <= html.BR()
+    play_low.MY_SUB_PANEL <= html.BR()
+
     information = html.DIV(Class='note')
     information <= "Le pseudo affiché est celui du joueur en cours, pas forcément celui de l'auteur réel du message"
     play_low.MY_SUB_PANEL <= information
@@ -1816,6 +1828,12 @@ def declare():
 
     # declarations already
     play_low.MY_SUB_PANEL <= declarations_table
+    play_low.MY_SUB_PANEL <= html.BR()
+    play_low.MY_SUB_PANEL <= html.BR()
+
+    button = html.BUTTON("Une déclaration avec un contenu inaproprié ?", title="xxx", Class='btn-inside')
+    button.bind("click", display_special_information_callback)
+    play_low.MY_SUB_PANEL <= button
     play_low.MY_SUB_PANEL <= html.BR()
     play_low.MY_SUB_PANEL <= html.BR()
 
