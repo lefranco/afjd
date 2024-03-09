@@ -70,7 +70,7 @@ FAQ_CONTENT_TABLE = {
     "Il faut enlever le rôle au joueur et le retirer de la partie (cf les deux questions précédentes). Un bouton est alors disponible dans la console d'arbitrage.",
 
     "Sur ma partie il y a un joueur qui insulte un autre depuis un stab. L'arbitre ne fait rien. Que dois-je faire  ?":
-    "C'est à l'arbitre de le rappeler à l'ordre en principe. Si sa manière de traiter la chose ne vous plait pas, il faut déclarer un incident. Nous voulons une atmosphère cordiale sur le site.",
+    "C'est à l'arbitre de le rappeler à l'ordre en principe. Si sa manière de traiter la chose ne vous plait pas, il faut contacter un modérateur via la messagerie personnelle. Nous voulons une atmosphère cordiale sur le site.",
 
     "Que peut faire l'arbitre ?":
     "L'arbitre connaît l'identité des joueurs de sa partie. Il démarre et arrête la partie. Il peut distinguer la partie. Il peut forcer des ordres de désordre civil pour un pays (si les paramètres de la partie le permettent). Il peut forcer un accord pour résoudre pour un pays (seulement après la date limite). Il peut retirer ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier (sans mettre dans le passé) une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
