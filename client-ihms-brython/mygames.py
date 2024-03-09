@@ -33,7 +33,7 @@ def get_suffering_games(games_dict, games_id_player, dict_role_id):
 
     suffering_games = []
 
-    incomplete_games_list = get_incomplete_games()
+    incomplete_games_list = common.get_incomplete_games()
     # there can be no message (if no game of failed to load)
 
     for game_id_str, data in games_dict.items():
@@ -91,37 +91,6 @@ def new_private_messages_received():
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return new_messages_loaded
-
-
-def get_incomplete_games():
-    """ get_incomplete_games : returns empty list if error or no game"""
-
-    incomplete_games_list = []
-
-    def reply_callback(req):
-        nonlocal incomplete_games_list
-        req_result = loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des parties qui sont prêtes : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des parties qui sont prêtes : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        incomplete_games_list = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games-incomplete"
-
-    # getting incomplete games list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return incomplete_games_list
 
 
 def get_all_roles_allocated_to_player():
