@@ -7223,7 +7223,7 @@ class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ign
 
             tournament_id = groupings_dict[game_id]
             if tournament_id not in tournaments_dict:
-                tournaments_dict[tournament_id]: typing.Dict[str, typing.Any] = {}
+                tournaments_dict[tournament_id] = {}
                 tournaments_dict[tournament_id]['start_time'] = start_time_stamp
                 tournaments_dict[tournament_id]['end_time'] = end_time_stamp
                 tournaments_dict[tournament_id]['players'] = players
@@ -7242,8 +7242,7 @@ class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ign
             data['affluence'] = len(data['players'])
             del data['players']
 
-        data = tournaments_dict
-        return data, 200
+        return tournaments_dict, 200
 
 
 @API.resource('/tournaments_manager/<tournament_id>')

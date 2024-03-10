@@ -298,6 +298,10 @@ class Game:
                 self._used_for_elo = False
             elif self._fog:
                 self._used_for_elo = False
+            # also if DC cannot be used for elo either
+            # must be after cd_possible_xxx of course !
+            elif self._cd_possible_moves or self._cd_possible_retreats or self._cd_possible_builds:
+                self._used_for_elo = False
             else:
                 self._used_for_elo = json_dict['used_for_elo']
 
