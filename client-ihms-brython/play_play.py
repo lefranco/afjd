@@ -614,18 +614,18 @@ def submit_orders():
                     legend_selected_unit = html.DIV(f"L'unité active sélectionnée est {selected_active_unit}")
                     buttons_right <= legend_selected_unit
 
-                legend_select_order = html.DIV("Sélectionner l'ordre (ou directement la destination - sous la légende)", Class='instruction')
-                buttons_right <= legend_select_order
-                buttons_right <= html.BR()
-
-                legend_select_order21 = html.I("Raccourcis clavier :")
-                buttons_right <= legend_select_order21
-                buttons_right <= html.BR()
-
-                for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
-                    legend_select_order22 = html.I(info)
-                    buttons_right <= legend_select_order22
+                    legend_select_order = html.DIV("Sélectionner l'ordre (ou directement la destination - sous la légende)", Class='instruction')
+                    buttons_right <= legend_select_order
                     buttons_right <= html.BR()
+
+                    legend_select_order21 = html.I("Raccourcis clavier :")
+                    buttons_right <= legend_select_order21
+                    buttons_right <= html.BR()
+
+                    for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                        legend_select_order22 = html.I(info)
+                        buttons_right <= legend_select_order22
+                        buttons_right <= html.BR()
 
                 # to catch keyboard
                 document.bind("keypress", callback_keypress)
