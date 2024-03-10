@@ -207,14 +207,14 @@ class OrderTypeEnum:
         return None
 
     @staticmethod
-    def compatible(unit, advancement_season: SeasonEnum) -> bool:
+    def compatible(order_type, advancement_season: SeasonEnum) -> bool:
         """ type order compatible with season """
         if advancement_season in [SeasonEnum.SPRING_SEASON, SeasonEnum.AUTUMN_SEASON]:
-            return unit in [OrderTypeEnum.ATTACK_ORDER, OrderTypeEnum.OFF_SUPPORT_ORDER, OrderTypeEnum.DEF_SUPPORT_ORDER, OrderTypeEnum.HOLD_ORDER, OrderTypeEnum.CONVOY_ORDER]
+            return order_type in [OrderTypeEnum.ATTACK_ORDER, OrderTypeEnum.OFF_SUPPORT_ORDER, OrderTypeEnum.DEF_SUPPORT_ORDER, OrderTypeEnum.HOLD_ORDER, OrderTypeEnum.CONVOY_ORDER]
         if advancement_season in [SeasonEnum.SUMMER_SEASON, SeasonEnum.WINTER_SEASON]:
-            return unit in [OrderTypeEnum.RETREAT_ORDER, OrderTypeEnum.DISBAND_ORDER]
+            return order_type in [OrderTypeEnum.RETREAT_ORDER, OrderTypeEnum.DISBAND_ORDER]
         if advancement_season is SeasonEnum.ADJUST_SEASON:
-            return unit in [OrderTypeEnum.BUILD_ORDER, OrderTypeEnum.REMOVE_ORDER]
+            return order_type in [OrderTypeEnum.BUILD_ORDER, OrderTypeEnum.REMOVE_ORDER]
         return False
 
 
