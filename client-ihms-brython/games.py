@@ -129,10 +129,21 @@ def create_game(json_dict):
     game_type = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}[game_type_code]
 
     # alert will be shown once
+    information_displayed_disorder = False
     information_displayed_archive = False
     information_displayed_fast = False
     information_displayed_game_type = False
     information_displayed_just_play = False
+
+    def display_disorder_callback(_):
+        """ display_disorder_callback """
+
+        nonlocal information_displayed_disorder
+
+        if input_cd_possible_moves.checked or input_cd_possible_retreats.checked or input_cd_possible_builds.checked:
+            if not information_displayed_disorder:
+                alert("Attention : autoriser le Désordre Civil sur une partie (quelque soit la saison) lui enlève automatiquement l'éligibilité pour le calcul du ELO")
+                information_displayed_disorder = True
 
     def display_archive_callback(_):
         """ display_archive_callback """
@@ -553,6 +564,7 @@ def create_game(json_dict):
     legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
     fieldset <= legend_cd_possible_moves
     input_cd_possible_moves = html.INPUT(type="checkbox", checked=bool(cd_possible_moves) if cd_possible_moves is not None else False, Class='btn-inside')
+    input_cd_possible_moves.bind("click", display_disorder_callback)
     fieldset <= input_cd_possible_moves
     form <= fieldset
 
@@ -569,6 +581,7 @@ def create_game(json_dict):
     legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
     fieldset <= legend_cd_possible_retreats
     input_cd_possible_retreats = html.INPUT(type="checkbox", checked=bool(cd_possible_retreats) if cd_possible_retreats is not None else False, Class='btn-inside')
+    input_cd_possible_retreats.bind("click", display_disorder_callback)
     fieldset <= input_cd_possible_retreats
     form <= fieldset
 
@@ -587,6 +600,7 @@ def create_game(json_dict):
     legend_cd_possible_builds = html.LEGEND("DC possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
     fieldset <= legend_cd_possible_builds
     input_cd_possible_builds = html.INPUT(type="checkbox", checked=bool(cd_possible_builds) if cd_possible_builds is not None else False, Class='btn-inside')
+    input_cd_possible_builds.bind("click", display_disorder_callback)
     fieldset <= input_cd_possible_builds
     form <= fieldset
 
@@ -1284,6 +1298,8 @@ def change_access_parameters_game():
 def change_pace_parameters_game():
     """ change_pace_parameters_game """
 
+    information_displayed_disorder = False
+
     # declare the values
     deadline_hour_loaded = None
     deadline_sync_loaded = None
@@ -1295,6 +1311,16 @@ def change_pace_parameters_game():
     speed_adjustments_loaded = None
     cd_possible_builds_loaded = None
     play_weekend_loaded = None
+
+    def display_disorder_callback(_):
+        """ display_disorder_callback """
+
+        nonlocal information_displayed_disorder
+
+        if input_cd_possible_moves.checked or input_cd_possible_retreats.checked or input_cd_possible_builds.checked:
+            if not information_displayed_disorder:
+                alert("Attention : autoriser le Désordre Civil sur une partie (quelque soit la saison) lui enlève automatiquement l'éligibilité pour le calcul du ELO")
+                information_displayed_disorder = True
 
     def change_pace_parameters_reload():
         """ change_pace_parameters_reload """
@@ -1486,6 +1512,7 @@ def change_pace_parameters_game():
     legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
     fieldset <= legend_cd_possible_moves
     input_cd_possible_moves = html.INPUT(type="checkbox", checked=cd_possible_moves_loaded, Class='btn-inside')
+    input_cd_possible_moves.bind("click", display_disorder_callback)
     fieldset <= input_cd_possible_moves
     form <= fieldset
 
@@ -1502,6 +1529,7 @@ def change_pace_parameters_game():
     legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
     fieldset <= legend_cd_possible_retreats
     input_cd_possible_retreats = html.INPUT(type="checkbox", checked=cd_possible_retreats_loaded, Class='btn-inside')
+    input_cd_possible_retreats.bind("click", display_disorder_callback)
     fieldset <= input_cd_possible_retreats
     form <= fieldset
 
@@ -1520,6 +1548,7 @@ def change_pace_parameters_game():
     legend_cd_possible_builds = html.LEGEND("DC possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
     fieldset <= legend_cd_possible_builds
     input_cd_possible_builds = html.INPUT(type="checkbox", checked=cd_possible_builds_loaded, Class='btn-inside')
+    input_cd_possible_builds.bind("click", display_disorder_callback)
     fieldset <= input_cd_possible_builds
     form <= fieldset
 
