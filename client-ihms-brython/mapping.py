@@ -1671,10 +1671,10 @@ class Position(Renderable):
 
             if isinstance(dislodged_unit, Fleet):
                 type_name = self._variant.unit_name_table[UnitTypeEnum.FLEET_UNIT].lower()
-                where_to = " / ".join([self._variant.full_zone_name_table[z] for z in dislodged_unit.zone.neighbours[UnitTypeEnum.FLEET_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
+                where_to = ' / '.join([f"{self._variant.full_zone_name_table[z]} ({self._variant.zone_name_table[z]})" for z in dislodged_unit.zone.neighbours[UnitTypeEnum.FLEET_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
             if isinstance(dislodged_unit, Army):
                 type_name = self._variant.unit_name_table[UnitTypeEnum.ARMY_UNIT].lower()
-                where_to = " / ".join([self._variant.full_zone_name_table[z] for z in dislodged_unit.zone.neighbours[UnitTypeEnum.ARMY_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
+                where_to = ' / '.join([f"{self._variant.full_zone_name_table[z]} ({self._variant.zone_name_table[z]})" for z in dislodged_unit.zone.neighbours[UnitTypeEnum.ARMY_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
 
             information = f"Votre {type_name} en {self._variant.full_zone_name_table[dislodged_unit.zone]} peut retraiter en : {where_to}"
             informations.append(information)
