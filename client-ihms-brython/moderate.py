@@ -754,7 +754,7 @@ def general_announce():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'annonce générale a été faite ! {messages}", True)
+            common.info_dialog(f"L'annonce dans toutes les parties a été faite ! {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -826,7 +826,7 @@ def game_announce():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La déclaration (annonce) a été faite ! {messages}", True)
+            common.info_dialog(f"L'annonce dans la partie a été faite ! {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()

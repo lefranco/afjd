@@ -129,7 +129,7 @@ def my_opportunities():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                common.info_dialog(f"Vous avez quitté la partie (en utilisant la page 'rejoindre') : {messages}", True)
+                common.info_dialog(f"Vous avez quitté la partie (en utilisant la page 'rejoindre') : {messages}")
 
             game_id = game_data_sel[game_name][0]
 
@@ -172,7 +172,7 @@ def my_opportunities():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                common.info_dialog(f"Vous avez rejoint la partie (en utilisant la page 'rejoindre') : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...", True)
+                common.info_dialog(f"Vous avez rejoint la partie (en utilisant la page 'rejoindre') : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...")
 
             game_id = game_data_sel[game_name][0]
 

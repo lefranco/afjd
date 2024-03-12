@@ -31,13 +31,10 @@ def noreply_callback(_):
     alert("Problème (pas de réponse de la part du serveur)")
 
 
-def info_dialog(mess, important=False):
+def info_dialog(mess):
     """ info_dialog """
 
-    if important:
-        mydialog.InfoDialog("Information", mess, remove_after=None, ok="Ok")
-    else:
-        mydialog.InfoDialog("Information", mess, remove_after=PERSIST_TIME_SEC)
+    mydialog.InfoDialog("Information", mess, remove_after=PERSIST_TIME_SEC)
 
 
 def check_creator():

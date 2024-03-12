@@ -67,7 +67,7 @@ def join_game():
             return
 
         messages = "<br>".join(req_result['msg'].split('\n'))
-        common.info_dialog(f"Vous avez rejoint la partie (en utilisant un lien externe) : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...", True)
+        common.info_dialog(f"Vous avez rejoint la partie (en utilisant un lien externe) : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...")
 
     if play_low.PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -971,7 +971,7 @@ def pairing():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez rejoint la partie : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...", True)
+            common.info_dialog(f"Vous avez rejoint la partie : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1222,7 +1222,7 @@ def negotiate(default_dest_set, def_focus_role_id):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le message a été envoyé ! {messages}", True)
+            common.info_dialog(f"Le message a été envoyé ! {messages}")
 
             # back to where we started
             global CONTENT_BACKUP
@@ -1591,7 +1591,7 @@ def declare():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La déclaration a été faite ! {messages}", True)
+            common.info_dialog(f"La déclaration a été faite ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
