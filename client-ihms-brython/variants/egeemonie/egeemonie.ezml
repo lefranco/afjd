@@ -16,15 +16,13 @@ $ Particularités de la carte
 (Canaux)
 Hellespont, Troias, Byzantion , Bythinia, Korinthios, Megara fonctionnent comme des canaux.
 (Ponts)
-Olympia & Stratos, Etolia& Achaia, Marathon & Eretre, Lesbos & Pergamon, Chiros & Ephese, Milet & Samos sont liés par des ponts de communication
-(Centres maritimes)
-Delos, Thera, Naxos, Limnos sont des zones maritime et des centres de ravitaillement.
-Une flotte stationnée à l'interieur d'un centre maritime
-peut convoyer. Une armee ne peut y stationer.
+Olympia & Stratos, Etolia & Achaia, Marathon & Eretre, Lesbos & Pergamon, Chiros & Ephese, Milet & Samos sont liés par des ponts de communication.
+(Centres maritimes - archipels)
+Delos, Thera, Naxos et Limnos sont des archipels : à la fois zone maritime et centre de ravitaillement. Une flotte stationnée à l'intérieur d'un archipel peut convoyer. Une armée ne peut y stationner.
 (Iles)
-Lesbos, Chiros, Samos & Rhodes sont des zones insulaires (i.e. des zone cotière). Si les zones de Lesbos Chiros & Samos contiennent de la mer, c'est uniquement pour les possibilités de déplacements maritimes. Une flotte stationnée dans une zone insulaire ne peut convoyer. Une armee peut y stationner.
+Lesbos, Chiros et Samos sont des zones insulaires (i.e. des zone cotière, comme Ephèse et Rhodes par exemple). Si elles contiennent de la mer, c'est uniquement pour les possibilités de déplacements maritimes. Une flotte stationnée dans une zone insulaire ne peut convoyer. Une armée peut y stationner.
 (Chiros et Lesbos)
-Il n'est pas possible à une armée de passer de Chiros à Lesbos et réciproquement.
+Il n'est pas possible à une armée de passer de Chiros à Lesbos et réciproquement sans l'assistance d'un convoi.
 
 
 _
@@ -58,7 +56,7 @@ Il y a six puissances dont les unités de départ sont les suivantes :
 _
 $ Pièges de la variante
 
-Comme précisé ci-dessus, "il n'est pas possible à une armée de passer de Chiros à Lesbos et réciproquement" (sauf par convoi). Si une flotte est dans le voisinage, le déplacement semblera possible (en envisageant que cette flotte convoie) Néanmoins, si la flotte ne convoie pas, le déplacement ne se fera pas.
+Comme précisé ci-dessus, "il n'est pas possible à une armée de passer de Chiros à Lesbos et réciproquement sans l'assistance d'un convoi". Si une flotte d'une autre puissance est dans le voisinage, le déplacement *semblera* possible, envisageant ce  convoi). Néanmoins, si la flotte ne convoie pas, le déplacement ne se fera pas.
 
 _
 $ Nomenclature
