@@ -85,7 +85,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le vote a été effacé ! {messages}", True)
+            common.info_dialog(f"Le vote a été effacé ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()

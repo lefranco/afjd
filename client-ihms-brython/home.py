@@ -747,7 +747,7 @@ def private_messages(dest_user_id):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le message privé a été supprimé ! {messages}", True)
+            common.info_dialog(f"Le message privé a été supprimé ! {messages}")
 
             # back to where we started
             global CONTENT_BACKUP
@@ -781,7 +781,7 @@ def private_messages(dest_user_id):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le message privé a été envoyé ! {messages}", True)
+            common.info_dialog(f"Le message privé a été envoyé ! {messages}")
 
             # back to where we started
             global CONTENT_BACKUP

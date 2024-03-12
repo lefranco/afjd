@@ -246,7 +246,7 @@ def registrations():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le message privé a été envoyé ! {messages}", True)
+            common.info_dialog(f"Le message privé a été envoyé ! {messages}")
 
         ev.preventDefault()
 

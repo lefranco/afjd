@@ -76,7 +76,7 @@ def login():
                 del storage['DATE_SUFFERING_NOTIFIED']
 
             # inform user
-            common.info_dialog(f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page", True)
+            common.info_dialog(f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page")
             show_login()
 
             # goto directly to page my games
@@ -185,7 +185,7 @@ def login():
         if not effective:
             alert("Déjà déconnecté !")
         else:
-            common.info_dialog("Déconnecté avec succès", True)
+            common.info_dialog("Déconnecté avec succès")
 
         render(PANEL_MIDDLE)
 
