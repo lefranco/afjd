@@ -22,8 +22,9 @@ Delos, Thera, Naxos et Limnos sont des archipels : à la fois zone maritime et c
 (Iles)
 Lesbos, Chiros et Samos sont des zones insulaires (i.e. des zone cotière, comme Ephèse et Rhodes par exemple). Si elles contiennent de la mer, c'est uniquement pour les possibilités de déplacements maritimes. Une flotte stationnée dans une zone insulaire ne peut convoyer. Une armée peut y stationner.
 (Chiros et Lesbos)
-Il n'est pas possible à une armée de passer de Chiros à Lesbos et réciproquement sans l'assistance d'un convoi.
-
+Puisque ce sont deux îles, il n'est pas possible à une armée de passer de Chiros à Lesbos (et réciproquement) sans l'assistance d'un convoi.
+(Samos et Ephèse)
+Puisque Salos est une île, il n'est pas possible à une armée de passer de Samos à Ephèse (et réciproquement) sans l'assistance d'un convoi.
 
 _
 $ Datation
@@ -56,7 +57,7 @@ Il y a six puissances dont les unités de départ sont les suivantes :
 _
 $ Pièges de la variante
 
-Comme précisé ci-dessus, "il n'est pas possible à une armée de passer de Chiros à Lesbos et réciproquement sans l'assistance d'un convoi". Si une flotte d'une autre puissance est dans le voisinage, le déplacement *semblera* possible, envisageant ce  convoi). Néanmoins, si la flotte ne convoie pas, le déplacement ne se fera pas.
+Comme précisé ci-dessus, "il n'est pas possible à une armée de passer de Chiros à Lesbos d'une part et de Samos à Ephèse d'autre part (et réciproquement) sans l'assistance d'un convoi". Si une flotte d'une autre puissance est dans le voisinage, le déplacement *semblera* possible, envisageant ce  convoi). Néanmoins, si la flotte ne convoie pas, le déplacement ne se fera pas.
 
 _
 $ Nomenclature
