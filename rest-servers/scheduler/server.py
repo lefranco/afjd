@@ -13,6 +13,7 @@ import json
 import time
 import argparse
 import threading
+import traceback
 
 
 import waitress
@@ -225,7 +226,11 @@ def acting_threaded_procedure() -> None:
             mylogger.LOGGER.info("Trying all games...")
 
             # try to commute all games
-            check_all_games(jwt_token)
+            try:
+                check_all_games(jwt_token)
+            except:  # noqa: E722 pylint: disable=bare-except
+                mylogger.LOGGER.error("Exception occured checking all games for commuting, stack is below")
+                mylogger.LOGGER.error("%s", traceback.format_exc())
 
             # log that adjudications are done
             mylogger.LOGGER.info("Done for adjudications...")
@@ -236,19 +241,35 @@ def acting_threaded_procedure() -> None:
 
             if hour_now == 0:
                 mylogger.LOGGER.info("ELO Scheduler...")
-                elo_scheduler.run(jwt_token)
+                try:
+                    elo_scheduler.run(jwt_token)
+                except:  # noqa: E722 pylint: disable=bare-except
+                    mylogger.LOGGER.error("Exception occured with ELO, stack is below")
+                    mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 1:
                 mylogger.LOGGER.info("Reliability Scheduler...")
-                reliability_scheduler.run(jwt_token)
+                try:
+                    reliability_scheduler.run(jwt_token)
+                except:  # noqa: E722 pylint: disable=bare-except
+                    mylogger.LOGGER.error("Exception occured with Reliability, stack is below")
+                    mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 2:
                 mylogger.LOGGER.info("Regularity Scheduler...")
-                regularity_scheduler.run(jwt_token)
+                try:
+                    regularity_scheduler.run(jwt_token)
+                except:  # noqa: E722 pylint: disable=bare-except
+                    mylogger.LOGGER.error("Exception occured with Regularity, stack is below")
+                    mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 3:
                 mylogger.LOGGER.info("Forgiver Scheduler...")
-                forgiver_scheduler.run(jwt_token)
+                try:
+                    forgiver_scheduler.run(jwt_token)
+                except:  # noqa: E722 pylint: disable=bare-except
+                    mylogger.LOGGER.error("Exception occured with Forgiver, stack is below")
+                    mylogger.LOGGER.error("%s", traceback.format_exc())
 
             # renew token every day
             if hour_now == 23:
