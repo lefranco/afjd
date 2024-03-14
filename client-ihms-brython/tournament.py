@@ -758,7 +758,7 @@ def show_powers_results():
     solo_table = {r: 0 for r in variant_data.roles if r}
     elimination_table = {r: 0 for r in variant_data.roles if r}
     worst_centers_table = {r: 100000 for r in variant_data.roles if r}
-    best_centers_table = {r:0 for r in variant_data.roles if r}
+    best_centers_table = {r: 0 for r in variant_data.roles if r}
     for data in positions_dict_loaded.values():
         game_score_table = {}
         for power in sc_table:
