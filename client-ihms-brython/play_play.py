@@ -395,6 +395,14 @@ def submit_orders():
 
             selected_order_type = order_type
 
+            if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER and nb_builds < 0:
+                alert("Bien essayé, mais vous devez détruire !")
+                return
+
+            if selected_order_type is mapping.OrderTypeEnum.REMOVE_ORDER and nb_builds > 0:
+                alert("Bien essayé, mais vous devez construire !")
+                return
+
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
@@ -1409,7 +1417,13 @@ def submit_orders():
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
+    nb_builds = 0
     if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+
+        # take a note of build / remove
+        role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
+        nb_builds, _, _, _ = play_low.POSITION_DATA.role_builds(role)
+
         legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_order
         for order_type in mapping.OrderTypeEnum.inventory():
