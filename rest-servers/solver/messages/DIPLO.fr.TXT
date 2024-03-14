@@ -394,6 +394,7 @@ resoud.c#32#Supprimer le (ou les) ordre(s) en double
 resoud.c#33#L'unité %1 attaque une unité compatriote immobile (erreur d'ordre très probable)
 resoud.c#44#Fin de la résolution passe %1
 resoud.c#45#Suppression des unités du pays %1
+resoud.c#49#L'unité %1 requiert pour son déplacement le convoi de l'unité %2 qui appartient à un autre joueur
 resoud.c#52#Même ordre de mouvement dans les deux occurences pour l'unité %1
 resoud.c#53#Même ordre de retraite dans les deux occurences pour l'unité délogée %1
 resoud.c#54#Même ordre de construction dans les deux occurences pour %1

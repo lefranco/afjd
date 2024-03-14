@@ -372,7 +372,7 @@ void verifmouvements(void) {
 	char buf2[TAILLEMOT * 4], buf3[TAILLEMOT * 4];
 	_MOUVEMENT *p, *q;
 	_UNITE *r, *t;
-	_PAYS *pays;
+	_PAYS *s, *pays;
 	char buf[TAILLEMESSAGE];
 	BOOL doublon;
 
@@ -560,6 +560,17 @@ void verifmouvements(void) {
 						cherchechaine(__FILE__, 8, buf, 2, buf2, buf3); /*"L'unite %1 requiert pour son d�placement le convoi de l'unite compatriote %2 (=> annule)"*/
 						avertir(buf);
 					}
+					for (s = PAYS.t; s < PAYS.t + PAYS.n; s++) 
+						if (s != p->unite->pays) {
+							r = unitedupaysempechantconvoi(s, p->unite->zone, p->zonedest);
+							if (r) {
+									decritunite(p->unite, buf2);
+									decritunite(r, buf3);
+									cherchechaine(__FILE__, 49, buf, 2, buf2,
+											buf3); /*"L'unite %1 a besoin du convoi de l'unite %2 dont l'ordre est indetermine"*/
+									informer(buf);
+							}
+						}
 					p->valable = FALSE;
 				}
 				break;
