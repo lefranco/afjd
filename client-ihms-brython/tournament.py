@@ -757,12 +757,19 @@ def show_powers_results():
     top_table = {r: 0 for r in variant_data.roles if r}
     solo_table = {r: 0 for r in variant_data.roles if r}
     elimination_table = {r: 0 for r in variant_data.roles if r}
+    worst_centers_table = {r: 100000 for r in variant_data.roles if r}
+    best_centers_table = {r:0 for r in variant_data.roles if r}
     for data in positions_dict_loaded.values():
         game_score_table = {}
         for power in sc_table:
             game_score_table[power] = len([p for p in data['ownerships'].values() if int(p) == power])
         for power in sc_table:
-            sc_table[power] += game_score_table[power]
+            nb_centers = game_score_table[power]
+            sc_table[power] += nb_centers
+            if nb_centers < worst_centers_table[power]:
+                worst_centers_table[power] = nb_centers
+            if nb_centers > best_centers_table[power]:
+                best_centers_table[power] = nb_centers
             if game_score_table[power] == max(game_score_table.values()):
                 top_table[power] += 1
             if game_score_table[power] > variant_data.number_centers() // 2:
@@ -772,12 +779,12 @@ def show_powers_results():
 
     tournament_powers_results_table = html.TABLE()
 
-    fields = ['flag', 'power', 'centers', 'victories', 'solos', 'eliminations']
+    fields = ['flag', 'power', 'centers', 'worst', 'best', 'victories', 'solos', 'eliminations']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'power': 'puissance', 'centers': 'moyenne centres (possibles)', 'victories': 'victoires', 'solos': 'solos', 'eliminations': 'éliminations'}[field]
+        field_fr = {'flag': 'drapeau', 'power': 'puissance', 'centers': 'moyenne centres (possibles)', 'worst': 'pire', 'best': 'mieux', 'victories': 'victoires', 'solos': 'solos', 'eliminations': 'éliminations'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournament_powers_results_table <= thead
@@ -811,6 +818,18 @@ def show_powers_results():
         col = html.TD()
         value = sc_table[role_id] / nb_games
         col <= f"{value:.2f} ({nb_possible_centers})"
+        row <= col
+
+        # worst
+        col = html.TD()
+        value = worst_centers_table[role_id]
+        col <= value
+        row <= col
+
+        # best
+        col = html.TD()
+        value = best_centers_table[role_id]
+        col <= value
         row <= col
 
         # percent victories
