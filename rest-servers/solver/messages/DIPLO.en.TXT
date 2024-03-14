@@ -394,6 +394,7 @@ resoud.c#32#Remove duplicated order(s)
 resoud.c#33#Unit %1 is attacking a motionless compatriot unit (misorder very likely)
 resoud.c#44#End of resolution pass %1
 resoud.c#45#Removal of units of country %1
+resoud.c#49#Unit %1 requires for its moving the convoy of unit %2 that belongs to another player
 resoud.c#52#Same move order on both occurences for unit %1
 resoud.c#53#Same retreat order on both occurences for dislodged unit %1
 resoud.c#54#Same build order on both occurences for %1
