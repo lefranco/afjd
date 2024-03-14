@@ -1346,8 +1346,8 @@ def negotiate(default_dest_set, def_focus_role_id):
         role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id_dest, role_name)
 
         # to restrict
-        action = "Focus" if role_id_dest != focus_role_id else "Défocus"
-        button_focus = html.BUTTON(action, Class='btn-menu')
+        action = "Filtrer" if role_id_dest != focus_role_id else "Pas Filtrer"
+        button_focus = html.BUTTON(action, Class='btn-inside')
         button_focus.bind("click", lambda e, r=role_id_dest: focus_callback(e, r))
 
         # necessary to link flag with button
