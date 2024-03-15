@@ -211,7 +211,7 @@ def registrations():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le comentaire d'inscription a été prise en compte : {messages}")
+            common.info_dialog(f"Le commentaire d'inscription a été prise en compte : {messages}")
 
         ev.preventDefault()
 

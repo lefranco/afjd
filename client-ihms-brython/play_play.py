@@ -153,7 +153,7 @@ def submit_orders():
             #  common.info_dialog(f"debug_message : {debug_message}", True)
 
             if messages:
-                common.info_dialog(f"Ordres validés avec le(s) message(s) : {messages}")
+                common.info_dialog(f"Ordres validés avec le(s) message(s) : {messages}", important=True)
             else:
                 common.info_dialog("Ordres validés !")
 
