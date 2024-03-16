@@ -172,8 +172,7 @@ def my_opportunities():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                common.info_dialog(f"Vous avez rejoint la partie (en utilisant la page 'rejoindre') : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...")
-
+                common.info_dialog(f"Vous avez rejoint la partie (en utilisant la page 'rejoindre') : {messages}<br>C'est un engagement à ne pas prendre à la légère.<br>Pour son bon déroulement, le joueurs sont tenus de respecter les dates limites de rendu des ordres (DL). <br>En cas de souci, contacter l'arbitre par l'onglet 'Négociation'", important=True)
             game_id = game_data_sel[game_name][0]
 
             json_dict = {

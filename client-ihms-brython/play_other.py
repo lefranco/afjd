@@ -67,7 +67,7 @@ def join_game():
             return
 
         messages = "<br>".join(req_result['msg'].split('\n'))
-        common.info_dialog(f"Vous avez rejoint la partie (en utilisant un lien externe) : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...", important=True)
+        common.info_dialog(f"Vous avez rejoint la partie (en utilisant un lien externe) : {messages}<br>C'est un engagement à ne pas prendre à la légère.<br>Pour son bon déroulement, le joueurs sont tenus de respecter les dates limites de rendu des ordres (DL). <br>En cas de souci, contacter l'arbitre par l'onglet 'Négociation'", important=True)
 
     if play_low.PSEUDO is None:
         alert("Il faut se connecter au préalable")
