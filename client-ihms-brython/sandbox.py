@@ -416,7 +416,7 @@ def sandbox():
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
-            put_rest_hold(buttons_right)
+                put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
@@ -486,7 +486,7 @@ def sandbox():
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
-            put_rest_hold(buttons_right)
+                put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
@@ -531,7 +531,7 @@ def sandbox():
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
-            put_rest_hold(buttons_right)
+                put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
@@ -571,7 +571,7 @@ def sandbox():
                 stack_orders(buttons_right)
                 if not POSITION_DATA.empty():
                     put_erase_all(buttons_right)
-                put_rest_hold(buttons_right)
+                    put_rest_hold(buttons_right)
                 if not ORDERS_DATA.empty():
                     put_submit(buttons_right)
                 if not POSITION_DATA.empty():
@@ -596,7 +596,7 @@ def sandbox():
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
-            put_rest_hold(buttons_right)
+                put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
@@ -664,7 +664,7 @@ def sandbox():
         stack_orders(buttons_right)
         if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
-        put_rest_hold(buttons_right)
+            put_rest_hold(buttons_right)
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
@@ -951,7 +951,7 @@ def sandbox():
         stack_orders(buttons_right)
         if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
-        put_rest_hold(buttons_right)
+            put_rest_hold(buttons_right)
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
@@ -1113,7 +1113,7 @@ def sandbox():
     stack_orders(buttons_right)
     if not POSITION_DATA.empty():
         put_erase_all(buttons_right)
-    put_rest_hold(buttons_right)
+        put_rest_hold(buttons_right)
     if not ORDERS_DATA.empty():
         put_submit(buttons_right)
     if not POSITION_DATA.empty():
