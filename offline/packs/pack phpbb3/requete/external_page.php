@@ -54,24 +54,24 @@ $posts_ary = array(
 
     $posts_result = $db->sql_query_limit($posts, $search_limit);
 
-	  $count = 1;
+    $count = 1;
 
-      while( $posts_row = $db->sql_fetchrow($posts_result) )
-      {
+    while( $posts_row = $db->sql_fetchrow($posts_result) )
+    {
          $topic_title       =  $posts_row['topic_title'];
-		 
-		 // topic already encountered : ignored
-		 if (in_array($topic_title, $topics))  continue;
-		 array_push($topics, $topic_title);
-		 
-		 
+
+         // topic already encountered : ignored
+         if (in_array($topic_title, $topics))  continue;
+
+         array_push($topics, $topic_title);
+
          $post_author       =  $posts_row['username'];
          $post_date          = $user->format_date($posts_row['post_time']);
          $post_link       = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "p=" . $posts_row['post_id'] . "#p" . $posts_row['post_id']);
 
          $post_text = nl2br($posts_row['post_text']);
 
-         $bbcode = new bbcode(base64_encode($bbcode_bitfield));         
+         $bbcode = new bbcode(base64_encode($bbcode_bitfield));
          $bbcode->bbcode_second_pass($post_text, $posts_row['bbcode_uid'], $posts_row['bbcode_bitfield']);
 
          $post_text = smiley_text($post_text);
@@ -79,22 +79,21 @@ $posts_ary = array(
          $template->assign_block_vars('announcements', array(
          'TOPIC_TITLE'       => censor_text($topic_title),
          'POST_AUTHOR'       => $post_author,
-         'POST_DATE'       => $post_date,
-         'POST_LINK'       => $post_link,
+         'POST_DATE'         => $post_date,
+         'POST_LINK'         => $post_link,
          'POST_TEXT'         => censor_text($post_text),
          ));
-		 
-		 $count ++;
-		 if ($count > $search_result_limit) break;
-      }
 
-	page_header('External page');
+         $count ++;
+         if ($count > $search_result_limit) break;
+    }
+
+    page_header('External page');
 
     $template->set_filenames(array(
         'body' => 'external_body.html'
     ));
 
     page_footer();
-
 
 ?>
