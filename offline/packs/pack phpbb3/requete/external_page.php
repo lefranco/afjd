@@ -22,7 +22,7 @@ $auth->acl($user->data);
 $user->setup('viewforum');
 
 $search_limit = 100;
-$search_result_limit = 10;
+$search_result_limit = 20;
 
 $topics = array();
 

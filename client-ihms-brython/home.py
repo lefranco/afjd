@@ -281,12 +281,16 @@ def show_news():
     # =B4==============================
 
     div_b4 = html.DIV(Class='tooltip')
+    div_b4.style = {
+        'grid-column': '2/3',
+        'grid-row': '2/4'
+    }
     title4 = html.H4("Dernières contributions sur les forums")
     div_b4 <= title4
 
     # ----
 
-    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="400", title="Forums", alt="Forums")
+    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="800", title="Forums", alt="Forums")
     div_b4 <= news_forum
 
     # ----
@@ -297,38 +301,32 @@ def show_news():
     # ==A3==============================
 
     div_a3 = html.DIV(Class='tooltip')
-    title5 = html.H4("Dernières nouvelles moderateur", Class='modo_news')
+    title5 = html.H4("Dernières nouvelles !")
     div_a3 <= title5
 
     # ----
 
-    news_content_loaded2 = news_content_table_loaded['modo']
-    news_content2 = common.formatted_news(news_content_loaded2, True, 'modo_news')
-    div_a3 <= news_content2
+    title51 = html.H5("Moderateur")
+    div_a3 <= title51
+    news_content_loaded = news_content_table_loaded['modo']
+    news_content = common.formatted_news(news_content_loaded, True, 'modo_news')
+    div_a3 <= news_content
+
+    title52 = html.H5("Administrateur")
+    div_a3 <= title52
+    news_content_loaded = news_content_table_loaded['admin']
+    news_content = common.formatted_news(news_content_loaded, True, 'admin_news')
+    div_a3 <= news_content
 
     # ----
 
-    div_a3_tip = html.SPAN("Vous pouvez contacter le modérateur par un MP sur le forum", Class='tooltiptext')
+    div_a3_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu “Accueil“ sous menu “Déclarer un incident“ et le modérateur par un MP sur le forum", Class='tooltiptext')
     div_a3 <= div_a3_tip
     div_homepage <= div_a3
 
     # ==B3==============================
 
-    div_b3 = html.DIV(Class='tooltip')
-    title6 = html.H4("Dernières nouvelles administrateur", Class='admin_news')
-    div_b3 <= title6
-
-    # ----
-
-    news_content_loaded = news_content_table_loaded['admin']
-    news_content = common.formatted_news(news_content_loaded, True, 'admin_news')
-    div_b3 <= news_content
-
-    # ----
-
-    div_b3_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu “Accueil“ sous menu “Déclarer un incident“", Class='tooltiptext')
-    div_b3 <= div_b3_tip
-    div_homepage <= div_b3
+    # Merged with B4
 
     # ==A2==============================
 
