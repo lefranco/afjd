@@ -21,8 +21,7 @@ OPTIONS = {
     'Classement fiabilité': "Classement selon la fiabilité, c'est à dire pas de retard ni d'abandon",
     'Classement régularité': "Classement selon la régularité, c'est à dire jouer souvent et sans interruption",
     'Les glorieux': "Les joueurs du site qui ont un titre en face à face",
-    'Liste inscrits': "Les inscrits sur le site",
-    'Liste joueurs': "Les inscrits dans des parties sur le site",
+    'Liste joueurs': "Les joueurs sur le site",
     'Liste arbitres': "Les arbitres de parties sur le site",
     'Abonnés remplaçants': "Les utilisateurs abonnés au demandes de remplacement",
     'Groupe créateurs': "Liste des utilisateurs disposant du droit de création",
@@ -745,51 +744,6 @@ def show_glorious_data():
     MY_SUB_PANEL <= hall_content
 
 
-def show_registered_data():
-    """ show_registered_data """
-
-    players_dict = common.get_players_data()
-
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-        return
-
-    players_table = html.TABLE()
-
-    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    players_table <= thead
-
-    code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
-
-    count = 0
-    for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):
-        row = html.TR()
-        for field in fields:
-            value = data[field]
-
-            if field in ['residence', 'nationality']:
-                code = value
-                country_name = code_country_table[code]
-                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
-
-            col = html.TD(value)
-            row <= col
-
-        players_table <= row
-        count += 1
-
-    MY_SUB_PANEL <= html.H3("Les inscrits")
-    MY_SUB_PANEL <= players_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
-
-
 def show_players_data():
     """ show_players_data """
 
@@ -826,33 +780,47 @@ def show_players_data():
 
     players_table = html.TABLE()
 
-    fields = ['player', 'games']
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'games']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'player': 'joueur', 'games': 'parties'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'games': 'parties'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_table <= thead
 
+    code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
+
     count = 0
-    for player, games in sorted(player_games_dict.items(), key=lambda p: p[0].upper()):
+    for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):
         row = html.TR()
+
+        data['games'] = None
+
         for field in fields:
-            if field == 'player':
-                value = player
+
+            value = data[field]
+
+            if field in ['residence', 'nationality']:
+                code = value
+                country_name = code_country_table[code]
+                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
+
             if field == 'games':
+                player = data['pseudo']
+                games = player_games_dict.get(player, [])
                 value = ' '.join(games)
+
             col = html.TD(value)
             row <= col
 
         players_table <= row
         count += 1
 
-    MY_SUB_PANEL <= html.H3("Les joueurs")
+    MY_SUB_PANEL <= html.H3("Les inscrits")
     MY_SUB_PANEL <= players_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} joueurs")
+    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
     MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
 
 
@@ -1089,8 +1057,6 @@ def load_option(_, item_name):
         show_rating_regularity()
     if item_name == 'Les glorieux':
         show_glorious_data()
-    if item_name == 'Liste inscrits':
-        show_registered_data()
     if item_name == 'Liste joueurs':
         show_players_data()
     if item_name == 'Liste arbitres':
