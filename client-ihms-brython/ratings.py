@@ -28,6 +28,11 @@ OPTIONS = {
     'Groupe modérateurs': "Liste des utilisateurs disposant du droit de modération"
 }
 
+def show_games(ev, game_list):  # pylint: disable=invalid-name
+    """ show_games """
+    ev.preventDefault()
+    alert(game_list)
+
 
 def get_detailed_elo_rating(classic, role_id):
     """ get_detailed_elo_rating """
@@ -793,6 +798,7 @@ def show_players_data():
     code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
 
     count = 0
+    count2 = 0
     for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):
         row = html.TR()
 
@@ -810,7 +816,14 @@ def show_players_data():
             if field == 'games':
                 player = data['pseudo']
                 games = player_games_dict.get(player, [])
-                value = ' '.join(games)
+                value = ""
+                if games:
+                    nb_games = len(games)
+                    button = html.BUTTON(f"Voir les {nb_games} partie(s)", title="Voir", Class='btn-menu')
+                    games_list = ' '.join(sorted(games))
+                    button.bind("click", lambda e, gl=games_list: show_games(e, gl))
+                    value = button
+                    count2 += 1
 
             col = html.TD(value)
             row <= col
@@ -818,9 +831,9 @@ def show_players_data():
         players_table <= row
         count += 1
 
-    MY_SUB_PANEL <= html.H3("Les inscrits")
+    MY_SUB_PANEL <= html.H3("Les joueur")
     MY_SUB_PANEL <= players_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
+    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits dont {count2} joueurs")
     MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
 
 
@@ -873,11 +886,21 @@ def show_game_masters_data():
     count = 0
     for master, games in sorted(master_games_dict.items(), key=lambda m: m[0].upper()):
         row = html.TR()
+
         for field in fields:
+
             if field == 'master':
                 value = master
+
             if field == 'games':
-                value = ' '.join(games)
+                value = ""
+                if games:
+                    nb_games = len(games)
+                    button = html.BUTTON(f"Voir les {nb_games} partie(s)", title="Voir", Class='btn-menu')
+                    games_list = ' '.join(sorted(games))
+                    button.bind("click", lambda e, gl=games_list: show_games(e, gl))
+                    value = button
+
             col = html.TD(value)
             row <= col
 
@@ -943,11 +966,22 @@ def show_replacement_data():
     count = 0
     for player, games in sorted(player_games_dict.items(), key=lambda p: p[0].upper()):
         row = html.TR()
+
         for field in fields:
+
             if field == 'player':
                 value = player
+
             if field == 'games':
-                value = ' '.join(games)
+                games = player_games_dict.get(player, [])
+                value = ""
+                if games:
+                    nb_games = len(games)
+                    button = html.BUTTON(f"Voir les {nb_games} partie(s)", title="Voir", Class='btn-menu')
+                    games_list = ' '.join(sorted(games))
+                    button.bind("click", lambda e, gl=games_list: show_games(e, gl))
+                    value = button
+
             col = html.TD(value)
             row <= col
 
