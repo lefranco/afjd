@@ -305,7 +305,6 @@ def show_news():
     div_b4 <= div_b4_tip
     div_homepage <= div_b4
 
-
     # ==A3==============================
 
     div_a3 = html.DIV(Class='tooltip')
@@ -461,7 +460,7 @@ def show_news():
 
     # ----
 
-    news_wiki = html.IFRAME(src="https://diplomania-gen.fr/dokuwiki/doku.php?id=start&do=export_xhtml", width="100%",height="350", title="Wiki", alt="Wiki", allow="fullscreen")
+    news_wiki = html.IFRAME(src="https://diplomania-gen.fr/dokuwiki/doku.php?id=start&do=export_xhtml", width="100%", height="350", title="Wiki", alt="Wiki", allow="fullscreen")
     div_b2 <= news_wiki
 
     # ----
