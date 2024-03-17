@@ -270,17 +270,20 @@ def show_news():
 
     # ----
 
-    news_events = html.OBJECT(data="https://diplomania-gen.fr/events/", width="100%", height="400", title="Evénements", alt="Evénements")
+    news_events = html.OBJECT(data="https://diplomania-gen.fr/events/", width="100%", height="400", alt="Evénements", title="Evénements")
     div_a4 <= news_events
 
     # ----
 
-    # no tip
+    # tip
+    div_a4_tip = html.SPAN("Vous pouvez accéder aux événements par le bouton du menu tout à gauche", Class='tooltiptext')
+    div_a4 <= div_a4_tip
     div_homepage <= div_a4
 
     # =B4==============================
 
     div_b4 = html.DIV(Class='tooltip')
+    # need special positioning !
     div_b4.style = {
         'grid-column': '2/3',
         'grid-row': '2/4'
@@ -290,13 +293,16 @@ def show_news():
 
     # ----
 
-    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="800", title="Forums", alt="Forums")
+    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="800", alt="Forums", title="Forums")
     div_b4 <= news_forum
 
     # ----
 
-    # no tip
+    # tip
+    div_b4_tip = html.SPAN("Vous pouvez accéder aux forums par le bouton du menu tout à gauche", Class='tooltiptext')
+    div_b4 <= div_b4_tip
     div_homepage <= div_b4
+
 
     # ==A3==============================
 
@@ -453,12 +459,13 @@ def show_news():
 
     # ----
 
-    news_wiki = html.IFRAME(src="https://diplomania-gen.fr/dokuwiki/doku.php?id=start&do=export_xhtml", width="100%", height="400", title="Wiki", alt="Wiki", allow="fullscreen")
+    news_wiki = html.IFRAME(src="https://diplomania-gen.fr/dokuwiki/doku.php?id=start&do=export_xhtml", width="100%", height="400", alt="Wiki", title="Wiki", allow="fullscreen")
     div_b2 <= news_wiki
 
     # ----
 
-    div_b2_tip = html.SPAN("Plus de détail sur le wiki https://diplomania-gen.fr/dokuwiki/doku.php?id=start", Class='tooltiptext')
+    # no tip
+    div_b2_tip = html.SPAN("Vous pouvez accéder au Wiki par le bouton du menu tout à gauche", Class='tooltiptext')
     div_b2 <= div_b2_tip
     div_homepage <= div_b2
 
