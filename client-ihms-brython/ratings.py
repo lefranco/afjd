@@ -21,12 +21,11 @@ OPTIONS = {
     'Classement fiabilité': "Classement selon la fiabilité, c'est à dire pas de retard ni d'abandon",
     'Classement régularité': "Classement selon la régularité, c'est à dire jouer souvent et sans interruption",
     'Les glorieux': "Les joueurs du site qui ont un titre en face à face",
-    'Liste joueurs': "Les joueurs sur le site",
-    'Liste arbitres': "Les arbitres de parties sur le site",
-    'Abonnés remplaçants': "Les utilisateurs abonnés au demandes de remplacement",
+    'Liste globale': "Les joueurs et arbitres sur le site",
     'Groupe créateurs': "Liste des utilisateurs disposant du droit de création",
     'Groupe modérateurs': "Liste des utilisateurs disposant du droit de modération"
 }
+
 
 def show_games(ev, game_list):  # pylint: disable=invalid-name
     """ show_games """
@@ -749,96 +748,8 @@ def show_glorious_data():
     MY_SUB_PANEL <= hall_content
 
 
-def show_players_data():
-    """ show_players_data """
-
-    # get the games
-    games_dict = common.get_games_data()
-    if games_dict is None:
-        alert("Erreur chargement dictionnaire parties")
-        return
-    games_dict = dict(games_dict)
-
-    players_dict = common.get_players_data()
-
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-        return
-
-    # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
-    if not allocations_data:
-        alert("Erreur chargement allocations")
-        return
-
-    players_alloc = allocations_data['players_dict']
-
-    # gather games to players
-    player_games_dict = {}
-    for player_id, games_id in players_alloc.items():
-        player = players_dict[str(player_id)]['pseudo']
-        if player not in player_games_dict:
-            player_games_dict[player] = []
-        for game_id in games_id:
-            game = games_dict[str(game_id)]['name']
-            player_games_dict[player].append(game)
-
-    players_table = html.TABLE()
-
-    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'games']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'games': 'parties'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    players_table <= thead
-
-    code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
-
-    count = 0
-    count2 = 0
-    for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):
-        row = html.TR()
-
-        data['games'] = None
-
-        for field in fields:
-
-            value = data[field]
-
-            if field in ['residence', 'nationality']:
-                code = value
-                country_name = code_country_table[code]
-                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
-
-            if field == 'games':
-                player = data['pseudo']
-                games = player_games_dict.get(player, [])
-                value = ""
-                if games:
-                    nb_games = len(games)
-                    button = html.BUTTON(f"Voir les {nb_games} partie(s)", title="Voir", Class='btn-menu')
-                    games_list = ' '.join(sorted(games))
-                    button.bind("click", lambda e, gl=games_list: show_games(e, gl))
-                    value = button
-                    count2 += 1
-
-            col = html.TD(value)
-            row <= col
-
-        players_table <= row
-        count += 1
-
-    MY_SUB_PANEL <= html.H3("Les joueur")
-    MY_SUB_PANEL <= players_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits dont {count2} joueurs")
-    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
-
-
-def show_game_masters_data():
-    """ show_game_masters_data """
+def show_players_masters_data():
+    """ show_players_masters_data """
 
     # get the games
     games_dict = common.get_games_data()
@@ -860,6 +771,17 @@ def show_game_masters_data():
         return
 
     masters_alloc = allocations_data['game_masters_dict']
+    players_alloc = allocations_data['players_dict']
+
+    # gather games to players
+    player_games_dict = {}
+    for player_id, games_id in players_alloc.items():
+        player = players_dict[str(player_id)]['pseudo']
+        if player not in player_games_dict:
+            player_games_dict[player] = []
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            player_games_dict[player].append(game)
 
     # gather games to masters
     master_games_dict = {}
@@ -871,28 +793,44 @@ def show_game_masters_data():
             game = games_dict[str(game_id)]['name']
             master_games_dict[master].append(game)
 
-    masters_table = html.TABLE()
+    players_masters_table = html.TABLE()
 
-    fields = ['master', 'games']
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'played_games', 'mastered_games', 'replaces']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'master': 'arbitre', 'games': 'parties'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'played_games': 'parties jouées', 'mastered_games': 'parties arbitrées', 'replaces': 'remplaçant'}[field]
         col = html.TD(field_fr)
         thead <= col
-    masters_table <= thead
+    players_masters_table <= thead
 
-    count = 0
-    for master, games in sorted(master_games_dict.items(), key=lambda m: m[0].upper()):
+    code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
+
+    count1 = 0
+    count2 = 0
+    count3 = 0
+    count4 = 0
+
+    for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):
         row = html.TR()
+
+        data['played_games'] = None
+        data['mastered_games'] = None
+        data['replaces'] = None
 
         for field in fields:
 
-            if field == 'master':
-                value = master
+            value = data[field]
 
-            if field == 'games':
+            if field in ['residence', 'nationality']:
+                code = value
+                country_name = code_country_table[code]
+                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
+
+            if field == 'played_games':
+                player = data['pseudo']
+                games = player_games_dict.get(player, [])
                 value = ""
                 if games:
                     nb_games = len(games)
@@ -900,16 +838,36 @@ def show_game_masters_data():
                     games_list = ' '.join(sorted(games))
                     button.bind("click", lambda e, gl=games_list: show_games(e, gl))
                     value = button
+                    count2 += 1
+
+            if field == 'mastered_games':
+                player = data['pseudo']
+                games = master_games_dict.get(player, [])
+                value = ""
+                if games:
+                    nb_games = len(games)
+                    button = html.BUTTON(f"Voir les {nb_games} partie(s)", title="Voir", Class='btn-menu')
+                    games_list = ' '.join(sorted(games))
+                    button.bind("click", lambda e, gl=games_list: show_games(e, gl))
+                    value = button
+                    count3 += 1
+
+            if field == 'replaces':
+                value = ""
+                if data['notify_replace']:
+                    value = "oui"
+                    count4 += 1
 
             col = html.TD(value)
             row <= col
 
-        masters_table <= row
-        count += 1
+        players_masters_table <= row
+        count1 += 1
 
-    MY_SUB_PANEL <= html.H3("Les arbitres")
-    MY_SUB_PANEL <= masters_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} arbitres")
+    MY_SUB_PANEL <= html.H3("Les joueurs, arbitres et remplaçants")
+    MY_SUB_PANEL <= players_masters_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count1} inscrits dont {count2} joueurs et {count3} arbitres pour {count4} remplaçants potentiels.")
+    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
 
 
 def show_replacement_data():
@@ -1091,12 +1049,8 @@ def load_option(_, item_name):
         show_rating_regularity()
     if item_name == 'Les glorieux':
         show_glorious_data()
-    if item_name == 'Liste joueurs':
-        show_players_data()
-    if item_name == 'Liste arbitres':
-        show_game_masters_data()
-    if item_name == 'Abonnés remplaçants':
-        show_replacement_data()
+    if item_name == 'Liste globale':
+        show_players_masters_data()
     if item_name == 'Groupe créateurs':
         show_creators()
     if item_name == 'Groupe modérateurs':
