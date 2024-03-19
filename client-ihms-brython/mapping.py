@@ -2256,5 +2256,10 @@ class Orders(Renderable):
             text += "\n"
         return text
 
+    @property
+    def orders(self):
+        """ property """
+        return self._orders
+
     def __str__(self) -> str:
         return '\n'.join([str(o) for o in self._orders])
