@@ -205,10 +205,11 @@ def sandbox():
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         stack_orders(buttons_right)
-
-        if not ORDERS_DATA.empty():
+        if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
-        # do not put all rest hold
+        if not ORDERS_DATA.empty():
+            put_erase_orders(buttons_right)
+        # do not put rest hold
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
@@ -245,12 +246,41 @@ def sandbox():
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         stack_orders(buttons_right)
-
         # do not put erase all
-        if not ORDERS_DATA.empty():
-            put_submit(buttons_right)
+        # do not put erase orders
+        # do not put submit
+        # do not put download
+        buttons_right <= html.BR()
+
+        my_sub_panel2 <= buttons_right
+        MY_SUB_PANEL <= my_sub_panel2
+
+    def erase_orders_callback(_):
+        """ erase_orders_callback """
+
+        nonlocal automaton_state
+        nonlocal buttons_right
+
+        # erase orders
+        ORDERS_DATA.erase_orders()
+
+        # update displayed map
+        callback_render(True)
+
+        my_sub_panel2.removeChild(buttons_right)
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        buttons_right <= legend_select_unit
+        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+        stack_orders(buttons_right)
         if not POSITION_DATA.empty():
-            put_download(buttons_right)
+            put_erase_all(buttons_right)
+        # do not put erase orders
+        # do not put submit
+        # do not put download
         buttons_right <= html.BR()
 
         my_sub_panel2 <= buttons_right
@@ -416,6 +446,8 @@ def sandbox():
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
+            if not ORDERS_DATA.empty():
+                put_erase_orders(buttons_right)
             if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
@@ -487,6 +519,8 @@ def sandbox():
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
+            if not ORDERS_DATA.empty():
+                put_erase_orders(buttons_right)
             if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
@@ -533,6 +567,8 @@ def sandbox():
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
+            if not ORDERS_DATA.empty():
+                put_erase_orders(buttons_right)
             if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
@@ -574,6 +610,8 @@ def sandbox():
                 stack_orders(buttons_right)
                 if not POSITION_DATA.empty():
                     put_erase_all(buttons_right)
+                if not ORDERS_DATA.empty():
+                    put_erase_orders(buttons_right)
                 if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
                     put_rest_hold(buttons_right)
                 if not ORDERS_DATA.empty():
@@ -600,6 +638,8 @@ def sandbox():
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
+            if not ORDERS_DATA.empty():
+                put_erase_orders(buttons_right)
             if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
@@ -669,6 +709,8 @@ def sandbox():
         stack_orders(buttons_right)
         if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
+        if not ORDERS_DATA.empty():
+            put_erase_orders(buttons_right)
         if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
             put_rest_hold(buttons_right)
         if not ORDERS_DATA.empty():
@@ -831,6 +873,15 @@ def sandbox():
         buttons_right <= input_erase_all
         buttons_right <= html.BR()
 
+    def put_erase_orders(buttons_right):
+        """ put_erase_orders """
+
+        input_erase_orders = html.INPUT(type="submit", value="Effacer les ordres", Class='btn-inside')
+        input_erase_orders.bind("click", erase_orders_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_erase_orders
+        buttons_right <= html.BR()
+
     def put_rest_hold(buttons_right):
         """ put_rest_hold """
 
@@ -957,6 +1008,8 @@ def sandbox():
         stack_orders(buttons_right)
         if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
+        if not ORDERS_DATA.empty():
+            put_erase_orders(buttons_right)
         if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
             put_rest_hold(buttons_right)
         if not ORDERS_DATA.empty():
@@ -1120,6 +1173,8 @@ def sandbox():
     stack_orders(buttons_right)
     if not POSITION_DATA.empty():
         put_erase_all(buttons_right)
+    if not ORDERS_DATA.empty():
+        put_erase_orders(buttons_right)
     if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
         put_rest_hold(buttons_right)
     if not ORDERS_DATA.empty():
