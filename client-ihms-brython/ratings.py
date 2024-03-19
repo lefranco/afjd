@@ -21,9 +21,7 @@ OPTIONS = {
     'Classement fiabilité': "Classement selon la fiabilité, c'est à dire pas de retard ni d'abandon",
     'Classement régularité': "Classement selon la régularité, c'est à dire jouer souvent et sans interruption",
     'Les glorieux': "Les joueurs du site qui ont un titre en face à face",
-    'Liste globale': "Les joueurs et arbitres sur le site",
-    'Groupe créateurs': "Liste des utilisateurs disposant du droit de création",
-    'Groupe modérateurs': "Liste des utilisateurs disposant du droit de modération"
+    'Liste globale': "Les joueurs et arbitres sur le site"
 }
 
 
@@ -751,6 +749,14 @@ def show_glorious_data():
 def show_players_masters_data():
     """ show_players_masters_data """
 
+    priviledged = common.PRIVILEDGED
+    if not priviledged:
+        return
+
+    creators_list = priviledged['creators']
+    moderators_list = priviledged['moderators']
+    admin_pseudo = priviledged['admin']
+
     # get the games
     games_dict = common.get_games_data()
     if games_dict is None:
@@ -795,12 +801,12 @@ def show_players_masters_data():
 
     players_masters_table = html.TABLE()
 
-    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'played_games', 'mastered_games', 'replaces']
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'played_games', 'mastered_games', 'replaces', 'roles']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'played_games': 'parties jouées', 'mastered_games': 'parties arbitrées', 'replaces': 'remplaçant'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'played_games': 'parties jouées', 'mastered_games': 'parties arbitrées', 'replaces': 'remplaçant', 'roles': 'roles'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_masters_table <= thead
@@ -818,6 +824,7 @@ def show_players_masters_data():
         data['played_games'] = None
         data['mastered_games'] = None
         data['replaces'] = None
+        data['roles'] = None
 
         for field in fields:
 
@@ -858,163 +865,25 @@ def show_players_masters_data():
                     value = "oui"
                     count4 += 1
 
+            if field == 'roles':
+                value = ""
+                if data['pseudo'] in creators_list:
+                    value += "créateur "
+                if data['pseudo'] in moderators_list:
+                    value += "modérateur "
+                if data['pseudo'] == admin_pseudo:
+                    value += "administrateur "
+
             col = html.TD(value)
             row <= col
 
         players_masters_table <= row
         count1 += 1
 
-    MY_SUB_PANEL <= html.H3("Les joueurs, arbitres et remplaçants")
+    MY_SUB_PANEL <= html.H3("Les joueurs, arbitres et remplaçants et les rôles")
     MY_SUB_PANEL <= players_masters_table
     MY_SUB_PANEL <= html.P(f"Il y a {count1} inscrits dont {count2} joueurs et {count3} arbitres pour {count4} remplaçants potentiels.")
     MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
-
-
-def show_replacement_data():
-    """ show_replacement_data """
-
-    # get the games
-    games_dict = common.get_games_data()
-    if games_dict is None:
-        alert("Erreur chargement dictionnaire parties")
-        return
-    games_dict = dict(games_dict)
-
-    players_dict = common.get_players_data()
-
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-        return
-
-    # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
-    if not allocations_data:
-        alert("Erreur chargement allocations")
-        return
-
-    players_alloc = allocations_data['players_dict']
-
-    # gather games to players
-    player_games_dict = {}
-    for player_id in players_dict:
-        if not players_dict[str(player_id)]['notify_replace']:
-            continue
-        player = players_dict[str(player_id)]['pseudo']
-        if player not in player_games_dict:
-            player_games_dict[player] = []
-        if player_id not in players_alloc:
-            continue
-        games_id = players_alloc[player_id]
-        for game_id in games_id:
-            game = games_dict[str(game_id)]['name']
-            player_games_dict[player].append(game)
-
-    players_table = html.TABLE()
-
-    fields = ['player', 'games']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'player': 'joueur', 'games': 'parties'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    players_table <= thead
-
-    count = 0
-    for player, games in sorted(player_games_dict.items(), key=lambda p: p[0].upper()):
-        row = html.TR()
-
-        for field in fields:
-
-            if field == 'player':
-                value = player
-
-            if field == 'games':
-                games = player_games_dict.get(player, [])
-                value = ""
-                if games:
-                    nb_games = len(games)
-                    button = html.BUTTON(f"Voir les {nb_games} partie(s)", title="Voir", Class='btn-menu')
-                    games_list = ' '.join(sorted(games))
-                    button.bind("click", lambda e, gl=games_list: show_games(e, gl))
-                    value = button
-
-            col = html.TD(value)
-            row <= col
-
-        players_table <= row
-        count += 1
-
-    MY_SUB_PANEL <= html.H3("Les remplaçants")
-    MY_SUB_PANEL <= players_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} abonnés remplaçants")
-
-
-def show_creators():
-    """ show_creators """
-
-    MY_SUB_PANEL <= html.H3("Les créateurs (de partie)")
-
-    priviledged = common.PRIVILEDGED
-    if not priviledged:
-        return
-    creators_list = priviledged['creators']
-
-    creators_table = html.TABLE()
-
-    fields = ['pseudo']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    creators_table <= thead
-
-    for creator in sorted(creators_list, key=lambda m: m.upper()):
-
-        row = html.TR()
-        col = html.TD(creator)
-        row <= col
-
-        creators_table <= row
-
-    MY_SUB_PANEL <= creators_table
-
-
-def show_moderators():
-    """ show_moderators """
-
-    MY_SUB_PANEL <= html.H3("Les modérateurs")
-
-    priviledged = common.PRIVILEDGED
-    if not priviledged:
-        return
-    moderators_list = priviledged['moderators']
-
-    moderators_table = html.TABLE()
-
-    fields = ['pseudo']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    moderators_table <= thead
-
-    for moderator in sorted(moderators_list, key=lambda m: m.upper()):
-
-        row = html.TR()
-        col = html.TD(moderator)
-        row <= col
-
-        moderators_table <= row
-
-    MY_SUB_PANEL <= moderators_table
 
 
 MY_PANEL = html.DIV()
@@ -1051,10 +920,6 @@ def load_option(_, item_name):
         show_glorious_data()
     if item_name == 'Liste globale':
         show_players_masters_data()
-    if item_name == 'Groupe créateurs':
-        show_creators()
-    if item_name == 'Groupe modérateurs':
-        show_moderators()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
