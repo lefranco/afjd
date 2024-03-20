@@ -5,19 +5,19 @@ Comment faire un publipostage
 1) récupérer les emails depuis la liste du précédent publipostage et nettoyer :
 On suppose que la liste est dans le fichier victims_before
 
-cat victims_before | sort -u | tr '[:upper:]' '[:lower:]' > victims
+cat victims_before | tr '[:upper:]' '[:lower:]' | sort -u  > victims
 
 2) récupérer les "oui" depuis le site et nettoyer :
 liste dans le fichier current_yes
 (prend la colonne avec les emails, trie, met en minuscules)
 
-cat current_yes | cut -f 2 | sort -u | tr '[:upper:]' '[:lower:]' > yes
+cat current_yes | cut -f 2  | tr '[:upper:]' '[:lower:]' | sort -u > yes
 
 3) récupérer les "non" depuis le site et nettoyer :
 liste dans le fichier current_no
 (prend la colonne avec les emails, trie, met en minuscules)
 
-cat current_no | cut -f 2 | sort -u | tr '[:upper:]' '[:lower:]' > no
+cat current_no | cut -f 2 | tr '[:upper:]' '[:lower:]' | sort -u  > no
 
 4) enlever les oui des non
 comm -13 yes no > new_no
@@ -30,6 +30,6 @@ sort -u victims -o victims
 6) retirer les non 
 (cette commande ne conserve que les lignes dans le deuxième fichier et pas le premier)
 
-comm -13 new_no victims > victims
+comm -13 new_no victims > actual_victims
 
-=> On peut spammer sur 'victims'
+=> On peut spammer sur 'actual_victims'
