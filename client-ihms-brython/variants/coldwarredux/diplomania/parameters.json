@@ -1,0 +1,1080 @@
+{
+"author": "Enriador",
+
+"map": { "width": 1046, "height": 619 },
+
+"regions": { "1": { "name": "Cote" }, "2": { "name": "Terre" }, "3": { "name": "Mer" } }, 
+
+"units": { "1": { "name": "Armee" }, "2": { "name": "Flotte" } }, 
+
+"roles": { 
+"0": { 
+"name": "Arbitre", 
+"adjective_name": "Arbitre", 
+"letter_name": "M", 
+"red": [ 0, 0 ],
+ "green": [ 0, 0], 
+"blue": [ 0, 0 ] 
+}, 
+"1": {
+ "name": "Etats Unis", 
+"adjective_name": "americain", 
+"letter_name": "A", 
+"red":[47,131],
+"green":[138,185],
+"blue" :[170,204]
+}, 
+"2": {
+ "name": "Europe", 
+"adjective_name": "europeen", 
+"letter_name": "E", 
+"red": [ 83,152], 
+"green": [210,228], 
+"blue": [224,237] 
+}, 
+"3": {
+ "name": "URSS", 
+"adjective_name": "sovietique", 
+"letter_name": "S", 
+"red": [ 224,237 ], 
+"green": [110,168], 
+"blue": [ 93,158] 
+}, 
+"4": {
+ "name": "Chine", 
+"adjective_name": "chinois", 
+"letter_name": "C", 
+"red": [ 224,237 ], 
+"green": [ 211,229 ], 
+"blue": [ 51,133] 
+}
+},
+
+"coasts": {
+"1": { "name": "ce" }, 
+"2": { "name": "cn" }, 
+"3": { "name": "cs" }
+"4": { "name": "co" } 
+}, 
+
+
+"zones": { 
+"1": { 
+"name": "mon", 
+"full_name": "Mongolie", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"2": { 
+"name": "uru", 
+"full_name": "Urumchi", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0,
+"display": 4 
+ }, 
+"3": { 
+"name": "afg", 
+"full_name": "Afghanistan", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0 
+ }, 
+"4": { 
+"name": "mos", 
+"full_name": "Moscou", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0,
+"display": 3
+ }, 
+"5": { 
+"name": "mid", 
+"full_name": "Midwest", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0,
+"display": 1 
+ }, 
+"6": { 
+"name": "PAE", 
+"full_name": "Pacifique Est", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"7": { 
+"name": "GME", 
+"full_name": "Golfe du Mexique", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"8": { 
+"name": "MCA", 
+"full_name": "Mer des Caraïbes", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"9": { 
+"name": "ATO", 
+"full_name": "Atlantique Ouest", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"10": { 
+"name": "BHU", 
+"full_name": "Baie d’Hudson", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"11": { 
+"name": "GAL", 
+"full_name": "Golfe d’Alaska", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"12": { 
+"name": "MBE", 
+"full_name": "Mer de Béring", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"13": { 
+"name": "OAR", 
+"full_name": "Océan Arctique", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"14": { 
+"name": "MNG", 
+"full_name": "Mer de Norvège", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"15": { 
+"name": "ATE", 
+"full_name": "Atlantique Est", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"16": { 
+"name": "MDN", 
+"full_name": "Mer du Nord", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"17": { 
+"name": "MBA", 
+"full_name": "Mer Baltique", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"18": { 
+"name": "MMO", 
+"full_name": "Mer Méditerranée Ouest", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"19": { 
+"name": "MIO", 
+"full_name": "Mer Ionienne", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"20": { 
+"name": "MME", 
+"full_name": "Mer Méditerranée Est", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"21": { 
+"name": "MNO", 
+"full_name": "Mer Noire", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"22": { 
+"name": "MRO", 
+"full_name": "Mer Rouge", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"23": { 
+"name": "MAR", 
+"full_name": "Mer d’Arabie", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"24": { 
+"name": "OIN", 
+"full_name": "Océan Indien", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"25": { 
+"name": "GBE", 
+"full_name": "Golfe du Bengale", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"26": { 
+"name": "MCS", 
+"full_name": "Mer de Chine Sud", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"27": { 
+"name": "MJN", 
+"full_name": "Mer Jaune", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"28": { 
+"name": "MJP", 
+"full_name": "Mer du Japon", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"29": { 
+"name": "PAO", 
+"full_name": "Pacifique Ouest", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"30": { 
+"name": "Aus", 
+"full_name": "Australie", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0,
+"display": 1 
+ }, 
+"31": { 
+"name": "Ids", 
+"full_name": "Indonésie", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"32": { 
+"name": "Phi", 
+"full_name": "Philippines", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0,
+"display": 1 
+ }, 
+"33": { 
+"name": "Jap", 
+"full_name": "Japon", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"34": { 
+"name": "CdS", 
+"full_name": "Corée du Sud", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"35": { 
+"name": "CdN", 
+"full_name": "Corée du Nord", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"36": { 
+"name": "Sha", 
+"full_name": "Shanghaï", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0,
+"display": 4 
+ }, 
+"37": { 
+"name": "Han", 
+"full_name": "Hanoï", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0,
+"display": 4 
+ }, 
+"38": { 
+"name": "SVi", 
+"full_name": "Sud Vietnam", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"39": { 
+"name": "AsS", 
+"full_name": "Asie du Sud", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+
+ }, 
+"40": { 
+"name": "Bng", 
+"full_name": "Bangladesh", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"41": { 
+"name": "Ind", 
+"full_name": "Inde", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"42": { 
+"name": "Pak", 
+"full_name": "Pakistan", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"43": { 
+"name": "Irn", 
+"full_name": "Iran", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"44": { 
+"name": "Irq", 
+"full_name": "", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"45": { 
+"name": "Arb", 
+"full_name": "Arabie", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"46": { 
+"name": "Lev", 
+"full_name": "Levant", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"47": { 
+"name": "Egy", 
+"full_name": "Egypte", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"48": { 
+"name": "AfE", 
+"full_name": "Afrique de l’Est", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0
+ }, 
+"49": { 
+"name": "Lib", 
+"full_name": "Libye", 
+"x_pos":, 
+"y_pos":, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0 
+ }, 
+"50": { 
+"name": "Vla", 
+"full_name": "Vladivostok", 
+"x_pos": 0, 
+"y_pos": 0, 
+"x_legend_pos": 0, 
+"y_legend_pos": 0,
+"display": 3
+ }, 
+"51": { 
+"name": Man"", 
+"full_name": "Mandchourie", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 3
+ }, 
+"52": { 
+"name": "Ana", 
+"full_name": "Anadyr", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 3
+ }, 
+"53": { 
+"name": "Sib", 
+"full_name": "Sibérie", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 3
+ }, 
+"54": { 
+"name": "Our", 
+"full_name": "Oural", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 3
+ }, 
+"55": { 
+"name": "Cau", 
+"full_name": "Caucase", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 3
+ }, 
+"56": { 
+"name": "Kur", 
+"full_name": "Kurdistan", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"57": { 
+"name": "Len", 
+"full_name": "Léningrad", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 3
+ }, 
+"58": { 
+"name": "You", 
+"full_name": "Yougoslavie", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"59": { 
+"name": "Fin", 
+"full_name": "Finlande", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"60": { 
+"name": "Sue", 
+"full_name": "Suède", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"61": { 
+"name": "AlE", 
+"full_name": "Allemagne de l’Est", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"62": { 
+"name": "AlO", 
+"full_name": "Allemagne de l’Ouest", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"63": { 
+"name": "Tun", 
+"full_name": "Tunisie", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"64": { 
+"name": "AfN", 
+"full_name": "Afrique du Nord", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"65": { 
+"name": "Ibe", 
+"full_name": "Ibérie", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"66": { 
+"name": "Fra", 
+"full_name": "France", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"67": { 
+"name": "GBr", 
+"full_name": " Grande Bretagne ", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"68": { 
+"name": "Nge", 
+"full_name": "Norvège", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"69": { 
+"name": "Gro", 
+"full_name": "Groënland", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"70": { 
+"name": "CaO", 
+"full_name": "Canada Occidental", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"71": { 
+"name": "Tor", 
+"full_name": "Toronto", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+ }, 
+"72": { 
+"name": "Que", 
+"full_name": "Québec", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+ }, 
+"73": { 
+"name": "NYo", 
+"full_name": "New York", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 1
+ }, 
+"74": { 
+"name": "Flo", 
+"full_name": "Floride", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 1
+ }, 
+"75": { 
+"name": "SoW", 
+"full_name": "South West", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 1
+ }, 
+"76": { 
+"name": "LAn", 
+"full_name": "Los Angeles", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 1
+ }, 
+"77": { 
+"name": "Mex", 
+"full_name": "Mexique", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"78": { 
+"name": "AmC", 
+"full_name": "Amérique Centrale", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"79": { 
+"name": "Cub", 
+"full_name": "Cuba", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 3
+ }, 
+"80": { 
+"name": "Pan", 
+"full_name": "Panama", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"81": { 
+"name": "Col", 
+"full_name": "Colombie", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"82": { 
+"name": "Ven", 
+"full_name": "Vénézuela", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"83": { 
+"name": "Bre", 
+"full_name": "Brésil", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"84": { 
+"name": "Ita", 
+"full_name": "Italie", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"85": { 
+"name": "Ukr", 
+"full_name": "Ukraine", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 3
+ }, 
+"86": { 
+"name": "Dan", 
+"full_name": "Danemark", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"87": { 
+"name": "Gre", 
+"full_name": "Grèce", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"88": { 
+"name": "Tur", 
+"full_name": "Turquie", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0,
+"display": 2
+ }, 
+"89": { 
+"name": "Ala", 
+"full_name": "Alaska", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"90": { 
+"name": "", 
+"full_name": "Colombie côte Pacifique", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"91": { 
+"name": "", 
+"full_name": "Colombie côte Atlantique", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"92": { 
+"name": "", 
+"full_name": "Amérique centrale côte Pacifique", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"93": { 
+"name": "", 
+"full_name": " Amérique centrale côte Atlantique ", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"94": { 
+"name": "", 
+"full_name": "Mexique côte Pacifique", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"95": { 
+"name": "", 
+"full_name": "Mexique côte Atlantique", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"96": { 
+"name": "", 
+"full_name": "Canada Occidental côte Pacifique", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"": { 
+"name": "97", 
+"full_name": "Canada Occidental côte Arctique", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"98": { 
+"name": "", 
+"full_name": "France côte Atlantique", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"99": { 
+"name": "", 
+"full_name": "France côte Méditerranée", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"100": { 
+"name": "", 
+"full_name": "Léningrad côte Baltique", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"101": { 
+"name": "", 
+"full_name": "Léningrad côte Mer de Norvège", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"102": { 
+"name": "", 
+"full_name": "Corée du Nord côte Mer du Japon", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+"103": { 
+"name": "", 
+"full_name": "Corée du Nord côte Mer Jaune", 
+"x_pos":0, 
+"y_pos":0, 
+"x_legend_pos":0, 
+"y_legend_pos":0
+ }, 
+
+
+    "centers": {
+        "1": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "2": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "3": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "4": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "5": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "6": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "7": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "8": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "9": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "10": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "11": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "12": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "13": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "14": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "15": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "16": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "17": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "18": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "19": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "20": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "21": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "22": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "23": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "24": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "25": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "26": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "27": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+        "28": {
+            "x_pos": 0,
+            "y_pos": 0
+        },
+}
+    "seasons": {
+        "1": {
+            "name": "Printemps"
+        },
+        "2": {
+            "name": "Ete"
+        },
+        "3": {
+            "name": "Automne"
+        },
+        "4": {
+            "name": "Hiver"
+        },
+        "5": {
+            "name": "Ajustements"
+        }
+    },
+    "orders": {
+        "1": {
+            "name": "Attaquer"
+        },
+        "2": {
+            "name": "Soutenir offensivement"
+        },
+        "3": {
+            "name": "Soutenir défensivement"
+        },
+        "4": {
+            "name": "Tenir"
+        },
+        "5": {
+            "name": "Convoyer"
+        },
+        "6": {
+            "name": "Retraiter"
+        },
+        "7": {
+            "name": "Disperser"
+        },
+        "8": {
+            "name": "Construire"
+        },
+        "9": {
+            "name": "Supprimer"
+        }
+    }
+}
