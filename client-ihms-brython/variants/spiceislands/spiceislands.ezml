@@ -1,0 +1,74 @@
+Spice Islands
+
+_
+$ Contexte
+Hundred est une variante à 7 joueurs.
+
+_
+$ Côtes spéciales
+
+(Northumbria)
+   Elle a 2 côtes, Ouest et Est.
+(L'Aragon)
+   Elle a 2 côtes, Nord et Sud.
+
+_
+$ Particularités de la carte
+
+(La Castille)
+Elle n'est pas divisée en côtes, de sorte que toute flotte entrant en Castille depuis la Biscaye peut ensuite se diriger vers la Méditerranée et vice versa.
+(Le detroit)
+Les unités (armées et flottes) peuvent se déplacer ou apporter leur soutien de Londres à Calais ou vice versa indépendamment de la présence d'une flotte dans le Pas de Calais.
+(Nord-Est)
+La zone au Nord (Chine) est hors-jeu, à l'instar de la Suisse dans la variante standard.
+
+
+_
+$ Datation
+
+La partie commence en *1491*. 
+Chaque tour représente *5* années 
+"en temps réel".
+
+_
+$ Centres de ravitaillement
+
+Il y a *35* centres de ravitaillement sur le plateau.
+.
+Le gagnant donc est la puissance qui détient *18* centres de ravitaillement ou plus pendant une phase d'ajustement.
+
+_
+$ Puissances en présence
+
+Il y a sept puissances dont les unités de départ sont les suivantes :
+.
+.
+= Position de départ
+|Puissance | Centres | Armées | Flottes| Centres inoccupés|
+=
+
+_
+$ Particularités
+
+_
+$ Pièges de la variante
+
+TODO
+
+_
+$ Nomenclature
+
+= Régions et abbréviations de la variante
+| Abbréviation | Nom complet |
+TODO
+=
+
+_
+$ Expansionnisme
+
+Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. Par exemple, xxx peut construire à yyy si ce centre est vacant et qu'elle en est propriétaire
+
+_
+$ Sur le wiki
+
+[[https://diplomania-gen.fr/dokuwiki/doku.php?id=variante:spice_islands]]
