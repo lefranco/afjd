@@ -20,29 +20,20 @@ import flask_mail  # type: ignore
 INTERVAL = 5
 
 # mailing suject
-SUBJECT = "Le Vendredi 16 Février, il sera trop tard !"
+SUBJECT = "Le courrier du Diplomate de l'Association Francophone des Joueurs de Diplomatie"
 
 # mailing body
 BODY = """
 Cher membre de Diplomania,
 
-Avec la nouvelle année, c’est la saison des Tournois qui redémarre, et en particulier THE BIG ONE, le fameux Diplomania T-Blitz 2024. Ce tournoi rassemble tous les joueurs du site qui sont mélangés dans autant de parties qu’il y a de joueurs inscrits. C’est l’occasion pour chacun de se mesurer à des joueurs qu’il n’a pas l’occasion de rencontrer à priori.
+Tu trouveras en pièce jointe le courrier du diplomate #7, une publication que nous espérons rendre mensuelle.
 
-Pas de tchatche, on pousse les flottes et les armées, ça prend bien moins de temps que les parties négociations.
-
-A ce jour, je n’ai pas encore vu passer ton inscription. Il s’agit surement d’un oubli que tu peux vite réparer en te connectant sur la page d’accueil de Diplomania avant le Vendredi 16 Février 2024.
-
-Si tu as encore des questions, tu peux consulter les infos publiées sur le Forum de Diplomania ou me répondre à cet e-mail.
-
-Nous t’attendons pour le Diplomania T-Blitz 2024 ! Viens vite !
-
-Lien pour s'inscire au tournoi :
-https://diplomania-gen.fr/?event=T_BLITZ_2024
+En te souhaitant une bonne lecture,
 
 Ludiquement
-Lafouine
+Lei
 
-Organisateur du Diplomania T-Blitz 2024
+Secretaire de l'Association
 """
 
 # mailing official sender
@@ -52,7 +43,7 @@ SENDER = "afjd_serveur_jeu@diplomania-gen.fr"
 REPLY_TO = "afjdiplo@gmail.com"
 
 # list of attached files (must be PDF)
-PDF_ATT_FILES = []
+PDF_ATT_FILES = ['Newsletter_AFJD_Mars_2024.pdf']
 
 
 MAILER = None
