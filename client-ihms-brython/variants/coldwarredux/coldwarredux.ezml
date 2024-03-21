@@ -1,64 +1,72 @@
-Crowded (Affluence)
+Cold War Redux
 
 _
 $ Contexte
-Sur le jeu standard, ajout de quatre puissances : Balkans, Bénélux, Scandinavie et Péninsule Ibérique.
-.
-Un centre est également ajouté : Rhénanie
+En pleine guerre froide, quatre puissances : Les Etats-Unis d'Amérique, l'Union de Républiques Socialistes Soviétique, la Chine et l'Europe.
 
 _
 $ Côtes spéciales
 
-(Espagne)
-   Elle a 2 côtes, Nord et Sud.
-(Bulgarie)
-   Elle a 2 côtes, Sud et Est.
-(Saint Pétersboug)
-   Elle a 2 côtes, Nord et Sud.
+(Colombie)
+   Elle a 2 côtes, Ouest (Océan Pacifique) et Est (Océan Atlantique).
+(Amérique Centrale)
+   Elle a 2 côtes, Ouest (Océan Pacifique) et Est (Océan Atlantique).
+(Mexique)
+   Elle a 2 côtes, Ouest (Océan Pacifique) et Est (Océan Atlantique).
+(Canada Occidental)
+   Elle a 2 côtes, Ouest (Océan Pacifique) et Nord (Océan Arctique).
+(France)
+   Elle a 2 côtes, Nord (Océan Atlantique) et Sud (Mer Méditerrannée).
+(Léningrad)
+   Elle a 2 côtes, Nord (Mer de Baltique) et Sud (Mer de Norvège).
+(Corée du Nord)
+   Elle a 2 côtes, Ouest (Mer Jaune) et Est (Mer du Japon).
 
 _
 $ Particularités de la carte
 
-Sans objet
+La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question
+
+(Canal en Egypte)
+Une flotte peut aller de Mer Noire à Mer Méditerrannée Est  (et réciproquement)
+(Canal du Panama)
+Une flotte peut aller de Mer des Caraïbes à Mer Pacifique Est  (et réciproquement)
+
+(Pont en Indonésie)
+Un armée peut aller de de Philippine en Australie en traversant l'Indonésie. (et réciproquement)
+
 _
 $ Datation
 
-La partie commence en *1901*. 
+La partie commence en *1961*. 
 Chaque tour représente *1* années 
 "en temps réel".
 
 _
 $ Centres de ravitaillement
 
-Il y a *35* centres de ravitaillement sur le plateau. 
+Il y a *28* centres de ravitaillement sur le plateau. 
 .
-Le gagnant est donc la puissance qui détient *18* centres de ravitaillement ou plus pendant une phase d'ajustement.
+Le gagnant est donc la puissance qui détient *15* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
 _
 $ Puissances en présence
 
-Il y a onze puissances dont les unités de départ sont les suivantes :
+Il y a quatre puissances dont les unités de départ sont les suivantes :
 .
 .
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés|
-|Angleterre | 3 | Liverpool| Edimbourg, Londres | |
-|France | 3 |Paris, Marseille | Brest | |
-|Allemagne | 3 |Berlin, Munich | Kiel | |
-|Italie | 3 |Venise, Rome| Naples | |
-|Autriche-Hongrie | 3 |Vienne, Budapest | Trieste | |
-|Russie | 4 |Moscou, Varsovie| Sébastopol, Saint-Pétersbourg (côte sud) | |
-|Turquie | 3 |Constantinople, Smyrne | Ankara | |
-|Balkans | 3 |Serbie, Bulgarie | Grèce, Roumanie | |
-|Bénélux | 4 |Hollande, Rhénanie | Belgique | |
-|Scandinavie | 3 |Suède | Norvège, Danemark | |
-|Péninsule Ibérique | 3 |Espagne | Portugal, Tunis | |
+|E.U. | 3 | Los Angeles| Australie, New York | |
+|U.R.S.S. | 4 | Moscou | Anadyr, Cuba, Leningrad | |
+|Chine | 3 | Uraunchi | Shangaï, Hanoï | |
+|Europe | 3 | France | Grande-Bretagne, Turquie | |
 =
 
 _
 $ Pièges de la variante
 
-Sans objet.
+Le Canada de l'Ouest ne borde pas le Groenland mais la Mer du nord boorde la Suède.
 
 _
 $ Nomenclature
@@ -150,4 +158,4 @@ Constructions sur les centres de départ.
 _
 $ Sur le wiki
 
-[[https://diplomania-gen.fr/dokuwiki/doku.php?id=variante:crowded]]
+[[https://diplomania-gen.fr/dokuwiki/doku.php?id=variante:cold_war_redux]]
