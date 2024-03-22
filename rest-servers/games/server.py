@@ -1363,6 +1363,10 @@ class AllocationStateListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+# These people may not join games
+OUTCASTS = ['Chryss', 'Clovis2024']
+
+
 @API.resource('/allocations')
 class AllocationListRessource(flask_restful.Resource):  # type: ignore
     """ AllocationListRessource """
@@ -1486,6 +1490,10 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         dangling_role_id = -1
 
         if not delete:
+
+            if pseudo in OUTCASTS:
+                del sql_executor
+                flask_restful.abort(400, msg="Error not allowed to join games")
 
             # put in game
             # cannot fail
