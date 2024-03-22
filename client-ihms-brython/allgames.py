@@ -251,10 +251,12 @@ def my_opportunities():
         return
     games_dict = dict(games_dict)
 
+    # get the link (allocations) of game masters
     allocations_data = common.get_allocations_data(state)
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
+    masters_alloc = allocations_data['game_masters_dict']
 
     state = 1
 
@@ -281,9 +283,7 @@ def my_opportunities():
         alert("Erreur chargement dictionnaire joueurs")
         return
 
-    masters_alloc = allocations_data['game_masters_dict']
-
-    # gather game to master
+    # fill table game -> master
     game_master_dict = {}
     for master_id, games_id in masters_alloc.items():
         master = players_dict[str(master_id)]['pseudo']
@@ -832,7 +832,6 @@ def all_games(state_name):
 
     # get the players (masters)
     players_dict = common.get_players_data()
-
     if not players_dict:
         alert("Erreur chargement dictionnaire des joueurs")
         return
