@@ -11,8 +11,8 @@ import typing
 import os
 import configparser
 import sys
-import shutil
 import enum
+import tempfile
 
 import tkinter
 import tkinter.messagebox
@@ -39,6 +39,7 @@ TITLE = "Map editor, select fill type and click on map to fill"
 
 # File with colors
 COLORS_FILE_NAME = "./colors.ini"
+
 
 @enum.unique
 class FillType(enum.Enum):
@@ -102,8 +103,7 @@ def load_version_information() -> VersionRecord:
 VERSION_INFORMATION = load_version_information()
 
 
-
-def load_colors() -> VersionRecord:
+def load_colors() -> typing.Dict[FillType, typing.Dict[str, int]]:
     """ load_colors """
 
     # Where is the file ?
@@ -115,12 +115,13 @@ def load_colors() -> VersionRecord:
 
     colors_dict = {}
     for fill_type in FillType:
-        colors_dict[fill_type] = {k: int(v) for k,v in dict(config[fill_type.name]).items()}
+        colors_dict[fill_type] = {k: int(v) for k, v in dict(config[fill_type.name]).items()}
 
     return colors_dict
 
 
 COLORS_TABLE = load_colors()
+
 
 class MyText(tkinter.Text):
     """ MyText """
@@ -159,6 +160,21 @@ class Application(tkinter.Frame):
         self.master = master
         self.grid()
 
+        # map file
+        self.map_file = map_file
+
+        # image for tkinter
+        self.image_map = tkinter.PhotoImage(file=map_file)
+
+        # image for cv
+        self.cv_image = cv2.imread(map_file)  # pylint: disable=c-extension-no-member
+
+        # stack of images
+        self.images_stack: typing.List[typing.Any] = []
+
+        # current fill type
+        self.fill_select: typing.Optional[FillType] = None
+
         # actual creation of widgets
         self.create_widgets(self, map_file)
 
@@ -170,8 +186,6 @@ class Application(tkinter.Frame):
 
         def put_image() -> None:
 
-            self.image_map = tkinter.PhotoImage(file=self.map_file)  # pylint: disable=attribute-defined-outside-init
-
             self.canvas = tkinter.Canvas(frame_carto, width=self.image_map.width(), height=self.image_map.height())  # pylint: disable=attribute-defined-outside-init
             self.canvas.grid(row=1, column=1)
 
@@ -181,36 +195,79 @@ class Application(tkinter.Frame):
             # clicking
             self.canvas.bind("<Button-1>", click_callback)
 
+        def reload_callback() -> None:
+
+            # Reload from file
+            self.image_map = tkinter.PhotoImage(file=self.map_file)
+
+            # image for cv
+            self.cv_image = cv2.imread(self.map_file)  # pylint: disable=c-extension-no-member
+
+            # Display on screen
+            put_image()
+
         def click_callback(event: typing.Any) -> None:
 
             if not self.fill_select:
                 tkinter.messagebox.showinfo(title="Error", message="Type to fill is not selected!")
                 return
 
+            # Get click position
             x_mouse, y_mouse = event.x, event.y
 
-            # Backup file
-            shutil.copyfile(self.map_file, self.map_bak_file)
-
-            # Apply
-            cv_image = cv2.imread(self.map_file)  # pylint: disable=c-extension-no-member
+            # Apply change
             color = COLORS_TABLE[self.fill_select]
             color_tuple = tuple(reversed(color.values()))
-            cv2.floodFill(cv_image, None, (x_mouse, y_mouse), color_tuple)
-            cv2.imwrite(self.map_file, cv_image)
+            cv2.floodFill(self.cv_image, None, (x_mouse, y_mouse), color_tuple)  # pylint: disable=c-extension-no-member
 
-            # Show changed file
-            put_image()
+            # Put copy of image in stack
+            cv_image_copy = self.cv_image.copy()
+            self.images_stack.append(cv_image_copy)
 
-        def reload_callback() -> None:
+            # Pass image cv -> tkinter
+            _, tmp_file = tempfile.mkstemp(suffix='.png')
+            cv2.imwrite(tmp_file, self.cv_image)  # pylint: disable=c-extension-no-member
+            self.image_map = tkinter.PhotoImage(file=tmp_file)
+            os.remove(tmp_file)
+
+            # Display on screen
             put_image()
 
         def undo_callback() -> None:
-            shutil.copyfile(self.map_bak_file, self.map_file)
-            os.unlink(self.map_bak_file)
+
+            # Must have an image in stack
+            if not self.images_stack:
+                tkinter.messagebox.showinfo(title="Error", message="Nothing to undo!")
+                return
+
+            # Get from stack
+            self.cv_image = self.images_stack.pop()
+
+            # Pass image cv -> tkinter
+            _, tmp_file = tempfile.mkstemp(suffix='.png')
+            cv2.imwrite(tmp_file, self.cv_image)  # pylint: disable=c-extension-no-member
+            self.image_map = tkinter.PhotoImage(file=tmp_file)
+            os.remove(tmp_file)
+
+            # Display on screen
             put_image()
 
-        def select_callback(fill_type: FillType):
+        def save_callback() -> None:
+            """ Save to file """
+
+            # Must have an image in stack
+            if not self.images_stack:
+                tkinter.messagebox.showinfo(title="Error", message="Nothing has changed!")
+                return
+
+            # Get from stack (copy)
+            cv_image = self.images_stack[-1]
+
+            # Save to file
+            cv2.imwrite(self.map_file, cv_image)  # pylint: disable=c-extension-no-member
+
+        def select_callback(fill_type: FillType) -> None:
+            """ Change selection """
             self.fill_select = fill_type
 
         self.menu_bar = tkinter.Menu(main_frame)
@@ -241,26 +298,32 @@ class Application(tkinter.Frame):
         frame_carto.grid(row=2, column=1, sticky='we')
 
         self.map_file = map_file
-        self.map_bak_file = f"{map_file}.bak"
         put_image()
 
-        # frame buttons and information
+        # frame buttons
         # -----------
-
-        self.fill_select = None
 
         frame_buttons = tkinter.LabelFrame(main_frame, text="Actions")
         frame_buttons.grid(row=2, column=2, sticky='nw')
 
-        self.reload_button = tkinter.Button(frame_buttons, text="Reload map file", command=reload_callback)
+        frame_actions_buttons = tkinter.LabelFrame(frame_buttons, text="Main")
+        frame_actions_buttons.grid(row=2, column=2, sticky='nw')
+
+        self.reload_button = tkinter.Button(frame_actions_buttons, text="Reload map file", command=reload_callback)
         self.reload_button.grid(row=1, column=1, sticky='we')
 
-        self.reload_button = tkinter.Button(frame_buttons, text="Undo", command=undo_callback)
+        self.reload_button = tkinter.Button(frame_actions_buttons, text="Undo", command=undo_callback)
         self.reload_button.grid(row=2, column=1, sticky='we')
 
+        self.reload_button = tkinter.Button(frame_actions_buttons, text="Save", command=save_callback)
+        self.reload_button.grid(row=3, column=1, sticky='we')
+
+        frame_selection_buttons = tkinter.LabelFrame(frame_buttons, text="Selection")
+        frame_selection_buttons.grid(row=3, column=2, sticky='nw')
+
         for num, fill_type in enumerate(FillType):
-            self.reload_button = tkinter.Button(frame_buttons, text=fill_type.name, command=lambda ft=fill_type: select_callback(ft))
-            self.reload_button.grid(row=3 + num, column=1, sticky='we')
+            self.reload_button = tkinter.Button(frame_selection_buttons, text=fill_type.name.title(), command=lambda ft=fill_type: select_callback(ft))  # type: ignore
+            self.reload_button.grid(row=4 + num, column=1, sticky='we')
 
     def menu_complete_quit(self) -> None:
         """ as it says """
@@ -303,8 +366,7 @@ def main() -> None:
     """ main """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-m', '--map_file', required=True,
-help='Map file to edit')
+    parser.add_argument('-m', '--map_file', required=True, help='Map file to edit')
     args = parser.parse_args()
 
     #  load files at start
