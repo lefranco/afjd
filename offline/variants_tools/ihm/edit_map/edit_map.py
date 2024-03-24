@@ -195,8 +195,7 @@ class Application(tkinter.Frame):
             # Apply
             cv_image = cv2.imread(self.map_file)  # pylint: disable=c-extension-no-member
             color = COLORS_TABLE[self.fill_select]
-            color_tuple = tuple(color.values())
-            print(f"{color_tuple=}")
+            color_tuple = tuple(reversed(color.values()))
             cv2.floodFill(cv_image, None, (x_mouse, y_mouse), color_tuple)
             cv2.imwrite(self.map_file, cv_image)
 
