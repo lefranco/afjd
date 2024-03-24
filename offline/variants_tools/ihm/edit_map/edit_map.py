@@ -19,6 +19,8 @@ import tkinter.messagebox
 import tkinter.filedialog
 import tkinter.scrolledtext
 
+import numpy as np
+
 import cv2  # type: ignore
 
 
@@ -39,6 +41,10 @@ TITLE = "Map editor, select fill type and click on map to fill"
 
 # File with colors
 COLORS_FILE_NAME = "./colors.ini"
+
+
+# Paint brush
+MAX_THICKNESS = 20
 
 
 @enum.unique
@@ -173,7 +179,9 @@ class Application(tkinter.Frame):
         self.images_stack: typing.List[typing.Any] = []
 
         # current fill type
-        self.fill_select: typing.Optional[FillType] = None
+        self.fill_type_selected: typing.Optional[FillType] = None
+        self.fill_mode_selected = True
+        self.thickness_selected = 10
 
         # actual creation of widgets
         self.create_widgets(self, map_file)
@@ -208,7 +216,7 @@ class Application(tkinter.Frame):
 
         def click_callback(event: typing.Any) -> None:
 
-            if not self.fill_select:
+            if not self.fill_type_selected:
                 tkinter.messagebox.showinfo(title="Error", message="Type to fill is not selected!")
                 return
 
@@ -219,10 +227,20 @@ class Application(tkinter.Frame):
             # Get click position
             x_mouse, y_mouse = event.x, event.y
 
-            # Apply change
-            color = COLORS_TABLE[self.fill_select]
+            color = COLORS_TABLE[self.fill_type_selected]
             color_tuple = tuple(reversed(color.values()))
-            cv2.floodFill(self.cv_image, None, (x_mouse, y_mouse), color_tuple)  # pylint: disable=c-extension-no-member
+
+            # Apply change
+            if self.fill_mode_selected:
+                cv2.floodFill(self.cv_image, None, (x_mouse, y_mouse), color_tuple)  # pylint: disable=c-extension-no-member
+            else:
+                poly = np.array([
+                    (x_mouse - self.thickness_selected, y_mouse - self.thickness_selected),
+                    (x_mouse + self.thickness_selected, y_mouse - self.thickness_selected),
+                    (x_mouse + self.thickness_selected, y_mouse + self.thickness_selected),
+                    (x_mouse - self.thickness_selected, y_mouse + self.thickness_selected)
+                ])
+                cv2.fillPoly(self.cv_image, [poly], color_tuple)  # pylint: disable=c-extension-no-member
 
             # Pass image cv -> tkinter
             _, tmp_file = tempfile.mkstemp(suffix='.png')
@@ -266,9 +284,26 @@ class Application(tkinter.Frame):
             # Save to file
             cv2.imwrite(self.map_file, cv_image)  # pylint: disable=c-extension-no-member
 
-        def select_callback(fill_type: FillType) -> None:
+        def select_fill_type_callback(fill_type: FillType) -> None:
             """ Change selection """
-            self.fill_select = fill_type
+            self.fill_type_selected = fill_type
+
+        def select_fill_mode_callback(fill_mode: bool) -> None:
+            """ Change selection """
+            self.fill_mode_selected = fill_mode
+
+        def select_fill_thickness_callback(more: bool) -> None:
+            """ Change selection """
+            if more:
+                if self.thickness_selected > MAX_THICKNESS:
+                    tkinter.messagebox.showinfo(title="Error", message="Too thick!")
+                    return
+                self.thickness_selected += 1
+            else:
+                if self.thickness_selected < 0:
+                    tkinter.messagebox.showinfo(title="Error", message="Not thick enough!")
+                    return
+                self.thickness_selected -= 1
 
         self.menu_bar = tkinter.Menu(main_frame)
 
@@ -322,8 +357,20 @@ class Application(tkinter.Frame):
         frame_selection_buttons.grid(row=3, column=2, sticky='nw')
 
         for num, fill_type in enumerate(FillType):
-            self.reload_button = tkinter.Button(frame_selection_buttons, text=fill_type.name.title(), command=lambda ft=fill_type: select_callback(ft))  # type: ignore
+            self.reload_button = tkinter.Button(frame_selection_buttons, text=fill_type.name.title(), command=lambda ft=fill_type: select_fill_type_callback(ft))  # type: ignore
             self.reload_button.grid(row=4 + num, column=1, sticky='we')
+
+        self.fill_button = tkinter.Button(frame_actions_buttons, text="Fill", command=lambda f=True: select_fill_mode_callback(f))  # type: ignore
+        self.fill_button.grid(row=4 + len(FillType), column=1, sticky='we')
+
+        self.fill_button = tkinter.Button(frame_actions_buttons, text="Erase", command=lambda f=False: select_fill_mode_callback(f))  # type: ignore
+        self.fill_button.grid(row=5 + len(FillType), column=1, sticky='we')
+
+        self.fill_button = tkinter.Button(frame_actions_buttons, text="Smaller paintbrush", command=lambda m=False: select_fill_thickness_callback(m))  # type: ignore
+        self.fill_button.grid(row=6 + len(FillType), column=1, sticky='we')
+
+        self.fill_button = tkinter.Button(frame_actions_buttons, text="Bigger paintbrush", command=lambda m=True: select_fill_thickness_callback(m))  # type: ignore
+        self.fill_button.grid(row=7 + len(FillType), column=1, sticky='we')
 
     def menu_complete_quit(self) -> None:
         """ as it says """
