@@ -212,6 +212,10 @@ class Application(tkinter.Frame):
                 tkinter.messagebox.showinfo(title="Error", message="Type to fill is not selected!")
                 return
 
+            # Put copy of image in stack
+            cv_image_copy = self.cv_image.copy()
+            self.images_stack.append(cv_image_copy)
+
             # Get click position
             x_mouse, y_mouse = event.x, event.y
 
@@ -219,10 +223,6 @@ class Application(tkinter.Frame):
             color = COLORS_TABLE[self.fill_select]
             color_tuple = tuple(reversed(color.values()))
             cv2.floodFill(self.cv_image, None, (x_mouse, y_mouse), color_tuple)  # pylint: disable=c-extension-no-member
-
-            # Put copy of image in stack
-            cv_image_copy = self.cv_image.copy()
-            self.images_stack.append(cv_image_copy)
 
             # Pass image cv -> tkinter
             _, tmp_file = tempfile.mkstemp(suffix='.png')
