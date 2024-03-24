@@ -273,16 +273,8 @@ class Application(tkinter.Frame):
         def save_callback() -> None:
             """ Save to file """
 
-            # Must have an image in stack
-            if not self.images_stack:
-                tkinter.messagebox.showinfo(title="Error", message="Nothing has changed!")
-                return
-
-            # Get from stack (copy)
-            cv_image = self.images_stack[-1]
-
             # Save to file
-            cv2.imwrite(self.map_file, cv_image)  # pylint: disable=c-extension-no-member
+            cv2.imwrite(self.map_file, self.cv_image)  # pylint: disable=c-extension-no-member
 
         def select_fill_type_callback(fill_type: FillType) -> None:
             """ Change selection """
