@@ -1,3 +1,4 @@
 /.pylintrc
 /.flake8
 /__pycache__/
+/.mypy_cache/
