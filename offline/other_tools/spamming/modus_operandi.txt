@@ -33,3 +33,11 @@ sort -u victims -o victims
 comm -13 new_no victims > actual_victims
 
 => On peut spammer sur 'actual_victims'
+
+7) après le spam, gérer les retours en erreur
+
+Si depuis le site :
+  marquer non confirmé
+  
+Si depuis l'annuaire :
+  supprimer de l'annuaire
