@@ -8,46 +8,46 @@
 "units": { "1": { "name": "Armee" }, "2": { "name": "Flotte" } },
 
 "roles": {
-"0": {
-"name": "Arbitre",
-"adjective_name": "Arbitre",
-"letter_name": "M",
-"red": [ 0, 0 ],
- "green": [ 0, 0],
-"blue": [ 0, 0 ]
-},
+	"0": {
+	"name": "Arbitre",
+	"adjective_name": "Arbitre",
+	"letter_name": "M",
+	"red": [ 0, 0 ],
+ 	"green": [ 0, 0],
+	"blue": [ 0, 0 ]
+	},
 "1": {
- "name": "Etats Unis",
-"adjective_name": "americain",
-"letter_name": "A",
-"red":[47,131],
-"green":[138,185],
-"blue" :[170,204]
-},
+ 	"name": "Etats Unis",
+	"adjective_name": "americain",
+	"letter_name": "A",
+	"red":[47,131],
+	"green":[138,185],
+	"blue" :[170,204]
+	},
 "2": {
- "name": "Europe",
-"adjective_name": "europeen",
-"letter_name": "E",
-"red": [ 83,152],
-"green": [210,228],
-"blue": [224,237]
-},
+ 	"name": "Europe",
+	"adjective_name": "europeen",
+	"letter_name": "E",
+	"red": [ 83,152],
+	"green": [210,228],
+	"blue": [224,237]
+	},
 "3": {
- "name": "URSS",
-"adjective_name": "sovietique",
-"letter_name": "S",
-"red": [ 224,237 ],
-"green": [110,168],
-"blue": [ 93,158]
-},
+ 	"name": "URSS",
+	"adjective_name": "sovietique",
+	"letter_name": "S",
+	"red": [ 224,237 ],
+	"green": [110,168],
+	"blue": [ 93,158]
+	},
 "4": {
- "name": "Chine",
-"adjective_name": "chinois",
-"letter_name": "C",
-"red": [ 224,237 ],
-"green": [ 211,229 ],
-"blue": [ 51,133]
-}
+ 	"name": "Chine",
+	"adjective_name": "chinois",
+	"letter_name": "C",
+	"red": [ 224,237 ],
+	"green": [ 211,229 ],
+	"blue": [ 51,133]
+	}
 },
 
 "coasts": {
@@ -56,7 +56,6 @@
 "3": { "name": "cs" },
 "4": { "name": "co" }
 },
-
 
 "zones": {
 "1": {
