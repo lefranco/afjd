@@ -29,11 +29,8 @@ VERSION_FILE_NAME = "./version.ini"
 
 VERSION_SECTION = "version"
 
-INFO_HEIGHT1 = 3
-INFO_WIDTH1 = 30
-
-INFO_HEIGHT2 = 15
-INFO_WIDTH2 = 30
+INFO_HEIGHT = 1
+INFO_WIDTH = 10
 
 BUTTONS_PER_COLUMN = 24
 
@@ -45,6 +42,7 @@ COLORS_FILE_NAME = "./colors.ini"
 
 # Paint brush
 MAX_THICKNESS = 20
+START_THICKNESS = 10
 
 
 @enum.unique
@@ -54,6 +52,14 @@ class FillType(enum.Enum):
     LAND_COAST = enum.auto()
     SEA = enum.auto()
     UNPASSABLE = enum.auto()
+
+
+@enum.unique
+class FillMode(enum.Enum):
+    """ FillMode """
+
+    FILL = enum.auto()
+    PAINT = enum.auto()
 
 
 class VersionRecord(typing.NamedTuple):
@@ -180,11 +186,14 @@ class Application(tkinter.Frame):
 
         # current fill type
         self.fill_type_selected: typing.Optional[FillType] = None
-        self.fill_mode_selected = True
-        self.thickness_selected = 10
+        self.fill_mode_selected: typing.Optional[FillMode] = None
+        self.thickness_selected = START_THICKNESS
 
         # actual creation of widgets
         self.create_widgets(self, map_file)
+
+        information = f"{self.thickness_selected} px"
+        self.thickness_value.display(information)
 
     def create_widgets(self, main_frame: tkinter.Frame, map_file: str) -> None:
         """ create all widgets for application """
@@ -231,9 +240,14 @@ class Application(tkinter.Frame):
             color_tuple = tuple(reversed(color.values()))
 
             # Apply change
-            if self.fill_mode_selected:
+            if self.fill_mode_selected is None:
+                tkinter.messagebox.showinfo(title="Error", message="Mode to fill is not selected!")
+                return
+
+            if self.fill_mode_selected is FillMode.FILL:
                 cv2.floodFill(self.cv_image, None, (x_mouse, y_mouse), color_tuple)  # pylint: disable=c-extension-no-member
-            else:
+
+            if self.fill_mode_selected is FillMode.PAINT:
                 poly = np.array([
                     (x_mouse - self.thickness_selected, y_mouse - self.thickness_selected),
                     (x_mouse + self.thickness_selected, y_mouse - self.thickness_selected),
@@ -277,25 +291,27 @@ class Application(tkinter.Frame):
             cv2.imwrite(self.map_file, self.cv_image)  # pylint: disable=c-extension-no-member
 
         def select_fill_type_callback(fill_type: FillType) -> None:
-            """ Change selection """
+            """ Change fill type selection """
             self.fill_type_selected = fill_type
 
-        def select_fill_mode_callback(fill_mode: bool) -> None:
-            """ Change selection """
+        def select_fill_mode_callback(fill_mode: FillMode) -> None:
+            """ Change fill mode selection """
             self.fill_mode_selected = fill_mode
 
         def select_fill_thickness_callback(more: bool) -> None:
-            """ Change selection """
+            """ Change thickness selection """
             if more:
-                if self.thickness_selected > MAX_THICKNESS:
+                if self.thickness_selected >= MAX_THICKNESS:
                     tkinter.messagebox.showinfo(title="Error", message="Too thick!")
                     return
                 self.thickness_selected += 1
             else:
-                if self.thickness_selected < 0:
+                if self.thickness_selected <= 1:
                     tkinter.messagebox.showinfo(title="Error", message="Not thick enough!")
                     return
                 self.thickness_selected -= 1
+            information = f"{self.thickness_selected} px"
+            self.thickness_value.display(information)
 
         self.menu_bar = tkinter.Menu(main_frame)
 
@@ -334,7 +350,7 @@ class Application(tkinter.Frame):
         frame_buttons.grid(row=2, column=2, sticky='nw')
 
         frame_actions_buttons = tkinter.LabelFrame(frame_buttons, text="Main")
-        frame_actions_buttons.grid(row=2, column=2, sticky='nw')
+        frame_actions_buttons.grid(row=1, column=1, sticky='nw')
 
         self.reload_button = tkinter.Button(frame_actions_buttons, text="Reload map file", command=reload_callback)
         self.reload_button.grid(row=1, column=1, sticky='we')
@@ -345,24 +361,36 @@ class Application(tkinter.Frame):
         self.reload_button = tkinter.Button(frame_actions_buttons, text="Save", command=save_callback)
         self.reload_button.grid(row=3, column=1, sticky='we')
 
-        frame_selection_buttons = tkinter.LabelFrame(frame_buttons, text="Selection")
-        frame_selection_buttons.grid(row=3, column=2, sticky='nw')
+        frame_selection_type_buttons = tkinter.LabelFrame(frame_buttons, text="Selection fill type")
+        frame_selection_type_buttons.grid(row=2, column=1, sticky='nw')
 
         for num, fill_type in enumerate(FillType):
-            self.reload_button = tkinter.Button(frame_selection_buttons, text=fill_type.name.title(), command=lambda ft=fill_type: select_fill_type_callback(ft))  # type: ignore
+            self.reload_button = tkinter.Button(frame_selection_type_buttons, text=fill_type.name.title(), command=lambda ft=fill_type: select_fill_type_callback(ft))  # type: ignore
             self.reload_button.grid(row=4 + num, column=1, sticky='we')
 
-        self.fill_button = tkinter.Button(frame_actions_buttons, text="Fill", command=lambda f=True: select_fill_mode_callback(f))  # type: ignore
-        self.fill_button.grid(row=4 + len(FillType), column=1, sticky='we')
+        frame_selection_mode_buttons = tkinter.LabelFrame(frame_buttons, text="Selection fill mode")
+        frame_selection_mode_buttons.grid(row=3, column=1, sticky='nw')
 
-        self.fill_button = tkinter.Button(frame_actions_buttons, text="Erase", command=lambda f=False: select_fill_mode_callback(f))  # type: ignore
-        self.fill_button.grid(row=5 + len(FillType), column=1, sticky='we')
+        self.fill_button = tkinter.Button(frame_selection_mode_buttons, text="Fill", command=lambda fm=FillMode.FILL: select_fill_mode_callback(fm))  # type: ignore
+        self.fill_button.grid(row=1, column=1, sticky='we')
 
-        self.fill_button = tkinter.Button(frame_actions_buttons, text="Smaller paintbrush", command=lambda m=False: select_fill_thickness_callback(m))  # type: ignore
-        self.fill_button.grid(row=6 + len(FillType), column=1, sticky='we')
+        self.fill_button = tkinter.Button(frame_selection_mode_buttons, text="Paint", command=lambda fm=FillMode.PAINT: select_fill_mode_callback(fm))  # type: ignore
+        self.fill_button.grid(row=2, column=1, sticky='we')
 
-        self.fill_button = tkinter.Button(frame_actions_buttons, text="Bigger paintbrush", command=lambda m=True: select_fill_thickness_callback(m))  # type: ignore
-        self.fill_button.grid(row=7 + len(FillType), column=1, sticky='we')
+        frame_selection_paintbrush_buttons = tkinter.LabelFrame(frame_buttons, text="Paintbrush")
+        frame_selection_paintbrush_buttons.grid(row=4, column=1, sticky='nw')
+
+        self.fill_button = tkinter.Button(frame_selection_paintbrush_buttons, text="Smaller paintbrush", command=lambda m=False: select_fill_thickness_callback(m))  # type: ignore
+        self.fill_button.grid(row=1, column=1, sticky='we')
+
+        self.fill_button = tkinter.Button(frame_selection_paintbrush_buttons, text="Bigger paintbrush", command=lambda m=True: select_fill_thickness_callback(m))  # type: ignore
+        self.fill_button.grid(row=2, column=1, sticky='we')
+
+        self.thickness_label = tkinter.Label(frame_selection_paintbrush_buttons, text="Size of paintbrush :")
+        self.thickness_label.grid(row=3, column=1, sticky='we')
+
+        self.thickness_value = MyText(self.master, frame_selection_paintbrush_buttons, height=INFO_HEIGHT, width=INFO_WIDTH)
+        self.thickness_value.grid(row=3, column=2, sticky='we')
 
     def menu_complete_quit(self) -> None:
         """ as it says """
