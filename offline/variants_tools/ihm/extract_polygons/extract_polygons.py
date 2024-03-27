@@ -245,6 +245,8 @@ class Application(tkinter.Frame):
             json_parameters_data['zones'][str(num)]['y_legend_pos'] = self.export_data['y_middle_pos'] + DELTA_LEGEND_EXPECTED_Y
 
             # update poly
+            if 'zone_areas' not in json_parameters_data:
+                json_parameters_data['zone_areas'] = {}
             if str(num) not in json_parameters_data['zone_areas']:
                 json_parameters_data['zone_areas'][str(num)] = {}
             json_parameters_data['zone_areas'][str(num)]['area'] = self.export_data['poly']
@@ -414,7 +416,7 @@ class Application(tkinter.Frame):
             export_buttons_table[legend] = export_button
 
         # display sorted (easier)
-        for num, (_, export_button) in enumerate(sorted(export_buttons_table.items(), key = lambda t: t[0])):
+        for num, (_, export_button) in enumerate(sorted(export_buttons_table.items(), key = lambda t: t[0].upper())):
             export_button.grid(row=num % BUTTONS_PER_COLUMN + 1, column=num // BUTTONS_PER_COLUMN + 1, sticky='we')
 
         frame_export_centers = tkinter.LabelFrame(main_frame, text="Export centers (click)")
