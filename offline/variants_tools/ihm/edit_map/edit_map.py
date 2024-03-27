@@ -44,6 +44,11 @@ COLORS_FILE_NAME = "./colors.ini"
 MAX_THICKNESS = 20
 START_THICKNESS = 10
 
+# Special coast
+CIRCLE_RADIUS = 7
+CIRCLE_COLOR = (0, 0, 0)  # Black
+CIRCLE_THICKNESS = 1
+
 
 @enum.unique
 class FillType(enum.Enum):
@@ -60,6 +65,7 @@ class FillMode(enum.Enum):
 
     FILL = enum.auto()
     PAINT = enum.auto()
+    SPECIAL_COAST = enum.auto()
 
 
 class VersionRecord(typing.NamedTuple):
@@ -225,7 +231,11 @@ class Application(tkinter.Frame):
 
         def click_callback(event: typing.Any) -> None:
 
-            if not self.fill_type_selected:
+            if not self.fill_mode_selected:
+                tkinter.messagebox.showinfo(title="Error", message="Mode to fill is not selected!")
+                return
+
+            if self.fill_mode_selected in [FillMode.FILL, FillMode.PAINT] and not self.fill_type_selected:
                 tkinter.messagebox.showinfo(title="Error", message="Type to fill is not selected!")
                 return
 
@@ -236,15 +246,9 @@ class Application(tkinter.Frame):
             # Get click position
             x_mouse, y_mouse = event.x, event.y
 
-            color = COLORS_TABLE[self.fill_type_selected]
-            color_tuple = tuple(reversed(color.values()))
-
-            # Apply change
-            if self.fill_mode_selected is None:
-                tkinter.messagebox.showinfo(title="Error", message="Mode to fill is not selected!")
-                return
-
             if self.fill_mode_selected is FillMode.FILL:
+                color = COLORS_TABLE[self.fill_type_selected]
+                color_tuple = tuple(reversed(color.values()))
                 cv2.floodFill(self.cv_image, None, (x_mouse, y_mouse), color_tuple)  # pylint: disable=c-extension-no-member
 
             if self.fill_mode_selected is FillMode.PAINT:
@@ -254,7 +258,12 @@ class Application(tkinter.Frame):
                     (x_mouse + self.thickness_selected, y_mouse + self.thickness_selected),
                     (x_mouse - self.thickness_selected, y_mouse + self.thickness_selected)
                 ])
+                color = COLORS_TABLE[self.fill_type_selected]
+                color_tuple = tuple(reversed(color.values()))
                 cv2.fillPoly(self.cv_image, [poly], color_tuple)  # pylint: disable=c-extension-no-member
+
+            if self.fill_mode_selected is FillMode.SPECIAL_COAST:
+                cv2.circle(self.cv_image, (x_mouse, y_mouse), CIRCLE_RADIUS, CIRCLE_COLOR, CIRCLE_THICKNESS)  # pylint: disable=c-extension-no-member
 
             # Pass image cv -> tkinter
             _, tmp_file = tempfile.mkstemp(suffix='.png')
@@ -376,6 +385,9 @@ class Application(tkinter.Frame):
 
         self.fill_button = tkinter.Button(frame_selection_mode_buttons, text="Paint", command=lambda fm=FillMode.PAINT: select_fill_mode_callback(fm))  # type: ignore
         self.fill_button.grid(row=2, column=1, sticky='we')
+
+        self.fill_button = tkinter.Button(frame_selection_mode_buttons, text="Special coast (circle)", command=lambda fm=FillMode.SPECIAL_COAST: select_fill_mode_callback(fm))  # type: ignore
+        self.fill_button.grid(row=3, column=1, sticky='we')
 
         frame_selection_paintbrush_buttons = tkinter.LabelFrame(frame_buttons, text="Paintbrush")
         frame_selection_paintbrush_buttons.grid(row=4, column=1, sticky='nw')
