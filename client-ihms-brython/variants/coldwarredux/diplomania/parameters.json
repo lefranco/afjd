@@ -870,7 +870,7 @@
         },
         "90": {
             "name": "",
-            "full_name": "Colombie côte Pacifique",
+            "full_name": "",
             "x_pos": 10,
             "y_pos": 484,
             "x_legend_pos": 10,
@@ -878,7 +878,7 @@
         },
         "91": {
             "name": "",
-            "full_name": "Colombie côte Atlantique",
+            "full_name": "",
             "x_pos": 46,
             "y_pos": 496,
             "x_legend_pos": 46,
@@ -886,7 +886,7 @@
         },
         "92": {
             "name": "",
-            "full_name": "Amérique centrale côte Pacifique",
+            "full_name": "",
             "x_pos": 66,
             "y_pos": 363,
             "x_legend_pos": 66,
@@ -894,7 +894,7 @@
         },
         "93": {
             "name": "",
-            "full_name": " Amérique centrale côte Atlantique ",
+            "full_name": "",
             "x_pos": 63,
             "y_pos": 404,
             "x_legend_pos": 63,
@@ -902,7 +902,7 @@
         },
         "94": {
             "name": "",
-            "full_name": "Mexique côte Pacifique",
+            "full_name": "",
             "x_pos": 167,
             "y_pos": 243,
             "x_legend_pos": 167,
@@ -910,7 +910,7 @@
         },
         "95": {
             "name": "",
-            "full_name": "Mexique côte Atlantique",
+            "full_name": "",
             "x_pos": 129,
             "y_pos": 293,
             "x_legend_pos": 129,
@@ -918,7 +918,7 @@
         },
         "96": {
             "name": "",
-            "full_name": "Canada Occidental côte Pacifique",
+            "full_name": "",
             "x_pos": 391,
             "y_pos": 228,
             "x_legend_pos": 391,
@@ -926,7 +926,7 @@
         },
         "97": {
             "name": "",
-            "full_name": "Canada Occidental côte Arctique",
+            "full_name": "",
             "x_pos": 469,
             "y_pos": 269,
             "x_legend_pos": 469,
@@ -934,7 +934,7 @@
         },
         "98": {
             "name": "",
-            "full_name": "France côte Atlantique",
+            "full_name": "",
             "x_pos": 590,
             "y_pos": 633,
             "x_legend_pos": 590,
@@ -942,7 +942,7 @@
         },
         "99": {
             "name": "",
-            "full_name": "France côte Méditerranée",
+            "full_name": "",
             "x_pos": 612,
             "y_pos": 634,
             "x_legend_pos": 612,
@@ -950,7 +950,7 @@
         },
         "100": {
             "name": "",
-            "full_name": "Léningrad côte Baltique",
+            "full_name": "",
             "x_pos": 686,
             "y_pos": 551,
             "x_legend_pos": 686,
@@ -958,7 +958,7 @@
         },
         "101": {
             "name": "",
-            "full_name": "Léningrad côte Mer de Norvège",
+            "full_name": "",
             "x_pos": 701,
             "y_pos": 497,
             "x_legend_pos": 701,
@@ -966,7 +966,7 @@
         },
         "102": {
             "name": "",
-            "full_name": "Corée du Nord côte Mer du Japon",
+            "full_name": "",
             "x_pos": 857,
             "y_pos": 171,
             "x_legend_pos": 857,
@@ -974,7 +974,7 @@
         },
         "103": {
             "name": "",
-            "full_name": "Corée du Nord côte Mer Jaune",
+            "full_name": "",
             "x_pos": 868,
             "y_pos": 176,
             "x_legend_pos": 868,
