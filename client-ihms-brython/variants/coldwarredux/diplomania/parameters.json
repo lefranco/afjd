@@ -161,10 +161,10 @@
         "5": {
             "name": "AlE",
             "full_name": "Allemagne de l’Est",
-            "x_pos": 670,
-            "y_pos": 588,
-            "x_legend_pos": 670,
-            "y_legend_pos": 574
+            "x_pos": 677,
+            "y_pos": 586,
+            "x_legend_pos": 677,
+            "y_legend_pos": 572
         },
         "6": {
             "name": "AlO",
@@ -179,7 +179,7 @@
             "full_name": "Amérique Centrale",
             "x_pos": 60,
             "y_pos": 398,
-            "x_legend_pos": 60,
+            "x_legend_pos": 63,
             "y_legend_pos": 384
         },
         "8": {
@@ -276,18 +276,18 @@
         "19": {
             "name": "CdN",
             "full_name": "Corée du Nord",
-            "x_pos": 867,
-            "y_pos": 173,
-            "x_legend_pos": 867,
-            "y_legend_pos": 159
+            "x_pos": 866,
+            "y_pos": 171,
+            "x_legend_pos": 888,
+            "y_legend_pos": 174
         },
         "20": {
             "name": "CdS",
             "full_name": "Corée du Sud",
-            "x_pos": 884,
+            "x_pos": 886,
             "y_pos": 153,
-            "x_legend_pos": 884,
-            "y_legend_pos": 139
+            "x_legend_pos": 904,
+            "y_legend_pos": 148
         },
         "21": {
             "name": "Col",
@@ -489,9 +489,9 @@
             "name": "Len",
             "full_name": "Léningrad",
             "x_pos": 709,
-            "y_pos": 518,
+            "y_pos": 527,
             "x_legend_pos": 709,
-            "y_legend_pos": 504,
+            "y_legend_pos": 513,
             "display": 2
         },
         "45": {
@@ -531,9 +531,9 @@
             "name": "MBA",
             "full_name": "Mer Baltique",
             "x_pos": 663,
-            "y_pos": 538,
+            "y_pos": 555,
             "x_legend_pos": 663,
-            "y_legend_pos": 524
+            "y_legend_pos": 541
         },
         "50": {
             "name": "MBE",
@@ -729,8 +729,8 @@
             "full_name": "Panama",
             "x_pos": 26,
             "y_pos": 435,
-            "x_legend_pos": 26,
-            "y_legend_pos": 421
+            "x_legend_pos": 34,
+            "y_legend_pos": 419
         },
         "74": {
             "name": "PAO",
@@ -789,7 +789,7 @@
             "full_name": "Suède",
             "x_pos": 641,
             "y_pos": 509,
-            "x_legend_pos": 641,
+            "x_legend_pos": 645,
             "y_legend_pos": 495
         },
         "81": {
@@ -803,10 +803,10 @@
         "82": {
             "name": "Tor",
             "full_name": "Toronto",
-            "x_pos": 334,
-            "y_pos": 351,
-            "x_legend_pos": 334,
-            "y_legend_pos": 337
+            "x_pos": 331,
+            "y_pos": 359,
+            "x_legend_pos": 331,
+            "y_legend_pos": 345
         },
         "83": {
             "name": "Tun",
@@ -906,7 +906,7 @@
             "x_pos": 167,
             "y_pos": 243,
             "x_legend_pos": 167,
-            "y_legend_pos": 229
+            "y_legend_pos": 228
         },
         "95": {
             "name": "",
@@ -967,18 +967,18 @@
         "102": {
             "name": "",
             "full_name": "",
-            "x_pos": 857,
+            "x_pos": 853,
             "y_pos": 171,
-            "x_legend_pos": 857,
-            "y_legend_pos": 157
+            "x_legend_pos": 855,
+            "y_legend_pos": 163
         },
         "103": {
             "name": "",
             "full_name": "",
             "x_pos": 868,
-            "y_pos": 176,
-            "x_legend_pos": 868,
-            "y_legend_pos": 162
+            "y_pos": 180,
+            "x_legend_pos": 885,
+            "y_legend_pos": 185
         }
     },
     "centers": {
