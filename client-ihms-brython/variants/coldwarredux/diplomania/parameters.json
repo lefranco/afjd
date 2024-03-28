@@ -635,10 +635,10 @@
         "62": {
             "name": "MNO",
             "full_name": "Mer Noire",
-            "x_pos": 757,
-            "y_pos": 610,
-            "x_legend_pos": 757,
-            "y_legend_pos": 596
+            "x_pos": 756,
+            "y_pos": 612,
+            "x_legend_pos": 756,
+            "y_legend_pos": 598
         },
         "63": {
             "name": "mon",
@@ -811,10 +811,10 @@
         "83": {
             "name": "Tun",
             "full_name": "Tunisie",
-            "x_pos": 655,
-            "y_pos": 716,
-            "x_legend_pos": 655,
-            "y_legend_pos": 702
+            "x_pos": 652,
+            "y_pos": 717,
+            "x_legend_pos": 652,
+            "y_legend_pos": 703
         },
         "84": {
             "name": "Tur",
@@ -881,24 +881,24 @@
             "full_name": "",
             "x_pos": 46,
             "y_pos": 496,
-            "x_legend_pos": 50,
-            "y_legend_pos": 480
+            "x_legend_pos": 71,
+            "y_legend_pos": 494
         },
         "92": {
             "name": "",
             "full_name": "",
             "x_pos": 66,
             "y_pos": 364,
-            "x_legend_pos": 53,
-            "y_legend_pos": 349
+            "x_legend_pos": 44,
+            "y_legend_pos": 363
         },
         "93": {
             "name": "",
             "full_name": "",
             "x_pos": 63,
             "y_pos": 404,
-            "x_legend_pos": 83,
-            "y_legend_pos": 394
+            "x_legend_pos": 85,
+            "y_legend_pos": 404
         },
         "94": {
             "name": "",
@@ -937,8 +937,8 @@
             "full_name": "",
             "x_pos": 590,
             "y_pos": 633,
-            "x_legend_pos": 569,
-            "y_legend_pos": 627
+            "x_legend_pos": 570,
+            "y_legend_pos": 628
         },
         "99": {
             "name": "",
@@ -969,8 +969,8 @@
             "full_name": "",
             "x_pos": 853,
             "y_pos": 171,
-            "x_legend_pos": 855,
-            "y_legend_pos": 163
+            "x_legend_pos": 853,
+            "y_legend_pos": 162
         },
         "103": {
             "name": "",
