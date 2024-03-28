@@ -378,9 +378,9 @@
             "name": "GME",
             "full_name": "Golfe du Mexique",
             "x_pos": 136,
-            "y_pos": 341,
+            "y_pos": 355,
             "x_legend_pos": 136,
-            "y_legend_pos": 327
+            "y_legend_pos": 341
         },
         "32": {
             "name": "Gre",
@@ -914,7 +914,7 @@
             "x_pos": 129,
             "y_pos": 293,
             "x_legend_pos": 129,
-            "y_legend_pos": 279
+            "y_legend_pos": 316
         },
         "96": {
             "name": "",
