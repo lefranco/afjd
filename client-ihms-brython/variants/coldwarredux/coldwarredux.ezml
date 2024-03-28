@@ -25,15 +25,15 @@ $ Côtes spéciales
 _
 $ Particularités de la carte
 
-La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question
+La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question (et des ponts pour les armées)
 
 (Canal en Egypte)
-Une flotte peut aller de Mer Noire à Mer Méditerrannée Est  (et réciproquement)
+Une flotte peut aller de Mer Noire à Mer Méditerrannée Est en traversant l'Egypte (et réciproquement).
 (Canal du Panama)
-Une flotte peut aller de Mer des Caraïbes à Mer Pacifique Est  (et réciproquement)
+Une flotte peut aller de Mer des Caraïbes à Mer Pacifique Est en traversant le Panama (et réciproquement).
 
 (Pont en Indonésie)
-Un armée peut aller de de Philippine en Australie en traversant l'Indonésie. (et réciproquement)
+Un armée peut aller de de Philippine en Australie en traversant l'Indonésie (et réciproquement).
 
 _
 $ Datation
@@ -57,97 +57,111 @@ Il y a quatre puissances dont les unités de départ sont les suivantes :
 .
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés|
-|E.U. | 3 | Los Angeles| Australie, New York | |
+|E.U. | 3 | New York | Australie, Los Angeles | |
 |U.R.S.S. | 4 | Moscou | Anadyr, Cuba, Leningrad | |
-|Chine | 3 | Uraunchi | Shangaï, Hanoï | |
+|Chine | 3 | Urumchi | Shangaï, Hanoï | |
 |Europe | 3 | France | Grande-Bretagne, Turquie | |
 =
 
 _
 $ Pièges de la variante
 
-Le Canada de l'Ouest ne borde pas le Groenland mais la Mer du nord boorde la Suède.
+Le Canada de l'Ouest ne borde pas le Groenland mais la Mer du nord borde la Suède.
 
 _
 $ Nomenclature
 
 = Régions et abbréviations de la variante
 | Abbréviation | Nom complet |
-| Adr | Mer Adriatique |
+| ATE | Atlantique Est |
+| ATO | Atlantique Ouest |
+| AfE | Afrique de l’Est |
 | AfN | Afrique du Nord |
-| Alb | Albanie |
-| Ank | Ankara |
-| Apu | Apulie |
-| Arm | Arménie |
-| AtN | Atlantique Nord |
-| Atl | Atlantique |
-| Bal | Mer Baltique |
-| Bar | Mer de Barents |
-| Bel | Belgique |
-| Ber | Berlin |
-| Boh | Bohème |
-| Bot | Golfe de Botnie |
-| Bou | Bourgogne |
-| Bre | Brest |
-| Bud | Budapest |
-| Bul | Bulgarie |
-| Cly | Clyde |
-| Con | Constantinople |
+| AlE | Allemagne de l’Est |
+| AlO | Allemagne de l’Ouest |
+| Ala | Alaska |
+| AmC | Amérique Centrale |
+| Ana | Anadyr |
+| Arb | Arabie |
+| AsS | Asie du Sud |
+| Aus | Australie |
+| BHU | Baie d’Hudson |
+| Bng | Bangladesh |
+| Bre | Brésil |
+| CaO | Canada Occidental |
+| Cau | Caucase |
+| CdN | Corée du Nord |
+| CdS | Corée du Sud |
+| Col | Colombie |
+| Cub | Cuba |
 | Dan | Danemark |
-| Edi | Édimbourg |
-| Ege | Mer d'Egée |
-| Esp | Espagne |
+| Egy | Egypte |
 | Fin | Finlande |
-| GLi | Golfe du Lion |
-| Gal | Galicie |
-| Gas | Gascogne |
+| Flo | Floride |
+| Fra | France |
+| GAL | Golfe d’Alaska |
+| GBE | Golfe du Bengale |
+| GBr |  Grande Bretagne  |
+| GME | Golfe du Mexique |
 | Gre | Grèce |
-| Hel | Baie de Helgoland |
-| Hol | Hollande |
-| Ion | Mer Ionienne |
-| Irl | Mer d'Irlande |
-| Kie | Kiel |
-| Lon | Londres |
-| Lvn | Livonie |
-| Lvp | Liverpool |
-| MNg | Mer de Norvège |
-| MOc | Méditerranée occidentale |
-| MOr | Méditerranée orientale |
-| MTy | Mer Tyrrhénienne |
-| Man | Manche |
-| Mar | Marseille |
-| Mos | Moscou |
-| Mun | Munich |
-| Nap | Naples |
+| Gro | Groënland |
+| Han | Hanoï |
+| Ibe | Ibérie |
+| Ids | Indonésie |
+| Ind | Inde |
+| Irk | Irak |
+| Irn | Iran |
+| Ita | Italie |
+| Jap | Japon |
+| Kur | Kurdistan |
+| LAn | Los Angeles |
+| Len | Léningrad |
+| Lev | Levant |
+| Lib | Libye |
+| MAR | Mer d’Arabie |
+| MBA | Mer Baltique |
+| MBE | Mer de Béring |
+| MCA | Mer des Caraïbes |
+| MCS | Mer de Chine Sud |
+| MDN | Mer du Nord |
+| MIO | Mer Ionienne |
+| MJN | Mer Jaune |
+| MJP | Mer du Japon |
+| MME | Mer Méditerranée Est |
+| MMO | Mer Méditerranée Ouest |
+| MNG | Mer de Norvège |
+| MNO | Mer Noire |
+| MRO | Mer Rouge |
+| Man | Mandchourie |
+| Mex | Mexique |
+| NYo | New York |
 | Nge | Norvège |
-| Noi | Mer Noire |
-| Nrd | Mer du Nord |
-| PGa | Pays de Galles |
-| Par | Paris |
-| Pic | Picardie |
-| Pie | Piémont |
-| Por | Portugal |
-| Pru | Prusse |
-| Rom | Rome |
-| Rou | Roumanie |
-| Ruh | Ruhr |
-| Seb | Sébastopol |
-| Ser | Serbie |
-| Sil | Silésie |
-| Ska | Skagerrak |
-| Smy | Smyrne |
-| StP | Saint-Pétersbourg |
+| OAR | Océan Arctique |
+| OIN | Océan Indien |
+| Our | Oural |
+| PAE | Pacifique Est |
+| PAO | Pacifique Ouest |
+| Pak | Pakistan |
+| Pan | Panama |
+| Phi | Philippines |
+| Que | Québec |
+| SVi | Sud Vietnam |
+| Sha | Shanghaï |
+| Sib | Sibérie |
+| SoW | South West |
 | Sue | Suède |
-| Syr | Syrie |
-| Tos | Toscane |
-| Tri | Trieste |
-| Tun | Tunis |
-| Tyr | Tyrol |
+| Tor | Toronto |
+| Tun | Tunisie |
+| Tur | Turquie |
 | Ukr | Ukraine |
-| Var | Varsovie |
-| Ven | Venise |
-| Vie | Vienne |
-| Yor | Yorkshire |
+| Ven | Vénézuela |
+| Vla | Vladivostok |
+| You | Yougoslavie |
+| afg | Afghanistan |
+| mid | Midwest |
+| mon | Mongolie |
+| mos | Moscou |
+| uru | Urumchi |
 =
 
 _
