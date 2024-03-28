@@ -18,6 +18,7 @@ INTERFACE_TABLE = {
     'successionautriche': ['diplomania'],
     'franceautriche': ['diplomania'],
     'crowded': ['diplomania'],
+    'coldwarredux': ['diplomania'],
 }
 
 
