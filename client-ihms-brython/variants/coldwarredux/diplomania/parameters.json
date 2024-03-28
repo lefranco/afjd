@@ -148,7 +148,7 @@
             "y_pos": 712,
             "x_legend_pos": 616,
             "y_legend_pos": 698,
-            "display": 2
+            "display": 4
         },
         "4": {
             "name": "Ala",
@@ -189,7 +189,7 @@
             "y_pos": 229,
             "x_legend_pos": 673,
             "y_legend_pos": 215,
-            "display": 3
+            "display": 2
         },
         "9": {
             "name": "Arb",
@@ -271,7 +271,7 @@
             "y_pos": 555,
             "x_legend_pos": 796,
             "y_legend_pos": 541,
-            "display": 3
+            "display": 2
         },
         "19": {
             "name": "CdN",
@@ -300,11 +300,11 @@
         "22": {
             "name": "Cub",
             "full_name": "Cuba",
-            "x_pos": 112,
-            "y_pos": 431,
-            "x_legend_pos": 112,
-            "y_legend_pos": 417,
-            "display": 3
+            "x_pos": 120,
+            "y_pos": 499,
+            "x_legend_pos": 120,
+            "y_legend_pos": 485,
+            "display": 2
         },
         "23": {
             "name": "Dan",
@@ -313,7 +313,7 @@
             "y_pos": 571,
             "x_legend_pos": 627,
             "y_legend_pos": 557,
-            "display": 2
+            "display": 4
         },
         "24": {
             "name": "Egy",
@@ -347,7 +347,7 @@
             "y_pos": 624,
             "x_legend_pos": 601,
             "y_legend_pos": 610,
-            "display": 2
+            "display": 4
         },
         "28": {
             "name": "GAL",
@@ -372,7 +372,7 @@
             "y_pos": 583,
             "x_legend_pos": 572,
             "y_legend_pos": 569,
-            "display": 2
+            "display": 4
         },
         "31": {
             "name": "GME",
@@ -389,7 +389,7 @@
             "y_pos": 656,
             "x_legend_pos": 723,
             "y_legend_pos": 642,
-            "display": 2
+            "display": 4
         },
         "33": {
             "name": "Gro",
@@ -398,7 +398,7 @@
             "y_pos": 414,
             "x_legend_pos": 532,
             "y_legend_pos": 400,
-            "display": 2
+            "display": 4
         },
         "34": {
             "name": "Han",
@@ -407,7 +407,7 @@
             "y_pos": 262,
             "x_legend_pos": 1063,
             "y_legend_pos": 248,
-            "display": 4
+            "display": 3
         },
         "35": {
             "name": "Ibe",
@@ -416,7 +416,7 @@
             "y_pos": 669,
             "x_legend_pos": 556,
             "y_legend_pos": 655,
-            "display": 2
+            "display": 4
         },
         "36": {
             "name": "Ids",
@@ -457,7 +457,7 @@
             "y_pos": 640,
             "x_legend_pos": 647,
             "y_legend_pos": 626,
-            "display": 2
+            "display": 4
         },
         "41": {
             "name": "Jap",
@@ -474,7 +474,7 @@
             "y_pos": 601,
             "x_legend_pos": 820,
             "y_legend_pos": 587,
-            "display": 2
+            "display": 4
         },
         "43": {
             "name": "LAn",
@@ -492,7 +492,7 @@
             "y_pos": 518,
             "x_legend_pos": 709,
             "y_legend_pos": 504,
-            "display": 3
+            "display": 2
         },
         "45": {
             "name": "Lev",
@@ -655,7 +655,7 @@
             "y_pos": 518,
             "x_legend_pos": 758,
             "y_legend_pos": 504,
-            "display": 3
+            "display": 2
         },
         "65": {
             "name": "MRO",
@@ -672,7 +672,7 @@
             "y_pos": 544,
             "x_legend_pos": 618,
             "y_legend_pos": 530,
-            "display": 2
+            "display": 4
         },
         "67": {
             "name": "NYo",
@@ -706,7 +706,7 @@
             "y_pos": 443,
             "x_legend_pos": 768,
             "y_legend_pos": 429,
-            "display": 3
+            "display": 2
         },
         "71": {
             "name": "PAE",
@@ -719,10 +719,10 @@
         "72": {
             "name": "Pak",
             "full_name": "Pakistan",
-            "x_pos": 987,
-            "y_pos": 505,
-            "x_legend_pos": 987,
-            "y_legend_pos": 491
+            "x_pos": 981,
+            "y_pos": 488,
+            "x_legend_pos": 981,
+            "y_legend_pos": 474
         },
         "73": {
             "name": "Pan",
@@ -764,7 +764,7 @@
             "y_pos": 225,
             "x_legend_pos": 970,
             "y_legend_pos": 211,
-            "display": 4
+            "display": 3
         },
         "78": {
             "name": "Sib",
@@ -773,7 +773,7 @@
             "y_pos": 312,
             "x_legend_pos": 776,
             "y_legend_pos": 298,
-            "display": 3
+            "display": 2
         },
         "79": {
             "name": "SoW",
@@ -823,7 +823,7 @@
             "y_pos": 624,
             "x_legend_pos": 784,
             "y_legend_pos": 610,
-            "display": 2
+            "display": 4
         },
         "85": {
             "name": "Ukr",
@@ -832,7 +832,7 @@
             "y_pos": 607,
             "x_legend_pos": 720,
             "y_legend_pos": 593,
-            "display": 3
+            "display": 2
         },
         "86": {
             "name": "uru",
@@ -841,7 +841,7 @@
             "y_pos": 363,
             "x_legend_pos": 954,
             "y_legend_pos": 349,
-            "display": 4
+            "display": 3
         },
         "87": {
             "name": "Ven",
@@ -858,7 +858,7 @@
             "y_pos": 208,
             "x_legend_pos": 781,
             "y_legend_pos": 194,
-            "display": 3
+            "display": 2
         },
         "89": {
             "name": "You",
@@ -873,23 +873,23 @@
             "full_name": "",
             "x_pos": 10,
             "y_pos": 484,
-            "x_legend_pos": 10,
-            "y_legend_pos": 470
+            "x_legend_pos": 15,
+            "y_legend_pos": 467
         },
         "91": {
             "name": "",
             "full_name": "",
             "x_pos": 46,
             "y_pos": 496,
-            "x_legend_pos": 46,
-            "y_legend_pos": 482
+            "x_legend_pos": 50,
+            "y_legend_pos": 480
         },
         "92": {
             "name": "",
             "full_name": "",
             "x_pos": 66,
-            "y_pos": 363,
-            "x_legend_pos": 66,
+            "y_pos": 364,
+            "x_legend_pos": 53,
             "y_legend_pos": 349
         },
         "93": {
@@ -897,8 +897,8 @@
             "full_name": "",
             "x_pos": 63,
             "y_pos": 404,
-            "x_legend_pos": 63,
-            "y_legend_pos": 390
+            "x_legend_pos": 83,
+            "y_legend_pos": 394
         },
         "94": {
             "name": "",
@@ -922,47 +922,47 @@
             "x_pos": 391,
             "y_pos": 228,
             "x_legend_pos": 391,
-            "y_legend_pos": 214
+            "y_legend_pos": 212
         },
         "97": {
             "name": "",
             "full_name": "",
             "x_pos": 469,
             "y_pos": 269,
-            "x_legend_pos": 469,
-            "y_legend_pos": 255
+            "x_legend_pos": 495,
+            "y_legend_pos": 275
         },
         "98": {
             "name": "",
             "full_name": "",
             "x_pos": 590,
             "y_pos": 633,
-            "x_legend_pos": 590,
-            "y_legend_pos": 619
+            "x_legend_pos": 569,
+            "y_legend_pos": 627
         },
         "99": {
             "name": "",
             "full_name": "",
             "x_pos": 612,
             "y_pos": 634,
-            "x_legend_pos": 612,
-            "y_legend_pos": 620
+            "x_legend_pos": 613,
+            "y_legend_pos": 652
         },
         "100": {
             "name": "",
             "full_name": "",
             "x_pos": 686,
             "y_pos": 551,
-            "x_legend_pos": 686,
-            "y_legend_pos": 537
+            "x_legend_pos": 673,
+            "y_legend_pos": 532
         },
         "101": {
             "name": "",
             "full_name": "",
             "x_pos": 701,
             "y_pos": 497,
-            "x_legend_pos": 701,
-            "y_legend_pos": 483
+            "x_legend_pos": 692,
+            "y_legend_pos": 462
         },
         "102": {
             "name": "",
@@ -3973,52 +3973,100 @@
         "22": {
             "area": [
                 [
-                    115,
-                    457
-                ],
-                [
-                    118,
-                    460
-                ],
-                [
-                    121,
-                    460
-                ],
-                [
-                    124,
-                    457
-                ],
-                [
-                    125,
-                    458
-                ],
-                [
-                    125,
-                    464
-                ],
-                [
-                    123,
-                    466
-                ],
-                [
-                    124,
-                    475
+                    111,
+                    390
                 ],
                 [
                     120,
-                    478
+                    392
                 ],
                 [
-                    116,
-                    474
+                    131,
+                    402
                 ],
                 [
-                    116,
-                    463
+                    136,
+                    419
                 ],
                 [
-                    114,
-                    460
+                    133,
+                    443
+                ],
+                [
+                    134,
+                    450
+                ],
+                [
+                    132,
+                    469
+                ],
+                [
+                    138,
+                    497
+                ],
+                [
+                    137,
+                    516
+                ],
+                [
+                    134,
+                    526
+                ],
+                [
+                    129,
+                    530
+                ],
+                [
+                    117,
+                    532
+                ],
+                [
+                    111,
+                    529
+                ],
+                [
+                    105,
+                    521
+                ],
+                [
+                    102,
+                    503
+                ],
+                [
+                    102,
+                    484
+                ],
+                [
+                    100,
+                    479
+                ],
+                [
+                    100,
+                    469
+                ],
+                [
+                    98,
+                    466
+                ],
+                [
+                    101,
+                    455
+                ],
+                [
+                    101,
+                    427
+                ],
+                [
+                    103,
+                    420
+                ],
+                [
+                    103,
+                    406
+                ],
+                [
+                    108,
+                    392
                 ]
             ]
         },
