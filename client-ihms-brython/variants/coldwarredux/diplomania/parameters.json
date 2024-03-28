@@ -300,10 +300,10 @@
         "22": {
             "name": "Cub",
             "full_name": "Cuba",
-            "x_pos": 120,
-            "y_pos": 499,
-            "x_legend_pos": 120,
-            "y_legend_pos": 485,
+            "x_pos": 117,
+            "y_pos": 432,
+            "x_legend_pos": 117,
+            "y_legend_pos": 418,
             "display": 2
         },
         "23": {
