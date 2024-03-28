@@ -59,23 +59,6 @@
             ]
         },
         "2": {
-            "name": "Europe",
-            "adjective_name": "europeen",
-            "letter_name": "E",
-            "red": [
-                83,
-                152
-            ],
-            "green": [
-                210,
-                228
-            ],
-            "blue": [
-                224,
-                237
-            ]
-        },
-        "3": {
             "name": "URSS",
             "adjective_name": "sovietique",
             "letter_name": "S",
@@ -92,7 +75,7 @@
                 158
             ]
         },
-        "4": {
+        "3": {
             "name": "Chine",
             "adjective_name": "chinois",
             "letter_name": "C",
@@ -107,6 +90,23 @@
             "blue": [
                 51,
                 133
+            ]
+        },
+        "4": {
+            "name": "Europe",
+            "adjective_name": "europeen",
+            "letter_name": "E",
+            "red": [
+                83,
+                152
+            ],
+            "green": [
+                210,
+                228
+            ],
+            "blue": [
+                224,
+                237
             ]
         }
     },
