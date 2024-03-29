@@ -64,7 +64,7 @@ def main() -> None:
         write_file.write("\n")
         write_file.write("= Régions et abbréviations de la variante\n")
         write_file.write("| Abbréviation | Nom complet |\n")
-        for name, full_name in sorted(abbr2name.items(), key=lambda t: t[0]):
+        for name, full_name in sorted(abbr2name.items(), key=lambda t: t[0].upper()):
             write_file.write(f"| {name} | {full_name} |\n")
         write_file.write("=\n")
         write_file.write("\n")
