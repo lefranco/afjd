@@ -171,16 +171,16 @@
             "full_name": "Allemagne de l’Ouest",
             "x_pos": 621,
             "y_pos": 592,
-            "x_legend_pos": 621,
-            "y_legend_pos": 578
+            "x_legend_pos": 640,
+            "y_legend_pos": 610
         },
         "7": {
             "name": "AmC",
             "full_name": "Amérique Centrale",
-            "x_pos": 60,
-            "y_pos": 398,
-            "x_legend_pos": 63,
-            "y_legend_pos": 384
+            "x_pos": 46,
+            "y_pos": 400,
+            "x_legend_pos": 62,
+            "y_legend_pos": 391
         },
         "8": {
             "name": "Ana",
@@ -226,10 +226,10 @@
         "13": {
             "name": "Aus",
             "full_name": "Australie",
-            "x_pos": 1217,
+            "x_pos": 1210,
             "y_pos": 15,
-            "x_legend_pos": 1217,
-            "y_legend_pos": 1,
+            "x_legend_pos": 1195,
+            "y_legend_pos": 9,
             "display": 1
         },
         "14": {
@@ -278,7 +278,7 @@
             "full_name": "Corée du Nord",
             "x_pos": 866,
             "y_pos": 171,
-            "x_legend_pos": 888,
+            "x_legend_pos": 896,
             "y_legend_pos": 174
         },
         "20": {
