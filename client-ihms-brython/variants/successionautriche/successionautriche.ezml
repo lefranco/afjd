@@ -83,7 +83,6 @@ $ Nomenclature
 
 = Régions et abbréviations de la variante
 | Abbréviation | Nom complet |
-| Abbréviation | Nom complet |
 | ALB | Albanie |
 | ALG | Algérie |
 | ANA | Anatolie |
@@ -93,6 +92,7 @@ $ Nomenclature
 | ARA | Aragon |
 | BEL | Belgrade |
 | BER | Berlin |
+| bHEL | Baie de Héligoland |
 | BOH | Bohème |
 | BOR | Bordeaux |
 | BOS | Bosnie |
@@ -108,12 +108,18 @@ $ Nomenclature
 | COR | Corse |
 | CRI | Crimée |
 | CRO | Croatie |
+| cSTG | Canal Saint Georges |
 | DAL | Dalmatie |
 | DAN | Danemark |
+| dMAN | La Manche |
+| dSKA | Détroit de Skaggerak |
 | ECO | Ecosse |
 | FIN | Finlande |
 | FLA | Flandres |
 | GAL | Galicie |
+| gBOT | Golfe de Botnie |
+| gGAS | Golfe de Gascogne |
+| gLIO | Golfe de Lyon |
 | GRE | Grèce |
 | HAN | Hanovre |
 | HES | Hesse |
@@ -125,14 +131,26 @@ $ Nomenclature
 | LON | Londres |
 | LOR | Lorraine |
 | LUB | Lublin |
+| mADR | Mer Adriatique |
 | MAR | Maroc |
+| mBAL | Mer Baltique |
+| mEGE | Mer Egée |
 | MEK | Mecklemburg |
 | MIL | Milan |
+| mION | Mer Ionienne |
+| mNOI | Mer Noire |
+| mNRD | Mer du Nord |
+| mNVG | Mer de Norvège |
+| mOCC | Mediteranée Occidentale |
 | MOL | Moldavie |
+| mORI | Mediteranée Orientale |
 | MOS | Moscou |
+| mTYR | Mer Tyrrhénienne |
 | MUN | Munich |
 | NAP | Naples |
 | NOR | Norvège |
+| oATL | Atlantique Moyen |
+| oEXT | Atlantique Extérieur |
 | PAL | Palatinat |
 | PAP | Papauté |
 | PAR | Paris |
@@ -167,26 +185,8 @@ $ Nomenclature
 | VLY | Volhynie |
 | WES | Westphalie |
 | YOR | York |
-| bHEL | Baie de Héligoland |
-| cSTG | Canal Saint Georges |
-| dMAN | La Manche |
-| dSKA | Détroit de Skaggerak |
-| gBOT | Golfe de Botnie |
-| gGAS | Golfe de Gascogne |
-| gLIO | Golfe de Lyon |
-| mADR | Mer Adriatique |
-| mBAL | Mer Baltique |
-| mEGE | Mer Egée |
-| mION | Mer Ionienne |
-| mNOI | Mer Noire |
-| mNRD | Mer du Nord |
-| mNVG | Mer de Norvège |
-| mOCC | Mediteranée Occidentale |
-| mORI | Mediteranée Orientale |
-| mTYR | Mer Tyrrhénienne |
-| oATL | Atlantique Moyen |
-| oEXT | Atlantique Extérieur |
 =
+
 
 
 _
