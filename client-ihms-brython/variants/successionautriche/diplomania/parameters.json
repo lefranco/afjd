@@ -595,8 +595,7 @@
             "x_pos": 384,
             "y_pos": 433,
             "x_legend_pos": 379,
-            "y_legend_pos": 420,
-            "display": 5
+            "y_legend_pos": 420
         },
         "48": {
             "name": "SAV",
