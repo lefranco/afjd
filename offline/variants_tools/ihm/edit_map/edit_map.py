@@ -13,6 +13,7 @@ import configparser
 import sys
 import enum
 import tempfile
+import json
 
 import tkinter
 import tkinter.messagebox
@@ -171,12 +172,15 @@ class MyText(tkinter.Text):
 class Application(tkinter.Frame):
     """ Tkinter application """
 
-    def __init__(self, map_file: str, master: tkinter.Tk):
+    def __init__(self, map_file: str, parameters_file: typing.Optional[str], master: tkinter.Tk):
 
         # standard stuff
         tkinter.Frame.__init__(self, master)
         self.master = master
         self.grid()
+
+        # map file
+        self.parameters_file = parameters_file
 
         # map file
         self.map_file = map_file
@@ -218,6 +222,47 @@ class Application(tkinter.Frame):
             # clicking
             self.canvas.bind("<Button-1>", click_callback)
 
+        def coasts_zones_callback(erase: bool) -> None:
+
+            if self.parameters_file is None:
+                tkinter.messagebox.showinfo(title="Error", message=("Please pass parameters file json as parameter of program!"))
+                return
+
+            if not os.path.exists(self.parameters_file):
+                tkinter.messagebox.showinfo(title="Error", message=(f"File '{self.parameters_file}' does not seem to exist, please advise !"))
+                return
+
+            # load parameters from json data file
+            with open(self.parameters_file, "r", encoding='utf-8') as read_file:
+                try:
+                    json_parameters_data = json.load(read_file)
+                except Exception as exception:  # pylint: disable=broad-except
+                    tkinter.messagebox.showinfo(title="Error", message=(f"Failed to load {self.parameters_file} : {exception}"))
+                    return
+
+            if erase:
+                color = COLORS_TABLE[FillType.LAND_COAST]
+                color_tuple = tuple(reversed(color.values()))
+            else:
+                color_tuple = CIRCLE_COLOR
+
+            for zone_data in json_parameters_data['zones'].values():
+                if zone_data['name']:
+                    continue
+                x_pos = zone_data['x_pos']
+                y_pos = zone_data['y_pos']
+
+                cv2.circle(self.cv_image, (x_pos, y_pos), CIRCLE_RADIUS, color_tuple, CIRCLE_THICKNESS)  # pylint: disable=c-extension-no-member
+
+            # Pass image cv -> tkinter
+            _, tmp_file = tempfile.mkstemp(suffix='.png')
+            cv2.imwrite(tmp_file, self.cv_image)  # pylint: disable=c-extension-no-member
+            self.image_map = tkinter.PhotoImage(file=tmp_file)
+            os.remove(tmp_file)
+
+            # Display on screen
+            put_image()
+
         def reload_callback() -> None:
 
             # Reload from file
@@ -247,6 +292,7 @@ class Application(tkinter.Frame):
             x_mouse, y_mouse = event.x, event.y
 
             if self.fill_mode_selected is FillMode.FILL:
+                assert self.fill_type_selected is not None
                 color = COLORS_TABLE[self.fill_type_selected]
                 color_tuple = tuple(reversed(color.values()))
                 cv2.floodFill(self.cv_image, None, (x_mouse, y_mouse), color_tuple)  # pylint: disable=c-extension-no-member
@@ -258,6 +304,7 @@ class Application(tkinter.Frame):
                     (x_mouse + self.thickness_selected, y_mouse + self.thickness_selected),
                     (x_mouse - self.thickness_selected, y_mouse + self.thickness_selected)
                 ])
+                assert self.fill_type_selected is not None
                 color = COLORS_TABLE[self.fill_type_selected]
                 color_tuple = tuple(reversed(color.values()))
                 cv2.fillPoly(self.cv_image, [poly], color_tuple)  # pylint: disable=c-extension-no-member
@@ -370,6 +417,12 @@ class Application(tkinter.Frame):
         self.reload_button = tkinter.Button(frame_actions_buttons, text="Save", command=save_callback)
         self.reload_button.grid(row=3, column=1, sticky='we')
 
+        self.reload_button = tkinter.Button(frame_actions_buttons, text="Erase coasts zones", command=lambda e=True: coasts_zones_callback(e))
+        self.reload_button.grid(row=4, column=1, sticky='we')
+
+        self.reload_button = tkinter.Button(frame_actions_buttons, text="Draw coasts zones", command=lambda e=False: coasts_zones_callback(e))
+        self.reload_button.grid(row=5, column=1, sticky='we')
+
         frame_selection_type_buttons = tkinter.LabelFrame(frame_buttons, text="Selection fill type")
         frame_selection_type_buttons.grid(row=2, column=1, sticky='nw')
 
@@ -413,7 +466,7 @@ class Application(tkinter.Frame):
         self.master.quit()
 
 
-def main_loop(map_file: str) -> None:
+def main_loop(map_file: str, parameters_file: typing.Optional[str]) -> None:
     """ main_loop """
 
     root = tkinter.Tk()
@@ -430,7 +483,7 @@ def main_loop(map_file: str) -> None:
     # create app
     root.title(window_name)
 
-    app = Application(map_file, master=root)
+    app = Application(map_file, parameters_file, master=root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
 
     # tkinter main loop
@@ -446,15 +499,17 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-m', '--map_file', required=True, help='Map file to edit')
+    parser.add_argument('-p', '--parameters_file', required=False, help='Load a parameters file at start (for erasing special centers)')
     args = parser.parse_args()
 
     #  load files at start
     map_file = args.map_file
+    parameters_file = args.parameters_file
 
     if not os.path.exists(map_file):
         print(f"File '{map_file}' does not seem to exist, please advise !", file=sys.stderr)
         sys.exit(-1)
-    main_loop(map_file)
+    main_loop(map_file, parameters_file)
 
     print("The End")
 
