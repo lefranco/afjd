@@ -14,7 +14,7 @@ def main() -> None:
     """ main """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input_file', required=True, help='Input  json file')
+    parser.add_argument('-i', '--input_file', required=True, help='Input and output json file')
     parser.add_argument('-x', '--x_shift', required=True, type=int, help='x_shift')
     parser.add_argument('-y', '--y_shift', required=True, type=int, help='y_shift')
     args = parser.parse_args()
@@ -22,7 +22,7 @@ def main() -> None:
     json_input = args.input_file
     x_shift = args.x_shift
     y_shift = args.y_shift
-    json_output = f"{json_input}.shifted"
+    json_output = json_input
 
     # load parameters from json data file
     with open(json_input, "r", encoding='utf-8') as read_file:
