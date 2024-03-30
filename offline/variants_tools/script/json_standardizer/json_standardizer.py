@@ -14,7 +14,7 @@ def main() -> None:
     """ main """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input_file', required=True, help='Input  json file')
+    parser.add_argument('-i', '--input_file', required=True, help='Input and output json file')
     args = parser.parse_args()
 
     json_input = args.input_file

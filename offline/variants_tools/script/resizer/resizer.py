@@ -14,13 +14,13 @@ def main() -> None:
     """ main """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input_file', required=True, help='Input  json file')
+    parser.add_argument('-i', '--input_file', required=True, help='Input and output json file')
     parser.add_argument('-s', '--scale', required=True, type=float, help='scale')
     args = parser.parse_args()
 
     json_input = args.input_file
     scale = args.scale
-    json_output = f"{json_input}.scaled"
+    json_output = json_input
 
     # load parameters from json data file
     with open(json_input, "r", encoding='utf-8') as read_file:

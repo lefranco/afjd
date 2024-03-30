@@ -25,10 +25,10 @@ echo "heigh=$h"
 
 ratio=$2
 
-convert $1 -resize ${ratio}% $1.scaled
+convert $1 -resize ${ratio}% $1
 
-w=$(convert $1.scaled -format "%[w]" info:)
-h=$(convert $1.scaled -format "%[h]" info:)
+w=$(convert $1 -format "%[w]" info:)
+h=$(convert $1 -format "%[h]" info:)
 
 echo "After"
 echo "width=$w"
