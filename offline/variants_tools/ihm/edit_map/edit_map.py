@@ -14,6 +14,7 @@ import sys
 import enum
 import tempfile
 import json
+import math
 
 import tkinter
 import tkinter.messagebox
@@ -46,9 +47,10 @@ MAX_THICKNESS = 20
 START_THICKNESS = 10
 
 # Special coast
-CIRCLE_RADIUS = 7
-CIRCLE_COLOR = (0, 0, 0)  # Black
-CIRCLE_THICKNESS = 1
+COAST_MARKER_RADIUS = 7
+COAST_MARKER_COLOR = (0, 0, 0)  # Black
+COAST_MARKER_THICKNESS = 1
+COAST_MARKER_DIVISIONS = 6
 
 
 @enum.unique
@@ -211,6 +213,17 @@ class Application(tkinter.Frame):
         def about() -> None:
             tkinter.messagebox.showinfo("About", str(VERSION_INFORMATION))
 
+        def hexagon(x_pos: int, y_pos: int, color_tuple: typing.Tuple[int,...]) -> None:
+
+            # calculate points
+            subangle = 2 * math.pi / COAST_MARKER_DIVISIONS
+            points = np.array([[x_pos + COAST_MARKER_RADIUS * math.cos(subangle * i_val),
+                                y_pos + COAST_MARKER_RADIUS * math.sin(subangle * i_val)]
+                               for i_val in range(COAST_MARKER_DIVISIONS)], np.int32)
+
+            # draw
+            cv2.polylines(self.cv_image, [points], True, color_tuple, COAST_MARKER_THICKNESS)  # pylint: disable=c-extension-no-member
+
         def put_image() -> None:
 
             self.canvas = tkinter.Canvas(frame_carto, width=self.image_map.width(), height=self.image_map.height())  # pylint: disable=attribute-defined-outside-init
@@ -244,15 +257,17 @@ class Application(tkinter.Frame):
                 color = COLORS_TABLE[FillType.LAND_COAST]
                 color_tuple = tuple(reversed(color.values()))
             else:
-                color_tuple = CIRCLE_COLOR
+                color_tuple = COAST_MARKER_COLOR
 
             for zone_data in json_parameters_data['zones'].values():
+
                 if zone_data['name']:
                     continue
-                x_pos = zone_data['x_pos']
-                y_pos = zone_data['y_pos']
 
-                cv2.circle(self.cv_image, (x_pos, y_pos), CIRCLE_RADIUS, color_tuple, CIRCLE_THICKNESS)  # pylint: disable=c-extension-no-member
+                x_center = zone_data['x_pos']
+                y_center = zone_data['y_pos']
+
+                hexagon(x_center, y_center, color_tuple)
 
             # Pass image cv -> tkinter
             _, tmp_file = tempfile.mkstemp(suffix='.png')
@@ -310,7 +325,8 @@ class Application(tkinter.Frame):
                 cv2.fillPoly(self.cv_image, [poly], color_tuple)  # pylint: disable=c-extension-no-member
 
             if self.fill_mode_selected is FillMode.SPECIAL_COAST:
-                cv2.circle(self.cv_image, (x_mouse, y_mouse), CIRCLE_RADIUS, CIRCLE_COLOR, CIRCLE_THICKNESS)  # pylint: disable=c-extension-no-member
+                color_tuple = COAST_MARKER_COLOR
+                hexagon(x_mouse, y_mouse, color_tuple)
 
             # Pass image cv -> tkinter
             _, tmp_file = tempfile.mkstemp(suffix='.png')
@@ -417,10 +433,10 @@ class Application(tkinter.Frame):
         self.reload_button = tkinter.Button(frame_actions_buttons, text="Save", command=save_callback)
         self.reload_button.grid(row=3, column=1, sticky='we')
 
-        self.reload_button = tkinter.Button(frame_actions_buttons, text="Erase coasts zones", command=lambda e=True: coasts_zones_callback(e))
+        self.reload_button = tkinter.Button(frame_actions_buttons, text="Erase coasts zones", command=lambda e=True: coasts_zones_callback(e))  # type: ignore
         self.reload_button.grid(row=4, column=1, sticky='we')
 
-        self.reload_button = tkinter.Button(frame_actions_buttons, text="Draw coasts zones", command=lambda e=False: coasts_zones_callback(e))
+        self.reload_button = tkinter.Button(frame_actions_buttons, text="Draw coasts zones", command=lambda e=False: coasts_zones_callback(e))  # type: ignore
         self.reload_button.grid(row=5, column=1, sticky='we')
 
         frame_selection_type_buttons = tkinter.LabelFrame(frame_buttons, text="Selection fill type")
@@ -439,7 +455,7 @@ class Application(tkinter.Frame):
         self.fill_button = tkinter.Button(frame_selection_mode_buttons, text="Paint", command=lambda fm=FillMode.PAINT: select_fill_mode_callback(fm))  # type: ignore
         self.fill_button.grid(row=2, column=1, sticky='we')
 
-        self.fill_button = tkinter.Button(frame_selection_mode_buttons, text="Special coast (circle)", command=lambda fm=FillMode.SPECIAL_COAST: select_fill_mode_callback(fm))  # type: ignore
+        self.fill_button = tkinter.Button(frame_selection_mode_buttons, text="Special coast (hexagon)", command=lambda fm=FillMode.SPECIAL_COAST: select_fill_mode_callback(fm))  # type: ignore
         self.fill_button.grid(row=3, column=1, sticky='we')
 
         frame_selection_paintbrush_buttons = tkinter.LabelFrame(frame_buttons, text="Paintbrush")
