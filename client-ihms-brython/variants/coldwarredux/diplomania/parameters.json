@@ -278,8 +278,8 @@
             "full_name": "Corée du Nord",
             "x_pos": 868,
             "y_pos": 175,
-            "x_legend_pos": 868,
-            "y_legend_pos": 161
+            "x_legend_pos": 896,
+            "y_legend_pos": 174
         },
         "20": {
             "name": "CdS",
@@ -873,32 +873,32 @@
             "full_name": "",
             "x_pos": 10,
             "y_pos": 484,
-            "x_legend_pos": 10,
-            "y_legend_pos": 470
+            "x_legend_pos": 15,
+            "y_legend_pos": 467
         },
         "91": {
             "name": "",
             "full_name": "",
             "x_pos": 46,
             "y_pos": 496,
-            "x_legend_pos": 46,
-            "y_legend_pos": 482
+            "x_legend_pos": 71,
+            "y_legend_pos": 494
         },
         "92": {
             "name": "",
             "full_name": "",
             "x_pos": 66,
             "y_pos": 364,
-            "x_legend_pos": 66,
-            "y_legend_pos": 350
+            "x_legend_pos": 44,
+            "y_legend_pos": 363
         },
         "93": {
             "name": "",
             "full_name": "",
             "x_pos": 63,
             "y_pos": 404,
-            "x_legend_pos": 63,
-            "y_legend_pos": 390
+            "x_legend_pos": 85,
+            "y_legend_pos": 404
         },
         "94": {
             "name": "",
@@ -906,7 +906,7 @@
             "x_pos": 167,
             "y_pos": 243,
             "x_legend_pos": 167,
-            "y_legend_pos": 229
+            "y_legend_pos": 228
         },
         "95": {
             "name": "",
@@ -914,7 +914,7 @@
             "x_pos": 129,
             "y_pos": 293,
             "x_legend_pos": 129,
-            "y_legend_pos": 279
+            "y_legend_pos": 316
         },
         "96": {
             "name": "",
@@ -922,63 +922,63 @@
             "x_pos": 391,
             "y_pos": 228,
             "x_legend_pos": 391,
-            "y_legend_pos": 214
+            "y_legend_pos": 212
         },
         "97": {
             "name": "",
             "full_name": "",
             "x_pos": 469,
             "y_pos": 269,
-            "x_legend_pos": 469,
-            "y_legend_pos": 255
+            "x_legend_pos": 495,
+            "y_legend_pos": 275
         },
         "98": {
             "name": "",
             "full_name": "",
             "x_pos": 592,
             "y_pos": 633,
-            "x_legend_pos": 592,
-            "y_legend_pos": 619
+            "x_legend_pos": 570,
+            "y_legend_pos": 628
         },
         "99": {
             "name": "",
             "full_name": "",
             "x_pos": 612,
             "y_pos": 634,
-            "x_legend_pos": 612,
-            "y_legend_pos": 620
+            "x_legend_pos": 613,
+            "y_legend_pos": 652
         },
         "100": {
             "name": "",
             "full_name": "",
             "x_pos": 686,
             "y_pos": 551,
-            "x_legend_pos": 686,
-            "y_legend_pos": 537
+            "x_legend_pos": 673,
+            "y_legend_pos": 532
         },
         "101": {
             "name": "",
             "full_name": "",
             "x_pos": 701,
             "y_pos": 497,
-            "x_legend_pos": 701,
-            "y_legend_pos": 483
+            "x_legend_pos": 692,
+            "y_legend_pos": 462
         },
         "102": {
             "name": "",
             "full_name": "",
             "x_pos": 855,
             "y_pos": 174,
-            "x_legend_pos": 855,
-            "y_legend_pos": 160
+            "x_legend_pos": 853,
+            "y_legend_pos": 162
         },
         "103": {
             "name": "",
             "full_name": "",
             "x_pos": 870,
             "y_pos": 178,
-            "x_legend_pos": 870,
-            "y_legend_pos": 164
+            "x_legend_pos": 885,
+            "y_legend_pos": 185
         }
     },
     "centers": {
