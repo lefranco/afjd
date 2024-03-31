@@ -220,6 +220,7 @@ def acting_threaded_procedure() -> None:
 
         # get initial token
         jwt_token = get_token()
+        timestamp_token = time.time()
 
         while True:
 
@@ -271,9 +272,11 @@ def acting_threaded_procedure() -> None:
                     mylogger.LOGGER.error("Exception occured with Forgiver, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
-            # renew token every day
+            # renew token at faster every hour at slower every day
             if hour_now == 23:
-                jwt_token = get_token()
+                if timestamp_now > timestamp_token + 3600:
+                    jwt_token = get_token()
+                    timestamp_token = time.time()
 
             # go to sleep
             wait_time = time_to_wait()
