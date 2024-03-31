@@ -7184,6 +7184,10 @@ class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ign
         tournaments_dict: typing.Dict[int, typing.Dict[str, typing.Any]] = {}
         for game_id in concerned_games_list:
 
+            # some game do not have a tournaneent yet
+            if game_id not in groupings_dict:
+                continue
+
             # get start date
             start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement)
 
