@@ -25,14 +25,14 @@ a:visited{
     width: 100%;
     display: inline-block;
     color: #111;
-	background-color: #CBE2FE;
+    background-color: #CBE2FE;
     border-radius: 5px;
     border: 1px solid rgba(0,0,0,0.3);
 }
 
 .btn-menu:hover {
     background-color: #9E9E9E;
-	color: white;
+    color: white;
     border-color: rgba(0,0,0,0.5);
 }
 
@@ -40,7 +40,6 @@ a:visited{
     background-color: #CCC;
     border-color: rgba(0,0,0,0.8);
 }
-
 
 
 .btn-inside {
@@ -51,7 +50,7 @@ a:visited{
 }
 
 .btn-inside:hover {
-	color: black;
+    color: black;
     background-color: #f4f4f4;
     border-color: rgba(0,0,0,0.6);
 }
@@ -60,8 +59,6 @@ a:visited{
     background-color: #DDD;
     border-color: rgba(0,0,0,0.9);
 }
-
-
 
 .code_failed{
     color: grey;
@@ -141,7 +138,6 @@ a:visited{
   box-shadow: 8px 8px 5px #444;
   padding: 8px 12px;
   background-color: #EDEDED;
-/*  background-image: linear-gradient(180deg, #989898, #838383 40%, #EDEDED); */
 }
 
 
@@ -287,18 +283,14 @@ fieldset{
 
 
 #home {
-	background-color: #EDEDED;
-/*    background: linear-gradient(-45deg, #eeeeee, #e7e7e7e7, #a6a6a6, #232323); */
+    background-color: #EDEDED;
     background-size: 400% 400%;
-/*    animation: gradient 15s ease infinite; */
 }
 
 
 #login {
-	background-color: #EDEDED;
-/*    background: linear-gradient(-45deg, #a0a0a0, #e7e7e7, #a6a6a6, #222222); */
+    background-color: #EDEDED;
     background-size: 400% 400%;
-/*    animation: gradient 15s ease infinite; */
 }
 
 #page {
@@ -307,38 +299,16 @@ fieldset{
 }
 
 #create {
-	background-color: #EDEDED;
-/*    background: linear-gradient(-45deg, #c0c0c0, #c7c7c7, #a6a6a6, #444444); */
+    background-color: #EDEDED;
     background-size: 400% 400%;
-/*    animation: gradient 15s ease infinite; */
 }
 
 #moderate {
-	background-color: #EDEDED;
-/*    background: linear-gradient(-45deg, #d0d0d0, #b7b7b7, #a6a6a6, #555555); */
+    background-color: #EDEDED;
     background-size: 400% 400%;
-/*    animation: gradient 15s ease infinite; */
 }
 
 #admin {
-	background-color: #EDEDED;
-/*    background: linear-gradient(-45deg, #dddddd, #e7e7e7e7, #a6a6a6, #232323); */
+    background-color: #EDEDED;
     background-size: 400% 400%;
-/*    animation: gradient 15s ease infinite; */
 }
-
-/*
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
-*/
