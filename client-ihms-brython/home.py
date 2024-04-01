@@ -109,12 +109,10 @@ def formatted_games(suffering_games):
     # init
     games_content = html.DIV()
 
-    arrival = 'rejoindre'
-
     game_content_table = html.TABLE()
     for game in suffering_games:
         row = html.TR()
-        link = html.A(href=f"?game={game}&arrival={arrival}", target="_blank")
+        link = html.A(href=f"?game={game}", target="_blank")
         link <= game
         col = html.TD(link)
         row <= col
@@ -219,9 +217,9 @@ def show_news():
     div_a5 <= html.BR()
     suffering_games_loaded = stats_content['suffering_games']
     if suffering_games_loaded:
-        div_a5 <= "Les parties ci-dessous sont en cours et ont besoin de remplaçant(s)."
+        div_a5 <= "Les parties ci-dessous sont en cours et ont besoin de remplaçant(s) - arbitre ou joueur."
         div_a5 <= html.BR()
-        div_a5 <= html.B("Cliquez sur le lien pour relever le gant !")
+        div_a5 <= html.B("Cliquez sur le lien pour aller voir la partie !")
         div_a5 <= html.BR()
         div_a5 <= formatted_games(suffering_games_loaded)
     else:
