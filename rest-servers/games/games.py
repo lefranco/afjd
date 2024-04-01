@@ -609,7 +609,7 @@ class Game:
             if self.detect_finished():
                 self._finished = True
 
-    def push_deadline(self) -> None:
+    def push_deadline(self, now: float) -> None:
         """ push_deadline """
 
         # do not touch deadline if game is archive
@@ -617,21 +617,18 @@ class Game:
             return
 
         # set start deadline from where we start
-        now = time.time()
         if self._fast:
+
             # round it to next minute
             self._deadline = (int(now) // 60) * 60 + 60
+
             # increment is one minute
             deadline_increment = 60
+
         else:
 
-            # round it
-            self._deadline = (int(now) // 3600) * 3600
-
-            # next hour if before deadline, previous hour otherwise
-            now = time.time()
-            if now < self._deadline:
-                self._deadline += 3600
+            # round it to next hour
+            self._deadline = (int(now) // 3600) * 3600 + 3600
 
             # increment is one hour
             deadline_increment = 3600
@@ -646,7 +643,7 @@ class Game:
         else:
             hours_or_minute_add = self._speed_adjustments
 
-        # increment deadline
+        # increment of what season and game format require
         self._deadline += hours_or_minute_add * deadline_increment
 
         # if fast we are done
@@ -666,10 +663,10 @@ class Game:
                 deadline_day = datetime_deadline_extracted.date()
 
                 # accept if we are out of the weekend
-                if not deadline_day.weekday() in [5, 6]:
+                if deadline_day.weekday() not in [5, 6]:
                     break
 
-                # pass a day
+                # pass the day
                 self._deadline += 24 * 3600
 
         # eventually sync the deadline to the proper hour of a day

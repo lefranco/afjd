@@ -565,7 +565,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     return True, True, f"Adjudication performed for game {game.name} season {game.current_advancement}!"
 
 
-def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, bool, int, bool, str]:
+def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, bool, int, bool, str]:
     """
     posts an agreement in a game (or a disagreement)
     returns
@@ -754,7 +754,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             return status, late, unsafe, missing, adjudicated, debug_message
 
     # update deadline
-    game.push_deadline()
+    game.push_deadline(now)
     game.update_database(sql_executor)
 
     debug_messages.append("Deadline adjusted!")
