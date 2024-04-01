@@ -787,6 +787,8 @@ def sandbox():
 
         nonlocal selected_hovered_object
 
+        helper.clear()
+
         # find where is mouse
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
         selected_hovered_object = POSITION_DATA.closest_object(pos)
