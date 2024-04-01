@@ -65,7 +65,7 @@ def load_credentials_config() -> None:
         COMMUTER_PASSWORD = credentials_data['COMMUTER_PASSWORD']
 
 
-def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_name: str) -> bool:
+def commute_game(jwt_token: str, now: float, game_id: int, variant_name_loaded: str, game_name: str) -> bool:
     """ commute_game """
 
     # get variant data
@@ -93,6 +93,7 @@ def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_na
     inforced_names_dict_json = json.dumps(inforced_names_dict)
 
     json_dict = {
+        'now': now,
         'adjudication_names': inforced_names_dict_json
     }
 
@@ -109,7 +110,7 @@ def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_na
     return True
 
 
-def check_all_games(jwt_token: str) -> None:
+def check_all_games(jwt_token: str, now: float) -> None:
     """ check_all_games """
 
     # get all games
@@ -166,23 +167,26 @@ def check_all_games(jwt_token: str) -> None:
 
         mylogger.LOGGER.info("Trying game '%s'...", game_name)
 
-        _ = commute_game(jwt_token, game_id, variant_name, game_name)
+        _ = commute_game(jwt_token, now, game_id, variant_name, game_name)
 
         # easy on the server !
         time.sleep(INTER_COMMUTATION_TIME_SEC)
 
 
-def time_to_wait() -> float:
-    """ time_to_wait """
+def time_next_and_to_wait() -> typing.Tuple[float, float]:
+    """ time_next_and_to_wait """
 
     timestamp_now = time.time()
     next_hour_time = (round(timestamp_now) // (60 * 60)) * (60 * 60) + (60 * 60)
-    wait_time = next_hour_time - timestamp_now
 
-    # make sure we are after
+    # time of next try : make sure we are before theoretical
+    next_time = next_hour_time - EPSILON_SEC
+
+    # time to wait before next try : make sure we are after theoretical
+    wait_time = next_hour_time - timestamp_now
     wait_time += EPSILON_SEC
 
-    return wait_time
+    return next_time, wait_time
 
 
 def acting_threaded_procedure() -> None:
@@ -222,13 +226,17 @@ def acting_threaded_procedure() -> None:
         jwt_token = get_token()
         timestamp_token = time.time()
 
+        # time of adjudications
+        next_time = None
+
         while True:
 
             mylogger.LOGGER.info("Trying all games...")
 
             # try to commute all games
+            now = next_time if next_time is not None else time.time()
             try:
-                check_all_games(jwt_token)
+                check_all_games(jwt_token, now)
             except:  # noqa: E722 pylint: disable=bare-except
                 mylogger.LOGGER.error("Exception occured checking all games for commuting, stack is below")
                 mylogger.LOGGER.error("%s", traceback.format_exc())
@@ -279,7 +287,7 @@ def acting_threaded_procedure() -> None:
                     timestamp_token = time.time()
 
             # go to sleep
-            wait_time = time_to_wait()
+            next_time, wait_time = time_next_and_to_wait()
             mylogger.LOGGER.info("Done for routine tasks. Back to sleep for %s secs...", wait_time)
             time.sleep(wait_time)
 

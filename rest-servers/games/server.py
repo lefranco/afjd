@@ -141,6 +141,7 @@ FORCE_AGREE_PARSER.add_argument('role_id', type=int, required=True)
 FORCE_AGREE_PARSER.add_argument('adjudication_names', type=str, required=True)
 
 COMMUTE_AGREE_PARSER = flask_restful.reqparse.RequestParser()
+COMMUTE_AGREE_PARSER.add_argument('now', type=float, required=True)
 COMMUTE_AGREE_PARSER.add_argument('adjudication_names', type=str, required=True)
 
 SUBMISSION_PARSER2 = flask_restful.reqparse.RequestParser()
@@ -656,7 +657,8 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 # commited later
 
                 # give a deadlines
-                game.push_deadline()
+                now = time.time()
+                game.push_deadline(now)
                 # commited later
 
                 if not (game.fast or game.archive):
@@ -2955,7 +2957,8 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
             # handle definitive boolean
             # game master forced player to agree to adjudicate
-            status, late, unsafe, missing, adjudicated, debug_message = agree.fake_post(game_id, role_id, True, adjudication_names, sql_executor)
+            now = time.time()
+            status, late, unsafe, missing, adjudicated, debug_message = agree.fake_post(now, game_id, role_id, True, adjudication_names, sql_executor)
 
         # end of protected section
 
@@ -3068,6 +3071,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         args = COMMUTE_AGREE_PARSER.parse_args(strict=True)
 
         adjudication_names = args['adjudication_names']
+        now = args['now']
 
         # needed for sending mails
         jwt_token = flask.request.headers.get('AccessToken')
@@ -3136,7 +3140,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             # automaton makes transition 2 (agree after)-> 1 (agree now)
             for role_id in agreed_after_list:
                 # late cannot be set here
-                status, _, __, ___, adjudicated, debug_message = agree.fake_post(game_id, role_id, 1, adjudication_names, sql_executor)
+                status, _, __, ___, adjudicated, debug_message = agree.fake_post(now, game_id, role_id, 1, adjudication_names, sql_executor)
                 if not status:
                     break
                 if adjudicated:
@@ -3501,7 +3505,8 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
             # handle definitive boolean
             # player submitted orders and agreed (or not) to adjudicate
-            status, late, unsafe, missing, adjudicated, debug_message = agree.fake_post(game_id, role_id, definitive_value, adjudication_names, sql_executor)  # noqa: F821
+            now = time.time()
+            status, late, unsafe, missing, adjudicated, debug_message = agree.fake_post(now, game_id, role_id, definitive_value, adjudication_names, sql_executor)  # noqa: F821
 
         # end of protected section
 
