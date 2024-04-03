@@ -309,10 +309,10 @@
         "23": {
             "name": "Dan",
             "full_name": "Danemark",
-            "x_pos": 627,
-            "y_pos": 571,
-            "x_legend_pos": 627,
-            "y_legend_pos": 557,
+            "x_pos": 629,
+            "y_pos": 558,
+            "x_legend_pos": 629,
+            "y_legend_pos": 575,
             "display": 4
         },
         "24": {
@@ -669,9 +669,9 @@
             "name": "Nge",
             "full_name": "Norvège",
             "x_pos": 618,
-            "y_pos": 544,
+            "y_pos": 542,
             "x_legend_pos": 618,
-            "y_legend_pos": 530,
+            "y_legend_pos": 528,
             "display": 4
         },
         "67": {
@@ -811,10 +811,10 @@
         "83": {
             "name": "Tun",
             "full_name": "Tunisie",
-            "x_pos": 650,
-            "y_pos": 705,
-            "x_legend_pos": 655,
-            "y_legend_pos": 723
+            "x_pos": 652,
+            "y_pos": 715,
+            "x_legend_pos": 650,
+            "y_legend_pos": 701
         },
         "84": {
             "name": "Tur",
@@ -995,8 +995,8 @@
             "y_pos": 583
         },
         "4": {
-            "x_pos": 613,
-            "y_pos": 200
+            "x_pos": 612,
+            "y_pos": 199
         },
         "5": {
             "x_pos": 1236,
@@ -1004,11 +1004,11 @@
         },
         "6": {
             "x_pos": 98,
-            "y_pos": 700
+            "y_pos": 701
         },
         "7": {
-            "x_pos": 877,
-            "y_pos": 155
+            "x_pos": 878,
+            "y_pos": 156
         },
         "8": {
             "x_pos": 119,
@@ -1067,7 +1067,7 @@
             "y_pos": 459
         },
         "22": {
-            "x_pos": 954,
+            "x_pos": 953,
             "y_pos": 171
         },
         "23": {
@@ -1084,11 +1084,11 @@
         },
         "26": {
             "x_pos": 651,
-            "y_pos": 686
+            "y_pos": 687
         },
         "27": {
-            "x_pos": 753,
-            "y_pos": 630
+            "x_pos": 752,
+            "y_pos": 632
         },
         "28": {
             "x_pos": 910,
