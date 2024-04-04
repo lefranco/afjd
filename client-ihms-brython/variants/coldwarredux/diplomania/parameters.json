@@ -727,10 +727,10 @@
         "73": {
             "name": "Pan",
             "full_name": "Panama",
-            "x_pos": 26,
-            "y_pos": 435,
-            "x_legend_pos": 34,
-            "y_legend_pos": 419
+            "x_pos": 22,
+            "y_pos": 436,
+            "x_legend_pos": 44,
+            "y_legend_pos": 430
         },
         "74": {
             "name": "PAO",
