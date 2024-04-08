@@ -35,6 +35,13 @@ Une flotte peut aller de Mer des Caraïbes à Mer Pacifique Est en traversant le
 (Pont en Indonésie)
 Une armée peut aller de Philippine en Australie en traversant l'Indonésie (et réciproquement).
 
+(Clarifications autour de la Suède, du Danemark, de la Mer du Nord et de la Mer Baltique)
+Une flotte peut aller de Mer du Nord à Mer Baltique directement (et réciproquement).
+Une armée peut aller de Danemark à Suède directement (et réciproquement).
+
+(Clarifications autour du Canada Occidental et du Groenland)
+Une flotte de l'Ouest Canadien ne peut pas atteindre le Groenland (et réciproquement).
+
 _
 $ Datation
 
@@ -57,8 +64,8 @@ Il y a quatre puissances dont les unités de départ sont les suivantes :
 .
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés|
-|Etats-Unis | 3 | New York | Australie, Los Angeles | |
-|U.R.S.S. | 4 | Moscou | Anadyr, Cuba, Leningrad (côte sud) | |
+|Etats-Unis | 3 | New-York | Australie, Los Angeles | |
+|U.R.S.S. | 4 | Moscou, Leningrad | Anadyr, Cuba | |
 |Chine | 3 | Urumchi | Shangaï, Hanoï | |
 |Europe | 3 | France | Grande-Bretagne, Turquie | |
 =
@@ -77,6 +84,7 @@ $ Nomenclature
 | afg | Afghanistan |
 | AfN | Afrique du Nord |
 | Ala | Alaska |
+| Alb | Albanie |
 | AlE | Allemagne de l’Est |
 | AlO | Allemagne de l’Ouest |
 | AmC | Amérique Centrale |
