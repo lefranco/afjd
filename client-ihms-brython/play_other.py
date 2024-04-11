@@ -451,11 +451,12 @@ def show_position(direct_last_moves):
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        input_download_game_json = html.INPUT(type="submit", value="Télécharger la partie au format JSON", Class='btn-inside')
-        input_download_game_json.bind("click", callback_download_game_json)
-        buttons_right <= input_download_game_json
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+        if play_low.VARIANT_DATA.name.startswith('standard'):
+            input_download_game_json = html.INPUT(type="submit", value="Télécharger la partie au format JSON", Class='btn-inside')
+            input_download_game_json.bind("click", callback_download_game_json)
+            buttons_right <= input_download_game_json
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
         url = f"https://diplomania-gen.fr?game={play_low.GAME}"
         buttons_right <= f"Pour inviter un joueur à consulter la partie, lui envoyer le lien : '{url}'"
