@@ -524,7 +524,6 @@ def tournament_result():
 
     MY_SUB_PANEL <= f"Tournoi concerné : {tournament_name}"
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
 
     games_dict = common.get_games_data()
     if games_dict is None:
@@ -720,8 +719,6 @@ def tournament_result():
         row <= col
 
         incident_table2 <= row
-
-    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
 
     MY_SUB_PANEL <= html.H4("Classement")
     MY_SUB_PANEL <= recap_table
