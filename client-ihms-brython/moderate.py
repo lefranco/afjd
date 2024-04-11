@@ -1037,12 +1037,14 @@ def game_announce():
 
         role_icon_img = ""
         pseudo_there = ""
-        if announce:
-            player_id = role_id_msg
-            if player_id in id2pseudo:
+        if role_id_msg != -1:
+
+            if announce:
+
+                player_id = role_id_msg
                 pseudo_there = id2pseudo[player_id]
-        else:
-            if role_id_msg != -1:
+
+            else:
 
                 role = variant_data.roles[role_id_msg]
                 role_name = variant_data.role_name_table[role]
