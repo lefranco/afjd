@@ -25,6 +25,7 @@ OPTIONS = {
     'Usurper': "Usurper le compte d'un untilisateur",
     'Rectifier les paramètres': "Rectifier les paramètres de la partie sélectionnée",
     'Rectifier la position': "Rectifier la position de la partie sélectionnée",
+    'Rectifier l\'état': "Rectifier l\'état de la partie sélectionnée",
     'Dernières connexions': "Les connexions réussies sur le site",
     'Connexions manquées': "Les connexions manquées sur le site",
     'Récupérations demandées': "Les récupérations demandées sur le site",
@@ -1165,6 +1166,117 @@ def rectify_position():
     MY_SUB_PANEL <= my_sub_panel2
 
 
+def rectify_current_state():
+    """ rectify_current_state """
+
+    # declare the values
+    current_state_loaded = None
+
+    def change_current_state_reload():
+        """ change_current_state_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ local_noreply_callback """
+            nonlocal status
+            alert("Problème (pas de réponse de la part du serveur)")
+            status = False
+
+        def reply_callback(req):
+            nonlocal status
+            nonlocal current_state_loaded
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération de l'état de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération de l'état de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                status = False
+                return
+
+            current_state_loaded = req_result['current_state']
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # getting game data : no need for token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_current_state_callback(ev, current_state_selected):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification de l'état de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification de l'état de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"L'état de la partie a été modifiés : {messages}")
+
+        ev.preventDefault()
+
+        json_dict = {
+            'current_state': current_state_selected,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/alter_games/{game}"
+
+        # altering game  : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        rectify_current_state()
+
+    MY_SUB_PANEL <= html.H3("Rectifier l'état de la partie")
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    status = change_current_state_reload()
+    if not status:
+        return
+
+    # list the states we have
+    state_list = config.STATE_CODE_TABLE.values()
+
+    rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
+
+    for current_state in state_list:
+
+        if current_state == current_state_loaded:
+            continue
+
+        current_state_str = rev_state_code_table[current_state]
+        input_change_current_state = html.INPUT(type="submit", value=f"Mettre dans l'état {current_state_str}", Class='btn-inside')
+        input_change_current_state.bind("click", lambda e, cs=current_state: change_current_state_callback(e, cs))
+        MY_SUB_PANEL <= input_change_current_state
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+
+
 def last_logins():
     """ logins """
 
@@ -2012,6 +2124,8 @@ def load_option(_, item_name):
         rectify_parameters()
     if item_name == 'Rectifier la position':
         rectify_position()
+    if item_name == 'Rectifier l\'état':
+        rectify_current_state()
     if item_name == 'Dernières connexions':
         last_logins()
     if item_name == 'Connexions manquées':
