@@ -28,7 +28,6 @@ import scoring
 SESSION = requests.Session()
 
 CENTER_NUMBER = 34
-IMPOSED_VARIANT = 'standard'
 
 POWER_NAME = [
     'England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey'
@@ -103,7 +102,7 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
         return False, "ERROR : Could not find the game with this identifier", None
 
     # game not standard : abort
-    if game.variant != IMPOSED_VARIANT:
+    if not game.variant.startswith('standard'):
         return False, f"Variant of this game is '{game.variant}' - this is not standard Diplomacy!", None
 
     # game not finished : abort
