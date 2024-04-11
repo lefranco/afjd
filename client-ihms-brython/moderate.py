@@ -1039,7 +1039,8 @@ def game_announce():
         pseudo_there = ""
         if announce:
             player_id = role_id_msg
-            pseudo_there = id2pseudo[player_id]
+            if player_id in id2pseudo:
+                pseudo_there = id2pseudo[player_id]
         else:
             if role_id_msg != -1:
 
