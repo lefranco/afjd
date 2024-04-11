@@ -105,6 +105,7 @@ GAME_PARSER2.add_argument('used_for_elo', type=int, required=False)
 GAME_PARSER2.add_argument('fast', type=int, required=False)
 GAME_PARSER2.add_argument('archive', type=int, required=False)
 GAME_PARSER2.add_argument('game_type', type=int, required=False)
+GAME_PARSER2.add_argument('current_state', type=int, required=False)
 
 GAMES_SELECT_PARSER = flask_restful.reqparse.RequestParser()
 GAMES_SELECT_PARSER.add_argument('selection', type=str, required=True)
