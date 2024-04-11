@@ -976,6 +976,10 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to alter a game!")
 
         assert game is not None
+
+        # keep a note of game state before
+        current_state_before = game.current_state
+
         changed = game.load_json(args)
         if not changed:
 
@@ -983,6 +987,30 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
 
             data = {'name': name, 'msg': 'Ok but no change !'}
             return data, 200
+
+        # check we have a 'legal' transition and take actgion
+
+        if current_state_before == 1 and game.current_state == 0:
+            # ongoing to waiting
+            # suppress lock file
+            del MOVE_GAME_LOCK_TABLE[game.name]
+
+        elif current_state_before == 2 and game.current_state == 1:
+            # finished to ongoing
+            # create lock file
+            lock = threading.Lock()
+            MOVE_GAME_LOCK_TABLE[game.name] = lock
+
+        elif current_state_before == 2 and game.current_state == 0:
+            # finished to waiting
+            # nothing to do
+            pass
+
+        elif current_state_before != game.current_state:
+            # rejected
+            del sql_executor
+            data = {'name': name, 'msg': 'State game transition rejected (either because legal or impossible) !'}
+            return data, 400
 
         game.update_database(sql_executor)
         sql_executor.commit()
