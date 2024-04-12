@@ -278,16 +278,16 @@
             "full_name": "Corée du Nord",
             "x_pos": 868,
             "y_pos": 175,
-            "x_legend_pos": 896,
-            "y_legend_pos": 174
+            "x_legend_pos": 899,
+            "y_legend_pos": 181
         },
         "20": {
             "name": "CdS",
             "full_name": "Corée du Sud",
-            "x_pos": 884,
-            "y_pos": 142,
-            "x_legend_pos": 902,
-            "y_legend_pos": 161
+            "x_pos": 901,
+            "y_pos": 152,
+            "x_legend_pos": 894,
+            "y_legend_pos": 170
         },
         "21": {
             "name": "Col",
