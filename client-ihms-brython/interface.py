@@ -19,6 +19,7 @@ INTERFACE_TABLE = {
     'franceautriche': ['diplomania'],
     'crowded': ['diplomania'],
     'coldwarredux': ['diplomania'],
+    'coldwar_redux': ['diplomania'],
 }
 
 
