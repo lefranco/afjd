@@ -40,7 +40,7 @@ with open("./data/game_type_list.json", "r", encoding="utf-8") as read_file:
     GAME_TYPES_CODE_TABLE = load(read_file)
 
 # default is first one
-VARIANT_NAMES_LIST = ['standard', 'standard_pds', 'grandeguerre', 'grandeguerreexpansionniste', 'hundred', 'moderne', 'egeemonie', 'mediterranee', 'successionautriche', 'franceautriche', 'crowded', 'coldwarredux']
+VARIANT_NAMES_LIST = ['standard', 'standard_pds', 'grandeguerre', 'grandeguerreexpansionniste', 'hundred', 'moderne', 'egeemonie', 'mediterranee', 'successionautriche', 'franceautriche', 'crowded', 'coldwarredux', 'coldwar_redux']
 
 
 # yellow before that
