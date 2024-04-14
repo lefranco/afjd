@@ -53,7 +53,7 @@ GAME_MASTER = None
 GAME_PLAYERS_DICT = {}
 
 
-def make_rating_colours_window(variant_data, position_data, interface_, game_scoring):
+def make_rating_colours_window(fog_of_war, finished, variant_data, position_data, interface_, game_scoring):
     """ make_rating_window """
 
     ratings = position_data.role_ratings()
@@ -131,11 +131,10 @@ def make_rating_colours_window(variant_data, position_data, interface_, game_sco
     rating_table <= rating_scoring_row
     col = html.TD(html.B(f"{scoring_name} :"))
     rating_scoring_row <= col
-    fog_of_war = GAME_PARAMETERS_LOADED['fog']
     for role_name in ratings:
         score_dis = score_table[role_name]
         role_score = ""
-        if not fog_of_war or ROLE_ID == 0:
+        if not fog_of_war or finished or ROLE_ID == 0:
             role_score = f"{float(score_dis):.2f}"
         col = html.TD(role_score)
         rating_scoring_row <= col
@@ -833,8 +832,10 @@ def show_board(panel):
     panel <= html.BR()
 
     # ratings
+    fog_of_war = GAME_PARAMETERS_LOADED['fog']
+    finished = GAME_PARAMETERS_LOADED['finished']
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, game_scoring)
+    rating_colours_window = make_rating_colours_window(fog_of_war, finished, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, game_scoring)
     panel <= rating_colours_window
     panel <= html.BR()
 

@@ -1334,8 +1334,10 @@ def submit_orders():
     img = common.read_image(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
+    fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
+    finished = play_low.GAME_PARAMETERS_LOADED['finished']
     game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = play_low.make_rating_colours_window(play_low.VARIANT_DATA, play_low.POSITION_DATA, play_low.INTERFACE_CHOSEN, game_scoring)
+    rating_colours_window = play_low.make_rating_colours_window(fog_of_war, finished, play_low.VARIANT_DATA, play_low.POSITION_DATA, play_low.INTERFACE_CHOSEN, game_scoring)
 
     report_window = common.make_report_window(play_low.REPORT_LOADED)
 
@@ -2189,8 +2191,10 @@ def submit_communication_orders():
     img = common.read_image(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
+    fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
+    finished = play_low.GAME_PARAMETERS_LOADED['finished']
     game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = play_low.make_rating_colours_window(play_low.VARIANT_DATA, play_low.POSITION_DATA, play_low.INTERFACE_CHOSEN, game_scoring)
+    rating_colours_window = play_low.make_rating_colours_window(fog_of_war, finished, play_low.VARIANT_DATA, play_low.POSITION_DATA, play_low.INTERFACE_CHOSEN, game_scoring)
 
     # left side
 
@@ -2651,8 +2655,10 @@ def imagine_units():
     img = common.read_image(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
+    fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
+    finished = play_low.GAME_PARAMETERS_LOADED['finished']
     game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = play_low.make_rating_colours_window(play_low.VARIANT_DATA, play_low.POSITION_DATA, play_low.INTERFACE_CHOSEN, game_scoring)
+    rating_colours_window = play_low.make_rating_colours_window(fog_of_war, finished, play_low.VARIANT_DATA, play_low.POSITION_DATA, play_low.INTERFACE_CHOSEN, game_scoring)
 
     # left side
 
