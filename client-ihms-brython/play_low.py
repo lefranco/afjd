@@ -407,10 +407,7 @@ def load_dynamic_stuff():
     global REPORT_LOADED
     fog_of_war = GAME_PARAMETERS_LOADED['fog']
     if fog_of_war:
-        if ROLE_ID is None:
-            REPORT_LOADED = None
-        else:
-            REPORT_LOADED = game_fog_of_war_report_reload(GAME_ID, ROLE_ID)
+        REPORT_LOADED = game_fog_of_war_report_reload(GAME_ID, ROLE_ID)
     else:
         REPORT_LOADED = game_report_reload(GAME_ID)
 

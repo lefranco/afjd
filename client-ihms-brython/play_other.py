@@ -280,10 +280,7 @@ def show_position(direct_last_moves):
 
             fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
             if fog_of_war:
-                if play_low.ROLE_ID is None:
-                    transition_loaded = None
-                else:
-                    transition_loaded = play_low.game_transition_fog_of_war_reload(play_low.GAME_ID, advancement_selected, play_low.ROLE_ID)
+                transition_loaded = play_low.game_transition_fog_of_war_reload(play_low.GAME_ID, advancement_selected, play_low.ROLE_ID)
             else:
                 transition_loaded = play_low.game_transition_reload(play_low.GAME_ID, advancement_selected)
 
