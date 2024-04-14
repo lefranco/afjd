@@ -53,7 +53,7 @@ GAME_MASTER = None
 GAME_PLAYERS_DICT = {}
 
 
-def make_rating_colours_window(fog_of_war, finished, variant_data, position_data, interface_, game_scoring):
+def make_rating_colours_window(fog_of_war, game_over, variant_data, position_data, interface_, game_scoring):
     """ make_rating_window """
 
     ratings = position_data.role_ratings()
@@ -134,7 +134,7 @@ def make_rating_colours_window(fog_of_war, finished, variant_data, position_data
     for role_name in ratings:
         score_dis = score_table[role_name]
         role_score = ""
-        if not fog_of_war or finished or ROLE_ID == 0:
+        if not fog_of_war or game_over or ROLE_ID == 0:
             role_score = f"{float(score_dis):.2f}"
         col = html.TD(role_score)
         rating_scoring_row <= col
@@ -392,10 +392,7 @@ def load_dynamic_stuff():
     global POSITION_LOADED
     fog_of_war = GAME_PARAMETERS_LOADED['fog']
     if fog_of_war:
-        if ROLE_ID is not None:
-            POSITION_LOADED = common.game_position_fog_of_war_reload(GAME_ID, ROLE_ID)
-        else:
-            POSITION_LOADED = common.game_position_empty()
+        POSITION_LOADED = common.game_position_fog_of_war_reload(GAME_ID, ROLE_ID)
     else:
         POSITION_LOADED = common.game_position_reload(GAME_ID)
     if not POSITION_LOADED:
@@ -833,9 +830,9 @@ def show_board(panel):
 
     # ratings
     fog_of_war = GAME_PARAMETERS_LOADED['fog']
-    finished = GAME_PARAMETERS_LOADED['finished']
+    game_over = GAME_PARAMETERS_LOADED['finished'] or GAME_PARAMETERS_LOADED['soloed']
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(fog_of_war, finished, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, game_scoring)
+    rating_colours_window = make_rating_colours_window(fog_of_war, game_over, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, game_scoring)
     panel <= rating_colours_window
     panel <= html.BR()
 
