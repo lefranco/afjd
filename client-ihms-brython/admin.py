@@ -513,6 +513,7 @@ def rectify_parameters():
     fast_loaded = None
     archive_loaded = None
     game_type_loaded = None
+    nb_max_cycles_to_play_loaded = None
 
     def change_parameters_reload():
         """ change_parameters_reload """
@@ -531,6 +532,7 @@ def rectify_parameters():
             nonlocal fast_loaded
             nonlocal archive_loaded
             nonlocal game_type_loaded
+            nonlocal nb_max_cycles_to_play_loaded
             req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -546,6 +548,7 @@ def rectify_parameters():
             fast_loaded = req_result['fast']
             archive_loaded = req_result['archive']
             game_type_loaded = req_result['game_type']
+            nb_max_cycles_to_play_loaded = req_result['nb_max_cycles_to_play']
 
         json_dict = {}
 
@@ -579,15 +582,16 @@ def rectify_parameters():
         used_for_elo = int(input_used_for_elo.checked)
         fast = int(input_fast.checked)
         archive = int(input_archive.checked)
-
         game_type = input_game_type.value
         game_type_code = config.GAME_TYPES_CODE_TABLE[game_type]
+        nb_max_cycles_to_play = int(input_nb_max_cycles_to_play.value)
 
         json_dict = {
             'used_for_elo': used_for_elo,
             'fast': fast,
             'archive': archive,
             'game_type': game_type_code,
+            'nb_max_cycles_to_play': nb_max_cycles_to_play
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -652,6 +656,13 @@ def rectify_parameters():
         input_game_type <= option
 
     fieldset <= input_game_type
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_nb_max_cycles_to_play = html.LEGEND("maximum de cycles (années)", title="Combien d'années à jouer au plus ?")
+    fieldset <= legend_nb_max_cycles_to_play
+    input_nb_max_cycles_to_play = html.INPUT(type="number", value=nb_max_cycles_to_play_loaded, Class='btn-inside')
+    fieldset <= input_nb_max_cycles_to_play
     form <= fieldset
 
     form <= html.BR()
