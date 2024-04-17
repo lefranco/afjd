@@ -54,7 +54,6 @@ INTERFACE_TABLE = {
     'standard': ['diplomania', 'diplomania_daltoniens', 'hasbro'],
     'standard_pds': ['diplomania'],
     'grandeguerre': ['diplomania'],
-    'grandeguerreexpansionniste': ['diplomania'],
     'hundred': ['diplomania'],
     'moderne': ['diplomania'],
     'egeemonie': ['diplomania'],
@@ -62,7 +61,6 @@ INTERFACE_TABLE = {
     'successionautriche': ['diplomania'],
     'franceautriche': ['diplomania'],
     'crowded': ['diplomania'],
-    'coldwarredux': ['diplomania'],
     'coldwar_redux': ['diplomania'],
 }
 
