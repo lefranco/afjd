@@ -1,5 +1,5 @@
 {
-    "author": "Enriador",
+    "author": "Firehawk & Safari",
     "map": {
         "width": 1248,
         "height": 739
@@ -46,16 +46,16 @@
             "adjective_name": "americain",
             "letter_name": "A",
             "red": [
-                83,
-                152
+                47,
+                131
             ],
             "green": [
-                210,
-                228
+                138,
+                185
             ],
             "blue": [
-                224,
-                237
+                170,
+                204
             ]
         },
         "2": {
@@ -159,6 +159,14 @@
             "y_legend_pos": 211
         },
         "5": {
+            "name": "Alb",
+            "full_name": "Albanie",
+            "x_pos": 705,
+            "y_pos": 638,
+            "x_legend_pos": 705,
+            "y_legend_pos": 624
+        },
+        "6": {
             "name": "AlE",
             "full_name": "Allemagne de l’Est",
             "x_pos": 677,
@@ -166,7 +174,7 @@
             "x_legend_pos": 677,
             "y_legend_pos": 572
         },
-        "6": {
+        "7": {
             "name": "AlO",
             "full_name": "Allemagne de l’Ouest",
             "x_pos": 621,
@@ -174,7 +182,7 @@
             "x_legend_pos": 640,
             "y_legend_pos": 610
         },
-        "7": {
+        "8": {
             "name": "AmC",
             "full_name": "Amérique Centrale",
             "x_pos": 46,
@@ -182,7 +190,7 @@
             "x_legend_pos": 62,
             "y_legend_pos": 391
         },
-        "8": {
+        "9": {
             "name": "Ana",
             "full_name": "Anadyr",
             "x_pos": 673,
@@ -191,7 +199,7 @@
             "y_legend_pos": 215,
             "display": 2
         },
-        "9": {
+        "10": {
             "name": "Arb",
             "full_name": "Arabie",
             "x_pos": 942,
@@ -199,7 +207,7 @@
             "x_legend_pos": 942,
             "y_legend_pos": 635
         },
-        "10": {
+        "11": {
             "name": "AsS",
             "full_name": "Asie du Sud",
             "x_pos": 1097,
@@ -207,7 +215,7 @@
             "x_legend_pos": 1097,
             "y_legend_pos": 264
         },
-        "11": {
+        "12": {
             "name": "ATE",
             "full_name": "Atlantique Est",
             "x_pos": 442,
@@ -215,7 +223,7 @@
             "x_legend_pos": 442,
             "y_legend_pos": 632
         },
-        "12": {
+        "13": {
             "name": "ATO",
             "full_name": "Atlantique Ouest",
             "x_pos": 259,
@@ -223,7 +231,7 @@
             "x_legend_pos": 259,
             "y_legend_pos": 564
         },
-        "13": {
+        "14": {
             "name": "Aus",
             "full_name": "Australie",
             "x_pos": 1211,
@@ -232,7 +240,7 @@
             "y_legend_pos": 10,
             "display": 1
         },
-        "14": {
+        "15": {
             "name": "BHU",
             "full_name": "Baie d’Hudson",
             "x_pos": 378,
@@ -240,7 +248,7 @@
             "x_legend_pos": 378,
             "y_legend_pos": 361
         },
-        "15": {
+        "16": {
             "name": "Bng",
             "full_name": "Bangladesh",
             "x_pos": 1040,
@@ -248,7 +256,7 @@
             "x_legend_pos": 1040,
             "y_legend_pos": 314
         },
-        "16": {
+        "17": {
             "name": "Bre",
             "full_name": "Brésil",
             "x_pos": 43,
@@ -256,7 +264,7 @@
             "x_legend_pos": 43,
             "y_legend_pos": 669
         },
-        "17": {
+        "18": {
             "name": "CaO",
             "full_name": "Canada Occidental",
             "x_pos": 399,
@@ -264,7 +272,7 @@
             "x_legend_pos": 399,
             "y_legend_pos": 262
         },
-        "18": {
+        "19": {
             "name": "Cau",
             "full_name": "Caucase",
             "x_pos": 796,
@@ -273,7 +281,7 @@
             "y_legend_pos": 541,
             "display": 2
         },
-        "19": {
+        "20": {
             "name": "CdN",
             "full_name": "Corée du Nord",
             "x_pos": 868,
@@ -281,7 +289,7 @@
             "x_legend_pos": 896,
             "y_legend_pos": 174
         },
-        "20": {
+        "21": {
             "name": "CdS",
             "full_name": "Corée du Sud",
             "x_pos": 884,
@@ -289,15 +297,15 @@
             "x_legend_pos": 902,
             "y_legend_pos": 161
         },
-        "21": {
+        "22": {
             "name": "Col",
             "full_name": "Colombie",
-            "x_pos": 24,
-            "y_pos": 498,
-            "x_legend_pos": 24,
-            "y_legend_pos": 484
+            "x_pos": 19,
+            "y_pos": 523,
+            "x_legend_pos": 19,
+            "y_legend_pos": 509
         },
-        "22": {
+        "23": {
             "name": "Cub",
             "full_name": "Cuba",
             "x_pos": 117,
@@ -306,16 +314,16 @@
             "y_legend_pos": 418,
             "display": 2
         },
-        "23": {
+        "24": {
             "name": "Dan",
             "full_name": "Danemark",
-            "x_pos": 627,
-            "y_pos": 571,
-            "x_legend_pos": 627,
-            "y_legend_pos": 557,
+            "x_pos": 629,
+            "y_pos": 558,
+            "x_legend_pos": 615,
+            "y_legend_pos": 578,
             "display": 4
         },
-        "24": {
+        "25": {
             "name": "Egy",
             "full_name": "Egypte",
             "x_pos": 799,
@@ -323,7 +331,7 @@
             "x_legend_pos": 799,
             "y_legend_pos": 697
         },
-        "25": {
+        "26": {
             "name": "Fin",
             "full_name": "Finlande",
             "x_pos": 668,
@@ -331,7 +339,7 @@
             "x_legend_pos": 668,
             "y_legend_pos": 499
         },
-        "26": {
+        "27": {
             "name": "Flo",
             "full_name": "Floride",
             "x_pos": 197,
@@ -340,7 +348,7 @@
             "y_legend_pos": 379,
             "display": 1
         },
-        "27": {
+        "28": {
             "name": "Fra",
             "full_name": "France",
             "x_pos": 614,
@@ -349,7 +357,7 @@
             "y_legend_pos": 610,
             "display": 4
         },
-        "28": {
+        "29": {
             "name": "GAL",
             "full_name": "Golfe d’Alaska",
             "x_pos": 428,
@@ -357,7 +365,7 @@
             "x_legend_pos": 428,
             "y_legend_pos": 139
         },
-        "29": {
+        "30": {
             "name": "GBE",
             "full_name": "Golfe du Bengale",
             "x_pos": 1132,
@@ -365,7 +373,7 @@
             "x_legend_pos": 1132,
             "y_legend_pos": 358
         },
-        "30": {
+        "31": {
             "name": "GBr",
             "full_name": " Grande Bretagne ",
             "x_pos": 569,
@@ -374,7 +382,7 @@
             "y_legend_pos": 566,
             "display": 4
         },
-        "31": {
+        "32": {
             "name": "GME",
             "full_name": "Golfe du Mexique",
             "x_pos": 136,
@@ -382,7 +390,7 @@
             "x_legend_pos": 136,
             "y_legend_pos": 341
         },
-        "32": {
+        "33": {
             "name": "Gre",
             "full_name": "Grèce",
             "x_pos": 723,
@@ -391,7 +399,7 @@
             "y_legend_pos": 642,
             "display": 4
         },
-        "33": {
+        "34": {
             "name": "Gro",
             "full_name": "Groënland",
             "x_pos": 532,
@@ -400,7 +408,7 @@
             "y_legend_pos": 400,
             "display": 4
         },
-        "34": {
+        "35": {
             "name": "Han",
             "full_name": "Hanoï",
             "x_pos": 1063,
@@ -409,7 +417,7 @@
             "y_legend_pos": 248,
             "display": 3
         },
-        "35": {
+        "36": {
             "name": "Ibe",
             "full_name": "Ibérie",
             "x_pos": 556,
@@ -418,7 +426,7 @@
             "y_legend_pos": 655,
             "display": 4
         },
-        "36": {
+        "37": {
             "name": "Ids",
             "full_name": "Indonésie",
             "x_pos": 1152,
@@ -426,7 +434,7 @@
             "x_legend_pos": 1152,
             "y_legend_pos": 98
         },
-        "37": {
+        "38": {
             "name": "Ind",
             "full_name": "Inde",
             "x_pos": 1050,
@@ -434,7 +442,7 @@
             "x_legend_pos": 1050,
             "y_legend_pos": 424
         },
-        "38": {
+        "39": {
             "name": "Irk",
             "full_name": "Irak",
             "x_pos": 857,
@@ -442,7 +450,7 @@
             "x_legend_pos": 857,
             "y_legend_pos": 601
         },
-        "39": {
+        "40": {
             "name": "Irn",
             "full_name": "Iran",
             "x_pos": 918,
@@ -450,7 +458,7 @@
             "x_legend_pos": 918,
             "y_legend_pos": 546
         },
-        "40": {
+        "41": {
             "name": "Ita",
             "full_name": "Italie",
             "x_pos": 647,
@@ -459,7 +467,7 @@
             "y_legend_pos": 626,
             "display": 4
         },
-        "41": {
+        "42": {
             "name": "Jap",
             "full_name": "Japon",
             "x_pos": 790,
@@ -467,7 +475,7 @@
             "x_legend_pos": 790,
             "y_legend_pos": 110
         },
-        "42": {
+        "43": {
             "name": "Kur",
             "full_name": "Kurdistan",
             "x_pos": 820,
@@ -476,7 +484,7 @@
             "y_legend_pos": 587,
             "display": 4
         },
-        "43": {
+        "44": {
             "name": "LAn",
             "full_name": "Los Angeles",
             "x_pos": 294,
@@ -485,7 +493,7 @@
             "y_legend_pos": 219,
             "display": 1
         },
-        "44": {
+        "45": {
             "name": "Len",
             "full_name": "Léningrad",
             "x_pos": 709,
@@ -494,7 +502,7 @@
             "y_legend_pos": 513,
             "display": 2
         },
-        "45": {
+        "46": {
             "name": "Lev",
             "full_name": "Levant",
             "x_pos": 825,
@@ -502,7 +510,7 @@
             "x_legend_pos": 825,
             "y_legend_pos": 621
         },
-        "46": {
+        "47": {
             "name": "Lib",
             "full_name": "Libye",
             "x_pos": 746,
@@ -510,7 +518,7 @@
             "x_legend_pos": 746,
             "y_legend_pos": 701
         },
-        "47": {
+        "48": {
             "name": "Man",
             "full_name": "Mandchourie",
             "x_pos": 836,
@@ -519,7 +527,7 @@
             "y_legend_pos": 192,
             "display": 3
         },
-        "48": {
+        "49": {
             "name": "MAR",
             "full_name": "Mer d’Arabie",
             "x_pos": 1033,
@@ -527,7 +535,7 @@
             "x_legend_pos": 1033,
             "y_legend_pos": 535
         },
-        "49": {
+        "50": {
             "name": "MBA",
             "full_name": "Mer Baltique",
             "x_pos": 663,
@@ -535,7 +543,7 @@
             "x_legend_pos": 663,
             "y_legend_pos": 541
         },
-        "50": {
+        "51": {
             "name": "MBE",
             "full_name": "Mer de Béring",
             "x_pos": 580,
@@ -543,7 +551,7 @@
             "x_legend_pos": 580,
             "y_legend_pos": 117
         },
-        "51": {
+        "52": {
             "name": "MCA",
             "full_name": "Mer des Caraïbes",
             "x_pos": 125,
@@ -551,7 +559,7 @@
             "x_legend_pos": 125,
             "y_legend_pos": 550
         },
-        "52": {
+        "53": {
             "name": "MCS",
             "full_name": "Mer de Chine Sud",
             "x_pos": 1045,
@@ -559,7 +567,7 @@
             "x_legend_pos": 1045,
             "y_legend_pos": 161
         },
-        "53": {
+        "54": {
             "name": "MDN",
             "full_name": "Mer du Nord",
             "x_pos": 597,
@@ -567,7 +575,7 @@
             "x_legend_pos": 591,
             "y_legend_pos": 548
         },
-        "54": {
+        "55": {
             "name": "Mex",
             "full_name": "Mexique",
             "x_pos": 163,
@@ -575,24 +583,24 @@
             "x_legend_pos": 163,
             "y_legend_pos": 258
         },
-        "55": {
+        "56": {
             "name": "mid",
             "full_name": "Midwest",
             "x_pos": 252,
-            "y_pos": 331,
+            "y_pos": 330,
             "x_legend_pos": 252,
-            "y_legend_pos": 317,
+            "y_legend_pos": 316,
             "display": 1
         },
-        "56": {
+        "57": {
             "name": "MIO",
             "full_name": "Mer Ionienne",
-            "x_pos": 705,
-            "y_pos": 690,
-            "x_legend_pos": 705,
-            "y_legend_pos": 676
+            "x_pos": 707,
+            "y_pos": 678,
+            "x_legend_pos": 707,
+            "y_legend_pos": 664
         },
-        "57": {
+        "58": {
             "name": "MJN",
             "full_name": "Mer Jaune",
             "x_pos": 955,
@@ -600,7 +608,7 @@
             "x_legend_pos": 955,
             "y_legend_pos": 97
         },
-        "58": {
+        "59": {
             "name": "MJP",
             "full_name": "Mer du Japon",
             "x_pos": 839,
@@ -608,15 +616,15 @@
             "x_legend_pos": 839,
             "y_legend_pos": 136
         },
-        "59": {
+        "60": {
             "name": "MME",
             "full_name": "Mer Méditerranée Est",
             "x_pos": 774,
             "y_pos": 670,
-            "x_legend_pos": 774,
+            "x_legend_pos": 782,
             "y_legend_pos": 656
         },
-        "60": {
+        "61": {
             "name": "MMO",
             "full_name": "Mer Méditerranée Ouest",
             "x_pos": 620,
@@ -624,7 +632,7 @@
             "x_legend_pos": 620,
             "y_legend_pos": 660
         },
-        "61": {
+        "62": {
             "name": "MNG",
             "full_name": "Mer de Norvège",
             "x_pos": 581,
@@ -632,15 +640,15 @@
             "x_legend_pos": 581,
             "y_legend_pos": 471
         },
-        "62": {
+        "63": {
             "name": "MNO",
             "full_name": "Mer Noire",
-            "x_pos": 756,
-            "y_pos": 612,
-            "x_legend_pos": 756,
-            "y_legend_pos": 598
+            "x_pos": 755,
+            "y_pos": 604,
+            "x_legend_pos": 779,
+            "y_legend_pos": 594
         },
-        "63": {
+        "64": {
             "name": "mon",
             "full_name": "Mongolie",
             "x_pos": 884,
@@ -648,7 +656,7 @@
             "x_legend_pos": 884,
             "y_legend_pos": 274
         },
-        "64": {
+        "65": {
             "name": "mos",
             "full_name": "Moscou",
             "x_pos": 758,
@@ -657,7 +665,7 @@
             "y_legend_pos": 504,
             "display": 2
         },
-        "65": {
+        "66": {
             "name": "MRO",
             "full_name": "Mer Rouge",
             "x_pos": 1030,
@@ -665,16 +673,16 @@
             "x_legend_pos": 1030,
             "y_legend_pos": 619
         },
-        "66": {
+        "67": {
             "name": "Nge",
             "full_name": "Norvège",
             "x_pos": 618,
-            "y_pos": 544,
+            "y_pos": 542,
             "x_legend_pos": 618,
-            "y_legend_pos": 530,
+            "y_legend_pos": 528,
             "display": 4
         },
-        "67": {
+        "68": {
             "name": "NYo",
             "full_name": "New York",
             "x_pos": 258,
@@ -683,7 +691,7 @@
             "y_legend_pos": 418,
             "display": 1
         },
-        "68": {
+        "69": {
             "name": "OAR",
             "full_name": "Océan Arctique",
             "x_pos": 587,
@@ -691,7 +699,7 @@
             "x_legend_pos": 587,
             "y_legend_pos": 302
         },
-        "69": {
+        "70": {
             "name": "OIN",
             "full_name": "Océan Indien",
             "x_pos": 1156,
@@ -699,7 +707,7 @@
             "x_legend_pos": 1156,
             "y_legend_pos": 632
         },
-        "70": {
+        "71": {
             "name": "Our",
             "full_name": "Oural",
             "x_pos": 768,
@@ -708,7 +716,7 @@
             "y_legend_pos": 429,
             "display": 2
         },
-        "71": {
+        "72": {
             "name": "PAE",
             "full_name": "Pacifique Est",
             "x_pos": 112,
@@ -716,7 +724,7 @@
             "x_legend_pos": 112,
             "y_legend_pos": 98
         },
-        "72": {
+        "73": {
             "name": "Pak",
             "full_name": "Pakistan",
             "x_pos": 981,
@@ -724,15 +732,15 @@
             "x_legend_pos": 981,
             "y_legend_pos": 474
         },
-        "73": {
+        "74": {
             "name": "Pan",
             "full_name": "Panama",
-            "x_pos": 26,
-            "y_pos": 435,
-            "x_legend_pos": 34,
-            "y_legend_pos": 419
+            "x_pos": 22,
+            "y_pos": 436,
+            "x_legend_pos": 44,
+            "y_legend_pos": 430
         },
-        "74": {
+        "75": {
             "name": "PAO",
             "full_name": "Pacifique Ouest",
             "x_pos": 765,
@@ -740,7 +748,7 @@
             "x_legend_pos": 765,
             "y_legend_pos": 40
         },
-        "75": {
+        "76": {
             "name": "Phi",
             "full_name": "Philippines",
             "x_pos": 1031,
@@ -749,7 +757,7 @@
             "y_legend_pos": 78,
             "display": 1
         },
-        "76": {
+        "77": {
             "name": "Que",
             "full_name": "Québec",
             "x_pos": 354,
@@ -757,7 +765,7 @@
             "x_legend_pos": 354,
             "y_legend_pos": 423
         },
-        "77": {
+        "78": {
             "name": "Sha",
             "full_name": "Shanghaï",
             "x_pos": 970,
@@ -766,7 +774,7 @@
             "y_legend_pos": 211,
             "display": 3
         },
-        "78": {
+        "79": {
             "name": "Sib",
             "full_name": "Sibérie",
             "x_pos": 776,
@@ -775,7 +783,7 @@
             "y_legend_pos": 298,
             "display": 2
         },
-        "79": {
+        "80": {
             "name": "SoW",
             "full_name": "South West",
             "x_pos": 196,
@@ -784,7 +792,7 @@
             "y_legend_pos": 287,
             "display": 1
         },
-        "80": {
+        "81": {
             "name": "Sue",
             "full_name": "Suède",
             "x_pos": 641,
@@ -792,7 +800,7 @@
             "x_legend_pos": 645,
             "y_legend_pos": 495
         },
-        "81": {
+        "82": {
             "name": "SVi",
             "full_name": "Sud Vietnam",
             "x_pos": 1090,
@@ -800,7 +808,7 @@
             "x_legend_pos": 1125,
             "y_legend_pos": 228
         },
-        "82": {
+        "83": {
             "name": "Tor",
             "full_name": "Toronto",
             "x_pos": 332,
@@ -808,15 +816,15 @@
             "x_legend_pos": 332,
             "y_legend_pos": 347
         },
-        "83": {
+        "84": {
             "name": "Tun",
             "full_name": "Tunisie",
-            "x_pos": 650,
-            "y_pos": 705,
-            "x_legend_pos": 655,
-            "y_legend_pos": 723
+            "x_pos": 652,
+            "y_pos": 715,
+            "x_legend_pos": 650,
+            "y_legend_pos": 701
         },
-        "84": {
+        "85": {
             "name": "Tur",
             "full_name": "Turquie",
             "x_pos": 784,
@@ -825,7 +833,7 @@
             "y_legend_pos": 610,
             "display": 4
         },
-        "85": {
+        "86": {
             "name": "Ukr",
             "full_name": "Ukraine",
             "x_pos": 720,
@@ -834,7 +842,7 @@
             "y_legend_pos": 593,
             "display": 2
         },
-        "86": {
+        "87": {
             "name": "uru",
             "full_name": "Urumchi",
             "x_pos": 954,
@@ -843,7 +851,7 @@
             "y_legend_pos": 349,
             "display": 3
         },
-        "87": {
+        "88": {
             "name": "Ven",
             "full_name": "Vénézuela",
             "x_pos": 71,
@@ -851,7 +859,7 @@
             "x_legend_pos": 71,
             "y_legend_pos": 570
         },
-        "88": {
+        "89": {
             "name": "Vla",
             "full_name": "Vladivostok",
             "x_pos": 781,
@@ -860,15 +868,15 @@
             "y_legend_pos": 194,
             "display": 2
         },
-        "89": {
+        "90": {
             "name": "You",
             "full_name": "Yougoslavie",
             "x_pos": 691,
             "y_pos": 628,
-            "x_legend_pos": 672,
-            "y_legend_pos": 621
+            "x_legend_pos": 663,
+            "y_legend_pos": 617
         },
-        "90": {
+        "91": {
             "name": "",
             "full_name": "",
             "x_pos": 10,
@@ -876,7 +884,7 @@
             "x_legend_pos": 15,
             "y_legend_pos": 467
         },
-        "91": {
+        "92": {
             "name": "",
             "full_name": "",
             "x_pos": 46,
@@ -884,7 +892,7 @@
             "x_legend_pos": 71,
             "y_legend_pos": 494
         },
-        "92": {
+        "93": {
             "name": "",
             "full_name": "",
             "x_pos": 66,
@@ -892,7 +900,7 @@
             "x_legend_pos": 44,
             "y_legend_pos": 363
         },
-        "93": {
+        "94": {
             "name": "",
             "full_name": "",
             "x_pos": 63,
@@ -900,7 +908,7 @@
             "x_legend_pos": 85,
             "y_legend_pos": 404
         },
-        "94": {
+        "95": {
             "name": "",
             "full_name": "",
             "x_pos": 167,
@@ -908,7 +916,7 @@
             "x_legend_pos": 167,
             "y_legend_pos": 228
         },
-        "95": {
+        "96": {
             "name": "",
             "full_name": "",
             "x_pos": 129,
@@ -916,7 +924,7 @@
             "x_legend_pos": 129,
             "y_legend_pos": 316
         },
-        "96": {
+        "97": {
             "name": "",
             "full_name": "",
             "x_pos": 391,
@@ -924,7 +932,7 @@
             "x_legend_pos": 391,
             "y_legend_pos": 212
         },
-        "97": {
+        "98": {
             "name": "",
             "full_name": "",
             "x_pos": 469,
@@ -932,7 +940,7 @@
             "x_legend_pos": 495,
             "y_legend_pos": 275
         },
-        "98": {
+        "99": {
             "name": "",
             "full_name": "",
             "x_pos": 592,
@@ -940,7 +948,7 @@
             "x_legend_pos": 570,
             "y_legend_pos": 628
         },
-        "99": {
+        "100": {
             "name": "",
             "full_name": "",
             "x_pos": 612,
@@ -948,7 +956,7 @@
             "x_legend_pos": 613,
             "y_legend_pos": 652
         },
-        "100": {
+        "101": {
             "name": "",
             "full_name": "",
             "x_pos": 686,
@@ -956,7 +964,7 @@
             "x_legend_pos": 673,
             "y_legend_pos": 532
         },
-        "101": {
+        "102": {
             "name": "",
             "full_name": "",
             "x_pos": 701,
@@ -964,7 +972,7 @@
             "x_legend_pos": 692,
             "y_legend_pos": 462
         },
-        "102": {
+        "103": {
             "name": "",
             "full_name": "",
             "x_pos": 855,
@@ -972,7 +980,7 @@
             "x_legend_pos": 853,
             "y_legend_pos": 162
         },
-        "103": {
+        "104": {
             "name": "",
             "full_name": "",
             "x_pos": 870,
@@ -995,8 +1003,8 @@
             "y_pos": 583
         },
         "4": {
-            "x_pos": 613,
-            "y_pos": 200
+            "x_pos": 612,
+            "y_pos": 199
         },
         "5": {
             "x_pos": 1236,
@@ -1004,11 +1012,11 @@
         },
         "6": {
             "x_pos": 98,
-            "y_pos": 700
+            "y_pos": 701
         },
         "7": {
-            "x_pos": 877,
-            "y_pos": 155
+            "x_pos": 878,
+            "y_pos": 156
         },
         "8": {
             "x_pos": 119,
@@ -1067,7 +1075,7 @@
             "y_pos": 459
         },
         "22": {
-            "x_pos": 954,
+            "x_pos": 953,
             "y_pos": 171
         },
         "23": {
@@ -1084,11 +1092,11 @@
         },
         "26": {
             "x_pos": 651,
-            "y_pos": 686
+            "y_pos": 687
         },
         "27": {
-            "x_pos": 753,
-            "y_pos": 630
+            "x_pos": 752,
+            "y_pos": 634
         },
         "28": {
             "x_pos": 910,
@@ -1142,7 +1150,43 @@
         }
     },
     "zone_areas": {
-        "71": {
+        "5": {
+            "area": [
+                [
+                    701,
+                    627
+                ],
+                [
+                    704,
+                    628
+                ],
+                [
+                    713,
+                    637
+                ],
+                [
+                    706,
+                    650
+                ],
+                [
+                    701,
+                    646
+                ],
+                [
+                    698,
+                    638
+                ],
+                [
+                    693,
+                    636
+                ],
+                [
+                    696,
+                    631
+                ]
+            ]
+        },
+        "72": {
             "area": [
                 [
                     0,
@@ -1514,7 +1558,7 @@
                 ]
             ]
         },
-        "21": {
+        "22": {
             "area": [
                 [
                     1,
@@ -1698,7 +1742,7 @@
                 ]
             ]
         },
-        "16": {
+        "17": {
             "area": [
                 [
                     1,
@@ -1970,7 +2014,7 @@
                 ]
             ]
         },
-        "87": {
+        "88": {
             "area": [
                 [
                     52,
@@ -2334,7 +2378,7 @@
                 ]
             ]
         },
-        "73": {
+        "74": {
             "area": [
                 [
                     33,
@@ -2474,7 +2518,7 @@
                 ]
             ]
         },
-        "7": {
+        "8": {
             "area": [
                 [
                     84,
@@ -2614,7 +2658,7 @@
                 ]
             ]
         },
-        "54": {
+        "55": {
             "area": [
                 [
                     237,
@@ -2998,7 +3042,7 @@
                 ]
             ]
         },
-        "79": {
+        "80": {
             "area": [
                 [
                     252,
@@ -3134,7 +3178,7 @@
                 ]
             ]
         },
-        "43": {
+        "44": {
             "area": [
                 [
                     233,
@@ -3157,24 +3201,12 @@
                     190
                 ],
                 [
-                    274,
+                    273,
                     186
                 ],
                 [
                     275,
                     188
-                ],
-                [
-                    279,
-                    187
-                ],
-                [
-                    280,
-                    189
-                ],
-                [
-                    283,
-                    186
                 ],
                 [
                     288,
@@ -3298,7 +3330,7 @@
                 ]
             ]
         },
-        "55": {
+        "56": {
             "area": [
                 [
                     324,
@@ -3366,171 +3398,51 @@
                 ],
                 [
                     285,
-                    358
+                    359
                 ],
                 [
-                    286,
-                    356
+                    291,
+                    366
                 ],
                 [
-                    289,
-                    357
+                    285,
+                    369
                 ],
                 [
-                    286,
-                    352
-                ],
-                [
-                    288,
-                    350
-                ],
-                [
-                    300,
-                    363
-                ],
-                [
-                    305,
-                    365
-                ],
-                [
-                    307,
-                    368
-                ],
-                [
-                    307,
-                    370
-                ],
-                [
-                    303,
-                    373
-                ],
-                [
-                    301,
-                    379
-                ],
-                [
-                    296,
-                    380
-                ],
-                [
-                    295,
-                    384
-                ],
-                [
-                    292,
-                    387
-                ],
-                [
-                    288,
-                    386
-                ],
-                [
-                    288,
-                    400
+                    285,
+                    376
                 ],
                 [
                     283,
-                    404
+                    377
                 ],
                 [
-                    282,
-                    407
+                    281,
+                    375
                 ],
                 [
-                    273,
-                    400
-                ],
-                [
-                    270,
-                    402
-                ],
-                [
-                    267,
-                    400
-                ],
-                [
-                    263,
-                    400
-                ],
-                [
-                    265,
-                    407
-                ],
-                [
-                    263,
-                    408
-                ],
-                [
-                    252,
-                    400
-                ],
-                [
-                    251,
-                    395
-                ],
-                [
-                    255,
-                    392
-                ],
-                [
-                    258,
-                    392
-                ],
-                [
-                    260,
-                    394
-                ],
-                [
-                    261,
-                    399
-                ],
-                [
-                    270,
-                    395
-                ],
-                [
-                    266,
-                    390
-                ],
-                [
-                    268,
-                    388
-                ],
-                [
-                    274,
-                    391
-                ],
-                [
-                    279,
-                    391
-                ],
-                [
-                    280,
-                    387
-                ],
-                [
-                    276,
-                    385
+                    281,
+                    371
                 ],
                 [
                     275,
-                    382
-                ],
-                [
-                    273,
-                    382
+                    368
                 ],
                 [
                     272,
-                    380
+                    372
                 ],
                 [
-                    262,
-                    379
+                    267,
+                    369
                 ],
                 [
-                    259,
-                    381
+                    257,
+                    369
+                ],
+                [
+                    250,
+                    372
                 ],
                 [
                     251,
@@ -3545,16 +3457,8 @@
                     379
                 ],
                 [
-                    269,
-                    379
-                ],
-                [
-                    272,
-                    382
-                ],
-                [
-                    274,
-                    382
+                    271,
+                    380
                 ],
                 [
                     280,
@@ -3714,7 +3618,7 @@
                 ]
             ]
         },
-        "26": {
+        "27": {
             "area": [
                 [
                     176,
@@ -3970,7 +3874,7 @@
                 ]
             ]
         },
-        "22": {
+        "23": {
             "area": [
                 [
                     111,
@@ -4070,7 +3974,7 @@
                 ]
             ]
         },
-        "17": {
+        "18": {
             "area": [
                 [
                     372,
@@ -4478,7 +4382,7 @@
                 ]
             ]
         },
-        "76": {
+        "77": {
             "area": [
                 [
                     402,
@@ -4950,7 +4854,7 @@
                 ]
             ]
         },
-        "14": {
+        "15": {
             "area": [
                 [
                     375,
@@ -5730,7 +5634,7 @@
                 ]
             ]
         },
-        "67": {
+        "68": {
             "area": [
                 [
                     227,
@@ -5761,68 +5665,16 @@
                     411
                 ],
                 [
-                    253,
+                    254,
                     402
                 ],
                 [
-                    267,
-                    410
-                ],
-                [
-                    264,
-                    406
-                ],
-                [
-                    263,
-                    401
-                ],
-                [
-                    272,
-                    401
-                ],
-                [
-                    273,
-                    403
-                ],
-                [
-                    270,
-                    406
-                ],
-                [
-                    270,
-                    411
+                    262,
+                    407
                 ],
                 [
                     274,
-                    415
-                ],
-                [
-                    274,
-                    421
-                ],
-                [
-                    275,
-                    415
-                ],
-                [
-                    279,
-                    422
-                ],
-                [
-                    279,
-                    426
-                ],
-                [
-                    277,
-                    428
-                ],
-                [
-                    273,
-                    426
-                ],
-                [
-                    274,
-                    423
+                    419
                 ],
                 [
                     272,
@@ -5837,8 +5689,8 @@
                     430
                 ],
                 [
-                    286,
-                    430
+                    284,
+                    429
                 ],
                 [
                     288,
@@ -5958,7 +5810,7 @@
                 ]
             ]
         },
-        "68": {
+        "69": {
             "area": [
                 [
                     689,
@@ -6166,7 +6018,7 @@
                 ],
                 [
                     563,
-                    406
+                    407
                 ],
                 [
                     567,
@@ -6213,12 +6065,12 @@
                     387
                 ],
                 [
-                    511,
-                    381
+                    515,
+                    383
                 ],
                 [
-                    510,
-                    386
+                    511,
+                    382
                 ],
                 [
                     508,
@@ -6393,8 +6245,8 @@
                     368
                 ],
                 [
-                    466,
-                    364
+                    463,
+                    365
                 ],
                 [
                     471,
@@ -6405,8 +6257,244 @@
                     366
                 ],
                 [
+                    471,
+                    364
+                ],
+                [
+                    466,
+                    364
+                ],
+                [
+                    460,
+                    368
+                ],
+                [
+                    462,
+                    370
+                ],
+                [
+                    473,
+                    371
+                ],
+                [
+                    476,
+                    374
+                ],
+                [
+                    476,
+                    378
+                ],
+                [
                     474,
-                    363
+                    382
+                ],
+                [
+                    471,
+                    383
+                ],
+                [
+                    470,
+                    382
+                ],
+                [
+                    472,
+                    378
+                ],
+                [
+                    467,
+                    377
+                ],
+                [
+                    467,
+                    385
+                ],
+                [
+                    457,
+                    395
+                ],
+                [
+                    457,
+                    397
+                ],
+                [
+                    462,
+                    402
+                ],
+                [
+                    458,
+                    407
+                ],
+                [
+                    446,
+                    409
+                ],
+                [
+                    447,
+                    416
+                ],
+                [
+                    445,
+                    420
+                ],
+                [
+                    445,
+                    425
+                ],
+                [
+                    443,
+                    427
+                ],
+                [
+                    438,
+                    426
+                ],
+                [
+                    432,
+                    428
+                ],
+                [
+                    431,
+                    425
+                ],
+                [
+                    435,
+                    423
+                ],
+                [
+                    438,
+                    419
+                ],
+                [
+                    431,
+                    418
+                ],
+                [
+                    421,
+                    425
+                ],
+                [
+                    418,
+                    431
+                ],
+                [
+                    415,
+                    432
+                ],
+                [
+                    415,
+                    425
+                ],
+                [
+                    420,
+                    419
+                ],
+                [
+                    420,
+                    417
+                ],
+                [
+                    416,
+                    419
+                ],
+                [
+                    414,
+                    424
+                ],
+                [
+                    410,
+                    428
+                ],
+                [
+                    408,
+                    427
+                ],
+                [
+                    409,
+                    415
+                ],
+                [
+                    413,
+                    410
+                ],
+                [
+                    419,
+                    409
+                ],
+                [
+                    421,
+                    412
+                ],
+                [
+                    423,
+                    412
+                ],
+                [
+                    426,
+                    409
+                ],
+                [
+                    426,
+                    407
+                ],
+                [
+                    421,
+                    404
+                ],
+                [
+                    430,
+                    399
+                ],
+                [
+                    434,
+                    404
+                ],
+                [
+                    439,
+                    404
+                ],
+                [
+                    442,
+                    400
+                ],
+                [
+                    441,
+                    393
+                ],
+                [
+                    446,
+                    392
+                ],
+                [
+                    452,
+                    388
+                ],
+                [
+                    454,
+                    381
+                ],
+                [
+                    451,
+                    375
+                ],
+                [
+                    447,
+                    372
+                ],
+                [
+                    455,
+                    364
+                ],
+                [
+                    463,
+                    360
+                ],
+                [
+                    472,
+                    362
+                ],
+                [
+                    474,
+                    364
                 ],
                 [
                     466,
@@ -6426,7 +6514,7 @@
                 ],
                 [
                     454,
-                    381
+                    384
                 ],
                 [
                     452,
@@ -6714,7 +6802,7 @@
                 ]
             ]
         },
-        "33": {
+        "34": {
             "area": [
                 [
                     568,
@@ -7018,7 +7106,7 @@
                 ]
             ]
         },
-        "13": {
+        "14": {
             "area": [
                 [
                     1181,
@@ -7086,7 +7174,7 @@
                 ]
             ]
         },
-        "37": {
+        "38": {
             "area": [
                 [
                     1060,
@@ -7438,7 +7526,7 @@
                 ]
             ]
         },
-        "52": {
+        "53": {
             "area": [
                 [
                     1012,
@@ -7754,7 +7842,7 @@
                 ]
             ]
         },
-        "81": {
+        "82": {
             "area": [
                 [
                     1072,
@@ -7850,7 +7938,7 @@
                 ]
             ]
         },
-        "34": {
+        "35": {
             "area": [
                 [
                     1089,
@@ -8014,7 +8102,7 @@
                 ]
             ]
         },
-        "15": {
+        "16": {
             "area": [
                 [
                     1063,
@@ -8234,7 +8322,7 @@
                 ]
             ]
         },
-        "86": {
+        "87": {
             "area": [
                 [
                     923,
@@ -8558,7 +8646,7 @@
                 ]
             ]
         },
-        "63": {
+        "64": {
             "area": [
                 [
                     846,
@@ -8754,7 +8842,7 @@
                 ]
             ]
         },
-        "78": {
+        "79": {
             "area": [
                 [
                     708,
@@ -8937,18 +9025,6 @@
                     389
                 ],
                 [
-                    892,
-                    390
-                ],
-                [
-                    894,
-                    393
-                ],
-                [
-                    896,
-                    391
-                ],
-                [
                     898,
                     392
                 ],
@@ -8989,7 +9065,7 @@
                     420
                 ],
                 [
-                    921,
+                    922,
                     423
                 ],
                 [
@@ -9033,8 +9109,12 @@
                     405
                 ],
                 [
-                    772,
-                    402
+                    776,
+                    403
+                ],
+                [
+                    771,
+                    401
                 ],
                 [
                     765,
@@ -9250,7 +9330,7 @@
                 ]
             ]
         },
-        "70": {
+        "71": {
             "area": [
                 [
                     698,
@@ -9301,7 +9381,7 @@
                     394
                 ],
                 [
-                    765,
+                    764,
                     395
                 ],
                 [
@@ -9670,7 +9750,7 @@
                 ]
             ]
         },
-        "61": {
+        "62": {
             "area": [
                 [
                     730,
@@ -9761,7 +9841,7 @@
                     481
                 ],
                 [
-                    691,
+                    692,
                     481
                 ],
                 [
@@ -9822,27 +9902,11 @@
                 ],
                 [
                     658,
-                    469
-                ],
-                [
-                    656,
-                    469
-                ],
-                [
-                    654,
-                    467
-                ],
-                [
-                    655,
                     466
                 ],
                 [
-                    651,
+                    650,
                     464
-                ],
-                [
-                    647,
-                    465
                 ],
                 [
                     644,
@@ -10033,7 +10097,7 @@
                     466
                 ],
                 [
-                    535,
+                    534,
                     468
                 ],
                 [
@@ -10090,7 +10154,11 @@
                 ],
                 [
                     555,
-                    439
+                    438
+                ],
+                [
+                    557,
+                    438
                 ],
                 [
                     560,
@@ -10113,8 +10181,8 @@
                     407
                 ],
                 [
-                    595,
-                    403
+                    604,
+                    402
                 ],
                 [
                     647,
@@ -10129,72 +10197,8 @@
                     401
                 ],
                 [
-                    672,
-                    404
-                ],
-                [
-                    671,
-                    394
-                ],
-                [
-                    673,
-                    388
-                ],
-                [
-                    675,
-                    390
-                ],
-                [
-                    675,
-                    401
-                ],
-                [
-                    685,
-                    418
-                ],
-                [
-                    689,
-                    421
-                ],
-                [
-                    695,
-                    421
-                ],
-                [
-                    698,
-                    423
-                ],
-                [
-                    695,
-                    429
-                ],
-                [
-                    692,
-                    428
-                ],
-                [
-                    688,
-                    430
-                ],
-                [
-                    684,
-                    426
-                ],
-                [
-                    682,
-                    419
-                ],
-                [
-                    677,
-                    415
-                ],
-                [
-                    672,
-                    406
-                ],
-                [
-                    677,
-                    415
+                    674,
+                    411
                 ],
                 [
                     682,
@@ -10262,7 +10266,7 @@
                 ]
             ]
         },
-        "64": {
+        "65": {
             "area": [
                 [
                     786,
@@ -10426,7 +10430,7 @@
                 ]
             ]
         },
-        "18": {
+        "19": {
             "area": [
                 [
                     758,
@@ -10509,47 +10513,7 @@
                     506
                 ],
                 [
-                    849,
-                    500
-                ],
-                [
-                    849,
-                    495
-                ],
-                [
-                    847,
-                    491
-                ],
-                [
-                    850,
-                    488
-                ],
-                [
-                    853,
-                    488
-                ],
-                [
-                    855,
-                    492
-                ],
-                [
-                    857,
-                    490
-                ],
-                [
-                    863,
-                    490
-                ],
-                [
-                    866,
-                    496
-                ],
-                [
-                    866,
-                    500
-                ],
-                [
-                    859,
+                    860,
                     506
                 ],
                 [
@@ -10629,199 +10593,7 @@
                     537
                 ],
                 [
-                    866,
-                    535
-                ],
-                [
-                    861,
-                    534
-                ],
-                [
-                    867,
-                    536
-                ],
-                [
-                    859,
-                    540
-                ],
-                [
-                    860,
-                    542
-                ],
-                [
                     864,
-                    541
-                ],
-                [
-                    867,
-                    543
-                ],
-                [
-                    875,
-                    543
-                ],
-                [
-                    878,
-                    546
-                ],
-                [
-                    882,
-                    547
-                ],
-                [
-                    885,
-                    551
-                ],
-                [
-                    880,
-                    554
-                ],
-                [
-                    881,
-                    558
-                ],
-                [
-                    879,
-                    560
-                ],
-                [
-                    875,
-                    561
-                ],
-                [
-                    872,
-                    564
-                ],
-                [
-                    868,
-                    564
-                ],
-                [
-                    866,
-                    568
-                ],
-                [
-                    859,
-                    568
-                ],
-                [
-                    854,
-                    565
-                ],
-                [
-                    854,
-                    560
-                ],
-                [
-                    850,
-                    557
-                ],
-                [
-                    852,
-                    555
-                ],
-                [
-                    849,
-                    552
-                ],
-                [
-                    843,
-                    555
-                ],
-                [
-                    833,
-                    555
-                ],
-                [
-                    831,
-                    553
-                ],
-                [
-                    826,
-                    554
-                ],
-                [
-                    823,
-                    550
-                ],
-                [
-                    818,
-                    550
-                ],
-                [
-                    814,
-                    543
-                ],
-                [
-                    816,
-                    539
-                ],
-                [
-                    816,
-                    534
-                ],
-                [
-                    819,
-                    530
-                ],
-                [
-                    818,
-                    525
-                ],
-                [
-                    824,
-                    522
-                ],
-                [
-                    826,
-                    519
-                ],
-                [
-                    828,
-                    519
-                ],
-                [
-                    829,
-                    522
-                ],
-                [
-                    834,
-                    525
-                ],
-                [
-                    830,
-                    529
-                ],
-                [
-                    832,
-                    533
-                ],
-                [
-                    829,
-                    534
-                ],
-                [
-                    829,
-                    539
-                ],
-                [
-                    833,
-                    537
-                ],
-                [
-                    849,
-                    537
-                ],
-                [
-                    853,
-                    539
-                ],
-                [
-                    853,
-                    533
-                ],
-                [
-                    859,
                     534
                 ],
                 [
@@ -10869,16 +10641,12 @@
                     525
                 ],
                 [
-                    829,
-                    522
+                    830,
+                    523
                 ],
                 [
                     828,
-                    518
-                ],
-                [
-                    823,
-                    522
+                    519
                 ],
                 [
                     819,
@@ -11030,7 +10798,7 @@
                 ]
             ]
         },
-        "39": {
+        "40": {
             "area": [
                 [
                     980,
@@ -11458,7 +11226,7 @@
                 ]
             ]
         },
-        "72": {
+        "73": {
             "area": [
                 [
                     959,
@@ -11718,7 +11486,7 @@
                 ]
             ]
         },
-        "9": {
+        "10": {
             "area": [
                 [
                     995,
@@ -11986,7 +11754,7 @@
                 ]
             ]
         },
-        "45": {
+        "46": {
             "area": [
                 [
                     835,
@@ -12074,7 +11842,7 @@
                 ]
             ]
         },
-        "84": {
+        "85": {
             "area": [
                 [
                     812,
@@ -12141,16 +11909,12 @@
                     644
                 ],
                 [
-                    754,
-                    643
-                ],
-                [
-                    747,
-                    643
+                    746,
+                    642
                 ],
                 [
                     746,
-                    639
+                    640
                 ],
                 [
                     743,
@@ -12162,67 +11926,35 @@
                 ],
                 [
                     742,
-                    631
-                ],
-                [
-                    746,
-                    628
-                ],
-                [
-                    748,
                     629
                 ],
                 [
-                    747,
-                    633
+                    736,
+                    626
                 ],
                 [
-                    750,
-                    636
-                ],
-                [
-                    753,
-                    636
-                ],
-                [
-                    756,
-                    633
-                ],
-                [
-                    756,
-                    630
-                ],
-                [
-                    753,
-                    627
-                ],
-                [
-                    755,
+                    736,
                     623
                 ],
                 [
-                    751,
-                    621
+                    741,
+                    618
+                ],
+                [
+                    743,
+                    620
                 ],
                 [
                     756,
                     620
                 ],
                 [
-                    762,
-                    616
-                ],
-                [
                     768,
                     610
                 ],
                 [
-                    768,
-                    607
-                ],
-                [
-                    776,
-                    601
+                    769,
+                    606
                 ],
                 [
                     781,
@@ -12246,7 +11978,7 @@
                 ]
             ]
         },
-        "24": {
+        "25": {
             "area": [
                 [
                     818,
@@ -12390,7 +12122,7 @@
                 ]
             ]
         },
-        "46": {
+        "47": {
             "area": [
                 [
                     787,
@@ -12486,7 +12218,7 @@
                 ]
             ]
         },
-        "83": {
+        "84": {
             "area": [
                 [
                     646,
@@ -12678,7 +12410,7 @@
                 ]
             ]
         },
-        "35": {
+        "36": {
             "area": [
                 [
                     530,
@@ -12798,7 +12530,7 @@
                 ]
             ]
         },
-        "27": {
+        "28": {
             "area": [
                 [
                     600,
@@ -12954,7 +12686,7 @@
                 ]
             ]
         },
-        "6": {
+        "7": {
             "area": [
                 [
                     603,
@@ -13106,7 +12838,7 @@
                 ]
             ]
         },
-        "5": {
+        "6": {
             "area": [
                 [
                     700,
@@ -13226,7 +12958,7 @@
                 ]
             ]
         },
-        "23": {
+        "24": {
             "area": [
                 [
                     625,
@@ -13282,19 +13014,11 @@
                 ]
             ]
         },
-        "66": {
+        "67": {
             "area": [
                 [
                     652,
                     464
-                ],
-                [
-                    655,
-                    466
-                ],
-                [
-                    653,
-                    467
                 ],
                 [
                     655,
@@ -13442,7 +13166,7 @@
                 ]
             ]
         },
-        "80": {
+        "81": {
             "area": [
                 [
                     641,
@@ -13558,15 +13282,15 @@
                 ]
             ]
         },
-        "25": {
+        "26": {
             "area": [
                 [
                     651,
                     470
                 ],
                 [
-                    657,
-                    469
+                    654,
+                    470
                 ],
                 [
                     660,
@@ -13670,8 +13394,16 @@
                 ]
             ]
         },
-        "44": {
+        "45": {
             "area": [
+                [
+                    654,
+                    465
+                ],
+                [
+                    659,
+                    466
+                ],
                 [
                     660,
                     464
@@ -13690,18 +13422,22 @@
                 ],
                 [
                     693,
-                    468
+                    467
                 ],
                 [
-                    688,
-                    476
+                    690,
+                    474
+                ],
+                [
+                    686,
+                    477
                 ],
                 [
                     674,
                     477
                 ],
                 [
-                    673,
+                    674,
                     479
                 ],
                 [
@@ -13725,12 +13461,12 @@
                     489
                 ],
                 [
-                    700,
-                    485
+                    696,
+                    488
                 ],
                 [
-                    694,
-                    484
+                    698,
+                    485
                 ],
                 [
                     692,
@@ -13830,7 +13566,7 @@
                 ],
                 [
                     667,
-                    551
+                    552
                 ],
                 [
                     667,
@@ -13861,16 +13597,24 @@
                     523
                 ],
                 [
-                    689,
-                    516
+                    687,
+                    520
                 ],
                 [
-                    687,
-                    514
+                    689,
+                    518
                 ],
                 [
                     686,
-                    499
+                    509
+                ],
+                [
+                    687,
+                    502
+                ],
+                [
+                    685,
+                    498
                 ],
                 [
                     681,
@@ -13901,12 +13645,16 @@
                     475
                 ],
                 [
-                    658,
-                    473
+                    655,
+                    471
+                ],
+                [
+                    653,
+                    467
                 ]
             ]
         },
-        "85": {
+        "86": {
             "area": [
                 [
                     769,
@@ -13981,24 +13729,12 @@
                     620
                 ],
                 [
-                    736,
-                    623
-                ],
-                [
-                    736,
-                    626
-                ],
-                [
                     726,
                     631
                 ],
                 [
-                    717,
-                    632
-                ],
-                [
-                    714,
-                    630
+                    715,
+                    631
                 ],
                 [
                     713,
@@ -14094,7 +13830,7 @@
                 ]
             ]
         },
-        "40": {
+        "41": {
             "area": [
                 [
                     626,
@@ -14238,7 +13974,7 @@
                 ]
             ]
         },
-        "89": {
+        "90": {
             "area": [
                 [
                     637,
@@ -14382,23 +14118,19 @@
                 ]
             ]
         },
-        "32": {
+        "33": {
             "area": [
                 [
-                    747,
-                    620
-                ],
-                [
-                    748,
-                    622
-                ],
-                [
-                    744,
+                    735,
                     625
                 ],
                 [
-                    742,
+                    739,
                     629
+                ],
+                [
+                    737,
+                    631
                 ],
                 [
                     732,
@@ -14407,10 +14139,6 @@
                 [
                     726,
                     634
-                ],
-                [
-                    725,
-                    636
                 ],
                 [
                     726,
@@ -14437,12 +14165,12 @@
                     651
                 ],
                 [
-                    724,
+                    727,
                     649
                 ],
                 [
                     720,
-                    652
+                    651
                 ],
                 [
                     726,
@@ -14453,8 +14181,8 @@
                     654
                 ],
                 [
-                    730,
-                    654
+                    731,
+                    655
                 ],
                 [
                     730,
@@ -14465,32 +14193,24 @@
                     662
                 ],
                 [
-                    732,
+                    731,
                     663
                 ],
                 [
-                    724,
-                    661
-                ],
-                [
-                    718,
-                    656
+                    721,
+                    659
                 ],
                 [
                     716,
                     652
                 ],
                 [
+                    709,
+                    649
+                ],
+                [
                     708,
-                    648
-                ],
-                [
-                    711,
-                    641
-                ],
-                [
-                    717,
-                    635
+                    647
                 ],
                 [
                     718,
@@ -14499,26 +14219,10 @@
                 [
                     726,
                     631
-                ],
-                [
-                    734,
-                    627
-                ],
-                [
-                    737,
-                    628
-                ],
-                [
-                    737,
-                    622
-                ],
-                [
-                    740,
-                    620
                 ]
             ]
         },
-        "28": {
+        "29": {
             "area": [
                 [
                     493,
@@ -14754,7 +14458,7 @@
                 ]
             ]
         },
-        "74": {
+        "75": {
             "area": [
                 [
                     514,
@@ -14791,54 +14495,6 @@
                 [
                     1175,
                     17
-                ],
-                [
-                    1158,
-                    8
-                ],
-                [
-                    1163,
-                    12
-                ],
-                [
-                    1174,
-                    17
-                ],
-                [
-                    1152,
-                    21
-                ],
-                [
-                    1149,
-                    17
-                ],
-                [
-                    1151,
-                    16
-                ],
-                [
-                    1154,
-                    18
-                ],
-                [
-                    1158,
-                    18
-                ],
-                [
-                    1157,
-                    13
-                ],
-                [
-                    1145,
-                    6
-                ],
-                [
-                    1151,
-                    5
-                ],
-                [
-                    1155,
-                    7
                 ],
                 [
                     1152,
@@ -14970,7 +14626,7 @@
                 ]
             ]
         },
-        "50": {
+        "51": {
             "area": [
                 [
                     490,
@@ -15526,7 +15182,7 @@
                 ]
             ]
         },
-        "31": {
+        "32": {
             "area": [
                 [
                     121,
@@ -15726,7 +15382,7 @@
                 ]
             ]
         },
-        "51": {
+        "52": {
             "area": [
                 [
                     74,
@@ -16166,7 +15822,7 @@
                 ]
             ]
         },
-        "12": {
+        "13": {
             "area": [
                 [
                     176,
@@ -16718,7 +16374,7 @@
                 ]
             ]
         },
-        "62": {
+        "63": {
             "area": [
                 [
                     812,
@@ -16882,7 +16538,7 @@
                 ]
             ]
         },
-        "59": {
+        "60": {
             "area": [
                 [
                     806,
@@ -17090,7 +16746,7 @@
                 ]
             ]
         },
-        "60": {
+        "61": {
             "area": [
                 [
                     686,
@@ -17246,7 +16902,7 @@
                 ]
             ]
         },
-        "56": {
+        "57": {
             "area": [
                 [
                     660,
@@ -17341,32 +16997,16 @@
                     695
                 ],
                 [
-                    656,
-                    693
+                    658,
+                    691
                 ],
                 [
-                    659,
-                    690
+                    658,
+                    685
                 ],
                 [
-                    660,
-                    692
-                ],
-                [
-                    661,
-                    690
-                ],
-                [
-                    660,
-                    686
-                ],
-                [
-                    657,
-                    683
-                ],
-                [
-                    657,
-                    679
+                    655,
+                    680
                 ],
                 [
                     666,
@@ -17377,32 +17017,8 @@
                     675
                 ],
                 [
-                    684,
-                    673
-                ],
-                [
-                    683,
-                    675
-                ],
-                [
-                    669,
-                    674
-                ],
-                [
-                    665,
-                    671
-                ],
-                [
-                    667,
-                    669
-                ],
-                [
-                    681,
-                    667
-                ],
-                [
                     685,
-                    671
+                    672
                 ],
                 [
                     682,
@@ -17470,15 +17086,11 @@
                 ]
             ]
         },
-        "69": {
+        "70": {
             "area": [
                 [
-                    1240,
-                    23
-                ],
-                [
-                    1243,
-                    27
+                    1241,
+                    25
                 ],
                 [
                     1247,
@@ -17581,8 +17193,12 @@
                     455
                 ],
                 [
-                    1135,
-                    453
+                    1136,
+                    454
+                ],
+                [
+                    1132,
+                    448
                 ],
                 [
                     1131,
@@ -17605,56 +17221,16 @@
                     449
                 ],
                 [
-                    1154,
+                    1157,
                     449
-                ],
-                [
-                    1146,
-                    448
-                ],
-                [
-                    1141,
-                    445
-                ],
-                [
-                    1138,
-                    441
-                ],
-                [
-                    1141,
-                    437
-                ],
-                [
-                    1151,
-                    432
-                ],
-                [
-                    1159,
-                    431
-                ],
-                [
-                    1161,
-                    433
-                ],
-                [
-                    1164,
-                    441
                 ],
                 [
                     1162,
                     445
                 ],
                 [
-                    1156,
-                    449
-                ],
-                [
-                    1159,
-                    448
-                ],
-                [
                     1164,
-                    442
+                    441
                 ],
                 [
                     1160,
@@ -17725,12 +17301,12 @@
                     29
                 ],
                 [
-                    1233,
-                    23
+                    1229,
+                    25
                 ]
             ]
         },
-        "48": {
+        "49": {
             "area": [
                 [
                     1070,
@@ -17934,7 +17510,7 @@
                 ]
             ]
         },
-        "65": {
+        "66": {
             "area": [
                 [
                     1072,
@@ -18238,7 +17814,7 @@
                 ]
             ]
         },
-        "53": {
+        "54": {
             "area": [
                 [
                     606,
@@ -18450,7 +18026,7 @@
                 ]
             ]
         },
-        "47": {
+        "48": {
             "area": [
                 [
                     796,
@@ -18782,7 +18358,7 @@
                 ]
             ]
         },
-        "11": {
+        "12": {
             "area": [
                 [
                     582,
@@ -19038,7 +18614,7 @@
                 ]
             ]
         },
-        "8": {
+        "9": {
             "area": [
                 [
                     720,
@@ -19418,7 +18994,7 @@
                 ]
             ]
         },
-        "10": {
+        "11": {
             "area": [
                 [
                     1064,
@@ -19698,7 +19274,7 @@
                 ]
             ]
         },
-        "20": {
+        "21": {
             "area": [
                 [
                     891,
@@ -19734,7 +19310,7 @@
                 ]
             ]
         },
-        "19": {
+        "20": {
             "area": [
                 [
                     886,
@@ -19814,7 +19390,7 @@
                 ]
             ]
         },
-        "29": {
+        "30": {
             "area": [
                 [
                     1170,
@@ -20034,7 +19610,7 @@
                 ]
             ]
         },
-        "30": {
+        "31": {
             "area": [
                 [
                     575,
@@ -20354,7 +19930,7 @@
                 ]
             ]
         },
-        "36": {
+        "37": {
             "area": [
                 [
                     1149,
@@ -20714,7 +20290,7 @@
                 ]
             ]
         },
-        "38": {
+        "39": {
             "area": [
                 [
                     900,
@@ -20830,7 +20406,7 @@
                 ]
             ]
         },
-        "41": {
+        "42": {
             "area": [
                 [
                     911,
@@ -20934,7 +20510,7 @@
                 ]
             ]
         },
-        "42": {
+        "43": {
             "area": [
                 [
                     830,
@@ -20994,7 +20570,7 @@
                 ]
             ]
         },
-        "49": {
+        "50": {
             "area": [
                 [
                     659,
@@ -21154,7 +20730,7 @@
                 ]
             ]
         },
-        "58": {
+        "59": {
             "area": [
                 [
                     895,
@@ -21242,7 +20818,7 @@
                 ]
             ]
         },
-        "57": {
+        "58": {
             "area": [
                 [
                     1021,
@@ -21510,7 +21086,7 @@
                 ]
             ]
         },
-        "75": {
+        "76": {
             "area": [
                 [
                     1071,
@@ -21586,7 +21162,7 @@
                 ]
             ]
         },
-        "77": {
+        "78": {
             "area": [
                 [
                     895,
@@ -21978,7 +21554,7 @@
                 ]
             ]
         },
-        "82": {
+        "83": {
             "area": [
                 [
                     364,
@@ -22101,15 +21677,27 @@
                     416
                 ],
                 [
-                    270,
-                    411
+                    271,
+                    413
                 ],
                 [
                     270,
-                    406
+                    408
                 ],
                 [
-                    274,
+                    264,
+                    405
+                ],
+                [
+                    263,
+                    401
+                ],
+                [
+                    267,
+                    400
+                ],
+                [
+                    269,
                     402
                 ],
                 [
@@ -22234,7 +21822,7 @@
                 ]
             ]
         },
-        "88": {
+        "89": {
             "area": [
                 [
                     836,
@@ -22402,7 +21990,7 @@
                 ]
             ]
         },
-        "97": {
+        "98": {
             "area": [
                 [
                     466,
@@ -22430,7 +22018,7 @@
                 ]
             ]
         },
-        "96": {
+        "97": {
             "area": [
                 [
                     388,
@@ -22458,7 +22046,7 @@
                 ]
             ]
         },
-        "92": {
+        "93": {
             "area": [
                 [
                     63,
@@ -22486,7 +22074,7 @@
                 ]
             ]
         },
-        "93": {
+        "94": {
             "area": [
                 [
                     60,
@@ -22514,7 +22102,7 @@
                 ]
             ]
         },
-        "95": {
+        "96": {
             "area": [
                 [
                     126,
@@ -22542,7 +22130,7 @@
                 ]
             ]
         },
-        "94": {
+        "95": {
             "area": [
                 [
                     164,
@@ -22570,7 +22158,7 @@
                 ]
             ]
         },
-        "99": {
+        "100": {
             "area": [
                 [
                     609,
@@ -22598,7 +22186,7 @@
                 ]
             ]
         },
-        "98": {
+        "99": {
             "area": [
                 [
                     589,
@@ -22626,7 +22214,7 @@
                 ]
             ]
         },
-        "101": {
+        "102": {
             "area": [
                 [
                     698,
@@ -22654,7 +22242,7 @@
                 ]
             ]
         },
-        "100": {
+        "101": {
             "area": [
                 [
                     683,
@@ -22682,7 +22270,7 @@
                 ]
             ]
         },
-        "102": {
+        "103": {
             "area": [
                 [
                     852,
@@ -22710,7 +22298,7 @@
                 ]
             ]
         },
-        "103": {
+        "104": {
             "area": [
                 [
                     867,
@@ -22738,7 +22326,7 @@
                 ]
             ]
         },
-        "91": {
+        "92": {
             "area": [
                 [
                     43,
@@ -22766,7 +22354,7 @@
                 ]
             ]
         },
-        "90": {
+        "91": {
             "area": [
                 [
                     7,
