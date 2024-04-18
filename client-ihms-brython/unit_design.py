@@ -52,40 +52,40 @@ def stabbeur_army(x_pos: int, y_pos: int, transpose: bool, ctx):
 
     # basement
     p_basement = [
-        Point(-15, 6),
-        Point(-15, 9),
-        Point(6, 9),
-        Point(6, 6)
+        Point(-11, 5),
+        Point(-11, 7),
+        Point(5, 7),
+        Point(5, 5)
     ]
     draw_poly(x_pos, y_pos, p_basement, transpose, True, ctx)
 
     # corner
     p_corner = [
-        Point(-9, 6),
-        Point(-4, 6),
-        Point(-7, 3)
+        Point(-7, 5),
+        Point(-3, 5),
+        Point(-5, 2)
     ]
     draw_poly(x_pos, y_pos, p_corner, transpose, True, ctx)
 
     # cannon
     p_cannon = [
-        Point(-2, -7),
-        Point(3, -14),
-        Point(4, -12),
-        Point(0, -7)
+        Point(-2, -5),
+        Point(2, -10),
+        Point(3, -9),
+        Point(0, -5)
     ]
     draw_poly(x_pos, y_pos, p_cannon, transpose, True, ctx)
 
     # circle around external wheel
-    draw_circle(x_pos, y_pos, 6, ctx)
+    draw_circle(x_pos, y_pos, 5, ctx)
 
     # internal wheel
     draw_circle(x_pos, y_pos, 2, ctx)
 
     # external corner
     p_ext_corner = [
-        Point(-7, 3),
-        Point(-9, 6)
+        Point(-5, 2),
+        Point(-7, 5)
     ]
     draw_poly(x_pos, y_pos, p_ext_corner, transpose, False, ctx)
 
@@ -97,44 +97,44 @@ def stabbeur_fleet(x_pos: int, y_pos: int, transpose: bool, ctx):
 
     # big work
     p_big_work = [
-        Point(- 15, 4),
-        Point(16, 4),
-        Point(15, 0),
-        Point(10, 0),
-        Point(10, - 3),
-        Point(7, - 3),
-        Point(7, - 2),
-        Point(4, - 2),
-        Point(4, - 9),
-        Point(3, - 9),
-        Point(3, - 6),
-        Point(- 1, - 6),
-        Point(- 1, - 9),
-        Point(- 2, - 9),
-        Point(- 2, - 13),
-        Point(- 3, - 13),
-        Point(- 3, - 6),
-        Point(- 6, - 6),
-        Point(- 6, - 5),
-        Point(- 3, - 5),
-        Point(- 3, - 4),
-        Point(- 4, - 3),
+        Point(- 11, 3),
+        Point(12, 3),
+        Point(11, 0),
+        Point(8, 0),
+        Point(8, - 2),
+        Point(5, - 2),
+        Point(5, - 2),
+        Point(3, - 2),
+        Point(3, - 7),
+        Point(2, - 7),
+        Point(2, - 5),
+        Point(- 1, - 5),
+        Point(- 1, - 7),
+        Point(- 2, - 7),
+        Point(- 2, - 11),
+        Point(- 2, - 11),
+        Point(- 2, - 5),
+        Point(- 5, - 5),
+        Point(- 5, - 4),
+        Point(- 2, - 4),
+        Point(- 2, - 3),
+        Point(- 3, - 2),
+        Point(- 3, - 2),
         Point(- 4, - 2),
-        Point(- 5, - 2),
-        Point(- 5, - 3),
-        Point(- 9, - 3),
+        Point(- 4, - 2),
+        Point(- 7, - 2),
+        Point(- 7, 0),
         Point(- 9, 0),
-        Point(- 12, 0),
-        Point(- 12, - 1),
-        Point(- 13, - 1),
-        Point(- 13, 0),
-        Point(- 12, 0),
-        Point(- 15, 4)
+        Point(- 9, - 1),
+        Point(- 11, - 1),
+        Point(- 11, 0),
+        Point(- 9, 0),
+        Point(- 11, 4)
     ]
     draw_poly(x_pos, y_pos, p_big_work, transpose, True, ctx)
 
     # porthole
-    p_porthole = [Point(- 8 + 5 * i + 1, 1) for i in range(5)]
+    p_porthole = [Point(- 6 + 4 * i + 1, 1) for i in range(4)]
     if transpose:
         p_porthole = [p.transpose() for p in p_porthole]
     for point in p_porthole:
