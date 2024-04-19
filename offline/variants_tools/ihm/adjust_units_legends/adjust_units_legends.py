@@ -93,10 +93,11 @@ DELTA_LEGEND_EXPECTED_Y = -14
 
 
 class Point:
-    """ Point for easier compatbility with old C software (do not use a record here) """
-    def __init__(self) -> None:
-        self.x = 0  # pylint: disable=invalid-name
-        self.y = 0  # pylint: disable=invalid-name
+    """ Point """
+
+    def __init__(self, x: int, y: int) -> None:  # pylint: disable=invalid-name
+        self.x = x  # pylint: disable=invalid-name
+        self.y = y  # pylint: disable=invalid-name
 
 
 def stabbeur_center(x: int, y: int, canvas: typing.Any) -> None:  # pylint: disable=invalid-name
@@ -110,56 +111,58 @@ def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> typing.Li
 
     items = []
 
-    # socle
-    p1 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
-    p1[0].x = x - 15; p1[0].y = y + 6
-    p1[1].x = x - 15; p1[1].y = y + 9
-    p1[2].x = x + 6; p1[2].y = y + 9
-    p1[3].x = x + 6; p1[3].y = y + 6
+    # basement
+    p_basement = [
+        Point(-11, 5),
+        Point(-11, 7),
+        Point(5, 7),
+        Point(5, 5)
+    ]
 
-    flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p1))
+    flat_points = itertools.chain.from_iterable(map(lambda p: (x+p.x, y+p.y), p_basement))
     polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
     items.append(polygon)
 
-    # coin
-    p2 = [Point() for _ in range(3)]  # pylint: disable=invalid-name
-    p2[0].x = x - 9; p2[0].y = y + 6
-    p2[1].x = x - 4; p2[1].y = y + 6
-    p2[2].x = x - 7; p2[2].y = y + 3
+    # corner
+    p_corner = [
+        Point(-7, 5),
+        Point(-3, 5),
+        Point(-5, 2)
+    ]
 
-    flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p2))
+    flat_points = itertools.chain.from_iterable(map(lambda p: (x+p.x, y+p.y), p_corner))
     polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
     items.append(polygon)
 
-    # canon
-    p3 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
-    p3[0].x = x - 2; p3[0].y = y - 7
-    p3[1].x = x + 3; p3[1].y = y - 14
-    p3[2].x = x + 4; p3[2].y = y - 12
-    p3[3].x = x; p3[3].y = y - 7
+    # cannon
+    p_cannon = [
+        Point(-2, -5),
+        Point(2, -10),
+        Point(3, -9),
+        Point(0, -5)
+    ]
 
-    flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p3))
+    flat_points = itertools.chain.from_iterable(map(lambda p: (x+p.x, y+p.y), p_cannon))
     polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
     items.append(polygon)
 
-    # cercle autour roue exterieure
-    # simplified
+    # circle around external wheel
     radius = 6
     oval = canvas.create_oval(x - radius, y - radius, x + radius, y + radius, outline=outline)
     items.append(oval)
 
-    # roue interieure
-    # simplified
+    # internal wheel
     radius = 2
     oval = canvas.create_oval(x - radius, y - radius, x + radius, y + radius, outline=outline)
     items.append(oval)
 
-    # exterieur coin
-    p4 = [Point() for _ in range(2)]  # pylint: disable=invalid-name
-    p4[0].x = x - 7; p4[0].y = y + 3
-    p4[1].x = x - 9; p4[1].y = y + 6
+    # external corner
+    p_ext_corner = [
+        Point(-5, 2),
+        Point(-7, 5)
+    ]
 
-    flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p4))
+    flat_points = itertools.chain.from_iterable(map(lambda p: (x+p.x, y+p.y), p_ext_corner))
     polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
     items.append(polygon)
 
@@ -171,50 +174,48 @@ def stabbeur_fleet(x: int, y: int, canvas: typing.Any, outline: str) -> typing.L
 
     items = []
 
-    # gros oeuvre
-    p1 = [Point() for _ in range(33)]  # pylint: disable=invalid-name
-    p1[0].x = x - 15; p1[0].y = y + 4
-    p1[1].x = x + 16; p1[1].y = y + 4
-    p1[2].x = x + 15; p1[2].y = y
-    p1[3].x = x + 10; p1[3].y = y
-    p1[4].x = x + 10; p1[4].y = y - 3
-    p1[5].x = x + 7; p1[5].y = y - 3
-    p1[6].x = x + 7; p1[6].y = y - 2
-    p1[7].x = x + 4; p1[7].y = y - 2
-    p1[8].x = x + 4; p1[8].y = y - 9
-    p1[9].x = x + 3; p1[9].y = y - 9
-    p1[10].x = x + 3; p1[10].y = y - 6
-    p1[11].x = x - 1; p1[11].y = y - 6
-    p1[12].x = x - 1; p1[12].y = y - 9
-    p1[13].x = x - 2; p1[13].y = y - 9
-    p1[14].x = x - 2; p1[14].y = y - 13
-    p1[15].x = x - 3; p1[15].y = y - 13
-    p1[16].x = x - 3; p1[16].y = y - 6
-    p1[17].x = x - 6; p1[17].y = y - 6
-    p1[18].x = x - 6; p1[18].y = y - 5
-    p1[19].x = x - 3; p1[19].y = y - 5
-    p1[20].x = x - 3; p1[20].y = y - 4
-    p1[21].x = x - 4; p1[21].y = y - 3
-    p1[22].x = x - 4; p1[22].y = y - 2
-    p1[23].x = x - 5; p1[23].y = y - 2
-    p1[24].x = x - 5; p1[24].y = y - 3
-    p1[25].x = x - 9; p1[25].y = y - 3
-    p1[26].x = x - 9; p1[26].y = y
-    p1[27].x = x - 12; p1[27].y = y
-    p1[28].x = x - 12; p1[28].y = y - 1
-    p1[29].x = x - 13; p1[29].y = y - 1
-    p1[30].x = x - 13; p1[30].y = y
-    p1[31].x = x - 12; p1[31].y = y
-    p1[32].x = x - 15; p1[32].y = y + 4
+    # big work
+    p_big_work = [
+        Point(- 11, 3),
+        Point(12, 3),
+        Point(11, 0),
+        Point(8, 0),
+        Point(8, - 2),
+        Point(5, - 2),
+        Point(3, - 2),
+        Point(3, - 7),
+        Point(2, - 7),
+        Point(2, - 5),
+        Point(- 1, - 5),
+        Point(- 1, - 7),
+        Point(- 2, - 7),
+        Point(- 2, - 11),
+        Point(- 2, - 5),
+        Point(- 5, - 5),
+        Point(- 5, - 4),
+        Point(- 2, - 4),
+        Point(- 2, - 3),
+        Point(- 3, - 2),
+        Point(- 4, - 2),
+        Point(- 7, - 2),
+        Point(- 7, 0),
+        Point(- 9, 0),
+        Point(- 9, - 1),
+        Point(- 11, - 1),
+        Point(- 11, 0),
+        Point(- 9, 0),
+        Point(- 11, 4)
+    ]
 
-    flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p1))
+    flat_points = itertools.chain.from_iterable(map(lambda p: (x + p.x, y + p.y), p_big_work))
     polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
     items.append(polygon)
 
     # hublots
-    for i in range(5):
-        radius = 1
-        oval = canvas.create_oval(x - 8 + 5 * i + 1 - radius, y + 1 - radius, x - 8 + 5 * i + 1 + radius, y + 1 + radius, outline=outline)
+    p_porthole = [Point(- 6 + 4 * i + 1, 1) for i in range(4)]
+    radius = 1
+    for p in p_porthole:
+        oval = canvas.create_oval(x + p.x - radius, y + p.y - radius, x + p.x - radius, y + p.y + radius, outline=outline)
         items.append(oval)
 
     return items
@@ -301,7 +302,7 @@ class Application(tkinter.Frame):
         self.item_table: typing.Dict[int, typing.Any] = {}
 
         # backup
-        self.prev_zone_data = {}
+        self.prev_zone_data: typing.Dict[str, typing.Any] = {}
 
         # actual creation of widgets
         self.create_widgets(self, map_file, parameters_file)
