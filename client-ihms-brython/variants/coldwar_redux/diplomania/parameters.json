@@ -137,9 +137,9 @@
             "name": "afg",
             "full_name": "Afghanistan",
             "x_pos": 944,
-            "y_pos": 492,
+            "y_pos": 501,
             "x_legend_pos": 944,
-            "y_legend_pos": 478
+            "y_legend_pos": 487
         },
         "3": {
             "name": "AfN",
@@ -317,10 +317,10 @@
         "24": {
             "name": "Dan",
             "full_name": "Danemark",
-            "x_pos": 629,
-            "y_pos": 558,
-            "x_legend_pos": 615,
-            "y_legend_pos": 578,
+            "x_pos": 630,
+            "y_pos": 566,
+            "x_legend_pos": 630,
+            "y_legend_pos": 555,
             "display": 4
         },
         "25": {
@@ -377,9 +377,9 @@
             "name": "GBr",
             "full_name": " Grande Bretagne ",
             "x_pos": 569,
-            "y_pos": 581,
-            "x_legend_pos": 572,
-            "y_legend_pos": 566,
+            "y_pos": 590,
+            "x_legend_pos": 577,
+            "y_legend_pos": 581,
             "display": 4
         },
         "32": {
@@ -429,10 +429,10 @@
         "37": {
             "name": "Ids",
             "full_name": "Indonésie",
-            "x_pos": 1152,
-            "y_pos": 112,
-            "x_legend_pos": 1152,
-            "y_legend_pos": 98
+            "x_pos": 1143,
+            "y_pos": 129,
+            "x_legend_pos": 1143,
+            "y_legend_pos": 115
         },
         "38": {
             "name": "Ind",
@@ -1007,8 +1007,8 @@
             "y_pos": 199
         },
         "5": {
-            "x_pos": 1236,
-            "y_pos": 18
+            "x_pos": 1235,
+            "y_pos": 19
         },
         "6": {
             "x_pos": 98,
@@ -1055,7 +1055,7 @@
             "y_pos": 109
         },
         "17": {
-            "x_pos": 261,
+            "x_pos": 260,
             "y_pos": 197
         },
         "18": {
