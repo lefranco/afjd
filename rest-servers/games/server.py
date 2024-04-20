@@ -2984,6 +2984,11 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(400, msg="We are not after deadline, please change deadline first.")
 
+            # are civil disorders allowed for the game ?
+            if not game.civil_disorder_allowed():
+                del sql_executor
+                flask_restful.abort(400, msg="Civil disorder in this game, for this season, does not seem to be allowed. Sent a notification to player.")
+
             # handle definitive boolean
             # game master forced player to agree to adjudicate
             now = time.time()
