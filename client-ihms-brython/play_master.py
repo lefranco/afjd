@@ -925,8 +925,13 @@ def game_master():
                 if role_id not in agreed_now_roles_list and role_id not in agreed_after_roles_list:
                     if pseudo_there:
                         if time_stamp_now > deadline_loaded:
-                            input_force_agreement = html.INPUT(type="submit", value="Forcer accord", title="Ceci forcera l'accord pour résoudre du joueur, déclenchant éventuellement la résolution", Class='btn-inside')
-                            input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
+
+                            allowed = play_low.civil_disorder_allowed(advancement_loaded)
+
+                            if allowed:
+                                input_force_agreement = html.INPUT(type="submit", value="Forcer accord", title="Ceci forcera l'accord pour résoudre du joueur, déclenchant éventuellement la résolution", Class='btn-inside')
+                                input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
+
         col <= input_force_agreement
         row <= col
 
