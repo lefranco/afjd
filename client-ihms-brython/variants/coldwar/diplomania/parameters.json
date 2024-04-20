@@ -126,8 +126,8 @@
         "5": {
             "name": "Alb",
             "full_name": "Albanie",
-            "x_pos": 705,
-            "y_pos": 638,
+            "x_pos": 703,
+            "y_pos": 633,
             "x_legend_pos": 705,
             "y_legend_pos": 624
         },
@@ -235,7 +235,8 @@
             "x_pos": 399,
             "y_pos": 276,
             "x_legend_pos": 399,
-            "y_legend_pos": 262
+            "y_legend_pos": 262,
+            "display": 1
         },
         "19": {
             "name": "Cau",
@@ -963,8 +964,8 @@
             "y_pos": 205
         },
         "2": {
-            "x_pos": 100,
-            "y_pos": 100
+            "x_pos": 705,
+            "y_pos": 645
         },
         "3": {
             "x_pos": 657,
@@ -1063,8 +1064,8 @@
             "y_pos": 634
         },
         "27": {
-            "x_pos": 500,
-            "y_pos": 500
+            "x_pos": 766,
+            "y_pos": 184
         }
     },
     "seasons": {
