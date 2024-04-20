@@ -663,7 +663,7 @@ def select_game(selected_variant, selected_state):
     variant_list = {d['variant'] for d in games_dict.values()}
 
     input_variant = html.SELECT(type="select-one", value="", Class='btn-inside')
-    for variant in variant_list:
+    for variant in sorted(variant_list):
         option = html.OPTION(variant)
         if variant == selected_variant:
             option.selected = True
