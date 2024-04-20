@@ -1,0 +1,181 @@
+Cold War
+
+_
+$ Contexte
+En pleine guerre froide, deux puissances s'affrontent : L'Organisation Territoriale Atlantique Nord (menée par les Etats-Unis d'Amériques) et le Pacte de Varsovie (menée par l'Union des Républiques Socialistes Soviétiques).
+
+_
+$ Côtes spéciales
+
+(Colombie)
+   Elle a 2 côtes, Ouest (Océan Pacifique) et Est (Océan Atlantique).
+(Amérique Centrale)
+   Elle a 2 côtes, Ouest (Océan Pacifique) et Est (Océan Atlantique).
+(Mexique)
+   Il a 2 côtes, Ouest (Océan Pacifique) et Est (Océan Atlantique).
+(Canada Occidental)
+   Il a 2 côtes, Ouest (Océan Pacifique) et Nord (Océan Arctique).
+(France)
+   Elle a 2 côtes, Nord (Océan Atlantique) et Sud (Mer Méditerranée).
+(Léningrad)
+   Elle a 2 côtes, Nord (Mer de Baltique) et Sud (Mer de Norvège).
+(Corée du Nord)
+   Elle a 2 côtes, Ouest (Mer Jaune) et Est (Mer du Japon).
+
+_
+$ Particularités de la carte
+
+La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question (et des ponts pour les armées)
+
+(Canal en Egypte)
+Une flotte peut aller de Mer Noire à Mer Méditerranée Est en traversant l'Egypte (et réciproquement).
+(Canal du Panama)
+Une flotte peut aller de Mer des Caraïbes à Mer Pacifique Est en traversant le Panama (et réciproquement).
+
+(Pont en Indonésie)
+Une armée peut aller de Philippine en Australie en traversant l'Indonésie (et réciproquement).
+
+(Clarifications autour de la Suède, du Danemark, de la Mer du Nord et de la Mer Baltique)
+Une flotte peut aller de Mer du Nord à Mer Baltique directement (et réciproquement).
+Une armée peut aller de Danemark à Suède directement (et réciproquement).
+
+(Clarifications autour du Canada Occidental et du Groenland)
+Une flotte de l'Ouest Canadien ne peut pas atteindre le Groenland (et réciproquement).
+
+_
+$ Datation
+
+La partie commence en *1961*. 
+Chaque tour représente *1* année "en temps réel".
+
+_
+$ Centres de ravitaillement
+
+Il y a *27* centres de ravitaillement sur le plateau. 
+.
+(Attention :)
+L'obtention de plus de la moitié des centres n'arrête pas la partie.
+
+_
+$ Puissances en présence
+
+Il y a deux puissances dont les unités de départ sont les suivantes :
+.
+.
+= Position de départ
+|Puissance | Centres |  Armées | Flottes | Centres inoccupés|
+|OTAN | 3 | New-York, France, Los Angeles | Australie, Grande-Bretagne, Turquie  | |
+|Varsovie | 4 | Moscou, Vladivostok, Shangaï | Cuba, Albanie, Leningrad côte sud | |
+=
+
+_
+$ Pièges de la variante
+
+Le Canada de l'Ouest ne borde pas le Groenland mais la Mer du Nord borde la Suède.
+
+_
+$ Nomenclature
+
+= Régions et abréviations de la variante
+| Abréviation | Nom complet |
+| AfE | Afrique de l’Est |
+| afg | Afghanistan |
+| AfN | Afrique du Nord |
+| Ala | Alaska |
+| Alb | Albanie |
+| AlE | Allemagne de l’Est |
+| AlO | Allemagne de l’Ouest |
+| AmC | Amérique Centrale |
+| Ana | Anadyr |
+| Arb | Arabie |
+| AsS | Asie du Sud |
+| ATE | Atlantique Est |
+| ATO | Atlantique Ouest |
+| Aus | Australie |
+| BHU | Baie d’Hudson |
+| Bng | Bangladesh |
+| Bre | Brésil |
+| CaO | Canada Occidental |
+| Cau | Caucase |
+| CdN | Corée du Nord |
+| CdS | Corée du Sud |
+| Col | Colombie |
+| Cub | Cuba |
+| Dan | Danemark |
+| Egy | Egypte |
+| Fin | Finlande |
+| Flo | Floride |
+| Fra | France |
+| GAL | Golfe d’Alaska |
+| GBE | Golfe du Bengale |
+| GBr |  Grande Bretagne  |
+| GME | Golfe du Mexique |
+| Gre | Grèce |
+| Gro | Groënland |
+| Han | Hanoï |
+| Ibe | Ibérie |
+| Ids | Indonésie |
+| Ind | Inde |
+| Irk | Irak |
+| Irn | Iran |
+| Ita | Italie |
+| Jap | Japon |
+| Kur | Kurdistan |
+| LAn | Los Angeles |
+| Len | Léningrad |
+| Lev | Levant |
+| Lib | Libye |
+| Man | Mandchourie |
+| MAR | Mer d’Arabie |
+| MBA | Mer Baltique |
+| MBE | Mer de Béring |
+| MCA | Mer des Caraïbes |
+| MCS | Mer de Chine Sud |
+| MDN | Mer du Nord |
+| Mex | Mexique |
+| mid | Midwest |
+| MIO | Mer Ionienne |
+| MJN | Mer Jaune |
+| MJP | Mer du Japon |
+| MME | Mer Méditerranée Est |
+| MMO | Mer Méditerranée Ouest |
+| MNG | Mer de Norvège |
+| MNO | Mer Noire |
+| mon | Mongolie |
+| mos | Moscou |
+| MRO | Mer Rouge |
+| Nge | Norvège |
+| NYo | New York |
+| OAR | Océan Arctique |
+| OIN | Océan Indien |
+| Our | Oural |
+| PAE | Pacifique Est |
+| Pak | Pakistan |
+| Pan | Panama |
+| PAO | Pacifique Ouest |
+| Phi | Philippines |
+| Que | Québec |
+| Sha | Shanghaï |
+| Sib | Sibérie |
+| SoW | South West |
+| Sue | Suède |
+| SVi | Sud Vietnam |
+| Tor | Toronto |
+| Tun | Tunisie |
+| Tur | Turquie |
+| Ukr | Ukraine |
+| uru | Urumchi |
+| Ven | Vénézuela |
+| Vla | Vladivostok |
+| You | Yougoslavie |
+=
+
+_
+$ Expansionnisme (non)
+
+Constructions sur les centres de départ comme dans la variante standard.
+
+_
+$ Sur le wiki
+
+[[https://diplomania-gen.fr/dokuwiki/doku.php?id=variante:cold_war]]
