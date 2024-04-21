@@ -128,7 +128,7 @@
             "full_name": "Albanie",
             "x_pos": 703,
             "y_pos": 633,
-            "x_legend_pos": 705,
+            "x_legend_pos": 700,
             "y_legend_pos": 624
         },
         "6": {
@@ -343,9 +343,9 @@
             "name": "GBr",
             "full_name": " Grande Bretagne ",
             "x_pos": 569,
-            "y_pos": 590,
-            "x_legend_pos": 577,
-            "y_legend_pos": 581,
+            "y_pos": 569,
+            "x_legend_pos": 579,
+            "y_legend_pos": 584,
             "display": 1
         },
         "32": {
@@ -359,10 +359,10 @@
         "33": {
             "name": "Gre",
             "full_name": "Grèce",
-            "x_pos": 723,
-            "y_pos": 656,
-            "x_legend_pos": 723,
-            "y_legend_pos": 642,
+            "x_pos": 727,
+            "y_pos": 654,
+            "x_legend_pos": 718,
+            "y_legend_pos": 645,
             "display": 1
         },
         "34": {
@@ -562,10 +562,10 @@
         "57": {
             "name": "MIO",
             "full_name": "Mer Ionienne",
-            "x_pos": 707,
-            "y_pos": 678,
-            "x_legend_pos": 707,
-            "y_legend_pos": 664
+            "x_pos": 702,
+            "y_pos": 686,
+            "x_legend_pos": 702,
+            "y_legend_pos": 672
         },
         "58": {
             "name": "MJN",
@@ -644,10 +644,10 @@
         "67": {
             "name": "Nge",
             "full_name": "Norvège",
-            "x_pos": 618,
-            "y_pos": 542,
-            "x_legend_pos": 618,
-            "y_legend_pos": 528,
+            "x_pos": 621,
+            "y_pos": 528,
+            "x_legend_pos": 620,
+            "y_legend_pos": 544,
             "display": 1
         },
         "68": {
@@ -773,10 +773,10 @@
         "82": {
             "name": "SVi",
             "full_name": "Sud Vietnam",
-            "x_pos": 1090,
-            "y_pos": 210,
-            "x_legend_pos": 1125,
-            "y_legend_pos": 228
+            "x_pos": 1129,
+            "y_pos": 226,
+            "x_legend_pos": 1092,
+            "y_legend_pos": 213
         },
         "83": {
             "name": "Tor",
