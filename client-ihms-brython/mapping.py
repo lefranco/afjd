@@ -17,17 +17,20 @@ MAX_PROXIMITY_ITEM_UNIT = 10
 # for filling zones
 TRANSPARENCY = 0.70
 
+# for shortening arrow
+EPSILON_SHORTER_ARROW = 3
+
 
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
     """ shorten the segment a little bit (returns new x_dest, y_dest) """
-    epsilon = 5
 
     delta_x = x_dest - x_start
     delta_y = y_dest - y_start
     dist = sqrt(delta_x**2 + delta_y**2)
-    if dist < 2 * epsilon:
+    if dist < 2 * EPSILON_SHORTER_ARROW:
         return x_dest, y_dest
-    new_dist = dist - epsilon
+
+    new_dist = dist - EPSILON_SHORTER_ARROW
     ratio = new_dist / dist
     new_x_dest = x_start + ratio * delta_x
     new_y_dest = y_start + ratio * delta_y
