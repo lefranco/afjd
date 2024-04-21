@@ -571,8 +571,8 @@ def legend_font() -> str:
 LEGEND_FONT = legend_font()
 
 
-def authors_font() -> str:
-    """ authors_font """
+def map_text_font() -> str:
+    """ map_text_font """
 
     font_style = 'italic'
     font_variant = 'normal'
@@ -582,11 +582,15 @@ def authors_font() -> str:
     return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"
 
 
-AUTHORS_FONT = authors_font()
+MAP_TEXT_FONT = map_text_font()
 VARIANT_AUTHOR_X_POS = 10
 VARIANT_AUTHOR_Y_POS = 12
 MAP_AUTHOR_X_POS = 10
 MAP_AUTHOR_Y_POS = 25
+ADDITIONAL_X_POS = 10
+ADDITIONAL_Y_POS = -10
+TEXT_HEIGHT_PIXEL = 10
+
 
 # center
 CENTER_COLOUR = ColourRecord(red=200, green=200, blue=200)  # light grey
@@ -606,6 +610,9 @@ class Variant(Renderable):
         # load the authors
         self._variant_author = raw_variant_content['author']
         self._map_author = raw_parameters_content['author']
+
+        # load the additional_text
+        self._additional_text = raw_parameters_content['additional_text']
 
         # build everywhere
         self._build_everywhere = raw_variant_content['build_everywhere']
@@ -922,10 +929,16 @@ class Variant(Renderable):
         for zone in self._zones.values():
             zone.render(ctx)
 
+        ctx.font = MAP_TEXT_FONT
+
         # put the authors
-        ctx.font = AUTHORS_FONT
         ctx.fillText(f"Variante : {self._variant_author}", VARIANT_AUTHOR_X_POS, VARIANT_AUTHOR_Y_POS)
         ctx.fillText(f"Carte : {self._map_author}", MAP_AUTHOR_X_POS, MAP_AUTHOR_Y_POS)
+
+        # put the additional
+        for num, chunk in enumerate(self._additional_text.split('\n')):
+            additional_y_pos = self._map_size.y_pos - TEXT_HEIGHT_PIXEL * (len(self._additional_text.split('\n')) - num)
+            ctx.fillText(chunk, ADDITIONAL_X_POS, additional_y_pos)
 
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """

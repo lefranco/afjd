@@ -1,6 +1,7 @@
 {
     "author": "Thibaud Idoux",
-    "map": {
+    "additional_text" : "Carte pour les daltoniens",
+   "map": {
         "width": 761,
         "height": 703
     },
