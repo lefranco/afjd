@@ -72,6 +72,9 @@ def sender_threaded_procedure() -> None:
         # do not put failed message back on queue if bad address
         if exception.find("Recipient address rejected: Domain not found") != -1:
             return False
+        # do not put failed message back on queue if email has an accent
+        if exception.find("'ascii' codec can't encode character") != -1:
+            return False
         return True
 
     with APP.app_context():
