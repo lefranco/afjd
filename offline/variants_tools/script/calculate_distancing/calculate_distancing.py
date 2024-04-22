@@ -66,7 +66,9 @@ def main() -> None:
             reachables.update(new_ones)
 
             dist += 1
-            assert dist <= MAX_DIST, f"Infinite loop ! for {role=} {zone=}"
+            if dist > MAX_DIST:
+                print(f"WARNING : By {'army' if neighbouring==neighbouring_army else 'fleet'} {role=} has no access to {zone=}")
+                return dist
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--variant_file', required=True, help='Load variant json file')
