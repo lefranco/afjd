@@ -214,6 +214,10 @@ class Application(tkinter.Frame):
             # update on screen
             erase(self.focused_num_center)
             draw(self.focused_num_center, True)
+            region_num = self.json_variant_data['centers'][self.focused_num_center-1]
+            region_name = self.json_parameters_data['zones'][str(region_num)]['name']
+            region_full_name = self.json_parameters_data['zones'][str(region_num)]['full_name']
+            self.center_selected.config(text = f"{region_full_name} ({region_name})")
 
         def key_callback(event: typing.Any) -> None:
             if event.char == '+':
@@ -301,8 +305,11 @@ class Application(tkinter.Frame):
         frame_buttons_information = tkinter.Frame(main_frame)
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
 
+        self.center_selected = tkinter.Label(frame_buttons_information, text="-", justify=tkinter.LEFT)
+        self.center_selected.grid(row=2, column=1, sticky='we')
+
         self.save_button = tkinter.Button(frame_buttons_information, text="save", command=save_callback)
-        self.save_button.grid(row=2, column=1, sticky='we')
+        self.save_button.grid(row=3, column=1, sticky='we')
 
     def menu_complete_quit(self) -> None:
 
