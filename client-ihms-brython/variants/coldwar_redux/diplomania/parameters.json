@@ -165,7 +165,8 @@
             "x_pos": 703,
             "y_pos": 633,
             "x_legend_pos": 700,
-            "y_legend_pos": 624
+            "y_legend_pos": 624,
+            "display": 2
         },
         "6": {
             "name": "AlE",
@@ -318,10 +319,10 @@
         "24": {
             "name": "Dan",
             "full_name": "Danemark",
-            "x_pos": 630,
-            "y_pos": 566,
-            "x_legend_pos": 630,
-            "y_legend_pos": 555,
+            "x_pos": 627,
+            "y_pos": 570,
+            "x_legend_pos": 627,
+            "y_legend_pos": 557,
             "display": 4
         },
         "25": {
