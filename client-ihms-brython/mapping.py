@@ -1560,7 +1560,7 @@ class Position(Renderable):
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
 
-        # start centers
+        # *start* centers hence the True value for parameter 'active' - put an extra circle
         for center in self._variant.centers.values():
             center.render(ctx, True)
 
