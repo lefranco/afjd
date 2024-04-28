@@ -1182,7 +1182,7 @@ def submit_orders():
         buttons_right <= input_now
         buttons_right <= html.BR()
 
-        option_after = "à la date limite"
+        option_after = "à la date limite (*)"
         label_after = html.LABEL(html.EM(option_after))
         buttons_right <= label_after
 
@@ -1223,6 +1223,9 @@ def submit_orders():
             buttons_right <= html.DIV("Pour communiquer avec des ordres (ordres invalides) utilisez le sous-menu 'taguer'", Class='Note')
             buttons_right <= html.BR()
         buttons_right <= html.DIV("Pour exporter la position vers le bac à sable passer par le sous-menu 'consulter'", Class='Note')
+        buttons_right <= html.BR()
+        buttons_right <= html.I("(*) Utilisez s'il vous plaît ce bouton 'à bon escient', puisqu'il retarde la résolution !", Class='Note')
+        buttons_right <= html.BR()
         buttons_right <= html.BR()
 
     # need to be connected
