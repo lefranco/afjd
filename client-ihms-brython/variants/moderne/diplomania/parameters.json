@@ -1,6 +1,6 @@
 {
     "author": "(Inconnu)",
-    "additional_text" : "",
+    "additional_text": "",
     "map": {
         "width": 942,
         "height": 732
@@ -604,8 +604,8 @@
         "48": {
             "name": "rom",
             "full_name": "Rome",
-            "x_pos": 326,
-            "y_pos": 472,
+            "x_pos": 338,
+            "y_pos": 469,
             "x_legend_pos": 340,
             "y_legend_pos": 483
         },
