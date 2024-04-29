@@ -1216,15 +1216,16 @@ def submit_orders():
         buttons_right <= input_submit
         buttons_right <= html.BR()
         buttons_right <= html.BR()
+        buttons_right <= html.I("(*) Utilisez s'il vous plaît ce bouton 'à bon escient', puisqu'il retarde la résolution !", Class='Note')
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
         buttons_right <= html.DIV("La soumission des ordres prend également en compte l'accord pour la résolution", Class='instruction')
         buttons_right <= html.BR()
         if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
-            buttons_right <= html.DIV("Pour communiquer avec des ordres (ordres invalides) utilisez le sous-menu 'taguer'", Class='Note')
+            buttons_right <= html.DIV("Pour communiquer avec des ordres invalides, utiliser le sous-menu 'taguer'", Class='Note')
             buttons_right <= html.BR()
-        buttons_right <= html.DIV("Pour exporter la position vers le bac à sable passer par le sous-menu 'consulter'", Class='Note')
-        buttons_right <= html.BR()
-        buttons_right <= html.I("(*) Utilisez s'il vous plaît ce bouton 'à bon escient', puisqu'il retarde la résolution !", Class='Note')
+        buttons_right <= html.DIV("Pour exporter la position vers le bac à sable, passer par le sous-menu 'consulter'", Class='Note')
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
