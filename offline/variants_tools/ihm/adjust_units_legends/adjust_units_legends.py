@@ -119,7 +119,7 @@ def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> typing.Li
         Point(5, 5)
     ]
 
-    flat_points = itertools.chain.from_iterable(map(lambda p: (x+p.x, y+p.y), p_basement))
+    flat_points = itertools.chain.from_iterable(map(lambda p: (x + p.x, y + p.y), p_basement))
     polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
     items.append(polygon)
 
@@ -130,7 +130,7 @@ def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> typing.Li
         Point(-5, 2)
     ]
 
-    flat_points = itertools.chain.from_iterable(map(lambda p: (x+p.x, y+p.y), p_corner))
+    flat_points = itertools.chain.from_iterable(map(lambda p: (x + p.x, y + p.y), p_corner))
     polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
     items.append(polygon)
 
@@ -142,7 +142,7 @@ def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> typing.Li
         Point(0, -5)
     ]
 
-    flat_points = itertools.chain.from_iterable(map(lambda p: (x+p.x, y+p.y), p_cannon))
+    flat_points = itertools.chain.from_iterable(map(lambda p: (x + p.x, y + p.y), p_cannon))
     polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
     items.append(polygon)
 
@@ -162,7 +162,7 @@ def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> typing.Li
         Point(-7, 5)
     ]
 
-    flat_points = itertools.chain.from_iterable(map(lambda p: (x+p.x, y+p.y), p_ext_corner))
+    flat_points = itertools.chain.from_iterable(map(lambda p: (x + p.x, y + p.y), p_ext_corner))
     polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
     items.append(polygon)
 
@@ -214,8 +214,8 @@ def stabbeur_fleet(x: int, y: int, canvas: typing.Any, outline: str) -> typing.L
     # hublots
     p_porthole = [Point(- 6 + 4 * i + 1, 1) for i in range(4)]
     radius = 1
-    for p in p_porthole:
-        oval = canvas.create_oval(x + p.x - radius, y + p.y - radius, x + p.x - radius, y + p.y + radius, outline=outline)
+    for point in p_porthole:
+        oval = canvas.create_oval(x + point.x - radius, y + point.y - radius, x + point.x - radius, y + point.y + radius, outline=outline)
         items.append(oval)
 
     return items
@@ -292,7 +292,9 @@ class Application(tkinter.Frame):
         # zones
         self.zones_data = self.json_parameters_data['zones']
 
-        # zones areas
+        # zones areas (create empy if none)
+        if 'zone_areas' not in self.json_parameters_data:
+            self.json_parameters_data['zone_areas'] = []
         self.zone_areas = self.json_parameters_data['zone_areas']
 
         # speed
