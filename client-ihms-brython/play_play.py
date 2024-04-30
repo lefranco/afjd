@@ -1216,7 +1216,7 @@ def submit_orders():
         buttons_right <= input_submit
         buttons_right <= html.BR()
         buttons_right <= html.BR()
-        buttons_right <= html.I("(*) Utilisez s'il vous plaît ce bouton 'à bon escient', puisqu'il retarde la résolution !", Class='Note')
+        buttons_right <= html.I("(*) Utilisez s'il vous plaît ce choix 'à bon escient', puisqu'il retarde la résolution !", Class='Note')
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
