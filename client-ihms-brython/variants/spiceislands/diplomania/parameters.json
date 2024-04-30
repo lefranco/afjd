@@ -61,7 +61,7 @@
         },
         "2": {
             "name": "Majapahit",
-            "adjective_name": "Java",
+            "adjective_name": "Majapahit",
             "letter_name": "J",
             "red": [
                 33,
@@ -78,7 +78,7 @@
         },
         "3": {
             "name": "Tondo",
-            "adjective_name": "Luson",
+            "adjective_name": "Tondo",
             "letter_name": "L",
             "red": [
                 235,
@@ -112,7 +112,7 @@
         },
         "5": {
             "name": "Ayutthaya",
-            "adjective_name": "Siam",
+            "adjective_name": "Ayutthaya",
             "letter_name": "S",
             "red": [
                 235,
@@ -145,8 +145,8 @@
             ]
         },
         "7": {
-            "name": "Dai_Viet",
-            "adjective_name": "Vietnam",
+            "name": "DaiViet",
+            "adjective_name": "DaiViet",
             "letter_name": "V",
             "red": [
                 221,
@@ -178,16 +178,16 @@
     },
     "zones": {
         "1": {
-            "name": "Als",
-            "full_name": "Alsace",
+            "name": "Ace",
+            "full_name": "Aceh",
             "x_pos": 515,
             "y_pos": 374,
             "x_legend_pos": 515,
             "y_legend_pos": 360
         },
         "2": {
-            "name": "Ang",
-            "full_name": "Anglie",
+            "name": "Ava",
+            "full_name": "Ava",
             "x_pos": 229,
             "y_pos": 228,
             "x_legend_pos": 229,
@@ -195,8 +195,8 @@
             "display": 1
         },
         "3": {
-            "name": "Anj",
-            "full_name": "Anjou",
+            "name": "Ayu",
+            "full_name": "Ayutthaya",
             "x_pos": 254,
             "y_pos": 398,
             "x_legend_pos": 254,
@@ -204,72 +204,72 @@
             "display": 2
         },
         "4": {
-            "name": "Ara",
-            "full_name": "Aragon",
+            "name": "BaS",
+            "full_name": "Banda Sea",
             "x_pos": 243,
             "y_pos": 612,
             "x_legend_pos": 243,
             "y_legend_pos": 598
         },
         "5": {
-            "name": "Atl",
-            "full_name": "Atlantique",
+            "name": "Bik",
+            "full_name": "Bikol",
             "x_pos": 37,
             "y_pos": 581,
             "x_legend_pos": 37,
             "y_legend_pos": 567
         },
         "6": {
-            "name": "Bis",
-            "full_name": "Biscay",
+            "name": "Bru",
+            "full_name": "Brunei",
             "x_pos": 138,
             "y_pos": 468,
             "x_legend_pos": 138,
             "y_legend_pos": 454
         },
         "7": {
-            "name": "Brs",
-            "full_name": "Canal de Bristol",
+            "name": "Bur",
+            "full_name": "Buru",
             "x_pos": 72,
             "y_pos": 299,
             "x_legend_pos": 72,
             "y_legend_pos": 285
         },
         "8": {
-            "name": "Bre",
-            "full_name": "Bretagne",
+            "name": "But",
+            "full_name": "Buton",
             "x_pos": 199,
             "y_pos": 380,
             "x_legend_pos": 199,
             "y_legend_pos": 366
         },
         "9": {
-            "name": "Cal",
-            "full_name": "Calais",
+            "name": "Bun",
+            "full_name": "Butuan",
             "x_pos": 326,
             "y_pos": 315,
             "x_legend_pos": 326,
             "y_legend_pos": 301
         },
         "10": {
-            "name": "Can",
-            "full_name": "Cantons",
+            "name": "Cha",
+            "full_name": "Chaiya",
             "x_pos": 472,
             "y_pos": 429,
             "x_legend_pos": 472,
             "y_legend_pos": 415
         },
         "11": {
-            "name": "Cas",
-            "full_name": "Castille",
+            "name": "Chp",
+            "full_name": "Champa",
             "x_pos": 129,
             "y_pos": 658,
             "x_legend_pos": 129,
             "y_legend_pos": 644
         },
         "12": {
-            "name": "Cha",
-            "full_name": "Charolais",
+            "name": "ChS",
+            "full_name": "Champa Sea",
             "x_pos": 404,
             "y_pos": 417,
             "x_legend_pos": 404,
@@ -277,48 +277,48 @@
             "display": 2
         },
         "13": {
-            "name": "Dau",
-            "full_name": "Dauphiné",
+            "name": "Cha",
+            "full_name": "Champassak",
             "x_pos": 398,
             "y_pos": 474,
             "x_legend_pos": 398,
             "y_legend_pos": 460
         },
         "14": {
-            "name": "Dev",
-            "full_name": "Comté du Devon",
+            "name": "Chi",
+            "full_name": "Chiangmai",
             "x_pos": 195,
             "y_pos": 274,
             "x_legend_pos": 195,
             "y_legend_pos": 260
         },
         "15": {
-            "name": "Dij",
-            "full_name": "Dijon",
+            "name": "Daw",
+            "full_name": "Dawei",
             "x_pos": 409,
             "y_pos": 356,
             "x_legend_pos": 409,
             "y_legend_pos": 342
         },
         "16": {
-            "name": "Man",
-            "full_name": "Manche",
+            "name": "ECS",
+            "full_name": "East China Sea",
             "x_pos": 169,
             "y_pos": 331,
             "x_legend_pos": 169,
             "y_legend_pos": 317
         },
         "17": {
-            "name": "Fla",
-            "full_name": "Flandres",
+            "name": "EaO",
+            "full_name": "Eastern Ocean",
             "x_pos": 385,
             "y_pos": 293,
             "x_legend_pos": 385,
             "y_legend_pos": 279
         },
         "18": {
-            "name": "Fri",
-            "full_name": "Friedland",
+            "name": "Fai",
+            "full_name": "Faifo",
             "x_pos": 439,
             "y_pos": 218,
             "x_legend_pos": 420,
@@ -326,32 +326,32 @@
             "display": 3
         },
         "19": {
-            "name": "Guy",
-            "full_name": "Guyenne",
+            "name": "GDT",
+            "full_name": "Gulf of Dai Viet",
             "x_pos": 251,
             "y_pos": 536,
             "x_legend_pos": 251,
             "y_legend_pos": 522
         },
         "20": {
-            "name": "Hol",
-            "full_name": "Hollande",
+            "name": "GuS",
+            "full_name": "Gulf of Siam",
             "x_pos": 415,
             "y_pos": 260,
             "x_legend_pos": 395,
             "y_legend_pos": 250
         },
         "21": {
-            "name": "Irl",
-            "full_name": "Mer d'Irlande",
+            "name": "GuT",
+            "full_name": "Gulf of Tomini",
             "x_pos": 90,
             "y_pos": 216,
             "x_legend_pos": 90,
             "y_legend_pos": 202
         },
         "22": {
-            "name": "Lim",
-            "full_name": "Limousin",
+            "name": "Hai",
+            "full_name": "Haiphong",
             "x_pos": 334,
             "y_pos": 486,
             "x_legend_pos": 334,
@@ -359,16 +359,16 @@
             "display": 2
         },
         "23": {
-            "name": "Lon",
-            "full_name": "Londres",
+            "name": "Hal",
+            "full_name": "Halmahera",
             "x_pos": 239,
             "y_pos": 275,
             "x_legend_pos": 232,
             "y_legend_pos": 262
         },
         "24": {
-            "name": "Lor",
-            "full_name": "Lorraine",
+            "name": "Han",
+            "full_name": "Hanoi",
             "x_pos": 460,
             "y_pos": 378,
             "x_legend_pos": 460,
@@ -376,48 +376,48 @@
             "display": 3
         },
         "25": {
-            "name": "Lux",
-            "full_name": "Luxembourg",
+            "name": "Jam",
+            "full_name": "Jambi",
             "x_pos": 446,
             "y_pos": 303,
             "x_legend_pos": 446,
             "y_legend_pos": 289
         },
         "26": {
-            "name": "Med",
-            "full_name": "Mer Méditerranée",
+            "name": "JaS",
+            "full_name": "Java Sea",
             "x_pos": 431,
             "y_pos": 660,
             "x_legend_pos": 431,
             "y_legend_pos": 646
         },
         "27": {
-            "name": "Min",
-            "full_name": "Minch du Nord",
+            "name": "Jav",
+            "full_name": "Javadvipa",
             "x_pos": 44,
             "y_pos": 95,
             "x_legend_pos": 44,
             "y_legend_pos": 81
         },
         "28": {
-            "name": "Nom",
-            "full_name": "Normandie",
+            "name": "KaS",
+            "full_name": "Karimata Sea",
             "x_pos": 277,
             "y_pos": 357,
             "x_legend_pos": 243,
             "y_legend_pos": 354
         },
         "29": {
-            "name": "Nor",
-            "full_name": "Mer du Nord",
+            "name": "Kas",
+            "full_name": "Kasiguran",
             "x_pos": 274,
             "y_pos": 75,
             "x_legend_pos": 274,
             "y_legend_pos": 61
         },
         "30": {
-            "name": "Not",
-            "full_name": "Northumbrie",
+            "name": "Kel",
+            "full_name": "Kelatan",
             "x_pos": 203,
             "y_pos": 182,
             "x_legend_pos": 175,
@@ -425,24 +425,24 @@
             "display": 1
         },
         "31": {
-            "name": "Orl",
-            "full_name": "Orléanais",
+            "name": "Khm",
+            "full_name": "Khmer",
             "x_pos": 319,
             "y_pos": 423,
             "x_legend_pos": 319,
             "y_legend_pos": 409
         },
         "32": {
-            "name": "Par",
-            "full_name": "Paris",
+            "name": "Kut",
+            "full_name": "Kutai",
             "x_pos": 340,
             "y_pos": 359,
             "x_legend_pos": 340,
             "y_legend_pos": 345
         },
         "33": {
-            "name": "Poi",
-            "full_name": "Poitou",
+            "name": "LaX",
+            "full_name": "Lan Xang",
             "x_pos": 279,
             "y_pos": 471,
             "x_legend_pos": 279,
@@ -450,8 +450,8 @@
             "display": 2
         },
         "34": {
-            "name": "Pro",
-            "full_name": "Provence",
+            "name": "Lum",
+            "full_name": "Lumajang",
             "x_pos": 427,
             "y_pos": 524,
             "x_legend_pos": 427,
@@ -459,48 +459,48 @@
             "display": 2
         },
         "35": {
-            "name": "Sav",
-            "full_name": "Savoie",
+            "name": "Lus",
+            "full_name": "Luson",
             "x_pos": 502,
             "y_pos": 495,
             "x_legend_pos": 502,
             "y_legend_pos": 481
         },
         "36": {
-            "name": "Eco",
-            "full_name": "Ecosse",
+            "name": "LnS",
+            "full_name": "Luson Sea",
             "x_pos": 160,
             "y_pos": 84,
             "x_legend_pos": 160,
             "y_legend_pos": 70
         },
         "37": {
-            "name": "Pas",
-            "full_name": "Pas de Calais",
+            "name": "Luw",
+            "full_name": "Luwuk",
             "x_pos": 322,
             "y_pos": 262,
             "x_legend_pos": 322,
             "y_legend_pos": 248
         },
         "38": {
-            "name": "Pal",
-            "full_name": "Pale",
+            "name": "Mai",
+            "full_name": "Mait Sea",
             "x_pos": 30,
             "y_pos": 203,
             "x_legend_pos": 30,
             "y_legend_pos": 189
         },
         "39": {
-            "name": "Was",
-            "full_name": "Wash",
+            "name": "Mak",
+            "full_name": "Makassar",
             "x_pos": 347,
             "y_pos": 181,
             "x_legend_pos": 347,
             "y_legend_pos": 167
         },
         "40": {
-            "name": "Not",
-            "full_name": "Northumbrie",
+            "name": "MaS",
+            "full_name": "Makassar Strait",
             "x_pos": 203,
             "y_pos": 182,
             "x_legend_pos": 175,
@@ -508,24 +508,24 @@
             "display": 1
         },
         "41": {
-            "name": "Orl",
-            "full_name": "Orléanais",
+            "name": "Mal",
+            "full_name": "Malacca",
             "x_pos": 319,
             "y_pos": 423,
             "x_legend_pos": 319,
             "y_legend_pos": 409
         },
         "42": {
-            "name": "Par",
-            "full_name": "Paris",
+            "name": "Min",
+            "full_name": "Minahassa",
             "x_pos": 340,
             "y_pos": 359,
             "x_legend_pos": 340,
             "y_legend_pos": 345
         },
         "43": {
-            "name": "Poi",
-            "full_name": "Poitou",
+            "name": "Miu",
+            "full_name": "Minangkabau",
             "x_pos": 279,
             "y_pos": 471,
             "x_legend_pos": 279,
@@ -533,8 +533,8 @@
             "display": 2
         },
         "44": {
-            "name": "Pro",
-            "full_name": "Provence",
+            "name": "Mio",
+            "full_name": "Mindanao",
             "x_pos": 427,
             "y_pos": 524,
             "x_legend_pos": 427,
@@ -542,460 +542,386 @@
             "display": 2
         },
         "45": {
-            "name": "Sav",
-            "full_name": "Savoie",
+            "name": "MoS",
+            "full_name": "Moluccan Sea",
             "x_pos": 502,
             "y_pos": 495,
             "x_legend_pos": 502,
             "y_legend_pos": 481
         },
         "46": {
-            "name": "Eco",
-            "full_name": "Ecosse",
+            "name": "Nam",
+            "full_name": "Namayan",
             "x_pos": 160,
             "y_pos": 84,
             "x_legend_pos": 160,
             "y_legend_pos": 70
         },
         "47": {
-            "name": "Pas",
-            "full_name": "Pas de Calais",
+            "name": "Nam",
+            "full_name": "Negara Daha",
             "x_pos": 322,
             "y_pos": 262,
             "x_legend_pos": 322,
             "y_legend_pos": 248
         },
         "48": {
-            "name": "Pal",
-            "full_name": "Pale",
+            "name": "OcE",
+            "full_name": "Oc Eo",
             "x_pos": 30,
             "y_pos": 203,
             "x_legend_pos": 30,
             "y_legend_pos": 189
         },
         "49": {
-            "name": "Was",
-            "full_name": "Wash",
+            "name": "Pah",
+            "full_name": "Pahang",
             "x_pos": 347,
             "y_pos": 181,
             "x_legend_pos": 347,
             "y_legend_pos": 167
         },
         "50": {
-            "name": "Not",
-            "full_name": "Northumbrie",
+            "name": "Pah",
+            "full_name": "Pajajaran",
             "x_pos": 203,
             "y_pos": 182,
             "x_legend_pos": 175,
             "y_legend_pos": 164,
             "display": 1
         },
-        "31": {
-            "name": "Orl",
-            "full_name": "Orléanais",
+        "51": {
+            "name": "Pal",
+            "full_name": "Palawan",
             "x_pos": 319,
             "y_pos": 423,
             "x_legend_pos": 319,
             "y_legend_pos": 409
         },
-        "32": {
-            "name": "Par",
-            "full_name": "Paris",
+        "52": {
+            "name": "Pag",
+            "full_name": "Palembang",
             "x_pos": 340,
             "y_pos": 359,
             "x_legend_pos": 340,
             "y_legend_pos": 345
         },
-        "33": {
-            "name": "Poi",
-            "full_name": "Poitou",
+        "53": {
+            "name": "Ped",
+            "full_name": "Pedir",
             "x_pos": 279,
             "y_pos": 471,
             "x_legend_pos": 279,
             "y_legend_pos": 457,
             "display": 2
         },
-        "34": {
-            "name": "Pro",
-            "full_name": "Provence",
+        "54": {
+            "name": "Peg",
+            "full_name": "Pegu",
             "x_pos": 427,
             "y_pos": 524,
             "x_legend_pos": 427,
             "y_legend_pos": 510,
             "display": 2
         },
-        "35": {
-            "name": "Sav",
-            "full_name": "Savoie",
+        "55": {
+            "name": "Ria",
+            "full_name": "Riau",
             "x_pos": 502,
             "y_pos": 495,
             "x_legend_pos": 502,
             "y_legend_pos": 481
         },
-        "36": {
-            "name": "Eco",
-            "full_name": "Ecosse",
+        "56": {
+            "name": "RoE",
+            "full_name": "Roi Et",
             "x_pos": 160,
             "y_pos": 84,
             "x_legend_pos": 160,
             "y_legend_pos": 70
         },
-        "37": {
-            "name": "Pas",
-            "full_name": "Pas de Calais",
+        "57": {
+            "name": "Sam",
+            "full_name": "Sambas",
             "x_pos": 322,
             "y_pos": 262,
             "x_legend_pos": 322,
             "y_legend_pos": 248
         },
-        "38": {
-            "name": "Pal",
-            "full_name": "Pale",
+        "58": {
+            "name": "Sam",
+            "full_name": "Sampit",
             "x_pos": 30,
             "y_pos": 203,
             "x_legend_pos": 30,
             "y_legend_pos": 189
         },
-        "39": {
-            "name": "Was",
-            "full_name": "Wash",
+        "59": {
+            "name": "SoI",
+            "full_name": "Sea of India",
             "x_pos": 347,
             "y_pos": 181,
             "x_legend_pos": 347,
             "y_legend_pos": 167
         },
-        "30": {
-            "name": "Not",
-            "full_name": "Northumbrie",
+        "60": {
+            "name": "Ser",
+            "full_name": "Seram",
             "x_pos": 203,
             "y_pos": 182,
             "x_legend_pos": 175,
             "y_legend_pos": 164,
             "display": 1
         },
-        "31": {
-            "name": "Orl",
-            "full_name": "Orléanais",
+        "61": {
+            "name": "Sha",
+            "full_name": "Shan",
             "x_pos": 319,
             "y_pos": 423,
             "x_legend_pos": 319,
             "y_legend_pos": 409
         },
-        "32": {
-            "name": "Par",
-            "full_name": "Paris",
+        "62": {
+            "name": "SiS",
+            "full_name": "Sibuyan Sea",
             "x_pos": 340,
             "y_pos": 359,
             "x_legend_pos": 340,
             "y_legend_pos": 345
         },
-        "33": {
-            "name": "Poi",
-            "full_name": "Poitou",
+        "63": {
+            "name": "SCS",
+            "full_name": "South China Sea",
             "x_pos": 279,
             "y_pos": 471,
             "x_legend_pos": 279,
             "y_legend_pos": 457,
             "display": 2
         },
-        "34": {
-            "name": "Pro",
-            "full_name": "Provence",
+        "64": {
+            "name": "SoO",
+            "full_name": "Southern Ocean",
             "x_pos": 427,
             "y_pos": 524,
             "x_legend_pos": 427,
             "y_legend_pos": 510,
             "display": 2
         },
-        "35": {
-            "name": "Sav",
-            "full_name": "Savoie",
+        "65": {
+            "name": "SoM",
+            "full_name": "Straits of Malacca",
             "x_pos": 502,
             "y_pos": 495,
             "x_legend_pos": 502,
             "y_legend_pos": 481
         },
-        "36": {
-            "name": "Eco",
-            "full_name": "Ecosse",
+        "66": {
+            "name": "SoT",
+            "full_name": "Straits of Taiwan",
             "x_pos": 160,
             "y_pos": 84,
             "x_legend_pos": 160,
             "y_legend_pos": 70
         },
-        "37": {
-            "name": "Pas",
-            "full_name": "Pas de Calais",
+        "67": {
+            "name": "Suk",
+            "full_name": "Sukadana",
             "x_pos": 322,
             "y_pos": 262,
             "x_legend_pos": 322,
             "y_legend_pos": 248
         },
-        "38": {
-            "name": "Pal",
-            "full_name": "Pale",
+        "68": {
+            "name": "SuS",
+            "full_name": "Sulawesi Sea",
             "x_pos": 30,
             "y_pos": 203,
             "x_legend_pos": 30,
             "y_legend_pos": 189
         },
-        "39": {
-            "name": "Was",
-            "full_name": "Wash",
+        "69": {
+            "name": "SuS",
+            "full_name": "Sulu Sea",
             "x_pos": 347,
             "y_pos": 181,
             "x_legend_pos": 347,
             "y_legend_pos": 167
         },
-        "30": {
-            "name": "Not",
-            "full_name": "Northumbrie",
+        "70": {
+            "name": "Sun",
+            "full_name": "Sunda",
             "x_pos": 203,
             "y_pos": 182,
             "x_legend_pos": 175,
             "y_legend_pos": 164,
             "display": 1
         },
-        "31": {
-            "name": "Orl",
-            "full_name": "Orléanais",
+        "71": {
+            "name": "Tai",
+            "full_name": "Taiwan",
             "x_pos": 319,
             "y_pos": 423,
             "x_legend_pos": 319,
             "y_legend_pos": 409
         },
-        "32": {
-            "name": "Par",
-            "full_name": "Paris",
+        "72": {
+            "name": "TiS",
+            "full_name": "Timor Sea",
             "x_pos": 340,
             "y_pos": 359,
             "x_legend_pos": 340,
             "y_legend_pos": 345
         },
-        "33": {
-            "name": "Poi",
-            "full_name": "Poitou",
+        "73": {
+            "name": "Ton",
+            "full_name": "Tondo",
             "x_pos": 279,
             "y_pos": 471,
             "x_legend_pos": 279,
             "y_legend_pos": 457,
             "display": 2
         },
-        "34": {
-            "name": "Pro",
-            "full_name": "Provence",
+        "74": {
+            "name": "Tro",
+            "full_name": "Trowulan",
             "x_pos": 427,
             "y_pos": 524,
             "x_legend_pos": 427,
             "y_legend_pos": 510,
             "display": 2
         },
-        "35": {
-            "name": "Sav",
-            "full_name": "Savoie",
+        "75": {
+            "name": "Tun",
+            "full_name": "Tunku",
             "x_pos": 502,
             "y_pos": 495,
             "x_legend_pos": 502,
             "y_legend_pos": 481
         },
-        "36": {
-            "name": "Eco",
-            "full_name": "Ecosse",
+        "76": {
+            "name": "ViS",
+            "full_name": "Visayas Sea",
             "x_pos": 160,
             "y_pos": 84,
             "x_legend_pos": 160,
             "y_legend_pos": 70
         },
-        "37": {
-            "name": "Pas",
-            "full_name": "Pas de Calais",
+        "77": {
+            "name": "Weh",
+            "full_name": "Wehali",
             "x_pos": 322,
             "y_pos": 262,
             "x_legend_pos": 322,
             "y_legend_pos": 248
         },
-        "38": {
-            "name": "Pal",
-            "full_name": "Pale",
+        "78": {
+            "name": "WeO",
+            "full_name": "Western Ocean",
             "x_pos": 30,
             "y_pos": 203,
             "x_legend_pos": 30,
             "y_legend_pos": 189
         },
-        "39": {
-            "name": "Was",
-            "full_name": "Wash",
+        "79": {
+            "name": "Wia",
+            "full_name": "Wiangium",
             "x_pos": 347,
             "y_pos": 181,
             "x_legend_pos": 347,
             "y_legend_pos": 167
         },
-        "30": {
-            "name": "Not",
-            "full_name": "Northumbrie",
+        "80": {
+            "name": "Zam",
+            "full_name": "Zamboanga",
             "x_pos": 203,
             "y_pos": 182,
             "x_legend_pos": 175,
             "y_legend_pos": 164,
             "display": 1
         },
-        "31": {
-            "name": "Orl",
-            "full_name": "Orléanais",
+        "81": {
+            "name": "",
+            "full_name": "",
             "x_pos": 319,
             "y_pos": 423,
             "x_legend_pos": 319,
             "y_legend_pos": 409
         },
-        "32": {
-            "name": "Par",
-            "full_name": "Paris",
+        "82": {
+            "name": "",
+            "full_name": "",
             "x_pos": 340,
             "y_pos": 359,
             "x_legend_pos": 340,
             "y_legend_pos": 345
         },
-        "33": {
-            "name": "Poi",
-            "full_name": "Poitou",
+        "83": {
+            "name": "",
+            "full_name": "",
             "x_pos": 279,
             "y_pos": 471,
             "x_legend_pos": 279,
             "y_legend_pos": 457,
             "display": 2
         },
-        "34": {
-            "name": "Pro",
-            "full_name": "Provence",
+        "84": {
+            "name": "",
+            "full_name": "",
             "x_pos": 427,
             "y_pos": 524,
             "x_legend_pos": 427,
             "y_legend_pos": 510,
             "display": 2
         },
-        "35": {
-            "name": "Sav",
-            "full_name": "Savoie",
+        "85": {
+            "name": "",
+            "full_name": "",
             "x_pos": 502,
             "y_pos": 495,
             "x_legend_pos": 502,
             "y_legend_pos": 481
         },
-        "36": {
-            "name": "Eco",
-            "full_name": "Ecosse",
+        "86": {
+            "name": "",
+            "full_name": "",
             "x_pos": 160,
             "y_pos": 84,
             "x_legend_pos": 160,
             "y_legend_pos": 70
         },
-        "37": {
-            "name": "Pas",
-            "full_name": "Pas de Calais",
+        "87": {
+            "name": "",
+            "full_name": "",
             "x_pos": 322,
             "y_pos": 262,
             "x_legend_pos": 322,
             "y_legend_pos": 248
         },
-        "38": {
-            "name": "Pal",
-            "full_name": "Pale",
+        "88": {
+            "name": "",
+            "full_name": "",
             "x_pos": 30,
             "y_pos": 203,
             "x_legend_pos": 30,
             "y_legend_pos": 189
         },
-        "39": {
-            "name": "Was",
-            "full_name": "Wash",
+        "89": {
+            "name": "",
+            "full_name": "",
             "x_pos": 347,
             "y_pos": 181,
             "x_legend_pos": 347,
             "y_legend_pos": 167
         },
-        "30": {
-            "name": "Not",
-            "full_name": "Northumbrie",
+        "90": {
+            "name": "",
+            "full_name": "",
             "x_pos": 203,
             "y_pos": 182,
             "x_legend_pos": 175,
             "y_legend_pos": 164,
             "display": 1
-        },
-        "31": {
-            "name": "Orl",
-            "full_name": "Orléanais",
-            "x_pos": 319,
-            "y_pos": 423,
-            "x_legend_pos": 319,
-            "y_legend_pos": 409
-        },
-        "32": {
-            "name": "Par",
-            "full_name": "Paris",
-            "x_pos": 340,
-            "y_pos": 359,
-            "x_legend_pos": 340,
-            "y_legend_pos": 345
-        },
-        "33": {
-            "name": "Poi",
-            "full_name": "Poitou",
-            "x_pos": 279,
-            "y_pos": 471,
-            "x_legend_pos": 279,
-            "y_legend_pos": 457,
-            "display": 2
-        },
-        "34": {
-            "name": "Pro",
-            "full_name": "Provence",
-            "x_pos": 427,
-            "y_pos": 524,
-            "x_legend_pos": 427,
-            "y_legend_pos": 510,
-            "display": 2
-        },
-        "35": {
-            "name": "Sav",
-            "full_name": "Savoie",
-            "x_pos": 502,
-            "y_pos": 495,
-            "x_legend_pos": 502,
-            "y_legend_pos": 481
-        },
-        "36": {
-            "name": "Eco",
-            "full_name": "Ecosse",
-            "x_pos": 160,
-            "y_pos": 84,
-            "x_legend_pos": 160,
-            "y_legend_pos": 70
-        },
-        "37": {
-            "name": "Pas",
-            "full_name": "Pas de Calais",
-            "x_pos": 322,
-            "y_pos": 262,
-            "x_legend_pos": 322,
-            "y_legend_pos": 248
-        },
-        "38": {
-            "name": "Pal",
-            "full_name": "Pale",
-            "x_pos": 30,
-            "y_pos": 203,
-            "x_legend_pos": 30,
-            "y_legend_pos": 189
-        },
-        "39": {
-            "name": "Was",
-            "full_name": "Wash",
-            "x_pos": 347,
-            "y_pos": 181,
-            "x_legend_pos": 347,
-            "y_legend_pos": 167
-        },
+        }
     },
     "centers": {
         "1": {
