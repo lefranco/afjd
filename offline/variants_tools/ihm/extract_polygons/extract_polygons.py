@@ -275,8 +275,10 @@ class Application(tkinter.Frame):
                     sys.exit(-1)
 
             # update center
-            if str(num) not in json_parameters_data['zones']:
-                json_parameters_data['zones'][str(num)] = {}
+            if 'centers' not in json_parameters_data:
+                json_parameters_data['centers'] = {}
+            if str(num) not in json_parameters_data['centers']:
+                json_parameters_data['centers'][str(num)] = {}
             json_parameters_data['centers'][str(num)]['x_pos'] = self.export_data['x_click_pos']
             json_parameters_data['centers'][str(num)]['y_pos'] = self.export_data['y_click_pos']
 
@@ -411,6 +413,8 @@ class Application(tkinter.Frame):
                 legend = f"{region_name}{coast_name}"
 
             export_button = tkinter.Button(frame_export_zones, text=legend, command=lambda number=number: export_zone_callback(int(number)))  # type: ignore
+            if 'zone_areas' in json_parameters_data and number in json_parameters_data['zone_areas']:
+                export_button['relief'] = tkinter.SUNKEN
             self._export_zone_button_table[int(number)] = export_button
 
             export_buttons_table[legend] = export_button
@@ -425,13 +429,14 @@ class Application(tkinter.Frame):
         self._export_center_button_table = {}
 
         export_buttons_table = {}
-        for number in json_parameters_data['centers']:
+        for number in map(str, range(1, 1 + len(json_variant_data['centers']))):
 
             num_zone = json_variant_data['centers'][int(number) - 1]
             legend = json_parameters_data['zones'][str(num_zone)]['name']
             export_button = tkinter.Button(frame_export_centers, text=legend, command=lambda number=number: export_center_callback(int(number)))  # type: ignore
+            if 'centers' in json_parameters_data and number in json_parameters_data['centers']:
+                export_button['relief'] = tkinter.SUNKEN
             self._export_center_button_table[int(number)] = export_button
-
             export_buttons_table[legend] = export_button
 
         # display sorted (easier)
