@@ -395,6 +395,14 @@ class Application(tkinter.Frame):
                 print(f"Failed to load {parameters_file} : {exception}")
                 sys.exit(-1)
 
+        names: typing.Set[str] = set()
+        for zone_data in json_parameters_data['zones'].values():
+            name = zone_data['name']
+            if name and name in names:
+                print(f"In {parameters_file} : zone '{name}' is duplicated")
+                sys.exit(-1)
+            names.add(name)
+
         frame_export_zones = tkinter.LabelFrame(main_frame, text="Export zones (polygon + middle)")
         frame_export_zones.grid(row=2, column=3, sticky='nw')
 
