@@ -49,19 +49,42 @@ def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx) -> Non
     ctx.lineTo(x_dest, y_dest)
     ctx.stroke(); ctx.closePath()
 
+    # keep this
+    angle = - atan2(x_start - x_dest, y_start - y_dest)
+
     # second draw the arrow head
     ctx.save()
 
     ctx.translate(x_dest, y_dest)
-    angle = - atan2(x_start - x_dest, y_start - y_dest)
+    ctx.rotate(angle)
+    ctx.beginPath()
+    ctx.moveTo(0, 0)
+    ctx.lineTo(-4, 7)
+    ctx.lineTo(4, 7)
+    ctx.fill(); ctx.closePath()
+
+    ctx.restore()
+
+    # third draw the arrow AT 2/3
+
+    x_two_thirds = (x_start + 2 * x_dest) / 3
+    y_two_thirds = (y_start + 2 * y_dest) / 3
+
+    line_width_saved = ctx.lineWidth
+    ctx.lineWidth = 1
+    ctx.save()
+
+    ctx.translate(x_two_thirds, y_two_thirds)
     ctx.rotate(angle)
     ctx.beginPath()
     ctx.moveTo(0, 0)
     ctx.lineTo(-3, 6)
+    ctx.moveTo(0, 0)
     ctx.lineTo(3, 6)
-    ctx.fill(); ctx.closePath()
+    ctx.stroke(); ctx.closePath()
 
     ctx.restore()
+    ctx.lineWidth = line_width_saved
 
 
 def fill_zone(ctx, zone_area, fill_colour):
@@ -1845,9 +1868,11 @@ class Order(Renderable):
             from_point = self._position.variant.position_table[self._passive_unit.zone]
             dest_point = self._position.variant.position_table[self._destination_zone]
             direction = geometry.get_direction(from_point, dest_point)
-            next_direction = geometry.perpendicular(direction)
-            from_point_shifted = from_point.shift(next_direction, 3)
-            dest_point_shifted = dest_point.shift(next_direction, 3)
+
+            # we do not shift
+            from_point_shifted = from_point
+            dest_point_shifted = dest_point
+
             dest_point_shifted_closer_x, dest_point_shifted_closer_y = shorten_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos)
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
@@ -1857,7 +1882,7 @@ class Order(Renderable):
 
             # a line (support)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
-            dest_point2 = geometry.PositionRecord((from_point_shifted.x_pos + dest_point_shifted.x_pos) // 2, (from_point_shifted.y_pos + dest_point_shifted.y_pos) // 2)
+            dest_point2 = geometry.PositionRecord(round((from_point_shifted.x_pos + 2 * dest_point_shifted.x_pos) / 3), round((from_point_shifted.y_pos + 2 * dest_point_shifted.y_pos) / 3))
             ctx.beginPath()
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
             ctx.lineTo(dest_point2.x_pos, dest_point2.y_pos)
@@ -1937,8 +1962,8 @@ class Order(Renderable):
             dest_point = self._position.variant.position_table[self._destination_zone]
             direction = geometry.get_direction(from_point, dest_point)
             next_direction = geometry.perpendicular(direction)
-            from_point_shifted = from_point.shift(next_direction, 6)
-            dest_point_shifted = dest_point.shift(next_direction, 6)
+            from_point_shifted = from_point.shift(next_direction, 3)  # was 6
+            dest_point_shifted = dest_point.shift(next_direction, 3)  # was 6
             dest_point_shifted_closer_x, dest_point_shifted_closer_y = shorten_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos)
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
@@ -1948,7 +1973,7 @@ class Order(Renderable):
 
             # put a line (convoy)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
-            dest_point2 = geometry.PositionRecord((from_point_shifted.x_pos + dest_point_shifted.x_pos) // 2, (from_point_shifted.y_pos + dest_point_shifted.y_pos) // 2)
+            dest_point2 = geometry.PositionRecord(round((from_point_shifted.x_pos + 2 * dest_point_shifted.x_pos) / 3), round((from_point_shifted.y_pos + 2 * dest_point_shifted.y_pos) / 3))
             ctx.beginPath()
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
             ctx.lineTo(dest_point2.x_pos, dest_point2.y_pos)
