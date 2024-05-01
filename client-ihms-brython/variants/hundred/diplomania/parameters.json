@@ -181,7 +181,8 @@
             "x_pos": 326,
             "y_pos": 315,
             "x_legend_pos": 326,
-            "y_legend_pos": 301
+            "y_legend_pos": 301,
+            "display": 1
         },
         "10": {
             "name": "Can",
@@ -214,7 +215,8 @@
             "x_pos": 398,
             "y_pos": 474,
             "x_legend_pos": 398,
-            "y_legend_pos": 460
+            "y_legend_pos": 460,
+            "display": 2
         },
         "14": {
             "name": "Dev",
@@ -222,7 +224,8 @@
             "x_pos": 195,
             "y_pos": 274,
             "x_legend_pos": 195,
-            "y_legend_pos": 260
+            "y_legend_pos": 260,
+            "display": 1
         },
         "15": {
             "name": "Dij",
@@ -230,7 +233,8 @@
             "x_pos": 409,
             "y_pos": 356,
             "x_legend_pos": 409,
-            "y_legend_pos": 342
+            "y_legend_pos": 342,
+            "display": 3
         },
         "16": {
             "name": "Man",
@@ -246,7 +250,8 @@
             "x_pos": 385,
             "y_pos": 293,
             "x_legend_pos": 385,
-            "y_legend_pos": 279
+            "y_legend_pos": 279,
+            "display": 3
         },
         "18": {
             "name": "Fri",
@@ -263,7 +268,8 @@
             "x_pos": 251,
             "y_pos": 536,
             "x_legend_pos": 251,
-            "y_legend_pos": 522
+            "y_legend_pos": 522,
+            "display": 1
         },
         "20": {
             "name": "Hol",
@@ -271,7 +277,8 @@
             "x_pos": 415,
             "y_pos": 260,
             "x_legend_pos": 395,
-            "y_legend_pos": 250
+            "y_legend_pos": 250,
+            "display": 3
         },
         "21": {
             "name": "Irl",
@@ -296,7 +303,8 @@
             "x_pos": 239,
             "y_pos": 275,
             "x_legend_pos": 232,
-            "y_legend_pos": 262
+            "y_legend_pos": 262,
+            "display": 1
         },
         "24": {
             "name": "Lor",
@@ -313,7 +321,8 @@
             "x_pos": 446,
             "y_pos": 303,
             "x_legend_pos": 446,
-            "y_legend_pos": 289
+            "y_legend_pos": 289,
+            "display": 3
         },
         "26": {
             "name": "Med",
@@ -337,7 +346,8 @@
             "x_pos": 277,
             "y_pos": 357,
             "x_legend_pos": 243,
-            "y_legend_pos": 354
+            "y_legend_pos": 354,
+            "display": 1
         },
         "29": {
             "name": "Nor",
@@ -362,7 +372,8 @@
             "x_pos": 319,
             "y_pos": 423,
             "x_legend_pos": 319,
-            "y_legend_pos": 409
+            "y_legend_pos": 409,
+            "display": 2
         },
         "32": {
             "name": "Par",
@@ -370,7 +381,8 @@
             "x_pos": 340,
             "y_pos": 359,
             "x_legend_pos": 340,
-            "y_legend_pos": 345
+            "y_legend_pos": 345,
+            "display": 2
         },
         "33": {
             "name": "Poi",
@@ -436,7 +448,8 @@
             "x_pos": 312,
             "y_pos": 549,
             "x_legend_pos": 312,
-            "y_legend_pos": 535
+            "y_legend_pos": 535,
+            "display": 2
         },
         "41": {
             "name": "Gal",
