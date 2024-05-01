@@ -152,7 +152,8 @@
             "x_pos": 718,
             "y_pos": 516,
             "x_legend_pos": 718,
-            "y_legend_pos": 505
+            "y_legend_pos": 505,
+            "display": 5
         },
         "4": {
             "name": "Ant",
@@ -160,7 +161,8 @@
             "x_pos": 926,
             "y_pos": 317,
             "x_legend_pos": 926,
-            "y_legend_pos": 306
+            "y_legend_pos": 306,
+            "display": 4
         },
         "5": {
             "name": "Apu",
@@ -195,7 +197,8 @@
             "x_pos": 589,
             "y_pos": 304,
             "x_legend_pos": 603,
-            "y_legend_pos": 295
+            "y_legend_pos": 295,
+            "display": 3
         },
         "9": {
             "name": "Aus",
@@ -269,7 +272,8 @@
             "x_pos": 295,
             "y_pos": 376,
             "x_legend_pos": 295,
-            "y_legend_pos": 365
+            "y_legend_pos": 365,
+            "display": 2
         },
         "18": {
             "name": "Che",
@@ -293,7 +297,8 @@
             "x_pos": 248,
             "y_pos": 443,
             "x_legend_pos": 248,
-            "y_legend_pos": 432
+            "y_legend_pos": 432,
+            "display": 2
         },
         "21": {
             "name": "Cor",
@@ -350,7 +355,8 @@
             "x_pos": 993,
             "y_pos": 298,
             "x_legend_pos": 993,
-            "y_legend_pos": 286
+            "y_legend_pos": 286,
+            "display": 4
         },
         "28": {
             "name": "Egy",
@@ -504,7 +510,8 @@
             "x_pos": 614,
             "y_pos": 234,
             "x_legend_pos": 614,
-            "y_legend_pos": 223
+            "y_legend_pos": 223,
+            "display": 3
         },
         "47": {
             "name": "Mar",
@@ -538,7 +545,8 @@
             "x_pos": 804,
             "y_pos": 573,
             "x_legend_pos": 804,
-            "y_legend_pos": 562
+            "y_legend_pos": 562,
+            "display": 5
         },
         "51": {
             "name": "Mes",
@@ -570,7 +578,8 @@
             "x_pos": 463,
             "y_pos": 265,
             "x_legend_pos": 447,
-            "y_legend_pos": 254
+            "y_legend_pos": 254,
+            "display": 1
         },
         "55": {
             "name": "Num",
@@ -611,7 +620,8 @@
             "x_pos": 390,
             "y_pos": 164,
             "x_legend_pos": 375,
-            "y_legend_pos": 153
+            "y_legend_pos": 153,
+            "display": 1
         },
         "60": {
             "name": "Red",
@@ -635,7 +645,8 @@
             "x_pos": 379,
             "y_pos": 199,
             "x_legend_pos": 379,
-            "y_legend_pos": 188
+            "y_legend_pos": 188,
+            "display": 1
         },
         "63": {
             "name": "Sag",
@@ -684,7 +695,8 @@
             "x_pos": 934,
             "y_pos": 361,
             "x_legend_pos": 934,
-            "y_legend_pos": 350
+            "y_legend_pos": 350,
+            "display": 4
         },
         "69": {
             "name": "Sii",
@@ -709,7 +721,8 @@
             "x_pos": 608,
             "y_pos": 343,
             "x_legend_pos": 608,
-            "y_legend_pos": 332
+            "y_legend_pos": 332,
+            "display": 3
         },
         "72": {
             "name": "Syr",
@@ -733,7 +746,8 @@
             "x_pos": 322,
             "y_pos": 424,
             "x_legend_pos": 322,
-            "y_legend_pos": 413
+            "y_legend_pos": 413,
+            "display": 2
         },
         "75": {
             "name": "The",
@@ -741,7 +755,8 @@
             "x_pos": 902,
             "y_pos": 627,
             "x_legend_pos": 902,
-            "y_legend_pos": 616
+            "y_legend_pos": 616,
+            "display": 5
         },
         "76": {
             "name": "Tyn",
