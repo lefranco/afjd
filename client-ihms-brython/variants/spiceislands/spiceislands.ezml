@@ -2,24 +2,25 @@ Spice Islands
 
 _
 $ Contexte
-Hundred est une variante à 7 joueurs.
+Spice Islands (Les îles des épices) est une variante à 7 joueurs.
 
 _
 $ Côtes spéciales
 
-(Northumbria)
-   Elle a 2 côtes, Ouest et Est.
-(L'Aragon)
-   Elle a 2 côtes, Nord et Sud.
+(Chaiya)
+   Elle a 2 côtes, Est et Ouest.
+(Dawei)
+   Elle a 2 côtes, Est et Ouest.
+(Javadvipa)
+   Elle a 2 côtes, Sud et Nord.
+(Namayan)
+   Elle a 2 côtes, Est et Sud.
+(Sukadana)
+   Elle a 2 côtes, Nord et Ouest.
 
 _
 $ Particularités de la carte
 
-(La Castille)
-Elle n'est pas divisée en côtes, de sorte que toute flotte entrant en Castille depuis la Biscaye peut ensuite se diriger vers la Méditerranée et vice versa.
-(Le detroit)
-Les unités (armées et flottes) peuvent se déplacer ou apporter leur soutien de Londres à Calais ou vice versa indépendamment de la présence d'une flotte dans le Pas de Calais.
-(Nord-Est)
 La zone au Nord (Chine) est hors-jeu, à l'instar de la Suisse dans la variante standard.
 
 
@@ -27,8 +28,7 @@ _
 $ Datation
 
 La partie commence en *1491*. 
-Chaque tour représente *5* années 
-"en temps réel".
+Chaque tour représente *1* années "en temps réel".
 
 _
 $ Centres de ravitaillement
@@ -45,6 +45,13 @@ Il y a sept puissances dont les unités de départ sont les suivantes :
 .
 = Position de départ
 |Puissance | Centres | Armées | Flottes| Centres inoccupés|
+|Brunei (Sultanat) | 3 | | Brunei, Tunku, Palawan | |
+|Majapahit (Sultanat) | 3 | | Javadvipa (cs), Pajajaran, Trowulan | |
+|Tondo (Royaume) | 3 | | Tondo, Kasiguran, Namayan (cs) | |
+|Malacca (Sultanat) | 3 | | Malacca, Riau, Pahang | |
+|Ayutthaya (Royaume) | 3 | Ayutthaya, Roi Et | Daiwei (co) | |
+|Ternate (Sultanat) | 3 | | Halmahera, Buru, Seram | |
+|Dai Viet (Royaume) | 3 | Hanoi, Haiphong | Faifo | |
 =
 
 _
@@ -53,20 +60,99 @@ $ Particularités
 _
 $ Pièges de la variante
 
-TODO
+A définir...
 
 _
 $ Nomenclature
 
 = Régions et abréviations de la variante
 | Abréviation | Nom complet |
-TODO
+| Ace | Aceh |
+| Ava | Ava |
+| Ayu | Ayutthaya |
+| BaS | Banda Sea |
+| Bik | Bikol |
+| Bru | Brunei |
+| Bun | Butuan |
+| Bur | Buru |
+| But | Buton |
+| Cha | Chaiya |
+| Chi | Chiangmai |
+| Chk | Champassak |
+| Chp | Champa |
+| ChS | Champa Sea |
+| Daw | Dawei |
+| EaO | Eastern Ocean |
+| ECS | East China Sea |
+| Fai | Faifo |
+| GDV | Gulf of Dai Viet |
+| GuS | Gulf of Siam |
+| GuT | Gulf of Tomini |
+| Hai | Haiphong |
+| Hal | Halmahera |
+| Han | Hanoi |
+| Jam | Jambi |
+| JaS | Java Sea |
+| Jav | Javadvipa |
+| KaS | Karimata Sea |
+| Kas | Kasiguran |
+| Kel | Kelatan |
+| Khm | Khmer |
+| Kut | Kutai |
+| LaX | Lan Xang |
+| LnS | Luson Sea |
+| Lum | Lumajang |
+| Lus | Luson |
+| Luw | Luwuk |
+| Mai | Mait Sea |
+| Mak | Makassar |
+| Mal | Malacca |
+| MaS | Makassar Strait |
+| Min | Minahassa |
+| Mio | Mindanao |
+| Miu | Minangkabau |
+| MoS | Moluccan Sea |
+| Nam | Namayan |
+| NeD | Negara Daha |
+| OcE | Oc Eo |
+| Pag | Palembang |
+| Pah | Pahang |
+| Paj | Pajajaran |
+| Pal | Palawan |
+| Ped | Pedir |
+| Peg | Pegu |
+| Ria | Riau |
+| RoE | Roi Et |
+| Sam | Sambas |
+| Sat | Sampit |
+| SCS | South China Sea |
+| Ser | Seram |
+| Sha | Shan |
+| SiS | Sibuyan Sea |
+| SlS | Sulu Sea |
+| SoI | Sea of India |
+| SoM | Straits of Malacca |
+| SoO | Southern Ocean |
+| SoT | Straits of Taiwan |
+| Suk | Sukadana |
+| Sun | Sunda |
+| SuS | Sulawesi Sea |
+| Tai | Taiwan |
+| TiS | Timor Sea |
+| Ton | Tondo |
+| Tro | Trowulan |
+| Tun | Tunku |
+| ViS | Visayas Sea |
+| Weh | Wehali |
+| WeO | Western Ocean |
+| Wia | Wiangium |
+| Zam | Zamboanga |
 =
 
 _
 $ Expansionnisme (oui)
 
-Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. Par exemple, xxx peut construire à yyy si ce centre est vacant et qu'elle en est propriétaire
+Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. Par exemple, Brunei peut construire à Ava si ce centre est vacant et qu'elle en est propriétaire
 
 _
 $ Sur le wiki
