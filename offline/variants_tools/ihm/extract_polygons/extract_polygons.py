@@ -279,8 +279,8 @@ class Application(tkinter.Frame):
                 json_parameters_data['centers'] = {}
             if str(num) not in json_parameters_data['centers']:
                 json_parameters_data['centers'][str(num)] = {}
-            json_parameters_data['centers'][str(num)]['x_pos'] = self.export_data['x_click_pos']
-            json_parameters_data['centers'][str(num)]['y_pos'] = self.export_data['y_click_pos']
+            json_parameters_data['centers'][str(num)]['x_pos'] = self.export_data['x_middle_pos']
+            json_parameters_data['centers'][str(num)]['y_pos'] = self.export_data['y_middle_pos']
 
             # save parameters to json data file
             output = json.dumps(json_parameters_data, indent=4, ensure_ascii=False)
