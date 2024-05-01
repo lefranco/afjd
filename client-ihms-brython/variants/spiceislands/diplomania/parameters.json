@@ -191,8 +191,7 @@
             "x_pos": 43,
             "y_pos": 50,
             "x_legend_pos": 43,
-            "y_legend_pos": 36,
-            "display": 1
+            "y_legend_pos": 36
         },
         "3": {
             "name": "Ayu",
@@ -200,8 +199,7 @@
             "x_pos": 158,
             "y_pos": 296,
             "x_legend_pos": 158,
-            "y_legend_pos": 282,
-            "display": 2
+            "y_legend_pos": 282
         },
         "4": {
             "name": "BaS",
@@ -273,8 +271,7 @@
             "x_pos": 462,
             "y_pos": 465,
             "x_legend_pos": 462,
-            "y_legend_pos": 451,
-            "display": 2
+            "y_legend_pos": 451
         },
         "13": {
             "name": "Chk",
@@ -322,8 +319,7 @@
             "x_pos": 366,
             "y_pos": 279,
             "x_legend_pos": 366,
-            "y_legend_pos": 265,
-            "display": 3
+            "y_legend_pos": 265
         },
         "19": {
             "name": "GDV",
@@ -355,8 +351,7 @@
             "x_pos": 324,
             "y_pos": 102,
             "x_legend_pos": 324,
-            "y_legend_pos": 88,
-            "display": 2
+            "y_legend_pos": 88
         },
         "23": {
             "name": "Hal",
@@ -372,8 +367,7 @@
             "x_pos": 261,
             "y_pos": 104,
             "x_legend_pos": 261,
-            "y_legend_pos": 90,
-            "display": 3
+            "y_legend_pos": 90
         },
         "25": {
             "name": "Jam",
@@ -421,8 +415,7 @@
             "x_pos": 187,
             "y_pos": 531,
             "x_legend_pos": 187,
-            "y_legend_pos": 517,
-            "display": 1
+            "y_legend_pos": 517
         },
         "31": {
             "name": "Khm",
@@ -446,8 +439,7 @@
             "x_pos": 211,
             "y_pos": 150,
             "x_legend_pos": 211,
-            "y_legend_pos": 136,
-            "display": 2
+            "y_legend_pos": 136
         },
         "34": {
             "name": "Lum",
@@ -455,8 +447,7 @@
             "x_pos": 724,
             "y_pos": 725,
             "x_legend_pos": 724,
-            "y_legend_pos": 711,
-            "display": 2
+            "y_legend_pos": 711
         },
         "35": {
             "name": "Lus",
@@ -504,8 +495,7 @@
             "x_pos": 591,
             "y_pos": 859,
             "x_legend_pos": 591,
-            "y_legend_pos": 845,
-            "display": 1
+            "y_legend_pos": 845
         },
         "41": {
             "name": "Mal",
@@ -529,8 +519,7 @@
             "x_pos": 196,
             "y_pos": 756,
             "x_legend_pos": 196,
-            "y_legend_pos": 742,
-            "display": 2
+            "y_legend_pos": 742
         },
         "44": {
             "name": "Mio",
@@ -538,8 +527,7 @@
             "x_pos": 844,
             "y_pos": 489,
             "x_legend_pos": 844,
-            "y_legend_pos": 475,
-            "display": 2
+            "y_legend_pos": 475
         },
         "45": {
             "name": "MoS",
@@ -587,8 +575,7 @@
             "x_pos": 331,
             "y_pos": 865,
             "x_legend_pos": 331,
-            "y_legend_pos": 851,
-            "display": 1
+            "y_legend_pos": 851
         },
         "51": {
             "name": "Pal",
@@ -612,8 +599,7 @@
             "x_pos": 125,
             "y_pos": 614,
             "x_legend_pos": 125,
-            "y_legend_pos": 600,
-            "display": 2
+            "y_legend_pos": 600
         },
         "54": {
             "name": "Peg",
@@ -621,8 +607,7 @@
             "x_pos": 96,
             "y_pos": 223,
             "x_legend_pos": 96,
-            "y_legend_pos": 209,
-            "display": 2
+            "y_legend_pos": 209
         },
         "55": {
             "name": "Ria",
@@ -670,8 +655,7 @@
             "x_pos": 936,
             "y_pos": 772,
             "x_legend_pos": 936,
-            "y_legend_pos": 758,
-            "display": 1
+            "y_legend_pos": 758
         },
         "61": {
             "name": "Sha",
@@ -695,8 +679,7 @@
             "x_pos": 513,
             "y_pos": 177,
             "x_legend_pos": 513,
-            "y_legend_pos": 163,
-            "display": 2
+            "y_legend_pos": 163
         },
         "64": {
             "name": "SoO",
@@ -704,8 +687,7 @@
             "x_pos": 52,
             "y_pos": 352,
             "x_legend_pos": 52,
-            "y_legend_pos": 338,
-            "display": 2
+            "y_legend_pos": 338
         },
         "65": {
             "name": "SoM",
@@ -753,8 +735,7 @@
             "x_pos": 351,
             "y_pos": 887,
             "x_legend_pos": 351,
-            "y_legend_pos": 873,
-            "display": 1
+            "y_legend_pos": 873
         },
         "71": {
             "name": "Tai",
@@ -778,8 +759,7 @@
             "x_pos": 690,
             "y_pos": 267,
             "x_legend_pos": 690,
-            "y_legend_pos": 253,
-            "display": 2
+            "y_legend_pos": 253
         },
         "74": {
             "name": "Tro",
@@ -787,8 +767,7 @@
             "x_pos": 469,
             "y_pos": 889,
             "x_legend_pos": 469,
-            "y_legend_pos": 875,
-            "display": 2
+            "y_legend_pos": 875
         },
         "75": {
             "name": "Tun",
@@ -836,8 +815,7 @@
             "x_pos": 797,
             "y_pos": 478,
             "x_legend_pos": 797,
-            "y_legend_pos": 464,
-            "display": 1
+            "y_legend_pos": 464
         },
         "81": {
             "name": "",
@@ -861,8 +839,7 @@
             "x_pos": 131,
             "y_pos": 363,
             "x_legend_pos": 131,
-            "y_legend_pos": 349,
-            "display": 2
+            "y_legend_pos": 349
         },
         "84": {
             "name": "",
@@ -870,8 +847,7 @@
             "x_pos": 95,
             "y_pos": 290,
             "x_legend_pos": 95,
-            "y_legend_pos": 276,
-            "display": 2
+            "y_legend_pos": 276
         },
         "85": {
             "name": "",
@@ -919,8 +895,7 @@
             "x_pos": 422,
             "y_pos": 744,
             "x_legend_pos": 422,
-            "y_legend_pos": 730,
-            "display": 1
+            "y_legend_pos": 730
         }
     },
     "seasons": {
