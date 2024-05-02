@@ -130,7 +130,8 @@
             "x_pos": 703,
             "y_pos": 633,
             "x_legend_pos": 700,
-            "y_legend_pos": 624
+            "y_legend_pos": 624,
+            "display": 2
         },
         "6": {
             "name": "AlE",
@@ -836,7 +837,8 @@
             "x_pos": 781,
             "y_pos": 208,
             "x_legend_pos": 781,
-            "y_legend_pos": 194
+            "y_legend_pos": 194,
+            "display": 2
         },
         "90": {
             "name": "You",
