@@ -196,10 +196,10 @@
         "3": {
             "name": "Ayu",
             "full_name": "Ayutthaya",
-            "x_pos": 158,
-            "y_pos": 296,
-            "x_legend_pos": 158,
-            "y_legend_pos": 282,
+            "x_pos": 184,
+            "y_pos": 324,
+            "x_legend_pos": 184,
+            "y_legend_pos": 310,
             "display": 5
         },
         "4": {
@@ -213,52 +213,52 @@
         "5": {
             "name": "Bik",
             "full_name": "Bikol",
-            "x_pos": 770,
-            "y_pos": 322,
-            "x_legend_pos": 770,
-            "y_legend_pos": 308
+            "x_pos": 768,
+            "y_pos": 318,
+            "x_legend_pos": 775,
+            "y_legend_pos": 335
         },
         "6": {
             "name": "Bru",
             "full_name": "Brunei",
-            "x_pos": 533,
-            "y_pos": 580,
-            "x_legend_pos": 533,
-            "y_legend_pos": 566,
+            "x_pos": 523,
+            "y_pos": 597,
+            "x_legend_pos": 523,
+            "y_legend_pos": 583,
             "display": 1
         },
         "7": {
             "name": "Bur",
             "full_name": "Buru",
-            "x_pos": 855,
-            "y_pos": 781,
-            "x_legend_pos": 855,
-            "y_legend_pos": 767,
+            "x_pos": 860,
+            "y_pos": 789,
+            "x_legend_pos": 850,
+            "y_legend_pos": 781,
             "display": 6
         },
         "8": {
             "name": "But",
             "full_name": "Buton",
-            "x_pos": 723,
+            "x_pos": 719,
             "y_pos": 778,
-            "x_legend_pos": 723,
+            "x_legend_pos": 719,
             "y_legend_pos": 764
         },
         "9": {
             "name": "Bun",
             "full_name": "Butuan",
-            "x_pos": 824,
+            "x_pos": 822,
             "y_pos": 465,
-            "x_legend_pos": 824,
-            "y_legend_pos": 451
+            "x_legend_pos": 839,
+            "y_legend_pos": 463
         },
         "10": {
             "name": "Cha",
             "full_name": "Chaiya",
             "x_pos": 123,
-            "y_pos": 458,
+            "y_pos": 460,
             "x_legend_pos": 123,
-            "y_legend_pos": 444
+            "y_legend_pos": 446
         },
         "11": {
             "name": "Chp",
@@ -295,9 +295,9 @@
         "15": {
             "name": "Daw",
             "full_name": "Daiwei",
-            "x_pos": 123,
+            "x_pos": 119,
             "y_pos": 337,
-            "x_legend_pos": 123,
+            "x_legend_pos": 119,
             "y_legend_pos": 323,
             "display": 5
         },
@@ -320,10 +320,10 @@
         "18": {
             "name": "Fai",
             "full_name": "Faifo",
-            "x_pos": 366,
-            "y_pos": 279,
-            "x_legend_pos": 366,
-            "y_legend_pos": 265,
+            "x_pos": 371,
+            "y_pos": 290,
+            "x_legend_pos": 371,
+            "y_legend_pos": 276,
             "display": 7
         },
         "19": {
@@ -353,10 +353,10 @@
         "22": {
             "name": "Hai",
             "full_name": "Haiphong",
-            "x_pos": 324,
-            "y_pos": 102,
+            "x_pos": 306,
+            "y_pos": 130,
             "x_legend_pos": 324,
-            "y_legend_pos": 88,
+            "y_legend_pos": 103,
             "display": 7
         },
         "23": {
@@ -364,8 +364,8 @@
             "full_name": "Halmahera",
             "x_pos": 905,
             "y_pos": 658,
-            "x_legend_pos": 905,
-            "y_legend_pos": 644,
+            "x_legend_pos": 894,
+            "y_legend_pos": 678,
             "display": 6
         },
         "24": {
@@ -396,10 +396,10 @@
         "27": {
             "name": "Jav",
             "full_name": "Javadvipa",
-            "x_pos": 428,
-            "y_pos": 891,
-            "x_legend_pos": 428,
-            "y_legend_pos": 877,
+            "x_pos": 419,
+            "y_pos": 889,
+            "x_legend_pos": 404,
+            "y_legend_pos": 884,
             "display": 2
         },
         "28": {
@@ -415,17 +415,17 @@
             "full_name": "Kasiguran",
             "x_pos": 712,
             "y_pos": 244,
-            "x_legend_pos": 712,
-            "y_legend_pos": 230,
+            "x_legend_pos": 729,
+            "y_legend_pos": 241,
             "display": 3
         },
         "30": {
             "name": "Kel",
             "full_name": "Kelatan",
-            "x_pos": 187,
-            "y_pos": 531,
-            "x_legend_pos": 187,
-            "y_legend_pos": 517
+            "x_pos": 186,
+            "y_pos": 540,
+            "x_legend_pos": 186,
+            "y_legend_pos": 526
         },
         "31": {
             "name": "Khm",
@@ -446,18 +446,18 @@
         "33": {
             "name": "LaX",
             "full_name": "Lan Xang",
-            "x_pos": 211,
-            "y_pos": 150,
-            "x_legend_pos": 211,
-            "y_legend_pos": 136
+            "x_pos": 223,
+            "y_pos": 169,
+            "x_legend_pos": 223,
+            "y_legend_pos": 155
         },
         "34": {
             "name": "Lum",
             "full_name": "Lumajang",
             "x_pos": 514,
             "y_pos": 908,
-            "x_legend_pos": 514,
-            "y_legend_pos": 894
+            "x_legend_pos": 486,
+            "y_legend_pos": 913
         },
         "35": {
             "name": "Lus",
@@ -478,10 +478,10 @@
         "37": {
             "name": "Luw",
             "full_name": "Luwuk",
-            "x_pos": 724,
-            "y_pos": 725,
-            "x_legend_pos": 724,
-            "y_legend_pos": 711
+            "x_pos": 722,
+            "y_pos": 727,
+            "x_legend_pos": 740,
+            "y_legend_pos": 722
         },
         "38": {
             "name": "Mai",
@@ -510,10 +510,10 @@
         "41": {
             "name": "Mal",
             "full_name": "Malacca",
-            "x_pos": 182,
-            "y_pos": 588,
-            "x_legend_pos": 182,
-            "y_legend_pos": 574,
+            "x_pos": 185,
+            "y_pos": 596,
+            "x_legend_pos": 185,
+            "y_legend_pos": 582,
             "display": 4
         },
         "42": {
@@ -521,8 +521,8 @@
             "full_name": "Minahassa",
             "x_pos": 709,
             "y_pos": 666,
-            "x_legend_pos": 709,
-            "y_legend_pos": 652
+            "x_legend_pos": 734,
+            "y_legend_pos": 672
         },
         "43": {
             "name": "Miu",
@@ -537,8 +537,8 @@
             "full_name": "Mindanao",
             "x_pos": 844,
             "y_pos": 489,
-            "x_legend_pos": 844,
-            "y_legend_pos": 475
+            "x_legend_pos": 823,
+            "y_legend_pos": 493
         },
         "45": {
             "name": "MoS",
@@ -553,8 +553,8 @@
             "full_name": "Namayan",
             "x_pos": 715,
             "y_pos": 305,
-            "x_legend_pos": 715,
-            "y_legend_pos": 291,
+            "x_legend_pos": 714,
+            "y_legend_pos": 294,
             "display": 3
         },
         "47": {
@@ -577,27 +577,27 @@
             "name": "Pah",
             "full_name": "Pahang",
             "x_pos": 217,
-            "y_pos": 585,
+            "y_pos": 569,
             "x_legend_pos": 217,
-            "y_legend_pos": 571,
+            "y_legend_pos": 555,
             "display": 4
         },
         "50": {
             "name": "Paj",
             "full_name": "Pajajaran",
-            "x_pos": 331,
-            "y_pos": 865,
-            "x_legend_pos": 331,
-            "y_legend_pos": 851,
+            "x_pos": 353,
+            "y_pos": 868,
+            "x_legend_pos": 317,
+            "y_legend_pos": 860,
             "display": 2
         },
         "51": {
             "name": "Pal",
             "full_name": "Palawan",
-            "x_pos": 615,
-            "y_pos": 453,
-            "x_legend_pos": 615,
-            "y_legend_pos": 439,
+            "x_pos": 637,
+            "y_pos": 433,
+            "x_legend_pos": 613,
+            "y_legend_pos": 457,
             "display": 1
         },
         "52": {
@@ -613,7 +613,7 @@
             "full_name": "Pedir",
             "x_pos": 125,
             "y_pos": 614,
-            "x_legend_pos": 125,
+            "x_legend_pos": 108,
             "y_legend_pos": 600
         },
         "54": {
@@ -627,10 +627,10 @@
         "55": {
             "name": "Ria",
             "full_name": "Riau",
-            "x_pos": 205,
-            "y_pos": 696,
-            "x_legend_pos": 205,
-            "y_legend_pos": 682,
+            "x_pos": 186,
+            "y_pos": 679,
+            "x_legend_pos": 186,
+            "y_legend_pos": 665,
             "display": 4
         },
         "56": {
@@ -671,8 +671,8 @@
             "full_name": "Seram",
             "x_pos": 936,
             "y_pos": 772,
-            "x_legend_pos": 936,
-            "y_legend_pos": 758,
+            "x_legend_pos": 911,
+            "y_legend_pos": 775,
             "display": 6
         },
         "61": {
@@ -752,16 +752,16 @@
             "full_name": "Sunda",
             "x_pos": 351,
             "y_pos": 887,
-            "x_legend_pos": 351,
-            "y_legend_pos": 873
+            "x_legend_pos": 328,
+            "y_legend_pos": 889
         },
         "71": {
             "name": "Tai",
             "full_name": "Taiwan",
-            "x_pos": 682,
-            "y_pos": 67,
-            "x_legend_pos": 682,
-            "y_legend_pos": 53
+            "x_pos": 683,
+            "y_pos": 74,
+            "x_legend_pos": 683,
+            "y_legend_pos": 60
         },
         "72": {
             "name": "TiS",
@@ -775,27 +775,27 @@
             "name": "Ton",
             "full_name": "Tondo",
             "x_pos": 690,
-            "y_pos": 267,
-            "x_legend_pos": 690,
-            "y_legend_pos": 253,
+            "y_pos": 270,
+            "x_legend_pos": 684,
+            "y_legend_pos": 259,
             "display": 3
         },
         "74": {
             "name": "Tro",
             "full_name": "Trowulan",
-            "x_pos": 469,
+            "x_pos": 473,
             "y_pos": 889,
-            "x_legend_pos": 469,
-            "y_legend_pos": 875,
+            "x_legend_pos": 458,
+            "y_legend_pos": 881,
             "display": 2
         },
         "75": {
             "name": "Tun",
             "full_name": "Tunku",
-            "x_pos": 610,
-            "y_pos": 541,
-            "x_legend_pos": 610,
-            "y_legend_pos": 527,
+            "x_pos": 612,
+            "y_pos": 548,
+            "x_legend_pos": 612,
+            "y_legend_pos": 534,
             "display": 1
         },
         "76": {
@@ -811,8 +811,8 @@
             "full_name": "Wehali",
             "x_pos": 794,
             "y_pos": 951,
-            "x_legend_pos": 794,
-            "y_legend_pos": 937
+            "x_legend_pos": 833,
+            "y_legend_pos": 930
         },
         "78": {
             "name": "WeO",
@@ -835,15 +835,15 @@
             "full_name": "Zamboanga",
             "x_pos": 797,
             "y_pos": 478,
-            "x_legend_pos": 797,
-            "y_legend_pos": 464
+            "x_legend_pos": 772,
+            "y_legend_pos": 469
         },
         "81": {
             "name": "",
             "full_name": "",
             "x_pos": 141,
             "y_pos": 472,
-            "x_legend_pos": 141,
+            "x_legend_pos": 137,
             "y_legend_pos": 458
         },
         "82": {
@@ -859,24 +859,24 @@
             "full_name": "",
             "x_pos": 131,
             "y_pos": 363,
-            "x_legend_pos": 131,
-            "y_legend_pos": 349
+            "x_legend_pos": 134,
+            "y_legend_pos": 351
         },
         "84": {
             "name": "",
             "full_name": "",
             "x_pos": 95,
             "y_pos": 290,
-            "x_legend_pos": 95,
-            "y_legend_pos": 276
+            "x_legend_pos": 106,
+            "y_legend_pos": 283
         },
         "85": {
             "name": "",
             "full_name": "",
             "x_pos": 438,
             "y_pos": 901,
-            "x_legend_pos": 438,
-            "y_legend_pos": 887
+            "x_legend_pos": 449,
+            "y_legend_pos": 913
         },
         "86": {
             "name": "",
@@ -884,31 +884,31 @@
             "x_pos": 433,
             "y_pos": 875,
             "x_legend_pos": 433,
-            "y_legend_pos": 861
+            "y_legend_pos": 888
         },
         "87": {
             "name": "",
             "full_name": "",
             "x_pos": 714,
             "y_pos": 280,
-            "x_legend_pos": 714,
-            "y_legend_pos": 266
+            "x_legend_pos": 723,
+            "y_legend_pos": 274
         },
         "88": {
             "name": "",
             "full_name": "",
             "x_pos": 715,
             "y_pos": 313,
-            "x_legend_pos": 715,
-            "y_legend_pos": 299
+            "x_legend_pos": 734,
+            "y_legend_pos": 317
         },
         "89": {
             "name": "",
             "full_name": "",
             "x_pos": 465,
             "y_pos": 621,
-            "x_legend_pos": 465,
-            "y_legend_pos": 607
+            "x_legend_pos": 481,
+            "y_legend_pos": 616
         },
         "90": {
             "name": "",
