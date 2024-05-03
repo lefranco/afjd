@@ -243,7 +243,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
                     continue
 
                 dict_unit_type[str(zone1.number)].append(zone2.number)
-                print(f"    {zone2}({zone2.number}) is adjacent")
+                print(f"    {zone2}({zone2.number}) is adjacent by {'army' if unit_type == 1 else 'fleet'}")
 
         result_queue.put(dict_unit_type)
         print(f"Done with {'army' if unit_type == 1 else 'fleet'}.")
