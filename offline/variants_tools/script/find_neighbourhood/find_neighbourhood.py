@@ -218,7 +218,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
             if not acceptable(unit_type, zone1):
                 continue
 
-            print(f"  Finding neighbours by {'army' if unit_type == 1 else 'fleet'} of {zone1}({zone1.number}):")
+            print(f"  Finding neighbours by {'army' if unit_type == 1 else 'fleet'} of {zone1} ({zone1.number}):")
 
             dict_unit_type[str(zone1.number)] = []
             assert zone1.polygon is not None
