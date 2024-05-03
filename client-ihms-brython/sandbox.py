@@ -680,20 +680,24 @@ def sandbox():
         if selected_erase_unit is None:
             selected_erase_unit = selected_active_unit
 
-        # if unit does not have an order... remove unit
-        if not ORDERS_DATA.is_ordered(selected_erase_unit):
+        # really nothing to do
+        if selected_erase_unit is None:
+            return
 
+        # if unit does not have an order... remove unit
+        if ORDERS_DATA.is_ordered(selected_erase_unit):
+        
+            # remove order
+            ORDERS_DATA.remove_order(selected_erase_unit)
+
+        else:
+        
             # remove unit
             POSITION_DATA.remove_unit(selected_erase_unit)
 
             # tricky
             if selected_hovered_object == selected_erase_unit:
                 selected_hovered_object = None
-
-        else:
-
-            # remove order
-            ORDERS_DATA.remove_order(selected_erase_unit)
 
         # update map
         callback_render(True)
