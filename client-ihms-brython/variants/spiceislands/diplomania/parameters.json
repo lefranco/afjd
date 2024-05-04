@@ -396,8 +396,8 @@
         "27": {
             "name": "Jav",
             "full_name": "Javadvipa",
-            "x_pos": 419,
-            "y_pos": 889,
+            "x_pos": 416,
+            "y_pos": 892,
             "x_legend_pos": 404,
             "y_legend_pos": 884,
             "display": 2
@@ -519,8 +519,8 @@
         "42": {
             "name": "Min",
             "full_name": "Minahassa",
-            "x_pos": 709,
-            "y_pos": 666,
+            "x_pos": 778,
+            "y_pos": 674,
             "x_legend_pos": 734,
             "y_legend_pos": 672
         },
@@ -537,7 +537,7 @@
             "full_name": "Mindanao",
             "x_pos": 844,
             "y_pos": 489,
-            "x_legend_pos": 823,
+            "x_legend_pos": 821,
             "y_legend_pos": 493
         },
         "45": {
@@ -551,10 +551,10 @@
         "46": {
             "name": "Nam",
             "full_name": "Namayan",
-            "x_pos": 715,
-            "y_pos": 305,
-            "x_legend_pos": 714,
-            "y_legend_pos": 294,
+            "x_pos": 732,
+            "y_pos": 302,
+            "x_legend_pos": 709,
+            "y_legend_pos": 305,
             "display": 3
         },
         "47": {
@@ -827,7 +827,7 @@
             "full_name": "Wiangium",
             "x_pos": 265,
             "y_pos": 246,
-            "x_legend_pos": 265,
+            "x_legend_pos": 254,
             "y_legend_pos": 232
         },
         "80": {
