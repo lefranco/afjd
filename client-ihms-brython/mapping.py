@@ -41,6 +41,7 @@ def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx) -> Non
     """ low level draw an arrow """
 
     # the ctx.strokeStyle and ctx.fillStyle should be defined
+    # the ctx.lineWidth should be defined
 
     # first draw the arrow line
 
@@ -70,8 +71,6 @@ def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx) -> Non
     x_two_thirds = (x_start + 2 * x_dest) / 3
     y_two_thirds = (y_start + 2 * y_dest) / 3
 
-    line_width_saved = ctx.lineWidth
-    ctx.lineWidth = 1
     ctx.save()
 
     ctx.translate(x_two_thirds, y_two_thirds)
@@ -84,11 +83,12 @@ def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx) -> Non
     ctx.stroke(); ctx.closePath()
 
     ctx.restore()
-    ctx.lineWidth = line_width_saved
 
 
 def fill_zone(ctx, zone_area, fill_colour):
     """ fill_zone """
+
+    # ctx.lineWidth not used
 
     # fill coulour
     ctx.fillStyle = fill_colour.str_value()  # filling zone
@@ -261,10 +261,10 @@ class Center(Renderable):
         """ put me on screen (active means start actually for this class) """
 
         fill_color = CENTER_COLOUR
-        ctx.fillStyle = fill_color.str_value()  # for a center
-
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
+        ctx.lineWidth = 1
+        ctx.fillStyle = fill_color.str_value()  # for a center
 
         position = self._region.zone.variant.position_table[self]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
@@ -417,6 +417,9 @@ class Zone(Highliteable, Renderable):
 
         # alteration (highlite)
         outline_colour = OUTLINE_COLOUR_HIGHLITED if active else (SPECIAL_COAST_OUTLINE_COLOUR if self._coast_type else OUTLINE_COLOUR)
+
+        # if bigger, leaves a trace of where mous has been (larger boundaries)
+        ctx.lineWidth = 1
 
         path = self._variant.path_table[self]
         ctx.beginPath()
@@ -1412,7 +1415,8 @@ class Forbidden(Renderable):
 
         outline_colour = ColourRecord(red=255, green=0, blue=0)
         ctx.strokeStyle = outline_colour.str_value()
-        ctx.lineWidth = 2
+        ctx.lineWidth = 2  # Need to really see it
+        # ctx.fillStyle is not used
 
         region = self._region
         zone = region.zone
@@ -1426,7 +1430,6 @@ class Forbidden(Renderable):
         ctx.moveTo(x + 6, y - 6)
         ctx.lineTo(x - 6, y + 6)
         ctx.stroke(); ctx.closePath()
-        ctx.lineWidth = 1
 
     @property
     def region(self) -> Region:
@@ -1840,16 +1843,13 @@ class Order(Renderable):
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
-            ctx.lineWidth = 2
+            ctx.lineWidth = 1  # Enough for just attack
 
             # an arrow (move)
             from_point = self._position.variant.position_table[self._active_unit.zone]
             dest_point = self._position.variant.position_table[self._destination_zone]
             dest_point_closer_x, dest_point_closer_y = shorten_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos)
             draw_arrow(from_point.x_pos, from_point.y_pos, dest_point_closer_x, dest_point_closer_y, ctx)
-
-            # put back
-            ctx.lineWidth = 1
 
         if self._order_type is OrderTypeEnum.OFF_SUPPORT_ORDER:
 
@@ -1861,7 +1861,7 @@ class Order(Renderable):
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
-            ctx.lineWidth = 1.5
+            ctx.lineWidth = 1.5 # a bit more for dashed
             ctx.setLineDash(DASH_PATTERN)
 
             # a dashed arrow (passive move)
@@ -1877,7 +1877,7 @@ class Order(Renderable):
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
             # put back
-            ctx.lineWidth = 1
+            ctx.lineWidth = 1 # enough for line
             ctx.setLineDash([])
 
             # a line (support)
@@ -1895,8 +1895,9 @@ class Order(Renderable):
             # green for peaceful defensive support
             stroke_color = SUPPORT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
+            # ctx.fillStyle is not used
 
-            ctx.lineWidth = 2
+            ctx.lineWidth = 1.5   # a bit more for dashed
             ctx.setLineDash(DASH_PATTERN)
 
             # prepare the line
@@ -1914,7 +1915,7 @@ class Order(Renderable):
             ctx.stroke(); ctx.closePath()
 
             # put back
-            ctx.lineWidth = 1
+            ctx.lineWidth = 1 # enough for line
             ctx.setLineDash([])
 
             # put the prepared line (support)
@@ -1929,8 +1930,9 @@ class Order(Renderable):
             # green for peaceful hold
             stroke_color = SUPPORT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
+            # ctx.fillStyle is not used
 
-            ctx.lineWidth = 3
+            ctx.lineWidth = 1.5  # a bit more for dashed
             ctx.setLineDash(DASH_PATTERN)
 
             center_point = self._position.variant.position_table[self._active_unit.zone]
@@ -1941,7 +1943,6 @@ class Order(Renderable):
             ctx.stroke(); ctx.closePath()
 
             # put back
-            ctx.lineWidth = 1
             ctx.setLineDash([])
 
         if self._order_type is OrderTypeEnum.CONVOY_ORDER:
@@ -1954,7 +1955,7 @@ class Order(Renderable):
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
-            ctx.lineWidth = 1.5
+            ctx.lineWidth = 1.5  # a bit more for dashed
             ctx.setLineDash(DASH_PATTERN)
 
             # a dashed arrow (passive move)
@@ -1968,7 +1969,7 @@ class Order(Renderable):
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
             # put back
-            ctx.lineWidth = 1
+            ctx.lineWidth = 1 # enough for line
             ctx.setLineDash([])
 
             # put a line (convoy)
@@ -1988,9 +1989,8 @@ class Order(Renderable):
             # orange for retreat
             stroke_color = RETREAT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
+            ctx.lineWidth = 1.5  # Retreats : not that many so can be thicker
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
-
-            ctx.lineWidth = 2
 
             # put an arrow (move/retreat)
             unit_position = self._position.variant.position_table[self._active_unit.zone]
@@ -2000,16 +2000,13 @@ class Order(Renderable):
             draw_arrow(from_point.x_pos, from_point.y_pos, dest_point_closer_x, dest_point_closer_y, ctx)
             # -- end
 
-            # put back
-            ctx.lineWidth = 1
-
         if self._order_type is OrderTypeEnum.DISBAND_ORDER:
 
             # orange for retreat
             stroke_color = RETREAT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
-
-            ctx.lineWidth = 2
+            ctx.lineWidth = 1.5
+            # ctx.fillStyle is not used
 
             # put a cross over unit
             unit_position = self._position.variant.position_table[self._active_unit.zone]
@@ -2021,9 +2018,6 @@ class Order(Renderable):
             ctx.lineTo(cross_center_point.x_pos + 8, cross_center_point.y_pos + 8)
             ctx.stroke(); ctx.closePath()
 
-            # put back
-            ctx.lineWidth = 1
-
         # -- builds --
 
         if self._order_type is OrderTypeEnum.BUILD_ORDER:
@@ -2034,8 +2028,8 @@ class Order(Renderable):
             # grey for builds
             stroke_color = ADJUSTMENT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
-
-            ctx.lineWidth = 2
+            ctx.lineWidth = 1.5
+            # ctx.fillStyle is not used
 
             # put a square around unit
             square_center_point = self._position.variant.position_table[self._active_unit.zone]
@@ -2043,16 +2037,13 @@ class Order(Renderable):
             ctx.rect(square_center_point.x_pos - 8, square_center_point.y_pos - 8, 16, 16)
             ctx.stroke(); ctx.closePath()
 
-            # put back
-            ctx.lineWidth = 1
-
         if self._order_type is OrderTypeEnum.REMOVE_ORDER:
 
             # grey for builds
             stroke_color = ADJUSTMENT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
-
-            ctx.lineWidth = 2
+            ctx.lineWidth = 1.5
+            # ctx.fillStyle is not used
 
             # put a cross over unit
             cross_center_point = self._position.variant.position_table[self._active_unit.zone]
@@ -2062,9 +2053,6 @@ class Order(Renderable):
             ctx.moveTo(cross_center_point.x_pos - 8, cross_center_point.y_pos - 8)
             ctx.lineTo(cross_center_point.x_pos + 8, cross_center_point.y_pos + 8)
             ctx.stroke(); ctx.closePath()
-
-            # put back
-            ctx.lineWidth = 1
 
     def save_json(self):
         """ Save to  dict """
