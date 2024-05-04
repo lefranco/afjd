@@ -248,7 +248,8 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
         result_queue.put(dict_unit_type)
         print(f"Done with {'army' if unit_type == 1 else 'fleet'}.")
 
-    # create zone
+    # create zone and special2region
+    special2region: typing.Dict[int, int] = {}
     for num_zone_str, zone_data in json_parameters_data['zones'].items():
         if zone_data['full_name']:
             zone = Zone(int(num_zone_str), zone_data['full_name'])
@@ -259,6 +260,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
                     coast_name = json_parameters_data['coasts'][str(num_coast)]['name']
                     break
             zone = Zone(int(num_zone_str), f"{str(zone2)} {coast_name}", num_coast, zone2)
+            special2region[int(num_zone_str)] = num_zone_orig
 
     # put type from variant
     for num, region_type in enumerate(json_variant_data['regions']):
@@ -352,6 +354,10 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
                 continue
             if not seas_of_zones[zone1] & seas_of_zones[zone2]:
                 print(f"Removing {zone2}({zone2.number}) from neighbours of {zone1}({zone1.number}) because no common sea")
+                neighbours.remove(zone_num2)
+                continue
+            if int(zone_num1) in special2region and zone_num2 in special2region and special2region[int(zone_num1)] == special2region[zone_num2]:
+                print(f"Removing {zone2}({zone2.number}) from neighbours of {zone1}({zone1.number}) because two special coasts of same region!")
                 neighbours.remove(zone_num2)
 
     old_neighbouring = json_variant_data['neighbouring'].copy()
