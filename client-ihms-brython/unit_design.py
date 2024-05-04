@@ -48,6 +48,7 @@ def draw_circle(x_pos: int, y_pos: int, ray: int, ctx):
 def stabbeur_army(x_pos: int, y_pos: int, transpose: bool, ctx):
     """ display an army the stabbeur way """
 
+    ctx.lineWidth = 1
     # the ctx.strokeStyle and ctx.fillStyle should be defined beforehand
 
     # basement
@@ -93,6 +94,7 @@ def stabbeur_army(x_pos: int, y_pos: int, transpose: bool, ctx):
 def stabbeur_fleet(x_pos: int, y_pos: int, transpose: bool, ctx):
     """ display a fleet the stabbeur way """
 
+    ctx.lineWidth = 1
     # the ctx.strokeStyle and ctx.fillStyle should be defined beforehand
 
     # big work
