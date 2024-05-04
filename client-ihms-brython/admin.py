@@ -513,6 +513,7 @@ def rectify_parameters():
     fast_loaded = None
     archive_loaded = None
     game_type_loaded = None
+    finished_loaded = None
     nb_max_cycles_to_play_loaded = None
 
     def change_parameters_reload():
@@ -532,6 +533,7 @@ def rectify_parameters():
             nonlocal fast_loaded
             nonlocal archive_loaded
             nonlocal game_type_loaded
+            nonlocal finished_loaded
             nonlocal nb_max_cycles_to_play_loaded
             req_result = loads(req.text)
             if req.status != 200:
@@ -548,6 +550,7 @@ def rectify_parameters():
             fast_loaded = req_result['fast']
             archive_loaded = req_result['archive']
             game_type_loaded = req_result['game_type']
+            finished_loaded = req_result['finished']
             nb_max_cycles_to_play_loaded = req_result['nb_max_cycles_to_play']
 
         json_dict = {}
@@ -584,6 +587,7 @@ def rectify_parameters():
         archive = int(input_archive.checked)
         game_type = input_game_type.value
         game_type_code = config.GAME_TYPES_CODE_TABLE[game_type]
+        finished = int(input_finished.checked)
         nb_max_cycles_to_play = int(input_nb_max_cycles_to_play.value)
 
         json_dict = {
@@ -591,6 +595,7 @@ def rectify_parameters():
             'fast': fast,
             'archive': archive,
             'game_type': game_type_code,
+            'finished': finished,
             'nb_max_cycles_to_play': nb_max_cycles_to_play
         }
 
@@ -663,6 +668,13 @@ def rectify_parameters():
     fieldset <= legend_nb_max_cycles_to_play
     input_nb_max_cycles_to_play = html.INPUT(type="number", value=nb_max_cycles_to_play_loaded, Class='btn-inside')
     fieldset <= input_nb_max_cycles_to_play
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_finished = html.LEGEND("terminée", title="Partie finie dernière saison jouée")
+    fieldset <= legend_finished
+    input_finished = html.INPUT(type="checkbox", checked=finished_loaded, Class='btn-inside')
+    fieldset <= input_finished
     form <= fieldset
 
     form <= html.BR()

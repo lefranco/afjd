@@ -106,6 +106,7 @@ GAME_PARSER2.add_argument('fast', type=int, required=False)
 GAME_PARSER2.add_argument('archive', type=int, required=False)
 GAME_PARSER2.add_argument('game_type', type=int, required=False)
 GAME_PARSER2.add_argument('current_state', type=int, required=False)
+GAME_PARSER2.add_argument('finished', type=int, required=False)
 GAME_PARSER2.add_argument('nb_max_cycles_to_play', type=int, required=False)
 
 GAMES_SELECT_PARSER = flask_restful.reqparse.RequestParser()
