@@ -335,6 +335,10 @@ class Game:
 
         # current_advancement cannot be set directly
 
+        if 'finished' in json_dict and json_dict['finished'] is not None and json_dict['finished'] != self._finished:
+            self._finished = json_dict['finished']
+            changed = True
+
         if 'nb_max_cycles_to_play' in json_dict and json_dict['nb_max_cycles_to_play'] is not None and json_dict['nb_max_cycles_to_play'] != self._nb_max_cycles_to_play:
             self._nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play']
             # safety
