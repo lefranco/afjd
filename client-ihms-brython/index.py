@@ -394,6 +394,13 @@ elif 'tournament' in document.query:
     load_option(None, 'Accueil')
     PANEL_MIDDLE.clear()
     tournament.render(PANEL_MIDDLE)
+elif 'variant' in document.query:
+    query_variant_name = document.query['variant']
+    variants.set_arrival('variant', query_variant_name)
+    window.history.pushState({}, document.title, "/")
+    load_option(None, 'Accueil')
+    PANEL_MIDDLE.clear()
+    variants.render(PANEL_MIDDLE)
 elif 'rescue' in document.query:
     if 'pseudo' in document.query:
         passed_pseudo = document.query['pseudo']
