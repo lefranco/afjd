@@ -909,8 +909,8 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             dropout.delete_database(sql_executor)
 
         # delete replacements
-        for (_, role_num, player_id, _) in replacements.Replacement.list_by_game_id(sql_executor, int(game_id)):
-            replacement = replacements.Replacement(int(game_id), role_num, player_id)
+        for (_, role_num, player_id, _, entering) in replacements.Replacement.list_by_game_id(sql_executor, int(game_id)):
+            replacement = replacements.Replacement(int(game_id), role_num, player_id, bool(entering))
             replacement.delete_database(sql_executor)
 
         # delete transitions
@@ -1699,6 +1699,10 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                 # cannot fail
                 _ = game.put_role(sql_executor, player_id, role_id)
 
+                # we have a replacement here (game master entering)
+                replacement = replacements.Replacement(game_id, role_id, player_id, True)
+                replacement.update_database(sql_executor)  # noqa: F821
+
                 sql_executor.commit()
                 del sql_executor
 
@@ -1715,6 +1719,10 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
             dangling_role_id = -1
             # cannot fail
             _ = game.put_role(sql_executor, player_id, dangling_role_id)
+
+            # we have a replacement here (game master quitting)
+            replacement = replacements.Replacement(game_id, role_id, player_id, False)
+            replacement.update_database(sql_executor)  # noqa: F821
 
             sql_executor.commit()
             del sql_executor
@@ -1755,6 +1763,10 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(400, msg="This role is incorrect for the variant of this game")
 
+            # we have a replacement here (player entering)
+            replacement = replacements.Replacement(game_id, role_id, player_id, True)
+            replacement.update_database(sql_executor)  # noqa: F821
+
             sql_executor.commit()
             del sql_executor
 
@@ -1781,8 +1793,8 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         dropout = dropouts.Dropout(game_id, role_id, player_id)
         dropout.update_database(sql_executor)  # noqa: F821
 
-        # we have a replacement here
-        replacement = replacements.Replacement(game_id, role_id, player_id)
+        # we have a replacement here (player quitting)
+        replacement = replacements.Replacement(game_id, role_id, player_id, False)
         replacement.update_database(sql_executor)  # noqa: F821
 
         sql_executor.commit()
@@ -5779,7 +5791,7 @@ class GameReplacementsRessource(flask_restful.Resource):  # type: ignore
 
         # replacements_list : those who quitted the game
         replacements_list = replacements.Replacement.list_by_game_id(sql_executor, game_id)
-        late_list = [(o[1], o[2], o[3]) for o in replacements_list]
+        late_list = [(o[1], o[2], o[3], o[4]) for o in replacements_list]
 
         del sql_executor
 
