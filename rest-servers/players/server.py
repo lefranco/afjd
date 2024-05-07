@@ -600,6 +600,26 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # second checks externally (games)
         # ----------------------
 
+        # player cannot quit if assignement (director of tournament)
+
+        # get all assignments
+        host = lowdata.SERVER_CONFIG['GAME']['HOST']
+        port = lowdata.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/assignments"
+        jwt_token = flask.request.headers.get('AccessToken')
+        req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"})
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Assignement check failed!:{message}")
+        json_dict = req_result.json()
+        groupings_dict = json_dict
+
+        if player_id in groupings_dict.values():
+            del sql_executor
+            flask_restful.abort(400, msg="Player is assigned to a tournament")
+
         # player cannot quit if allocation (play in game)
 
         # get all allocations of the player
@@ -618,6 +638,12 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if allocations_dict:
             del sql_executor
             flask_restful.abort(400, msg="Player is still in a game")
+
+        # ----------------------
+        # all is ok
+        # ----------------------
+
+        # TODO : just remove all incidents
 
         # player cannot quit if incidents
 
@@ -639,6 +665,8 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg=f"Player has an incident in a game(s) number {game_numbers}")
 
+        # TODO : just remove all dropouts
+
         # player cannot quit if dropouts
 
         # Get all dropouts of the player
@@ -659,29 +687,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg=f"Player has a dropout in a game(s) number {game_numbers}")
 
-        # player cannot quit if assignement (director of tournament)
-
-        # get all assignments
-        host = lowdata.SERVER_CONFIG['GAME']['HOST']
-        port = lowdata.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/assignments"
-        jwt_token = flask.request.headers.get('AccessToken')
-        req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"})
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            del sql_executor
-            flask_restful.abort(400, msg=f"Assignement check failed!:{message}")
-        json_dict = req_result.json()
-        groupings_dict = json_dict
-
-        if player_id in groupings_dict.values():
-            del sql_executor
-            flask_restful.abort(400, msg="Player is assigned to a tournament")
-
-        # ----------------------
-        # all is ok
-        # ----------------------
+        # TODO : just remove all replacements
 
         # notify player
         email_player = player.email
