@@ -1,0 +1,5 @@
+(imagemagick)
+
+convert <initial file> -fuzz 10% -fill <after color> -opaque <before color> <final file>
+
+use for colors : "#RRGGBB" in hexa
