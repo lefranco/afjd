@@ -686,12 +686,12 @@ def sandbox():
 
         # if unit does not have an order... remove unit
         if ORDERS_DATA.is_ordered(selected_erase_unit):
-        
+
             # remove order
             ORDERS_DATA.remove_order(selected_erase_unit)
 
         else:
-        
+
             # remove unit
             POSITION_DATA.remove_unit(selected_erase_unit)
 
