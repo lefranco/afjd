@@ -990,7 +990,7 @@ def game_announce():
     game_dropouts = common.game_dropouts_reload(game_id)
 
     # add fake messages (game dropouts)
-    fake_declarations = [(common.MessageTypeEnum.DROPOUT, 0, -1, False, False, r, d, f"Le joueur {id2pseudo[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur avec le pseudo '{id2pseudo[p]}' et avec ce rôle a été remplacé dans la partie...") for r, p, d in game_dropouts]
     declarations.extend(fake_declarations)
 
     # sort with all that was added
@@ -1017,8 +1017,8 @@ def game_announce():
                 class_ = 'text'
         elif type_ is common.MessageTypeEnum.SEASON:
             class_ = 'season'
-        elif type_ is common.MessageTypeEnum.DROPOUT:
-            class_ = 'dropout'
+        elif type_ is common.MessageTypeEnum.REPLACEMENT:
+            class_ = 'replacement'
 
         row = html.TR()
 

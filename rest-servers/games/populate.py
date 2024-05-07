@@ -34,6 +34,7 @@ import assignments
 import tournaments
 import groupings
 import dropouts
+import replacements
 import database
 
 
@@ -167,6 +168,11 @@ def populate_dropouts(sql_executor: database.SqlExecutor) -> None:
     dropouts.Dropout.create_table(sql_executor)
 
 
+def populate_replacements(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    replacements.Replacement.create_table(sql_executor)
+
+
 def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
@@ -197,6 +203,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_assignements(sql_executor)
     populate_groupings(sql_executor)
     populate_dropouts(sql_executor)
+    populate_replacements(sql_executor)
 
 
 if __name__ == '__main__':

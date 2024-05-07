@@ -117,7 +117,7 @@ class MessageTypeEnum:
 
     TEXT = 1
     SEASON = 2
-    DROPOUT = 3
+    REPLACEMENT = 3
 
 
 def formatted_news(news_content_loaded, admin_modo, class_):

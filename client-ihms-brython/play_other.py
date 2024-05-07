@@ -95,6 +95,37 @@ def join_game():
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
+def game_replacements_reload(game_id):
+    """ game_replacements_reload """
+
+    replacements = []
+
+    def reply_callback(req):
+        nonlocal replacements
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des remplacements de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des remplacements de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        replacements = req_result['replacements']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-replacements/{game_id}"
+
+    # extracting replacements from a game : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return replacements
+
+
 def game_incidents2_reload(game_id):
     """ game_incidents2_reload """
 
@@ -740,7 +771,7 @@ def show_events_in_game():
 
     # get the actual dropouts of the game
     game_dropouts = common.game_dropouts_reload(play_low.GAME_ID)
-    # there can be no incidents (if no incident of failed to load)
+    # there can be no dropouts (if no incident of failed to load)
 
     game_dropouts_table = html.TABLE()
 
@@ -1410,11 +1441,11 @@ def negotiate(default_dest_set, def_focus_role_id):
     fake_messages = [(common.MessageTypeEnum.SEASON, int(k), -1, -1, v, [], common.readable_season(int(k), play_low.VARIANT_DATA)) for k, v in game_transitions.items()]
     messages.extend(fake_messages)
 
-    # get the dropouts table
-    game_dropouts = common.game_dropouts_reload(play_low.GAME_ID)
+    # get the replacements table
+    game_replacements = game_replacements_reload(play_low.GAME_ID)
 
     # add fake messages (game dropouts)
-    fake_messages = [(common.MessageTypeEnum.DROPOUT, 0, -1, r, d, [], f"Le joueur {play_low.ID2PSEUDO[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    fake_messages = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, r, d, [], f"Le joueur avec le pseudo '{play_low.ID2PSEUDO[p]}' et avec ce rôle a été remplacé la partie...") for r, p, d in game_replacements]
     messages.extend(fake_messages)
 
     # sort with all that was added
@@ -1438,8 +1469,8 @@ def negotiate(default_dest_set, def_focus_role_id):
             class_ = 'text'
         elif type_ is common.MessageTypeEnum.SEASON:
             class_ = 'season'
-        elif type_ is common.MessageTypeEnum.DROPOUT:
-            class_ = 'dropout'
+        elif type_ is common.MessageTypeEnum.REPLACEMENT:
+            class_ = 'replacement'
 
         row = html.TR()
 
@@ -1710,11 +1741,11 @@ def declare():
     fake_declarations = [(common.MessageTypeEnum.SEASON, int(k), -1, False, False, -1, v, common.readable_season(int(k), play_low.VARIANT_DATA)) for k, v in game_transitions.items()]
     declarations.extend(fake_declarations)
 
-    # get the dropouts table
-    game_dropouts = common.game_dropouts_reload(play_low.GAME_ID)
+    # get the replacements table
+    game_replacements = game_replacements_reload(play_low.GAME_ID)
 
-    # add fake messages (game dropouts)
-    fake_declarations = [(common.MessageTypeEnum.DROPOUT, 0, -1, False, False, r, d, f"Le joueur {play_low.ID2PSEUDO[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    # add fake messages (game replacements)
+    fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur avec le pseudo '{play_low.ID2PSEUDO[p]}' et avec ce rôle a été remplacé dans la partie...") for r, p, d in game_replacements]
     declarations.extend(fake_declarations)
 
     # sort with all that was added
@@ -1741,8 +1772,8 @@ def declare():
                 class_ = 'text'
         elif type_ is common.MessageTypeEnum.SEASON:
             class_ = 'season'
-        elif type_ is common.MessageTypeEnum.DROPOUT:
-            class_ = 'dropout'
+        elif type_ is common.MessageTypeEnum.REPLACEMENT:
+            class_ = 'replacement'
 
         row = html.TR()
 
