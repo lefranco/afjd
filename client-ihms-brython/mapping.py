@@ -1861,7 +1861,7 @@ class Order(Renderable):
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
-            ctx.lineWidth = 1.5 # a bit more for dashed
+            ctx.lineWidth = 1.5  # a bit more for dashed
             ctx.setLineDash(DASH_PATTERN)
 
             # a dashed arrow (passive move)
@@ -1877,7 +1877,7 @@ class Order(Renderable):
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
             # put back
-            ctx.lineWidth = 1 # enough for line
+            ctx.lineWidth = 1  # enough for line
             ctx.setLineDash([])
 
             # a line (support)
@@ -1915,7 +1915,7 @@ class Order(Renderable):
             ctx.stroke(); ctx.closePath()
 
             # put back
-            ctx.lineWidth = 1 # enough for line
+            ctx.lineWidth = 1  # enough for line
             ctx.setLineDash([])
 
             # put the prepared line (support)
@@ -1969,7 +1969,7 @@ class Order(Renderable):
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
             # put back
-            ctx.lineWidth = 1 # enough for line
+            ctx.lineWidth = 1  # enough for line
             ctx.setLineDash([])
 
             # put a line (convoy)
