@@ -56,6 +56,7 @@ import tournaments
 import groupings
 import assignments
 import dropouts
+import replacements
 import exporter
 
 
@@ -906,6 +907,11 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         for (_, role_num, player_id, _) in dropouts.Dropout.list_by_game_id(sql_executor, int(game_id)):
             dropout = dropouts.Dropout(int(game_id), role_num, player_id)
             dropout.delete_database(sql_executor)
+
+        # delete replacements
+        for (_, role_num, player_id, _) in replacements.Replacement.list_by_game_id(sql_executor, int(game_id)):
+            replacement = replacements.Replacement(int(game_id), role_num, player_id)
+            replacement.delete_database(sql_executor)
 
         # delete transitions
         for transition in transitions.Transition.list_by_game_id(sql_executor, int(game_id)):
@@ -1771,9 +1777,13 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         # cannot fail
         _ = game.put_role(sql_executor, player_id, dangling_role_id)
 
-        # we have a quitter here
+        # we have a quitter here (until further notice)
         dropout = dropouts.Dropout(game_id, role_id, player_id)
         dropout.update_database(sql_executor)  # noqa: F821
+
+        # we have a replacement here
+        replacement = replacements.Replacement(game_id, role_id, player_id)
+        replacement.update_database(sql_executor)  # noqa: F821
 
         sql_executor.commit()
         del sql_executor
@@ -2276,7 +2286,7 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
 class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
     """ GameFogOfWarPositionRessource """
 
-    def get(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int, role_id: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Gets position of the game (fog of war : foggy variant mainly)
         EXPOSED
@@ -2394,11 +2404,11 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
 
         # this will update last parameters
         variant_name = game.variant
-        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
+        apply_visibility(variant_name, int(role_id), ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
 
         # get imagined units
         imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        imagined_game_units = imagined_units.ImaginedUnit.list_by_game_id_role_num(sql_executor, game_id, role_id)
+        imagined_game_units = imagined_units.ImaginedUnit.list_by_game_id_role_num(sql_executor, game_id, int(role_id))
         for _, _, type_num, zone_num, role_num in imagined_game_units:
             imagined_unit_dict[str(role_num)].append([type_num, zone_num])
 
@@ -2582,7 +2592,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
 class GameFogOfWarReportRessource(flask_restful.Resource):  # type: ignore
     """ GameFogOfWarReportRessource """
 
-    def get(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int, role_id: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Gets the restrcited report of adjudication for the game
         EXPOSED
@@ -2712,7 +2722,7 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
 class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
     """ GameFogOfWarTransitionRessource """
 
-    def get(self, game_id: int, advancement: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int, advancement: int, role_id: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Gets the full fog of war report  (transition : postions + orders + report) of adjudication for the game
         EXPOSED
@@ -2815,7 +2825,7 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
 
         # this will update last parameters
         variant_name = game.variant
-        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
+        apply_visibility(variant_name, int(role_id), ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
 
         # this will insert supported units that need to be seen (this will update unit_dict parameter)
         apply_supported(complete_unit_dict, unit_dict, orders_list)
@@ -5744,6 +5754,36 @@ class GameIncidents2Ressource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'incidents': late_list}
+        return data, 200
+
+
+@API.resource('/game-replacements/<game_id>')
+class GameReplacementsRessource(flask_restful.Resource):  # type: ignore
+    """ GameReplacementsRessource """
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:
+        """
+        Gets list of roles which have produced an replacements for given game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-v/<game_id> - GET - getting which replacements occured for game id=%s", game_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # replacements_list : those who quitted the game
+        replacements_list = replacements.Replacement.list_by_game_id(sql_executor, game_id)
+        late_list = [(o[1], o[2], o[3]) for o in replacements_list]
+
+        del sql_executor
+
+        data = {'replacements': late_list}
         return data, 200
 
 
