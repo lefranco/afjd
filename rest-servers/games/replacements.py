@@ -16,7 +16,7 @@ class Replacement:
     """ Class for handling an replacement """
 
     @staticmethod
-    def list_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, int, int, float]]:
+    def list_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, int, int, float, int]]:
         """ class lookup : finds the object in database from game id """
         replacements_found = sql_executor.execute("SELECT * FROM replacements where player_id = ?", (player_id,), need_result=True)
         if not replacements_found:
@@ -24,7 +24,7 @@ class Replacement:
         return replacements_found
 
     @staticmethod
-    def list_by_game_id(sql_executor: database.SqlExecutor, game_id: int) -> typing.List[typing.Tuple[int, int, int, float]]:
+    def list_by_game_id(sql_executor: database.SqlExecutor, game_id: int) -> typing.List[typing.Tuple[int, int, int, float, int]]:
         """ class lookup : finds the object in database from game id """
         replacements_found = sql_executor.execute("SELECT * FROM replacements where game_id = ?", (game_id,), need_result=True)
         if not replacements_found:
@@ -32,7 +32,7 @@ class Replacement:
         return replacements_found
 
     @staticmethod
-    def inventory(sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[int, int, int, float]]:
+    def inventory(sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[int, int, int, float, int]]:
         """ class inventory : gives a list of all objects in database """
         replacements_found = sql_executor.execute("SELECT * FROM replacements", need_result=True)
         if not replacements_found:
@@ -44,9 +44,9 @@ class Replacement:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS replacements")
-        sql_executor.execute("CREATE TABLE replacements (game_id INTEGER, role_num INTEGER, player_id INTEGER, date real)")
+        sql_executor.execute("CREATE TABLE replacements (game_id INTEGER, role_num INTEGER, player_id INTEGER, date real, entering INTEGER)")
 
-    def __init__(self, game_id: int, role_num: int, player_id: int) -> None:
+    def __init__(self, game_id: int, role_num: int, player_id: int, entering: bool) -> None:
 
         assert isinstance(game_id, int), "game_id must be an int"
         self._game_id = game_id
@@ -57,19 +57,21 @@ class Replacement:
         assert isinstance(player_id, int), "player_id must be an int"
         self._player_id = player_id
 
+        assert isinstance(entering, bool), "entering must be an bool"
+        self._entering = int(entering)
+
         self._date = time.time()
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        sql_executor.execute("DELETE FROM replacements WHERE game_id = ? AND role_num = ? and player_id = ?", (self._game_id, self._role_num, self._player_id))
-        sql_executor.execute("INSERT OR REPLACE INTO replacements (game_id, role_num, player_id, date) VALUES (?, ?, ?, ?)", (self._game_id, self._role_num, self._player_id, self._date))
+        sql_executor.execute("INSERT OR REPLACE INTO replacements (game_id, role_num, player_id, date, entering) VALUES (?, ?, ?, ?, ?)", (self._game_id, self._role_num, self._player_id, self._date, self._entering))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
-        sql_executor.execute("DELETE FROM replacements WHERE game_id = ? AND role_num = ? and player_id = ?", (self._game_id, self._role_num, self._player_id))
+        sql_executor.execute("DELETE FROM replacements WHERE game_id = ? AND role_num = ? and player_id = ? and entering = ?", (self._game_id, self._role_num, self._player_id, self._entering))
 
     def __str__(self) -> str:
-        return f"game_id={self._game_id} role_num={self._role_num} player_id={self._player_id} date={self._date}"
+        return f"game_id={self._game_id} role_num={self._role_num} player_id={self._player_id} date={self._date} entering={self._entering}"
 
 
 if __name__ == '__main__':

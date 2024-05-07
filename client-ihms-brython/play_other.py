@@ -1444,8 +1444,8 @@ def negotiate(default_dest_set, def_focus_role_id):
     # get the replacements table
     game_replacements = game_replacements_reload(play_low.GAME_ID)
 
-    # add fake messages (game dropouts)
-    fake_messages = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, r, d, [], f"Le joueur avec le pseudo '{play_low.ID2PSEUDO[p]}' et avec ce rôle a été remplacé la partie...") for r, p, d in game_replacements]
+    # add fake messages (game replacements)
+    fake_messages = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, r, d, [], f"Le joueur ou arbitre avec le pseudo '{play_low.ID2PSEUDO[p]}' et avec ce rôle {'a été mis dans' if e else 'a été retiré de'} la partie...") for r, p, d, e in game_replacements]
     messages.extend(fake_messages)
 
     # sort with all that was added
@@ -1745,7 +1745,7 @@ def declare():
     game_replacements = game_replacements_reload(play_low.GAME_ID)
 
     # add fake messages (game replacements)
-    fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur avec le pseudo '{play_low.ID2PSEUDO[p]}' et avec ce rôle a été remplacé dans la partie...") for r, p, d in game_replacements]
+    fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur ou arbitre avec le pseudo '{play_low.ID2PSEUDO[p]}' et avec ce rôle {'a été mis dans' if e else 'a été retiré de'} la partie...") for r, p, d, e in game_replacements]
     declarations.extend(fake_declarations)
 
     # sort with all that was added
