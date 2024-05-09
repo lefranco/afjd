@@ -5773,7 +5773,7 @@ class GameIncidents2Ressource(flask_restful.Resource):  # type: ignore
 class GameReplacementsRessource(flask_restful.Resource):  # type: ignore
     """ GameReplacementsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float, int]]], int]:
         """
         Gets list of roles which have produced an replacements for given game
         EXPOSED
@@ -5789,12 +5789,74 @@ class GameReplacementsRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # replacements_list : those who quitted the game
+        # replacements_list : those who entered or quitted the game
         replacements_list = replacements.Replacement.list_by_game_id(sql_executor, game_id)
-        late_list = [(o[1], o[2], o[3], o[4]) for o in replacements_list]
 
+        # find game master
+        assert game is not None
+        game_master_id = game.get_role(sql_executor, 0)
         del sql_executor
 
+        if not game.anonymous:
+
+            late_list = [(o[1], o[2], o[3], o[4]) for o in replacements_list]
+            data = {'replacements': late_list}
+            return data, 200
+
+        # game is anonymous, access is restricted
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        if user_id == game_master_id:
+
+            late_list = [(o[1], o[2], o[3], o[4]) for o in replacements_list]
+            data = {'replacements': late_list}
+            return data, 200
+
+        # check moderator rights
+
+        # get moderator list
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+        the_moderators = req_result.json()
+
+        # check pseudo in moderator list
+        if pseudo in the_moderators:
+            late_list = [(o[1], o[2], o[3], o[4]) for o in replacements_list]
+            data = {'replacements': late_list}
+            return data, 200
+
+        # ofuscate (not game master)
+        late_list = [(o[1], o[2] if o[1] == 0 else -1, o[3], o[4]) for o in replacements_list]
         data = {'replacements': late_list}
         return data, 200
 
