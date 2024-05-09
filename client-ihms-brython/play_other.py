@@ -19,6 +19,9 @@ import play  # circular import
 import play_low
 
 
+NON_DIVULGUE = "Non divulgué"
+
+
 def display_special_information_callback(_):
     """ display_special_information_callback """
 
@@ -120,8 +123,8 @@ def game_replacements_reload(game_id):
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/game-replacements/{game_id}"
 
-    # extracting replacements from a game : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    # extracting replacements from a game : need token (anonymous games)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return replacements
 
@@ -1445,7 +1448,7 @@ def negotiate(default_dest_set, def_focus_role_id):
     game_replacements = game_replacements_reload(play_low.GAME_ID)
 
     # add fake messages (game replacements)
-    fake_messages = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, r, d, [], f"Le joueur ou arbitre avec le pseudo '{play_low.ID2PSEUDO[p]}' et avec ce rôle {'a été mis dans' if e else 'a été retiré de'} la partie...") for r, p, d, e in game_replacements]
+    fake_messages = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, r, d, [], f"Le joueur ou arbitre avec le pseudo '{play_low.ID2PSEUDO.get(p, NON_DIVULGUE)}' et avec ce rôle {'a été mis dans' if e else 'a été retiré de'} la partie...") for r, p, d, e in game_replacements]
     messages.extend(fake_messages)
 
     # sort with all that was added
@@ -1745,7 +1748,7 @@ def declare():
     game_replacements = game_replacements_reload(play_low.GAME_ID)
 
     # add fake messages (game replacements)
-    fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur ou arbitre avec le pseudo '{play_low.ID2PSEUDO[p]}' et avec ce rôle {'a été mis dans' if e else 'a été retiré de'} la partie...") for r, p, d, e in game_replacements]
+    fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur ou arbitre avec le pseudo '{play_low.ID2PSEUDO.get(p, NON_DIVULGUE)}' et avec ce rôle {'a été mis dans' if e else 'a été retiré de'} la partie...") for r, p, d, e in game_replacements]
     declarations.extend(fake_declarations)
 
     # sort with all that was added
