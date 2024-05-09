@@ -579,8 +579,10 @@ CONVOY_COLOUR = ColourRecord(red=25, green=25, blue=255)  # blue
 RETREAT_COLOUR = ColourRecord(red=255, green=127, blue=0)  # orange
 ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
-# legend
+# legend & additional
 LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
+AUTHORS_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
+ADDITIONAL_COLOUR = ColourRecord(red=255, green=0, blue=0)  # red
 
 # outline
 SPECIAL_COAST_OUTLINE_COLOUR = ColourRecord(red=50, green=50, blue=50)  # black-ish
@@ -965,9 +967,15 @@ class Variant(Renderable):
 
         ctx.font = MAP_TEXT_FONT
 
+        info_colour = AUTHORS_COLOUR
+        ctx.fillStyle = info_colour.str_value()  # for a text
+
         # put the authors
         ctx.fillText(f"Variante : {self._variant_author}", VARIANT_AUTHOR_X_POS, VARIANT_AUTHOR_Y_POS)
         ctx.fillText(f"Carte : {self._map_author}", MAP_AUTHOR_X_POS, MAP_AUTHOR_Y_POS)
+
+        info_colour = ADDITIONAL_COLOUR
+        ctx.fillStyle = info_colour.str_value()  # for a text
 
         # put the additional
         for num, chunk in enumerate(self._additional_text.split('\n')):
