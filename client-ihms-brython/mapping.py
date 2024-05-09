@@ -552,7 +552,8 @@ class ColourRecord:
 
 # position
 DISLODGED_TEXT_BACKGROUND_COLOUR = ColourRecord(255, 255, 255)  # white
-DISLODGED_COLOUR = ColourRecord(255, 127, 0)  # orange
+DISLODGED_TEXT_COLOUR = ColourRecord(0, 0, 0)  # black
+DISLODGED_COLOUR = ColourRecord(255, 140, 0)  # dark orange
 DISLODGED_SHIFT_X = -9
 DISLODGED_SHIFT_Y = -7
 
@@ -1227,13 +1228,20 @@ class Unit(Highliteable, Renderable):
 
         dislodger_back_colour = DISLODGED_TEXT_BACKGROUND_COLOUR
         ctx.fillStyle = dislodger_back_colour.str_value()  # for background
-        ctx.rect(x_pos + 12, y_pos - 17, 20, 10)
+        ctx.rect(x_pos + 12, y_pos - 17, len(dislodger_legend) * 6, 10)
         ctx.fill()
 
-        dislodger_colour = DISLODGED_COLOUR
+        dislodger_frame_colour = DISLODGED_COLOUR
+        ctx.strokeStyle = dislodger_frame_colour.str_value()
+        ctx.lineWidth = 1.5
+        ctx.beginPath()
+        ctx.rect(x_pos + 12, y_pos - 17, len(dislodger_legend) * 6, 10)
+        ctx.stroke(); ctx.closePath()
+
+        dislodger_colour = DISLODGED_TEXT_COLOUR
         ctx.fillStyle = dislodger_colour.str_value()  # for text
         ctx.font = DISLODGED_FONT
-        ctx.fillText(dislodger_legend, x_pos + 14, y_pos - 9)
+        ctx.fillText(dislodger_legend, x_pos + 13, y_pos - 9)
 
     def save_json(self):
         """ Save to  dict """
