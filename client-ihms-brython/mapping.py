@@ -1254,6 +1254,7 @@ class Unit(Highliteable, Renderable):
     def save_json(self):
         """ Save to  dict """
 
+        type_unit = None
         if isinstance(self, Fleet):
             type_unit = UnitTypeEnum.FLEET_UNIT
         if isinstance(self, Army):
@@ -1277,6 +1278,7 @@ class Unit(Highliteable, Renderable):
         variant = self._position.variant
 
         # unit type
+        type_name = ""
         if isinstance(self, Army):
             type_name = variant.unit_name_table[UnitTypeEnum.ARMY_UNIT].lower()
         if isinstance(self, Fleet):
@@ -1324,6 +1326,7 @@ class Unit(Highliteable, Renderable):
         variant = self._position.variant
         zone = self._zone
         name = variant.zone_name_table[zone]
+        type_name = ""
         if isinstance(self, Army):
             type_name = variant.unit_name_table[UnitTypeEnum.ARMY_UNIT]
         if isinstance(self, Fleet):

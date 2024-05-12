@@ -152,7 +152,7 @@ def check_batch(current_pseudo, games_to_create, number_players_expected):
 
             # empty player (fatal)
             if not player_name:
-                alert(f"Il y a un nom de joueur vide dans le fichier en ligne {ligne+1}")
+                alert(f"Il y a un nom de joueur vide dans le fichier en ligne {ligne + 1}")
                 return False
 
             if player_name not in players_set:

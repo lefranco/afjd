@@ -589,7 +589,7 @@ def my_opportunities():
 
     stats = f"Temps de chargement de la page {elapsed:.2f} secs"
     if number_games:
-        stats += f" soit {elapsed/number_games:.2f} par partie"
+        stats += f" soit {elapsed / number_games:.2f} par partie"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()
@@ -1115,7 +1115,7 @@ def all_games(state_name):
 
     stats = f"Temps de chargement de la page {elapsed:.2f} secs avec {number_games} partie(s)"
     if number_games:
-        stats += f" soit {elapsed/number_games:.2f} par partie"
+        stats += f" soit {elapsed / number_games:.2f} par partie"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()

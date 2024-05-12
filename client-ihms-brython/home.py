@@ -128,6 +128,7 @@ def formatted_teaser(teasers):
     # collect data
     data = {}
     done = False
+    datation = ''
     for line in teasers.split('\n'):
         if line:
             if done:
