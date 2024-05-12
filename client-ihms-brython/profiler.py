@@ -100,7 +100,7 @@ class Profiler:
         global DEPTH
 
         if DEBUG:
-            print(f"{' '*DEPTH}start_mes({legend})")
+            print(f"{' ' * DEPTH}start_mes({legend})")
             DEPTH += 1
 
         if self._main_measure is None:
@@ -119,7 +119,7 @@ class Profiler:
 
         if DEBUG:
             DEPTH -= 1
-            print(f"{' '*DEPTH}stop_mes()")
+            print(f"{' ' * DEPTH}stop_mes()")
 
         cur_measure = self._current_measure
         cur_measure.terminate()
@@ -180,7 +180,7 @@ class Profiler:
         def rec_display(level, measure):
             nonlocal result
             ratio = (measure.duration() / elapsed) * 100
-            result += f"{'    '*level}{measure} ({ratio:.2f}%) {'+'*round(ratio)}\n"
+            result += f"{'    ' * level}{measure} ({ratio:.2f}%) {'+' * round(ratio)}\n"
             for sub_mes in measure.list_sub_measures():
                 rec_display(level + 1, sub_mes)
 
