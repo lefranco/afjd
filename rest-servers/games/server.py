@@ -7168,7 +7168,7 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             # get scoring, classic and name
             game_name = game.name
             game_data['scoring'] = game.scoring
-            game_data['classic'] = (game.game_type == 0)
+            game_data['classic'] = not bool(game.game_type)
 
             # get ownerships
             game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
@@ -7575,7 +7575,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
             iterations += 1
 
             # list remaining players
-            players = map(int, set.union(*(map(set, table.values()))))  # type: ignore
+            players = map(int, set.union(*(map(set, table.values()))))
 
             # count games per player
             nb_games = {p: len([g for g in table if p in table[g]]) for p in players}
