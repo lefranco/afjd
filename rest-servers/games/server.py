@@ -5549,55 +5549,63 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/player-incidents/<player_id>')
-class PlayerIncidentsRessource(flask_restful.Resource):  # type: ignore
-    """ PlayerIncidentsRessource """
+@API.resource('/vaporize-player/<player_id>')
+class VaporizePlayerRessource(flask_restful.Resource):  # type: ignore
+    """ VaporizePlayerRessource """
 
-    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int]]], int]:
+    def post(self, player_id: int) -> typing.Tuple[typing.Dict[str, str], int]:
         """
-        Gets list of roles which have produced an incident for given player
+        Remove incidents, dropouts, replacements for given player
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/player-incidents/<game_id> - GET - getting which incidents occured for player id=%s", player_id)
+        mylogger.LOGGER.info("/vaporize-player/<player_id> - POST - vaporize player id=%s", player_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        if user_id != int(player_id):
+            flask_restful.abort(404, msg="Not the expected player for vaporization")
 
         sql_executor = database.SqlExecutor()
 
-        # incidents_list : those who submitted orders after deadline
-        incidents_list = incidents.Incident.list_by_player_id(sql_executor, player_id)
+        # delete incidents
+        sql_executor.execute("DELETE FROM incidents WHERE player_id = ?", (player_id,))
 
-        # only outputs game_id and game_advancement
-        late_list = [(o[0], o[2]) for o in incidents_list]
+        # delete dropouts
+        sql_executor.execute("DELETE FROM dropouts WHERE player_id = ?", (player_id,))
 
-        del sql_executor
+        # delete replacements
+        sql_executor.execute("DELETE FROM replacements WHERE player_id = ?", (player_id,))
 
-        data = {'incidents': late_list}
-        return data, 200
-
-
-@API.resource('/player-dropouts/<player_id>')
-class PlayerDropoutsRessource(flask_restful.Resource):  # type: ignore
-    """ PlayerDropoutsRessource """
-
-    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int]]], int]:
-        """
-        Gets list of games which have produced an dropout for given player
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/player-dropouts/<game_id> - GET - getting which dropouts occured for player id=%s", player_id)
-
-        sql_executor = database.SqlExecutor()
-
-        # dropouts_list : those who quitted the game
-        dropouts_list = dropouts.Dropout.list_by_player_id(sql_executor, player_id)
-
-        # only outputs game_id
-        drop_list = [(o[0], ) for o in dropouts_list]
+        sql_executor.commit()
 
         del sql_executor
 
-        data = {'dropouts': drop_list}
+        data = {'msg' : f"Ok, {pseudo} ({player_id}) vaporized !"}
         return data, 200
 
 
