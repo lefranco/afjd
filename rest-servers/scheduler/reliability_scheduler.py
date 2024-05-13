@@ -44,7 +44,7 @@ def process_reliability(players_dict: typing.Dict[str, typing.Any], games_result
     # 1 Parse all games
     # ------------------
 
-    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):  # type: ignore
+    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):
 
         # extract information
         number_advancement_played = game_data['number_advancement_played']
