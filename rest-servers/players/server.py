@@ -643,51 +643,17 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # all is ok
         # ----------------------
 
-        # TODO : just remove all incidents
-
-        # player cannot quit if incidents
-
-        # Get all incidents of the player
+        # remove all incidents, dropouts, all replacements
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
         port = lowdata.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/player-incidents/{player_id}"
+        url = f"{host}:{port}/vaporize-player/{player_id}"
         jwt_token = flask.request.headers.get('AccessToken')
-        req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"})
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"})
+
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            del sql_executor
-            flask_restful.abort(400, msg=f"Incident check failed!:{message}")
-        json_dict = req_result.json()
-        incidents_list = json_dict['incidents']
-        if incidents_list:
-            game_numbers = {i[0] for i in incidents_list}
-            del sql_executor
-            flask_restful.abort(400, msg=f"Player has an incident in a game(s) number {game_numbers}")
-
-        # TODO : just remove all dropouts
-
-        # player cannot quit if dropouts
-
-        # Get all dropouts of the player
-        host = lowdata.SERVER_CONFIG['GAME']['HOST']
-        port = lowdata.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/player-dropouts/{player_id}"
-        jwt_token = flask.request.headers.get('AccessToken')
-        req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"})
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            del sql_executor
-            flask_restful.abort(400, msg=f"Dropout check failed!:{message}")
-        json_dict = req_result.json()
-        dropouts_list = json_dict['dropouts']
-        if dropouts_list:
-            game_numbers = {i[0] for i in dropouts_list}
-            del sql_executor
-            flask_restful.abort(400, msg=f"Player has a dropout in a game(s) number {game_numbers}")
-
-        # TODO : just remove all replacements
+            flask_restful.abort(400, msg=f"Failed to vaporize player {message}")
 
         # notify player
         email_player = player.email
@@ -717,7 +683,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # delete player from submissions table
         submissions.Submission.delete_by_player_id(sql_executor, player_id)
 
-        # delete player from messages
+        # delete player from messages (private messages)
         messages.Message.delete_by_player_id(sql_executor, player_id)
 
         # delete player from users server (that will implicitly check we have rights)
