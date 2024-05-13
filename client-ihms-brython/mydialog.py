@@ -80,7 +80,7 @@ class Dialog(html.DIV):
             else:
                 document <= html.STYLE(style_sheet, id="brython-dialog")
 
-        html.DIV.__init__(self, style=dict(position="absolute"), Class="brython-dialog-main")
+        html.DIV.__init__(self, style={"position": 'absolute'}, Class="brython-dialog-main")
 
         self.title_bar = html.DIV(html.SPAN(title), Class="brython-dialog-title")
         self <= self.title_bar
