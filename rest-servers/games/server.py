@@ -5605,7 +5605,7 @@ class VaporizePlayerRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {'msg' : f"Ok, {pseudo} ({player_id}) vaporized !"}
+        data = {'msg': f"Ok, {pseudo} ({player_id}) vaporized !"}
         return data, 200
 
 
@@ -7398,15 +7398,28 @@ class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ign
             tournament_id = groupings_dict[game_id]
             if tournament_id not in tournaments_dict:
                 tournaments_dict[tournament_id] = {}
-                tournaments_dict[tournament_id]['start_time'] = start_time_stamp
-                tournaments_dict[tournament_id]['end_time'] = end_time_stamp
+
+                # take values
+                tournaments_dict[tournament_id]['first_start_time'] = start_time_stamp
+                tournaments_dict[tournament_id]['last_start_time'] = start_time_stamp
+                tournaments_dict[tournament_id]['first_end_time'] = end_time_stamp
+                tournaments_dict[tournament_id]['last_end_time'] = end_time_stamp
+
                 tournaments_dict[tournament_id]['players'] = players
             else:
-                tournaments_dict[tournament_id]['start_time'] = min(start_time_stamp, tournaments_dict[tournament_id]['start_time'])
+
+                # update values
+                tournaments_dict[tournament_id]['first_start_time'] = min(start_time_stamp, tournaments_dict[tournament_id]['first_start_time'])
+                tournaments_dict[tournament_id]['last_start_time'] = max(start_time_stamp, tournaments_dict[tournament_id]['last_start_time'])
                 if end_time_stamp is None:
-                    tournaments_dict[tournament_id]['end_time'] = None
-                elif tournaments_dict[tournament_id]['end_time'] is not None:
-                    tournaments_dict[tournament_id]['end_time'] = max(end_time_stamp, tournaments_dict[tournament_id]['end_time'])
+                    tournaments_dict[tournament_id]['first_end_time'] = None
+                    tournaments_dict[tournament_id]['last_end_time'] = None
+                else:
+                    if tournaments_dict[tournament_id]['first_end_time'] is not None:
+                        tournaments_dict[tournament_id]['first_end_time'] = min(end_time_stamp, tournaments_dict[tournament_id]['first_end_time'])
+                    if tournaments_dict[tournament_id]['last_end_time'] is not None:
+                        tournaments_dict[tournament_id]['last_end_time'] = max(end_time_stamp, tournaments_dict[tournament_id]['last_end_time'])
+
                 tournaments_dict[tournament_id]['players'].update(players)
 
         del sql_executor
@@ -7727,7 +7740,7 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
         print("MAINTENANCE - start !!!", file=sys.stderr)
         #  sql_executor = database.SqlExecutor()
 
-        # TODO : insert specific code here
+        # insert specific code here
 
         #  sql_executor.commit()
 
