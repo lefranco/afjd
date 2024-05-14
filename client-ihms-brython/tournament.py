@@ -1420,30 +1420,25 @@ def show_tournaments_frequentation_data():
 
     tournaments_table = html.TABLE()
 
-    fields = ['tournament', 'start', 'end', 'affluence']
+    fields = ['tournament', 'first_start_time','last_start_time', 'first_end_time', 'last_end_time', 'affluence']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'tournament': 'tournoi', 'start': 'debut', 'end': 'fin', 'affluence': 'affluence'}[field]
+        field_fr = {'tournament': 'tournoi', 'first_start_time': 'premier debut', 'last_start_time': 'dernier debut', 'first_end_time': 'première fin', 'last_end_time': 'dernière fin', 'affluence': 'affluence'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournaments_table <= thead
 
-    for tournament_id, data in sorted(tournaments_freq_dict.items(), key=lambda m: int(m[1]['start_time']), reverse=True):
+    for tournament_id, data in sorted(tournaments_freq_dict.items(), key=lambda m: int(m[1]['first_start_time']), reverse=True):
         row = html.TR()
         for field in fields:
 
             if field == 'tournament':
                 value = tournaments_dict[tournament_id]['name']
-            if field == 'start':
-                time_stamp = data['start_time']
-                date_now_gmt = mydatetime.fromtimestamp(time_stamp)
-                date_now_gmt_str = mydatetime.strftime(*date_now_gmt, year_first=True, day_only=True)
-                value = date_now_gmt_str
-            if field == 'end':
-                if data['end_time'] is not None:
-                    time_stamp = data['end_time']
+            if field in ['first_start_time', 'last_start_time', 'first_end_time', 'last_end_time']:
+                if data[field] is not None:
+                    time_stamp = data[field]
                     date_now_gmt = mydatetime.fromtimestamp(time_stamp)
                     date_now_gmt_str = mydatetime.strftime(*date_now_gmt, year_first=True, day_only=True)
                     value = date_now_gmt_str
