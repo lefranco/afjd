@@ -12,12 +12,17 @@ import mydatetime
 import mydialog
 import config
 import common
+import interface
+import mapping
+import memoize
+import scoring
 
 
 OPTIONS = {
     'Editer les glorieux': "Changer nouvelles du site pour le createur (les glorieux)",
     'Créer plusieurs parties': "Créer des parties à partir d'un fichier CSV",
     'Explications': "Explications sur la création de parties à partir d'un fichier CSV",
+    'Résultats du tournoi': "Résultats détaillé du tournoi de la partie sélectionnée sans anonymat",
     'Mur de la honte': "Les joueurs qui ont abandonné une partie"
 }
 
@@ -56,6 +61,37 @@ def get_quitters_data():
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return quitters_data
+
+
+def get_tournament_players_data(tournament_id):
+    """ get_tournament_players_data : returns empty dict if problem """
+
+    tournament_players_dict = {}
+
+    def reply_callback(req):
+        nonlocal tournament_players_dict
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des joueurs des parties du tournoi : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des joueurs des partie du tournoi : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        tournament_players_dict = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/tournament-allocations/{tournament_id}"
+
+    # getting tournament allocation : need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return tournament_players_dict
 
 
 def change_glorious():
@@ -244,8 +280,8 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         time_creation = mydatetime.fromtimestamp(time_stamp_now)
         time_creation_str = mydatetime.strftime(*time_creation)
         variant = json_dict['variant']
-        scoring = json_dict['scoring']
-        description = f"Partie créée par batch (sur le modèle de {current_game_name}) le {time_creation_str} par {current_pseudo} variante {variant}. Scorage {scoring}."
+        scoring_used = json_dict['scoring']
+        description = f"Partie créée par batch (sur le modèle de {current_game_name}) le {time_creation_str} par {current_pseudo} variante {variant}. Scorage {scoring_used}."
         json_dict['description'] = description
 
         # logically : manual allocation (otherwise at start random allocation will spoil csv file allocation)
@@ -616,6 +652,241 @@ def explain_stuff():
     MY_SUB_PANEL <= html.BR()
 
 
+def tournament_result():
+    """ tournament_result """
+
+    MY_SUB_PANEL <= html.H3("Résultats intermédiaires du tournoi")
+
+    if not common.check_creator():
+        alert("Pas le bon compte (pas créateur)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    tournament_dict = common.get_tournament_data(game)
+    if not tournament_dict:
+        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
+
+    tournament_name = tournament_dict['name']
+    tournament_id = tournament_dict['identifier']
+    games_in = tournament_dict['games']
+
+    MY_SUB_PANEL <= f"Tournoi concerné : {tournament_name}"
+    MY_SUB_PANEL <= html.BR()
+
+    games_dict = common.get_games_data()
+    if games_dict is None:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        alert("Erreur chargement info joueurs")
+        return
+
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
+    tournament_players_dict = get_tournament_players_data(tournament_id)
+    if not tournament_players_dict:
+        alert("Erreur chargement allocation tournois")
+        return
+
+    gamerole2pseudo = {(int(g), r): id2pseudo[int(p)] for g, d in tournament_players_dict.items() for p, r in d.items()}
+
+    # =====
+    # points
+    # =====
+
+    # build dict of positions
+    positions_dict_loaded = common.tournament_position_reload(tournament_id)
+    if not positions_dict_loaded:
+        alert("Erreur chargement positions des parties du tournoi")
+        return
+
+    points = {}
+
+    for game_id_str, data in games_dict.items():
+
+        game_id = int(game_id_str)
+
+        if game_id not in games_in:
+            continue
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        # position previously loaded
+        position_loaded = positions_dict_loaded[game_id_str]
+
+        position_data = mapping.Position(position_loaded, variant_data)
+        ratings = position_data.role_ratings()
+
+        # scoring
+        game_scoring = data['scoring']
+        centers_variant = variant_data.number_centers()
+        score_table = scoring.scoring(game_scoring, centers_variant, ratings)
+
+        rolename2num = {variant_data.role_name_table[r]: n for n, r in variant_data.roles.items()}
+
+        for role_name, score in score_table.items():
+            role_num = rolename2num[role_name]
+            if (game_id, role_num) in gamerole2pseudo:
+                pseudo = gamerole2pseudo[(game_id, role_num)]
+            else:
+                pseudo = "&lt;pas alloué&gt;"
+            if pseudo not in points:
+                points[pseudo] = score
+            else:
+                points[pseudo] += score
+
+    # =====
+    # incidents
+    # =====
+
+    # get the actual incidents of the tournament
+    tournament_incidents = common.tournament_incidents_reload(tournament_id)
+    # there can be no incidents (if no incident of failed to load)
+
+    count = {}
+    for game_id, role_num, _, duration, _ in tournament_incidents:
+        pseudo = gamerole2pseudo[(game_id, role_num)]
+        if pseudo not in count:
+            count[pseudo] = []
+        count[pseudo].append(duration)
+
+    recap_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['rang', 'pseudo', 'score', 'retards']:
+        col = html.TD(field)
+        thead <= col
+    recap_table <= thead
+
+    rank = 1
+    for pseudo, score in sorted(points.items(), key=lambda p: float(p[1]), reverse=True):
+        row = html.TR()
+
+        col = html.TD(rank)
+        row <= col
+
+        col = html.TD(pseudo)
+        row <= col
+
+        col = html.TD(f"{float(score):.2f}")
+        row <= col
+
+        incidents_list = count.get(pseudo, [])
+        col = html.TD(" ".join([f"{i}" for i in incidents_list]))
+        row <= col
+
+        recap_table <= row
+        rank += 1
+
+    incident_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'retards']:
+        col = html.TD(field)
+        thead <= col
+    incident_table <= thead
+
+    for pseudo, incidents_list in sorted(count.items(), key=lambda p: len(p[1]), reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        incidents_list = count.get(pseudo, [])
+        col = html.TD(" ".join([f"{i}" for i in incidents_list]))
+        row <= col
+
+        incident_table <= row
+
+    # =====
+    # incidents2
+    # =====
+
+    # get the actual incidents of the tournament
+    tournament_incidents2 = common.tournament_incidents2_reload(tournament_id)
+    # there can be no incidents (if no incident of failed to load)
+
+    count = {}
+    for game_id, role_num, _, _ in tournament_incidents2:
+        pseudo = gamerole2pseudo[(game_id, role_num)]
+        if pseudo not in count:
+            count[pseudo] = 0
+        count[pseudo] += 1
+
+    incident_table2 = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'Nombre de Désordres Civils']:
+        col = html.TD(field)
+        thead <= col
+    incident_table2 <= thead
+
+    for pseudo in sorted(count, key=lambda p: count[p], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        nb_dc = count[pseudo]
+        col = html.TD(nb_dc)
+        row <= col
+
+        incident_table2 <= row
+
+    MY_SUB_PANEL <= html.H4("Classement")
+    MY_SUB_PANEL <= recap_table
+
+    MY_SUB_PANEL <= html.H4("Retards")
+    MY_SUB_PANEL <= incident_table
+
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
+
+    MY_SUB_PANEL <= html.H4("Désordres Civils")
+    MY_SUB_PANEL <= incident_table2
+
+
 def show_game_quitters():
     """ show_game_quitters """
 
@@ -706,6 +977,8 @@ def load_option(_, item_name):
         create_many_games()
     if item_name == 'Explications':
         explain_stuff()
+    if item_name == 'Résultats du tournoi':
+        tournament_result()
     if item_name == 'Mur de la honte':
         show_game_quitters()
 

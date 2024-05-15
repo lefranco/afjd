@@ -1420,7 +1420,7 @@ def show_tournaments_frequentation_data():
 
     tournaments_table = html.TABLE()
 
-    fields = ['tournament', 'first_start_time','last_start_time', 'first_end_time', 'last_end_time', 'affluence']
+    fields = ['tournament', 'first_start_time', 'last_start_time', 'first_end_time', 'last_end_time', 'affluence']
 
     # header
     thead = html.THEAD()

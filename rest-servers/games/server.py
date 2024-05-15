@@ -6915,16 +6915,16 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
         # get moderator list
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/moderators"
+        url = f"{host}:{port}/creators"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
-        the_moderators = req_result.json()
+        the_creators = req_result.json()
 
-        # check pseudo in moderator list
-        if pseudo not in the_moderators:
-            flask_restful.abort(403, msg="You do not seem to be site moderator so you are not allowed get all players from tournament !")
+        # check pseudo in creator list
+        if pseudo not in the_creators:
+            flask_restful.abort(403, msg="You do not seem to be site creator so you are not allowed get all players from tournament !")
 
         sql_executor = database.SqlExecutor()
 
@@ -6946,6 +6946,13 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
             if game is None:
                 del sql_executor
                 flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+            assert game is not None
+
+            # no anonymous game possible
+            if game.anonymous:
+                del sql_executor
+                flask_restful.abort(404, msg=f"There seems to be an anonymous game '{game.name}' in this tournament")
 
             # get answer
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
