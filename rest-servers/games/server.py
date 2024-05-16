@@ -6971,7 +6971,7 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
 class TournamentPlayersRessource(flask_restful.Resource):  # type: ignore
     """ TournamentPlayersRessource """
 
-    def get(self, tournament_id: int) -> typing.Tuple[typing.List[int], int]:
+    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, int], int]:
         """
         Gets all players for the game of the tournamnet
         EXPOSED
@@ -6991,17 +6991,23 @@ class TournamentPlayersRessource(flask_restful.Resource):  # type: ignore
         tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
         tournament_game_ids = [g[1] for g in tournament_games]
 
-        players_list: typing.Set[int] = set()
+        players_dict: typing.Dict[int, int] = {}
         for game_id in tournament_game_ids:
 
             # get answer
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-            players_list.update([a[1] for a in allocations_list if a[2] > 0])
+            for a in allocations_list:
+                if a[2] > 0:
+                    player_id = a[1]
+                    if player_id not in players_dict:
+                        players_dict[player_id] = 0
+                    players_dict[player_id] += 1
 
         del sql_executor
 
-        # need to sort so not to give any indoications on who plays what
-        data = sorted(players_list)
+        # need to sort so not to give any indications on who plays what
+        players = sorted(players_dict.keys())
+        data = {p: players_dict[p] for p in players}
 
         return data, 200
 
