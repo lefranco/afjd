@@ -265,15 +265,19 @@ def my_opportunities():
         alert(f"Erreur chargement dictionnaire parties etat {state}")
         return
     games_dict2 = dict(games_dict2)
+    games_dict.update(games_dict2)
 
     allocations_data2 = common.get_allocations_data(state)
     if not allocations_data2:
         alert("Erreur chargement allocations")
         return
-
-    # join both dicts
-    games_dict.update(games_dict2)
-    allocations_data.update(allocations_data2)
+    masters_alloc2 = allocations_data2['game_masters_dict']
+    # merge 'masters_alloc2' into 'masters_alloc'
+    for k, v in masters_alloc2.items():
+        if k in masters_alloc:
+            masters_alloc[k] += masters_alloc2[k]
+        else:
+            masters_alloc[k] = v
 
     games_dict_recruiting = {k: v for k, v in games_dict.items() if int(k) in recruiting_games_dict}
 
