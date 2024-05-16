@@ -453,8 +453,8 @@ def show_players():
 
     tournament_id = TOURNAMENT_DICT['identifier']
 
-    players_list = get_tournament_players(tournament_id)
-    if not players_list:
+    players_tournament_dict = get_tournament_players(tournament_id)
+    if not players_tournament_dict:
         return
 
     players_dict = common.get_players()
@@ -466,20 +466,24 @@ def show_players():
 
     players_table = html.TABLE()
 
-    fields = ['pseudo']
+    fields = ['pseudo', 'times']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo'}[field]
+        field_fr = {'pseudo': 'pseudo', 'times': 'fois'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_table <= thead
 
-    for player_id in sorted(players_list, key=lambda p: num2pseudo[p].upper()):
+    for player_id_str, times in sorted(players_tournament_dict.items(), key=lambda t: num2pseudo[int(t[0])].upper()):
 
         row = html.TR()
-        col = html.TD(num2pseudo[player_id])
+
+        col = html.TD(num2pseudo[int(player_id_str)])
+        row <= col
+
+        col = html.TD(times)
         row <= col
 
         players_table <= row
