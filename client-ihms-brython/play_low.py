@@ -484,6 +484,15 @@ COUNTDOWN_COL = None
 def get_game_status():
     """ get_game__status """
 
+    def show_dc_callback(ev, allowed):  # pylint: disable=invalid-name
+        """ show_variant_callback """
+
+        ev.preventDefault()
+        if allowed:
+            alert("Pour cette phase de jeu, un désordre civil est possible. Cela signifie qu'un joueur en retard se voir sanctionné par des ordres de désordre civil (tenir en place, ne pas retraiter, ne pas construire, suppression par défaut)")
+        else:
+            alert("Pour cette phase de jeu, pas de désordre civil possible.")
+
     def show_variant_callback(ev, variant_name):  # pylint: disable=invalid-name
         """ show_variant_callback """
 
@@ -564,13 +573,6 @@ def get_game_status():
     col = html.TD(f"Type {game_type_name}")
     row <= col
 
-    # DC
-    allowed = civil_disorder_allowed(advancement_loaded)
-    col = html.TD(f"D.C. {'Oui' if allowed else 'Non'}")
-    if allowed:
-        col.style = {'color': 'red'}
-    row <= col
-
     # state
     col = html.TD(f"Etat {game_state_readable}")
     row <= col
@@ -595,6 +597,19 @@ def get_game_status():
     global COUNTDOWN_COL
     COUNTDOWN_COL = html.TD("")
     row <= COUNTDOWN_COL
+
+    # DC
+    form = html.FORM()
+    allowed = civil_disorder_allowed(advancement_loaded)
+    game_dc = f"D.C. {'Oui' if allowed else 'Non'}"
+    input_show_dc = html.INPUT(type="submit", value=game_dc, Class='btn-inside')
+    input_show_dc.attrs['style'] = 'font-size: 10px'
+    input_show_dc.bind("click", lambda e, v=allowed: show_dc_callback(e, v))
+    if allowed:
+        input_show_dc.attrs['style'] = 'color: red'
+    form <= input_show_dc
+    col = html.TD(form)
+    row <= col
 
     # variant + link
     form = html.FORM()
