@@ -492,7 +492,7 @@ def show_news():
         col <= form
 
         row <= col
-        if (num + 1) % 4 == 0:
+        if (num + 1) % 3 == 0:
             variants_table <= row
             row = html.TR()
 
