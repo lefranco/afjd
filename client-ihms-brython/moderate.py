@@ -579,8 +579,6 @@ def game_announce():
 
         role_id = 0
         role_name = ""
-        anonymous = False
-        announce = True
 
         json_dict = {
             'role_id': role_id,
@@ -688,7 +686,7 @@ def game_announce():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer dans la partiee ?")
+    legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer dans la partie ?")
     fieldset <= legend_declaration
     input_declaration = html.TEXTAREA(type="text", rows=8, cols=80)
     input_declaration <= announce
@@ -697,7 +695,7 @@ def game_announce():
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Déclarer (annoncer) dans la partie", Class='btn-inside')
+    input_declare_in_game = html.INPUT(type="submit", value="Annoncer dans la partie", Class='btn-inside')
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
 
@@ -719,14 +717,14 @@ def game_announce():
     declarations.extend(fake_declarations)
 
     # get the dropouts table
-    game_dropouts = common.game_dropouts_reload(game_id)
+    game_replacements = common.game_replacements_reload(game_id)
 
-    # add fake messages (game dropouts)
-    fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur avec le pseudo '{id2pseudo[p]}' et avec ce rôle a été remplacé dans la partie...") for r, p, d in game_dropouts]
+    # add fake messages (game replacements)
+    fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur ou arbitre avec le pseudo '{id2pseudo[p]}' et avec ce rôle a été remplacé dans la partie...") for r, p, d, e in game_replacements]
     declarations.extend(fake_declarations)
 
     # sort with all that was added
-    declarations.sort(key=lambda d: (float(d[6]), float(d[1])), reverse=True)
+    declarations.sort(key=lambda d: (float(d[6]), float(int(d[2] != -1)), float(d[1])), reverse=True)
 
     declarations_table = html.TABLE()
 

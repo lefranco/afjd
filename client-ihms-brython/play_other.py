@@ -98,37 +98,6 @@ def join_game():
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
-def game_replacements_reload(game_id):
-    """ game_replacements_reload """
-
-    replacements = []
-
-    def reply_callback(req):
-        nonlocal replacements
-        req_result = loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des remplacements de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des remplacements de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        replacements = req_result['replacements']
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-replacements/{game_id}"
-
-    # extracting replacements from a game : need token (anonymous games)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return replacements
-
-
 def game_incidents2_reload(game_id):
     """ game_incidents2_reload """
 
@@ -1445,7 +1414,7 @@ def negotiate(default_dest_set, def_focus_role_id):
     messages.extend(fake_messages)
 
     # get the replacements table
-    game_replacements = game_replacements_reload(play_low.GAME_ID)
+    game_replacements = common.game_replacements_reload(play_low.GAME_ID)
 
     # add fake messages (game replacements)
     fake_messages = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, r, d, [], f"Le joueur ou arbitre avec le pseudo '{play_low.ID2PSEUDO.get(p, NON_DIVULGUE)}' et avec ce rôle {'a été mis dans' if e else 'a été retiré de'} la partie...") for r, p, d, e in game_replacements]
@@ -1745,7 +1714,7 @@ def declare():
     declarations.extend(fake_declarations)
 
     # get the replacements table
-    game_replacements = game_replacements_reload(play_low.GAME_ID)
+    game_replacements = common.game_replacements_reload(play_low.GAME_ID)
 
     # add fake messages (game replacements)
     fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur ou arbitre avec le pseudo '{play_low.ID2PSEUDO.get(p, NON_DIVULGUE)}' et avec ce rôle {'a été mis dans' if e else 'a été retiré de'} la partie...") for r, p, d, e in game_replacements]

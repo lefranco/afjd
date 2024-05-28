@@ -285,6 +285,37 @@ def get_games_data(current_state=None):
     return games_dict
 
 
+def game_replacements_reload(game_id):
+    """ game_replacements_reload """
+
+    replacements = []
+
+    def reply_callback(req):
+        nonlocal replacements
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des remplacements de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des remplacements de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        replacements = req_result['replacements']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-replacements/{game_id}"
+
+    # extracting replacements from a game : need token (anonymous games)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return replacements
+
+
 def game_variant_content_reload(variant_name):
     """ game_variant_content_reload """
 
