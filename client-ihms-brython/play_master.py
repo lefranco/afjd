@@ -1329,11 +1329,6 @@ def game_master():
         else:
             play_low.MY_SUB_PANEL <= debrief_form
 
-
-
-
-
-
     play_low.MY_SUB_PANEL <= html.H3("Déplacer des joueurs")
 
     play_low.MY_SUB_PANEL <= html.H4("Faire venir des joueurs")
@@ -1420,13 +1415,6 @@ def game_master():
     form <= input_remove_from_game
 
     play_low.MY_SUB_PANEL <= form
-
-
-
-
-
-
-
 
     play_low.MY_SUB_PANEL <= html.H3("Suppression des incidents")
 
