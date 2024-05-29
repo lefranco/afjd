@@ -25,8 +25,6 @@ HELP_CONTENT_TABLE = {
     "Comment arrêter la partie ?": "menu “Editer partie“ sous menu “Changer l'état“",
     "Comment changer des joueurs ?": "menu “Editer partie“ sous menu “Déplacer des joueurs“ (en plus de d'attribuer/retirer le rôle)",
     "Comment bénéficier du bouton permettant de contacter tous les remplaçants ?": "retirer le rôle au joueur puis éjecter le joueur de la partie (cf. comment changer des joueurs)",
-    "Comment effacer un retard ?": "sous menu “retards“ de la partie et utiliser le bouton “supprimer“ en face du retard",
-    "Comment effacer un abandon ?": "sous menu “retards“ de la partie et utiliser le bouton “supprimer“ en face de l'abandon",
     "Comment revenir sur le debriefing ?": "menu “Editer partie“ sous menu “Changer anonymat“ et “Changer accès messagerie“",
 }
 
@@ -69,6 +67,102 @@ SUPERVISE_REFRESH_PERIOD_SEC = 15
 
 def game_master():
     """ game_master """
+
+    def cancel_remove_dropout_callback(_, dialog):
+        """ cancel_remove_dropout_callback """
+        dialog.close(None)
+
+    def cancel_remove_incident_callback(_, dialog):
+        """ cancel_remove_incident_callback """
+        dialog.close(None)
+
+    def remove_dropout_callback(_, dialog, role_id, player_id):
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la suppression de l'abandon : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la suppression de l'abandon : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"L'abandon a été supprimé : {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            game_master()
+
+        dialog.close(None)
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-dropouts-manage/{play_low.GAME_ID}/{role_id}/{player_id}"
+
+        # deleting dropout : need token
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def remove_incident_callback(_, dialog, role_id, advancement):
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la suppression de l'incident : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la suppression de l'incident : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"L'incident a été supprimé : {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            game_master()
+
+        dialog.close(None)
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-incidents-manage/{play_low.GAME_ID}/{role_id}/{advancement}"
+
+        # deleting incident : need token
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def remove_dropout_callback_confirm(ev, role_id, player_id, text):  # pylint: disable=invalid-name
+        """ remove_dropout_callback_confirm """
+
+        ev.preventDefault()
+
+        dialog = mydialog.Dialog(f"On supprime vraiment cet abandon pour {text} ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, p=player_id: remove_dropout_callback(e, d, r, p))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_dropout_callback(e, d))
+
+        # back to where we started
+        play_low.MY_SUB_PANEL.clear()
+        game_master()
+
+    def remove_incident_callback_confirm(ev, role_id, advancement, text):  # pylint: disable=invalid-name
+        """ remove_incident_callback_confirm """
+
+        ev.preventDefault()
+
+        dialog = mydialog.Dialog(f"On supprime vraiment cet incident pour {text} ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, a=advancement: remove_incident_callback(e, d, r, a))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_incident_callback(e, d))
+
+        # back to where we started
+        play_low.MY_SUB_PANEL.clear()
+        game_master()
 
     def clear_vote_callback(ev, role_id):  # pylint: disable=invalid-name
         """ clear_vote_callback """
@@ -1096,6 +1190,148 @@ def game_master():
             play_low.MY_SUB_PANEL <= "Partie toujours en cours..."
         else:
             play_low.MY_SUB_PANEL <= debrief_form
+
+    # quitters
+    play_low.MY_SUB_PANEL <= html.H3("Abandons")
+
+    # get the actual dropouts of the game
+    game_dropouts = common.game_dropouts_reload(play_low.GAME_ID)
+    # there can be no dropouts (if no incident of failed to load)
+
+    game_dropouts_table = html.TABLE()
+
+    fields = ['flag', 'role', 'pseudo', 'date', 'remove']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'pseudo': 'pseudo', 'date': 'date', 'remove': 'supprimer'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    game_dropouts_table <= thead
+
+    for role_id, player_id, time_stamp in sorted(game_dropouts, key=lambda d: d[2], reverse=True):
+
+        row = html.TR()
+
+        # role flag
+        role = play_low.VARIANT_DATA.roles[role_id]
+        role_name = play_low.VARIANT_DATA.role_name_table[role]
+        role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
+
+        if role_icon_img:
+            col = html.TD(role_icon_img)
+        else:
+            col = html.TD()
+        row <= col
+
+        role = play_low.VARIANT_DATA.roles[role_id]
+        role_name = play_low.VARIANT_DATA.role_name_table[role]
+
+        col = html.TD(role_name)
+        row <= col
+
+        # pseudo
+        col = html.TD()
+        pseudo_quitter = play_low.ID2PSEUDO[player_id]
+        col <= pseudo_quitter
+        row <= col
+
+        # date
+        datetime_incident = mydatetime.fromtimestamp(time_stamp)
+        datetime_incident_str = mydatetime.strftime(*datetime_incident, year_first=True)
+        col = html.TD(datetime_incident_str)
+        row <= col
+
+        # remove
+        form = html.FORM()
+        input_remove_dropout = html.INPUT(type="submit", value="Supprimer", Class='btn-inside')
+        text = f"Rôle {role_name} et joueur {pseudo_quitter}"
+        input_remove_dropout.bind("click", lambda e, r=role_id, p=player_id, t=text: remove_dropout_callback_confirm(e, r, p, t))
+        form <= input_remove_dropout
+        col = html.TD(form)
+        row <= col
+
+        game_dropouts_table <= row
+
+    play_low.MY_SUB_PANEL <= game_dropouts_table
+    play_low.MY_SUB_PANEL <= html.BR()
+
+    # incidents
+    play_low.MY_SUB_PANEL <= html.H3("Retards")
+
+    # get the actual incidents of the game
+    game_incidents = play_low.game_incidents_reload(play_low.GAME_ID)
+    # there can be no incidents (if no incident of failed to load)
+
+    game_incidents_table = html.TABLE()
+
+    fields = ['flag', 'role', 'pseudo', 'season', 'duration', 'date', 'remove']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'pseudo': 'pseudo', 'season': 'saison', 'duration': 'durée', 'date': 'date', 'remove': 'supprimer'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    game_incidents_table <= thead
+
+    for role_id, advancement, player_id, duration, time_stamp in sorted(game_incidents, key=lambda i: i[4], reverse=True):
+
+        row = html.TR()
+
+        # role flag
+        role = play_low.VARIANT_DATA.roles[role_id]
+        role_name = play_low.VARIANT_DATA.role_name_table[role]
+        role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
+
+        if role_icon_img:
+            col = html.TD(role_icon_img)
+        else:
+            col = html.TD()
+        row <= col
+
+        role = play_low.VARIANT_DATA.roles[role_id]
+        role_name = play_low.VARIANT_DATA.role_name_table[role]
+
+        col = html.TD(role_name)
+        row <= col
+
+        # pseudo
+        col = html.TD()
+        if player_id is not None:
+            col <= play_low.ID2PSEUDO[player_id]
+        row <= col
+
+        # season
+        nb_max_cycles_to_play = play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
+        game_season = common.get_full_season(advancement, play_low.VARIANT_DATA, nb_max_cycles_to_play, False)
+        col = html.TD(game_season)
+        row <= col
+
+        # duration
+        col = html.TD(f"{duration}")
+        row <= col
+
+        # date
+        datetime_incident = mydatetime.fromtimestamp(time_stamp)
+        datetime_incident_str = mydatetime.strftime(*datetime_incident, year_first=True)
+        col = html.TD(datetime_incident_str)
+        row <= col
+
+        # remove
+        form = html.FORM()
+        input_remove_incident = html.INPUT(type="submit", value="Supprimer", Class='btn-inside')
+        text = f"Rôle {role_name} en saison {game_season}"
+        input_remove_incident.bind("click", lambda e, r=role_id, a=advancement, t=text: remove_incident_callback_confirm(e, r, a, t))
+        form <= input_remove_incident
+        col = html.TD(form)
+        row <= col
+
+        game_incidents_table <= row
+
+    play_low.MY_SUB_PANEL <= game_incidents_table
+    play_low.MY_SUB_PANEL <= html.BR()
 
     play_low.MY_SUB_PANEL <= html.H3("Aide mémoire")
 
