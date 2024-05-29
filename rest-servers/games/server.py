@@ -6951,8 +6951,7 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
 
             # no anonymous game possible
             if game.anonymous:
-                del sql_executor
-                flask_restful.abort(404, msg=f"There seems to be an anonymous game '{game.name}' in this tournament")
+                continue
 
             # get answer
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
