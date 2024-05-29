@@ -76,7 +76,7 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
     # 1 Parse all games
     # ------------------
 
-    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):
+    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):  # type: ignore
 
         # extract information
         game_start_time = game_data['start_time_stamp']
@@ -102,7 +102,7 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
         # calculate scoring
         before = time.time()
         raw_ratings = {num2rolename[n]: centers_number_dict[str(n)] if str(n) in centers_number_dict else 0 for n in variant_data.roles if n >= 1}
-        ratings = dict(sorted(raw_ratings.items(), key=lambda i: i[1], reverse=True))
+        ratings = dict(sorted(raw_ratings.items(), key=lambda i: i[1], reverse=True))  # type: ignore
         solo_threshold = variant_data.number_centers() // 2
 
         # use clone of unit in front end (scoring)
@@ -362,14 +362,14 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
     gameid2starttime = {gamename2gameid[k]: v['start_time_stamp'] for k, v in games_results_dict.items()}
 
     # sort according to game start
-    elo_raw_list_sorted = sorted(elo_raw_list, key=lambda e: gameid2starttime[e[5]])
+    elo_raw_list_sorted = sorted(elo_raw_list, key=lambda e: gameid2starttime[e[5]])  # type: ignore
 
     # make teaser (just an abstract)
     teaser_text = ""
     for classic1 in (True, False):
         for role_id1 in effective_roles:
             elo_sub_raw_list = [e for e in elo_raw_list if e[0] == classic1 and e[1] == role_id1]
-            best_one = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0]
+            best_one = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0]  # type: ignore
             teaser_text += f"{num2pseudo[best_one[2]]} {best_one[3]} {num2rolename[best_one[1]]} {'classique' if best_one[0] else 'blitz'}\n"
 
     # separator

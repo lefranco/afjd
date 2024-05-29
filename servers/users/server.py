@@ -270,7 +270,7 @@ def login_user() -> typing.Tuple[typing.Any, int]:
             del sql_executor
             return flask.jsonify({"msg": "User does not exist"}), 404
 
-        if not werkzeug.security.check_password_hash(user.pwd_hash, password):
+        if not werkzeug.security.check_password_hash(user.pwd_hash, password):  # type: ignore
 
             # we keep a trace of the failure if user exists
             failure = failures.Failure(user_name, ip_address)
