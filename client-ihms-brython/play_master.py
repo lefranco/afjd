@@ -1191,8 +1191,10 @@ def game_master():
         else:
             play_low.MY_SUB_PANEL <= debrief_form
 
+    play_low.MY_SUB_PANEL <= html.H3("Suppression des incidents")
+
     # quitters
-    play_low.MY_SUB_PANEL <= html.H3("Abandons")
+    play_low.MY_SUB_PANEL <= html.H4("Abandons")
 
     # get the actual dropouts of the game
     game_dropouts = common.game_dropouts_reload(play_low.GAME_ID)
@@ -1258,7 +1260,7 @@ def game_master():
     play_low.MY_SUB_PANEL <= html.BR()
 
     # incidents
-    play_low.MY_SUB_PANEL <= html.H3("Retards")
+    play_low.MY_SUB_PANEL <= html.H4("Retards")
 
     # get the actual incidents of the game
     game_incidents = play_low.game_incidents_reload(play_low.GAME_ID)
