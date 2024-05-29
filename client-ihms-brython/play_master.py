@@ -5,7 +5,7 @@
 from json import loads, dumps
 from time import time
 
-from browser import html, ajax, alert, timer   # pylint: disable=import-error
+from browser import document, window, html, ajax, alert, timer   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -108,6 +108,43 @@ def game_master():
 
     players_dict = {}
     allocated = []
+
+    def callback_download_game_csv(ev):  # pylint: disable=invalid-name
+        """ callback_download_game_csv """
+        ev.preventDefault()
+
+        # needed too for some reason
+        play_low.MY_SUB_PANEL <= html.A(id='download_link')
+
+        role_name2_centers = play_low.POSITION_DATA.role_ratings()
+
+        result_list = []
+        for role_id in play_low.VARIANT_DATA.roles:
+
+            if role_id == 0:
+                continue
+
+            pseudo_there = ""
+            if role_id in role2pseudo:
+                player_id_str = role2pseudo[role_id]
+                player_id = int(player_id_str)
+                pseudo_there = play_low.ID2PSEUDO[player_id]
+
+            role = play_low.VARIANT_DATA.roles[role_id]
+            role_name = play_low.VARIANT_DATA.role_name_table[role]
+            n_centers = role_name2_centers[role_name]
+
+            result = ','.join([role_name, pseudo_there, str(n_centers)])
+            result_list.append(result)
+
+        result_csv = '\n'.join(result_list)
+
+        # perform actual exportation
+        text_file_as_blob = window.Blob.new([result_csv], {'type': 'text/plain'})
+        download_link = document['download_link']
+        download_link.download = f"diplomania_{play_low.GAME}_{play_low.GAME_ID}_result.csv"
+        download_link.href = window.URL.createObjectURL(text_file_as_blob)
+        document['download_link'].click()
 
     def put_in_game_callback(ev):  # pylint: disable=invalid-name
         """ put_in_game_callback """
@@ -958,7 +995,7 @@ def game_master():
     players_dict = common.get_players()
     if not players_dict:
         alert("Erreur chargement joueurs")
-        return
+        return False
     id2pseudo = {v: k for k, v in players_dict.items()}
 
     allocated = get_game_allocated_players(play_low.GAME_ID)
@@ -1559,6 +1596,12 @@ def game_master():
 
     play_low.MY_SUB_PANEL <= game_incidents_table
     play_low.MY_SUB_PANEL <= html.BR()
+
+    play_low.MY_SUB_PANEL <= html.H3("Exportation")
+
+    input_download_game_csv = html.INPUT(type="submit", value="Télécharger le résultat de la partie au format CSV", Class='btn-inside')
+    input_download_game_csv.bind("click", callback_download_game_csv)
+    play_low.MY_SUB_PANEL <= input_download_game_csv
 
     play_low.MY_SUB_PANEL <= html.H3("Aide mémoire")
 
