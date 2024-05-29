@@ -22,9 +22,9 @@ SUPERVISE_REFRESH_TIMER = None
 
 HELP_CONTENT_TABLE = {
 
+    "Comment changer des joueurs ?": "1) retirer le rôle au partant 2) faire partir de la partie le partant 3) faire venir l'arrivant 4) attribuer le role à l'arrivant",
+    "Comment bénéficier du bouton permettant de contacter tous les remplaçants ?": "1) et 2) ci-dessus",
     "Comment arrêter la partie ?": "menu “Editer partie“ sous menu “Changer l'état“",
-    "Comment changer des joueurs ?": "menu “Editer partie“ sous menu “Déplacer des joueurs“ (en plus de d'attribuer/retirer le rôle)",
-    "Comment bénéficier du bouton permettant de contacter tous les remplaçants ?": "retirer le rôle au joueur puis éjecter le joueur de la partie (cf. comment changer des joueurs)",
     "Comment revenir sur le debriefing ?": "menu “Editer partie“ sous menu “Changer anonymat“ et “Changer accès messagerie“",
 }
 
@@ -65,8 +65,135 @@ def stack_clock(frame, period):
 SUPERVISE_REFRESH_PERIOD_SEC = 15
 
 
+def get_game_allocated_players(game_id):
+    """ get_available_players returns a tuple game_master + players """
+
+    game_master_id = None
+    players_allocated_list = None
+    players_assigned_list = None
+
+    def reply_callback(req):
+        nonlocal game_master_id
+        nonlocal players_allocated_list
+        nonlocal players_assigned_list
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des joueurs de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des joueurs de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        game_masters_list = [int(k) for k, v in req_result.items() if v == 0]
+        game_master_id = game_masters_list.pop()
+        players_allocated_list = [int(k) for k, v in req_result.items() if v == -1]
+        players_assigned_list = [int(k) for k, v in req_result.items() if v > 0]
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-allocations/{game_id}"
+
+    # get players allocated to game : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return game_master_id, players_allocated_list, players_assigned_list
+
+
 def game_master():
     """ game_master """
+
+    players_dict = {}
+    allocated = []
+
+    def put_in_game_callback(ev):  # pylint: disable=invalid-name
+        """ put_in_game_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la mise d'un joueur dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la mise d'un joueur dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                play_low.MY_SUB_PANEL.clear()
+                game_master()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Le joueur a été mis dans la partie: {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            game_master()
+
+        ev.preventDefault()
+
+        player_pseudo = input_incomer.value
+
+        json_dict = {
+            'game_id': play_low.GAME_ID,
+            'player_pseudo': player_pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/allocations"
+
+        # putting a player in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def remove_from_game_callback(ev):  # pylint: disable=invalid-name
+        """remove_from_game_callback"""
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au retrait d'un joueur de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au retrait d'un joueur de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                play_low.MY_SUB_PANEL.clear()
+                game_master()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Le joueur a été retiré de la partie: {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            game_master()
+
+        ev.preventDefault()
+
+        player_pseudo = input_outcomer.value
+
+        json_dict = {
+            'game_id': play_low.GAME_ID,
+            'player_pseudo': player_pseudo,
+            'delete': 1
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/allocations"
+
+        # removing a player from a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def cancel_remove_dropout_callback(_, dialog):
         """ cancel_remove_dropout_callback """
@@ -828,6 +955,17 @@ def game_master():
 
     advancement_loaded = play_low.GAME_PARAMETERS_LOADED['current_advancement']
 
+    players_dict = common.get_players()
+    if not players_dict:
+        alert("Erreur chargement joueurs")
+        return
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
+    allocated = get_game_allocated_players(play_low.GAME_ID)
+    if allocated is None:
+        alert("Erreur chargement allocations joueurs")
+        return False
+
     # now we can display
 
     # header
@@ -1190,6 +1328,105 @@ def game_master():
             play_low.MY_SUB_PANEL <= "Partie toujours en cours..."
         else:
             play_low.MY_SUB_PANEL <= debrief_form
+
+
+
+
+
+
+    play_low.MY_SUB_PANEL <= html.H3("Déplacer des joueurs")
+
+    play_low.MY_SUB_PANEL <= html.H4("Faire venir des joueurs")
+
+    game_master_id, players_allocated_ids_list, players_assigned_ids_list = allocated
+
+    players_allocated_list = [id2pseudo[i] for i in list(players_allocated_ids_list)]
+    players_assigned_list = [id2pseudo[i] for i in list(players_assigned_ids_list)]
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_incomer = html.LEGEND("Entrant", title="Sélectionner le joueur à mettre dans la partie")
+    fieldset <= legend_incomer
+
+    # all players can come in
+    possible_incomers = set(players_dict.keys())
+
+    # not those already in
+    possible_incomers -= set(players_allocated_list)
+    possible_incomers -= set(players_assigned_list)
+
+    # not the operator
+    possible_incomers -= set([play_low.PSEUDO])
+
+    # not the gm of the game
+    possible_incomers -= set([game_master_id])
+
+    input_incomer = html.SELECT(type="select-one", value="", Class='btn-inside')
+    for play_pseudo in sorted(possible_incomers, key=lambda pi: pi.upper()):
+        option = html.OPTION(play_pseudo)
+        input_incomer <= option
+
+    fieldset <= input_incomer
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_put_in_game = html.INPUT(type="submit", value="Mettre dans la partie sélectionnée", Class='btn-inside')
+    input_put_in_game.bind("click", put_in_game_callback)
+    form <= input_put_in_game
+
+    form <= html.BR()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    fieldset <= html.LEGEND("Ont un rôle : ")
+    fieldset <= html.DIV(" ".join(sorted(list(set(players_assigned_list)), key=lambda p: p.upper())), Class='note')
+    form <= fieldset
+
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    fieldset <= html.LEGEND("Sont en attente : ")
+    fieldset <= html.DIV(" ".join(sorted(list(set(players_allocated_list)), key=lambda p: p.upper())), Class='note')
+    form <= fieldset
+
+    play_low.MY_SUB_PANEL <= form
+
+    # ---
+    play_low.MY_SUB_PANEL <= html.H4("Faire partir des joueurs")
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_outcomer = html.LEGEND("Sortant", title="Sélectionner le joueur à retirer de la partie")
+    fieldset <= legend_outcomer
+
+    # players can come out are the ones not assigned
+    possible_outcomers = players_allocated_list
+
+    input_outcomer = html.SELECT(type="select-one", value="", Class='btn-inside')
+    for play_pseudo in sorted(possible_outcomers):
+        option = html.OPTION(play_pseudo)
+        input_outcomer <= option
+
+    fieldset <= input_outcomer
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_remove_from_game = html.INPUT(type="submit", value="Retirer de la partie sélectionnée", Class='btn-inside')
+    input_remove_from_game.bind("click", remove_from_game_callback)
+    form <= input_remove_from_game
+
+    play_low.MY_SUB_PANEL <= form
+
+
+
+
+
+
+
 
     play_low.MY_SUB_PANEL <= html.H3("Suppression des incidents")
 
