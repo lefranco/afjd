@@ -390,27 +390,6 @@ class Zone(Highliteable, Renderable):
         # the legend (only if not active)
         # -----------------
 
-        if not active:
-
-            legend_colour = LEGEND_COLOUR
-            ctx.fillStyle = legend_colour.str_value()  # for a text
-
-            # legend position and unit position are calculated from area ith polylabel
-            position = self._variant.legend_position_table[self]
-            x_pos = position.x_pos
-            y_pos = position.y_pos
-
-            # legend content (just for the length)
-            if self._coast_type:
-                legend = self._variant.coast_name_table[self._coast_type]
-            else:
-                legend = self._variant.zone_name_table[self]
-
-            # put on screen
-            text_width = ctx.measureText(legend).width
-            ctx.font = LEGEND_FONT
-            ctx.fillText(legend, x_pos - text_width / 2, y_pos)
-
         # -----------------
         # the outline
         # -----------------
@@ -441,6 +420,32 @@ class Zone(Highliteable, Renderable):
         path = self._variant.path_table[self]
         background_fill_color = self._variant.background_colour_table[role]
         fill_zone(ctx, path, background_fill_color)
+
+    def render_legend(self, ctx):
+        """ put me on screen """
+
+        # -----------------
+        # the legend
+        # -----------------
+
+        legend_colour = LEGEND_COLOUR
+        ctx.fillStyle = legend_colour.str_value()  # for a text
+
+        # legend position and unit position are calculated from area ith polylabel
+        position = self._variant.legend_position_table[self]
+        x_pos = position.x_pos
+        y_pos = position.y_pos
+
+        # legend content (just for the length)
+        if self._coast_type:
+            legend = self._variant.coast_name_table[self._coast_type]
+        else:
+            legend = self._variant.zone_name_table[self]
+
+        # put on screen
+        text_width = ctx.measureText(legend).width
+        ctx.font = LEGEND_FONT
+        ctx.fillText(legend, x_pos - text_width / 2, y_pos)
 
     def description(self):
         """ description for helping """
@@ -963,7 +968,7 @@ class Variant(Renderable):
 
         # put legends actually
         for zone in self._zones.values():
-            zone.render(ctx)
+            zone.render_legend(ctx)
 
         ctx.font = MAP_TEXT_FONT
 
