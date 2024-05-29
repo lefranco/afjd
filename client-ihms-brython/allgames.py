@@ -273,11 +273,11 @@ def my_opportunities():
         return
     masters_alloc2 = allocations_data2['game_masters_dict']
     # merge 'masters_alloc2' into 'masters_alloc'
-    for k, v in masters_alloc2.items():
-        if k in masters_alloc:
-            masters_alloc[k] += masters_alloc2[k]
+    for master, his_games in masters_alloc2.items():
+        if master in masters_alloc:
+            masters_alloc[master] += his_games
         else:
-            masters_alloc[k] = v
+            masters_alloc[master] = his_games
 
     games_dict_recruiting = {k: v for k, v in games_dict.items() if int(k) in recruiting_games_dict}
 
