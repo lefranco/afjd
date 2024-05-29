@@ -397,7 +397,7 @@ def notify_last_line(sql_executor: database.SqlExecutor, game_id: int, payload: 
 class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
     """ VariantIdentifierRessource """
 
-    def get(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets json file in database about a variant
         EXPOSED
@@ -421,7 +421,7 @@ class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
 class GameIdentifierRessource(flask_restful.Resource):  # type: ignore
     """ GameIdentifierRessource """
 
-    def get(self, name: str) -> typing.Tuple[int, int]:
+    def get(self, name: str) -> typing.Tuple[int, int]:  # pylint: disable=R0201
         """
         From name get identifier
         EXPOSED
@@ -446,7 +446,7 @@ class GameIdentifierRessource(flask_restful.Resource):  # type: ignore
 class DebriefGameRessource(flask_restful.Resource):  # type: ignore
     """ DebriefGameRessource """
 
-    def post(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Debrief game
         EXPOSED
@@ -521,7 +521,7 @@ class DebriefGameRessource(flask_restful.Resource):  # type: ignore
 class GameRessource(flask_restful.Resource):  # type: ignore
     """ GameRessource """
 
-    def get(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get all information about game
         EXPOSED
@@ -541,7 +541,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         data = game.save_json()
         return data, 200
 
-    def put(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def put(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Updates information about a game
         EXPOSED
@@ -777,7 +777,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         data = {'name': name, 'msg': 'Ok updated'}
         return data, 200
 
-    def delete(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def delete(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Deletes a game
         EXPOSED
@@ -932,7 +932,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 class AlterGameRessource(flask_restful.Resource):  # type: ignore
     """ AlterGameRessource """
 
-    def put(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def put(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Updates information about a game (as site administrattor)
         EXPOSED
@@ -1036,7 +1036,7 @@ CREATE_GAME_LOCK = threading.Lock()
 class GameStateListRessource(flask_restful.Resource):  # type: ignore
     """ GameStateListRessource """
 
-    def get(self, current_state: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, current_state: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get list of all games (dictionary identifier -> name)
         EXPOSED
@@ -1059,7 +1059,7 @@ class GameStateListRessource(flask_restful.Resource):  # type: ignore
 class GameListRessource(flask_restful.Resource):  # type: ignore
     """ GameListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get list of all games (dictionary identifier -> name)
         EXPOSED
@@ -1077,7 +1077,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Creates a new game
         EXPOSED
@@ -1273,7 +1273,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 class GameSelectListRessource(flask_restful.Resource):  # type: ignore
     """ GameSelectListRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Provides list of some games ( selected by identifier)
         Should be a get but has parameters
@@ -1306,7 +1306,7 @@ class ActivePlayersRessource(flask_restful.Resource):  # type: ignore
 
     # an allocation is a game-role-pseudo relation where role is -1
 
-    def get(self) -> typing.Tuple[typing.List[int], int]:
+    def get(self) -> typing.Tuple[typing.List[int], int]:  # pylint: disable=R0201
         """
         Get list active players)
         EXPOSED
@@ -1359,7 +1359,7 @@ class AllocationStateListRessource(flask_restful.Resource):  # type: ignore
 
     # an allocation is a game-role-pseudo relation where role is -1
 
-    def get(self, current_state: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, current_state: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get list of all allocations only games that are not anonymous (dictionary identifier -> (gm name, list of players names) only if game in some state)
         EXPOSED
@@ -1412,7 +1412,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
     # an allocation is a game-role-pseudo relation where role is -1
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get list of all allocations only games that are not anonymous (dictionary identifier -> (gm name, list of players names))
         EXPOSED
@@ -1447,7 +1447,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         data = {'game_masters_dict': game_masters_dict, 'players_dict': players_dict}
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Creates or deletes an allocation (a relation player-role-game)
         EXPOSED
@@ -1604,7 +1604,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
 
     # a role-allocation is a game-role-pseudo relation where role is <> -1
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Creates or deletes an role allocation (a relation player-role-game)
         creates : There should be a single -1 role allacation
@@ -1809,7 +1809,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
 class GameMasterRessource(flask_restful.Resource):  # type: ignore
     """ GameRoleRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Optional[int], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Optional[int], int]:  # pylint: disable=R0201
         """
         Get game master of a game
         EXPOSED
@@ -1833,7 +1833,7 @@ class GameMasterRessource(flask_restful.Resource):  # type: ignore
 class GameRoleRessource(flask_restful.Resource):  # type: ignore
     """ GameRoleRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Optional[int], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Optional[int], int]:  # pylint: disable=R0201
         """
         Get my role in a game
         EXPOSED
@@ -1894,7 +1894,7 @@ class GameRoleRessource(flask_restful.Resource):  # type: ignore
 class AllGamesRolesRessource(flask_restful.Resource):  # type: ignore
     """ AllGamesRolesRessource """
 
-    def get(self) -> typing.Tuple[typing.Optional[typing.Dict[int, int]], int]:
+    def get(self) -> typing.Tuple[typing.Optional[typing.Dict[int, int]], int]:  # pylint: disable=R0201
         """
         Get all my roles in all my games
         EXPOSED
@@ -1944,7 +1944,7 @@ class AllGamesRolesRessource(flask_restful.Resource):  # type: ignore
 class AllocationGameRessource(flask_restful.Resource):  # type: ignore
     """ AllocationGameRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets all allocations for the game
         EXPOSED
@@ -2024,7 +2024,7 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
 class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
     """ AllocationPlayerRessource """
 
-    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets all allocations for the player
         Note : here because data is in this database
@@ -2074,7 +2074,7 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
 class AllocationPlayer2Ressource(flask_restful.Resource):  # type: ignore
     """ AllocationPlayer2Ressource """
 
-    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets all allocations for the player (from moderator)
         Note : here because data is in this database
@@ -2124,7 +2124,7 @@ class AllocationPlayer2Ressource(flask_restful.Resource):  # type: ignore
 class GamesIncompleteRessource(flask_restful.Resource):  # type: ignore
     """ GamesIncompleteRessource """
 
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:  # pylint: disable=R0201
         """
         Gets all  games that do not have all players
         EXPOSED
@@ -2147,7 +2147,7 @@ class GamesIncompleteRessource(flask_restful.Resource):  # type: ignore
 class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
     """ GamesRecruitingRessource """
 
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:  # pylint: disable=R0201
         """
         Gets all  games that do not have all players
         EXPOSED
@@ -2170,7 +2170,7 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
 class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
     """ GameImagineUnitRessource """
 
-    def post(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Imagine a unit of a game
         EXPOSED
@@ -2298,7 +2298,7 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
 class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
     """ GameFogOfWarPositionRessource """
 
-    def get(self, game_id: int, role_id: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int, role_id: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets position of the game (fog of war : foggy variant mainly)
         EXPOSED
@@ -2441,7 +2441,7 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
 class GamePositionRessource(flask_restful.Resource):  # type: ignore
     """ GamePositionRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Changes position of a game
         EXPOSED
@@ -2539,7 +2539,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': 'Ok position rectified'}
         return data, 201
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets position of the game
         EXPOSED
@@ -2604,7 +2604,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
 class GameFogOfWarReportRessource(flask_restful.Resource):  # type: ignore
     """ GameFogOfWarReportRessource """
 
-    def get(self, game_id: int, role_id: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int, role_id: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets the restrcited report of adjudication for the game
         EXPOSED
@@ -2692,7 +2692,7 @@ class GameFogOfWarReportRessource(flask_restful.Resource):  # type: ignore
 class GameReportRessource(flask_restful.Resource):  # type: ignore
     """ GameReportRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets the report of adjudication for the game
         EXPOSED
@@ -2734,7 +2734,7 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
 class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
     """ GameFogOfWarTransitionRessource """
 
-    def get(self, game_id: int, advancement: int, role_id: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int, advancement: int, role_id: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets the full fog of war report  (transition : postions + orders + report) of adjudication for the game
         EXPOSED
@@ -2850,7 +2850,7 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
 class GameTransitionRessource(flask_restful.Resource):  # type: ignore
     """ GameTransitionRessource """
 
-    def get(self, game_id: int, advancement: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int, advancement: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets the full report  (transition : postions + orders + report) of adjudication for the game
         EXPOSED
@@ -2894,7 +2894,7 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
 class GameTransitionsRessource(flask_restful.Resource):  # type: ignore
     """ GameTransitionsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[int, int], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[int, int], int]:  # pylint: disable=R0201
         """
         Gets all existing transitions of that game
         EXPOSED
@@ -2927,7 +2927,7 @@ class GameTransitionsRessource(flask_restful.Resource):  # type: ignore
 class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
     """ GameForceAgreeSolveRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Force agree to solve with these orders by a game master
         EXPOSED
@@ -3118,7 +3118,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
     """ GameCommuteAgreeSolveRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[None, int]:
+    def post(self, game_id: int) -> typing.Tuple[None, int]:  # pylint: disable=R0201
         """
         Commute agree to solve from after deadline to now by a clockwork
         EXPOSED
@@ -3263,7 +3263,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 class GameOrderRessource(flask_restful.Resource):  # type: ignore
     """ GameOrderRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Submit orders
         EXPOSED
@@ -3640,7 +3640,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         return data, 201
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets orders
         EXPOSED
@@ -3721,7 +3721,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
     """ GameForceNoOrderRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Submit civil disorder
         EXPOSED
@@ -3912,7 +3912,7 @@ class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
 class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
     """ GameCommunicationOrderRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Submit communication orders
         EXPOSED
@@ -4067,7 +4067,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': "Ok communication orders stored"}
         return data, 201
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets communication orders
         EXPOSED
@@ -4142,7 +4142,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
     """ GameOrdersSubmittedRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[int]], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[int]], int]:  # pylint: disable=R0201
         """
         Gets list of roles which have submitted orders, orders are missing, orders are not needed for given game
         EXPOSED
@@ -4238,7 +4238,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 class AllPlayerGamesOngoingVotesRessource(flask_restful.Resource):  # type: ignore
     """ AllPlayerGamesOngoingVotesRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[int, int]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[int, int]], int]:  # pylint: disable=R0201
         """
         Gets list of games where a vote is ongoing
         EXPOSED
@@ -4296,7 +4296,7 @@ class AllPlayerGamesOngoingVotesRessource(flask_restful.Resource):  # type: igno
 class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
     """ AllPlayerGamesOrdersSubmittedRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[int, typing.List[int]]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[int, typing.List[int]]], int]:  # pylint: disable=R0201
         """
         Gets list of roles which have submitted orders, orders are missing, orders are not needed for all my games
         EXPOSED
@@ -4378,7 +4378,7 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
 class AllGamesMissingOrdersRessource(flask_restful.Resource):  # type: ignore
     """ AllGamesMissingOrdersRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[int, typing.Dict[int, int]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[int, typing.Dict[int, int]], int]:  # pylint: disable=R0201
         """
         Gets list of roles which are late all ongoing games
         EXPOSED
@@ -4463,7 +4463,7 @@ class AllGamesMissingOrdersRessource(flask_restful.Resource):  # type: ignore
 class SimulationRessource(flask_restful.Resource):  # type: ignore
     """ SimulationRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Performs a simulation
         EXPOSED
@@ -4584,7 +4584,7 @@ POST_MESSAGE_REPEAT_PREVENTER = RepeatPreventer()
 class GameMessageRessource(flask_restful.Resource):  # type: ignore
     """  GameMessageRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Insert message in database
         EXPOSED
@@ -4741,7 +4741,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': f"Ok {nb_addressees} message(s) inserted"}
         return data, 201
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets all or some messages of game
         EXPOSED
@@ -4827,7 +4827,7 @@ POST_DECLARATION_LOCK = threading.Lock()
 class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
     """  GameDeclarationRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Insert declaration in database
         EXPOSED
@@ -5015,7 +5015,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': "Ok declaration inserted."}
         return data, 201
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets all or some declarations of game
         EXPOSED
@@ -5104,7 +5104,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
     """  DateLastDeclarationsRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets date of last declarations of all games in which player plays
         EXPOSED
@@ -5153,7 +5153,7 @@ class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
 class DateLastGameMessagesRessource(flask_restful.Resource):  # type: ignore
     """  DateLastGameMessagesRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Gets date of last messages sent to player's role in all games in which player plays
         EXPOSED
@@ -5202,7 +5202,7 @@ class DateLastGameMessagesRessource(flask_restful.Resource):  # type: ignore
 class GameVisitsRessource(flask_restful.Resource):  # type: ignore
     """  GameVisitsRessource """
 
-    def post(self, game_id: int, visit_type: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int, visit_type: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Insert visit in database
         EXPOSED
@@ -5270,7 +5270,7 @@ class GameVisitsRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': "Ok visit inserted"}
         return data, 201
 
-    def get(self, game_id: int, visit_type: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int, visit_type: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Retrieve visit in database
         EXPOSED
@@ -5341,7 +5341,7 @@ class GameVisitsRessource(flask_restful.Resource):  # type: ignore
 class AllGameVisitsRessource(flask_restful.Resource):  # type: ignore
     """  AllGameVisitsRessource """
 
-    def get(self, visit_type: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, visit_type: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Retrieve visit for all my games in database
         EXPOSED
@@ -5405,7 +5405,7 @@ class AllGameVisitsRessource(flask_restful.Resource):  # type: ignore
 class GameVoteRessource(flask_restful.Resource):  # type: ignore
     """  GameVoteRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Insert vote in database
         EXPOSED
@@ -5485,7 +5485,7 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': "Ok vote inserted or deleted"}
         return data, 201
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Retrieve vote in database
         EXPOSED
@@ -5553,7 +5553,7 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
 class VaporizePlayerRessource(flask_restful.Resource):  # type: ignore
     """ VaporizePlayerRessource """
 
-    def post(self, player_id: int) -> typing.Tuple[typing.Dict[str, str], int]:
+    def post(self, player_id: int) -> typing.Tuple[typing.Dict[str, str], int]:  # pylint: disable=R0201
         """
         Remove incidents, dropouts, replacements for given player
         EXPOSED
@@ -5613,7 +5613,7 @@ class VaporizePlayerRessource(flask_restful.Resource):  # type: ignore
 class PlayerGameIncidentsRessource(flask_restful.Resource):  # type: ignore
     """ PlayerGameIncidentsRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, int, float]]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, int, float]]], int]:  # pylint: disable=R0201
         """
         Gets list of incidents incident for given player
         EXPOSED
@@ -5665,7 +5665,7 @@ class PlayerGameIncidentsRessource(flask_restful.Resource):  # type: ignore
 class PlayerGameDropoutsRessource(flask_restful.Resource):  # type: ignore
     """ PlayerGameDropoutsRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:  # pylint: disable=R0201
         """
         Gets list of incidents dropout for given player
         EXPOSED
@@ -5715,7 +5715,7 @@ class PlayerGameDropoutsRessource(flask_restful.Resource):  # type: ignore
 class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
     """ GameIncidentsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, typing.Optional[int], int, float]]], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, typing.Optional[int], int, float]]], int]:  # pylint: disable=R0201
         """
         Gets list of roles which have produced an incident for given game
         EXPOSED
@@ -5751,7 +5751,7 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
 class GameIncidents2Ressource(flask_restful.Resource):  # type: ignore
     """ GameIncidents2Ressource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:  # pylint: disable=R0201
         """
         Gets list of roles which have produced an incident2 for given game
         EXPOSED
@@ -5781,7 +5781,7 @@ class GameIncidents2Ressource(flask_restful.Resource):  # type: ignore
 class GameReplacementsRessource(flask_restful.Resource):  # type: ignore
     """ GameReplacementsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float, int]]], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float, int]]], int]:  # pylint: disable=R0201
         """
         Gets list of roles which have produced an replacements for given game
         EXPOSED
@@ -5873,7 +5873,7 @@ class GameReplacementsRessource(flask_restful.Resource):  # type: ignore
 class GameDropoutsRessource(flask_restful.Resource):  # type: ignore
     """ GameDropoutsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:  # pylint: disable=R0201
         """
         Gets list of roles which have produced an dropout for given game
         EXPOSED
@@ -5903,7 +5903,7 @@ class GameDropoutsRessource(flask_restful.Resource):  # type: ignore
 class AllGamesDropoutsRessource(flask_restful.Resource):  # type: ignore
     """ AllGamesDropoutsRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, float]]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, float]]], int]:  # pylint: disable=R0201
         """
         Gets list of roles which have produced an dropout
         EXPOSED
@@ -5923,7 +5923,7 @@ class AllGamesDropoutsRessource(flask_restful.Resource):  # type: ignore
 class GameNoteRessource(flask_restful.Resource):  # type: ignore
     """  GameNoteRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Insert note in database
         EXPOSED
@@ -5989,7 +5989,7 @@ class GameNoteRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': "Ok note inserted"}
         return data, 201
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Retrieve note in database
         EXPOSED
@@ -6054,7 +6054,7 @@ class GameNoteRessource(flask_restful.Resource):  # type: ignore
 class GameExportRessource(flask_restful.Resource):  # type: ignore
     """ GameExportRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Export all data about a game in JSON format
         EXPOSED
@@ -6085,7 +6085,7 @@ class GameExportRessource(flask_restful.Resource):  # type: ignore
 class GameIncidentsManageRessource(flask_restful.Resource):  # type: ignore
     """ GameIncidentsManageRessource """
 
-    def delete(self, game_id: int, role_id: int, advancement: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def delete(self, game_id: int, role_id: int, advancement: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Deletes an incident in game
         EXPOSED
@@ -6151,7 +6151,7 @@ class GameIncidentsManageRessource(flask_restful.Resource):  # type: ignore
 class GameDropoutsManageRessource(flask_restful.Resource):  # type: ignore
     """ GameDropoutsManageRessource """
 
-    def delete(self, game_id: int, role_id: int, player_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def delete(self, game_id: int, role_id: int, player_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Deletes an dropout in game
         EXPOSED
@@ -6217,7 +6217,7 @@ class GameDropoutsManageRessource(flask_restful.Resource):  # type: ignore
 class TournamentRessource(flask_restful.Resource):  # type: ignore
     """ TournamentRessource """
 
-    def get(self, game_name: str) -> typing.Tuple[typing.Optional[typing.Dict[str, typing.Any]], int]:
+    def get(self, game_name: str) -> typing.Tuple[typing.Optional[typing.Dict[str, typing.Any]], int]:  # pylint: disable=R0201
         """
         Get all information about tournament
         EXPOSED
@@ -6286,7 +6286,7 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def delete(self, game_name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def delete(self, game_name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Deletes a tournament
         EXPOSED
@@ -6380,7 +6380,7 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
 class TournamentListRessource(flask_restful.Resource):  # type: ignore
     """ TournamentListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[str, typing.Any]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[str, typing.Any]], int]:  # pylint: disable=R0201
         """
         Get list of tournament
         EXPOSED
@@ -6396,7 +6396,7 @@ class TournamentListRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Creates a new tournament
         EXPOSED
@@ -6478,7 +6478,7 @@ class TournamentListRessource(flask_restful.Resource):  # type: ignore
 class GroupingTournamentRessource(flask_restful.Resource):  # type: ignore
     """ GroupingTournamentRessource """
 
-    def post(self, tournament_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, tournament_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Creates or deletes a grouping (a relation game-tournament)
         EXPOSED
@@ -6581,7 +6581,7 @@ class GroupingTournamentRessource(flask_restful.Resource):  # type: ignore
 class GroupingListRessource(flask_restful.Resource):  # type: ignore
     """ GroupingListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get list of all groupings (dictionary identifier -> list of games ids)
         EXPOSED
@@ -6601,7 +6601,7 @@ class GroupingListRessource(flask_restful.Resource):  # type: ignore
 class AssignmentListRessource(flask_restful.Resource):  # type: ignore
     """ AssignmentListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get list of all assignements (dictionary identifier -> director_id)
         EXPOSED
@@ -6621,7 +6621,7 @@ class AssignmentListRessource(flask_restful.Resource):  # type: ignore
 class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
     """ TournamentIncidentsRessource """
 
-    def get(self, tournament_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, float]], int]:
+    def get(self, tournament_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, float]], int]:  # pylint: disable=R0201
         """
         Gets list of pseudo/alias which have produced an incident delay for given tournament
         EXPOSED
@@ -6667,7 +6667,7 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
 class TournamentIncidents2Ressource(flask_restful.Resource):  # type: ignore
     """ TournamentIncidents2Ressource """
 
-    def get(self, tournament_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, float]], int]:
+    def get(self, tournament_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, float]], int]:  # pylint: disable=R0201
         """
         Gets list of pseudo/alias which have produced an incident civil disorder for given tournament
         EXPOSED
@@ -6703,7 +6703,7 @@ class TournamentIncidents2Ressource(flask_restful.Resource):  # type: ignore
 class TournamentPositionRessource(flask_restful.Resource):  # type: ignore
     """ TournamentPositionRessource """
 
-    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:
+    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:  # pylint: disable=R0201
         """
         Gets list of positions of the games of the tournament
         EXPOSED
@@ -6769,7 +6769,7 @@ class TournamentPositionRessource(flask_restful.Resource):  # type: ignore
 class RevokeRessource(flask_restful.Resource):  # type: ignore
     """ RevokeRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Revoke game master of the game
         EXPOSED
@@ -6848,7 +6848,7 @@ class RevokeRessource(flask_restful.Resource):  # type: ignore
 class ClearOldDelaysRessource(flask_restful.Resource):  # type: ignore
     """ ClearOldDelaysRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         maintain
         EXPOSED
@@ -6888,7 +6888,7 @@ class ClearOldDelaysRessource(flask_restful.Resource):  # type: ignore
 class TournamentGameRessource(flask_restful.Resource):  # type: ignore
     """ TournamentGameRessource """
 
-    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:
+    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:  # pylint: disable=R0201
         """
         Gets all allocations for the game of the tournamnet
         EXPOSED
@@ -6971,7 +6971,7 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
 class TournamentPlayersRessource(flask_restful.Resource):  # type: ignore
     """ TournamentPlayersRessource """
 
-    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, int], int]:
+    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, int], int]:  # pylint: disable=R0201
         """
         Gets all players for the game of the tournamnet
         EXPOSED
@@ -6996,9 +6996,9 @@ class TournamentPlayersRessource(flask_restful.Resource):  # type: ignore
 
             # get answer
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-            for a in allocations_list:
-                if a[2] > 0:
-                    player_id = a[1]
+            for alloc in allocations_list:
+                if alloc[2] > 0:
+                    player_id = alloc[1]
                     if player_id not in players_dict:
                         players_dict[player_id] = 0
                     players_dict[player_id] += 1
@@ -7016,7 +7016,7 @@ class TournamentPlayersRessource(flask_restful.Resource):  # type: ignore
 class StatisticsRessource(flask_restful.Resource):  # type: ignore
     """ StatisticsRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get statistics of games, players etc...
         EXPOSED
@@ -7078,7 +7078,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
 class CurrentWorstAnnoyersRessource(flask_restful.Resource):  # type: ignore
     """ CurrentWorstAnnoyersRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get current worst annoyers (late or giving  up) in current games...
         EXPOSED
@@ -7131,7 +7131,7 @@ class CurrentWorstAnnoyersRessource(flask_restful.Resource):  # type: ignore
 class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
     """ ExtractEloDataRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get information for ELO of players etc...
         EXPOSED
@@ -7221,7 +7221,7 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
 class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
     """ ExtractHistoDataRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[int, int], int]:
+    def get(self) -> typing.Tuple[typing.Dict[int, int], int]:  # pylint: disable=R0201
         """
         Get information for historic of number of players for site etc...
         EXPOSED
@@ -7335,7 +7335,7 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
 class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ignore
     """ ExtractTournamentsHistoDataRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:  # pylint: disable=R0201
         """
         Get information for historic of number of players for tournaments etc...
         EXPOSED
@@ -7449,7 +7449,7 @@ class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ign
 class TournamentManagerRessource(flask_restful.Resource):  # type: ignore
     """ TournamentManagerRessource """
 
-    def post(self, tournament_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self, tournament_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Updates an tournament (director)
         EXPOSED
@@ -7518,7 +7518,7 @@ class TournamentManagerRessource(flask_restful.Resource):  # type: ignore
 class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
     """  AnnounceGamesRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Insert declaration in database for all ongoing games
         EXPOSED
@@ -7609,7 +7609,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
             iterations += 1
 
             # list remaining players
-            players = map(int, set.union(*(map(set, table.values()))))
+            players = map(int, set.union(*(map(set, table.values()))))  # type: ignore
 
             # count games per player
             nb_games = {p: len([g for g in table if p in table[g]]) for p in players}
@@ -7712,7 +7712,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
 class MaintainRessource(flask_restful.Resource):  # type: ignore
     """ MaintainRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         maintain
         EXPOSED

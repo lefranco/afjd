@@ -44,7 +44,7 @@ class SiteImage:
         sql_executor.execute("DELETE FROM site_image")
         sql_executor.execute("INSERT OR REPLACE INTO site_image (legend, content) VALUES (?, ?)", (self._legend, self._content))
 
-    def delete_database(self, sql_executor: database.SqlExecutor) -> None:
+    def delete_database(self, sql_executor: database.SqlExecutor) -> None:  # pylint: disable=R0201
         """ Removes object from database """
         sql_executor.execute("DELETE FROM site_image ")
 
