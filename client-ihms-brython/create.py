@@ -64,7 +64,7 @@ def get_quitters_data():
 
 
 def get_tournament_players_data(tournament_id):
-    """ get_tournament_players_data : returns empty dict if problem """
+    """ get_tournament_players_data : can return empty dict  (all games anonymous) """
 
     tournament_players_dict = {}
 
@@ -676,6 +676,9 @@ def tournament_result():
     tournament_id = tournament_dict['identifier']
     games_in = tournament_dict['games']
 
+    MY_SUB_PANEL <= html.DIV("Attention : si des parties sont anonymes le classement est incomplet", Class='important')
+    MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= f"Tournoi concerné : {tournament_name}"
     MY_SUB_PANEL <= html.BR()
 
@@ -692,9 +695,6 @@ def tournament_result():
     id2pseudo = {v: k for k, v in players_dict.items()}
 
     tournament_players_dict = get_tournament_players_data(tournament_id)
-    if not tournament_players_dict:
-        alert("Erreur chargement allocation tournois")
-        return
 
     gamerole2pseudo = {(int(g), r): id2pseudo[int(p)] for g, d in tournament_players_dict.items() for p, r in d.items()}
 
@@ -764,14 +764,12 @@ def tournament_result():
 
         for role_name, score in score_table.items():
             role_num = rolename2num[role_name]
-            if (game_id, role_num) in gamerole2pseudo:
-                pseudo = gamerole2pseudo[(game_id, role_num)]
-            else:
-                pseudo = "&lt;pas alloué&gt;"
-            if pseudo not in points:
-                points[pseudo] = score
-            else:
-                points[pseudo] += score
+            pseudo = gamerole2pseudo.get((game_id, role_num), None)
+            if pseudo:
+                if pseudo not in points:
+                    points[pseudo] = score
+                else:
+                    points[pseudo] += score
 
     # =====
     # incidents
@@ -783,10 +781,11 @@ def tournament_result():
 
     count = {}
     for game_id, role_num, _, duration, _ in tournament_incidents:
-        pseudo = gamerole2pseudo[(game_id, role_num)]
-        if pseudo not in count:
-            count[pseudo] = []
-        count[pseudo].append(duration)
+        pseudo = gamerole2pseudo.get((game_id, role_num), None)
+        if pseudo:
+            if pseudo not in count:
+                count[pseudo] = []
+            count[pseudo].append(duration)
 
     recap_table = html.TABLE()
 
@@ -848,10 +847,11 @@ def tournament_result():
 
     count = {}
     for game_id, role_num, _, _ in tournament_incidents2:
-        pseudo = gamerole2pseudo[(game_id, role_num)]
-        if pseudo not in count:
-            count[pseudo] = 0
-        count[pseudo] += 1
+        pseudo = gamerole2pseudo.get((game_id, role_num), None)
+        if pseudo:
+            if pseudo not in count:
+                count[pseudo] = 0
+            count[pseudo] += 1
 
     incident_table2 = html.TABLE()
 
