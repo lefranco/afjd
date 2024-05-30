@@ -22,7 +22,7 @@ SUPERVISE_REFRESH_TIMER = None
 
 HELP_CONTENT_TABLE = {
 
-    "Comment changer des joueurs ?": "1) retirer le rôle au partant 2) faire partir de la partie le partant 3) faire venir l'arrivant 4) attribuer le role à l'arrivant",
+    "Comment changer des joueurs ?": "1) retirer le rôle au partant 2) retirer de la partie le partant 3) mettre dans la partie l'arrivant 4) attribuer le role à l'arrivant",
     "Comment bénéficier du bouton permettant de contacter tous les remplaçants ?": "1) et 2) ci-dessus",
     "Comment arrêter la partie ?": "menu “Editer partie“ sous menu “Changer l'état“",
     "Comment revenir sur le debriefing ?": "menu “Editer partie“ sous menu “Changer anonymat“ et “Changer accès messagerie“",
@@ -1370,8 +1370,6 @@ def game_master():
 
     row = html.TR()
 
-#    play_low.MY_SUB_PANEL <= html.H4("Faire venir des joueurs")
-
     game_master_id, players_allocated_ids_list, players_assigned_ids_list = allocated
 
     players_allocated_list = [id2pseudo[i] for i in list(players_allocated_ids_list)]
@@ -1428,10 +1426,6 @@ def game_master():
     col = html.TD()
     col <= form
     row <= col
-#    play_low.MY_SUB_PANEL <= form
-
-    # ---
-#    play_low.MY_SUB_PANEL <= html.H4("Faire partir des joueurs")
 
     form = html.FORM()
 
