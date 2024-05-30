@@ -807,7 +807,7 @@ def my_games(state_name):
     if day_now > day_notified:
         new_messages = new_private_messages_received()
         if new_messages:
-            alert(f"Vous avez {new_messages} nouveau(x) message(s) personnel(s) ! Pour les lire : Accueil/Messages personnels.")
+            alert(f"Vous avez {new_messages} nouveau(x) message(s) personnel(s) ! Pour le(s) lire : Menu Messages personnels.")
             storage['DATE_NEW_MESSAGES_NOTIFIED'] = str(day_now)
 
     dict_role_id = get_all_roles_allocated_to_player()

@@ -27,11 +27,12 @@ import events
 import ratings
 import sandbox
 import technical
-import discovery
+import helping
 import variants
 import scorings
 import wiki
 import forum
+import messenging
 
 
 SITE_IMAGE_DISPLAY_SIZE = 100
@@ -45,13 +46,12 @@ document <= MAIN_TITLE
 
 OPTIONS = {
     'Accueil': "L'accueil du site et les fonctionnalité élémentaires d'un site web",
-    'Découverte': "Pour découvrir simplement le jeu et le site par des vidéos, des tutoriels etc...",
+    'Aide': "Pour obtenir de l'aide et découvrir simplement le jeu et le site par des vidéos, des tutoriels etc...",
     'Connexion': "Se connecter au site par mot de passe",
     'Mon compte': "Pour éditer les paramètres de son compte sur le site (il faut être connecté)",
-    'Les parties': "Liste des parties et se mettre dans une partie qui va bientôt commencer",
+    'Les parties (à rejoindre)': "Liste des parties et se mettre dans une partie qui va bientôt commencer",
     'Mes parties': "La liste des parties dans laquelle vous jouez (il faut être connecté)",
-    'Editer partie': "Pour modifier la partie (il faut être un arbitre) ou créer une partie",
-    'Retourner dans la partie': "Revient dans la partie sélectionnée pour y jouer",
+    'Editer (et créer) partie': "Pour modifier la partie (il faut être un arbitre) ou créer une partie",
     'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
     'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
     'Classements': "Différents classements sur les joueurs du site (obtenir une liste de joueurs)",
@@ -61,6 +61,7 @@ OPTIONS = {
     'Scorages': "Explications sur les systèmes de scorages pratiqués sur le site",
     'Wiki': "Un wiki de partage de contenu sur le jeu en général",
     'Forum': "Un forum de discusion sur beaucoup de sujets",
+    'Messages personnels': "Lire mes messages personnels et en envoyer",
     'Création': "Ce menu réservé aux créateurs de tournois",
     'Modération': "Ce menu réservé aux modérateurs du site",
     'Administration': "Ce menu réservé à l'administrateur du site"
@@ -210,20 +211,18 @@ def load_option(_, item_name):
     PANEL_MIDDLE.clear()
     if item_name == 'Accueil':
         home.render(PANEL_MIDDLE)
-    if item_name == 'Découverte':
-        discovery.render(PANEL_MIDDLE)
+    if item_name == 'Aide':
+        helping.render(PANEL_MIDDLE)
     if item_name == 'Connexion':
         login.render(PANEL_MIDDLE)
     if item_name == 'Mon compte':
         account.render(PANEL_MIDDLE)
-    if item_name == 'Les parties':
+    if item_name == 'Les parties (à rejoindre)':
         allgames.render(PANEL_MIDDLE)
     if item_name == 'Mes parties':
         mygames.render(PANEL_MIDDLE)
-    if item_name == 'Editer partie':
+    if item_name == 'Editer (et créer) partie':
         games.render(PANEL_MIDDLE)
-    if item_name == 'Retourner dans la partie':
-        play.render(PANEL_MIDDLE)
     if item_name == 'Interface tournois':
         tournament.render(PANEL_MIDDLE)
     if item_name == 'Evénements':
@@ -242,6 +241,8 @@ def load_option(_, item_name):
         wiki.render(PANEL_MIDDLE)
     if item_name == 'Forum':
         forum.render(PANEL_MIDDLE)
+    if item_name == 'Messages personnels':
+        messenging.render(PANEL_MIDDLE)
     if item_name == 'Création':
         if common.check_creator():
             import create  # pylint: disable=import-outside-toplevel
