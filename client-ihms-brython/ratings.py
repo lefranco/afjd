@@ -12,6 +12,9 @@ import common
 import interface
 import config
 import mapping
+import scoring
+import ezml_render
+
 
 DEFAULT_ELO = 1500
 
@@ -23,6 +26,25 @@ OPTIONS = {
     'Les glorieux': "Les joueurs du site qui ont un titre en face à face",
     'Liste globale': "Les joueurs et arbitres sur le site"
 }
+
+OPTIONS.update({f"Scorage {n}": f"Description précise du scorage {n}" for n in (config.SCORING_CODE_TABLE.keys())})
+
+ARRIVAL = None
+
+# from home
+SCORING_REQUESTED = None
+
+
+def set_arrival(arrival, scoring_requested=None):
+    """ set_arrival """
+
+    global ARRIVAL
+    global SCORING_REQUESTED
+
+    ARRIVAL = arrival
+
+    if scoring_requested:
+        SCORING_REQUESTED = scoring_requested
 
 
 def show_games(ev, game_list):  # pylint: disable=invalid-name
@@ -886,6 +908,95 @@ def show_players_masters_data():
     MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
 
 
+RATING_TABLE = {}
+
+
+def show_scoring():
+    """ show_scoring """
+
+    def test_scoring_callback(ev, ratings_input):  # pylint: disable=invalid-name
+        """ test_scoring_callback """
+
+        ev.preventDefault()
+
+        for name, element in ratings_input.items():
+            val = 0
+            try:
+                val = int(element.value)
+            except:  # noqa: E722 pylint: disable=bare-except
+                pass
+            RATING_TABLE[name] = val
+
+        # scoring
+        centers_variant = variant_data.number_centers()
+        score_table = scoring.scoring(SCORING_REQUESTED, centers_variant, RATING_TABLE)
+
+        score_desc = "\n".join([f"{k} : {v} points" for k, v in score_table.items()])
+        alert(f"Dans cette configuration la marque est :\n{score_desc}")
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        show_scoring()
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    ezml_file = f"./scorings/{SCORING_REQUESTED}.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
+
+    title = html.H3("Tester !")
+    MY_SUB_PANEL <= title
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    variant_name_loaded = storage['GAME_VARIANT']
+
+    # from variant name get variant content
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+
+    # selected interface (user choice)
+    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+    interface_parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, interface_parameters_read)
+
+    form = html.FORM()
+
+    title_enter_centers = html.H4("Entrer les nombre de centres")
+    form <= title_enter_centers
+
+    ratings_input = {}
+    for num, role in variant_data.roles.items():
+
+        if num == 0:
+            continue
+
+        role_name = variant_data.role_name_table[role]
+
+        fieldset = html.FIELDSET()
+        legend_centers = html.LEGEND(role_name, title="nombre de centres")
+        fieldset <= legend_centers
+        input_centers = html.INPUT(type="number", value=str(RATING_TABLE[role_name]) if role_name in RATING_TABLE else "", Class='btn-inside')
+        fieldset <= input_centers
+        form <= fieldset
+
+        ratings_input[role_name] = input_centers
+
+    input_test_scoring = html.INPUT(type="submit", value="Calculer le scorage", Class='btn-inside')
+    input_test_scoring.bind("click", lambda e, ri=ratings_input: test_scoring_callback(e, ri))
+    form <= input_test_scoring
+
+    MY_SUB_PANEL <= form
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -906,6 +1017,7 @@ MY_PANEL <= MY_SUB_PANEL
 
 def load_option(_, item_name):
     """ load_option """
+    global SCORING_REQUESTED
 
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
@@ -920,6 +1032,11 @@ def load_option(_, item_name):
         show_glorious_data()
     if item_name == 'Liste globale':
         show_players_masters_data()
+
+    # otherwise show scoring
+    if item_name.partition(' ')[2] in config.SCORING_CODE_TABLE:
+        SCORING_REQUESTED = config.SCORING_CODE_TABLE[item_name.partition(' ')[2]]
+        show_scoring()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
@@ -946,7 +1063,14 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
+    global ARRIVAL
+
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
+    # this means user wants to see variant
+    if ARRIVAL == 'scoring':
+        ITEM_NAME_SELECTED = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[SCORING_REQUESTED]
+
+    ARRIVAL = None
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

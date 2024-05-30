@@ -29,7 +29,6 @@ import sandbox
 import technical
 import helping
 import variants
-import scorings
 import wiki
 import forum
 import messenging
@@ -54,11 +53,10 @@ OPTIONS = {
     'Editer (et créer) partie': "Pour modifier la partie (il faut être un arbitre) ou créer une partie",
     'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
     'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
-    'Classements': "Différents classements sur les joueurs du site (obtenir une liste de joueurs)",
+    'Classements (et scorages)': "Différents classements sur les joueurs du site (obtenir une liste de joueurs) et les scorages disponibles",
     'Bac à sable': "Pour essayer le moteur de résolution hors d'une parte sur un cas concret",
     'Technique': "Différents articles techniques (pour les joueurs chevronnés)",
     'Variantes': "Explications sur les variantes de jeu pratiquées sur le site",
-    'Scorages': "Explications sur les systèmes de scorages pratiqués sur le site",
     'Wiki': "Un wiki de partage de contenu sur le jeu en général",
     'Forum': "Un forum de discusion sur beaucoup de sujets",
     'Messages personnels': "Lire mes messages personnels et en envoyer",
@@ -227,7 +225,7 @@ def load_option(_, item_name):
         tournament.render(PANEL_MIDDLE)
     if item_name == 'Evénements':
         events.render(PANEL_MIDDLE)
-    if item_name == 'Classements':
+    if item_name == 'Classements (et scorages)':
         ratings.render(PANEL_MIDDLE)
     if item_name == 'Bac à sable':
         sandbox.render(PANEL_MIDDLE)
@@ -235,8 +233,6 @@ def load_option(_, item_name):
         technical.render(PANEL_MIDDLE)
     if item_name == 'Variantes':
         variants.render(PANEL_MIDDLE)
-    if item_name == 'Scorages':
-        scorings.render(PANEL_MIDDLE)
     if item_name == 'Wiki':
         wiki.render(PANEL_MIDDLE)
     if item_name == 'Forum':
