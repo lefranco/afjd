@@ -15,7 +15,7 @@ import interface
 import mapping
 import memoize
 import variants
-import scorings
+import ratings
 import technical
 
 import play  # circular import
@@ -56,7 +56,7 @@ GAME_PLAYERS_DICT = {}
 def make_rating_colours_window(fog_of_war, game_over, variant_data, position_data, interface_, game_scoring):
     """ make_rating_window """
 
-    ratings = position_data.role_ratings()
+    ratings1 = position_data.role_ratings()
     units = position_data.role_units()
     colours = position_data.role_colours()
 
@@ -69,7 +69,7 @@ def make_rating_colours_window(fog_of_war, game_over, variant_data, position_dat
     rating_table <= flags_row
     col = html.TD(html.B("Drapeaux :"))
     flags_row <= col
-    for role_name in ratings:
+    for role_name in ratings1:
         col = html.TD()
         role_id = rolename2role_id[role_name]
         role_icon_img = common.display_flag(variant_name, interface_, role_id, role_name)
@@ -81,7 +81,7 @@ def make_rating_colours_window(fog_of_war, game_over, variant_data, position_dat
     rating_table <= rating_names_row
     col = html.TD(html.B("Rôles :"))
     rating_names_row <= col
-    for role_name in ratings:
+    for role_name in ratings1:
         col = html.TD()
 
         canvas2 = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
@@ -109,7 +109,7 @@ def make_rating_colours_window(fog_of_war, game_over, variant_data, position_dat
     rating_table <= rating_centers_row
     col = html.TD(html.B("Centres (unités) :"))
     rating_centers_row <= col
-    for role, ncenters in ratings.items():
+    for role, ncenters in ratings1.items():
         nunits = units[role]
         col = html.TD()
         if nunits != ncenters:
@@ -120,7 +120,7 @@ def make_rating_colours_window(fog_of_war, game_over, variant_data, position_dat
 
     # scoring
     centers_variant = variant_data.number_centers()
-    score_table = scoring.scoring(game_scoring, centers_variant, ratings)
+    score_table = scoring.scoring(game_scoring, centers_variant, ratings1)
 
     # get scoring name
     name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}
@@ -131,7 +131,7 @@ def make_rating_colours_window(fog_of_war, game_over, variant_data, position_dat
     rating_table <= rating_scoring_row
     col = html.TD(html.B(f"{scoring_name} :"))
     rating_scoring_row <= col
-    for role_name in ratings:
+    for role_name in ratings1:
         score_dis = score_table[role_name]
         role_score = ""
         if not fog_of_war or game_over or ROLE_ID == 0:
@@ -146,7 +146,7 @@ def make_rating_colours_window(fog_of_war, game_over, variant_data, position_dat
     rating_table <= players_row
     col = html.TD(html.B("Joueurs :"))
     players_row <= col
-    for role_name in ratings:
+    for role_name in ratings1:
         role_id = rolename2role_id[role_name]
         pseudo_there = ""
         if role_id in role2pseudo:
@@ -515,11 +515,11 @@ def get_game_status():
         arrival = 'scoring'
 
         # so that will go to proper page
-        scorings.set_arrival(arrival, scoring_name)
+        ratings.set_arrival(arrival, scoring_name)
 
         # action of going to game page
         PANEL_MIDDLE.clear()
-        scorings.render(PANEL_MIDDLE)
+        ratings.render(PANEL_MIDDLE)
 
     def show_option_callback(ev, option_name):  # pylint: disable=invalid-name
         """ show_option_callback """
