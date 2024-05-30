@@ -1368,7 +1368,9 @@ def game_master():
 
     play_low.MY_SUB_PANEL <= html.H3("Déplacer des joueurs")
 
-    play_low.MY_SUB_PANEL <= html.H4("Faire venir des joueurs")
+    row = html.TR()
+
+#    play_low.MY_SUB_PANEL <= html.H4("Faire venir des joueurs")
 
     game_master_id, players_allocated_ids_list, players_assigned_ids_list = allocated
 
@@ -1423,10 +1425,13 @@ def game_master():
     fieldset <= html.DIV(" ".join(sorted(list(set(players_allocated_list)), key=lambda p: p.upper())), Class='note')
     form <= fieldset
 
-    play_low.MY_SUB_PANEL <= form
+    col = html.TD()
+    col <= form
+    row <= col
+#    play_low.MY_SUB_PANEL <= form
 
     # ---
-    play_low.MY_SUB_PANEL <= html.H4("Faire partir des joueurs")
+#    play_low.MY_SUB_PANEL <= html.H4("Faire partir des joueurs")
 
     form = html.FORM()
 
@@ -1451,7 +1456,14 @@ def game_master():
     input_remove_from_game.bind("click", remove_from_game_callback)
     form <= input_remove_from_game
 
-    play_low.MY_SUB_PANEL <= form
+    col = html.TD()
+    col <= form
+    row <= col
+#   play_low.MY_SUB_PANEL <= form
+
+    table = html.TABLE()
+    table <= row
+    play_low.MY_SUB_PANEL <= table
 
     play_low.MY_SUB_PANEL <= html.H3("Suppression des incidents")
 
