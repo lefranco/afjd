@@ -226,6 +226,9 @@ NO_REPEAT_DELAY_SEC = 15
 # account allowed to clear old ratings
 COMMUTER_ACCOUNT = "TheCommuter"
 
+# if deadline is more away that this game is dying
+CRITICAL_DELAY_DAY = 7
+
 
 def apply_supported(complete_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], orders_list: typing.List[typing.List[int]]) -> None:
     """ apply_supported
@@ -611,7 +614,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc):
                     date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
                     del sql_executor
-                    flask_restful.abort(400, msg=f"You cannot set a deadline in the past from now !:'{date_desc}' (GMT)")
+                    flask_restful.abort(400, msg=f"You cannot set a deadline in the past from now!:'{date_desc}' (GMT)")
 
         # keep a note of game state before
         current_state_before = game.current_state
@@ -1160,7 +1163,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             # cannot be in past
             if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
                 date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
-                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{date_desc}' (GMT)")
+                flask_restful.abort(400, msg=f"You cannot set a deadline in the past from now!:'{date_desc}' (GMT)")
 
         else:
 
@@ -7042,10 +7045,16 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
                 continue
             suffering_games.append(game.name)
 
+        # a list of games
+        games_list = games.Game.inventory(sql_executor)
+
+        # games very late
+        limit = int(time.time()) - CRITICAL_DELAY_DAY * 24 * 3600
+        dying_games = [g.name for g in games_list if g.current_state == 1 and not g.finished and g.deadline < limit]
+
         # stats about games
 
         allocations_list = allocations.Allocation.inventory(sql_executor)
-        games_list = games.Game.inventory(sql_executor)
         del sql_executor
 
         # games we can speak about the players
@@ -7069,7 +7078,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         most_active_master_id = active_masters.most_common(1)[0][0]
         most_active_player_id = active_players.most_common(1)[0][0]
 
-        data = {'suffering_games': suffering_games, 'ongoing_games': len(ongoing_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set), 'most_active_master': most_active_master_id, 'most_active_player': most_active_player_id}
+        data = {'dying_games': dying_games, 'suffering_games': suffering_games, 'ongoing_games': len(ongoing_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set), 'most_active_master': most_active_master_id, 'most_active_player': most_active_player_id}
         return data, 200
 
 

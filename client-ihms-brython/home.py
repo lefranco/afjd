@@ -214,8 +214,18 @@ def show_news():
 
     # ----
 
+    div_a5 <= html.H5("Grands retards :")
+    dying_games_loaded = stats_content['dying_games']
+    if dying_games_loaded:
+        div_a5 <= "Les parties ci-dessous sont en grand retard."
+        div_a5 <= html.BR()
+        div_a5 <= html.B("Cliquez sur le lien pour aller voir la partie !")
+        div_a5 <= html.BR()
+        div_a5 <= formatted_games(dying_games_loaded)
+    else:
+        div_a5 <= "Aucune partie en cours n'est en grand retard."
+
     div_a5 <= html.H5("Remplacements :")
-    div_a5 <= html.BR()
     suffering_games_loaded = stats_content['suffering_games']
     if suffering_games_loaded:
         div_a5 <= "Les parties ci-dessous sont en cours et ont besoin de remplaçant(s) - arbitre ou joueur."
