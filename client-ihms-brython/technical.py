@@ -2,7 +2,7 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import html, alert, window  # pylint: disable=import-error
+from browser import document, html, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
@@ -18,7 +18,8 @@ OPTIONS = {
     'Choix d\'interface': "Choisir une interface différente de celle par défaut pour voir les parties",
     'Calcul du ELO': "Détail de la méthode de calcul du E.L.O. utilisé sur le site",
     'Le brouillard': "Des informations sur l'option 'Brouillard de Guerre' pour une partie",
-    'Langage Markup Facile': "Des informations sur un langage de construction facile de pages HTML pour les descriptions techniques"
+    'Langage Markup Facile': "Des informations sur un langage de construction facile de pages HTML pour les descriptions techniques",
+    'Evolution de la fréquentation': "Evolution sous forme graphique du nombre de joueurs actifs sur le site"
 }
 
 
@@ -275,6 +276,18 @@ def show_ezml_spec():
     my_ezml.render(MY_SUB_PANEL)
 
 
+def frequentation_evolution():
+    """ frequentation_evolution """
+
+    # load frequentation directly
+
+    # use button
+    button = html.BUTTON("Lancement du calcul de fréquentation", id='frequentation_link', Class='btn-inside')
+    MY_SUB_PANEL <= button
+    button.bind("click", lambda e: window.open("https://diplomania-gen.fr/frequentation"))
+    document['frequentation_link'].click()
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -311,6 +324,8 @@ def load_option(_, item_name):
         show_fog_of_war()
     if item_name == 'Langage Markup Facile':
         show_ezml_spec()
+    if item_name == 'Evolution de la fréquentation':
+        frequentation_evolution()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name

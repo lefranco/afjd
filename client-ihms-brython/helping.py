@@ -4,9 +4,15 @@
 
 from browser import html, document, window  # pylint: disable=import-error
 
+import faq
+import tips
+import ezml_render
 
 OPTIONS = {
     'Documents': "Lien vers différents documents d'initiation sur le jeu",
+    'Foire aux questions': "Foire Aux Questions du site",
+    'Les petits tuyaux': "Différentes petites choses à savoir pour mieux jouer sur le site",
+    'Charte du bon diplomate': "Document indiquant les règles de bonne conduite en jouant les parties",
     'Youtube Diplomacy': "Lien une vidéo Youtube qui présente simplement les règles du jeu avec humour",
     'Youtube Diplomania Jeu': "Lien une vidéo Youtube qui présente simplement comment jouer sur ce site",
     'Youtube Diplomania Arbitrage': "Lien une vidéo Youtube qui présente simplement comment arbitrer sur ce site",
@@ -24,6 +30,88 @@ def show_discovery():
     link5 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
     link5 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
     MY_SUB_PANEL <= link5
+
+
+FAQ_DISPLAYED_TABLE = {k: False for k in faq.FAQ_CONTENT_TABLE}
+FAQ_CONTENT = html.DIV("faq")
+
+TIPS_DISPLAYED_TABLE = {k: False for k in tips.TIPS_CONTENT_TABLE}
+TIPS_CONTENT = html.DIV("tips")
+
+
+def show_faq():
+    """ show_faq """
+
+    def reveal_callback(_, question):
+        """ reveal_callback """
+
+        FAQ_DISPLAYED_TABLE[question] = not FAQ_DISPLAYED_TABLE[question]
+        MY_SUB_PANEL.clear()
+        show_faq()
+
+    title1 = html.H3("Foire aux questions")
+    MY_SUB_PANEL <= title1
+
+    FAQ_CONTENT.clear()
+
+    for question_txt, answer_txt in faq.FAQ_CONTENT_TABLE.items():
+
+        reveal_button = html.INPUT(type="submit", value=question_txt, Class='btn-inside')
+        reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
+        FAQ_CONTENT <= reveal_button
+
+        if FAQ_DISPLAYED_TABLE[question_txt]:
+
+            faq_elt = html.DIV(answer_txt, Class='faq-info')
+            FAQ_CONTENT <= faq_elt
+
+        FAQ_CONTENT <= html.P()
+
+    MY_SUB_PANEL <= FAQ_CONTENT
+
+
+def show_tips():
+    """ show_tips """
+
+    def reveal_callback(_, question):
+        """ reveal_callback """
+
+        TIPS_DISPLAYED_TABLE[question] = not TIPS_DISPLAYED_TABLE[question]
+        MY_SUB_PANEL.clear()
+        show_tips()
+
+    title1 = html.H3("Les petits tuyaux")
+    MY_SUB_PANEL <= title1
+
+    TIPS_CONTENT.clear()
+
+    for question_txt, answer_txt in tips.TIPS_CONTENT_TABLE.items():
+
+        reveal_button = html.INPUT(type="submit", value=question_txt, Class='btn-inside')
+        reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
+        TIPS_CONTENT <= reveal_button
+
+        if TIPS_DISPLAYED_TABLE[question_txt]:
+
+            tip_elt = html.DIV(answer_txt, Class='faq-info')
+            TIPS_CONTENT <= tip_elt
+
+        TIPS_CONTENT <= html.P()
+
+    MY_SUB_PANEL <= TIPS_CONTENT
+
+
+def show_diplomat_chart():
+    """ show_diplomat_chart """
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    ezml_file = "./docs/charte.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
 
 
 def tutorial_game():
@@ -88,6 +176,12 @@ def load_option(_, item_name):
 
     if item_name == 'Documents':
         show_discovery()
+    if item_name == 'Foire aux questions':
+        show_faq()
+    if item_name == 'Les petits tuyaux':
+        show_tips()
+    if item_name == 'Charte du bon diplomate':
+        show_diplomat_chart()
     if item_name == 'Youtube Diplomacy':
         tutorial_game()
     if item_name == 'Youtube Diplomania Jeu':

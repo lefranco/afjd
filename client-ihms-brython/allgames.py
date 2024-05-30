@@ -21,6 +21,7 @@ import index  # circular import
 
 OPTIONS = {
     'Sélectionner une partie': "Séléction d'une partie sur des critères éléborés",
+    'Retourner dans la partie': "Revient dans la partie sélectionnée pour y jouer",
     'Rejoindre une partie': "Pour rejoindre (I.e. se mettre dans) un partie afin d'y jouer",
     'Toutes les parties': "Liste de toutes les parties",
     'Parties sans arbitres': "Liste des parties qui n'ont pas d'arbitre alloué",
@@ -1329,6 +1330,8 @@ def load_option(_, item_name):
 
     if item_name == 'Sélectionner une partie':
         select_game(config.FORCED_VARIANT_NAME, 1)
+    if item_name == 'Retourner dans la partie':
+        play.render(PANEL_MIDDLE)
     if item_name == 'Rejoindre une partie':
         my_opportunities()
     if item_name == 'Toutes les parties':
