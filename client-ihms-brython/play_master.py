@@ -1366,7 +1366,7 @@ def game_master():
         else:
             play_low.MY_SUB_PANEL <= debrief_form
 
-    play_low.MY_SUB_PANEL <= html.H3("Déplacer des joueurs")
+    play_low.MY_SUB_PANEL <= html.H3("Déplacement de joueurs")
 
     row = html.TR()
 
