@@ -1331,6 +1331,7 @@ def load_option(_, item_name):
     if item_name == 'Sélectionner une partie':
         select_game(config.FORCED_VARIANT_NAME, 1)
     if item_name == 'Retourner dans la partie':
+        PANEL_MIDDLE.clear()
         play.render(PANEL_MIDDLE)
     if item_name == 'Rejoindre une partie':
         my_opportunities()
