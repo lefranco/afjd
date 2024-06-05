@@ -234,9 +234,7 @@ def show_news():
         last_chat_author = last_chat[1]
         last_chat_message = last_chat[2]
         div_a5 <= html.BR()
-        div_a5 <= html.BR()
         div_a5 <= html.H5("Dernier chat :")
-        div_a5 <= html.BR()
         div_a5 <= html.DIV(f"{last_chat_author} : {last_chat_message}", Class='chat_sample')
 
     # ----
@@ -248,7 +246,7 @@ def show_news():
     # ==B5==============================
 
     div_b5 = html.DIV(Class='tooltip')
-    title2 = html.H4("Les meilleurs joueurs du site (d'après le classement ELO)")
+    title2 = html.H4("Les meilleurs joueurs du site (d'après le classement ELO sur les parties 'standard')")
     div_b5 <= title2
 
     # ----
