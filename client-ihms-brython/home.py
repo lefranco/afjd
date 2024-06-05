@@ -11,7 +11,6 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import user_config
 import config
 import common
-import variants
 import ezml_render
 import mydatetime
 import mydialog
@@ -168,20 +167,6 @@ def formatted_teaser(teasers):
 
 def show_news():
     """ show_home """
-
-    def show_variant_callback(ev, variant_name):  # pylint: disable=invalid-name
-        """ show_variant_callback """
-
-        ev.preventDefault()
-
-        arrival = 'variant'
-
-        # so that will go to proper page
-        variants.set_arrival(arrival, variant_name)
-
-        # action of going to game page
-        PANEL_MIDDLE.clear()
-        variants.render(PANEL_MIDDLE)
 
     def show_chart_callback(ev):  # pylint: disable=invalid-name
         """ show_chart_callback """
@@ -454,6 +439,12 @@ def show_news():
     # ==B2==============================
 
     div_b2 = html.DIV(Class='tooltip')
+    # need special positioning !
+    div_b2.style = {
+        'grid-column': '2/3',
+        'grid-row': '4/6'
+    }
+
     title7 = html.H4("Du nouveau sur le wiki (pour l'ouvrir dans une nouvelle fenêtre utiliser le menu 'Wiki')")
     div_b2 <= title7
 
@@ -473,46 +464,11 @@ def show_news():
     # ==A1==============================
 
     div_a1 = html.DIV(Class='tooltip')
-    title10 = html.H4("Aperçu des variantes possibles")
-    div_a1 <= title10
-
-    # ----
-
-    variants_table = html.TABLE()
-    row = html.TR()
-    for num, variant_name in enumerate(config.VARIANT_NAMES_LIST):
-
-        col = html.TD()
-
-        form = html.FORM()
-        input_show_variant = html.INPUT(type="submit", value=variant_name, Class='btn-inside')
-        input_show_variant.attrs['style'] = 'font-size: 10px'
-        input_show_variant.bind("click", lambda e, v=variant_name: show_variant_callback(e, v))
-        form <= input_show_variant
-        col <= form
-
-        row <= col
-        if (num + 1) % 3 == 0:
-            variants_table <= row
-            row = html.TR()
-
-    variants_table <= row
-    div_a1 <= variants_table
-
-    # ----
-
-    div_a1_tip = html.SPAN("Plus de détail dans le menu “Bac à sable“ sous menu “Documents“", Class='tooltiptext')
-    div_a1 <= div_a1_tip
-    div_homepage <= div_a1
-
-    # ==B1==============================
-
-    div_b1 = html.DIV(Class='tooltip')
 
     id2pseudo = {v: k for k, v in players_dict.items()}
 
     title11 = html.H4("Statistiques")
-    div_b1 <= title11
+    div_a1 <= title11
     ongoing_games = stats_content['ongoing_games']
     active_game_masters = stats_content['active_game_masters']
     active_players = stats_content['active_players']
@@ -521,13 +477,17 @@ def show_news():
     most_active_player_id = stats_content['most_active_player']
     most_active_player = id2pseudo[most_active_player_id]
     information = f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. L'arbitre le plus actif est {most_active_master}. Le joueur le plus actif est {most_active_player}. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
-    div_b1 <= information
+    div_a1 <= information
 
     # ----
 
     div_b1_tip = html.SPAN("Plus de détail dans le menu “Classement“ sous menu “Joueurs“", Class='tooltiptext')
-    div_b1 <= div_b1_tip
-    div_homepage <= div_b1
+    div_a1 <= div_b1_tip
+    div_homepage <= div_a1
+
+    # ==B1==============================
+
+    # Merged with B2
 
     # ================================
 
