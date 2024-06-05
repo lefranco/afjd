@@ -50,7 +50,7 @@ OPTIONS = {
     'Mon compte': "Pour éditer les paramètres de son compte sur le site (il faut être connecté)",
     'Les parties (à rejoindre)': "Liste des parties et se mettre dans une partie qui va bientôt commencer",
     'Mes parties': "La liste des parties dans laquelle vous jouez (il faut être connecté)",
-    'Editer (et créer) partie': "Pour modifier la partie (il faut être un arbitre) ou créer une partie",
+    'Créer (et éditer) une partie': "Pour modifier la partie (il faut être un arbitre) ou créer une partie",
     'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
     'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
     'Classements (et scorages)': "Différents classements sur les joueurs du site (obtenir une liste de joueurs) et les scorages disponibles",
@@ -219,7 +219,7 @@ def load_option(_, item_name):
         allgames.render(PANEL_MIDDLE)
     if item_name == 'Mes parties':
         mygames.render(PANEL_MIDDLE)
-    if item_name == 'Editer (et créer) partie':
+    if item_name == 'Créer (et éditer) une partie':
         games.render(PANEL_MIDDLE)
     if item_name == 'Interface tournois':
         tournament.render(PANEL_MIDDLE)

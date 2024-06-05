@@ -18,7 +18,7 @@ import allgames
 import index  # circular import
 
 OPTIONS = {
-    'Créer': "Créer une partie (pour y jouer ou l'arbitrer)",
+    'Créer une partie': "Créer une partie (pour y jouer ou l'arbitrer)",
     'Changer anonymat': "Changer le paramètre d'anonymat sur la partie séléctionnée",
     'Changer accès messagerie': "Changer les paramètres d'acccès aux messageries sur la partie séléctionnée",
     'Changer description': "Changer la description de la partie séléctionnée",
@@ -26,7 +26,7 @@ OPTIONS = {
     'Changer paramètres accès': "Changer les paramètres d'accès de la partie séléctionnée",
     'Changer paramètres cadence': "Changer les paramètres de cadence la partie séléctionnée",
     'Changer état': "Changer l'état la partie séléctionnée (la démarrer ou l'arrêter)",
-    'Supprimer': "Supprimer la partie séléctionnée"
+    'Supprimer la partie': "Supprimer la partie séléctionnée"
 }
 
 MAX_LEN_GAME_NAME = 50
@@ -1778,7 +1778,7 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Créer':
+    if item_name == 'Créer une partie':
         create_game(None)
     if item_name == 'Changer anonymat':
         change_anonymity_game()
@@ -1794,7 +1794,7 @@ def load_option(_, item_name):
         change_pace_parameters_game()
     if item_name == 'Changer état':
         change_state_game()
-    if item_name == 'Supprimer':
+    if item_name == 'Supprimer la partie':
         delete_game()
 
     ITEM_NAME_SELECTED = item_name
