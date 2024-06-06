@@ -461,6 +461,41 @@ def stack_role_flag(frame):
     frame <= html.BR()
 
 
+def stack_role_retreats(frame):
+    """ stack_role_retreats """
+    if ROLE_ID != 0:
+        role = VARIANT_DATA.roles[ROLE_ID]
+        info_retreats = POSITION_DATA.role_retreats(role)
+        for info_retreat in info_retreats:
+            frame <= html.DIV(info_retreat, Class='note')
+            frame <= html.BR()
+
+
+def stack_role_builds(frame):
+    """ stack_role_builds """
+    if ROLE_ID != 0:
+        role = VARIANT_DATA.roles[ROLE_ID]
+        nb_builds, nb_ownerships, nb_units, nb_free_centers = POSITION_DATA.role_builds(role)
+        free_info = f" et {nb_free_centers} emplacement(s) libre(s)" if nb_builds > 0 else ""
+        frame <= html.DIV(f"Vous avez {nb_ownerships} centre(s) pour {nb_units} unité(s){free_info}. Vous {'construisez' if nb_builds > 0 else 'détruisez'} donc {abs(nb_builds)} fois.", Class='note')
+
+
+def stack_possibilities(frame, advancement_season):
+    """ stack_possibilities """
+
+    # : we alert about retreat possibilities
+    if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+        stack_role_retreats(frame)
+        frame <= html.BR()
+        frame <= html.BR()
+
+    # first time : we alert about build stat
+    if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+        stack_role_builds(frame)
+        frame <= html.BR()
+        frame <= html.BR()
+
+
 def civil_disorder_allowed(advancement_loaded):
     """ civil_disorder_allowed """
 
