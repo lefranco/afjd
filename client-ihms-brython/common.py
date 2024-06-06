@@ -120,7 +120,7 @@ class MessageTypeEnum:
     REPLACEMENT = 3
 
 
-def formatted_news(news_content_loaded, admin_modo, class_):
+def formatted_news(news_content_loaded, origin, class_):
     """ formatted_news """
 
     # init
@@ -130,12 +130,11 @@ def formatted_news(news_content_loaded, admin_modo, class_):
     if news_content_loaded is not None:
         for line in news_content_loaded.split("\n"):
             if line.startswith(".ANNONCE"):
-                if admin_modo:
+                if origin:
                     _, _, announcement = line.partition(".ANNONCE ")
-                    previous_announcement = storage['ANNOUNCEMENT']
-                    storage['ANNOUNCEMENT'] = announcement
-                    if announcement != previous_announcement:
-                        storage['ANNOUNCEMENT_DISPLAYED'] = 'no'
+                    if announcement != storage[f'ANNOUNCEMENT_{origin}']:
+                        storage[f'ANNOUNCEMENT_{origin}'] = announcement
+                        storage[f'ANNOUNCEMENT_DISPLAYED_{origin}'] = 'no'
             elif line.startswith(".HR"):
                 separator = html.HR()
                 news_content <= separator
