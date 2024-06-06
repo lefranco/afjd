@@ -62,25 +62,6 @@ def restore_context(ctx):
     ctx.drawImage(BACKUP_CANVAS, 0, 0)
 
 
-def stack_role_retreats(frame):
-    """ stack_role_retreats """
-    if play_low.ROLE_ID != 0:
-        role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
-        info_retreats = play_low.POSITION_DATA.role_retreats(role)
-        for info_retreat in info_retreats:
-            frame <= html.DIV(info_retreat, Class='note')
-            frame <= html.BR()
-
-
-def stack_role_builds(frame):
-    """ stack_role_builds """
-    if play_low.ROLE_ID != 0:
-        role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
-        nb_builds, nb_ownerships, nb_units, nb_free_centers = play_low.POSITION_DATA.role_builds(role)
-        free_info = f" et {nb_free_centers} emplacement(s) libre(s)" if nb_builds > 0 else ""
-        frame <= html.DIV(f"Vous avez {nb_ownerships} centre(s) pour {nb_units} unité(s){free_info}. Vous {'construisez' if nb_builds > 0 else 'détruisez'} donc {abs(nb_builds)} fois.", Class='note')
-
-
 def submit_orders():
     """ submit_orders """
 
@@ -264,6 +245,9 @@ def submit_orders():
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
 
+        # information retreats/builds
+        play_low.stack_possibilities(buttons_right, advancement_season)
+
         # we are in spring or autumn
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
@@ -305,6 +289,9 @@ def submit_orders():
 
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
+
+        # information retreats/builds
+        play_low.stack_possibilities(buttons_right, advancement_season)
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
@@ -359,6 +346,9 @@ def submit_orders():
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
 
+            # information retreats/builds
+            play_low.stack_possibilities(buttons_right, advancement_season)
+
             legend_select_active = html.DIV("Sélectionner la zone où construire", Class='instruction')
             buttons_right <= legend_select_active
 
@@ -412,6 +402,9 @@ def submit_orders():
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
+
+            # information retreats/builds
+            play_low.stack_possibilities(buttons_right, advancement_season)
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
@@ -588,6 +581,9 @@ def submit_orders():
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
 
+            # information retreats/builds
+            play_low.stack_possibilities(buttons_right, advancement_season)
+
             # gm can pass orders on archive games
             if play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]:
 
@@ -688,6 +684,9 @@ def submit_orders():
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
+
+            # information retreats/builds
+            play_low.stack_possibilities(buttons_right, advancement_season)
 
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
@@ -804,6 +803,9 @@ def submit_orders():
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
+
+            # information retreats/builds
+            play_low.stack_possibilities(buttons_right, advancement_season)
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -923,6 +925,9 @@ def submit_orders():
 
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
+
+        # information retreats/builds
+        play_low.stack_possibilities(buttons_right, advancement_season)
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
@@ -1405,17 +1410,8 @@ def submit_orders():
     # button last moves
     play_low.stack_last_moves_button(buttons_right)
 
-    # first time : we alert about retreat possibilities
-    if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-        stack_role_retreats(buttons_right)
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
-
-    # first time : we alert about build stat
-    if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-        stack_role_builds(buttons_right)
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+    # information retreats/builds
+    play_low.stack_possibilities(buttons_right, advancement_season)
 
     if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
