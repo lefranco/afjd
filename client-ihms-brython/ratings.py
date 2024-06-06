@@ -762,7 +762,7 @@ def show_glorious_data():
 
     news_content_table_loaded = common.get_news_content()
     hall_content_loaded = news_content_table_loaded['glory']
-    hall_content = common.formatted_news(hall_content_loaded, False, 'glory_news')
+    hall_content = common.formatted_news(hall_content_loaded, None, 'glory_news')
 
     MY_SUB_PANEL <= html.H3("Les glorieux")
     MY_SUB_PANEL <= hall_content

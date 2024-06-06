@@ -82,8 +82,10 @@ $$ Interne
 = Local storage a but interne
 | Nom | Finalité |
 | _RGPD ACCEPTED_ | acceptation de l'utilisation des données personnelles pratiquées sur le site |
-| _ANNOUNCEMENT_ | contenu de l'annonce spéciale ("popup") |
-| _ANNOUNCEMENT DISPLAYED_ | le contenu de l'annonce spéciale ("popup") déjà montrée |
+| _ANNOUNCEMENT ADMIN_ | contenu de l'annonce spéciale ("popup") (administrateur) |
+| _ANNOUNCEMENT DISPLAYED ADMIN_ | le contenu de l'annonce spéciale ("popup") déjà montrée (administrateur) |
+| _ANNOUNCEMENT MODO_ | contenu de l'annonce spéciale ("popup") (modérateur) |
+| _ANNOUNCEMENT DISPLAYED MODO_ | le contenu de l'annonce spéciale ("popup") déjà montrée (modérateur) |
 | _DATE NEW MESSAGES NOTIFIED_ | le dernier jour de notification de messages personnels |
 | _DATE SUFFERING NOTIFIED_ | le dernier jour de notifications de parties à démarrer |
 | _DELTA TIME SEC_ | différence temps local et temps serveur |

@@ -28,10 +28,14 @@ OPTIONS = {
 
 
 # for safety
-if 'ANNOUNCEMENT' not in storage:
-    storage['ANNOUNCEMENT'] = ""
-if 'ANNOUNCEMENT_DISPLAYED' not in storage:
-    storage['ANNOUNCEMENT_DISPLAYED'] = 'no'
+if 'ANNOUNCEMENT_ADMIN' not in storage:
+    storage['ANNOUNCEMENT_ADMIN'] = ""
+if 'ANNOUNCEMENT_DISPLAYED_ADMIN' not in storage:
+    storage['ANNOUNCEMENT_DISPLAYED_ADMIN'] = 'no'
+if 'ANNOUNCEMENT_MODO' not in storage:
+    storage['ANNOUNCEMENT_MODO'] = ""
+if 'ANNOUNCEMENT_DISPLAYED_MODO' not in storage:
+    storage['ANNOUNCEMENT_DISPLAYED_MODO'] = 'no'
 
 
 def get_stats_content():
@@ -297,16 +301,16 @@ def show_news():
 
     # ----
 
-    title51 = html.H5("Moderateur")
+    title51 = html.H5("Administrateur")
     div_a3 <= title51
-    news_content_loaded = news_content_table_loaded['modo']
-    news_content = common.formatted_news(news_content_loaded, True, 'modo_news')
+    news_content_loaded = news_content_table_loaded['admin']
+    news_content = common.formatted_news(news_content_loaded, 'ADMIN', 'admin_news')
     div_a3 <= news_content
 
-    title52 = html.H5("Administrateur")
+    title52 = html.H5("Moderateur")
     div_a3 <= title52
-    news_content_loaded = news_content_table_loaded['admin']
-    news_content = common.formatted_news(news_content_loaded, True, 'admin_news')
+    news_content_loaded = news_content_table_loaded['modo']
+    news_content = common.formatted_news(news_content_loaded, 'MODO', 'modo_news')
     div_a3 <= news_content
 
     # ----
@@ -510,11 +514,11 @@ def show_news():
     MY_SUB_PANEL <= div_homepage
 
     # announce
-    if storage['ANNOUNCEMENT_DISPLAYED'] == 'no':
-        announcement = storage['ANNOUNCEMENT']
-        if announcement:
-            alert(announcement)
-        storage['ANNOUNCEMENT_DISPLAYED'] = 'yes'
+    for origin in ('ADMIN', 'MODO'):
+        if storage[f'ANNOUNCEMENT_DISPLAYED_{origin}'] == 'no':
+            if storage[f'ANNOUNCEMENT_{origin}']:
+                alert(storage[f'ANNOUNCEMENT_{origin}'])
+                storage[f'ANNOUNCEMENT_DISPLAYED_{origin}'] = 'yes'
 
     # RGPD
     if 'RGPD_ACCEPTED' not in storage:
