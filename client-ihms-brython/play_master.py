@@ -65,6 +65,14 @@ def stack_clock(frame, period):
 SUPERVISE_REFRESH_PERIOD_SEC = 15
 
 
+def information_about_start_game():
+    """ information_about_account """
+
+    information = html.DIV(Class='important')
+    information <= "Si la partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !"
+    return information
+
+
 def get_game_allocated_players(game_id):
     """ get_available_players returns a tuple game_master + players """
 
@@ -108,6 +116,61 @@ def game_master():
 
     players_dict = {}
     allocated = []
+
+    def cancel_change_state_game_callback(_, dialog):
+        """ cancel_delete_account_callback """
+        dialog.close(None)
+
+    def change_state_game_callback(ev, dialog, expected_state):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification de l'état de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification de l'état de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"L'état de la partie a été modifié : {messages}")
+
+        ev.preventDefault()
+
+        if dialog is not None:
+            dialog.close(None)
+
+        json_dict = {
+            'name': play_low.GAME,
+            'current_state': expected_state,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{play_low.GAME}"
+
+        # changing game state : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        play_low.MY_SUB_PANEL.clear()
+        play_low.load_dynamic_stuff()
+        game_master()
+
+    def change_state_game_callback_confirm(ev, expected_state):  # pylint: disable=invalid-name
+
+        ev.preventDefault()
+
+        dialog = mydialog.Dialog(f"On arrête vraiment la partie {play_low.GAME} ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog, es=expected_state: change_state_game_callback(e, d, es))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_change_state_game_callback(e, d))
+
+        # back to where we started
+        play_low.MY_SUB_PANEL.clear()
+        play_low.load_dynamic_stuff()
+        game_master()
 
     def callback_download_game_csv(ev):  # pylint: disable=invalid-name
         """ callback_download_game_csv """
@@ -1602,6 +1665,51 @@ def game_master():
 
     play_low.MY_SUB_PANEL <= game_incidents_table
     play_low.MY_SUB_PANEL <= html.BR()
+
+
+
+
+
+    play_low.MY_SUB_PANEL <= html.H3("Changer l'état de la partie")
+
+    state_loaded = play_low.GAME_PARAMETERS_LOADED['current_state']
+
+    form = html.FORM()
+
+    if state_loaded == 0:
+        form <= information_about_start_game()
+        form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours, terminée ou distinguée.")
+    fieldset <= legend_state
+
+    if state_loaded == 0:
+        input_start_game = html.INPUT(type="submit", value="Démarrer la partie", Class='btn-inside')
+        input_start_game.bind("click", lambda e, s=1: change_state_game_callback(e, None, s))
+        form <= input_start_game
+
+    if state_loaded == 1:
+        input_stop_game = html.INPUT(type="submit", value="Arrêter la partie", Class='btn-inside')
+        input_stop_game.bind("click", lambda e, s=2: change_state_game_callback_confirm(e, s))
+        form <= input_stop_game
+
+    if state_loaded == 2:
+        input_stop_game = html.INPUT(type="submit", value="Distinguer la partie", Class='btn-inside')
+        input_stop_game.bind("click", lambda e, s=3: change_state_game_callback(e, None, s))
+        form <= input_stop_game
+
+    if state_loaded == 3:
+        input_stop_game = html.INPUT(type="submit", value="Ne plus distinguer la partie", Class='btn-inside')
+        input_stop_game.bind("click", lambda e, s=2: change_state_game_callback(e, None, s))
+        form <= input_stop_game
+
+    play_low.MY_SUB_PANEL <= form
+
+
+
+
+
 
     play_low.MY_SUB_PANEL <= html.H3("Exportation")
 

@@ -25,7 +25,6 @@ OPTIONS = {
     'Changer scorage': "Changer le paramètre système de scorage de la partie séléctionnée",
     'Changer paramètres accès': "Changer les paramètres d'accès de la partie séléctionnée",
     'Changer paramètres cadence': "Changer les paramètres de cadence la partie séléctionnée",
-    'Changer état': "Changer l'état la partie séléctionnée (la démarrer ou l'arrêter)",
     'Supprimer la partie': "Supprimer la partie séléctionnée"
 }
 
@@ -38,14 +37,6 @@ DEFAULT_GRACE_DURATION = 24
 DEFAULT_SPEED_MOVES = 72
 DEFAULT_SPEED_OTHERS = 24
 DEFAULT_NB_CYCLES = 7
-
-
-def information_about_start_game():
-    """ information_about_account """
-
-    information = html.DIV(Class='important')
-    information <= "Si la partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !"
-    return information
 
 
 def information_about_input():
@@ -1531,152 +1522,6 @@ def change_pace_parameters_game():
     MY_SUB_PANEL <= form
 
 
-def change_state_game():
-    """ change_state_game """
-
-    # declare the values
-    state_loaded = None
-
-    def change_state_reload():
-        """ change_state_reload """
-
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problème (pas de réponse de la part du serveur)")
-            status = False
-
-        def reply_callback(req):
-            nonlocal status
-            nonlocal state_loaded
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération de l'état de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération de l'état de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                status = False
-                return
-
-            state_loaded = req_result['current_state']
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        return status
-
-    def cancel_change_state_game_callback(_, dialog):
-        """ cancel_delete_account_callback """
-        dialog.close(None)
-
-    def change_state_game_callback(ev, dialog, expected_state):  # pylint: disable=invalid-name
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la modification de l'état de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la modification de l'état de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'état de la partie a été modifié : {messages}")
-
-        ev.preventDefault()
-
-        if dialog is not None:
-            dialog.close(None)
-
-        json_dict = {
-            'name': game,
-            'current_state': expected_state,
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # changing game state : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        change_state_game()
-
-    def change_state_game_callback_confirm(ev, expected_state):  # pylint: disable=invalid-name
-
-        ev.preventDefault()
-
-        dialog = mydialog.Dialog(f"On arrête vraiment la partie {game} ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog, es=expected_state: change_state_game_callback(e, d, es))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_change_state_game_callback(e, d))
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        change_state_game()
-
-    MY_SUB_PANEL <= html.H3("Changement d'état")
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    status = change_state_reload()
-    if not status:
-        return
-
-    form = html.FORM()
-
-    if state_loaded == 0:
-        form <= information_about_start_game()
-        form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours, terminée ou distinguée.")
-    fieldset <= legend_state
-
-    if state_loaded == 0:
-        input_start_game = html.INPUT(type="submit", value="Démarrer la partie", Class='btn-inside')
-        input_start_game.bind("click", lambda e, s=1: change_state_game_callback(e, None, s))
-        form <= input_start_game
-
-    if state_loaded == 1:
-        input_stop_game = html.INPUT(type="submit", value="Arrêter la partie", Class='btn-inside')
-        input_stop_game.bind("click", lambda e, s=2: change_state_game_callback_confirm(e, s))
-        form <= input_stop_game
-
-    if state_loaded == 2:
-        input_stop_game = html.INPUT(type="submit", value="Distinguer la partie", Class='btn-inside')
-        input_stop_game.bind("click", lambda e, s=3: change_state_game_callback(e, None, s))
-        form <= input_stop_game
-
-    if state_loaded == 3:
-        input_stop_game = html.INPUT(type="submit", value="Ne plus distinguer la partie", Class='btn-inside')
-        input_stop_game.bind("click", lambda e, s=2: change_state_game_callback(e, None, s))
-        form <= input_stop_game
-
-    MY_SUB_PANEL <= form
-
-
 def delete_game():
     """ delete_game """
 
@@ -1792,8 +1637,6 @@ def load_option(_, item_name):
         change_access_parameters_game()
     if item_name == 'Changer paramètres cadence':
         change_pace_parameters_game()
-    if item_name == 'Changer état':
-        change_state_game()
     if item_name == 'Supprimer la partie':
         delete_game()
 
