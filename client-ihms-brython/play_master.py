@@ -8,6 +8,7 @@ from time import time
 from browser import document, window, html, ajax, alert, timer   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import allgames
 import mydatetime
 import mydialog
 import config
@@ -15,6 +16,7 @@ import common
 
 import play  # circular import
 import play_low
+import index
 
 
 SUPERVISE_REFRESH_TIMER = None
@@ -137,6 +139,11 @@ def game_master():
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"L'état de la partie a été modifié : {messages}")
 
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            play_low.load_dynamic_stuff()
+            game_master()
+
         ev.preventDefault()
 
         if dialog is not None:
@@ -154,11 +161,6 @@ def game_master():
         # changing game state : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-        # back to where we started
-        play_low.MY_SUB_PANEL.clear()
-        play_low.load_dynamic_stuff()
-        game_master()
-
     def change_state_game_callback_confirm(ev, expected_state):  # pylint: disable=invalid-name
 
         ev.preventDefault()
@@ -169,7 +171,56 @@ def game_master():
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
-        play_low.load_dynamic_stuff()
+        game_master()
+
+    def cancel_delete_game_callback(_, dialog):
+        """ cancel_delete_game_callback """
+        dialog.close(None)
+
+    def delete_game_callback(ev, dialog):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la suppression de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la suppression de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"La partie a été supprimée : {messages}", important=True)
+            allgames.unselect_game()
+
+            # go to select another game
+            index.load_option(None, 'Accueil')
+
+        ev.preventDefault()
+
+        dialog.close(None)
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{play_low.GAME}"
+
+        # deleting game : need token
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def delete_game_callback_confirm(ev):  # pylint: disable=invalid-name
+        """ delete_game_callback_confirm """
+
+        ev.preventDefault()
+
+        dialog = mydialog.Dialog(f"On supprime vraiment la partie {play_low.GAME} ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_game_callback(e, d))
+
+        # back to where we started
+        play_low.MY_SUB_PANEL.clear()
         game_master()
 
     def callback_download_game_csv(ev):  # pylint: disable=invalid-name
@@ -1666,10 +1717,6 @@ def game_master():
     play_low.MY_SUB_PANEL <= game_incidents_table
     play_low.MY_SUB_PANEL <= html.BR()
 
-
-
-
-
     play_low.MY_SUB_PANEL <= html.H3("Changer l'état de la partie")
 
     state_loaded = play_low.GAME_PARAMETERS_LOADED['current_state']
@@ -1706,10 +1753,15 @@ def game_master():
 
     play_low.MY_SUB_PANEL <= form
 
+    play_low.MY_SUB_PANEL <= html.H3("Supprimer la partie")
 
+    form = html.FORM()
 
+    input_delete_game = html.INPUT(type="submit", value="Supprimer la partie", Class='btn-inside')
+    input_delete_game.bind("click", delete_game_callback_confirm)
+    form <= input_delete_game
 
-
+    play_low.MY_SUB_PANEL <= form
 
     play_low.MY_SUB_PANEL <= html.H3("Exportation")
 

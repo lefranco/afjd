@@ -10,12 +10,9 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 
 import mydatetime
-import mydialog
 import config
 import common
 import allgames
-
-import index  # circular import
 
 OPTIONS = {
     'Créer une partie': "Créer une partie (pour y jouer ou l'arbitrer)",
@@ -25,7 +22,6 @@ OPTIONS = {
     'Changer scorage': "Changer le paramètre système de scorage de la partie séléctionnée",
     'Changer paramètres accès': "Changer les paramètres d'accès de la partie séléctionnée",
     'Changer paramètres cadence': "Changer les paramètres de cadence la partie séléctionnée",
-    'Supprimer la partie': "Supprimer la partie séléctionnée"
 }
 
 MAX_LEN_GAME_NAME = 50
@@ -1522,80 +1518,6 @@ def change_pace_parameters_game():
     MY_SUB_PANEL <= form
 
 
-def delete_game():
-    """ delete_game """
-
-    def cancel_delete_game_callback(_, dialog):
-        """ cancel_delete_game_callback """
-        dialog.close(None)
-
-    def delete_game_callback(ev, dialog):  # pylint: disable=invalid-name
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la suppression de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la suppression de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La partie a été supprimée : {messages}")
-            allgames.unselect_game()
-
-            # go to select another game
-            index.load_option(None, 'Sélectionner partie')
-
-        ev.preventDefault()
-
-        dialog.close(None)
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # deleting game : need token
-        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    def delete_game_callback_confirm(ev):  # pylint: disable=invalid-name
-        """ delete_game_callback_confirm """
-
-        ev.preventDefault()
-
-        dialog = mydialog.Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_game_callback(e, d))
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        delete_game()
-
-    MY_SUB_PANEL <= html.H3("Suppression")
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    form = html.FORM()
-
-    input_delete_game = html.INPUT(type="submit", value="Supprimer la partie", Class='btn-inside')
-    input_delete_game.bind("click", delete_game_callback_confirm)
-    form <= input_delete_game
-
-    MY_SUB_PANEL <= form
-
-
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -1637,8 +1559,6 @@ def load_option(_, item_name):
         change_access_parameters_game()
     if item_name == 'Changer paramètres cadence':
         change_pace_parameters_game()
-    if item_name == 'Supprimer la partie':
-        delete_game()
 
     ITEM_NAME_SELECTED = item_name
 
