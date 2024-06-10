@@ -12,12 +12,7 @@ import config
 import common
 
 OPTIONS = {
-    'Changer anonymat': "Changer le paramètre d'anonymat sur la partie séléctionnée",
-    'Changer accès messagerie': "Changer les paramètres d'acccès aux messageries sur la partie séléctionnée",
-    'Changer description': "Changer la description de la partie séléctionnée",
-    'Changer scorage': "Changer le paramètre système de scorage de la partie séléctionnée",
-    'Changer paramètres accès': "Changer les paramètres d'accès de la partie séléctionnée",
-    'Changer paramètres cadence': "Changer les paramètres de cadence la partie séléctionnée",
+    'Rectifier paramètres': "Rectifier un des paramètres de la partie séléctionnée",
 }
 
 MAX_LEN_GAME_NAME = 50
@@ -39,14 +34,44 @@ def information_about_input():
     return information
 
 
-def change_anonymity_game():
-    """ change_anonymity_game """
+def rectify_parameters_game():
+    """ rectify_parameters_game """
 
     # declare the values
     anonymity_loaded = None
+    access_nopress_loaded = None
+    access_nomessage_loaded = None
+    description_loaded = None
+    scoring_code_loaded = None
+    access_restriction_reliability_loaded = None
+    access_restriction_regularity_loaded = None
+    access_restriction_performance_loaded = None
+    deadline_hour_loaded = None
+    deadline_sync_loaded = None
+    grace_duration_loaded = None
+    speed_moves_loaded = None
+    cd_possible_moves_loaded = None
+    speed_retreats_loaded = None
+    cd_possible_retreats_loaded = None
+    speed_adjustments_loaded = None
+    cd_possible_builds_loaded = None
+    play_weekend_loaded = None
 
-    def change_anonymity_reload():
-        """ change_anonymity_reload """
+
+    information_displayed_disorder = False
+
+    def display_disorder_callback(_):
+        """ display_disorder_callback """
+
+        nonlocal information_displayed_disorder
+
+        if input_cd_possible_moves.checked or input_cd_possible_retreats.checked or input_cd_possible_builds.checked:
+            if not information_displayed_disorder:
+                alert("Attention : autoriser le Désordre Civil sur une partie (quelque soit la saison) lui enlève automatiquement l'éligibilité pour le calcul du ELO")
+                information_displayed_disorder = True
+
+    def rectify_parameters_reload():
+        """ rectify_parameters_reload """
 
         status = True
 
@@ -58,7 +83,26 @@ def change_anonymity_game():
 
         def reply_callback(req):
             nonlocal status
+
             nonlocal anonymity_loaded
+            nonlocal access_nopress_loaded
+            nonlocal access_nomessage_loaded
+            nonlocal description_loaded
+            nonlocal scoring_code_loaded
+            nonlocal access_restriction_reliability_loaded
+            nonlocal access_restriction_regularity_loaded
+            nonlocal access_restriction_performance_loaded
+            nonlocal deadline_hour_loaded
+            nonlocal deadline_sync_loaded
+            nonlocal grace_duration_loaded
+            nonlocal speed_moves_loaded
+            nonlocal cd_possible_moves_loaded
+            nonlocal speed_retreats_loaded
+            nonlocal cd_possible_retreats_loaded
+            nonlocal speed_adjustments_loaded
+            nonlocal cd_possible_builds_loaded
+            nonlocal play_weekend_loaded
+
             req_result = loads(req.text)
 
             if req.status != 200:
@@ -72,6 +116,23 @@ def change_anonymity_game():
                 return
 
             anonymity_loaded = req_result['anonymous']
+            access_nopress_loaded = req_result['nopress_current']
+            access_nomessage_loaded = req_result['nomessage_current']
+            description_loaded = req_result['description']
+            scoring_code_loaded = req_result['scoring']
+            access_restriction_reliability_loaded = req_result['access_restriction_reliability']
+            access_restriction_regularity_loaded = req_result['access_restriction_regularity']
+            access_restriction_performance_loaded = req_result['access_restriction_performance']
+            deadline_hour_loaded = req_result['deadline_hour']
+            deadline_sync_loaded = req_result['deadline_sync']
+            grace_duration_loaded = req_result['grace_duration']
+            speed_moves_loaded = req_result['speed_moves']
+            cd_possible_moves_loaded = req_result['cd_possible_moves']
+            speed_retreats_loaded = req_result['speed_retreats']
+            cd_possible_retreats_loaded = req_result['cd_possible_retreats']
+            speed_adjustments_loaded = req_result['speed_adjustments']
+            cd_possible_builds_loaded = req_result['cd_possible_builds']
+            play_weekend_loaded = req_result['play_weekend']
 
         json_dict = {}
 
@@ -111,97 +172,12 @@ def change_anonymity_game():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/games/{game}"
 
-        # changing game scoring : need token
+        # changing game anonimity : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        change_anonymity_game()
-
-    MY_SUB_PANEL <= html.H3("Changement de l'anonymat sur la partie")
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    status = change_anonymity_reload()
-    if not status:
-        return
-
-    form = html.FORM()
-
-    form <= information_about_input()
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
-    fieldset <= legend_anonymous
-    input_anonymous = html.INPUT(type="checkbox", checked=anonymity_loaded, Class='btn-inside')
-    fieldset <= input_anonymous
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_change_anonymity_game = html.INPUT(type="submit", value="Changer l'anonymat de la partie", Class='btn-inside')
-    input_change_anonymity_game.bind("click", change_anonymity_games_callback)
-    form <= input_change_anonymity_game
-
-    MY_SUB_PANEL <= form
-
-
-def change_access_messages_game():
-    """ change_access_messages_game """
-
-    # declare the values
-    access_nopress_loaded = None
-    access_nomessage_loaded = None
-
-    def change_access_messages_reload():
-        """ change_access_messages_reload """
-
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problème (pas de réponse de la part du serveur)")
-            status = False
-
-        def reply_callback(req):
-            nonlocal status
-            nonlocal access_nopress_loaded
-            nonlocal access_nomessage_loaded
-            req_result = loads(req.text)
-
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération acces messagerie de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération acces messagerie de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                status = False
-                return
-
-            access_nopress_loaded = req_result['nopress_current']
-            access_nomessage_loaded = req_result['nomessage_current']
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        return status
+        rectify_parameters_game()
 
     def change_access_messages_games_callback(ev):  # pylint: disable=invalid-name
 
@@ -236,97 +212,7 @@ def change_access_messages_game():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        change_access_messages_game()
-
-    MY_SUB_PANEL <= html.H3("Changement de l'accès aux messagerie")
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    status = change_access_messages_reload()
-    if not status:
-        return
-
-    form = html.FORM()
-
-    form <= information_about_input()
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_nopress = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
-    fieldset <= legend_nopress
-    input_nopress = html.INPUT(type="checkbox", checked=access_nopress_loaded, Class='btn-inside')
-    fieldset <= input_nopress
-    form <= fieldset
-
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_nomessage = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
-    fieldset <= legend_nomessage
-    input_nomessage = html.INPUT(type="checkbox", checked=access_nomessage_loaded, Class='btn-inside')
-    fieldset <= input_nomessage
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_change_message_game = html.INPUT(type="submit", value="Changer l'accès aux déclarations et négociations de la partie", Class='btn-inside')
-    input_change_message_game.bind("click", change_access_messages_games_callback)
-    form <= input_change_message_game
-
-    MY_SUB_PANEL <= form
-
-
-def change_description_game():
-    """ change_description_game """
-
-    # declare the values
-    description_loaded = None
-
-    def change_description_reload():
-        """ change_description_reload """
-
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problème (pas de réponse de la part du serveur)")
-            status = False
-
-        def reply_callback(req):
-            nonlocal status
-            nonlocal description_loaded
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération de la description de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération de la description de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                status = False
-                return
-
-            description_loaded = req_result['description']
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        return status
+        rectify_parameters_game()
 
     def change_description_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -362,89 +248,7 @@ def change_description_game():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        change_description_game()
-
-    MY_SUB_PANEL <= html.H3("Changement de la description")
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    status = change_description_reload()
-    if not status:
-        return
-
-    form = html.FORM()
-
-    form <= information_about_input()
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'une partie entre étudiants de l'ETIAM'")
-    fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", rows=8, cols=80)
-    input_description <= description_loaded
-    fieldset <= input_description
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_change_description_game = html.INPUT(type="submit", value="Changer la description de la partie", Class='btn-inside')
-    input_change_description_game.bind("click", change_description_game_callback)
-    form <= input_change_description_game
-
-    MY_SUB_PANEL <= form
-
-
-def change_scoring_game():
-    """ change_scoring_game """
-
-    # declare the values
-    scoring_code_loaded = None
-
-    def change_scoring_reload():
-        """ change_scoring_reload """
-
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problème (pas de réponse de la part du serveur)")
-            status = False
-
-        def reply_callback(req):
-            nonlocal status
-            nonlocal scoring_code_loaded
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération du scorage de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération du scorage de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                status = False
-                return
-
-            scoring_code_loaded = req_result['scoring']
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        return status
+        rectify_parameters_game()
 
     def change_scoring_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -480,101 +284,7 @@ def change_scoring_game():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        change_scoring_game()
-
-    MY_SUB_PANEL <= html.H3("Changement du scorage")
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    status = change_scoring_reload()
-    if not status:
-        return
-
-    form = html.FORM()
-
-    form <= information_about_input()
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_scoring = html.LEGEND("scorage", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
-    fieldset <= legend_scoring
-    input_scoring = html.SELECT(type="select-one", value="", Class='btn-inside')
-
-    for scoring_name in config.SCORING_CODE_TABLE:
-        option = html.OPTION(scoring_name)
-        if config.SCORING_CODE_TABLE[scoring_name] == scoring_code_loaded:
-            option.selected = True
-        input_scoring <= option
-
-    fieldset <= input_scoring
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_change_scoring_game = html.INPUT(type="submit", value="Changer le scorage de la partie", Class='btn-inside')
-    input_change_scoring_game.bind("click", change_scoring_game_callback)
-    form <= input_change_scoring_game
-
-    MY_SUB_PANEL <= form
-
-
-def change_access_parameters_game():
-    """ change_access_parameters_game """
-
-    # declare the values
-    access_restriction_reliability_loaded = None
-    access_restriction_regularity_loaded = None
-    access_restriction_performance_loaded = None
-
-    def change_access_parameters_reload():
-        """ change_access_parameters_reload """
-
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problème (pas de réponse de la part du serveur)")
-            status = False
-
-        def reply_callback(req):
-            nonlocal status
-            nonlocal access_restriction_reliability_loaded
-            nonlocal access_restriction_regularity_loaded
-            nonlocal access_restriction_performance_loaded
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération des paramètres d'accès à la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération des paramètres d'accès à la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                status = False
-                return
-
-            access_restriction_reliability_loaded = req_result['access_restriction_reliability']
-            access_restriction_regularity_loaded = req_result['access_restriction_regularity']
-            access_restriction_performance_loaded = req_result['access_restriction_performance']
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        return status
+        rectify_parameters_game()
 
     def change_access_parameters_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -614,141 +324,7 @@ def change_access_parameters_game():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        change_access_parameters_game()
-
-    MY_SUB_PANEL <= html.H3("Changement des paramètres d'accès")
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    status = change_access_parameters_reload()
-    if not status:
-        return
-
-    form = html.FORM()
-
-    form <= information_about_input()
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
-    fieldset <= legend_access_restriction_reliability
-    input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability_loaded, Class='btn-inside')
-    fieldset <= input_access_restriction_reliability
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_access_restriction_regularity = html.LEGEND("restriction régularité", title="Sélectionne les joueurs sur leur régularité")
-    fieldset <= legend_access_restriction_regularity
-    input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity_loaded, Class='btn-inside')
-    fieldset <= input_access_restriction_regularity
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_access_restriction_performance = html.LEGEND("restriction performance", title="Sélectionne les joueurs sur leur niveau de performance")
-    fieldset <= legend_access_restriction_performance
-    input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance_loaded, Class='btn-inside')
-    fieldset <= input_access_restriction_performance
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_change_access_game = html.INPUT(type="submit", value="Changer les paramètres d'accès à la partie", Class='btn-inside')
-    input_change_access_game.bind("click", change_access_parameters_game_callback)
-    form <= input_change_access_game
-
-    MY_SUB_PANEL <= form
-
-
-def change_pace_parameters_game():
-    """ change_pace_parameters_game """
-
-    information_displayed_disorder = False
-
-    # declare the values
-    deadline_hour_loaded = None
-    deadline_sync_loaded = None
-    grace_duration_loaded = None
-    speed_moves_loaded = None
-    cd_possible_moves_loaded = None
-    speed_retreats_loaded = None
-    cd_possible_retreats_loaded = None
-    speed_adjustments_loaded = None
-    cd_possible_builds_loaded = None
-    play_weekend_loaded = None
-
-    def display_disorder_callback(_):
-        """ display_disorder_callback """
-
-        nonlocal information_displayed_disorder
-
-        if input_cd_possible_moves.checked or input_cd_possible_retreats.checked or input_cd_possible_builds.checked:
-            if not information_displayed_disorder:
-                alert("Attention : autoriser le Désordre Civil sur une partie (quelque soit la saison) lui enlève automatiquement l'éligibilité pour le calcul du ELO")
-                information_displayed_disorder = True
-
-    def change_pace_parameters_reload():
-        """ change_pace_parameters_reload """
-
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problème (pas de réponse de la part du serveur)")
-            status = False
-
-        def reply_callback(req):
-            nonlocal status
-            nonlocal deadline_hour_loaded
-            nonlocal deadline_sync_loaded
-            nonlocal grace_duration_loaded
-            nonlocal speed_moves_loaded
-            nonlocal cd_possible_moves_loaded
-            nonlocal speed_retreats_loaded
-            nonlocal cd_possible_retreats_loaded
-            nonlocal speed_adjustments_loaded
-            nonlocal cd_possible_builds_loaded
-            nonlocal play_weekend_loaded
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération du rythme de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération du rythme de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                status = False
-                return
-
-            deadline_hour_loaded = req_result['deadline_hour']
-            deadline_sync_loaded = req_result['deadline_sync']
-            grace_duration_loaded = req_result['grace_duration']
-            speed_moves_loaded = req_result['speed_moves']
-            cd_possible_moves_loaded = req_result['cd_possible_moves']
-            speed_retreats_loaded = req_result['speed_retreats']
-            cd_possible_retreats_loaded = req_result['cd_possible_retreats']
-            speed_adjustments_loaded = req_result['speed_adjustments']
-            cd_possible_builds_loaded = req_result['cd_possible_builds']
-            play_weekend_loaded = req_result['play_weekend']
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        return status
+        rectify_parameters_game()
 
     def change_pace_parameters_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -825,9 +401,9 @@ def change_pace_parameters_game():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        change_pace_parameters_game()
+        rectify_parameters_game()
 
-    MY_SUB_PANEL <= html.H3("Changement de paramètres de cadence")
+    MY_SUB_PANEL <= html.H3("Rectification de paramètres de la partie")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -839,9 +415,158 @@ def change_pace_parameters_game():
         alert("Il faut se connecter au préalable")
         return
 
-    status = change_pace_parameters_reload()
+    status = rectify_parameters_reload()
     if not status:
         return
+
+    MY_SUB_PANEL <= html.HR()
+    MY_SUB_PANEL <= html.H4("Anonymat")
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
+    fieldset <= legend_anonymous
+    input_anonymous = html.INPUT(type="checkbox", checked=anonymity_loaded, Class='btn-inside')
+    fieldset <= input_anonymous
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_anonymity_game = html.INPUT(type="submit", value="Changer l'anonymat de la partie", Class='btn-inside')
+    input_change_anonymity_game.bind("click", change_anonymity_games_callback)
+    form <= input_change_anonymity_game
+
+    MY_SUB_PANEL <= form
+
+    MY_SUB_PANEL <= html.HR()
+    MY_SUB_PANEL <= html.H4("Accès aux messagerie")
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_nopress = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
+    fieldset <= legend_nopress
+    input_nopress = html.INPUT(type="checkbox", checked=access_nopress_loaded, Class='btn-inside')
+    fieldset <= input_nopress
+    form <= fieldset
+
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_nomessage = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
+    fieldset <= legend_nomessage
+    input_nomessage = html.INPUT(type="checkbox", checked=access_nomessage_loaded, Class='btn-inside')
+    fieldset <= input_nomessage
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_message_game = html.INPUT(type="submit", value="Changer l'accès aux déclarations et négociations de la partie", Class='btn-inside')
+    input_change_message_game.bind("click", change_access_messages_games_callback)
+    form <= input_change_message_game
+
+    MY_SUB_PANEL <= form
+
+    MY_SUB_PANEL <= html.HR()
+    MY_SUB_PANEL <= html.H4("Description")
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'une partie entre étudiants de l'ETIAM'")
+    fieldset <= legend_description
+    input_description = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_description <= description_loaded
+    fieldset <= input_description
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_description_game = html.INPUT(type="submit", value="Changer la description de la partie", Class='btn-inside')
+    input_change_description_game.bind("click", change_description_game_callback)
+    form <= input_change_description_game
+
+    MY_SUB_PANEL <= form
+
+    MY_SUB_PANEL <= html.HR()
+    MY_SUB_PANEL <= html.H4("Scorage")
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_scoring = html.LEGEND("scorage", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
+    fieldset <= legend_scoring
+    input_scoring = html.SELECT(type="select-one", value="", Class='btn-inside')
+
+    for scoring_name in config.SCORING_CODE_TABLE:
+        option = html.OPTION(scoring_name)
+        if config.SCORING_CODE_TABLE[scoring_name] == scoring_code_loaded:
+            option.selected = True
+        input_scoring <= option
+
+    fieldset <= input_scoring
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_scoring_game = html.INPUT(type="submit", value="Changer le scorage de la partie", Class='btn-inside')
+    input_change_scoring_game.bind("click", change_scoring_game_callback)
+    form <= input_change_scoring_game
+
+    MY_SUB_PANEL <= form
+
+    MY_SUB_PANEL <= html.HR()
+    MY_SUB_PANEL <= html.H4("Paramètres d'accès")
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
+    fieldset <= legend_access_restriction_reliability
+    input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability_loaded, Class='btn-inside')
+    fieldset <= input_access_restriction_reliability
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_access_restriction_regularity = html.LEGEND("restriction régularité", title="Sélectionne les joueurs sur leur régularité")
+    fieldset <= legend_access_restriction_regularity
+    input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity_loaded, Class='btn-inside')
+    fieldset <= input_access_restriction_regularity
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_access_restriction_performance = html.LEGEND("restriction performance", title="Sélectionne les joueurs sur leur niveau de performance")
+    fieldset <= legend_access_restriction_performance
+    input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance_loaded, Class='btn-inside')
+    fieldset <= input_access_restriction_performance
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_access_game = html.INPUT(type="submit", value="Changer les paramètres d'accès à la partie", Class='btn-inside')
+    input_change_access_game.bind("click", change_access_parameters_game_callback)
+    form <= input_change_access_game
+
+    MY_SUB_PANEL <= form
+
+    MY_SUB_PANEL <= html.HR()
+    MY_SUB_PANEL <= html.H4("Paramètres de cadence")
 
     form = html.FORM()
 
@@ -969,18 +694,8 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Changer anonymat':
-        change_anonymity_game()
-    if item_name == 'Changer accès messagerie':
-        change_access_messages_game()
-    if item_name == 'Changer description':
-        change_description_game()
-    if item_name == 'Changer scorage':
-        change_scoring_game()
-    if item_name == 'Changer paramètres accès':
-        change_access_parameters_game()
-    if item_name == 'Changer paramètres cadence':
-        change_pace_parameters_game()
+    if item_name == 'Rectifier paramètres':
+        rectify_parameters_game()
 
     ITEM_NAME_SELECTED = item_name
 
