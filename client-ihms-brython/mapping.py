@@ -14,8 +14,11 @@ import unit_design
 # otherwise the zones have no chance since units are first
 MAX_PROXIMITY_ITEM_UNIT = 10
 
-# for filling zones
-TRANSPARENCY = 0.70
+# for filling zones coloring
+TRANSPARENCY_OWNER = 0.70
+
+# for filling zones fog
+TRANSPARENCY_FOG = 0.90
 
 # for shortening arrow
 EPSILON_SHORTER_ARROW = 3
@@ -85,7 +88,7 @@ def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx) -> Non
     ctx.restore()
 
 
-def fill_zone(ctx, zone_area, fill_colour):
+def fill_zone(ctx, zone_area, fill_colour, transparency):
     """ fill_zone """
 
     # ctx.lineWidth not used
@@ -95,7 +98,7 @@ def fill_zone(ctx, zone_area, fill_colour):
 
     # change transparency
     prev_global_alpha = ctx.globalAlpha
-    ctx.globalAlpha = TRANSPARENCY
+    ctx.globalAlpha = transparency
 
     ctx.beginPath()
     for n, p in enumerate(zone_area.points):  # pylint: disable=invalid-name
@@ -419,7 +422,13 @@ class Zone(Highliteable, Renderable):
 
         path = self._variant.path_table[self]
         background_fill_color = self._variant.background_colour_table[role]
-        fill_zone(ctx, path, background_fill_color)
+        fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
+
+    def render3(self, ctx):
+        """ put me on screen - fill me because foggy"""
+
+        path = self._variant.path_table[self]
+        fill_zone(ctx, path, FOG_COLOUR, TRANSPARENCY_FOG)
 
     def render_legend(self, ctx):
         """ put me on screen """
@@ -635,6 +644,9 @@ TEXT_HEIGHT_PIXEL = 10
 
 # center
 CENTER_COLOUR = ColourRecord(red=200, green=200, blue=200)  # light grey
+
+# fog
+FOG_COLOUR = ColourRecord(red=100, green=100, blue=100)  # dark grey
 
 
 class Variant(Renderable):
@@ -1176,7 +1188,7 @@ class Unit(Highliteable, Renderable):
                     if zone.region.region_type is not RegionTypeEnum.SEA_REGION:
                         path = self._position.variant.path_table[zone]
                         background_fill_color = self._position.variant.background_colour_table[self._role]
-                        fill_zone(ctx, path, background_fill_color)
+                        fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
 
         fill_color = self._position.variant.item_colour_table[self._role]
 
@@ -1410,7 +1422,7 @@ class Ownership(Highliteable, Renderable):
             zone = self._center.region.zone
             path = self._position.variant.path_table[zone]
             background_fill_color = self._position.variant.background_colour_table[self._role]
-            fill_zone(ctx, path, background_fill_color)
+            fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
 
         # the little disk ("old way")
 
@@ -1577,6 +1589,11 @@ class Position(Renderable):
             dislodging_unit = real_occupants_table[region]
             self._dislodging_table[dislodging_unit] = dislodged_unit
 
+        # seen regions
+        self._seen_regions = []
+        if 'seen_regions' in server_dict:
+            self._seen_regions = server_dict['seen_regions']
+
     def erase_centers(self) -> None:
         """ erase all centers """
         self._ownerships = []
@@ -1629,6 +1646,12 @@ class Position(Renderable):
         # *start* centers hence the True value for parameter 'active' - put an extra circle
         for center in self._variant.centers.values():
             center.render(ctx, True)
+
+        # foggy
+        if self._seen_regions:
+            for zone in self._variant.zones.values():
+                if zone.region.identifier not in self._seen_regions:
+                    zone.render3(ctx)
 
     def save_json(self) -> str:
         """ export as list of dict """
@@ -2310,7 +2333,7 @@ class Orders(Renderable):
             order.render(ctx)
 
         if self._communication_orders_present:
-            fill_zone(ctx, COMMUNICATION_ORDER_PATH, COMMUNICATION_ORDER_COLOR)
+            fill_zone(ctx, COMMUNICATION_ORDER_PATH, COMMUNICATION_ORDER_COLOR, 1)
 
     def save_json(self):
         """ export as list of dict """

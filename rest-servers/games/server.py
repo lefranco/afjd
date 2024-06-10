@@ -254,7 +254,7 @@ def apply_supported(complete_unit_dict: typing.Dict[str, typing.List[typing.List
         unit_dict[role_num].append([type_num, zone_num])
 
 
-def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int], orders_list: typing.List[typing.List[int]], fake_units_list: typing.List[typing.List[int]]) -> None:
+def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int], orders_list: typing.List[typing.List[int]], fake_units_list: typing.List[typing.List[int]], seen_regions_list: typing.List[int]) -> None:
     """ apply_visibility
     this will change the parameters
     """
@@ -348,6 +348,10 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
     # fake_units_list
     fake_units_list.clear()
     fake_units_list.extend(fake_units_list2)
+
+    # seen_list
+    seen_regions_list.clear()
+    seen_regions_list.extend(seen_regions)
 
 
 class RepeatPreventer(typing.Dict[typing.Tuple[int, int], float]):
@@ -2416,10 +2420,11 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
 
         orders_list2: typing.List[typing.List[int]] = []
         fake_units_list2: typing.List[typing.List[int]] = []
+        seen_regions_list: typing.List[int] = []
 
         # this will update last parameters
         variant_name = game.variant
-        apply_visibility(variant_name, int(role_id), ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
+        apply_visibility(variant_name, int(role_id), ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, seen_regions_list)
 
         # get imagined units
         imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
@@ -2435,6 +2440,7 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
             'units': unit_dict,
             'forbiddens': forbidden_list,
             'imagined_units': imagined_unit_dict,
+            'seen_regions': seen_regions_list
         }
 
         return data, 200
@@ -2835,17 +2841,33 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         orders_list = the_orders['orders']
         fake_units_list = the_orders['fake_units']
 
+        seen_regions_list: typing.List[int] = []
+
         # backup orders
         complete_unit_dict = unit_dict.copy()
 
         # this will update last parameters
         variant_name = game.variant
-        apply_visibility(variant_name, int(role_id), ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
+        apply_visibility(variant_name, int(role_id), ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list, seen_regions_list)
 
         # this will insert supported units that need to be seen (this will update unit_dict parameter)
         apply_supported(complete_unit_dict, unit_dict, orders_list)
 
-        data = {'time_stamp': transition.time_stamp, 'situation': {'ownerships': ownership_dict, 'dislodged_ones': dislodged_unit_dict, 'units': unit_dict, 'forbiddens': forbidden_list}, 'orders': {'orders': orders_list, 'fake_units': fake_units_list}, 'report_txt': "---"}
+        data = {
+            'time_stamp': transition.time_stamp,
+            'situation': {
+                'ownerships': ownership_dict,
+                'dislodged_ones': dislodged_unit_dict,
+                'units': unit_dict,
+                'forbiddens': forbidden_list,
+                'seen_regions': seen_regions_list
+            },
+            'orders': {
+                'orders': orders_list,
+                'fake_units': fake_units_list
+            },
+            'report_txt': "---"
+        }
         return data, 200
 
 
@@ -3464,10 +3486,11 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
                 orders_list2: typing.List[typing.List[int]] = []
                 fake_units_list2: typing.List[typing.List[int]] = []
+                seen_regions_list: typing.List[int] = []
 
                 # now we can start hiding stuff
                 # this will update last parameters
-                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
+                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, seen_regions_list)
 
                 # get imagined units
                 imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
@@ -4002,10 +4025,11 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
             orders_list2: typing.List[typing.List[int]] = []
             fake_units_list2: typing.List[typing.List[int]] = []
+            seen_regions_list: typing.List[int] = []
 
             # this will update last parameters
             variant_name = game.variant
-            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
+            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, seen_regions_list)
 
         # check orders (rough check)
 
