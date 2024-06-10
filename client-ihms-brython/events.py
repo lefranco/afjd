@@ -1243,7 +1243,7 @@ def render(panel_middle):
     # this means user wants to join game
     if ARRIVAL:
         ITEM_NAME_SELECTED = 'Inscription à l\'événement'
+        ARRIVAL = False
 
-    ARRIVAL = False
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

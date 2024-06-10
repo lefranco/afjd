@@ -363,8 +363,8 @@ elif 'edit_game' in document.query:
     if load_game(QUERY_GAME_NAME):
         # stick to game name
         window.history.pushState({}, document.title, f"?edit_game={QUERY_GAME_NAME}")
-        load_option(None, 'Accueil')
         PANEL_MIDDLE.clear()
+        allgames.set_arrival()
         allgames.render(PANEL_MIDDLE)
     else:
         alert("Partie inconnue !")
