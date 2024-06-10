@@ -672,6 +672,7 @@ def my_games(state_name):
 
         # action of going to edit game page
         PANEL_MIDDLE.clear()
+        allgames.set_arrival()
         allgames.render(PANEL_MIDDLE)
 
     def start_game_callback(ev, game):  # pylint: disable=invalid-name

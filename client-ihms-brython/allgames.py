@@ -41,6 +41,15 @@ DEFAULT_SPEED_OTHERS = 24
 DEFAULT_NB_CYCLES = 7
 
 
+ARRIVAL = False
+
+
+def set_arrival():
+    """ set_arrival """
+    global ARRIVAL
+    ARRIVAL = True
+
+
 def information_about_input():
     """ information_about_account """
 
@@ -2597,11 +2606,18 @@ def render(panel_middle):
     """ render """
 
     global PANEL_MIDDLE
+    global ARRIVAL
+
     PANEL_MIDDLE = panel_middle
 
     # always back to top
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
+
+    # this means user wants to join game
+    if ARRIVAL:
+        ITEM_NAME_SELECTED = 'Rectifier paramètres'
+        ARRIVAL = False
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
