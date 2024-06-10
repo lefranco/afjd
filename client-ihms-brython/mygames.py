@@ -17,7 +17,6 @@ import interface
 import memoize
 import play
 import allgames
-import games
 
 MY_PANEL = html.DIV()
 MY_SUB_PANEL = html.DIV(id="page")
@@ -673,7 +672,7 @@ def my_games(state_name):
 
         # action of going to edit game page
         PANEL_MIDDLE.clear()
-        games.render(PANEL_MIDDLE)
+        allgames.render(PANEL_MIDDLE)
 
     def start_game_callback(ev, game):  # pylint: disable=invalid-name
 
