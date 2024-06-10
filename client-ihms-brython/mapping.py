@@ -1428,12 +1428,28 @@ class Ownership(Highliteable, Renderable):
         center_design.stabbeur_center(x, y, ctx)
 
 
-class Forbidden(Renderable):
+class Forbidden(Highliteable, Renderable):
     """ Forbidden """
 
     def __init__(self, position: 'Position', region: Region) -> None:
         self._position = position
         self._region = region
+
+    def highlite(self, ctx, active) -> None:
+        pass
+
+    def description(self):
+        """ description for helping """
+
+        variant = self._position.variant
+
+        # role
+
+        # zone
+        zone = self._region.zone
+        zone_full_name = variant.full_zone_name_table[zone]
+
+        return f"Un région bloquée suite à conflit en {zone_full_name}."
 
     def render(self, ctx, active=False) -> None:
 
@@ -1704,6 +1720,16 @@ class Position(Renderable):
                 continue
             if distance < distance_closest:
                 closest_object = ownership
+                distance_closest = distance
+
+        for forbidden in self._forbiddens:
+            zone = forbidden.region.zone
+            region_pos = self._variant.position_table[zone]
+            distance = designated_pos.distance(region_pos)
+            if distance >= MAX_PROXIMITY_ITEM_UNIT:
+                continue
+            if distance < distance_closest:
+                closest_object = forbidden
                 distance_closest = distance
 
         # search the zones
