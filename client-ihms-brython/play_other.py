@@ -97,37 +97,6 @@ def join_game():
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
-def game_incidents2_reload(game_id):
-    """ game_incidents2_reload """
-
-    incidents = []
-
-    def reply_callback(req):
-        nonlocal incidents
-        req_result = loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des incidents désordres civils  de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des incidents désordres civils de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        incidents = req_result['incidents']
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-incidents2/{game_id}"
-
-    # extracting incidents from a game : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return incidents
-
-
 def non_playing_information():
     """ non_playing_information """
 
@@ -585,7 +554,7 @@ def show_events_in_game():
     play_low.MY_SUB_PANEL <= html.H3("Désordres civils")
 
     # get the actual incidents of the game
-    game_incidents2 = game_incidents2_reload(play_low.GAME_ID)
+    game_incidents2 = play_low.game_incidents2_reload(play_low.GAME_ID)
     # there can be no incidents (if no incident of failed to load)
 
     game_incidents2_table = html.TABLE()
