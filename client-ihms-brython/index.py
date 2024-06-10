@@ -21,7 +21,6 @@ import login
 import account
 import mygames
 import allgames
-import games
 import tournament
 import events
 import ratings
@@ -48,9 +47,8 @@ OPTIONS = {
     'Aide': "Pour obtenir de l'aide et découvrir simplement le jeu et le site par des vidéos, des tutoriels etc...",
     'Connexion': "Se connecter au site par mot de passe",
     'Mon compte': "Pour éditer les paramètres de son compte sur le site (il faut être connecté)",
-    'Les parties': "Liste des parties et se mettre dans une partie qui va bientôt commencer",
+    'Les parties': "Se mettrtea dans une partie, créer ujne partie, rectifier une partie, liste des parties...",
     'Mes parties': "La liste des parties dans laquelle vous jouez (il faut être connecté)",
-    'Editer une partie': "Pour modifier la partie (il faut être un arbitre)",
     'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
     'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
     'Classements (et scorages)': "Différents classements sur les joueurs du site (obtenir une liste de joueurs) et les scorages disponibles",
@@ -219,8 +217,6 @@ def load_option(_, item_name):
         allgames.render(PANEL_MIDDLE)
     if item_name == 'Mes parties':
         mygames.render(PANEL_MIDDLE)
-    if item_name == 'Editer une partie':
-        games.render(PANEL_MIDDLE)
     if item_name == 'Interface tournois':
         tournament.render(PANEL_MIDDLE)
     if item_name == 'Evénements':
@@ -369,7 +365,7 @@ elif 'edit_game' in document.query:
         window.history.pushState({}, document.title, f"?edit_game={QUERY_GAME_NAME}")
         load_option(None, 'Accueil')
         PANEL_MIDDLE.clear()
-        games.render(PANEL_MIDDLE)
+        allgames.render(PANEL_MIDDLE)
     else:
         alert("Partie inconnue !")
         load_option(None, ITEM_NAME_SELECTED)
