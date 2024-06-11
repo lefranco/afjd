@@ -552,18 +552,20 @@ def show_news():
                 alert(storage[f'ANNOUNCEMENT_{origin}'])
                 storage[f'ANNOUNCEMENT_DISPLAYED_{origin}'] = 'yes'
 
-    # get the day
-    day_now = int(time()) // (3600 * 24)
+    if 'PSEUDO' in storage:
 
-    # we check new private messages once a day
-    day_notified = 0
-    if 'DATE_NEW_MESSAGES_NOTIFIED' in storage:
-        day_notified = int(storage['DATE_NEW_MESSAGES_NOTIFIED'])
-    if day_now > day_notified:
-        new_messages = new_private_messages_received()
-        if new_messages:
-            alert(f"Vous avez {new_messages} nouveau(x) message(s) personnel(s) ! Pour le(s) lire : Menu Messages personnels.")
-            storage['DATE_NEW_MESSAGES_NOTIFIED'] = str(day_now)
+        # get the day
+        day_now = int(time()) // (3600 * 24)
+
+        # we check new private messages once a day
+        day_notified = 0
+        if 'DATE_NEW_MESSAGES_NOTIFIED' in storage:
+            day_notified = int(storage['DATE_NEW_MESSAGES_NOTIFIED'])
+        if day_now > day_notified:
+            new_messages = new_private_messages_received()
+            if new_messages:
+                alert(f"Vous avez {new_messages} nouveau(x) message(s) personnel(s) ! Pour le(s) lire : Menu Messages personnels.")
+                storage['DATE_NEW_MESSAGES_NOTIFIED'] = str(day_now)
 
     # RGPD
     if 'RGPD_ACCEPTED' not in storage:
