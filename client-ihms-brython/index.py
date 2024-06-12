@@ -51,7 +51,7 @@ OPTIONS = {
     'Mes parties': "La liste des parties dans laquelle vous jouez (il faut être connecté)",
     'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
     'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
-    'Classements (et scorages)': "Différents classements sur les joueurs du site (obtenir une liste de joueurs) et les scorages disponibles",
+    'Classements': "Différents classements sur les joueurs du site (obtenir une liste de joueurs) et les scorages disponibles",
     'Bac à sable': "Pour essayer le moteur de résolution hors d'une parte sur un cas concret",
     'Technique': "Différents articles techniques (pour les joueurs chevronnés)",
     'Variantes': "Explications sur les variantes de jeu pratiquées sur le site",
