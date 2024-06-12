@@ -71,7 +71,8 @@ SCORING_CONVERSION_TABLE = {
     'DLIG': 'DiploLigue',
     'NOMG': 'OpenMindTheGap',
     'CNAM': 'CDiploNamur',
-    'BOUC': 'Boucher'
+    'BOUC': 'Boucher',
+    'MANO': 'Manorcon'
 }
 
 
