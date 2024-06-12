@@ -24,16 +24,14 @@ OPTIONS = {
     'Classement fiabilité': "Classement selon la fiabilité, c'est à dire pas de retard ni d'abandon",
     'Classement régularité': "Classement selon la régularité, c'est à dire jouer souvent et sans interruption",
     'Les glorieux': "Les joueurs du site qui ont un titre en face à face",
-    'Liste globale': "Les joueurs et arbitres sur le site"
+    'Liste globale': "Les joueurs et arbitres sur le site",
+    'Les scorages': "Les systèmes de scorage disponibles  sur le site"
 }
-
-OPTIONS.update({f"Scorage {n}": f"Description précise du scorage {n}" for n in (config.SCORING_CODE_TABLE.keys())})
 
 ARRIVAL = None
 
 # from home
-SCORING_REQUESTED = None
-
+SCORING_REQUESTED = list(config.SCORING_CODE_TABLE.values())[0]
 
 def set_arrival(arrival, scoring_requested=None):
     """ set_arrival """
@@ -914,6 +912,21 @@ RATING_TABLE = {}
 def show_scoring():
     """ show_scoring """
 
+    def change_scoring_callback(ev):  # pylint: disable=invalid-name
+        """ change_scoring_callback """
+
+        global SCORING_REQUESTED
+
+        ev.preventDefault()
+
+        # Change scoring selected
+        scoring = input_scoring.value
+        SCORING_REQUESTED = config.SCORING_CODE_TABLE[scoring]
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        show_scoring()
+
     def test_scoring_callback(ev, ratings_input):  # pylint: disable=invalid-name
         """ test_scoring_callback """
 
@@ -947,7 +960,7 @@ def show_scoring():
     my_ezml = ezml_render.MyEzml(ezml_file)
     my_ezml.render(MY_SUB_PANEL)
 
-    title = html.H3("Tester !")
+    title = html.H3("Test du scorage")
     MY_SUB_PANEL <= title
 
     if 'GAME' not in storage:
@@ -990,9 +1003,33 @@ def show_scoring():
 
         ratings_input[role_name] = input_centers
 
-    input_test_scoring = html.INPUT(type="submit", value="Calculer le scorage", Class='btn-inside')
+    input_test_scoring = html.INPUT(type="submit", value="Calculer la marque avec ce scorage", Class='btn-inside')
     input_test_scoring.bind("click", lambda e, ri=ratings_input: test_scoring_callback(e, ri))
     form <= input_test_scoring
+
+    MY_SUB_PANEL <= form
+
+    title = html.H3("Changement de scorage")
+    MY_SUB_PANEL <= title
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_scoring = html.LEGEND("scorage", title="Le scorage à étudier")
+    fieldset <= legend_scoring
+    input_scoring = html.SELECT(type="select-one", value="", Class='btn-inside')
+
+    for scoring_name in config.SCORING_CODE_TABLE:
+        option = html.OPTION(scoring_name)
+        if config.SCORING_CODE_TABLE[scoring_name] == SCORING_REQUESTED:
+            option.selected = True
+        input_scoring <= option
+    fieldset <= input_scoring
+    form <= fieldset
+
+    input_select_scoring = html.INPUT(type="submit", value="Sélectionner ce scorage", Class='btn-inside')
+    input_select_scoring.bind("click", change_scoring_callback)
+    form <= input_select_scoring
 
     MY_SUB_PANEL <= form
 
@@ -1018,6 +1055,7 @@ MY_PANEL <= MY_SUB_PANEL
 def load_option(_, item_name):
     """ load_option """
     global SCORING_REQUESTED
+    global ITEM_NAME_SELECTED
 
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
@@ -1032,13 +1070,9 @@ def load_option(_, item_name):
         show_glorious_data()
     if item_name == 'Liste globale':
         show_players_masters_data()
-
-    # otherwise show scoring
-    if item_name.partition(' ')[2] in config.SCORING_CODE_TABLE:
-        SCORING_REQUESTED = config.SCORING_CODE_TABLE[item_name.partition(' ')[2]]
+    if item_name == 'Les scorages':
         show_scoring()
 
-    global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
     MENU_LEFT.clear()
@@ -1069,7 +1103,7 @@ def render(panel_middle):
 
     # this means user wants to see variant
     if ARRIVAL == 'scoring':
-        ITEM_NAME_SELECTED = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[SCORING_REQUESTED]
+        pass  # TODO
 
     ARRIVAL = None
     load_option(None, ITEM_NAME_SELECTED)
