@@ -356,6 +356,45 @@ def bangkok(centers_variant, ratings):
     return score
 
 
+def manorcon(centers_variant, ratings):
+    """ the manorcon scoring system """
+
+    # solo
+    solo_threshold = centers_variant // 2
+
+    # take floor value it seems
+    nb_players = len(ratings)
+    center_value = int(centers_variant / nb_players)
+    add_param = center_value ** 2
+
+    solo_reward = 75
+
+    # default score
+    score = {role_name: 0 for role_name in ratings}
+
+    # detect solo
+    best_role_name = list(ratings.keys())[0]
+    if ratings[best_role_name] > solo_threshold:
+        score[best_role_name] = solo_reward
+        return score
+
+    # total points
+    total = 0
+    for role_name in score:
+        center_num = ratings[role_name]
+        share = center_num ** 2 + 4 * center_num + add_param
+        total += share
+
+    # only survivors score
+    survivers = [r for r in ratings if ratings[r]]
+    for role_name in survivers:
+        center_num = ratings[role_name]
+        share = center_num ** 2 + 4 * center_num + add_param
+        score[role_name] = 100 * (share / total)
+
+    return score
+
+
 def scoring(game_scoring, centers_variant, ratings):
     """ scoring """
 
@@ -376,5 +415,7 @@ def scoring(game_scoring, centers_variant, ratings):
         score_table = butcher(centers_variant, ratings)
     if game_scoring == 'BANG':
         score_table = bangkok(centers_variant, ratings)
+    if game_scoring == 'MANO':
+        score_table = manorcon(centers_variant, ratings)
 
     return score_table
