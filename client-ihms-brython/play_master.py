@@ -1225,7 +1225,7 @@ def game_master():
         if role_id in role2pseudo:
             player_id_str = role2pseudo[role_id]
             player_id = int(player_id_str)
-            num_disorders = len([_ for role_id2, _, player_id2, _, _ in game_incidents2 if role_id2 == role_id and player_id2 is None])
+            num_disorders = len([_ for role_id2, _, _ in game_incidents2 if role_id2 == role_id])
         col <= num_disorders
         row <= col
 
