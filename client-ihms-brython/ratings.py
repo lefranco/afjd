@@ -28,21 +28,20 @@ OPTIONS = {
     'Les scorages': "Les systèmes de scorage disponibles  sur le site"
 }
 
-ARRIVAL = None
+ARRIVAL = False
 
 # from home
 SCORING_REQUESTED = list(config.SCORING_CODE_TABLE.values())[0]
 
-def set_arrival(arrival, scoring_requested=None):
+
+def set_arrival(scoring_requested):
     """ set_arrival """
 
     global ARRIVAL
     global SCORING_REQUESTED
 
-    ARRIVAL = arrival
-
-    if scoring_requested:
-        SCORING_REQUESTED = scoring_requested
+    ARRIVAL = True
+    SCORING_REQUESTED = scoring_requested
 
 
 def show_games(ev, game_list):  # pylint: disable=invalid-name
@@ -920,8 +919,8 @@ def show_scoring():
         ev.preventDefault()
 
         # Change scoring selected
-        scoring = input_scoring.value
-        SCORING_REQUESTED = config.SCORING_CODE_TABLE[scoring]
+        scoring1 = input_scoring.value
+        SCORING_REQUESTED = config.SCORING_CODE_TABLE[scoring1]
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -1054,7 +1053,6 @@ MY_PANEL <= MY_SUB_PANEL
 
 def load_option(_, item_name):
     """ load_option """
-    global SCORING_REQUESTED
 
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
@@ -1102,9 +1100,9 @@ def render(panel_middle):
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     # this means user wants to see scoring
-    if ARRIVAL == 'scoring':
-        pass  # TODO
+    if ARRIVAL:
+        ITEM_NAME_SELECTED = 'Les scorages'
+        ARRIVAL = False
 
-    ARRIVAL = None
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

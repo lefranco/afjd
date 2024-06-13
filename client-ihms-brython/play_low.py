@@ -547,10 +547,8 @@ def get_game_status():
 
         ev.preventDefault()
 
-        arrival = 'scoring'
-
         # so that will go to proper page
-        ratings.set_arrival(arrival, scoring_name)
+        ratings.set_arrival(scoring_name)
 
         # action of going to game page
         PANEL_MIDDLE.clear()
