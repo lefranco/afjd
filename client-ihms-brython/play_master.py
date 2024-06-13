@@ -134,6 +134,10 @@ def game_master():
                     alert(f"Problème à la modification de l'état de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
+
+                # fail but refresh
+                play_low.MY_SUB_PANEL.clear()
+                game_master()
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -142,6 +146,7 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
+            play_low.load_special_stuff()
             game_master()
 
         ev.preventDefault()
