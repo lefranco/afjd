@@ -221,7 +221,7 @@ def load_option(_, item_name):
         tournament.render(PANEL_MIDDLE)
     if item_name == 'Evénements':
         events.render(PANEL_MIDDLE)
-    if item_name == 'Classements (et scorages)':
+    if item_name == 'Classements':
         ratings.render(PANEL_MIDDLE)
     if item_name == 'Bac à sable':
         sandbox.render(PANEL_MIDDLE)

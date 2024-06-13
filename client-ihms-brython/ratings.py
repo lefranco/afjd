@@ -1055,7 +1055,6 @@ MY_PANEL <= MY_SUB_PANEL
 def load_option(_, item_name):
     """ load_option """
     global SCORING_REQUESTED
-    global ITEM_NAME_SELECTED
 
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
@@ -1073,6 +1072,7 @@ def load_option(_, item_name):
     if item_name == 'Les scorages':
         show_scoring()
 
+    global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
     MENU_LEFT.clear()
@@ -1101,7 +1101,7 @@ def render(panel_middle):
 
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
-    # this means user wants to see variant
+    # this means user wants to see scoring
     if ARRIVAL == 'scoring':
         pass  # TODO
 
