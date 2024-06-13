@@ -20,10 +20,10 @@ import index  # circular import
 
 
 OPTIONS = {
-    'Sélectionner une partie': "Séléction d'une partie sur des critères éléborés",
     'Créer une partie': "Créer une partie (pour y jouer ou l'arbitrer)",
     'Rectifier paramètres': "Rectifier un des paramètres de la partie séléctionnée",
     'Rejoindre une partie': "Pour rejoindre (I.e. se mettre dans) un partie afin d'y jouer",
+    'Sélectionner une partie': "Séléction d'une partie sur des critères éléborés",
     'Toutes les parties': "Liste de toutes les parties",
     'Parties sans arbitres': "Liste des parties qui n'ont pas d'arbitre alloué",
     'Parties sans tournoi': "Liste des parties qui ne sont pas dans un tournoi",
@@ -2561,15 +2561,12 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Sélectionner une partie':
-        select_game(config.FORCED_VARIANT_NAME, 1)
-    if item_name == 'Retourner dans la partie':
-        PANEL_MIDDLE.clear()
-        play.render(PANEL_MIDDLE)
     if item_name == 'Créer une partie':
         create_game(None)
     if item_name == 'Rectifier paramètres':
         rectify_parameters_game()
+    if item_name == 'Sélectionner une partie':
+        select_game(config.FORCED_VARIANT_NAME, 1)
     if item_name == 'Rejoindre une partie':
         my_opportunities()
     if item_name == 'Toutes les parties':
@@ -2578,6 +2575,9 @@ def load_option(_, item_name):
         show_no_game_masters_data()
     if item_name == 'Parties sans tournoi':
         show_no_tournaments_data()
+    if item_name == 'Retourner dans la partie':
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
