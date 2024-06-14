@@ -24,10 +24,9 @@ SUPERVISE_REFRESH_TIMER = None
 
 HELP_CONTENT_TABLE = {
 
-    "Comment changer des joueurs ?": "1) retirer le rôle au partant 2) retirer de la partie le partant 3) mettre dans la partie l'arrivant 4) attribuer le role à l'arrivant",
+    "Comment changer des joueurs ?": "1) retirer le rôle au partant 2) retirer de la partie sélectionnée le partant 3) mettre dans la partie sélectionnée l'arrivant 4) attribuer le role à l'arrivant",
     "Comment bénéficier du bouton permettant de contacter tous les remplaçants ?": "1) et 2) ci-dessus",
-    "Comment arrêter la partie ?": "menu “Editer partie“ sous menu “Changer l'état“",
-    "Comment revenir sur le debriefing ?": "menu “Editer partie“ sous menu “Changer anonymat“ et “Changer accès messagerie“",
+    "Comment modifier un paramètre de la partie ?": "menu “Les partie“ sous menu “Rectifier paramètres“",
 }
 
 
