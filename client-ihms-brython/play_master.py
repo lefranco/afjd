@@ -118,6 +118,16 @@ def game_master():
     players_dict = {}
     allocated = []
 
+    def edit_game_callback(ev):  # pylint: disable=invalid-name
+        """ edit_game_callback """
+
+        ev.preventDefault()
+
+        # action of going to edit game page
+        play_low.PANEL_MIDDLE.clear()
+        allgames.set_arrival()
+        allgames.render(play_low.PANEL_MIDDLE)
+
     def cancel_change_state_game_callback(_, dialog):
         """ cancel_delete_account_callback """
         dialog.close(None)
@@ -1731,6 +1741,15 @@ def game_master():
 
     play_low.MY_SUB_PANEL <= game_incidents_table
     play_low.MY_SUB_PANEL <= html.BR()
+
+    play_low.MY_SUB_PANEL <= html.H3("Rectifier les paramètres de la partie")
+
+    form = html.FORM()
+
+    input_rectify_game = html.INPUT(type="submit", value="Rectifier les paramètres", Class='btn-inside')
+    input_rectify_game.bind("click", edit_game_callback)
+    form <= input_rectify_game
+    play_low.MY_SUB_PANEL <= form
 
     play_low.MY_SUB_PANEL <= html.H3("Changer l'état de la partie")
 

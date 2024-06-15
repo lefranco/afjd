@@ -2606,15 +2606,15 @@ def render(panel_middle):
     """ render """
 
     global PANEL_MIDDLE
+    global ITEM_NAME_SELECTED
     global ARRIVAL
 
     PANEL_MIDDLE = panel_middle
 
     # always back to top
-    global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
-    # this means user wants to join game
+    # this means user wants to edit  game
     if ARRIVAL:
         ITEM_NAME_SELECTED = 'Rectifier paramètres'
         ARRIVAL = False
