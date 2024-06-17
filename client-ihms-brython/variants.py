@@ -15,7 +15,7 @@ import sandbox
 import index
 import ezml_render
 
-OPTIONS = {n: f"La variante {n}" for n in config.VARIANT_NAMES_LIST}
+OPTIONS = {variant_name: f"La variante {variant_name} ({nb_players}j.)" for variant_name, nb_players in config.VARIANT_NAMES_DICT.items()}
 OPTIONS.update({'Fréquentation des variantes': "Statistiques de fréquentation des variantes sur le site"})
 
 ARRIVAL = None
