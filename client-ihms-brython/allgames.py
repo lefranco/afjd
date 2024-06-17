@@ -118,7 +118,7 @@ def create_game(json_dict):
 
     # load previous values if applicable
     name = json_dict['name'] if json_dict and 'name' in json_dict else None
-    variant = json_dict['variant'] if json_dict and 'variant' in json_dict else config.VARIANT_NAMES_LIST[0]
+    variant = json_dict['variant'] if json_dict and 'variant' in json_dict else list(config.VARIANT_NAMES_DICT.keys())[0]
     fog = json_dict['fog'] if json_dict and 'fog' in json_dict else None
     archive = json_dict['archive'] if json_dict and 'archive' in json_dict else None
     used_for_elo = json_dict['used_for_elo'] if json_dict and 'used_for_elo' in json_dict else None
@@ -455,8 +455,8 @@ def create_game(json_dict):
     fieldset <= legend_variant
     input_variant = html.SELECT(type="select-one", value="", Class='btn-inside')
 
-    for variant_name in config.VARIANT_NAMES_LIST:
-        option = html.OPTION(variant_name)
+    for variant_name, nb_players in config.VARIANT_NAMES_DICT.items():
+        option = html.OPTION(f"{variant_name} ({nb_players}j.)")
         if variant_name == variant:
             option.selected = True
         input_variant <= option
