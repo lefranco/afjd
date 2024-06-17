@@ -2612,7 +2612,7 @@ def render(panel_middle):
     PANEL_MIDDLE = panel_middle
 
     # always back to top
-    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
+    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0] if 'PSEUDO' in storage else list(OPTIONS.keys())[3]
 
     # this means user wants to edit  game
     if ARRIVAL:
