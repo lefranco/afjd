@@ -7512,6 +7512,10 @@ class ExtractVariantsDataRessource(flask_restful.Resource):  # type: ignore
             if variant_name not in variants_dict:
 
                 variants_dict[variant_name] = {}
+
+                variant = variants.Variant.get_by_name(variant_name)
+                variants_dict[variant_name]['nb_players'] = variant['roles']['number']
+
                 variants_dict[variant_name]['players'] = players
                 variants_dict[variant_name]['games'] = 1
 
