@@ -7477,6 +7477,59 @@ class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ign
         return tournaments_dict, 200
 
 
+@API.resource('/extract_variants_data')
+class ExtractVariantsDataRessource(flask_restful.Resource):  # type: ignore
+    """ ExtractVariantsDataRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[str, typing.Any]], int]:  # pylint: disable=R0201
+        """
+        Get information for historic of number of players for variants etc...
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/extract_variants_data - GET - getting variant data ")
+
+        sql_executor = database.SqlExecutor()
+
+        # concerned_games
+        games_list = games.Game.inventory(sql_executor)
+        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.archive]
+
+        # extract start_time, end_time and players from games
+        variants_dict: typing.Dict[str, typing.Dict[str, typing.Any]] = {}
+        for game_id in concerned_games_list:
+
+            # get game
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+
+            variant_name = game.variant
+
+            # get players (finally)
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            players = {a[1] for a in allocations_list if a[2] >= 1}
+
+            if variant_name not in variants_dict:
+
+                variants_dict[variant_name] = {}
+                variants_dict[variant_name]['players'] = players
+                variants_dict[variant_name]['games'] = 1
+
+            else:
+
+                variants_dict[variant_name]['players'].update(players)
+                variants_dict[variant_name]['games'] += 1
+
+        del sql_executor
+
+        # need the number of players
+        for data in variants_dict.values():
+            data['affluence'] = len(data['players'])
+            del data['players']
+
+        return variants_dict, 200
+
+
 @API.resource('/tournaments_manager/<tournament_id>')
 class TournamentManagerRessource(flask_restful.Resource):  # type: ignore
     """ TournamentManagerRessource """

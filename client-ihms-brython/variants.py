@@ -1,8 +1,9 @@
 """ variants """
 
 # pylint: disable=pointless-statement, expression-not-assigned
+from json import loads, dumps
 
-from browser import html, alert, window  # pylint: disable=import-error
+from browser import html, alert, ajax, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
@@ -15,7 +16,7 @@ import index
 import ezml_render
 
 OPTIONS = {n: f"La variante {n}" for n in config.VARIANT_NAMES_LIST}
-
+OPTIONS.update({'Fréquentation des variantes': "Statistiques de fréquentation des variantes sur le site"})
 
 ARRIVAL = None
 
@@ -292,6 +293,82 @@ def show_variant():
     my_ezml.render(MY_SUB_PANEL)
 
 
+def show_variants_frequentation_data():
+    """ show_variants_frequentation_data """
+
+    def extract_variant_frequentation_data():
+        """ extract_variant_frequentation_data """
+
+        data = None
+
+        def reply_callback(req):
+
+            nonlocal data
+
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au calcul de la fréquentation des variantes : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au calcul de la fréquentation des variantes : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                return
+
+            data = req_result
+
+        json_dict = {
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/extract_variants_data"
+
+        # extract_histo_tournament_data : do not need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return data
+
+    # get the variants frequentations
+    variants_freq_dict = extract_variant_frequentation_data()
+    if not variants_freq_dict:
+        alert("Pas de variantes ou erreur chargement dictionnaire frequentation tournois")
+        return
+
+    variants_table = html.TABLE()
+
+    fields = ['variant', 'games', 'affluence']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'variant': 'nom de la variante', 'games': 'nombre de parties', 'affluence': 'nombre de joueurs en tout'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    variants_table <= thead
+
+    for variant_name, data in sorted(variants_freq_dict.items(), key=lambda t: t[1]['affluence'], reverse=True):
+        row = html.TR()
+        for field in fields:
+
+            if field == 'variant':
+                value = variant_name
+            if field == 'games':
+                value = data['games']
+            if field == 'affluence':
+                value = data['affluence']
+
+            col = html.TD(value)
+
+            row <= col
+
+        variants_table <= row
+
+    MY_SUB_PANEL <= html.H3("La fréquentation des variantes du site")
+    MY_SUB_PANEL <= variants_table
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -318,8 +395,11 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    VARIANT_REQUESTED_NAME = item_name
-    show_variant()
+    if item_name == 'Fréquentation des variantes':
+        show_variants_frequentation_data()
+    else:
+        VARIANT_REQUESTED_NAME = item_name
+        show_variant()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
