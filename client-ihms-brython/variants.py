@@ -335,15 +335,15 @@ def show_variants_frequentation_data():
     if not variants_freq_dict:
         alert("Pas de variantes ou erreur chargement dictionnaire frequentation tournois")
         return
-
+    
     variants_table = html.TABLE()
 
-    fields = ['variant', 'games', 'affluence']
+    fields = ['variant', 'nb_players', 'games', 'affluence']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'variant': 'nom de la variante', 'games': 'nombre de parties', 'affluence': 'nombre de joueurs en tout'}[field]
+        field_fr = {'variant': "nom de la variante", 'nb_players': "nombre de joueurs de la variante", 'games': "nombre de parties en cours ou terminées", 'affluence': "nombre de joueurs la jouant ou l'ayant jouée"}[field]
         col = html.TD(field_fr)
         thead <= col
     variants_table <= thead
@@ -352,12 +352,11 @@ def show_variants_frequentation_data():
         row = html.TR()
         for field in fields:
 
+            data['variant'] = None
+            value = data[field]
+
             if field == 'variant':
                 value = variant_name
-            if field == 'games':
-                value = data['games']
-            if field == 'affluence':
-                value = data['affluence']
 
             col = html.TD(value)
 
