@@ -1,0 +1,1000 @@
+
+"author": "Tartempion",
+"map": {
+"width": ,
+"height": 
+},
+"regions": {
+"1": {
+"name": "Cote"
+}, "2": {
+"name": "Terre"
+}, "3": {
+"name": "Mer"
+}
+},
+"units": {
+"1": {
+"name": "Armee"
+
+}, "2": {
+"name": "Flotte"
+}
+},
+"coasts": {
+"1": {
+"name": "ce"
+}, "2": {
+"name": "cn"
+}, "3": {
+"name": "cs"
+}
+},
+"seasons": {
+"1": {
+"name": "Printemps"
+}, "2": {
+"name": "Ete"
+}, "3": {
+"name": "Automne"
+}, "4": {
+"name": "Hiver"
+}, "5": {
+"name": "Ajustements"
+}
+},
+"orders": {
+"1": {
+"name": "Attaquer"
+}, "2": {
+"name": "Soutenir offensivement"
+}, "3": {
+"name": "Soutenir defensivement"
+
+}, "4": {
+"name": "Tenir"
+}, "5": {
+"name": "Convoyer"
+}, "6": {
+"name": "Retraiter"
+}, "7": {
+"name": "Disperser"
+}, "8": {
+"name": "Construire"
+}, "9": {
+"name": "Supprimer"
+}
+},
+"zone_areas": { "1": {
+"area": [ [500,593],[497,592],[493,592] ]
+}, "2": {
+"area": [ [500,593],[497,592],[493,592] ]
+},
+"roles" : {
+	"0" : {
+		"name": "Arbitre",
+		"adjective_name" : "Arbitre",
+		"letter_name" : "M",
+		"red" : [0,0],
+		"green" : [0,0],
+		"blue" : [0,0],
+},
+	"1" : {
+		"name" : "Wisigoth",
+		"adjective_name" : "Wisigothique",
+		"letter_name" : "W",
+		"red" : [255,255],
+		"green" : [242,248],
+		"blue" : [0,119],
+},
+	"2" : {
+		"name" : "Francs",
+		"adjective_name" : "Franque",
+		"letter_name" : "F",
+		"red" : [5,0],
+		"green" : [129,168],
+		"blue" : [184,243],
+},
+	"3" : {
+		"name" : "Lombards",
+		"adjective_name" : "Lombarde",
+		"letter_name" : "L",
+		"red" : [14,88],
+		"green" : [209,231],
+		"blue" : [69,128],
+},
+	"4" : {
+		"name" : "Avars",
+		"adjective_name" : "Avare",
+		"letter_name" : "A",
+		"red" : [88,215],
+		"green" : [88,215],
+		"blue" : [88,215],
+},
+
+	"5" : {
+		"name" : "Gokturk",
+		"adjective_name" : "Gokturque",
+		"letter_name" : "G",
+		"red" : [174,118],
+		"green" : [230,208],
+		"blue" : [255,248],
+},
+
+	"6" : {
+		"name" : "Perse",
+		"adjective_name" : "Persane",
+		"letter_name" : "P",
+		"red" : [209,255],
+		"green" : [54,141],
+		"blue" : [61,146],
+},
+
+	"7" : {
+		"name" : "Byzance",
+		"adjective_name" : "Byzantine",
+		"letter_name" : "B",
+		"red" : [198,255],
+		"green" : [85,141],
+		"blue" : [200,146],
+},
+
+	"8" : {
+		"name" : "Afrique",
+		"adjective_name" : "Afrique",
+		"letter_name" : "A",
+		"red" : [255,255],
+		"green" : [255,204],
+		"blue" : [255,220],
+},
+
+"zones" : {
+	"1" : {
+		"name" : "GWY"
+		"full_name" : "Gwynned"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"2" : {
+		"name" : "DEI"
+		"full_name" : "Deira"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"3" : {
+		"name" : "LON"
+		"full_name" : "London"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"4" : {
+		"name" : "SAX"
+		"full_name" : "Saxe"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"5" : {
+		"name" : "AQU"
+		"full_name" : "Aquae Granni"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"6" : {
+		"name" : "PAR"
+		"full_name" : "Paris"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"7" : {
+		"name" : "DOM"
+		"full_name" : "Domnonea"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"8" : {
+		"name" : "ARV"
+		"full_name" : "Arvorig"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"9" : {
+		"name" : "NAO"
+		"full_name" : "Naoned"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+	"10" : {
+		"name" : "TOU"
+		"full_name" : "Toulouse"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"11" : {
+		"name" : "TAR"
+		"full_name" : "Tarraconensis"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"12" : {
+		"name" : "VAS"
+		"full_name" : "Vasconia"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"13" : {
+		"name" : "AST"
+		"full_name" : "Asturie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"14" : {
+		"name" : "BRA"
+		"full_name" : "Bracara"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"15" : {
+		"name" : "BAE"
+		"full_name" : "Baetica"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"16" : {
+		"name" : "VAL"
+		"full_name" : "Valencia"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+
+	"16" : {
+		"name" : "VAL"
+		"full_name" : "Valencia"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"17" : {
+		"name" : "BUR"
+		"full_name" : "BURGONDIE"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"18" : {
+		"name" : "PAV"
+		"full_name" : "Pavie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"19" : {
+		"name" : "TOS"
+		"full_name" : "Toscane"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"20" : {
+		"name" : "ROM"
+		"full_name" : "Rome"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"21" : {
+		"name" : "CAL"
+		"full_name" : "Calabre"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"22" : {
+		"name" : "BEN"
+		"full_name" : "Benevent"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"23" : {
+		"name" : "SPO"
+		"full_name" : "Spolete"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"24" : {
+		"name" : "RAV"
+		"full_name" : "Ravenne"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"25" : {
+		"name" : "SAL"
+		"full_name" : "Salona"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"26" : {
+		"name" : "CON"
+		"full_name" : "Constantinople"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"27" : {
+		"name" : "EPH"
+		"full_name" : "Ephese"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"28" : {
+		"name" : "ANT"
+		"full_name" : "Antioche"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"29" : {
+		"name" : "SYR"
+		"full_name" : "Syrie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"30" : {
+		"name" : "ALX"
+		"full_name" : "Alexandrie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"31" : {
+		"name" : "CAT"
+		"full_name" : "Carthage"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"32" : {
+		"name" : "CAE"
+		"full_name" : "Caesarea"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"33" : {
+		"name" : "MAU"
+		"full_name" : "Mauretanie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"34" : {
+		"name" : "TIN"
+		"full_name" : "Tingis"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"35" : {
+		"name" : "BAR"
+		"full_name" : "Barghawata"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"36" : {
+		"name" : "AXU"
+		"full_name" : "Axum"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"37" : {
+		"name" : "NUB"
+		"full_name" : "Nubie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"38" : {
+		"name" : "GHA"
+		"full_name" : "Ghassan"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"39" : {
+		"name" : "QUR"
+		"full_name" : "Qurayshia"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"40" : {
+		"name" : "HIM"
+		"full_name" : "Himyar"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"41" : {
+		"name" : ""
+		"full_name" : "Lakhmia"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"42" : {
+		"name" : "EST"
+		"full_name" : "Estakhr"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"43" : {
+		"name" : "MAK"
+		"full_name" : "Makran"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"44" : {
+		"name" : "CHA"
+		"full_name" : "Chalukya"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"45" : {
+		"name" : "KAD"
+		"full_name" : "Kadambas"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"46" : {
+		"name" : "MOE"
+		"full_name" : "Moesie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"47" : {
+		"name" : "TYR"
+		"full_name" : "Tyras"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"48" : {
+		"name" : "BUL"
+		"full_name" : "Bulgaria"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"49" : {
+		"name" : "OST"
+		"full_name" : "Ostrogothie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"50" : {
+		"name" : "OGH"
+		"full_name" : "Oghurie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"51" : {
+		"name" : "ALA"
+		"full_name" : "Alanie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"52" : {
+		"name" : "ARM"
+		"full_name" : "Armenie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"53" : {
+		"name" : "ATI"
+		"full_name" : "Atil"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"54" : {
+		"name" : "GUR"
+		"full_name" : "Gurganj"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"55" : {
+		"name" : "Parthia"
+		"full_name" : "PTH"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"56" : {
+		"name" : "HYR"
+		"full_name" : "Hyrcania"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"57" : {
+		"name" : "CTE"
+		"full_name" : "Ctesiphon"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"58" : {
+		"name" : "GAR"
+		"full_name" : "Garamantea"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"59" : {
+		"name" : "ALO"
+		"full_name" : "Alodie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"60" : {
+		"name" : "LEO"
+		"full_name" : "Leon"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"61" : {
+		"name" : "TOL"
+		"full_name" : "Tolede"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"62" : {
+		"name" : "NEU"
+		"full_name" : "Neustrie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"63" : {
+		"name" : "AUS"
+		"full_name" : "Austrasie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"64" : {
+		"name" : "ALE"
+		"full_name" : "Alemanie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"65" : {
+		"name" : "RHE"
+		"full_name" : "Rhetie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"66" : {
+		"name" : "VER"
+		"full_name" : "Verone"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"67" : {
+		"name" : "BAV"
+		"full_name" : "Baviere"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"68" : {
+		"name" : "NOR"
+		"full_name" : "Norique"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"69" : {
+		"name" : "THU"
+		"full_name" : "Thuringe"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"70" : {
+		"name" : "SOR"
+		"full_name" : "Sorbie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"71" : {
+		"name" : "PAS"
+		"full_name" : "Parsticum"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"72" : {
+		"name" : "DAC"
+		"full_name" : "Dacie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"73" : {
+		"name" : "POL"
+		"full_name" : "Pologne"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"74" : {
+		"name" : "APU"
+		"full_name" : "Apulum"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"75" : {
+		"name" : "SEV"
+		"full_name" : "Severie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"76" : {
+		"name" : "SAB"
+		"full_name" : "Sabiristan"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"77" : {
+		"name" : "BAC"
+		"full_name" : "Bachikiristan"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"78" : {
+		"name" : "KIM"
+		"full_name" : "Kimekistan"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"79" : {
+		"name" : "SUY"
+		"full_name" : "Suyab"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"80" : {
+		"name" : "TAA"
+		"full_name" : "Taank"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"81" : {
+		"name" : "TOK"
+		"full_name" : "Tokharia"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"82" : {
+		"name" : "KHO"
+		"full_name" : "Khorassan"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"83" : {
+		"name" : "MER"
+		"full_name" : "Merv"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"84" : {
+		"name" : "BAM"
+		"full_name" : "Bamiyan"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"85" : {
+		"name" : "VAR"
+		"full_name" : "Varnataka"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"86" : {
+		"name" : "EDE"
+		"full_name" : "Edesse"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"87" : {
+		"name" : "S1"
+		"full_name" : "Steppes 1"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"88" : {
+		"name" : "S2"
+		"full_name" : "Steppes 2"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"89" : {
+		"name" : "S3"
+		"full_name" : "Steppes 3"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"90" : {
+		"name" : "mNOR"
+		"full_name" : "Mer Nordique"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"91" : {
+		"name" : "mHIB"
+		"full_name" : "Mer d'Hibernie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"92" : {
+		"name" : "mCAN"
+		"full_name" : "Mer Cantabrique"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"93" : {
+		"name" : "mEXT"
+		"full_name" : "Mer Exterieure"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"94" : {
+		"name" : "mTYR"
+		"full_name" : "Mer Tyrrheniene"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"95" : {
+		"name" : "mLIG"
+		"full_name" : "Mer Ligurienne"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"96" : {
+		"name" : "mLYB"
+		"full_name" : "Mer Lybienne"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"97" : {
+		"name" : "mDAL"
+		"full_name" : "Mer Dalmatienne"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"98" : {
+		"name" : "mLEV"
+		"full_name" : "Mer Levantine"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"99" : {
+		"name" : "gARA"
+		"full_name" : "Golfe d'Arabie"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"100" : {
+		"name" : "gPER"
+		"full_name" : "Golfe Persique"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"101" : {
+		"name" : "gSAV"
+		"full_name" : "Golfe Savatahanan"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"102" : {
+		"name" : "pEUX"
+		"full_name" : "Pont Euxin"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"103" : {
+		"name" : "pMOE"
+		"full_name" : "Palus Moetique"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"104" : {
+		"name" : "mMAZ"
+		"full_name" : "Mer de Mazandaran"
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+},
+	"105" : {
+		"name" : "BAR"
+		"full_name" : Barbarie
+		"x_pos" : ,
+		"y_pos" : ,
+		"x_legend_pos" : ,
+		"y_legend_pos" : ,
+
+},
