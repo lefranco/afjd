@@ -1243,34 +1243,35 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
                 # cannot fail
                 _ = game.put_role(sql_executor, user_id, 0)
 
-        # if game has a passive role, fill it
+            # if game has a passive role, fill it
 
-        variant_name = game.variant
-        variant_data = variants.Variant.get_by_name(variant_name)
-        assert variant_data is not None
+            variant_name = game.variant
+            variant_data = variants.Variant.get_by_name(variant_name)
+            assert variant_data is not None
 
-        for role_id_str, passive_pseudo in variant_data['disorder'].items():
+            for role_id_str, passive_pseudo in variant_data['disorder'].items():
 
-            role_id = int(role_id_str)
+                role_id = int(role_id_str)
 
-            # get player identifier
-            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-            url = f"{host}:{port}/player-identifiers/{passive_pseudo}"
-            req_result = SESSION.get(url)
-            if req_result.status_code != 200:
-                print(f"ERROR from server  : {req_result.text}")
-                del sql_executor
-                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                flask_restful.abort(404, msg=f"Failed to get id from pseudo for {passive_pseudo} : {message}")
-            passive_user_id = req_result.json()
+                # get player identifier
+                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                url = f"{host}:{port}/player-identifiers/{passive_pseudo}"
+                req_result = SESSION.get(url)
+                if req_result.status_code != 200:
+                    print(f"ERROR from server  : {req_result.text}")
+                    del sql_executor
+                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                    flask_restful.abort(404, msg=f"Failed to get id from pseudo for {passive_pseudo} : {message}")
+                passive_user_id = req_result.json()
 
-            # allocate passive to game
-            # cannot fail
-            _ = game.put_role(sql_executor, passive_user_id, role_id)
+                # allocate passive to game
+                # cannot fail
+                _ = game.put_role(sql_executor, passive_user_id, role_id)
 
-        sql_executor.commit()
-        del sql_executor
+            sql_executor.commit()
+            del sql_executor
+            # end of pretected section
 
         data = {'name': name, 'msg': 'Ok game created'}
         return data, 201
@@ -3042,69 +3043,24 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             now = time.time()
             status, late, unsafe, missing, adjudicated, debug_message = agree.fake_post(now, game_id, role_id, True, adjudication_names, sql_executor)
 
-        # end of protected section
+            if not status:
+                del sql_executor  # noqa: F821
+                flask_restful.abort(400, msg=f"Failed to agree (forced) to adjudicate : {debug_message}")
 
-        if not status:
-            del sql_executor  # noqa: F821
-            flask_restful.abort(400, msg=f"Failed to agree (forced) to adjudicate : {debug_message}")
-
-        # this may have caused player to be late
-        if late:
-            subject = f"L'arbitre de la partie {game.name} a forcé votre accord, ce qui vous inflige un retard !"
-            game_id = game.identifier
-            allocations_list = allocations.Allocation.list_by_role_id_game_id(sql_executor, role_id, game_id)
-            addressees = []
-            for _, player_id, __ in allocations_list:
-                addressees.append(player_id)
-
-            body = "Bonjour !\n"
-            body += "\n"
-            body += "L'arbitre a forcé votre accord sur cette partie et vous étiez en retard !\n"
-            body += "\n"
-            body += "Conclusion : vous avez un retard sur cette partie...\n"
-            body += "\n"
-            body += "Pour se rendre directement sur la partie :\n"
-            body += f"https://diplomania-gen.fr?game={game.name}"
-
-            json_dict = {
-                'addressees': " ".join([str(a) for a in addressees]),
-                'subject': subject,
-                'body': body,
-                'type': 'late',
-            }
-
-            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-            url = f"{host}:{port}/mail-players"
-            # for a rest API headers are presented differently
-            req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
-            if req_result.status_code != 200:
-                print(f"ERROR from server  : {req_result.text}")
-                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                del sql_executor
-                flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
-
-        if adjudicated:
-
-            # reload game
-            game = games.Game.find_by_identifier(sql_executor, game_id)
-            assert game is not None
-
-            # notify players
-
-            if not (game.fast or game.archive):
-
-                subject = f"La partie {game.name} a avancé (avec l'aide de l'arbitre)!"
+            # this may have caused player to be late
+            if late:
+                subject = f"L'arbitre de la partie {game.name} a forcé votre accord, ce qui vous inflige un retard !"
                 game_id = game.identifier
-                allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+                allocations_list = allocations.Allocation.list_by_role_id_game_id(sql_executor, role_id, game_id)
                 addressees = []
                 for _, player_id, __ in allocations_list:
                     addressees.append(player_id)
+
                 body = "Bonjour !\n"
                 body += "\n"
-                body += "Vous pouvez continuer à jouer dans cette partie !\n"
+                body += "L'arbitre a forcé votre accord sur cette partie et vous étiez en retard !\n"
                 body += "\n"
-                body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
+                body += "Conclusion : vous avez un retard sur cette partie...\n"
                 body += "\n"
                 body += "Pour se rendre directement sur la partie :\n"
                 body += f"https://diplomania-gen.fr?game={game.name}"
@@ -3113,7 +3069,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                     'addressees': " ".join([str(a) for a in addressees]),
                     'subject': subject,
                     'body': body,
-                    'type': 'adjudication',
+                    'type': 'late',
                 }
 
                 host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -3127,13 +3083,57 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                     del sql_executor
                     flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
-                # declaration from system
-                if game.last_year():
-                    payload = "Attention, dernière année !"
-                    notify_last_line(sql_executor, game_id, payload)  # noqa: F821
+            if adjudicated:
 
-        sql_executor.commit()  # noqa: F821
-        del sql_executor  # noqa: F821
+                # reload game
+                game = games.Game.find_by_identifier(sql_executor, game_id)
+                assert game is not None
+
+                # notify players
+
+                if not (game.fast or game.archive):
+
+                    subject = f"La partie {game.name} a avancé (avec l'aide de l'arbitre)!"
+                    game_id = game.identifier
+                    allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+                    addressees = []
+                    for _, player_id, __ in allocations_list:
+                        addressees.append(player_id)
+                    body = "Bonjour !\n"
+                    body += "\n"
+                    body += "Vous pouvez continuer à jouer dans cette partie !\n"
+                    body += "\n"
+                    body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
+                    body += "\n"
+                    body += "Pour se rendre directement sur la partie :\n"
+                    body += f"https://diplomania-gen.fr?game={game.name}"
+
+                    json_dict = {
+                        'addressees': " ".join([str(a) for a in addressees]),
+                        'subject': subject,
+                        'body': body,
+                        'type': 'adjudication',
+                    }
+
+                    host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                    port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                    url = f"{host}:{port}/mail-players"
+                    # for a rest API headers are presented differently
+                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                    if req_result.status_code != 200:
+                        print(f"ERROR from server  : {req_result.text}")
+                        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                        del sql_executor
+                        flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+                    # declaration from system
+                    if game.last_year():
+                        payload = "Attention, dernière année !"
+                        notify_last_line(sql_executor, game_id, payload)  # noqa: F821
+
+            sql_executor.commit()  # noqa: F821
+            del sql_executor  # noqa: F821
+            # end of protected section
 
         data = {'late': late, 'unsafe': unsafe, 'missing': missing, 'adjudicated': adjudicated, 'debug_message': debug_message, 'msg': "Forced!"}
         return data, 201
@@ -3228,58 +3228,57 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 if adjudicated:
                     break
 
-        # end of protected section
+            if not status:
+                del sql_executor  # noqa: F821
+                flask_restful.abort(400, msg=f"Failed to agree (commute) to adjudicate : {debug_message}")
 
-        if not status:
+            if adjudicated:
+
+                # reload game
+                game = games.Game.find_by_identifier(sql_executor, game_id)
+                assert game is not None
+
+                # notify players
+
+                subject = f"La partie {game.name} a avancé (avec l'aide de l'automate)!"
+                game_id = game.identifier
+                allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+                addressees = []
+                for ____, player_id, _____ in allocations_list:
+                    addressees.append(player_id)
+                body = "Vous pouvez continuer à jouer dans cette partie !\n"
+                body += "\n"
+                body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
+                body += "\n"
+                body += "Pour se rendre directement sur la partie :\n"
+                body += f"https://diplomania-gen.fr?game={game.name}"
+
+                json_dict = {
+                    'addressees': " ".join([str(a) for a in addressees]),
+                    'subject': subject,
+                    'body': body,
+                    'type': 'adjudication',
+                }
+
+                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                url = f"{host}:{port}/mail-players"
+                # for a rest API headers are presented differently
+                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                if req_result.status_code != 200:
+                    print(f"ERROR from server  : {req_result.text}")
+                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                    del sql_executor
+                    flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+                # declaration from system
+                if game.last_year():
+                    payload = "Attention, dernière année !"
+                    notify_last_line(sql_executor, game_id, payload)  # noqa: F821
+
+            sql_executor.commit()  # noqa: F821
             del sql_executor  # noqa: F821
-            flask_restful.abort(400, msg=f"Failed to agree (commute) to adjudicate : {debug_message}")
-
-        if adjudicated:
-
-            # reload game
-            game = games.Game.find_by_identifier(sql_executor, game_id)
-            assert game is not None
-
-            # notify players
-
-            subject = f"La partie {game.name} a avancé (avec l'aide de l'automate)!"
-            game_id = game.identifier
-            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-            addressees = []
-            for ____, player_id, _____ in allocations_list:
-                addressees.append(player_id)
-            body = "Vous pouvez continuer à jouer dans cette partie !\n"
-            body += "\n"
-            body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
-            body += "\n"
-            body += "Pour se rendre directement sur la partie :\n"
-            body += f"https://diplomania-gen.fr?game={game.name}"
-
-            json_dict = {
-                'addressees': " ".join([str(a) for a in addressees]),
-                'subject': subject,
-                'body': body,
-                'type': 'adjudication',
-            }
-
-            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-            url = f"{host}:{port}/mail-players"
-            # for a rest API headers are presented differently
-            req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
-            if req_result.status_code != 200:
-                print(f"ERROR from server  : {req_result.text}")
-                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                del sql_executor
-                flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
-
-            # declaration from system
-            if game.last_year():
-                payload = "Attention, dernière année !"
-                notify_last_line(sql_executor, game_id, payload)  # noqa: F821
-
-        sql_executor.commit()  # noqa: F821
-        del sql_executor  # noqa: F821
+            # end of protected section
 
         return None, 201
 
@@ -3591,76 +3590,75 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             now = time.time()
             status, late, unsafe, missing, adjudicated, debug_message = agree.fake_post(now, game_id, role_id, definitive_value, adjudication_names, sql_executor)  # noqa: F821
 
-        # end of protected section
+            if not status:
+                del sql_executor  # noqa: F821
+                flask_restful.abort(400, msg=f"Failed to agree to adjudicate : {debug_message}")
 
-        if not status:
+            if adjudicated:
+
+                # reload game
+                game = games.Game.find_by_identifier(sql_executor, game_id)  # noqa: F821
+                assert game is not None
+
+                if not (game.fast or game.archive):
+
+                    # notify players
+                    subject = f"La partie {game.name} a avancé !"
+                    game_id = game.identifier
+                    allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)  # noqa: F821
+                    addressees = []
+                    for _, player_id, __ in allocations_list:
+                        addressees.append(player_id)
+                    body = "Bonjour !\n"
+                    body += "\n"
+                    body += "Vous pouvez continuer à jouer dans cette partie !\n"
+                    body += "\n"
+                    body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
+                    body += "\n"
+                    body += "Pour se rendre directement sur la partie :\n"
+                    body += f"https://diplomania-gen.fr?game={game.name}"
+
+                    json_dict = {
+                        'addressees': " ".join([str(a) for a in addressees]),
+                        'subject': subject,
+                        'body': body,
+                        'type': 'adjudication',
+                    }
+
+                    host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                    port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                    url = f"{host}:{port}/mail-players"
+                    # for a rest API headers are presented differently
+                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                    if req_result.status_code != 200:
+                        print(f"ERROR from server  : {req_result.text}")
+                        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                        del sql_executor
+                        flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+                    # declaration from system
+                    if game.last_year():
+                        payload = "Attention, dernière année !"
+                        notify_last_line(sql_executor, game_id, payload)  # noqa: F821
+
+            else:
+
+                # put passive players in disorder (must be done by first player to actually submit orders in first turn so not to be in game creation of game start)
+
+                variant_name = game.variant
+                variant_data = variants.Variant.get_by_name(variant_name)
+                assert variant_data is not None
+
+                for role_id_str in variant_data['disorder']:
+                    role_id = int(role_id_str)
+                    status, _, message = agree.disorder(game_id, role_id, game, variant_data, adjudication_names, sql_executor)  # noqa: F821
+                    if not status:
+                        del sql_executor
+                        flask_restful.abort(400, msg=f"Failed to set power {role_id} in disorder : {message}")
+
+            sql_executor.commit()  # noqa: F821
             del sql_executor  # noqa: F821
-            flask_restful.abort(400, msg=f"Failed to agree to adjudicate : {debug_message}")
-
-        if adjudicated:
-
-            # reload game
-            game = games.Game.find_by_identifier(sql_executor, game_id)  # noqa: F821
-            assert game is not None
-
-            if not (game.fast or game.archive):
-
-                # notify players
-                subject = f"La partie {game.name} a avancé !"
-                game_id = game.identifier
-                allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)  # noqa: F821
-                addressees = []
-                for _, player_id, __ in allocations_list:
-                    addressees.append(player_id)
-                body = "Bonjour !\n"
-                body += "\n"
-                body += "Vous pouvez continuer à jouer dans cette partie !\n"
-                body += "\n"
-                body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
-                body += "\n"
-                body += "Pour se rendre directement sur la partie :\n"
-                body += f"https://diplomania-gen.fr?game={game.name}"
-
-                json_dict = {
-                    'addressees': " ".join([str(a) for a in addressees]),
-                    'subject': subject,
-                    'body': body,
-                    'type': 'adjudication',
-                }
-
-                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-                url = f"{host}:{port}/mail-players"
-                # for a rest API headers are presented differently
-                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
-                if req_result.status_code != 200:
-                    print(f"ERROR from server  : {req_result.text}")
-                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                    del sql_executor
-                    flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
-
-                # declaration from system
-                if game.last_year():
-                    payload = "Attention, dernière année !"
-                    notify_last_line(sql_executor, game_id, payload)  # noqa: F821
-
-        else:
-
-            # put passive players in disorder (must be done by first player to actually submit orders in first turn so not to be in game creation of game start)
-
-            variant_name = game.variant
-            variant_data = variants.Variant.get_by_name(variant_name)
-            assert variant_data is not None
-
-            for role_id_str in variant_data['disorder']:
-                role_id = int(role_id_str)
-                status, _, message = agree.disorder(game_id, role_id, game, variant_data, adjudication_names, sql_executor)  # noqa: F821
-                if not status:
-                    del sql_executor
-                    flask_restful.abort(400, msg=f"Failed to set power {role_id} in disorder : {message}")
-
-        sql_executor.commit()  # noqa: F821
-        del sql_executor  # noqa: F821
+            # end of protected section
 
         data = {'late': late, 'unsafe': unsafe, 'missing': missing, 'adjudicated': adjudicated, 'debug_message': debug_message, 'msg': submission_report}
 
@@ -7514,6 +7512,7 @@ class ExtractVariantsDataRessource(flask_restful.Resource):  # type: ignore
                 variants_dict[variant_name] = {}
 
                 variant = variants.Variant.get_by_name(variant_name)
+                assert variant is not None
                 variants_dict[variant_name]['nb_players'] = variant['roles']['number']
 
                 variants_dict[variant_name]['players'] = players
