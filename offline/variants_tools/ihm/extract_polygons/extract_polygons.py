@@ -489,6 +489,7 @@ def study_image(map_file: str, debug: bool) -> None:
 
     if debug:
         cv2.imshow('image', thresh)  # pylint: disable=c-extension-no-member
+        print("Appuyer sur une touche dans la fenêtre graphique")
         cv2.waitKey()  # pylint: disable=c-extension-no-member
         sys.exit()
 
