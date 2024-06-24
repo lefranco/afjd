@@ -347,7 +347,7 @@ def prepare_mailing():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'nom', 'prénom', 'courriel', 'confirmé', 'ne veut plus recevoir']:
+    for field in ['pseudo', 'nom', 'prénom', 'courriel', 'confirmation', 'action', 'publipostage', 'action']:
         col = html.TD(field)
         thead <= col
     emails_table <= thead
@@ -379,27 +379,32 @@ def prepare_mailing():
             }
         row <= col
 
-        form = ""
+        col = html.TD()
         if confirmed:
-            form = html.FORM()
-            input_patch_account_confirmed = html.INPUT(type="image", src="./images/unconfirmed.png", Class='btn-inside')
-            input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_unconfirmed_callback(e, p))
-            form <= input_patch_account_confirmed
+            col <= "Confirmé"
         else:
-            form = html.FORM()
-            input_patch_account_confirmed = html.INPUT(type="image", src="./images/confirmed.png", Class='btn-inside')
-            input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_confirmed_callback(e, p))
-            form <= input_patch_account_confirmed
-
-        col = html.TD(form)
+            col <= "Non confirmé"
         row <= col
 
-        form = html.FORM()
-        input_patch_account_refuses = html.INPUT(type="image", src="./images/refuses.png", Class='btn-inside')
-        input_patch_account_refuses.bind("click", lambda e, p=pseudo: patch_account_refuses_callback(e, p))
-        form <= input_patch_account_refuses
+        col = html.TD()
+        if confirmed:
+            input_patch_account_not_confirmed = html.BUTTON("Enlever la confirmation", Class='btn-inside')
+            input_patch_account_not_confirmed.bind("click", lambda e, p=pseudo: patch_account_unconfirmed_callback(e, p))
+            col <= input_patch_account_not_confirmed
+        else:
+            input_patch_account_confirmed = html.BUTTON("Confirmer", Class='btn-inside')
+            input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_confirmed_callback(e, p))
+            col <= input_patch_account_confirmed
+        row <= col
 
-        col = html.TD(form)
+        col = html.TD()
+        col <= "Accepte"
+        row <= col
+
+        col = html.TD()
+        input_patch_account_refuses = html.BUTTON("Faire refuser", Class='btn-inside')
+        input_patch_account_refuses.bind("click", lambda e, p=pseudo: patch_account_refuses_callback(e, p))
+        col <= input_patch_account_refuses
         row <= col
 
         emails_table <= row
@@ -408,7 +413,7 @@ def prepare_mailing():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'nom', 'prénom', 'courriel', 'confirmé']:
+    for field in ['pseudo', 'nom', 'prénom', 'courriel', 'confirmation', 'action', 'publipostage']:
         col = html.TD(field)
         thead <= col
     emails_table2 <= thead
@@ -436,19 +441,26 @@ def prepare_mailing():
             }
         row <= col
 
-        form = ""
+        col = html.TD()
         if confirmed:
-            form = html.FORM()
-            input_patch_account_confirmed = html.INPUT(type="image", src="./images/unconfirmed.png", Class='btn-inside')
-            input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_unconfirmed_callback(e, p))
-            form <= input_patch_account_confirmed
+            col <= "Confirmé"
         else:
-            form = html.FORM()
-            input_patch_account_confirmed = html.INPUT(type="image", src="./images/confirmed.png", Class='btn-inside')
-            input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_confirmed_callback(e, p))
-            form <= input_patch_account_confirmed
+            col <= "Non confirmé"
+        row <= col
 
-        col = html.TD(form)
+        col = html.TD()
+        if confirmed:
+            input_patch_account_not_confirmed = html.BUTTON("Enlever la confirmation", Class='btn-inside')
+            input_patch_account_not_confirmed.bind("click", lambda e, p=pseudo: patch_account_unconfirmed_callback(e, p))
+            col <= input_patch_account_not_confirmed
+        else:
+            input_patch_account_confirmed = html.BUTTON("Confirmer", Class='btn-inside')
+            input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_confirmed_callback(e, p))
+            col <= input_patch_account_confirmed
+        row <= col
+
+        col = html.TD()
+        col <= "Refuse"
         row <= col
 
         emails_table2 <= row
