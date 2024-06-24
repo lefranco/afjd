@@ -259,7 +259,10 @@ def create_game(json_dict):
         # get values from user input
 
         name = input_name.value
-        variant = input_variant.value
+
+        # remove the number of players on the right
+        variant, _, __ = input_variant.value.partition(' ')
+
         fog = int(input_fog.checked)
         archive = int(input_archive.checked)
         used_for_elo = int(input_used_for_elo.checked)
