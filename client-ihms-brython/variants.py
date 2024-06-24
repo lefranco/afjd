@@ -335,7 +335,7 @@ def show_variants_frequentation_data():
     if not variants_freq_dict:
         alert("Pas de variantes ou erreur chargement dictionnaire frequentation tournois")
         return
-    
+
     variants_table = html.TABLE()
 
     fields = ['variant', 'nb_players', 'games', 'affluence']
