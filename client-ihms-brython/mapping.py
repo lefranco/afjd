@@ -1260,7 +1260,7 @@ class Unit(Highliteable, Renderable):
         ctx.strokeStyle = dislodger_frame_colour.str_value()
         ctx.lineWidth = 1.5
         ctx.beginPath()
-        ctx.rect(x_pos + 12, y_pos - 17, len(dislodger_legend) * 6, 10)
+        ctx.rect(x_pos + 12, y_pos - 17, len(dislodger_legend) * 7, 10)
         ctx.stroke(); ctx.closePath()
 
         dislodger_colour = DISLODGED_TEXT_COLOUR
