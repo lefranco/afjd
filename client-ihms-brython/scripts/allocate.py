@@ -5,7 +5,8 @@
 File : allocate.py
 
 Solves the problem of allocating players in a Diplomacy tournament
-For 1000 players takes 35 seconds on an average laptop
+For 1000 players takes 35 seconds on an average laptop (linux)
+Limited to 275 players on windows
 """
 
 import typing
@@ -294,13 +295,24 @@ def perform_swap(role: int, player1: Player, player2: Player, game1: Game, game2
     player2.put_in_game(role, game1)
 
 
+ref_worst = 0
+ref_worst_number = 0
+ref_worst_dump: typing.List[int] = []
+
+
 def hill_climb(players_variant: int) -> bool:
     """ hill_climb """
+
+    global ref_worst
+    global ref_worst_number
+    global ref_worst_dump
 
     while True:
 
         worst, worst_number, worst_dump = evaluate()
-        print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
+        if (worst, worst_number, worst_dump) < (ref_worst, ref_worst_number, ref_worst_dump):
+            print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
+            ref_worst, ref_worst_number, ref_worst_dump = worst, worst_number, worst_dump
 
         # are we done
         if worst == 1:
@@ -373,6 +385,10 @@ def main() -> None:
     global SWAPS
     global BEST_SWAPS
 
+    global ref_worst
+    global ref_worst_number
+    global ref_worst_dump
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--players_variant', required=True, type=int, help='number of players per game in the variant')
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
@@ -380,8 +396,13 @@ def main() -> None:
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
     parser.add_argument('-o', '--output_file', required=True, help='resulting file')
     parser.add_argument('-s', '--show', required=False, action='store_true', help='show worst interactions')
+    parser.add_argument('-d', '--deterministic', required=False, action='store_true', help='make it deterministic')
     parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players of the file (for testing)')
     args = parser.parse_args()
+
+    # make it derterministic if requested
+    if args.deterministic:
+        random.seed(0)
 
     # load players file
     with open(args.players_file, "r", encoding='utf-8') as read_file:
@@ -470,6 +491,8 @@ def main() -> None:
 
     best_worst, best_worst_number = nb_players, 0
 
+    ref_worst, ref_worst_number, ref_worst_dump = evaluate()
+
     while True:
 
         # make a climb
@@ -517,10 +540,12 @@ def main() -> None:
 
     for master in masters_list:
         print(f"Game master {master.name} has {len([g for g in GAMES if master_game_table[g] == master])} games!")
-    print("")
 
     worst, worst_number, _ = evaluate()
-    print(f"We have {worst_number} occurrences of two players interacting {worst} times")
+    if worst > 1:
+        print(f"We have {worst_number} occurrences of two players interacting {worst} times")
+    else:
+        print("Allocation is perfect !")
 
     if args.show:
         print("Interactions more than once: ")
