@@ -5756,15 +5756,13 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # find the current players
-        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-        current_players_dict = {a[2]: a[1] for a in allocations_list}
-
         # incidents_list : those who submitted orders after deadline
         incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
 
+        assert game is not None
+
         # player_id only provided if not in game at this role (because left or was moved)
-        late_list = [(o[1], o[2], o[3] if o[1] not in current_players_dict or o[3] != current_players_dict[o[1]] else None, o[4], o[5]) for o in incidents_list]
+        late_list = [(o[1], o[2], o[3] if not game.anonymous else None, o[4], o[5]) for o in incidents_list]
 
         del sql_executor
 
