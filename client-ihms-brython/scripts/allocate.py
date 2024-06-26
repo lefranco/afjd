@@ -23,9 +23,6 @@ import pstats
 
 PROFILE = False
 
-# this is a standard diplomacy constant
-POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
-
 # as extracted from input file
 PLAYERS_DATA: typing.List[str] = []
 MASTERS_DATA: typing.List[str] = []
@@ -50,15 +47,16 @@ def user_interrupt(_, __) -> None:  # type: ignore
 class Game:
     """ a game """
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, players_variant: int) -> None:
         self._name = name
         self._allocation: typing.Dict[int, Player] = {}
+        self._players_variant = players_variant
 
     def put_player_in(self, role: int, player: 'Player') -> None:
         """ puts the player in this game """
 
         assert isinstance(role, int), "Internal error: role should be an int"
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < self._players_variant, "Internal error: role should be in range"
 
         assert isinstance(player, Player), "Internal error: player should be a Player"
 
@@ -75,7 +73,7 @@ class Game:
         """ takes the player ou of this game """
 
         assert isinstance(role, int), "Internal error: role should be an int"
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < self._players_variant, "Internal error: role should be in range"
 
         assert isinstance(player, Player), "Internal error: player should be a Player"
         assert player in self._allocation.values(), "Internal error: player should be in game already"
@@ -98,16 +96,16 @@ class Game:
 
     def has_role_in_game(self, role: int) -> bool:
         """ hios the someone with this role in the game ? """
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < self._players_variant, "Internal error: role should be in range"
         return role in self._allocation
 
     def is_complete(self) -> bool:
         """ is the game complete ? """
-        return len(self._allocation) == len(POWERS)
+        return len(self._allocation) == self._players_variant
 
     def list_players(self) -> str:
         """ display list of players of the game """
-        return ";".join([str(self._allocation[r] if r in self._allocation else "_") for r in range(len(POWERS))])
+        return ";".join([str(self._allocation[r] if r in self._allocation else "_") for r in range(self._players_variant)])
 
     @property
     def name(self) -> str:
@@ -125,7 +123,7 @@ GAMES: typing.List[Game] = []
 class Player:
     """ a player """
 
-    def __init__(self, name: str, number: int) -> None:
+    def __init__(self, name: str, number: int, players_variant: int) -> None:
 
         assert isinstance(name, str), "Internal error: name should be str"
         self._name = name
@@ -134,12 +132,13 @@ class Player:
         self._allocation: typing.Dict[int, Game] = {}
         self._fully_allocated = False
         self._is_master = False
+        self._players_variant = players_variant
 
     def put_in_game(self, role: int, game: Game) -> None:
         """ put the player in a game """
 
         assert isinstance(role, int), "Internal error: number should be int"
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < self._players_variant, "Internal error: role should be in range"
 
         assert isinstance(game, Game)
 
@@ -150,7 +149,7 @@ class Player:
         """ remove the player from a game """
 
         assert isinstance(role, int), "Internal error: role for player should be int"
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < self._players_variant, "Internal error: role should be in range"
 
         assert isinstance(game, Game), "Internal error: game for player should be a Game"
 
@@ -163,12 +162,12 @@ class Player:
 
     def has_role(self, role: int) -> bool:
         """ does the players has this role ? """
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < self._players_variant, "Internal error: role should be in range"
         return role in self._allocation
 
     def game_where_has_role(self, role: int) -> Game:
         """ game where the players has this role ? """
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert 0 <= role < self._players_variant, "Internal error: role should be in range"
         assert role in self._allocation, "Internal error: player should have the role"
         return self._allocation[role]
 
@@ -207,10 +206,10 @@ SWAPS: typing.List[typing.Tuple[int, Player, Player, Game, Game]] = []
 BEST_SWAPS: typing.List[typing.Tuple[int, Player, Player, Game, Game]] = []
 
 
-def try_and_error(depth: int) -> bool:
+def try_and_error(depth: int, players_variant: int) -> bool:
     """ try_and_error """
 
-    print(f"{depth // len(POWERS):5} ", end='\r', flush=True)
+    print(f"{depth // players_variant:5} ", end='\r', flush=True)
 
     # find a game where to fill up
     game = None
@@ -228,7 +227,7 @@ def try_and_error(depth: int) -> bool:
 
     # find a role
     role = None
-    for role_poss in range(len(POWERS)):
+    for role_poss in range(players_variant):
         # game already has someone for this role
         if not game.has_role_in_game(role_poss):
             role = role_poss
@@ -258,7 +257,7 @@ def try_and_error(depth: int) -> bool:
         player.put_in_game(role, game)
 
         # if we fail, we try otherwise !
-        if try_and_error(depth + 1):
+        if try_and_error(depth + 1, players_variant):
             return True
 
         player.remove_from_game(role, game)
@@ -295,12 +294,10 @@ def perform_swap(role: int, player1: Player, player2: Player, game1: Game, game2
     player2.put_in_game(role, game1)
 
 
-def hill_climb() -> bool:
+def hill_climb(players_variant: int) -> bool:
     """ hill_climb """
 
     while True:
-
-        evaluate()
 
         worst, worst_number, worst_dump = evaluate()
         print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
@@ -327,7 +324,7 @@ def hill_climb() -> bool:
         changed = False
         for player1, player2 in couples:
 
-            roles = list(range(len(POWERS)))
+            roles = list(range(players_variant))
             random.shuffle(roles)
 
             # find a swap
@@ -363,7 +360,6 @@ def hill_climb() -> bool:
                 break
 
         if not changed:
-            print("")
             return False
 
 
@@ -378,10 +374,12 @@ def main() -> None:
     global BEST_SWAPS
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--players_variant', required=True, type=int, help='number of players per game in the variant')
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
     parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
     parser.add_argument('-o', '--output_file', required=True, help='resulting file')
+    parser.add_argument('-s', '--show', required=False, action='store_true', help='show worst interactions')
     parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players of the file (for testing)')
     args = parser.parse_args()
 
@@ -389,7 +387,7 @@ def main() -> None:
     with open(args.players_file, "r", encoding='utf-8') as read_file:
         PLAYERS_DATA = [p.rstrip() for p in read_file.readlines() if p.rstrip()]
 
-    # for testing pupose we may limit to fewer players
+    # for testing purpose we may limit to fewer players
     if args.limit:
         assert args.limit <= len(PLAYERS_DATA), "Please set the limit to less than the number of players in file"
         PLAYERS_DATA = PLAYERS_DATA[:args.limit]
@@ -397,8 +395,10 @@ def main() -> None:
     # all players must be different
     assert len(set(PLAYERS_DATA)) == len(PLAYERS_DATA), "Duplicate in players"
 
+    players_variant = args.players_variant
+
     # must be enough : that is at least 7
-    assert len(PLAYERS_DATA) >= len(POWERS), "You need more players than that to hope success!"
+    assert len(PLAYERS_DATA) >= players_variant, "With so few players you wont make a single game!"
 
     # make it harder to guess
     random.shuffle(PLAYERS_DATA)
@@ -406,7 +406,7 @@ def main() -> None:
     # make players
     for player_id, _ in enumerate(PLAYERS_DATA):
         name = PLAYERS_DATA[player_id]
-        player = Player(name, player_id)
+        player = Player(name, player_id, players_variant)
         PLAYERS.append(player)
 
     # check game identifiers prefix
@@ -415,7 +415,7 @@ def main() -> None:
     # make games (as many as players)
     for game_id, _ in enumerate(PLAYERS):
         name = f"{args.game_names_prefix}_{game_id+1}"
-        game = Game(name)
+        game = Game(name, players_variant)
         GAMES.append(game)
 
     # load masters file
@@ -433,17 +433,17 @@ def main() -> None:
         # a game master may not be playing
         if master_name not in player_table:
             print(f"Game master {master_name} is not playing !")
-            player = Player(master_name, -1)
+            player = Player(master_name, -1, players_variant)
         else:
             print(f"Game master {master_name} is playing !")
             player = player_table[master_name]
-            assert player.name == master_name, "Internal error: game master losts his/her name!"
+            assert player.name == master_name, "Internal error: game master lost his/her name!"
         player.is_master = True
         masters_list.append(player)
 
     # Print a recap
     nb_players = len(PLAYERS)
-    nb_non_playing_masters = len([p for p in masters_list if p.number == 1])
+    nb_non_playing_masters = len([p for p in masters_list if p.number == -1])
     nb_playing_masters = len([p for p in PLAYERS if p.is_master])
 
     print(f"We have {nb_players} players, {nb_non_playing_masters} non playing masters and {nb_playing_masters} playing masters")
@@ -454,7 +454,7 @@ def main() -> None:
     # if badly designed, we may calculate for too long
     # so this allows us to interrupt gracefully
     try:
-        status = try_and_error(0)
+        status = try_and_error(0, players_variant)
     except KeyboardInterrupt:
         return
 
@@ -464,7 +464,7 @@ def main() -> None:
     assert status, "Sorry : failed to make initial tournament ! Contact support !"
 
     print("Press CTRL-C to interrupt")
-    print("Showing <number of interactions> (<Number of occurences>)")
+    print("Showing <number of interactions> (<Number of occurrences>)")
 
     signal.signal(signal.SIGINT, user_interrupt)
 
@@ -474,7 +474,7 @@ def main() -> None:
 
         # make a climb
         SWAPS = []
-        status = hill_climb()
+        status = hill_climb(players_variant)
         if status:
             break
 
@@ -519,19 +519,21 @@ def main() -> None:
         print(f"Game master {master.name} has {len([g for g in GAMES if master_game_table[g] == master])} games!")
     print("")
 
+    worst, worst_number, _ = evaluate()
+    print(f"We have {worst_number} occurrences of two players interacting {worst} times")
+
+    if args.show:
+        print("Interactions more than once: ")
+        for player1, player2 in [cp for cp in INTERACTION if INTERACTION[cp] > 1]:
+            games = set(player1.games_in()) & set(player2.games_in())
+            print(f"{player1} and {player2} in games {' '.join([g.name for g in games])}")
+
     # output stuff
     if args.output_file:
         with open(args.output_file, "w", encoding='utf-8') as write_file:
             for game in GAMES:
                 write_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
-
-    worst, worst_number, _ = evaluate()
-    print(f"We have {worst_number} occurences of two players interacting {worst} times")
-
-    print("Interactions more than once: ")
-    for player1, player2 in [cp for cp in INTERACTION if INTERACTION[cp] > 1]:
-        games = set(player1.games_in()) & set(player2.games_in())
-        print(f"{player1} and {player2} in games {' '.join([g.name for g in games])}")
+        print(f"File {args.output_file} was written.")
 
     finished_time = time.time()
     elapsed = finished_time - start_time
@@ -547,12 +549,9 @@ if __name__ == '__main__':
     # windows can crash if too deep
     faulthandler.enable()
 
-    # this to know how long it takes
-    START = time.time()
-
     # this if script too slow and profile it
+    PR = cProfile.Profile()
     if PROFILE:
-        PR = cProfile.Profile()
         PR.enable()
 
     main()
@@ -563,10 +562,5 @@ if __name__ == '__main__':
         PS.strip_dirs()
         PS.sort_stats('time')
         PS.print_stats()  # uncomment to have profile stats
-
-    # how long it took
-    DONE = time.time()
-    elapsed = DONE - START
-    print(f"Time elapsed : {elapsed}")
 
     sys.exit(0)
