@@ -5,7 +5,7 @@
 File : allocate.py
 
 Solves the problem of allocating players in a Diplomacy tournament
-For 1000 players takes 35 seconds on an average laptop (linux)
+For 1000 players takes 54 seconds on a good laptop (linux)
 Limited to 275 players on windows
 """
 
@@ -235,7 +235,7 @@ def try_and_error(depth: int, players_variant: int) -> bool:
             break
 
     if role is None:
-        assert False, "Internal error : game has role or not !?"
+        assert False, "Internal error : game has role or not!?"
 
     # objective acceptable players
     acceptable_players = [p for p in PLAYERS if not p.has_role(role) and not game.is_player_in_game(p)]
@@ -257,7 +257,7 @@ def try_and_error(depth: int, players_variant: int) -> bool:
         game.put_player_in(role, player)
         player.put_in_game(role, game)
 
-        # if we fail, we try otherwise !
+        # if we fail, we try otherwise!
         if try_and_error(depth + 1, players_variant):
             return True
 
@@ -295,24 +295,24 @@ def perform_swap(role: int, player1: Player, player2: Player, game1: Game, game2
     player2.put_in_game(role, game1)
 
 
-ref_worst = 0
-ref_worst_number = 0
-ref_worst_dump: typing.List[int] = []
+REF_WORST = 0
+REF_WORST_NUMBER = 0
+REF_WORST_DUMP: typing.List[int] = []
 
 
 def hill_climb(players_variant: int) -> bool:
     """ hill_climb """
 
-    global ref_worst
-    global ref_worst_number
-    global ref_worst_dump
+    global REF_WORST
+    global REF_WORST_NUMBER
+    global REF_WORST_DUMP
 
     while True:
 
         worst, worst_number, worst_dump = evaluate()
-        if (worst, worst_number, worst_dump) < (ref_worst, ref_worst_number, ref_worst_dump):
+        if (worst, worst_number, worst_dump) < (REF_WORST, REF_WORST_NUMBER, REF_WORST_DUMP):
             print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
-            ref_worst, ref_worst_number, ref_worst_dump = worst, worst_number, worst_dump
+            REF_WORST, REF_WORST_NUMBER, REF_WORST_DUMP = worst, worst_number, worst_dump
 
         # are we done
         if worst == 1:
@@ -385,9 +385,9 @@ def main() -> None:
     global SWAPS
     global BEST_SWAPS
 
-    global ref_worst
-    global ref_worst_number
-    global ref_worst_dump
+    global REF_WORST
+    global REF_WORST_NUMBER
+    global REF_WORST_DUMP
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--players_variant', required=True, type=int, help='number of players per game in the variant')
@@ -453,10 +453,10 @@ def main() -> None:
     for master_name in MASTERS_DATA:
         # a game master may not be playing
         if master_name not in player_table:
-            print(f"Game master {master_name} is not playing !")
+            print(f"Game master {master_name} is not playing!")
             player = Player(master_name, -1, players_variant)
         else:
-            print(f"Game master {master_name} is playing !")
+            print(f"Game master {master_name} is playing!")
             player = player_table[master_name]
             assert player.name == master_name, "Internal error: game master lost his/her name!"
         player.is_master = True
@@ -482,7 +482,7 @@ def main() -> None:
     # end line after displaying depth
     print("")
 
-    assert status, "Sorry : failed to make initial tournament ! Contact support !"
+    assert status, "Sorry : failed to make initial tournament! Contact support!"
 
     print("Press CTRL-C to interrupt")
     print("Showing <number of interactions> (<Number of occurrences>)")
@@ -491,7 +491,7 @@ def main() -> None:
 
     best_worst, best_worst_number = nb_players, 0
 
-    ref_worst, ref_worst_number, ref_worst_dump = evaluate()
+    REF_WORST, REF_WORST_NUMBER, REF_WORST_DUMP = evaluate()
 
     while True:
 
@@ -521,7 +521,7 @@ def main() -> None:
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     if not status:
-        print("Sorry : failed to make a perfect tournament ! Contact support !")
+        print("Sorry : failed to make a perfect tournament! Contact support!")
         # still apply BEST SWAPS
         for (role, player1, player2, game1, game2) in BEST_SWAPS:
             perform_swap(role, player1, player2, game1, game2, False)
@@ -535,7 +535,7 @@ def main() -> None:
             if not game.is_player_in_game(master_poss):
                 master = master_poss
                 break
-        assert master, f"Sorry : Could not put a master in game {game} ! Contact support !"
+        assert master, f"Sorry : Could not put a master in game {game}! Contact support!"
         master_game_table[game] = master
 
     for master in masters_list:
@@ -545,7 +545,7 @@ def main() -> None:
     if worst > 1:
         print(f"We have {worst_number} occurrences of two players interacting {worst} times")
     else:
-        print("Allocation is perfect !")
+        print("Allocation is perfect!")
 
     if args.show:
         print("Interactions more than once: ")
@@ -575,8 +575,8 @@ if __name__ == '__main__':
     faulthandler.enable()
 
     # this if script too slow and profile it
-    PR = cProfile.Profile()
     if PROFILE:
+        PR = cProfile.Profile()
         PR.enable()
 
     main()
