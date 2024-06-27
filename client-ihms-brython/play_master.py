@@ -1168,7 +1168,7 @@ def game_master():
         vote_values_table[role] = bool(vote_val)
 
     # incidents
-    game_incidents = play_low.game_incidents_reload(play_low.GAME_ID)
+    game_incidents = play_low.game_master_incidents_reload(play_low.GAME_ID)
     game_incidents2 = play_low.game_incidents2_reload(play_low.GAME_ID)
 
     submitted_roles_list = submitted_data['submitted']
@@ -1668,10 +1668,6 @@ def game_master():
 
     # incidents
     play_low.MY_SUB_PANEL <= html.H4("Retards")
-
-    # get the actual incidents of the game
-    game_incidents = play_low.game_incidents_reload(play_low.GAME_ID)
-    # there can be no incidents (if no incident of failed to load)
 
     game_incidents_table = html.TABLE()
 
