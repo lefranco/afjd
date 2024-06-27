@@ -2920,6 +2920,57 @@ class NewPrivateMessageReceivedRessource(flask_restful.Resource):  # type: ignor
         return data, 200
 
 
+@API.resource('/email-confirmed')
+class EmailConfirmedRessource(flask_restful.Resource):  # type: ignore
+    """  EmailConfirmedRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Do we have new messages ?
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/email-confirmed - GET - new confirmed")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        player = players.Player.find_by_identifier(sql_executor, player_id)
+        del sql_executor
+
+        if player is None:
+            flask_restful.abort(404, msg=f"Player with id {player_id} doesn't exist")
+
+        assert player is not None
+        data = {'email_confirmed': player.email_confirmed}
+        return data, 200
+
+
 @API.resource('/maintain')
 class MaintainRessource(flask_restful.Resource):  # type: ignore
     """ MaintainRessource """

@@ -201,6 +201,38 @@ def new_private_messages_received():
     return new_messages_loaded
 
 
+def email_address_is_confirmed():
+    """ email_address_is_confirmed """
+
+    email_confirmed = False
+
+    def reply_callback(req):
+        nonlocal email_confirmed
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement confirmation email : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement confirmation email : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        email_confirmed = req_result['email_confirmed']
+        return
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/email-confirmed"
+
+    # reading new private messages received : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return email_confirmed
+
+
 def show_news():
     """ show_home """
 
@@ -566,6 +598,16 @@ def show_news():
             if new_messages:
                 alert(f"Vous avez {new_messages} nouveau(x) message(s) personnel(s) ! Pour le(s) lire : Menu Messages personnels.")
                 storage['DATE_NEW_MESSAGES_NOTIFIED'] = str(day_now)
+
+        # we check email not confirmed once a day
+        day_notified = 0
+        if 'DATE_CONFIRMATION_MISSING_NOTIFIED' in storage:
+            day_notified = int(storage['DATE_CONFIRMATION_MISSING_NOTIFIED'])
+        if day_now > day_notified:
+            is_confirmed = email_address_is_confirmed()
+            if not is_confirmed:
+                alert("Votre adresse courriel n'est pas confirmée. Soit elle est en rebond, soit vous ne l'avez pas encore confirmée ! Pour le faire : Menu Mon compte / Valider mon courriel. ")
+                storage['DATE_CONFIRMATION_MISSING_NOTIFIED'] = str(day_now)
 
     # RGPD
     if 'RGPD_ACCEPTED' not in storage:

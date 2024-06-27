@@ -110,6 +110,15 @@ def information_about_pseudo():
     return information
 
 
+def information_about_confirm():
+    """ information_about_account """
+
+    information = html.DIV(Class='note')
+    information <= html.B("Vous arrivez sur cette page ? Cliquez sur le bouton 'Me renvoyer un nouveau code' et consultez votre boite à lettre. Recopiez le code ici et cliquez 'Valider le courriel'")
+    information <= html.BR()
+    return information
+
+
 def create_account(json_dict):
     """ create_account """
 
@@ -803,6 +812,9 @@ def validate_email():
         validate_email()
 
     MY_SUB_PANEL <= html.H3("Validation du courriel")
+
+    MY_SUB_PANEL <= information_about_confirm()
+    MY_SUB_PANEL <= html.BR()
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
