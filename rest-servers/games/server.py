@@ -5761,8 +5761,76 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
 
         assert game is not None
 
-        # player_id only provided if not in game at this role (because left or was moved)
+        # player_id only provided if not anonymous
         late_list = [(o[1], o[2], o[3] if not game.anonymous else None, o[4], o[5]) for o in incidents_list]
+
+        del sql_executor
+
+        data = {'incidents': late_list}
+        return data, 200
+
+
+@API.resource('/game-master-incidents/<game_id>')
+class GameMasterIncidentsRessource(flask_restful.Resource):  # type: ignore
+    """ GameMasterIncidentsRessource """
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, int, float]]], int]:  # pylint: disable=R0201
+        """
+        Gets list of roles which have produced an incident for given game with pseudo for a game master
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-master-incidents/<game_id> - GET - getting which incidents occured for game id=%s for master", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # find game master
+        assert game is not None
+        game_master_id = game.get_role(sql_executor, 0)
+
+        if user_id != game_master_id:
+            del sql_executor
+            flask_restful.abort(404, msg=f"You do not seem to be game master of game {game_id}")
+
+        # incidents_list : those who submitted orders after deadline
+        incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
+
+        assert game is not None
+
+        # all info
+        late_list = [(o[1], o[2], o[3], o[4], o[5]) for o in incidents_list]
 
         del sql_executor
 
