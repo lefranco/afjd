@@ -737,7 +737,7 @@ def show_events_in_game():
     count = {}
 
     for role_id, advancement, player_id, duration, _ in game_incidents:
-        if player_id is not None:
+        if player_id is None:
             continue
         if role_id not in count:
             count[role_id] = []
@@ -753,7 +753,7 @@ def show_events_in_game():
     recap_table <= thead
 
     rank = 1
-    for role_id in sorted(count.keys(), key=lambda r: len(count[r]), reverse=True):
+    for role_id in sorted(count.keys(), key=lambda r: (len(count[r]), max(count[r])), reverse=True):
         row = html.TR()
 
         # rank
@@ -783,13 +783,12 @@ def show_events_in_game():
     play_low.MY_SUB_PANEL <= recap_table
     play_low.MY_SUB_PANEL <= html.BR()
 
-    # a bit of humour !
     if game_incidents:
 
         play_low.MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) a réalisé la transition 'pas d'accord pour le résolution' -> 'd'accord pour résoudre' après la date limite", Class='note')
         play_low.MY_SUB_PANEL <= html.BR()
 
-        play_low.MY_SUB_PANEL <= html.DIV("Seuls les pseudos de joueurs en retard qui depuis ont été remplacés apparaissent (ces retards ne sont pas comptés dans le récapitulatif)", Class='note')
+        play_low.MY_SUB_PANEL <= html.DIV("Les retards des joueurs qui depuis ont été remplacés apparaissent (ces retards ne sont pas comptés dans le récapitulatif)", Class='note')
         play_low.MY_SUB_PANEL <= html.BR()
 
         play_low.MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
