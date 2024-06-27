@@ -17,8 +17,8 @@ Ce sont les données conservées dans la base de données liées à la création
 | mot de passe | non | oui | authentification de l'utilisateur |
 | courriel | non |oui | messages de notification, recrutement pour des événements |
 | téléphone | non |oui | inutilisée |
-| notification avancement parties | oui |oui | explicite, permet d'évbiter certains courriels |
-| notification remplacement | oui |oui | explicite, permet d'évbiter certains courriels |
+| notification avancement parties | oui |oui | explicite, permet d'éviter certains courriels |
+| notification remplacement | oui |oui | explicite, permet d'éviter certains courriels |
 | abonnement newsletter | oui |oui | explicite, permet d'évbiter certains courriels |
 | nom | non |oui | explicite |
 | prénom | non |oui | explicite |
@@ -87,6 +87,7 @@ $$ Interne
 | _ANNOUNCEMENT MODO_ | contenu de l'annonce spéciale ("popup") (modérateur) |
 | _ANNOUNCEMENT DISPLAYED MODO_ | le contenu de l'annonce spéciale ("popup") déjà montrée (modérateur) |
 | _DATE NEW MESSAGES NOTIFIED_ | le dernier jour de notification de messages personnels |
+| _DATE CONFIRMATION MISSING NOTIFIED_ | le dernier jour de notification de confirmation de courriel manquante |
 | _DATE SUFFERING NOTIFIED_ | le dernier jour de notifications de parties à démarrer |
 | _DELTA TIME SEC_ | différence temps local et temps serveur |
 | _VERSION_ | version du front end (logiciel dans le navigateur) utilisé |
