@@ -91,21 +91,6 @@ def show_technical():
 
     # --
 
-    title6 = html.H3("Problème de l'allocation des pays pour les très gros tournois")
-    MY_SUB_PANEL <= title6
-
-    link61 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
-    link61 <= "Comment allouer les joueurs dans les parties d'un très gros tournoi"
-    MY_SUB_PANEL <= link61
-
-    MY_SUB_PANEL <= html.P()
-
-    link62 = html.A(href="./scripts/allocate.py", target="_blank")
-    link62 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
-    MY_SUB_PANEL <= link62
-
-    # --
-
     title7 = html.H3("Document d'interface de l'API")
     MY_SUB_PANEL <= title7
 
