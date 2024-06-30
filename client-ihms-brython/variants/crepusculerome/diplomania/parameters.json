@@ -269,10 +269,10 @@
         "10": {
             "name": "TOU",
             "full_name": "Toulouse",
-            "x_pos": 178,
-            "y_pos": 163,
-            "x_legend_pos": 178,
-            "y_legend_pos": 149
+            "x_pos": 202,
+            "y_pos": 154,
+            "x_legend_pos": 165,
+            "y_legend_pos": 152
         },
         "11": {
             "name": "TAR",
