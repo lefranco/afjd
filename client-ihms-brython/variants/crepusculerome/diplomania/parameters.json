@@ -541,10 +541,10 @@
         "44": {
             "name": "CHA",
             "full_name": "Chalukya",
-            "x_pos": 1247,
-            "y_pos": 610,
-            "x_legend_pos": 1247,
-            "y_legend_pos": 596
+            "x_pos": 1238,
+            "y_pos": 583,
+            "x_legend_pos": 1238,
+            "y_legend_pos": 569
         },
         "45": {
             "name": "KAD",
@@ -581,10 +581,10 @@
         "49": {
             "name": "OST",
             "full_name": "Ostrogothie",
-            "x_pos": 624,
+            "x_pos": 637,
             "y_pos": 148,
-            "x_legend_pos": 611,
-            "y_legend_pos": 144
+            "x_legend_pos": 619,
+            "y_legend_pos": 141
         },
         "50": {
             "name": "OGH",
@@ -598,9 +598,9 @@
             "name": "ALA",
             "full_name": "Alanie",
             "x_pos": 776,
-            "y_pos": 220,
+            "y_pos": 235,
             "x_legend_pos": 776,
-            "y_legend_pos": 206
+            "y_legend_pos": 221
         },
         "52": {
             "name": "ARM",
