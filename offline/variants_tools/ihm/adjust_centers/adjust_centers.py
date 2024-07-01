@@ -95,10 +95,10 @@ class Point:
         self.y = 0  # pylint: disable=invalid-name
 
 
-def stabbeur_center(x: int, y: int, canvas: typing.Any, outline: str) -> None:  # pylint: disable=invalid-name
+def stabbeur_center(x: int, y: int, canvas: typing.Any, outline: str, fill: str) -> None:  # pylint: disable=invalid-name
     """ display a center the stabbeur way """
 
-    item = canvas.create_oval(x - 5, y - 5, x + 5, y + 5, outline=outline)
+    item = canvas.create_oval(x - 5, y - 5, x + 5, y + 5, outline=outline, fill=fill)
     return item
 
 
@@ -163,8 +163,9 @@ class Application(tkinter.Frame):
             x_pos_read = center_data['x_pos']
             y_pos_read = center_data['y_pos']
 
-            outline = 'red' if highlited else 'black'
-            item = stabbeur_center(x_pos_read, y_pos_read, self.canvas, outline)
+            outline = 'red' if highlited else 'blue'
+            fill = 'grey'
+            item = stabbeur_center(x_pos_read, y_pos_read, self.canvas, outline, fill)
             self.item_table[num_center] = item
 
         def arrow_callback(event: typing.Any) -> None:
