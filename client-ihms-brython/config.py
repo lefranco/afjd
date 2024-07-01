@@ -51,6 +51,7 @@ VARIANT_NAMES_DICT = {
     'mediterranee': 5,
     'egeemonie': 6,
     'spiceislands': 7,
+    'crepusculerome': 8,
     'successionautriche': 9,
     'moderne': 10,
     'crowded': 11,
