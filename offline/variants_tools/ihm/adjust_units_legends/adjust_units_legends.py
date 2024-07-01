@@ -103,7 +103,7 @@ class Point:
 def stabbeur_center(x: int, y: int, canvas: typing.Any) -> None:  # pylint: disable=invalid-name
     """ display a center the stabbeur way """
 
-    _ = canvas.create_oval(x - 5, y - 5, x + 5, y + 5, outline='black')
+    _ = canvas.create_oval(x - 5, y - 5, x + 5, y + 5, outline='black', fill='grey')
 
 
 def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> typing.List[typing.Any]:  # pylint: disable=invalid-name
