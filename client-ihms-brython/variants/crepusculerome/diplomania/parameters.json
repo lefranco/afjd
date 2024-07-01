@@ -312,7 +312,8 @@
             "x_pos": 126,
             "y_pos": 278,
             "x_legend_pos": 95,
-            "y_legend_pos": 285
+            "y_legend_pos": 285,
+            "display": 1
         },
         "16": {
             "name": "VAL",
@@ -344,7 +345,8 @@
             "x_pos": 309,
             "y_pos": 164,
             "x_legend_pos": 308,
-            "y_legend_pos": 180
+            "y_legend_pos": 180,
+            "display": 3
         },
         "20": {
             "name": "ROM",
@@ -376,7 +378,8 @@
             "x_pos": 345,
             "y_pos": 185,
             "x_legend_pos": 339,
-            "y_legend_pos": 178
+            "y_legend_pos": 178,
+            "display": 3
         },
         "24": {
             "name": "RAV",
@@ -424,7 +427,8 @@
             "x_pos": 674,
             "y_pos": 341,
             "x_legend_pos": 674,
-            "y_legend_pos": 327
+            "y_legend_pos": 327,
+            "display": 8
         },
         "30": {
             "name": "ALX",
@@ -488,7 +492,8 @@
             "x_pos": 619,
             "y_pos": 558,
             "x_legend_pos": 619,
-            "y_legend_pos": 544
+            "y_legend_pos": 544,
+            "display": 8
         },
         "38": {
             "name": "GHA",
@@ -560,7 +565,8 @@
             "x_pos": 486,
             "y_pos": 186,
             "x_legend_pos": 486,
-            "y_legend_pos": 172
+            "y_legend_pos": 172,
+            "display": 7
         },
         "47": {
             "name": "TYR",
@@ -608,7 +614,8 @@
             "x_pos": 652,
             "y_pos": 235,
             "x_legend_pos": 652,
-            "y_legend_pos": 221
+            "y_legend_pos": 221,
+            "display": 7
         },
         "53": {
             "name": "ATI",
@@ -640,7 +647,8 @@
             "x_pos": 915,
             "y_pos": 314,
             "x_legend_pos": 915,
-            "y_legend_pos": 300
+            "y_legend_pos": 300,
+            "display": 6
         },
         "57": {
             "name": "CTE",
@@ -672,7 +680,8 @@
             "x_pos": 101,
             "y_pos": 211,
             "x_legend_pos": 83,
-            "y_legend_pos": 204
+            "y_legend_pos": 204,
+            "display": 1
         },
         "61": {
             "name": "TOL",
@@ -688,7 +697,8 @@
             "x_pos": 200,
             "y_pos": 120,
             "x_legend_pos": 181,
-            "y_legend_pos": 113
+            "y_legend_pos": 113,
+            "display": 2
         },
         "63": {
             "name": "AUS",
@@ -696,7 +706,8 @@
             "x_pos": 237,
             "y_pos": 105,
             "x_legend_pos": 254,
-            "y_legend_pos": 95
+            "y_legend_pos": 95,
+            "display": 2
         },
         "64": {
             "name": "ALE",
@@ -736,7 +747,8 @@
             "x_pos": 365,
             "y_pos": 109,
             "x_legend_pos": 365,
-            "y_legend_pos": 95
+            "y_legend_pos": 95,
+            "display": 4
         },
         "69": {
             "name": "THU",
@@ -752,7 +764,8 @@
             "x_pos": 382,
             "y_pos": 62,
             "x_legend_pos": 382,
-            "y_legend_pos": 48
+            "y_legend_pos": 48,
+            "display": 4
         },
         "71": {
             "name": "PAS",
@@ -800,7 +813,8 @@
             "x_pos": 725,
             "y_pos": 68,
             "x_legend_pos": 725,
-            "y_legend_pos": 54
+            "y_legend_pos": 54,
+            "display": 5
         },
         "77": {
             "name": "BAC",
@@ -808,7 +822,8 @@
             "x_pos": 1086,
             "y_pos": 94,
             "x_legend_pos": 1086,
-            "y_legend_pos": 80
+            "y_legend_pos": 80,
+            "display": 5
         },
         "78": {
             "name": "KIM",
@@ -848,7 +863,8 @@
             "x_pos": 1043,
             "y_pos": 282,
             "x_legend_pos": 1043,
-            "y_legend_pos": 268
+            "y_legend_pos": 268,
+            "display": 6
         },
         "83": {
             "name": "MER",
