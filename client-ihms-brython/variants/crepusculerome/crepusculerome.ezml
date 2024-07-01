@@ -7,167 +7,160 @@ SDU
 _
 $ Côtes spéciales
 
-(Colombie)
-   Elle a 2 côtes, Ouest (Océan Pacifique) et Est (Océan Atlantique).
-(Amérique Centrale)
-   Elle a 2 côtes, Ouest (Océan Pacifique) et Est (Océan Atlantique).
-(Mexique)
-   Il a 2 côtes, Ouest (Océan Pacifique) et Est (Océan Atlantique).
-(Canada Occidental)
-   Il a 2 côtes, Ouest (Océan Pacifique) et Nord (Océan Arctique).
-(France)
-   Elle a 2 côtes, Nord (Océan Atlantique) et Sud (Mer Méditerranée).
-(Léningrad)
-   Elle a 2 côtes, Nord (Mer de Baltique) et Sud (Mer de Norvège).
-(Corée du Nord)
-   Elle a 2 côtes, Ouest (Mer Jaune) et Est (Mer du Japon).
+(Bulgaria)
+   Elle a 2 côtes, Ouest (Mer de Point Euxin) et Est (Mer de Palus Moétrique).
+(Alanie)
+   Elle a 2 côtes, Ouest (Mer de Palus Moétrique) et Est (Mer de Mazandaran).
 
 _
 $ Particularités de la carte
 
-La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question (et des ponts pour les armées)
-
-(Canal en Egypte)
-Une flotte peut aller de Mer Noire à Mer Méditerranée Est en passant par l'Egypte (et réciproquement).
-(Canal du Panama)
-Une flotte peut aller de Mer des Caraïbes à Mer Pacifique Est en passant par le Panama (et réciproquement).
-
-(Pont en Indonésie)
-Une armée peut aller de Philippine en Australie en traversant l'Indonésie (et réciproquement).
-
-(Clarifications autour de la Suède, du Danemark, de la Mer du Nord et de la Mer Baltique)
-Une flotte peut aller de Mer du Nord à Mer Baltique directement (et réciproquement).
-Une armée peut aller de Danemark à Suède directement (et réciproquement).
-
-(Clarifications autour du Canada Occidental et du Groenland)
-Une flotte de l'Ouest Canadien ne peut pas atteindre le Groenland (et réciproquement).
-
+SDU
 _
 $ Datation
 
-La partie commence en *1961*. 
+La partie commence en *621*. 
 Chaque tour représente *1* année "en temps réel".
 
 _
 $ Centres de ravitaillement
 
-Il y a *27* centres de ravitaillement sur le plateau. 
+Il y a *41* centres de ravitaillement sur le plateau.
 .
-(Attention :)
-L'obtention de plus de la moitié des centres n'arrête pas la partie.
+Le gagnant donc est la puissance qui détient *21* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
 _
 $ Puissances en présence
 
-Il y a deux puissances dont les unités de départ sont les suivantes :
+Il y a huit puissances dont les unités de départ sont les suivantes :
 .
 .
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés|
-|OTAN | 3 | New-York, France, Los Angeles | Australie, Grande-Bretagne, Turquie  | |
-|Varsovie | 4 | Moscou, Vladivostok, Shangaï | Cuba, Albanie, Leningrad côte sud | |
+|Wisigoth | 3 | Tolède | Valencia, Bracara  | |
+|Francs| 3 | Toulouse, Aquae Granni | Paris  | |
+|Lombards | 3 | Pavie, Vérone | Benevent  | |
+|Avars | 3 | Apulum, Partiscum, Tyras |   | |
+|Gokturk | 3 | Atil, Suyab, Gurganj |   | |
+|Perse | 3 |  | Ctesiphon, Merv  | Estakhr |
+|Byzance | 4 | Salona, Ephèse, Antioche | Constantinople  | |
+|Afrique | 3 | Carthage | Caeseresa, Alexandrie  | |
 =
 
 _
 $ Pièges de la variante
 
-Le Canada de l'Ouest ne borde pas le Groenland mais la Mer du Nord borde la Suède.
-
+SDU
 _
 $ Nomenclature
 
 = Régions et abréviations de la variante
 | Abréviation | Nom complet |
-| AfE | Afrique de l’Est |
-| afg | Afghanistan |
-| AfN | Afrique du Nord |
-| Ala | Alaska |
-| Alb | Albanie |
-| AlE | Allemagne de l’Est |
-| AlO | Allemagne de l’Ouest |
-| AmC | Amérique Centrale |
-| Ana | Anadyr |
-| Arb | Arabie |
-| AsS | Asie du Sud |
-| ATE | Atlantique Est |
-| ATO | Atlantique Ouest |
-| Aus | Australie |
-| BHU | Baie d’Hudson |
-| Bng | Bangladesh |
-| Bre | Brésil |
-| CaO | Canada Occidental |
-| Cau | Caucase |
-| CdN | Corée du Nord |
-| CdS | Corée du Sud |
-| Col | Colombie |
-| Cub | Cuba |
-| Dan | Danemark |
-| Egy | Egypte |
-| Fin | Finlande |
-| Flo | Floride |
-| Fra | France |
-| GAL | Golfe d’Alaska |
-| GBE | Golfe du Bengale |
-| GBr |  Grande Bretagne  |
-| GME | Golfe du Mexique |
-| Gre | Grèce |
-| Gro | Groënland |
-| Han | Hanoï |
-| Ibe | Ibérie |
-| Ids | Indonésie |
-| Ind | Inde |
-| Irk | Irak |
-| Irn | Iran |
-| Ita | Italie |
-| Jap | Japon |
-| Kur | Kurdistan |
-| LAn | Los Angeles |
-| Len | Léningrad |
-| Lev | Levant |
-| Lib | Libye |
-| Man | Mandchourie |
-| MAR | Mer d’Arabie |
-| MBA | Mer Baltique |
-| MBE | Mer de Béring |
-| MCA | Mer des Caraïbes |
-| MCS | Mer de Chine Sud |
-| MDN | Mer du Nord |
-| Mex | Mexique |
-| mid | Midwest |
-| MIO | Mer Ionienne |
-| MJN | Mer Jaune |
-| MJP | Mer du Japon |
-| MME | Mer Méditerranée Est |
-| MMO | Mer Méditerranée Ouest |
-| MNG | Mer de Norvège |
-| MNO | Mer Noire |
-| mon | Mongolie |
-| mos | Moscou |
-| MRO | Mer Rouge |
-| Nge | Norvège |
-| NYo | New York |
-| OAR | Océan Arctique |
-| OIN | Océan Indien |
-| Our | Oural |
-| PAE | Pacifique Est |
-| Pak | Pakistan |
-| Pan | Panama |
-| PAO | Pacifique Ouest |
-| Phi | Philippines |
-| Que | Québec |
-| Sha | Shanghaï |
-| Sib | Sibérie |
-| SoW | South West |
-| Sue | Suède |
-| SVi | Sud Vietnam |
-| Tor | Toronto |
-| Tun | Tunisie |
-| Tur | Turquie |
-| Ukr | Ukraine |
-| uru | Urumchi |
-| Ven | Vénézuela |
-| Vla | Vladivostok |
-| You | Yougoslavie |
+| ALA | Alanie |
+| ALE | Alemanie |
+| ALO | Alodie |
+| ALX | Alexandrie |
+| ANT | Antioche |
+| APU | Apulum |
+| AQU | Aquae Granni |
+| ARM | Armenie |
+| ARV | Arvorig |
+| AST | Asturie |
+| ATI | Atil |
+| AUS | Austrasie |
+| AXU | Axum |
+| BAB | Barbarie |
+| BAC | Bachikiristan |
+| BAE | Baetica |
+| BAM | Bamiyan |
+| BAR | Barghawata |
+| BAV | Baviere |
+| BEN | Benevent |
+| BRA | Bracara |
+| BUL | Bulgaria |
+| BUR | BURGONDIE |
+| CAE | Caesarea |
+| CAL | Calabre |
+| CAT | Carthage |
+| CHA | Chalukya |
+| CON | Constantinople |
+| CTE | Ctesiphon |
+| DAC | Dacie |
+| DEI | Deira |
+| DOM | Domnonea |
+| EDE | Edesse |
+| EPH | Ephese |
+| EST | Estakhr |
+| GAR | Garamantea |
+| gARA | Golfe d'Arabie |
+| GHA | Ghassan |
+| gPER | Golfe Persique |
+| gSAV | Golfe Savatahanan |
+| GUR | Gurganj |
+| GWY | Gwynned |
+| HIM | Himyar |
+| HYR | Hyrcania |
+| KAD | Kadambas |
+| KHO | Khorassan |
+| KIM | Kimekistan |
+| LAK | Lakhmia |
+| LEO | Leon |
+| LON | London |
+| MAK | Makran |
+| MAU | Mauretanie |
+| mCAN | Mer Cantabrique |
+| mDAL | Mer Dalmatienne |
+| MER | Merv |
+| mEXT | Mer Exterieure |
+| mHIB | Mer d'Hibernie |
+| mLEV | Mer Levantine |
+| mLIG | Mer Ligurienne |
+| mLYB | Mer Lybienne |
+| mMAZ | Mer de Mazandaran |
+| mNOR | Mer Nordique |
+| MOE | Moesie |
+| mTYR | Mer Tyrrheniene |
+| NAO | Naoned |
+| NEU | Neustrie |
+| NOR | Norique |
+| NUB | Nubie |
+| OGH | Oghurie |
+| OST | Ostrogothie |
+| PAR | Paris |
+| PAS | Parsticum |
+| PAV | Pavie |
+| pEUX | Pont Euxin |
+| pMOE | Palus Moetique |
+| POL | Pologne |
+| PTH | Parthia |
+| QUR | Qurayshia |
+| RAV | Ravenne |
+| RHE | Rhetie |
+| ROM | Rome |
+| S1 | Steppes 1 |
+| S2 | Steppes 2 |
+| S3 | Steppes 3 |
+| SAB | Sabiristan |
+| SAL | Salona |
+| SAX | Saxe |
+| SEV | Severie |
+| SOR | Sorbie |
+| SPO | Spolete |
+| SUY | Suyab |
+| SYR | Syrie |
+| TAA | Taank |
+| TAR | Tarraconensis |
+| THU | Thuringe |
+| TIN | Tingis |
+| TOK | Tokharia |
+| TOL | Tolede |
+| TOS | Toscane |
+| TOU | Toulouse |
+| TYR | Tyras |
+| VAL | Valencia |
+| VAR | Varnataka |
+| VAS | Vasconia |
+| VER | Verone |
 =
 
 _
@@ -178,4 +171,4 @@ Constructions sur les centres de départ comme dans la variante standard.
 _
 $ Sur le wiki
 
-[[https://diplomania-gen.fr/dokuwiki/doku.php?id=variante:cold_war]]
+[[https://diplomania-gen.fr/dokuwiki/doku.php?id=variante:crepuscule_du_monde_classique]]
