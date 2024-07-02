@@ -52,6 +52,7 @@ COAST_MARKER_COLOR = (0, 0, 0)  # Black
 COAST_MARKER_THICKNESS = 1
 COAST_MARKER_DIVISIONS = 6
 
+CENTER_RADIUS = 5
 
 @enum.unique
 class FillType(enum.Enum):
@@ -224,6 +225,11 @@ class Application(tkinter.Frame):
             # draw
             cv2.polylines(self.cv_image, [points], True, color_tuple, COAST_MARKER_THICKNESS)  # pylint: disable=c-extension-no-member
 
+        def circle(x_pos: int, y_pos: int, color_tuple: typing.Tuple[int,...]) -> None:
+
+            # draw
+            cv2.circle(self.cv_image, (x_pos, y_pos), CENTER_RADIUS, color_tuple, COAST_MARKER_THICKNESS)  # pylint: disable=c-extension-no-member
+
         def put_image() -> None:
 
             self.canvas = tkinter.Canvas(frame_carto, width=self.image_map.width(), height=self.image_map.height())  # pylint: disable=attribute-defined-outside-init
@@ -268,6 +274,46 @@ class Application(tkinter.Frame):
                 y_center = zone_data['y_pos']
 
                 hexagon(x_center, y_center, color_tuple)
+
+            # Pass image cv -> tkinter
+            _, tmp_file = tempfile.mkstemp(suffix='.png')
+            cv2.imwrite(tmp_file, self.cv_image)  # pylint: disable=c-extension-no-member
+            self.image_map = tkinter.PhotoImage(file=tmp_file)
+            os.remove(tmp_file)
+
+            # Display on screen
+            put_image()
+
+        def centers_callback(erase: bool) -> None:
+
+            if self.parameters_file is None:
+                tkinter.messagebox.showinfo(title="Error", message=("Please pass parameters file json as parameter of program!"))
+                return
+
+            if not os.path.exists(self.parameters_file):
+                tkinter.messagebox.showinfo(title="Error", message=(f"File '{self.parameters_file}' does not seem to exist, please advise !"))
+                return
+
+            # load parameters from json data file
+            with open(self.parameters_file, "r", encoding='utf-8') as read_file:
+                try:
+                    json_parameters_data = json.load(read_file)
+                except Exception as exception:  # pylint: disable=broad-except
+                    tkinter.messagebox.showinfo(title="Error", message=(f"Failed to load {self.parameters_file} : {exception}"))
+                    return
+
+            if erase:
+                color = COLORS_TABLE[FillType.LAND_COAST]
+                color_tuple = tuple(reversed(color.values()))
+            else:
+                color_tuple = COAST_MARKER_COLOR
+
+            for center_data in json_parameters_data['centers'].values():
+
+                x_center = center_data['x_pos']
+                y_center = center_data['y_pos']
+
+                circle(x_center, y_center, color_tuple)
 
             # Pass image cv -> tkinter
             _, tmp_file = tempfile.mkstemp(suffix='.png')
@@ -427,24 +473,30 @@ class Application(tkinter.Frame):
         self.reload_button = tkinter.Button(frame_actions_buttons, text="Reload map file", command=reload_callback)
         self.reload_button.grid(row=1, column=1, sticky='we')
 
-        self.reload_button = tkinter.Button(frame_actions_buttons, text="Undo", command=undo_callback)
-        self.reload_button.grid(row=2, column=1, sticky='we')
+        self.undo_button = tkinter.Button(frame_actions_buttons, text="Undo", command=undo_callback)
+        self.undo_button.grid(row=2, column=1, sticky='we')
 
-        self.reload_button = tkinter.Button(frame_actions_buttons, text="Save", command=save_callback)
-        self.reload_button.grid(row=3, column=1, sticky='we')
+        self.save_button = tkinter.Button(frame_actions_buttons, text="Save", command=save_callback)
+        self.save_button.grid(row=3, column=1, sticky='we')
 
-        self.reload_button = tkinter.Button(frame_actions_buttons, text="Erase coasts zones", command=lambda e=True: coasts_zones_callback(e))  # type: ignore
-        self.reload_button.grid(row=4, column=1, sticky='we')
+        self.erase_coasts_button = tkinter.Button(frame_actions_buttons, text="Erase coasts zones", command=lambda e=True: coasts_zones_callback(e))  # type: ignore
+        self.erase_coasts_button.grid(row=4, column=1, sticky='we')
 
-        self.reload_button = tkinter.Button(frame_actions_buttons, text="Draw coasts zones", command=lambda e=False: coasts_zones_callback(e))  # type: ignore
-        self.reload_button.grid(row=5, column=1, sticky='we')
+        self.draw_coasts_button = tkinter.Button(frame_actions_buttons, text="Draw coasts zones", command=lambda e=False: coasts_zones_callback(e))  # type: ignore
+        self.draw_coasts_button.grid(row=5, column=1, sticky='we')
+
+        self.erase_centers_button = tkinter.Button(frame_actions_buttons, text="Erase centers", command=lambda e=True: centers_callback(e))  # type: ignore
+        self.erase_centers_button.grid(row=6, column=1, sticky='we')
+
+        self.draw_centers_button = tkinter.Button(frame_actions_buttons, text="Draw centers", command=lambda e=False: centers_callback(e))  # type: ignore
+        self.draw_centers_button.grid(row=7, column=1, sticky='we')
 
         frame_selection_type_buttons = tkinter.LabelFrame(frame_buttons, text="Selection fill type")
         frame_selection_type_buttons.grid(row=2, column=1, sticky='nw')
 
         for num, fill_type in enumerate(FillType):
-            self.reload_button = tkinter.Button(frame_selection_type_buttons, text=fill_type.name.title(), command=lambda ft=fill_type: select_fill_type_callback(ft))  # type: ignore
-            self.reload_button.grid(row=4 + num, column=1, sticky='we')
+            self.fill_button = tkinter.Button(frame_selection_type_buttons, text=fill_type.name.title(), command=lambda ft=fill_type: select_fill_type_callback(ft))  # type: ignore
+            self.fill_button.grid(row=4 + num, column=1, sticky='we')
 
         frame_selection_mode_buttons = tkinter.LabelFrame(frame_buttons, text="Selection fill mode")
         frame_selection_mode_buttons.grid(row=3, column=1, sticky='nw')
@@ -452,20 +504,20 @@ class Application(tkinter.Frame):
         self.fill_button = tkinter.Button(frame_selection_mode_buttons, text="Fill", command=lambda fm=FillMode.FILL: select_fill_mode_callback(fm))  # type: ignore
         self.fill_button.grid(row=1, column=1, sticky='we')
 
-        self.fill_button = tkinter.Button(frame_selection_mode_buttons, text="Paint", command=lambda fm=FillMode.PAINT: select_fill_mode_callback(fm))  # type: ignore
-        self.fill_button.grid(row=2, column=1, sticky='we')
+        self.paint_button = tkinter.Button(frame_selection_mode_buttons, text="Paint", command=lambda fm=FillMode.PAINT: select_fill_mode_callback(fm))  # type: ignore
+        self.paint_button.grid(row=2, column=1, sticky='we')
 
-        self.fill_button = tkinter.Button(frame_selection_mode_buttons, text="Special coast (hexagon)", command=lambda fm=FillMode.SPECIAL_COAST: select_fill_mode_callback(fm))  # type: ignore
-        self.fill_button.grid(row=3, column=1, sticky='we')
+        self.coast_button = tkinter.Button(frame_selection_mode_buttons, text="Special coast (hexagon)", command=lambda fm=FillMode.SPECIAL_COAST: select_fill_mode_callback(fm))  # type: ignore
+        self.coast_button.grid(row=3, column=1, sticky='we')
 
         frame_selection_paintbrush_buttons = tkinter.LabelFrame(frame_buttons, text="Paintbrush")
         frame_selection_paintbrush_buttons.grid(row=4, column=1, sticky='nw')
 
-        self.fill_button = tkinter.Button(frame_selection_paintbrush_buttons, text="Smaller paintbrush", command=lambda m=False: select_fill_thickness_callback(m))  # type: ignore
-        self.fill_button.grid(row=1, column=1, sticky='we')
+        self.smaller_button = tkinter.Button(frame_selection_paintbrush_buttons, text="Smaller paintbrush", command=lambda m=False: select_fill_thickness_callback(m))  # type: ignore
+        self.smaller_button.grid(row=1, column=1, sticky='we')
 
-        self.fill_button = tkinter.Button(frame_selection_paintbrush_buttons, text="Bigger paintbrush", command=lambda m=True: select_fill_thickness_callback(m))  # type: ignore
-        self.fill_button.grid(row=2, column=1, sticky='we')
+        self.bigger_button = tkinter.Button(frame_selection_paintbrush_buttons, text="Bigger paintbrush", command=lambda m=True: select_fill_thickness_callback(m))  # type: ignore
+        self.bigger_button.grid(row=2, column=1, sticky='we')
 
         self.thickness_label = tkinter.Label(frame_selection_paintbrush_buttons, text="Size of paintbrush :")
         self.thickness_label.grid(row=3, column=1, sticky='we')
