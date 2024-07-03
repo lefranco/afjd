@@ -624,10 +624,10 @@ LEGEND_FONT = legend_font()
 def map_text_font() -> str:
     """ map_text_font """
 
-    font_style = 'italic'
+    font_style = 'oblique'
     font_variant = 'normal'
     font_weight = 'lighter'
-    font_size = 'small'
+    font_size = 'x-small'
     font_family = 'Arial'
     return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"
 
