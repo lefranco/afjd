@@ -263,7 +263,7 @@
             "full_name": "Naoned",
             "x_pos": 153,
             "y_pos": 126,
-            "x_legend_pos": 152,
+            "x_legend_pos": 148,
             "y_legend_pos": 114
         },
         "10": {
@@ -325,7 +325,7 @@
         },
         "17": {
             "name": "BUR",
-            "full_name": "BURGONDIE",
+            "full_name": "Burgondie",
             "x_pos": 244,
             "y_pos": 156,
             "x_legend_pos": 244,
@@ -933,10 +933,10 @@
         "91": {
             "name": "mHIB",
             "full_name": "Mer d'Hibernie",
-            "x_pos": 30,
-            "y_pos": 30,
-            "x_legend_pos": 30,
-            "y_legend_pos": 16
+            "x_pos": 16,
+            "y_pos": 65,
+            "x_legend_pos": 16,
+            "y_legend_pos": 51
         },
         "92": {
             "name": "mCAN",
