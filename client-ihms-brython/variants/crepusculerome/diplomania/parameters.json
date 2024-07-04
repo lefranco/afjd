@@ -337,57 +337,57 @@
             "x_pos": 279,
             "y_pos": 147,
             "x_legend_pos": 294,
-            "y_legend_pos": 144
+            "y_legend_pos": 143
         },
         "19": {
             "name": "TOS",
             "full_name": "Toscane",
             "x_pos": 309,
             "y_pos": 164,
-            "x_legend_pos": 308,
+            "x_legend_pos": 292,
             "y_legend_pos": 180,
             "display": 3
         },
         "20": {
             "name": "ROM",
             "full_name": "Rome",
-            "x_pos": 340,
-            "y_pos": 206,
-            "x_legend_pos": 322,
-            "y_legend_pos": 191
+            "x_pos": 319,
+            "y_pos": 188,
+            "x_legend_pos": 316,
+            "y_legend_pos": 208
         },
         "21": {
             "name": "CAL",
             "full_name": "Calabre",
             "x_pos": 388,
             "y_pos": 244,
-            "x_legend_pos": 377,
-            "y_legend_pos": 229
+            "x_legend_pos": 364,
+            "y_legend_pos": 239
         },
         "22": {
             "name": "BEN",
             "full_name": "Benevent",
             "x_pos": 389,
             "y_pos": 218,
-            "x_legend_pos": 356,
-            "y_legend_pos": 200
+            "x_legend_pos": 394,
+            "y_legend_pos": 207
         },
         "23": {
             "name": "SPO",
             "full_name": "Spolete",
-            "x_pos": 345,
-            "y_pos": 185,
-            "x_legend_pos": 339,
-            "y_legend_pos": 178,
+            "x_pos": 343,
+            "y_pos": 181,
+            "x_legend_pos": 353,
+            "y_legend_pos": 169,
             "display": 3
         },
         "24": {
             "name": "RAV",
             "full_name": "Ravenne",
-            "x_pos": 368,
-            "y_pos": 143,
-            "x_legend_pos": 326,
-            "y_legend_pos": 154
+            "x_pos": 327,
+            "y_pos": 160,
+            "x_legend_pos": 360,
+            "y_legend_pos": 141
         },
         "25": {
             "name": "SAL",
@@ -957,10 +957,10 @@
         "94": {
             "name": "mTYR",
             "full_name": "Mer Tyrrheniene",
-            "x_pos": 310,
-            "y_pos": 238,
-            "x_legend_pos": 310,
-            "y_legend_pos": 224
+            "x_pos": 291,
+            "y_pos": 251,
+            "x_legend_pos": 291,
+            "y_legend_pos": 237
         },
         "95": {
             "name": "mLIG",
@@ -981,9 +981,9 @@
         "97": {
             "name": "mDAL",
             "full_name": "Mer Dalmatienne",
-            "x_pos": 385,
-            "y_pos": 191,
-            "x_legend_pos": 368,
+            "x_pos": 390,
+            "y_pos": 192,
+            "x_legend_pos": 372,
             "y_legend_pos": 182
         },
         "98": {
