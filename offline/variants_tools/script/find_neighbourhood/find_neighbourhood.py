@@ -366,7 +366,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
     for num, (old_dict_unit_type, new_dict_unit_type) in enumerate(zip(old_neighbouring, new_neighbouring)):
         for (old_zone_num, old_neighbours), (new_zone_num, new_neighbours) in zip(old_dict_unit_type.items(), new_dict_unit_type.items()):
             if new_zone_num != old_zone_num:
-                print(f"ERROR : By {'army' if num == 0 else 'fleet'} Zone number {old_zone_num} became {new_zone_num}")
+                print(f"WARNING : By {'army' if num == 0 else 'fleet'} Zone number {old_zone_num} became {new_zone_num}")
                 continue
             gained_items = set(new_neighbours) - set(old_neighbours)
             if gained_items:
