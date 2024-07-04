@@ -463,6 +463,7 @@ class Zone(Highliteable, Renderable):
 
         # zone
         zone_full_name = variant.full_zone_name_table[self]
+        zone_name = variant.zone_name_table[self]
 
         # region type name
         region_type_name = variant.region_name_table[self._region.region_type]
@@ -471,7 +472,7 @@ class Zone(Highliteable, Renderable):
 
         neighbours_fleet_desc = f"par {self._variant.unit_name_table[UnitTypeEnum.FLEET_UNIT]} : [{' '.join([variant.zone_name_table[z] for z in self.neighbours[UnitTypeEnum.FLEET_UNIT]])}]" if self.neighbours[UnitTypeEnum.FLEET_UNIT] else ""
 
-        return f"La zone {zone_full_name} - {region_type_name} - dont les voisins sont {neighbours_army_desc} {neighbours_fleet_desc}."
+        return f"La zone {zone_full_name} ({zone_name}) - {region_type_name} - dont les voisins sont {neighbours_army_desc} {neighbours_fleet_desc}."
 
     @property
     def identifier(self) -> int:
