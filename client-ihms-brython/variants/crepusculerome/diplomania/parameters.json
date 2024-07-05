@@ -1,9 +1,9 @@
 {
     "author": "Inconnu",
-    "additional_text": "",
+    "additional_text": "Informations à lire pour jouer la variante :\nLes steppes (le rectangle blanc en haut à droite) ne sont pas une\nprovince et ne peuvent être occcupées.\nC'est en réalité un indicateur d'adjacence.\nIl y a trois provinces de steppe dans cette zone : S1, s2 et s3\nElles peuvent être occupées comme une province normale.\nChacune est adjacente aux deux autres et à toutes les\nprovinces voisines de la steppe.\nPlus concrètement :\nS1, S2 et S3 sont adjacentes à POL, SEV, SAB, BAC et KIM\nLes steppes sont des terres.",
     "map": {
-        "width": 1351,
-        "height": 750
+        "width": 1297,
+        "height": 720
     },
     "regions": {
         "1": {
