@@ -247,8 +247,8 @@
             "full_name": "Domnonea",
             "x_pos": 154,
             "y_pos": 96,
-            "x_legend_pos": 161,
-            "y_legend_pos": 85
+            "x_legend_pos": 159,
+            "y_legend_pos": 84
         },
         "8": {
             "name": "ARV",
@@ -278,16 +278,16 @@
             "name": "TAR",
             "full_name": "Tarraconensis",
             "x_pos": 148,
-            "y_pos": 197,
+            "y_pos": 203,
             "x_legend_pos": 148,
-            "y_legend_pos": 183
+            "y_legend_pos": 189
         },
         "12": {
             "name": "VAS",
             "full_name": "Vasconia",
             "x_pos": 95,
             "y_pos": 185,
-            "x_legend_pos": 111,
+            "x_legend_pos": 110,
             "y_legend_pos": 196
         },
         "13": {
@@ -320,8 +320,8 @@
             "full_name": "Valencia",
             "x_pos": 157,
             "y_pos": 230,
-            "x_legend_pos": 153,
-            "y_legend_pos": 258
+            "x_legend_pos": 170,
+            "y_legend_pos": 247
         },
         "17": {
             "name": "BUR",
@@ -369,8 +369,8 @@
             "full_name": "Benevent",
             "x_pos": 389,
             "y_pos": 218,
-            "x_legend_pos": 394,
-            "y_legend_pos": 207
+            "x_legend_pos": 397,
+            "y_legend_pos": 208
         },
         "23": {
             "name": "SPO",
@@ -714,7 +714,7 @@
             "full_name": "Alemanie",
             "x_pos": 294,
             "y_pos": 103,
-            "x_legend_pos": 278,
+            "x_legend_pos": 279,
             "y_legend_pos": 102
         },
         "65": {
@@ -966,9 +966,9 @@
             "name": "mLIG",
             "full_name": "Mer Ligurienne",
             "x_pos": 233,
-            "y_pos": 206,
+            "y_pos": 214,
             "x_legend_pos": 233,
-            "y_legend_pos": 192
+            "y_legend_pos": 200
         },
         "96": {
             "name": "mLYB",
