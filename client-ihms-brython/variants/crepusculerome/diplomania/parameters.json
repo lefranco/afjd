@@ -61,7 +61,7 @@
         },
         "2": {
             "name": "Francs",
-            "adjective_name": "Franque",
+            "adjective_name": "Franc",
             "letter_name": "F",
             "red": [
                 5,
@@ -78,7 +78,7 @@
         },
         "3": {
             "name": "Lombards",
-            "adjective_name": "Lombarde",
+            "adjective_name": "Lombard",
             "letter_name": "L",
             "red": [
                 14,
@@ -95,7 +95,7 @@
         },
         "4": {
             "name": "Avars",
-            "adjective_name": "Avare",
+            "adjective_name": "Avar",
             "letter_name": "V",
             "red": [
                 88,
@@ -129,7 +129,7 @@
         },
         "6": {
             "name": "Perse",
-            "adjective_name": "Persane",
+            "adjective_name": "Persan",
             "letter_name": "E",
             "red": [
                 209,
@@ -146,7 +146,7 @@
         },
         "7": {
             "name": "Byzance",
-            "adjective_name": "Byzantine",
+            "adjective_name": "Byzantin",
             "letter_name": "B",
             "red": [
                 198,
@@ -163,7 +163,7 @@
         },
         "8": {
             "name": "Afrique",
-            "adjective_name": "Afrique",
+            "adjective_name": "Africain",
             "letter_name": "A",
             "red": [
                 255,
