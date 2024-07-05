@@ -462,6 +462,7 @@ class Zone(Highliteable, Renderable):
         variant = self._variant
 
         # zone
+        # zone
         zone_full_name = variant.full_zone_name_table[self]
         zone_name = variant.zone_name_table[self]
 
@@ -633,14 +634,27 @@ def map_text_font() -> str:
     return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"
 
 
+def map_additional_text_font() -> str:
+    """ map_text_font """
+
+    font_style = 'normal'
+    font_variant = 'normal'
+    font_weight = 'lighter'
+    font_size = 'medium'
+    font_family = 'Arial'
+    return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"
+
+
 MAP_TEXT_FONT = map_text_font()
 VARIANT_AUTHOR_X_POS = 10
 VARIANT_AUTHOR_Y_POS = 12
 MAP_AUTHOR_X_POS = 10
 MAP_AUTHOR_Y_POS = 25
+
+MAP_ADDITIONAL_TEXT_FONT = map_additional_text_font()
 ADDITIONAL_X_POS = 10
-ADDITIONAL_Y_POS = -10
-TEXT_HEIGHT_PIXEL = 10
+ADDITIONAL_Y_POS = 10
+TEXT_HEIGHT_PIXEL = 18
 
 
 # center
@@ -996,9 +1010,13 @@ class Variant(Renderable):
         ctx.fillStyle = info_colour.str_value()  # for a text
 
         # put the additional
+        ctx.font = MAP_ADDITIONAL_TEXT_FONT
+        x_pos = ADDITIONAL_X_POS
+        num_lines = len(self._additional_text.split('\n'))
+        start_y_pos = self._map_size.y_pos - TEXT_HEIGHT_PIXEL * (num_lines - 1)
         for num, chunk in enumerate(self._additional_text.split('\n')):
-            additional_y_pos = self._map_size.y_pos - TEXT_HEIGHT_PIXEL * (len(self._additional_text.split('\n')) - num)
-            ctx.fillText(chunk, ADDITIONAL_X_POS, additional_y_pos)
+            y_pos = start_y_pos + TEXT_HEIGHT_PIXEL * num - ADDITIONAL_Y_POS
+            ctx.fillText(chunk, x_pos, y_pos)
 
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
