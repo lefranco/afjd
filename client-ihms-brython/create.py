@@ -444,6 +444,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
 
 
 def info_allocate():
+    """ info_allocate """
 
     MY_SUB_PANEL <= html.H3("Problème de l'allocation des pays")
 
@@ -469,7 +470,6 @@ def info_allocate():
     link62 = html.A(href="./scripts/allocate.py", target="_blank")
     link62 <= "Téléchargement du script PYTHON à utiliser pour réaliser cette allocation (lire le document au préalable)"
     MY_SUB_PANEL <= link62
-
 
 
 # so that we do not too much repeat the selected game
@@ -673,6 +673,7 @@ def explain_stuff():
     information2 <= modus
 
     MY_SUB_PANEL <= information2
+
 
 def tournament_result():
     """ tournament_result """
