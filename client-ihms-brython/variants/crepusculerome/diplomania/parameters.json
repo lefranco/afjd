@@ -96,7 +96,7 @@
         "4": {
             "name": "Avars",
             "adjective_name": "Avare",
-            "letter_name": "A",
+            "letter_name": "V",
             "red": [
                 88,
                 215
@@ -867,7 +867,7 @@
             "display": 6
         },
         "83": {
-            "name": "MER",
+            "name": "MEV",
             "full_name": "Merv",
             "x_pos": 1148,
             "y_pos": 322,
