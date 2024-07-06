@@ -232,7 +232,8 @@
             "x_pos": 247,
             "y_pos": 51,
             "x_legend_pos": 247,
-            "y_legend_pos": 37
+            "y_legend_pos": 37,
+            "display": 2
         },
         "6": {
             "name": "PAR",
@@ -240,7 +241,8 @@
             "x_pos": 205,
             "y_pos": 72,
             "x_legend_pos": 205,
-            "y_legend_pos": 58
+            "y_legend_pos": 58,
+            "display": 2
         },
         "7": {
             "name": "DOM",
@@ -272,7 +274,8 @@
             "x_pos": 202,
             "y_pos": 154,
             "x_legend_pos": 165,
-            "y_legend_pos": 152
+            "y_legend_pos": 152,
+            "display": 2
         },
         "11": {
             "name": "TAR",
@@ -304,7 +307,8 @@
             "x_pos": 59,
             "y_pos": 246,
             "x_legend_pos": 59,
-            "y_legend_pos": 232
+            "y_legend_pos": 232,
+            "display": 1
         },
         "15": {
             "name": "BAE",
@@ -321,7 +325,8 @@
             "x_pos": 157,
             "y_pos": 230,
             "x_legend_pos": 170,
-            "y_legend_pos": 247
+            "y_legend_pos": 247,
+            "display": 1
         },
         "17": {
             "name": "BUR",
@@ -337,7 +342,8 @@
             "x_pos": 279,
             "y_pos": 147,
             "x_legend_pos": 294,
-            "y_legend_pos": 143
+            "y_legend_pos": 143,
+            "display": 3
         },
         "19": {
             "name": "TOS",
@@ -370,7 +376,8 @@
             "x_pos": 389,
             "y_pos": 218,
             "x_legend_pos": 397,
-            "y_legend_pos": 208
+            "y_legend_pos": 208,
+            "display": 3
         },
         "23": {
             "name": "SPO",
@@ -395,7 +402,8 @@
             "x_pos": 443,
             "y_pos": 205,
             "x_legend_pos": 443,
-            "y_legend_pos": 191
+            "y_legend_pos": 191,
+            "display": 7
         },
         "26": {
             "name": "CON",
@@ -403,7 +411,8 @@
             "x_pos": 573,
             "y_pos": 227,
             "x_legend_pos": 517,
-            "y_legend_pos": 209
+            "y_legend_pos": 209,
+            "display": 7
         },
         "27": {
             "name": "EPH",
@@ -411,7 +420,8 @@
             "x_pos": 567,
             "y_pos": 272,
             "x_legend_pos": 567,
-            "y_legend_pos": 258
+            "y_legend_pos": 258,
+            "display": 7
         },
         "28": {
             "name": "ANT",
@@ -419,7 +429,8 @@
             "x_pos": 699,
             "y_pos": 290,
             "x_legend_pos": 699,
-            "y_legend_pos": 276
+            "y_legend_pos": 276,
+            "display": 7
         },
         "29": {
             "name": "SYR",
@@ -436,7 +447,8 @@
             "x_pos": 569,
             "y_pos": 435,
             "x_legend_pos": 569,
-            "y_legend_pos": 421
+            "y_legend_pos": 421,
+            "display": 8
         },
         "31": {
             "name": "CAT",
@@ -444,7 +456,8 @@
             "x_pos": 281,
             "y_pos": 315,
             "x_legend_pos": 281,
-            "y_legend_pos": 301
+            "y_legend_pos": 301,
+            "display": 8
         },
         "32": {
             "name": "CAE",
@@ -452,7 +465,8 @@
             "x_pos": 213,
             "y_pos": 313,
             "x_legend_pos": 213,
-            "y_legend_pos": 299
+            "y_legend_pos": 299,
+            "display": 8
         },
         "33": {
             "name": "MAU",
@@ -533,7 +547,8 @@
             "x_pos": 1019,
             "y_pos": 397,
             "x_legend_pos": 1019,
-            "y_legend_pos": 383
+            "y_legend_pos": 383,
+            "display": 6
         },
         "43": {
             "name": "MAK",
@@ -574,7 +589,8 @@
             "x_pos": 548,
             "y_pos": 112,
             "x_legend_pos": 548,
-            "y_legend_pos": 98
+            "y_legend_pos": 98,
+            "display": 4
         },
         "48": {
             "name": "BUL",
@@ -623,7 +639,8 @@
             "x_pos": 773,
             "y_pos": 115,
             "x_legend_pos": 773,
-            "y_legend_pos": 101
+            "y_legend_pos": 101,
+            "display": 5
         },
         "54": {
             "name": "GUR",
@@ -631,7 +648,8 @@
             "x_pos": 1011,
             "y_pos": 183,
             "x_legend_pos": 1011,
-            "y_legend_pos": 169
+            "y_legend_pos": 169,
+            "display": 5
         },
         "55": {
             "name": "PTH",
@@ -656,7 +674,8 @@
             "x_pos": 829,
             "y_pos": 310,
             "x_legend_pos": 829,
-            "y_legend_pos": 296
+            "y_legend_pos": 296,
+            "display": 6
         },
         "58": {
             "name": "GAR",
@@ -689,7 +708,8 @@
             "x_pos": 106,
             "y_pos": 247,
             "x_legend_pos": 125,
-            "y_legend_pos": 233
+            "y_legend_pos": 233,
+            "display": 1
         },
         "62": {
             "name": "NEU",
@@ -731,7 +751,8 @@
             "x_pos": 340,
             "y_pos": 124,
             "x_legend_pos": 324,
-            "y_legend_pos": 124
+            "y_legend_pos": 124,
+            "display": 3
         },
         "67": {
             "name": "BAV",
@@ -773,7 +794,8 @@
             "x_pos": 415,
             "y_pos": 112,
             "x_legend_pos": 415,
-            "y_legend_pos": 98
+            "y_legend_pos": 98,
+            "display": 4
         },
         "72": {
             "name": "DAC",
@@ -797,7 +819,8 @@
             "x_pos": 491,
             "y_pos": 92,
             "x_legend_pos": 491,
-            "y_legend_pos": 78
+            "y_legend_pos": 78,
+            "display": 4
         },
         "75": {
             "name": "SEV",
@@ -839,7 +862,8 @@
             "x_pos": 1202,
             "y_pos": 181,
             "x_legend_pos": 1202,
-            "y_legend_pos": 167
+            "y_legend_pos": 167,
+            "display": 5
         },
         "80": {
             "name": "TAA",
@@ -872,7 +896,8 @@
             "x_pos": 1148,
             "y_pos": 322,
             "x_legend_pos": 1148,
-            "y_legend_pos": 308
+            "y_legend_pos": 308,
+            "display": 6
         },
         "84": {
             "name": "BAM",
