@@ -9,18 +9,18 @@ For 1000 players takes 54 seconds on a good laptop (linux)
 Limited to 275 players on windows
 """
 
-import typing
 import argparse
-import sys
+import cProfile
 import collections
-import time
-import random
 import faulthandler
 import itertools
-import signal
-
-import cProfile
+import math
 import pstats
+import random
+import signal
+import sys
+import time
+import typing
 
 PROFILE = False
 
@@ -455,8 +455,9 @@ def main() -> None:
     assert args.game_names_prefix.isidentifier(), "Game prefix is incorrect, should look like an identifier"
 
     # make games (as many as players)
+    size = math.floor(math.log10(len(PLAYERS))) + 1
     for game_id, _ in enumerate(PLAYERS):
-        name = f"{args.game_names_prefix}_{game_id+1}"
+        name = f"{args.game_names_prefix}_{game_id+1:0{size}}"
         game = Game(name)
         GAMES.append(game)
 
