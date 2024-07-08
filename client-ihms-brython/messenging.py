@@ -10,6 +10,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import common
 import mydatetime
+import mydialog
 
 
 THRESHOLD_DRIFT_ALERT_SEC = 59
@@ -48,7 +49,7 @@ def private_messages(dest_user_id):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le message privé a été supprimé ! {messages}")
+            mydialog.InfoDialog("Information", f"Le message privé a été supprimé ! {messages}")
 
             # back to where we started
             global CONTENT_BACKUP
@@ -82,7 +83,7 @@ def private_messages(dest_user_id):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le message privé a été envoyé ! {messages}")
+            mydialog.InfoDialog("Information", f"Le message privé a été envoyé ! {messages}")
 
             # back to where we started
             global CONTENT_BACKUP

@@ -113,7 +113,7 @@ def change_glorious():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Les glorieux ont été changées : {messages}")
+            mydialog.InfoDialog("Information", f"Les glorieux ont été changées : {messages}")
 
         ev.preventDefault()
 
@@ -434,7 +434,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # update progress bar
         games_created_so_far += 1
         # was not possible to have a progress bar for some reason
-        common.info_dialog(f"Partie {game_to_create_name} ({games_created_so_far}/{number_games}) créé et peuplée..")
+        mydialog.InfoDialog("Information", f"Partie {game_to_create_name} ({games_created_so_far}/{number_games}) créé et peuplée..")
 
     # will increment
     games_created_so_far = 0

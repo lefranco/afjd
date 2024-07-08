@@ -17,6 +17,7 @@ import interface
 import memoize
 import play
 import allgames
+import mydialog
 
 MY_PANEL = html.DIV()
 MY_SUB_PANEL = html.DIV(id="page")
@@ -290,7 +291,6 @@ def my_delays(ev):  # pylint: disable=invalid-name
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         allgames.show_game_selected()
 
         # so that will go to proper page
@@ -473,7 +473,6 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         allgames.show_game_selected()
 
         # so that will go to proper page
@@ -613,7 +612,6 @@ def my_games(state_name):
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         allgames.show_game_selected()
 
         # so that will go to proper page
@@ -635,7 +633,6 @@ def my_games(state_name):
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         allgames.show_game_selected()
 
         # action of going to edit game page
@@ -657,7 +654,7 @@ def my_games(state_name):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La partie a été démarrée : {messages}")
+            mydialog.InfoDialog("Information", f"La partie a été démarrée : {messages}")
 
         ev.preventDefault()
 
@@ -691,7 +688,7 @@ def my_games(state_name):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La partie a été arrêtée : {messages}")
+            mydialog.InfoDialog("Information", f"La partie a été arrêtée : {messages}")
 
         ev.preventDefault()
 

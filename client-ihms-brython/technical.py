@@ -6,9 +6,9 @@ from browser import document, html, alert, window  # pylint: disable=import-erro
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
-import common
 import interface
 import whynot
+import mydialog
 import ezml_render
 
 
@@ -158,7 +158,7 @@ def select_interface():
         """ select_interface_callback """
 
         interface.set_interface(variant_name_loaded, user_interface)
-        common.info_dialog(f"Interface sélectionnée pour la variante {variant_name_loaded} : {user_interface}")
+        mydialog.InfoDialog("Information", f"Interface sélectionnée pour la variante {variant_name_loaded} : {user_interface}")
 
         # we do not go back to where we started
         # this is intended otherwise the new maps are not active

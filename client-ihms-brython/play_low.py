@@ -17,6 +17,7 @@ import memoize
 import variants
 import ratings
 import technical
+import mydialog
 
 import play  # circular import
 
@@ -426,7 +427,7 @@ def load_special_stuff():
     if ROLE_ID is not None:
         content_loaded = common.game_note_reload(GAME_ID)
         if content_loaded:
-            common.info_dialog("Attention, vous avez pris des notes dans cette partie !")
+            mydialog.InfoDialog("Information", "Attention, vous avez pris des notes dans cette partie !")
 
     if not (ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         return

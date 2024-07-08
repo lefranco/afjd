@@ -12,6 +12,8 @@ import config
 import common
 import sandbox
 import mapping
+import mydialog
+
 import index  # circular import
 
 import play  # circular import
@@ -69,7 +71,7 @@ def join_game():
             return
 
         messages = "<br>".join(req_result['msg'].split('\n'))
-        common.info_dialog(f"Vous avez rejoint la partie (en utilisant un lien externe) : {messages}<br>C'est un engagement à ne pas prendre à la légère.<br>Pour son bon déroulement, le joueurs sont tenus de respecter les dates limites de rendu des ordres (DL). <br>En cas de souci, contacter l'arbitre par l'onglet 'Négociation'", important=True)
+        mydialog.InfoDialog("Information", f"Vous avez rejoint la partie (en utilisant un lien externe) : {messages}<br>C'est un engagement à ne pas prendre à la légère.<br>Pour son bon déroulement, le joueurs sont tenus de respecter les dates limites de rendu des ordres (DL). <br>En cas de souci, contacter l'arbitre par l'onglet 'Négociation'", True)
 
     if play_low.PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -139,7 +141,7 @@ def show_position(direct_last_moves):
 
         if game_parameters_loaded['current_advancement'] == play_low.GAME_PARAMETERS_LOADED['current_advancement']:
             # no change it seeems
-            common.info_dialog("Rien de nouveau sous le soleil !")
+            mydialog.InfoDialog("Information", "Rien de nouveau sous le soleil !")
             return
 
         alert("La position de la partie a changé !")
@@ -819,7 +821,7 @@ def pairing():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez rejoint la partie : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...")
+            mydialog.InfoDialog("Information", f"Vous avez rejoint la partie : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...", True)
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -859,7 +861,7 @@ def pairing():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez quitté la partie : {messages}")
+            mydialog.InfoDialog("Information", f"Vous avez quitté la partie : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -901,7 +903,7 @@ def pairing():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez pris l'arbitrage de la partie : {messages}")
+            mydialog.InfoDialog("Information", f"Vous avez pris l'arbitrage de la partie : {messages}")
 
             # action of going to game page
             play_low.MY_SUB_PANEL.clear()
@@ -942,7 +944,7 @@ def pairing():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez quitté l'arbitrage de la partie : {messages}")
+            mydialog.InfoDialog("Information", f"Vous avez quitté l'arbitrage de la partie : {messages}")
 
             # action of going to game page
             play_low.MY_SUB_PANEL.clear()
@@ -1070,7 +1072,7 @@ def negotiate(default_dest_set, def_focus_role_id):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le message a été envoyé ! {messages}")
+            mydialog.InfoDialog("Information", f"Le message a été envoyé ! {messages}")
 
             # back to where we started
             global CONTENT_BACKUP
@@ -1439,7 +1441,7 @@ def declare():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La déclaration a été faite ! {messages}")
+            mydialog.InfoDialog("Information", f"La déclaration a été faite ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1710,7 +1712,7 @@ def note():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La note a été enregistrée ! {messages}")
+            mydialog.InfoDialog("Information", f"La note a été enregistrée ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()

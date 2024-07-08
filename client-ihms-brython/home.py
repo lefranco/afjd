@@ -292,7 +292,7 @@ def show_news():
 
     # ----
 
-    div_a5_tip = html.SPAN("Plus de détail dans le menu “Les parties“ sous menu “Rejoindre une partie“ et dans le menu “Chatter en direct“", Class='tooltiptext')
+    div_a5_tip = html.SPAN("Plus de détail dans le menu “Les parties“ sous menu 'Rejoindre une partie' et dans le menu 'Chatter en direct'", Class='tooltiptext')
     div_a5 <= div_a5_tip
     div_homepage <= div_a5
 
@@ -310,7 +310,7 @@ def show_news():
 
     # ----
 
-    div_b5_tip = html.SPAN("Plus de détail dans le menu “Classements“ sous menu “Classement performance“", Class='tooltiptext')
+    div_b5_tip = html.SPAN("Plus de détail dans le menu 'Classements' sous menu 'Classement performance'", Class='tooltiptext')
     div_b5 <= div_b5_tip
     div_homepage <= div_b5
 
@@ -500,7 +500,7 @@ def show_news():
 
     # ----
 
-    div_a2_tip = html.SPAN("Plus de détail dans le menu “Accueil“ sous menu “Brique sociale“", Class='tooltiptext')
+    div_a2_tip = html.SPAN("Plus de détail sur le site http://www.diplomania.fr", Class='tooltiptext')
     div_a2 <= div_a2_tip
     div_homepage <= div_a2
 
@@ -549,7 +549,7 @@ def show_news():
 
     # ----
 
-    div_b1_tip = html.SPAN("Plus de détail dans le menu “Classement“ sous menu “Joueurs“", Class='tooltiptext')
+    div_b1_tip = html.SPAN("Plus de détail dans le menu 'Classement' sous menu 'Joueurs'", Class='tooltiptext')
     div_a1 <= div_b1_tip
     div_homepage <= div_a1
 
@@ -611,7 +611,7 @@ def show_news():
 
     # RGPD
     if 'RGPD_ACCEPTED' not in storage:
-        mydialog.InfoDialog("Règlement général sur la protection des données", "Vous êtes d'accord avec la manière dont le site utilise et conserve vos données personnelles. Si vous ne l'êtes pas, n'utilisez pas le site ! Plus de détail dans la page 'Données personnelles' accessible depuis le menu Accueil.", remove_after=None, ok="OK")
+        mydialog.InfoDialog("Règlement général sur la protection des données", "Vous êtes d'accord avec la manière dont le site utilise et conserve vos données personnelles. Si vous ne l'êtes pas, n'utilisez pas le site ! Plus de détail dans la page 'Données personnelles' accessible depuis le menu Accueil.", True)
         storage['RGPD_ACCEPTED'] = 'yes'
 
 

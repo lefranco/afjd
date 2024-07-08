@@ -10,12 +10,8 @@ from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
-import mydialog
 import mapping
 import config
-
-
-PERSIST_TIME_SEC = 5
 
 
 TYPE_GAME_EXPLAIN_CONV = {
@@ -29,15 +25,6 @@ TYPE_GAME_EXPLAIN_CONV = {
 def noreply_callback(_):
     """ noreply_callback """
     alert("Problème (pas de réponse de la part du serveur)")
-
-
-def info_dialog(mess, important=False):
-    """ info_dialog """
-
-    if important:
-        mydialog.InfoDialog("Information", mess, ok="OK")
-    else:
-        mydialog.InfoDialog("Information", mess, ok="OK", remove_after=PERSIST_TIME_SEC)
 
 
 def check_creator():

@@ -150,7 +150,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'état de la partie a été modifié : {messages}")
+            mydialog.InfoDialog("Information", f"L'état de la partie a été modifié : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -205,7 +205,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La partie a été supprimée : {messages}", important=True)
+            mydialog.InfoDialog("Information", f"La partie a été supprimée : {messages}", True)
             allgames.unselect_game()
 
             # go to select another game
@@ -294,7 +294,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le joueur a été mis dans la partie: {messages}")
+            mydialog.InfoDialog("Information", f"Le joueur a été mis dans la partie: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -337,7 +337,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le joueur a été retiré de la partie: {messages}")
+            mydialog.InfoDialog("Information", f"Le joueur a été retiré de la partie: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -382,7 +382,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'abandon a été supprimé : {messages}")
+            mydialog.InfoDialog("Information", f"L'abandon a été supprimé : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -413,7 +413,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'incident a été supprimé : {messages}")
+            mydialog.InfoDialog("Information", f"L'incident a été supprimé : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -471,7 +471,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le vote a été effacé ! {messages}")
+            mydialog.InfoDialog("Information", f"Le vote a été effacé ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -509,7 +509,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La partie a été modifiée pour le debrief : {messages}")
+            mydialog.InfoDialog("Information", f"La partie a été modifiée pour le debrief : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -541,7 +541,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La date limite a été modifiée : {messages}")
+            mydialog.InfoDialog("Information", f"La date limite a été modifiée : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -593,7 +593,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La date limite a été reportée : {messages}")
+            mydialog.InfoDialog("Information", f"La date limite a été reportée : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -636,7 +636,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La date limite a été synchronisée : {messages}")
+            mydialog.InfoDialog("Information", f"La date limite a été synchronisée : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -675,7 +675,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            common.info_dialog(f"Message de rappel (manque ordres) émis vers : {pseudo_there}")
+            mydialog.InfoDialog("Information", f"Message de rappel (manque ordres) émis vers : {pseudo_there}")
 
         ev.preventDefault()
 
@@ -737,7 +737,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            common.info_dialog(f"Message de rappel (manque d'accord pour résoudre) émis vers : {pseudo_there}")
+            mydialog.InfoDialog("Information", f"Message de rappel (manque d'accord pour résoudre) émis vers : {pseudo_there}")
 
         ev.preventDefault()
 
@@ -799,7 +799,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            common.info_dialog(f"Message de bienvenue émis vers : {pseudo_there}")
+            mydialog.InfoDialog("Information", f"Message de bienvenue émis vers : {pseudo_there}")
 
         ev.preventDefault()
 
@@ -855,7 +855,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            common.info_dialog("Message de demande de remplacement émis vers les remplaçants potentiels")
+            mydialog.InfoDialog("Information", "Message de demande de remplacement émis vers les remplaçants potentiels")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -917,7 +917,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}")
+            mydialog.InfoDialog("Information", f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -955,7 +955,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le joueur s'est vu imposé un accord pour résoudre: {messages}")
+            mydialog.InfoDialog("Information", f"Le joueur s'est vu imposé un accord pour résoudre: {messages}")
 
             adjudicated = req_result['adjudicated']
             if adjudicated:
@@ -1000,7 +1000,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le joueur s'est vu retirer le rôle dans la partie: {messages}")
+            mydialog.InfoDialog("Information", f"Le joueur s'est vu retirer le rôle dans la partie: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1038,7 +1038,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le joueur s'est vu attribuer le rôle dans la partie: {messages}")
+            mydialog.InfoDialog("Information", f"Le joueur s'est vu attribuer le rôle dans la partie: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1875,7 +1875,7 @@ def supervise():
 
             adjudicated = req_result['adjudicated']
             if adjudicated:
-                common.info_dialog("La résolution a été forcée..")
+                mydialog.InfoDialog("Information", "La résolution a été forcée..")
                 message = "Résolution forcée par la console suite forçage accord"
                 log_stack.insert(message)
 
