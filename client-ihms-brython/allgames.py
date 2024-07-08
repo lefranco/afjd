@@ -553,7 +553,7 @@ def create_game(json_dict):
     # deadline
 
     fieldset = html.FIELDSET()
-    legend_deadline_hour = html.LEGEND("heure de date limite", title="Heure GMT de la journée à laquelle placer les dates limites")
+    legend_deadline_hour = html.LEGEND("heure de date limite (GMT)", title="Heure GMT de la journée à laquelle placer les dates limites")
     fieldset <= legend_deadline_hour
     input_deadline_hour = html.INPUT(type="number", value=deadline_hour if deadline_hour is not None else DEFAULT_DEADLINE_TIME, Class='btn-inside')
     fieldset <= input_deadline_hour
@@ -567,7 +567,7 @@ def create_game(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre d'heures (minutes pour une partie en direct) alloués avant fin de la grâce")
+    legend_grace_duration = html.LEGEND("durée de grâce (heures)", title="Nombre d'heures (minutes pour une partie en direct) alloués avant fin de la grâce")
     fieldset <= legend_grace_duration
     input_grace_duration = html.INPUT(type="number", value=grace_duration if grace_duration is not None else DEFAULT_GRACE_DURATION, Class='btn-inside')
     fieldset <= input_grace_duration
@@ -576,14 +576,14 @@ def create_game(json_dict):
     # moves
 
     fieldset = html.FIELDSET()
-    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite de mouvements")
+    legend_speed_moves = html.LEGEND("cadence mouvements (heures)", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite de mouvements")
     fieldset <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=speed_moves if speed_moves is not None else DEFAULT_SPEED_MOVES, Class='btn-inside')
     fieldset <= input_speed_moves
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
+    legend_cd_possible_moves = html.LEGEND("DC (Ordres par défaut pour un joueur en retard) possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
     fieldset <= legend_cd_possible_moves
     input_cd_possible_moves = html.INPUT(type="checkbox", checked=bool(cd_possible_moves) if cd_possible_moves is not None else False, Class='btn-inside')
     input_cd_possible_moves.bind("click", display_disorder_callback)
@@ -593,14 +593,14 @@ def create_game(json_dict):
     # retreats
 
     fieldset = html.FIELDSET()
-    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite de retraites")
+    legend_speed_retreats = html.LEGEND("cadence retraites (heures)", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite de retraites")
     fieldset <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=speed_retreats if speed_retreats is not None else DEFAULT_SPEED_OTHERS, Class='btn-inside')
     fieldset <= input_speed_retreats
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
+    legend_cd_possible_retreats = html.LEGEND("DC (Ordres par défaut pour un joueur en retard) possible retraites", title="Désordre civil possible pour une résolution de retraites")
     fieldset <= legend_cd_possible_retreats
     input_cd_possible_retreats = html.INPUT(type="checkbox", checked=bool(cd_possible_retreats) if cd_possible_retreats is not None else False, Class='btn-inside')
     input_cd_possible_retreats.bind("click", display_disorder_callback)
@@ -610,7 +610,7 @@ def create_game(json_dict):
     # adjustments
 
     fieldset = html.FIELDSET()
-    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite d'ajustements")
+    legend_speed_adjustments = html.LEGEND("cadence ajustements (heures)", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite d'ajustements")
     fieldset <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments if speed_adjustments is not None else DEFAULT_SPEED_OTHERS, Class='btn-inside')
     fieldset <= input_speed_adjustments
@@ -619,7 +619,7 @@ def create_game(json_dict):
     # builds/removals
 
     fieldset = html.FIELDSET()
-    legend_cd_possible_builds = html.LEGEND("DC possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
+    legend_cd_possible_builds = html.LEGEND("DC (Ordres par défaut pour un joueur en retard) possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
     fieldset <= legend_cd_possible_builds
     input_cd_possible_builds = html.INPUT(type="checkbox", checked=bool(cd_possible_builds) if cd_possible_builds is not None else False, Class='btn-inside')
     input_cd_possible_builds.bind("click", display_disorder_callback)
@@ -1230,7 +1230,7 @@ def rectify_parameters_game():
     # deadline related
 
     fieldset = html.FIELDSET()
-    legend_deadline_hour = html.LEGEND("heure de date limite", title="Heure GMT de la journée à laquelle placer les dates limites")
+    legend_deadline_hour = html.LEGEND("heure de date limite (GMT)", title="Heure GMT de la journée à laquelle placer les dates limites")
     fieldset <= legend_deadline_hour
     input_deadline_hour = html.INPUT(type="number", value=deadline_hour_loaded, Class='btn-inside')
     fieldset <= input_deadline_hour
