@@ -15,6 +15,8 @@ import mapping
 import interface
 import memoize
 import play
+import mydialog
+
 
 import index  # circular import
 
@@ -248,11 +250,10 @@ def create_game(json_dict):
             game_id = common.get_game_id(name)
             storage['GAME_ID'] = str(game_id)
 
-            common.info_dialog(f"Partie sélectionnée : {name} - cette information est rappelée en bas de la page")
             show_game_selected()
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La partie a été créé : {messages}")
+            mydialog.InfoDialog("Information", f"La partie a été créé : {messages}")
 
         ev.preventDefault()
 
@@ -812,7 +813,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'accès à l'anonymat a été modifié : {messages}")
+            mydialog.InfoDialog("Information", f"L'accès à l'anonymat a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -846,7 +847,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'accès à la messagerie a été modifié : {messages}")
+            mydialog.InfoDialog("Information", f"L'accès à la messagerie a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -881,7 +882,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La description a été modifiée : {messages}")
+            mydialog.InfoDialog("Information", f"La description a été modifiée : {messages}")
 
         ev.preventDefault()
 
@@ -917,7 +918,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le scorage a été modifié : {messages}")
+            mydialog.InfoDialog("Information", f"Le scorage a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -953,7 +954,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Les paramètres d'accès ont été modifiés : {messages}")
+            mydialog.InfoDialog("Information", f"Les paramètres d'accès ont été modifiés : {messages}")
 
         ev.preventDefault()
 
@@ -993,7 +994,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Les paramètres de cadence ont été modifiés : {messages}")
+            mydialog.InfoDialog("Information", f"Les paramètres de cadence ont été modifiés : {messages}")
 
         ev.preventDefault()
 
@@ -1341,7 +1342,6 @@ def my_opportunities():
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         show_game_selected()
 
         # action of going to game page
@@ -1366,7 +1366,7 @@ def my_opportunities():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                common.info_dialog(f"Vous avez quitté la partie (en utilisant la page 'rejoindre') : {messages}")
+                mydialog.InfoDialog("Information", f"Vous avez quitté la partie (en utilisant la page 'rejoindre') : {messages}")
 
             game_id = game_data_sel[game_name][0]
 
@@ -1409,7 +1409,7 @@ def my_opportunities():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                common.info_dialog(f"Vous avez rejoint la partie (en utilisant la page 'rejoindre') : {messages}<br>C'est un engagement à ne pas prendre à la légère.<br>Pour son bon déroulement, le joueurs sont tenus de respecter les dates limites de rendu des ordres (DL). <br>En cas de souci, contacter l'arbitre par l'onglet 'Négociation'", important=True)
+                mydialog.InfoDialog("Information", f"Vous avez rejoint la partie (en utilisant la page 'rejoindre') : {messages}<br>C'est un engagement à ne pas prendre à la légère.<br>Pour son bon déroulement, le joueurs sont tenus de respecter les dates limites de rendu des ordres (DL). <br>En cas de souci, contacter l'arbitre par l'onglet 'Négociation'", True)
             game_id = game_data_sel[game_name][0]
 
             json_dict = {
@@ -1879,7 +1879,6 @@ def select_game(selected_variant, selected_state):
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         show_game_selected()
 
         # back to where we started
@@ -2025,7 +2024,6 @@ def all_games(state_name):
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         show_game_selected()
 
         # action of going to game page
@@ -2394,7 +2392,7 @@ def show_no_game_masters_data():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez pris l'arbitrage de la partie : {messages}")
+            mydialog.InfoDialog("Information", f"Vous avez pris l'arbitrage de la partie : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()

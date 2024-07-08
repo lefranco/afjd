@@ -16,6 +16,7 @@ import interface
 import login
 import mapping
 import geometry
+import mydialog
 
 import index
 
@@ -250,7 +251,7 @@ def change_news_admin():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Les nouvelles ont été changées : {messages}")
+            mydialog.InfoDialog("Information", f"Les nouvelles (administrateur) ont été changées : {messages}")
 
         ev.preventDefault()
 
@@ -331,7 +332,7 @@ def change_site_image():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                common.info_dialog(f"L'image du site a été changée : {messages}")
+                mydialog.InfoDialog("Information", f"L'image du site a été changée : {messages}")
 
                 index.SITE_IMAGE_DICT['image'] = image_str
                 index.SITE_IMAGE_DICT['legend'] = legend_content
@@ -451,7 +452,7 @@ def usurp():
             time_stamp_now = time()
             storage['LOGIN_TIME'] = str(time_stamp_now)
 
-            common.info_dialog(f"Vous usurpez maintenant : {usurped_user_name}")
+            mydialog.InfoDialog("Information", f"Vous usurpez maintenant : {usurped_user_name}")
             login.show_login()
 
         usurped_user_name = input_usurped.value
@@ -578,7 +579,7 @@ def rectify_parameters():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Les paramètres de la partie ont été modifiés : {messages}")
+            mydialog.InfoDialog("Information", f"Les paramètres de la partie ont été modifiés : {messages}")
 
         ev.preventDefault()
 
@@ -708,7 +709,7 @@ def rectify_position():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez rectifié la position : {messages}")
+            mydialog.InfoDialog("Information", f"Vous avez rectifié la position : {messages}")
 
         # units
         units_list_dict = position_data.save_json()
@@ -1247,7 +1248,7 @@ def rectify_current_state():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'état de la partie a été modifiés : {messages}")
+            mydialog.InfoDialog("Information", f"L'état de la partie a été modifiés : {messages}")
 
         ev.preventDefault()
 
@@ -1521,7 +1522,7 @@ def edit_creators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le joueur a été promu créateur : {messages}")
+            mydialog.InfoDialog("Information", f"Le joueur a été promu créateur : {messages}")
             alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
@@ -1564,7 +1565,7 @@ def edit_creators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le joueur a été déchu du rôle de créateur : {messages}")
+            mydialog.InfoDialog("Information", f"Le joueur a été déchu du rôle de créateur : {messages}")
             alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
@@ -1687,7 +1688,7 @@ def edit_moderators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le joueur a été promu modérateur : {messages}")
+            mydialog.InfoDialog("Information", f"Le joueur a été promu modérateur : {messages}")
             alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
@@ -1730,7 +1731,7 @@ def edit_moderators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le joueur a été déchu du rôle de modérateur : {messages}")
+            mydialog.InfoDialog("Information", f"Le joueur a été déchu du rôle de modérateur : {messages}")
             alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
@@ -1853,7 +1854,7 @@ def show_idle_data():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                common.info_dialog(f"Le compte {player_pseudo} a été supprimé : {messages}")
+                mydialog.InfoDialog("Information", f"Le compte {player_pseudo} a été supprimé : {messages}")
 
                 # back to where we started
                 MY_SUB_PANEL.clear()
@@ -2074,7 +2075,7 @@ def maintain():
             messages = "<br>".join(req_result['msg'].split('\n'))
             print(messages)
 
-            common.info_dialog(f"Maintenance réalisée :{messages}")
+            mydialog.InfoDialog("Information", f"Maintenance réalisée :{messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()

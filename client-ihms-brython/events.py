@@ -110,8 +110,6 @@ def select_event():
         event_name = input_event.value
         storage['EVENT'] = event_name
 
-        common.info_dialog(f"Evénement sélectionné : {event_name}")
-
         # back to where we started
         MY_SUB_PANEL.clear()
         select_event()
@@ -211,7 +209,7 @@ def registrations():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le commentaire d'inscription a été prise en compte : {messages}")
+            mydialog.InfoDialog("Information", f"Le commentaire d'inscription a été prise en compte : {messages}")
 
         ev.preventDefault()
 
@@ -246,7 +244,7 @@ def registrations():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le message privé a été envoyé ! {messages}")
+            mydialog.InfoDialog("Information", f"Le message privé a été envoyé ! {messages}")
 
         ev.preventDefault()
 
@@ -300,9 +298,9 @@ def registrations():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             if register:
-                common.info_dialog(f"L'inscription a été prise en compte : {messages}")
+                mydialog.InfoDialog("Information", f"L'inscription a été prise en compte : {messages}")
             else:
-                common.info_dialog(f"La désinscription a été prise en compte : {messages}")
+                mydialog.InfoDialog("Information", f"La désinscription a été prise en compte : {messages}")
 
         ev.preventDefault()
 
@@ -615,7 +613,7 @@ def create_event(json_dict):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'événement a été créé : {messages}")
+            mydialog.InfoDialog("Information", f"L'événement a été créé : {messages}")
 
         ev.preventDefault()
 
@@ -778,7 +776,7 @@ def edit_event():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'événement a été mis à jour : {messages}")
+            mydialog.InfoDialog("Information", f"L'événement a été mis à jour : {messages}")
 
         ev.preventDefault()
 
@@ -949,7 +947,7 @@ def handle_joiners():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'inscription a été modifiée : {messages}")
+            mydialog.InfoDialog("Information", f"L'inscription a été modifiée : {messages}")
 
         ev.preventDefault()
 
@@ -1109,7 +1107,7 @@ def delete_event():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'événement a été supprimé : {messages}")
+            mydialog.InfoDialog("Information", f"L'événement a été supprimé : {messages}")
 
             del storage['EVENT']
 

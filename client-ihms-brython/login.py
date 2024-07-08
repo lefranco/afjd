@@ -11,6 +11,8 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import mydatetime
 import config
 import common
+import mydialog
+
 import index  # circular import
 
 MY_PANEL = html.DIV()
@@ -78,7 +80,7 @@ def login():
                 del storage['DATE_SUFFERING_NOTIFIED']
 
             # inform user
-            common.info_dialog(f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page")
+            mydialog.InfoDialog("Information", f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page")
             show_login()
 
             # goto directly to page my games
@@ -187,7 +189,7 @@ def login():
         if not effective:
             alert("Déjà déconnecté !")
         else:
-            common.info_dialog("Déconnecté avec succès")
+            mydialog.InfoDialog("Information", "Déconnecté avec succès")
 
         render(PANEL_MIDDLE)
 
@@ -302,12 +304,12 @@ def check_token():
 
     if 'JWT_TOKEN' not in storage:
         # should not happen (or tweak)
-        common.info_dialog("Pour des raisons techniques il faut vous loguer à nouveau !")
+        mydialog.InfoDialog("Information", "Pour des raisons techniques il faut vous loguer à nouveau !")
         return
 
     if 'LOGIN_EXPIRATION_TIME' not in storage:
         # should not happen (or tweak or transition period)
-        common.info_dialog("Pour des raisons techniques il faut vous loguer à nouveau !")
+        mydialog.InfoDialog("Information", "Pour des raisons techniques il faut vous loguer à nouveau !")
         logout()
         return
 

@@ -91,7 +91,6 @@ def show_games():
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         allgames.show_game_selected()
 
         # action of going to tournament page
@@ -895,7 +894,7 @@ def create_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le tournoi a été créé : {messages}")
+            mydialog.InfoDialog("Information", f"Le tournoi a été créé : {messages}")
 
             # we may have just created so need to reload
             global TOURNAMENT_DICT
@@ -1004,7 +1003,7 @@ def edit_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La partie a été mise dans le tournoi : {messages}")
+            mydialog.InfoDialog("Information", f"La partie a été mise dans le tournoi : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1050,7 +1049,7 @@ def edit_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La partie a été retirée du tournoi : {messages}")
+            mydialog.InfoDialog("Information", f"La partie a été retirée du tournoi : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1207,7 +1206,7 @@ def delete_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le tournoi a été supprimé : {messages}")
+            mydialog.InfoDialog("Information", f"Le tournoi a été supprimé : {messages}")
 
             global TOURNAMENT_DICT
             TOURNAMENT_DICT = common.get_tournament_data(game)
@@ -1286,7 +1285,6 @@ def show_tournaments_data():
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         allgames.show_game_selected()
 
         # action of going to tournament page
@@ -1587,7 +1585,6 @@ def render(panel_middle):
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         allgames.show_game_selected()
 
     if 'GAME' in storage:

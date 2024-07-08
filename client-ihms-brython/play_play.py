@@ -131,12 +131,12 @@ def submit_orders():
 
             # to better undestand what is going on, on can use code below :
             #  debug_message = req_result['debug_message'].split('\n')
-            #  common.info_dialog(f"debug_message : {debug_message}", True)
+            #  mydialog.InfoDialog("Information", f"debug_message : {debug_message}", True)
 
             if messages:
-                common.info_dialog(f"Ordres validés avec le(s) message(s) : {messages}", important=True)
+                mydialog.InfoDialog("Information", f"Ordres validés avec le(s) message(s) : {messages}", True)
             else:
-                common.info_dialog("Ordres validés !")
+                mydialog.InfoDialog("Information", "Ordres validés !")
 
             # special : send ip address to server
             common.send_ip_address()
@@ -1494,7 +1494,7 @@ def submit_communication_orders():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez déposé les ordres de communication : {messages}")
+            mydialog.InfoDialog("Information", f"Vous avez déposé les ordres de communication : {messages}")
 
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = dumps(orders_list_dict)
@@ -2262,9 +2262,9 @@ def imagine_units():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             if delete:
-                common.info_dialog(f"Vous avez cessé d'imaginer une unité (vérifiez directement sur la carte) : {messages}")
+                mydialog.InfoDialog("Information", f"Vous avez cessé d'imaginer une unité (vérifiez directement sur la carte) : {messages}")
             else:
-                common.info_dialog(f"Vous avez imaginé une unité (vérifiez directement sur la carte) : {messages}")
+                mydialog.InfoDialog("Information", f"Vous avez imaginé une unité (vérifiez directement sur la carte) : {messages}")
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             # reload position
@@ -2727,7 +2727,7 @@ def vote():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le vote a été enregistré ! {messages}")
+            mydialog.InfoDialog("Information", f"Le vote a été enregistré ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()

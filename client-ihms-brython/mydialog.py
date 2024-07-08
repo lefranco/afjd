@@ -3,7 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 
-from browser import document, html, window  # pylint: disable=import-error
+from browser import document, html, window, alert  # pylint: disable=import-error
 
 # pylint: disable=invalid-name
 style_sheet = """
@@ -62,6 +62,10 @@ style_sheet = """
 }
 """
 
+REMOVE_AFTER_SEC = 5
+
+POPUPS = set()
+
 
 class Dialog(html.DIV):
     """Basic, moveable dialog box with a title bar, optional
@@ -72,7 +76,8 @@ class Dialog(html.DIV):
     Method close() removes the dialog box.
     """
 
-    def __init__(self, title="", *, top=None, left=None, ok_cancel=False, default_css=True):
+    def __init__(self, title="", ok_cancel=False, default_css=True):
+
         if default_css:
             for stylesheet in document.styleSheets:
                 if stylesheet.ownerNode.id == "brython-dialog":
@@ -108,18 +113,39 @@ class Dialog(html.DIV):
         cstyle = window.getComputedStyle(self)
 
         # Center horizontally and vertically
-        if left is None:
-            width = round(float(cstyle.width[:-2]) + 0.5)
-            left = int((window.innerWidth - width) / 2)
-        self.left = left
-        self.style.left = f'{left}px'
-        if top is None:
-            height = round(float(cstyle.height[:-2]) + 0.5)
-            top = int((window.innerHeight - height) / 2)
+        width = round(float(cstyle.width[:-2]) + 0.5)
+        self.left = int((window.innerWidth - width) / 2)
+        # left to document scrollTop
+        adjust_left = round(document.scrollingElement.scrollLeft)
+        self.left += adjust_left
+        self.style.left = f'{self.left}px'
+
+        height = round(float(cstyle.height[:-2]) + 0.5)
+        self.top = int((window.innerHeight - height) / 2)
         # top is relative to document scrollTop
-        top += round(document.scrollingElement.scrollTop)
-        self.top = top
-        self.style.top = f'{top}px'
+        adjust_top = round(document.scrollingElement.scrollTop)
+        self.top += adjust_top
+        self.style.top = f'{self.top}px'
+
+        match len(POPUPS):
+            case 0:
+                pass
+            case 1:
+                self.left += window.innerWidth // 4
+                self.top += window.innerHeight // 4
+            case 2:
+                self.left -= window.innerWidth // 4
+                self.top += window.innerHeight // 4
+            case 3:
+                self.left -= window.innerWidth // 4
+                self.top -= window.innerHeight // 4
+            case 4:
+                self.left += window.innerWidth // 4
+                self.top -= window.innerHeight // 4
+            case _:
+                alert("Il faut effacer les popups !")
+
+        POPUPS.add(self)
 
         self.title_bar.bind("mousedown", self.mousedown)
         self.title_bar.bind("touchstart", self.mousedown)
@@ -132,6 +158,7 @@ class Dialog(html.DIV):
     def close(self, *_):
         """ close """
         self.remove()
+        POPUPS.remove(self)
 
     def mousedown(self, event):
         """ mousedown """
@@ -158,57 +185,18 @@ class Dialog(html.DIV):
         document.unbind("touchmove")
 
 
-# NOT USED - RESERVE
-class EntryDialog(Dialog):
-    """Dialog box with "Ok / Cancel" buttons and an INPUT element.
-    When the user clicks on "Ok" or hits the Enter key, an event called
-    "entry" is triggered on the element.
-
-    Usage:
-        box = EntryDialog()
-
-        @bind(box, "entry")
-        def entry(evt):
-            ...
-    """
-
-    def __init__(self, title, message=None, *, top=None, left=None, default_css=True):
-        Dialog.__init__(self, title, top=top, left=left, ok_cancel=True, default_css=default_css)
-        self.message = html.SPAN(message or '', Class="brython-dialog-message") \
-            or ""
-        self.entry = html.INPUT()
-        self.panel <= self.message + self.entry
-        self.entry.focus()
-
-        self.entry.bind("keypress", self.callback)
-        self.ok_button.bind("click", self.callback)
-
-    @property
-    def value(self):
-        """ value """
-        return self.entry.value
-
-    def callback(self, evt):
-        """ callback """
-        if evt.target == self.entry and evt.key != "Enter":
-            return
-        self.dispatchEvent(window.Event.new("entry"))
-
-
 class InfoDialog(Dialog):
     """Dialog box with an information message and no "Ok / Cancel" button."""
 
-    def __init__(self, title, message, *, top=None, left=None, default_css=True, remove_after=None, ok=None):
+    def __init__(self, title, message, confirm=False, default_css=True):
         """If remove_after is set, number of seconds after which the dialog is
         removed."""
-        Dialog.__init__(self, title, top=top, left=left, default_css=default_css)
+        Dialog.__init__(self, title, default_css=default_css)
         self.panel <= html.DIV(message)
-        if ok:
-            self.ok_button = html.BUTTON(ok, Class="brython-dialog-button")
+        if confirm:
+            self.ok_button = html.BUTTON("OK", Class="brython-dialog-button")
             self.panel <= html.P()
             self.panel <= html.DIV(self.ok_button, style={"text-align": "center"})
             self.ok_button.bind("click", lambda ev: self.remove())
-        if remove_after:
-            if not isinstance(remove_after, (int, float)):
-                raise TypeError("remove_after should be a number, not " + str(remove_after.__class__.__name__))
-            window.setTimeout(self.close, remove_after * 1000)
+        else:
+            window.setTimeout(self.close, REMOVE_AFTER_SEC * 1000)

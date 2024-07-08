@@ -15,6 +15,7 @@ import mapping
 import memoize
 import mydatetime
 import play
+import mydialog
 
 
 MAX_LEN_EMAIL = 100
@@ -171,7 +172,7 @@ def change_news_modo():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Les nouvelles (modo) ont été changées : {messages}")
+            mydialog.InfoDialog("Information", f"Les nouvelles (modérateur) ont été changées : {messages}")
 
         ev.preventDefault()
 
@@ -495,7 +496,7 @@ def general_announce():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'annonce dans toutes les parties a été faite ! {messages}")
+            mydialog.InfoDialog("Information", f"L'annonce dans toutes les parties a été faite ! {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -567,7 +568,7 @@ def game_announce():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"L'annonce dans la partie a été faite ! {messages}")
+            mydialog.InfoDialog("Information", f"L'annonce dans la partie a été faite ! {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -923,7 +924,6 @@ def all_missing_orders():
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         show_game_selected()
 
         # action of going to game page
@@ -1283,7 +1283,6 @@ def show_player_games(pseudo_player, game_list):
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         show_game_selected()
 
         # action of going to game page
@@ -1824,7 +1823,7 @@ def revoke_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez destitué l'arbitre : {messages}")
+            mydialog.InfoDialog("Information", f"Vous avez destitué l'arbitre : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1896,7 +1895,7 @@ def change_director():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            common.info_dialog(f"Il a été promu responsable: {director}")
+            mydialog.InfoDialog("Information", f"Il a été promu responsable du tournoi: {director}")
 
         ev.preventDefault()
 
@@ -1987,7 +1986,7 @@ def change_manager():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            common.info_dialog(f"Il a été promu responsable: {manager}")
+            mydialog.InfoDialog("Information", f"Il a été promu responsable de l'événement: {manager}")
 
         ev.preventDefault()
 
