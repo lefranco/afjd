@@ -27,6 +27,7 @@ OPTIONS = {
     'Rectifier les paramètres': "Rectifier les paramètres de la partie sélectionnée",
     'Rectifier la position': "Rectifier la position de la partie sélectionnée",
     'Rectifier l\'état': "Rectifier l\'état de la partie sélectionnée",
+    'Logs des soumissions d\'ordres': "Les soumissions d'ordres sur le site",
     'Dernières connexions': "Les connexions réussies sur le site",
     'Connexions manquées': "Les connexions manquées sur le site",
     'Récupérations demandées': "Les récupérations demandées sur le site",
@@ -1301,6 +1302,52 @@ def rectify_current_state():
         MY_SUB_PANEL <= html.BR()
 
 
+LINES_SUBMISSION_LOGS = 600
+
+
+def show_submissions_logs():
+    """ show_submissions_logs """
+
+    def get_logs():  # pylint: disable=invalid-name
+        """ get_logs_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération des logs de soumission : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération des logs de soumission: {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                return
+
+            req_result2 = req_result.copy()
+            req_result2.reverse()
+            for log in req_result2:
+                MY_SUB_PANEL <= log
+                MY_SUB_PANEL <= html.BR()
+
+        json_dict = {
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/access-submission-logs/{LINES_SUBMISSION_LOGS}"
+
+        # get logs : do not need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    MY_SUB_PANEL <= html.H3("Logs soumissions")
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    get_logs()
+
+
 def last_logins():
     """ logins """
 
@@ -2017,9 +2064,9 @@ def show_scheduler_logs():
             req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la récupération des logs : {req_result['message']}")
+                    alert(f"Erreur à la récupération des logs du scheduleur : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la récupération des logs : {req_result['msg']}")
+                    alert(f"Problème à la récupération des logs du scheduleur : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
 
@@ -2150,6 +2197,8 @@ def load_option(_, item_name):
         rectify_position()
     if item_name == 'Rectifier l\'état':
         rectify_current_state()
+    if item_name == 'Logs des soumissions d\'ordres':
+        show_submissions_logs()
     if item_name == 'Dernières connexions':
         last_logins()
     if item_name == 'Connexions manquées':

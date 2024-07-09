@@ -58,7 +58,7 @@ import assignments
 import dropouts
 import replacements
 import exporter
-
+import orders_logger
 
 SESSION = requests.Session()
 
@@ -3336,9 +3336,11 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+        assert game is not None
+
+        orders_logger.LOGGER.info("pseudo=%s game=%s role=%d", pseudo, game.name, role_id)
 
         # who is player for role ?
-        assert game is not None
         player_id = game.get_role(sql_executor, role_id)
 
         # must be player
@@ -7862,6 +7864,32 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
+@API.resource('/access-submission-logs/<lines>')
+class AccessSubmissionLogsRessource(flask_restful.Resource):  # type: ignore
+    """ AccessSubmissionLogsRessource """
+
+    def get(self, lines: int) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=R0201
+        """
+        Simply return logs content
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/access-logs - GET - accessing submission logs lines=%s", lines)
+
+        # extract from log file
+        with open(lowdata.SUBMISSION_FILE, encoding='UTF-8') as file:
+            log_lines = file.readlines()
+
+        # remove trailing '\n'
+        log_lines = [ll.rstrip('\n') for ll in log_lines]
+
+        # take only last part
+        log_lines = log_lines[- int(lines):]
+
+        data = log_lines
+        return data, 200
+
+
 @API.resource('/maintain')
 class MaintainRessource(flask_restful.Resource):  # type: ignore
     """ MaintainRessource """
@@ -7943,6 +7971,8 @@ def main() -> None:
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
+
+    orders_logger.start_logger('orders')
 
     # emergency
     if not database.db_present():

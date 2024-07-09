@@ -10,6 +10,9 @@ import configparser
 import collections
 
 
+SUBMISSION_FILE = './logdir/orders.log'
+
+
 class ConfigFile:
     """    Just reads an ini file   """
 
