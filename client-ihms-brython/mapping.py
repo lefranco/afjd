@@ -640,7 +640,7 @@ def map_additional_text_font() -> str:
     font_style = 'normal'
     font_variant = 'normal'
     font_weight = 'lighter'
-    font_size = 'medium'
+    font_size = 'small'
     font_family = 'Arial'
     return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"
 
@@ -654,7 +654,7 @@ MAP_AUTHOR_Y_POS = 25
 MAP_ADDITIONAL_TEXT_FONT = map_additional_text_font()
 ADDITIONAL_X_POS = 10
 ADDITIONAL_Y_POS = 10
-TEXT_HEIGHT_PIXEL = 18
+TEXT_HEIGHT_PIXEL = 16
 
 
 # center
