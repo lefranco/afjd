@@ -2146,7 +2146,7 @@ def submit_communication_orders():
 
     # check game finished (if not soloed)
     if play_low.GAME_PARAMETERS_LOADED['finished']:
-        alert("La partie est arrivée à échéance")
+        alert("La partie est terminée parce qu'arrivée à échéance")
         play.load_option(None, 'Consulter')
         return False
 
