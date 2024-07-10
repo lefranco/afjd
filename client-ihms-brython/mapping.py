@@ -1332,11 +1332,11 @@ class Unit(Highliteable, Renderable):
         if self._dislodged_origin is not None:
             zone_dislodger = self._dislodged_origin.zone
             dislodger_legend = self._position.variant.zone_name_table[zone_dislodger]
-            dislodged_info = f"- delogée par une unité venue de la région {dislodger_legend}"
+            dislodged_info = f" - delogée par une unité venue de la région {dislodger_legend}"
 
-        imagined_info = 'imaginée' if self._imagined else ''
+        imagined_info = ' imaginée' if self._imagined else ''
 
-        return f"Une {type_name} {imagined_info} appartenant au joueur {adjective} positionnée en {zone_full_name} {dislodged_info}."
+        return f"Une {type_name}{imagined_info} appartenant au joueur {adjective} positionnée à/en {zone_full_name}{dislodged_info}."
 
     @property
     def zone(self) -> Zone:
@@ -1431,7 +1431,7 @@ class Ownership(Highliteable, Renderable):
         zone = self._center.region.zone
         zone_full_name = variant.full_zone_name_table[zone]
 
-        return f"Un centre appartenant au joueur {adjective} positionné en {zone_full_name}."
+        return f"Un centre appartenant au joueur {adjective} positionné à/en {zone_full_name}."
 
     def render(self, ctx, active=False) -> None:
 
