@@ -64,8 +64,8 @@ style_sheet = """
 
 REMOVE_AFTER_SEC = 5
 
-POPUPS_INDEXES_SET = set()
-CURRENT_POPUP_INDEX = 0
+
+POPUP_OCCUPATION = {n : None for n in range(5)}
 
 
 class Dialog(html.DIV):
@@ -79,8 +79,6 @@ class Dialog(html.DIV):
 
     def __init__(self, title="", ok_cancel=False, default_css=True):
 
-        global CURRENT_POPUP_INDEX
-
         if default_css:
             for stylesheet in document.styleSheets:
                 if stylesheet.ownerNode.id == "brython-dialog":
@@ -92,11 +90,6 @@ class Dialog(html.DIV):
 
         # Put popup
         document <= self
-
-        # Mecanism to know how many are displayed currently
-        self.popup_index = CURRENT_POPUP_INDEX
-        CURRENT_POPUP_INDEX += 1
-        POPUPS_INDEXES_SET.add(self.popup_index)
 
         self.title_bar = html.DIV(html.SPAN(title), Class="brython-dialog-title")
         self <= self.title_bar
@@ -137,23 +130,37 @@ class Dialog(html.DIV):
         self.top += adjust_top
         self.style.top = f'{self.top}px'
 
-        match len(POPUPS_INDEXES_SET):
+        # Take occupation slot if available
+        for popup_pos, occupant in POPUP_OCCUPATION.items():
+            if not occupant:
+                POPUP_OCCUPATION[popup_pos] = self
+                self.popup_pos = popup_pos
+                break
+        else:
+            alert("Trop de popups !")
+            self.popup_pos = -1
+            
+        # Move popup according to slot taken
+        # Occupation map as below:
+        #
+        # 3       4 
+        #     0
+        # 2       1
+        #
+        match self.popup_pos:
+            # case 0 (only one popup) or -1 (too many popups) : no move (centered)
             case 1:
-                pass
-            case 2:
                 self.left += window.innerWidth // 4
+                self.top += window.innerHeight // 4
+            case 2:
+                self.left -= window.innerWidth // 4
                 self.top += window.innerHeight // 4
             case 3:
                 self.left -= window.innerWidth // 4
-                self.top += window.innerHeight // 4
-            case 4:
-                self.left -= window.innerWidth // 4
                 self.top -= window.innerHeight // 4
-            case 5:
+            case 4:
                 self.left += window.innerWidth // 4
                 self.top -= window.innerHeight // 4
-            case _:
-                alert("Il faut effacer les popups !")
 
         self.title_bar.bind("mousedown", self.mousedown)
         self.title_bar.bind("touchstart", self.mousedown)
@@ -165,7 +172,11 @@ class Dialog(html.DIV):
 
     def close(self, *_):
         """ close """
-        POPUPS_INDEXES_SET.remove(self.popup_index)
+        
+        # Free occupation slot
+        if self.popup_pos >= 0:
+            POPUP_OCCUPATION[self.popup_pos] = None
+            
         self.remove()
 
     def mousedown(self, event):
@@ -205,6 +216,6 @@ class InfoDialog(Dialog):
             self.ok_button = html.BUTTON("OK", Class="brython-dialog-button")
             self.panel <= html.P()
             self.panel <= html.DIV(self.ok_button, style={"text-align": "center"})
-            self.ok_button.bind("click", lambda ev: self.remove())
+            self.ok_button.bind("click", lambda ev: self.close())
         else:
             window.setTimeout(self.close, REMOVE_AFTER_SEC * 1000)
