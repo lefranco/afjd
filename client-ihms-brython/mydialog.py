@@ -64,7 +64,8 @@ style_sheet = """
 
 REMOVE_AFTER_SEC = 5
 
-POPUPS = set()
+POPUPS_INDEXES_SET = set()
+CURRENT_POPUP_INDEX = 0
 
 
 class Dialog(html.DIV):
@@ -78,6 +79,8 @@ class Dialog(html.DIV):
 
     def __init__(self, title="", ok_cancel=False, default_css=True):
 
+        global CURRENT_POPUP_INDEX
+
         if default_css:
             for stylesheet in document.styleSheets:
                 if stylesheet.ownerNode.id == "brython-dialog":
@@ -86,6 +89,14 @@ class Dialog(html.DIV):
                 document <= html.STYLE(style_sheet, id="brython-dialog")
 
         html.DIV.__init__(self, style={"position": 'absolute'}, Class="brython-dialog-main")
+
+        # Put popup
+        document <= self
+
+        # Mecanism to know how many are displayed currently
+        self.popup_index = CURRENT_POPUP_INDEX
+        CURRENT_POPUP_INDEX += 1
+        POPUPS_INDEXES_SET.add(self.popup_index)
 
         self.title_bar = html.DIV(html.SPAN(title), Class="brython-dialog-title")
         self <= self.title_bar
@@ -109,7 +120,6 @@ class Dialog(html.DIV):
             ok_cancel_zone <= self.ok_button + self.cancel_button
             self <= ok_cancel_zone
 
-        document <= self
         cstyle = window.getComputedStyle(self)
 
         # Center horizontally and vertically
@@ -127,25 +137,23 @@ class Dialog(html.DIV):
         self.top += adjust_top
         self.style.top = f'{self.top}px'
 
-        match len(POPUPS):
-            case 0:
-                pass
+        match len(POPUPS_INDEXES_SET):
             case 1:
-                self.left += window.innerWidth // 4
-                self.top += window.innerHeight // 4
+                pass
             case 2:
-                self.left -= window.innerWidth // 4
+                self.left += window.innerWidth // 4
                 self.top += window.innerHeight // 4
             case 3:
                 self.left -= window.innerWidth // 4
-                self.top -= window.innerHeight // 4
+                self.top += window.innerHeight // 4
             case 4:
+                self.left -= window.innerWidth // 4
+                self.top -= window.innerHeight // 4
+            case 5:
                 self.left += window.innerWidth // 4
                 self.top -= window.innerHeight // 4
             case _:
                 alert("Il faut effacer les popups !")
-
-        POPUPS.add(self)
 
         self.title_bar.bind("mousedown", self.mousedown)
         self.title_bar.bind("touchstart", self.mousedown)
@@ -157,8 +165,8 @@ class Dialog(html.DIV):
 
     def close(self, *_):
         """ close """
+        POPUPS_INDEXES_SET.remove(self.popup_index)
         self.remove()
-        POPUPS.remove(self)
 
     def mousedown(self, event):
         """ mousedown """
