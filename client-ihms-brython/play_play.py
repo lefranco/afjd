@@ -1043,6 +1043,8 @@ def submit_orders():
         if selected_hovered_object is not None:
             selected_hovered_object.highlite(ctx, True)
             helper <= selected_hovered_object.description()
+        else:
+            helper <= "_"
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
@@ -1981,6 +1983,8 @@ def submit_communication_orders():
         if selected_hovered_object is not None:
             selected_hovered_object.highlite(ctx, True)
             helper <= selected_hovered_object.description()
+        else:
+            helper <= "_"
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """

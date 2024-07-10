@@ -11,6 +11,7 @@ import mydatetime
 import config
 import common
 import sandbox
+import geometry
 import mapping
 import mydialog
 
@@ -130,6 +131,79 @@ def show_position(direct_last_moves):
     adv_last_moves = None
     fake_report_loaded = None
     orders_data_txt = ""
+    selected_hovered_object = None
+
+    canvas = None
+    helper = None
+    ctx = None
+
+    def callback_canvas_mouse_move(event):
+        """ callback_canvas_mouse_move """
+
+        nonlocal selected_hovered_object
+
+        prev_selected_hovered_object = selected_hovered_object
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        selected_hovered_object = play_low.POSITION_DATA.closest_object(pos)
+
+        if selected_hovered_object != prev_selected_hovered_object:
+
+            helper.clear()
+
+            # unhightlite previous
+            if prev_selected_hovered_object is not None:
+                prev_selected_hovered_object.highlite(ctx, False)
+
+            # hightlite object where mouse is
+            if selected_hovered_object is not None:
+                selected_hovered_object.highlite(ctx, True)
+                helper <= selected_hovered_object.description()
+            else:
+                helper <= "_"
+
+            # redraw dislodged if applicable
+            if isinstance(prev_selected_hovered_object, mapping.Unit):
+                if prev_selected_hovered_object in play_low.POSITION_DATA.dislodging_table:
+                    dislodged = play_low.POSITION_DATA.dislodging_table[prev_selected_hovered_object]
+                    if dislodged is not selected_hovered_object:
+                        dislodged.highlite(ctx, False)
+
+    def callback_canvas_mouse_enter(event):
+        """ callback_canvas_mouse_enter """
+
+        nonlocal selected_hovered_object
+
+        helper.clear()
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        selected_hovered_object = play_low.POSITION_DATA.closest_object(pos)
+
+        # hightlite object where mouse is
+        if selected_hovered_object is not None:
+            selected_hovered_object.highlite(ctx, True)
+            helper <= selected_hovered_object.description()
+        else:
+            helper <= "_"
+
+    def callback_canvas_mouse_leave(_):
+        """ callback_canvas_mouse_leave """
+
+        if selected_hovered_object is not None:
+
+            selected_hovered_object.highlite(ctx, False)
+
+            # redraw dislodged if applicable
+            if isinstance(selected_hovered_object, mapping.Unit):
+                if selected_hovered_object in play_low.POSITION_DATA.dislodging_table:
+                    dislodged = play_low.POSITION_DATA.dislodging_table[selected_hovered_object]
+                    if dislodged is not selected_hovered_object:
+                        dislodged.highlite(ctx, False)
+
+        helper.clear()
+        helper <= "_"
 
     def callback_refresh(_):
         """ callback_refresh """
@@ -213,6 +287,10 @@ def show_position(direct_last_moves):
         nonlocal position_data
         nonlocal fake_report_loaded
         nonlocal orders_data_txt
+
+        nonlocal canvas
+        nonlocal helper
+        nonlocal ctx
 
         def callback_render(_):
             """ callback_render """
@@ -322,11 +400,20 @@ def show_position(direct_last_moves):
             alert("Il faudrait utiliser un navigateur plus récent !")
             return
 
+        # hovering effect
+        canvas.bind("mousemove", callback_canvas_mouse_move)
+        canvas.bind("mouseenter", callback_canvas_mouse_enter)
+        canvas.bind("mouseleave", callback_canvas_mouse_leave)
+
         # put background (this will call the callback that display the whole map)
         img = common.read_image(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
         img.bind('load', lambda _: callback_render(True))
 
         display_left <= canvas
+
+        helper = html.DIV(Class='helper')
+        display_left <= helper
+
         display_left <= html.BR()
 
         fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']

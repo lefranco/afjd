@@ -850,6 +850,8 @@ def rectify_position():
 
         nonlocal selected_hovered_object
 
+        helper.clear()
+
         # find where is mouse
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
         selected_hovered_object = position_data.closest_object(pos)
@@ -858,6 +860,8 @@ def rectify_position():
         if selected_hovered_object is not None:
             selected_hovered_object.highlite(ctx, True)
             helper <= selected_hovered_object.description()
+        else:
+            helper <= "_"
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
