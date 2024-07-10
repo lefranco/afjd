@@ -146,7 +146,7 @@ def show_position(direct_last_moves):
 
         # find where is mouse
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        selected_hovered_object = play_low.POSITION_DATA.closest_object(pos)
+        selected_hovered_object = position_data.closest_object(pos)
 
         if selected_hovered_object != prev_selected_hovered_object:
 
@@ -165,8 +165,8 @@ def show_position(direct_last_moves):
 
             # redraw dislodged if applicable
             if isinstance(prev_selected_hovered_object, mapping.Unit):
-                if prev_selected_hovered_object in play_low.POSITION_DATA.dislodging_table:
-                    dislodged = play_low.POSITION_DATA.dislodging_table[prev_selected_hovered_object]
+                if prev_selected_hovered_object in position_data.dislodging_table:
+                    dislodged = position_data.dislodging_table[prev_selected_hovered_object]
                     if dislodged is not selected_hovered_object:
                         dislodged.highlite(ctx, False)
 
@@ -179,7 +179,7 @@ def show_position(direct_last_moves):
 
         # find where is mouse
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        selected_hovered_object = play_low.POSITION_DATA.closest_object(pos)
+        selected_hovered_object = position_data.closest_object(pos)
 
         # hightlite object where mouse is
         if selected_hovered_object is not None:
@@ -197,8 +197,8 @@ def show_position(direct_last_moves):
 
             # redraw dislodged if applicable
             if isinstance(selected_hovered_object, mapping.Unit):
-                if selected_hovered_object in play_low.POSITION_DATA.dislodging_table:
-                    dislodged = play_low.POSITION_DATA.dislodging_table[selected_hovered_object]
+                if selected_hovered_object in position_data.dislodging_table:
+                    dislodged = position_data.dislodging_table[selected_hovered_object]
                     if dislodged is not selected_hovered_object:
                         dislodged.highlite(ctx, False)
 

@@ -1,9 +1,9 @@
 {
     "author": "Inconnu",
-    "additional_text": "",
+    "additional_text": "Informations importantes à lire pour jouer la variante :\nLe rectangle blanc en haut à droite symbolise les steppes.\nC'est en réalité un indicateur d'adjacence.\nIl y a trois provinces de steppe à l'intérieur du rectangle :\nLes régions S1, S2 et S3.\nChacune de ces régions :\n1) peut être occupée comme une province normale,\n2) est adjacente aux deux autres,\n3) est adjacente à toutes les provinces voisines du rectangle.\n(à savoir : POL, SEV, SAB, BAC et KIM)\n Note : Les trois steppes sont des terres.",
     "map": {
-        "width": 1351,
-        "height": 750
+        "width": 1297,
+        "height": 720
     },
     "regions": {
         "1": {
@@ -61,7 +61,7 @@
         },
         "2": {
             "name": "Francs",
-            "adjective_name": "Franque",
+            "adjective_name": "Franc",
             "letter_name": "F",
             "red": [
                 5,
@@ -78,7 +78,7 @@
         },
         "3": {
             "name": "Lombards",
-            "adjective_name": "Lombarde",
+            "adjective_name": "Lombard",
             "letter_name": "L",
             "red": [
                 14,
@@ -95,19 +95,19 @@
         },
         "4": {
             "name": "Avars",
-            "adjective_name": "Avare",
-            "letter_name": "A",
+            "adjective_name": "Avar",
+            "letter_name": "V",
             "red": [
                 88,
-                215
+                115
             ],
             "green": [
                 88,
-                215
+                115
             ],
             "blue": [
                 88,
-                215
+                115
             ]
         },
         "5": {
@@ -129,8 +129,8 @@
         },
         "6": {
             "name": "Perse",
-            "adjective_name": "Persane",
-            "letter_name": "P",
+            "adjective_name": "Persan",
+            "letter_name": "E",
             "red": [
                 209,
                 255
@@ -146,7 +146,7 @@
         },
         "7": {
             "name": "Byzance",
-            "adjective_name": "Byzantine",
+            "adjective_name": "Byzantin",
             "letter_name": "B",
             "red": [
                 198,
@@ -163,19 +163,19 @@
         },
         "8": {
             "name": "Afrique",
-            "adjective_name": "Afrique",
+            "adjective_name": "Africain",
             "letter_name": "A",
             "red": [
-                255,
-                255
+                239,
+                246
             ],
             "green": [
-                255,
-                204
+                249,
+                252
             ],
             "blue": [
-                255,
-                220
+                248,
+                251
             ]
         }
     },
@@ -232,7 +232,8 @@
             "x_pos": 247,
             "y_pos": 51,
             "x_legend_pos": 247,
-            "y_legend_pos": 37
+            "y_legend_pos": 37,
+            "display": 2
         },
         "6": {
             "name": "PAR",
@@ -240,15 +241,16 @@
             "x_pos": 205,
             "y_pos": 72,
             "x_legend_pos": 205,
-            "y_legend_pos": 58
+            "y_legend_pos": 58,
+            "display": 2
         },
         "7": {
             "name": "DOM",
             "full_name": "Domnonea",
             "x_pos": 154,
             "y_pos": 96,
-            "x_legend_pos": 161,
-            "y_legend_pos": 85
+            "x_legend_pos": 159,
+            "y_legend_pos": 84
         },
         "8": {
             "name": "ARV",
@@ -263,7 +265,7 @@
             "full_name": "Naoned",
             "x_pos": 153,
             "y_pos": 126,
-            "x_legend_pos": 152,
+            "x_legend_pos": 148,
             "y_legend_pos": 114
         },
         "10": {
@@ -272,22 +274,23 @@
             "x_pos": 202,
             "y_pos": 154,
             "x_legend_pos": 165,
-            "y_legend_pos": 152
+            "y_legend_pos": 152,
+            "display": 2
         },
         "11": {
             "name": "TAR",
             "full_name": "Tarraconensis",
-            "x_pos": 148,
-            "y_pos": 197,
-            "x_legend_pos": 148,
-            "y_legend_pos": 183
+            "x_pos": 162,
+            "y_pos": 207,
+            "x_legend_pos": 162,
+            "y_legend_pos": 193
         },
         "12": {
             "name": "VAS",
             "full_name": "Vasconia",
             "x_pos": 95,
             "y_pos": 185,
-            "x_legend_pos": 111,
+            "x_legend_pos": 110,
             "y_legend_pos": 196
         },
         "13": {
@@ -304,7 +307,8 @@
             "x_pos": 59,
             "y_pos": 246,
             "x_legend_pos": 59,
-            "y_legend_pos": 232
+            "y_legend_pos": 232,
+            "display": 1
         },
         "15": {
             "name": "BAE",
@@ -312,19 +316,21 @@
             "x_pos": 126,
             "y_pos": 278,
             "x_legend_pos": 95,
-            "y_legend_pos": 285
+            "y_legend_pos": 285,
+            "display": 1
         },
         "16": {
             "name": "VAL",
             "full_name": "Valencia",
             "x_pos": 157,
             "y_pos": 230,
-            "x_legend_pos": 153,
-            "y_legend_pos": 258
+            "x_legend_pos": 170,
+            "y_legend_pos": 247,
+            "display": 1
         },
         "17": {
             "name": "BUR",
-            "full_name": "BURGONDIE",
+            "full_name": "Burgondie",
             "x_pos": 244,
             "y_pos": 156,
             "x_legend_pos": 244,
@@ -336,55 +342,59 @@
             "x_pos": 279,
             "y_pos": 147,
             "x_legend_pos": 294,
-            "y_legend_pos": 144
+            "y_legend_pos": 143,
+            "display": 3
         },
         "19": {
             "name": "TOS",
             "full_name": "Toscane",
             "x_pos": 309,
             "y_pos": 164,
-            "x_legend_pos": 308,
-            "y_legend_pos": 180
+            "x_legend_pos": 292,
+            "y_legend_pos": 180,
+            "display": 3
         },
         "20": {
             "name": "ROM",
             "full_name": "Rome",
-            "x_pos": 340,
-            "y_pos": 206,
-            "x_legend_pos": 322,
-            "y_legend_pos": 191
+            "x_pos": 319,
+            "y_pos": 188,
+            "x_legend_pos": 316,
+            "y_legend_pos": 208
         },
         "21": {
             "name": "CAL",
             "full_name": "Calabre",
             "x_pos": 388,
             "y_pos": 244,
-            "x_legend_pos": 377,
-            "y_legend_pos": 229
+            "x_legend_pos": 364,
+            "y_legend_pos": 239
         },
         "22": {
             "name": "BEN",
             "full_name": "Benevent",
             "x_pos": 389,
             "y_pos": 218,
-            "x_legend_pos": 356,
-            "y_legend_pos": 200
+            "x_legend_pos": 397,
+            "y_legend_pos": 208,
+            "display": 3
         },
         "23": {
             "name": "SPO",
             "full_name": "Spolete",
-            "x_pos": 345,
-            "y_pos": 185,
-            "x_legend_pos": 339,
-            "y_legend_pos": 178
+            "x_pos": 343,
+            "y_pos": 181,
+            "x_legend_pos": 353,
+            "y_legend_pos": 169,
+            "display": 3
         },
         "24": {
             "name": "RAV",
             "full_name": "Ravenne",
-            "x_pos": 368,
-            "y_pos": 143,
-            "x_legend_pos": 326,
-            "y_legend_pos": 154
+            "x_pos": 327,
+            "y_pos": 160,
+            "x_legend_pos": 360,
+            "y_legend_pos": 141
         },
         "25": {
             "name": "SAL",
@@ -392,15 +402,17 @@
             "x_pos": 443,
             "y_pos": 205,
             "x_legend_pos": 443,
-            "y_legend_pos": 191
+            "y_legend_pos": 191,
+            "display": 7
         },
         "26": {
             "name": "CON",
             "full_name": "Constantinople",
-            "x_pos": 579,
-            "y_pos": 236,
-            "x_legend_pos": 579,
-            "y_legend_pos": 222
+            "x_pos": 573,
+            "y_pos": 227,
+            "x_legend_pos": 517,
+            "y_legend_pos": 209,
+            "display": 7
         },
         "27": {
             "name": "EPH",
@@ -408,7 +420,8 @@
             "x_pos": 567,
             "y_pos": 272,
             "x_legend_pos": 567,
-            "y_legend_pos": 258
+            "y_legend_pos": 258,
+            "display": 7
         },
         "28": {
             "name": "ANT",
@@ -416,7 +429,8 @@
             "x_pos": 699,
             "y_pos": 290,
             "x_legend_pos": 699,
-            "y_legend_pos": 276
+            "y_legend_pos": 276,
+            "display": 7
         },
         "29": {
             "name": "SYR",
@@ -424,7 +438,8 @@
             "x_pos": 674,
             "y_pos": 341,
             "x_legend_pos": 674,
-            "y_legend_pos": 327
+            "y_legend_pos": 327,
+            "display": 8
         },
         "30": {
             "name": "ALX",
@@ -432,7 +447,8 @@
             "x_pos": 569,
             "y_pos": 435,
             "x_legend_pos": 569,
-            "y_legend_pos": 421
+            "y_legend_pos": 421,
+            "display": 8
         },
         "31": {
             "name": "CAT",
@@ -440,7 +456,8 @@
             "x_pos": 281,
             "y_pos": 315,
             "x_legend_pos": 281,
-            "y_legend_pos": 301
+            "y_legend_pos": 301,
+            "display": 8
         },
         "32": {
             "name": "CAE",
@@ -448,7 +465,8 @@
             "x_pos": 213,
             "y_pos": 313,
             "x_legend_pos": 213,
-            "y_legend_pos": 299
+            "y_legend_pos": 299,
+            "display": 8
         },
         "33": {
             "name": "MAU",
@@ -488,7 +506,8 @@
             "x_pos": 619,
             "y_pos": 558,
             "x_legend_pos": 619,
-            "y_legend_pos": 544
+            "y_legend_pos": 544,
+            "display": 8
         },
         "38": {
             "name": "GHA",
@@ -528,7 +547,8 @@
             "x_pos": 1019,
             "y_pos": 397,
             "x_legend_pos": 1019,
-            "y_legend_pos": 383
+            "y_legend_pos": 383,
+            "display": 6
         },
         "43": {
             "name": "MAK",
@@ -560,7 +580,8 @@
             "x_pos": 486,
             "y_pos": 186,
             "x_legend_pos": 486,
-            "y_legend_pos": 172
+            "y_legend_pos": 172,
+            "display": 7
         },
         "47": {
             "name": "TYR",
@@ -568,7 +589,8 @@
             "x_pos": 548,
             "y_pos": 112,
             "x_legend_pos": 548,
-            "y_legend_pos": 98
+            "y_legend_pos": 98,
+            "display": 4
         },
         "48": {
             "name": "BUL",
@@ -608,7 +630,8 @@
             "x_pos": 652,
             "y_pos": 235,
             "x_legend_pos": 652,
-            "y_legend_pos": 221
+            "y_legend_pos": 221,
+            "display": 7
         },
         "53": {
             "name": "ATI",
@@ -616,7 +639,8 @@
             "x_pos": 773,
             "y_pos": 115,
             "x_legend_pos": 773,
-            "y_legend_pos": 101
+            "y_legend_pos": 101,
+            "display": 5
         },
         "54": {
             "name": "GUR",
@@ -624,7 +648,8 @@
             "x_pos": 1011,
             "y_pos": 183,
             "x_legend_pos": 1011,
-            "y_legend_pos": 169
+            "y_legend_pos": 169,
+            "display": 5
         },
         "55": {
             "name": "PTH",
@@ -640,7 +665,8 @@
             "x_pos": 915,
             "y_pos": 314,
             "x_legend_pos": 915,
-            "y_legend_pos": 300
+            "y_legend_pos": 300,
+            "display": 6
         },
         "57": {
             "name": "CTE",
@@ -648,7 +674,8 @@
             "x_pos": 829,
             "y_pos": 310,
             "x_legend_pos": 829,
-            "y_legend_pos": 296
+            "y_legend_pos": 296,
+            "display": 6
         },
         "58": {
             "name": "GAR",
@@ -672,7 +699,8 @@
             "x_pos": 101,
             "y_pos": 211,
             "x_legend_pos": 83,
-            "y_legend_pos": 204
+            "y_legend_pos": 204,
+            "display": 1
         },
         "61": {
             "name": "TOL",
@@ -680,7 +708,8 @@
             "x_pos": 106,
             "y_pos": 247,
             "x_legend_pos": 125,
-            "y_legend_pos": 233
+            "y_legend_pos": 233,
+            "display": 1
         },
         "62": {
             "name": "NEU",
@@ -688,7 +717,8 @@
             "x_pos": 200,
             "y_pos": 120,
             "x_legend_pos": 181,
-            "y_legend_pos": 113
+            "y_legend_pos": 113,
+            "display": 2
         },
         "63": {
             "name": "AUS",
@@ -696,14 +726,15 @@
             "x_pos": 237,
             "y_pos": 105,
             "x_legend_pos": 254,
-            "y_legend_pos": 95
+            "y_legend_pos": 95,
+            "display": 2
         },
         "64": {
             "name": "ALE",
             "full_name": "Alemanie",
             "x_pos": 294,
             "y_pos": 103,
-            "x_legend_pos": 278,
+            "x_legend_pos": 279,
             "y_legend_pos": 102
         },
         "65": {
@@ -720,7 +751,8 @@
             "x_pos": 340,
             "y_pos": 124,
             "x_legend_pos": 324,
-            "y_legend_pos": 124
+            "y_legend_pos": 124,
+            "display": 3
         },
         "67": {
             "name": "BAV",
@@ -736,7 +768,8 @@
             "x_pos": 365,
             "y_pos": 109,
             "x_legend_pos": 365,
-            "y_legend_pos": 95
+            "y_legend_pos": 95,
+            "display": 4
         },
         "69": {
             "name": "THU",
@@ -752,7 +785,8 @@
             "x_pos": 382,
             "y_pos": 62,
             "x_legend_pos": 382,
-            "y_legend_pos": 48
+            "y_legend_pos": 48,
+            "display": 4
         },
         "71": {
             "name": "PAS",
@@ -760,7 +794,8 @@
             "x_pos": 415,
             "y_pos": 112,
             "x_legend_pos": 415,
-            "y_legend_pos": 98
+            "y_legend_pos": 98,
+            "display": 4
         },
         "72": {
             "name": "DAC",
@@ -784,7 +819,8 @@
             "x_pos": 491,
             "y_pos": 92,
             "x_legend_pos": 491,
-            "y_legend_pos": 78
+            "y_legend_pos": 78,
+            "display": 4
         },
         "75": {
             "name": "SEV",
@@ -800,7 +836,8 @@
             "x_pos": 725,
             "y_pos": 68,
             "x_legend_pos": 725,
-            "y_legend_pos": 54
+            "y_legend_pos": 54,
+            "display": 5
         },
         "77": {
             "name": "BAC",
@@ -808,7 +845,8 @@
             "x_pos": 1086,
             "y_pos": 94,
             "x_legend_pos": 1086,
-            "y_legend_pos": 80
+            "y_legend_pos": 80,
+            "display": 5
         },
         "78": {
             "name": "KIM",
@@ -824,7 +862,8 @@
             "x_pos": 1202,
             "y_pos": 181,
             "x_legend_pos": 1202,
-            "y_legend_pos": 167
+            "y_legend_pos": 167,
+            "display": 5
         },
         "80": {
             "name": "TAA",
@@ -848,15 +887,17 @@
             "x_pos": 1043,
             "y_pos": 282,
             "x_legend_pos": 1043,
-            "y_legend_pos": 268
+            "y_legend_pos": 268,
+            "display": 6
         },
         "83": {
-            "name": "MER",
+            "name": "MEV",
             "full_name": "Merv",
             "x_pos": 1148,
             "y_pos": 322,
             "x_legend_pos": 1148,
-            "y_legend_pos": 308
+            "y_legend_pos": 308,
+            "display": 6
         },
         "84": {
             "name": "BAM",
@@ -917,10 +958,10 @@
         "91": {
             "name": "mHIB",
             "full_name": "Mer d'Hibernie",
-            "x_pos": 30,
-            "y_pos": 30,
-            "x_legend_pos": 30,
-            "y_legend_pos": 16
+            "x_pos": 16,
+            "y_pos": 65,
+            "x_legend_pos": 16,
+            "y_legend_pos": 51
         },
         "92": {
             "name": "mCAN",
@@ -941,18 +982,18 @@
         "94": {
             "name": "mTYR",
             "full_name": "Mer Tyrrheniene",
-            "x_pos": 310,
-            "y_pos": 238,
-            "x_legend_pos": 310,
-            "y_legend_pos": 224
+            "x_pos": 291,
+            "y_pos": 251,
+            "x_legend_pos": 291,
+            "y_legend_pos": 237
         },
         "95": {
             "name": "mLIG",
             "full_name": "Mer Ligurienne",
             "x_pos": 233,
-            "y_pos": 206,
+            "y_pos": 214,
             "x_legend_pos": 233,
-            "y_legend_pos": 192
+            "y_legend_pos": 200
         },
         "96": {
             "name": "mLYB",
@@ -965,9 +1006,9 @@
         "97": {
             "name": "mDAL",
             "full_name": "Mer Dalmatienne",
-            "x_pos": 385,
-            "y_pos": 191,
-            "x_legend_pos": 368,
+            "x_pos": 390,
+            "y_pos": 192,
+            "x_legend_pos": 372,
             "y_legend_pos": 182
         },
         "98": {
@@ -1065,6 +1106,22 @@
             "y_pos": 196,
             "x_legend_pos": 740,
             "y_legend_pos": 182
+        },
+        "110": {
+            "name": "",
+            "full_name": "",
+            "x_pos": 192,
+            "y_pos": 197,
+            "x_legend_pos": 198,
+            "y_legend_pos": 187
+        },
+        "111": {
+            "name": "",
+            "full_name": "",
+            "x_pos": 136,
+            "y_pos": 188,
+            "x_legend_pos": 130,
+            "y_legend_pos": 203
         }
     },
     "centers": {
@@ -18461,6 +18518,62 @@
                 [
                     820,
                     236
+                ]
+            ]
+        },
+        "110": {
+            "area": [
+                [
+                    189,
+                    190
+                ],
+                [
+                    195,
+                    190
+                ],
+                [
+                    199,
+                    197
+                ],
+                [
+                    195,
+                    203
+                ],
+                [
+                    188,
+                    203
+                ],
+                [
+                    185,
+                    198
+                ]
+            ]
+        },
+        "111": {
+            "area": [
+                [
+                    133,
+                    181
+                ],
+                [
+                    139,
+                    181
+                ],
+                [
+                    143,
+                    188
+                ],
+                [
+                    139,
+                    194
+                ],
+                [
+                    132,
+                    194
+                ],
+                [
+                    129,
+                    189
                 ]
             ]
         }
