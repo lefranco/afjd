@@ -2834,4 +2834,13 @@ def vote():
     # form
     play_low.MY_SUB_PANEL <= form
 
+    play_low.MY_SUB_PANEL <= html.BR()
+    play_low.MY_SUB_PANEL <= html.DIV("Règles du vote d'arrêt de la partie", Class='note')
+    rules = html.UL()
+    rules <= html.LI("Seules les voix des joueurs encore en jeu compte (ceux qui ont encore un centre et/ou une unité).")
+    rules <= html.LI("Les non votants sont considérés en faveur de la continuation de la partie.")
+    rules <= html.LI("L'unanimité (pour l'arrêt de la partie) est requise pour que l'arrêt soit voté.")
+    rules <= html.LI("La décision est prise en attendant les ordres d'ajustement.")
+    play_low.MY_SUB_PANEL <= rules
+
     return True
