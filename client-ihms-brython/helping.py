@@ -18,6 +18,16 @@ OPTIONS = {
     'Youtube Diplomania Arbitrage': "Lien une vidéo Youtube qui présente simplement comment arbitrer sur ce site",
 }
 
+ARRIVAL = None
+
+
+def set_arrival(arrival):
+    """ set_arrival """
+
+    global ARRIVAL
+
+    ARRIVAL = arrival
+
 
 def show_simplified_rules():
     """ show_simplified_rules """
@@ -212,8 +222,14 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
+    global ARRIVAL
 
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
+    # this means user wants to see variant
+    if ARRIVAL == 'charte':
+        ITEM_NAME_SELECTED = 'Charte du bon diplomate'
+
+    ARRIVAL = None
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
