@@ -11,6 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import user_config
 import config
 import common
+import helping
 import ezml_render
 import mydatetime
 import mydialog
@@ -241,7 +242,14 @@ def show_news():
 
         ev.preventDefault()
 
-        load_option(None, 'Charte du bon diplomate')
+        arrival = 'charte'
+
+        # so that will go to proper page
+        helping.set_arrival(arrival)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        helping.render(PANEL_MIDDLE)
 
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
