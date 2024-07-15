@@ -65,7 +65,7 @@ style_sheet = """
 REMOVE_AFTER_SEC = 5
 
 
-POPUP_OCCUPATION = {n : None for n in range(5)}
+POPUP_OCCUPATION = {n: None for n in range(5)}
 
 
 class Dialog(html.DIV):
@@ -139,11 +139,11 @@ class Dialog(html.DIV):
         else:
             alert("Trop de popups !")
             self.popup_pos = -1
-            
+
         # Move popup according to slot taken
         # Occupation map as below:
         #
-        # 3       4 
+        # 3       4
         #     0
         # 2       1
         #
@@ -172,11 +172,11 @@ class Dialog(html.DIV):
 
     def close(self, *_):
         """ close """
-        
+
         # Free occupation slot
         if self.popup_pos >= 0:
             POPUP_OCCUPATION[self.popup_pos] = None
-            
+
         self.remove()
 
     def mousedown(self, event):
