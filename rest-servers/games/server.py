@@ -5524,10 +5524,21 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="Game does not seem to be ongoing")
 
         # create or delete vote here
+
+        # player
         if user_id == expected_player_id:
-            vote = votes.Vote(int(game_id), role_id, bool(value))
-            vote.update_database(sql_executor)
+            if value is None:
+                # Erase
+                vote = votes.Vote(int(game_id), role_id, False)
+                vote.delete_database(sql_executor)
+            else:
+                # Create
+                vote = votes.Vote(int(game_id), role_id, bool(value))
+                vote.update_database(sql_executor)
+
+        # master
         if user_id == expected_master_id:
+            # Erase
             vote = votes.Vote(int(game_id), role_id, bool(value))
             vote.delete_database(sql_executor)
 
