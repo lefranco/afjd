@@ -1309,6 +1309,7 @@ def submit_orders():
 
     # game status
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
+    play_low.MY_SUB_PANEL <= html.BR()
 
     advancement_loaded = play_low.GAME_PARAMETERS_LOADED['current_advancement']
     advancement_season, _ = common.get_short_season(advancement_loaded, play_low.VARIANT_DATA)
@@ -2160,6 +2161,7 @@ def submit_communication_orders():
 
     # game status
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
+    play_low.MY_SUB_PANEL <= html.BR()
 
     # create canvas
     map_size = play_low.VARIANT_DATA.map_size
@@ -2634,6 +2636,7 @@ def imagine_units():
 
     # game status
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
+    play_low.MY_SUB_PANEL <= html.BR()
 
     # create canvas
     map_size = play_low.VARIANT_DATA.map_size
@@ -2716,8 +2719,10 @@ def imagine_units():
 def vote():
     """ vote """
 
-    def add_vote_callback(ev):  # pylint: disable=invalid-name
-        """ add_vote_callback """
+    vote_value = None
+
+    def submit_vote_callback(ev):  # pylint: disable=invalid-name
+        """ submit_vote_callback """
 
         def reply_callback(req):
             req_result = loads(req.text)
@@ -2739,8 +2744,6 @@ def vote():
 
         ev.preventDefault()
 
-        vote_value = input_vote.checked
-
         json_dict = {
             'role_id': play_low.ROLE_ID,
             'value': vote_value
@@ -2756,6 +2759,18 @@ def vote():
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
         vote()
+
+    def update_select(event):
+        """ update_select """
+
+        nonlocal vote_value
+
+        if event.target is input_stop:
+            vote_value = False
+        if event.target is input_continue:
+            vote_value = True
+        if event.target is input_abstention:
+            vote_value = None
 
     # from game id and token get role_id of player
 
@@ -2788,27 +2803,11 @@ def vote():
         return False
     votes = list(votes)
 
-    vote_value = False
+    vote_value = None
     for _, role, vote_val in votes:
         if role == play_low.ROLE_ID:
             vote_value = bool(vote_val)
             break
-
-    form = html.FORM()
-
-    fieldset = html.FIELDSET()
-    legend_vote = html.LEGEND("Cochez pour voter l'arrêt", title="Etes vous d'accord pour terminer la partie en l'état ?")
-    fieldset <= legend_vote
-    form <= fieldset
-    input_vote = html.INPUT(type="checkbox", checked=vote_value, Class='btn-inside')
-    fieldset <= input_vote
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_vote_in_game = html.INPUT(type="submit", value="Voter dans la partie", Class='btn-inside')
-    input_vote_in_game.bind("click", add_vote_callback)
-    form <= input_vote_in_game
 
     # now we can display
 
@@ -2831,19 +2830,53 @@ def vote():
     play_low.MY_SUB_PANEL <= special_legend
     play_low.MY_SUB_PANEL <= html.BR()
 
-    # form
-    play_low.MY_SUB_PANEL <= form
-
+    label_vote = html.LABEL(html.B("Je vote :"))
+    play_low.MY_SUB_PANEL <= label_vote
     play_low.MY_SUB_PANEL <= html.BR()
+
+    # Continuation ===
+    option_continue = "pour que la partie s'arrête !"
+    label_continue = html.LABEL(html.EM(option_continue))
+    play_low.MY_SUB_PANEL <= label_continue
+    input_continue = html.INPUT(type="radio", id="stop", name="vote", checked=(vote_value is True), Class='btn-inside')
+    input_continue.bind("click", update_select)
+    play_low.MY_SUB_PANEL <= input_continue
+    play_low.MY_SUB_PANEL <= html.BR()
+
+    # Arret ===
+    option_stop = "pour que la partie continue !"
+    label_stop = html.LABEL(html.EM(option_stop))
+    play_low.MY_SUB_PANEL <= label_stop
+    input_stop = html.INPUT(type="radio", id="continue", name="vote", checked=(vote_value is False), Class='btn-inside')
+    input_stop.bind("click", update_select)
+    play_low.MY_SUB_PANEL <= input_stop
+    play_low.MY_SUB_PANEL <= html.BR()
+
+    # Abstention ===
+    option_abstention = "non, je m'abstiens ! (équivaut à voter pour continuer)"
+    label_abstention = html.LABEL(html.EM(option_abstention))
+    play_low.MY_SUB_PANEL <= label_abstention
+    input_abstention = html.INPUT(type="radio", id="abstention", name="vote", checked=(vote_value is None), Class='btn-inside')
+    input_abstention.bind("click", update_select)
+    play_low.MY_SUB_PANEL <= input_abstention
+    play_low.MY_SUB_PANEL <= html.BR()
+
+    input_submit = html.INPUT(type="submit", value="Soumettre ce vote", Class='btn-inside')
+    input_submit.bind("click", submit_vote_callback)
+    play_low.MY_SUB_PANEL <= html.BR()
+    play_low.MY_SUB_PANEL <= input_submit
+    play_low.MY_SUB_PANEL <= html.BR()
+    play_low.MY_SUB_PANEL <= html.BR()
+
     play_low.MY_SUB_PANEL <= html.DIV("Règles du vote d'arrêt de la partie", Class='note')
     rules = html.UL()
+    rules <= html.LI("Le vote individuel est confidentiel mais le nombre de votes exprimés est public.")
     rules <= html.LI("Seules les voix des joueurs encore en jeu compte (ceux qui ont encore un centre et/ou une unité).")
     rules <= html.LI("Les non votants sont considérés en faveur de la continuation de la partie.")
     rules <= html.LI("L'unanimité (pour l'arrêt de la partie) est requise pour que l'arrêt soit voté.")
     rules <= html.LI("La décision est prise en attendant les ordres d'ajustement.")
     rules <= html.LI("Quand un vote est en cours, la partie continue normalement.")
     rules <= html.LI("Les modalités d'un tournoi peuvent interdire l'arrêt de la partie avant une année de jeu spécifique.")
-    rules <= html.LI("Le vote individuel est confidentiel mais le nombre de votes exprimés est public.")
 
     play_low.MY_SUB_PANEL <= rules
 
