@@ -2841,6 +2841,10 @@ def vote():
     rules <= html.LI("Les non votants sont considérés en faveur de la continuation de la partie.")
     rules <= html.LI("L'unanimité (pour l'arrêt de la partie) est requise pour que l'arrêt soit voté.")
     rules <= html.LI("La décision est prise en attendant les ordres d'ajustement.")
+    rules <= html.LI("Quand un vote est en cours, la partie continue normalement.")
+    rules <= html.LI("Les modalités d'un tournoi peuvent interdire l'arrêt de la partie avant une année de jeu spécifique.")
+    rules <= html.LI("Le vote individuel est confidentiel mais le nombre de votes exprimés est public.")
+
     play_low.MY_SUB_PANEL <= rules
 
     return True
