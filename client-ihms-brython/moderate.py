@@ -733,7 +733,7 @@ def game_announce():
     game_replacements = common.game_replacements_reload(game_id)
 
     # add fake messages (game replacements)
-    fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur ou arbitre avec le pseudo '{id2pseudo[p]}' et avec ce rôle a été remplacé dans la partie...") for r, p, d, e in game_replacements]
+    fake_declarations = [(common.MessageTypeEnum.REPLACEMENT, 0, -1, False, False, r, d, f"Le joueur ou arbitre avec le pseudo '{id2pseudo[p]}' et avec ce rôle {'a été mis dans' if e else 'a été retiré de'} la partie...") for r, p, d, e in game_replacements]
     declarations.extend(fake_declarations)
 
     # sort with all that was added
