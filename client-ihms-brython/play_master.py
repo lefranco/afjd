@@ -298,6 +298,7 @@ def game_master():
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
+            play_low.load_special_stuff()
             game_master()
 
         ev.preventDefault()
@@ -341,6 +342,7 @@ def game_master():
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
+            play_low.load_special_stuff()
             game_master()
 
         ev.preventDefault()
@@ -964,7 +966,6 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
-
             play_low.load_special_stuff()
             game_master()
 
