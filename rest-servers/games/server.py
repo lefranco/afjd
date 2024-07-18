@@ -1411,7 +1411,7 @@ class AllocationStateListRessource(flask_restful.Resource):  # type: ignore
 
 
 # These people may not join games
-OUTCASTS = ['Chryss', 'Clovis2024']
+OUTCASTS = []
 
 
 @API.resource('/allocations')
