@@ -188,10 +188,10 @@
         "2": {
             "name": "Ava",
             "full_name": "Ava",
-            "x_pos": 43,
-            "y_pos": 50,
-            "x_legend_pos": 43,
-            "y_legend_pos": 36
+            "x_pos": 27,
+            "y_pos": 86,
+            "x_legend_pos": 27,
+            "y_legend_pos": 72
         },
         "3": {
             "name": "Ayu",
@@ -257,8 +257,8 @@
             "full_name": "Chaiya",
             "x_pos": 123,
             "y_pos": 460,
-            "x_legend_pos": 123,
-            "y_legend_pos": 446
+            "x_legend_pos": 122,
+            "y_legend_pos": 448
         },
         "11": {
             "name": "Chp",
@@ -398,8 +398,8 @@
             "full_name": "Javadvipa",
             "x_pos": 416,
             "y_pos": 892,
-            "x_legend_pos": 404,
-            "y_legend_pos": 884,
+            "x_legend_pos": 379,
+            "y_legend_pos": 880,
             "display": 2
         },
         "28": {
@@ -594,10 +594,10 @@
         "51": {
             "name": "Pal",
             "full_name": "Palawan",
-            "x_pos": 637,
-            "y_pos": 433,
-            "x_legend_pos": 613,
-            "y_legend_pos": 457,
+            "x_pos": 633,
+            "y_pos": 434,
+            "x_legend_pos": 599,
+            "y_legend_pos": 450,
             "display": 1
         },
         "52": {
@@ -843,7 +843,7 @@
             "full_name": "",
             "x_pos": 141,
             "y_pos": 472,
-            "x_legend_pos": 137,
+            "x_legend_pos": 136,
             "y_legend_pos": 458
         },
         "82": {
@@ -851,7 +851,7 @@
             "full_name": "",
             "x_pos": 102,
             "y_pos": 455,
-            "x_legend_pos": 102,
+            "x_legend_pos": 107,
             "y_legend_pos": 441
         },
         "83": {
@@ -883,8 +883,8 @@
             "full_name": "",
             "x_pos": 433,
             "y_pos": 875,
-            "x_legend_pos": 433,
-            "y_legend_pos": 888
+            "x_legend_pos": 411,
+            "y_legend_pos": 882
         },
         "87": {
             "name": "",
@@ -915,8 +915,8 @@
             "full_name": "",
             "x_pos": 422,
             "y_pos": 744,
-            "x_legend_pos": 422,
-            "y_legend_pos": 730
+            "x_legend_pos": 418,
+            "y_legend_pos": 732
         }
     },
     "seasons": {
