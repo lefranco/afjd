@@ -12,6 +12,7 @@ import common
 import interface
 import config
 import mapping
+import mydialog
 import scoring
 import ezml_render
 
@@ -47,7 +48,7 @@ def set_arrival(scoring_requested):
 def show_games(ev, game_list):  # pylint: disable=invalid-name
     """ show_games """
     ev.preventDefault()
-    alert(game_list)
+    mydialog.InfoDialog("Information", game_list, True)
 
 
 def get_detailed_elo_rating(classic, role_id):
