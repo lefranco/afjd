@@ -771,7 +771,7 @@ def sandbox():
 
             helper.clear()
 
-            # put back previous
+            # unhightlite previous
             if prev_selected_hovered_object is not None:
                 prev_selected_hovered_object.highlite(ctx, False)
 
@@ -781,6 +781,9 @@ def sandbox():
                 helper <= selected_hovered_object.description()
             else:
                 helper <= "_"
+
+            # redraw dislodged if applicable
+            # no
 
             # redraw all arrows
             if prev_selected_hovered_object is not None or selected_hovered_object is not None:
@@ -841,14 +844,17 @@ def sandbox():
             # put the background map first
             ctx.drawImage(img, 0, 0)
 
-            # put the centers
+            # because we display from scratch
+            VARIANT_DATA.reset_display()
+
+            # put the centers (phase 1)
             VARIANT_DATA.render(ctx)
 
             # put the position
             POSITION_DATA.render(ctx)
 
-            # put the legends at the end
-            VARIANT_DATA.render_legends(ctx)
+            # put the legends at the end (phase 2)
+            VARIANT_DATA.render(ctx)
 
             # save
             save_context(ctx)

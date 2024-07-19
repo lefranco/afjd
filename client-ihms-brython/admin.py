@@ -845,6 +845,12 @@ def rectify_position():
             else:
                 helper <= "_"
 
+            # redraw dislodged if applicable
+            # no
+
+            # redraw all arrows
+            # no
+
     def callback_canvas_mouse_enter(event):
         """ callback_canvas_mouse_enter """
 
@@ -880,14 +886,14 @@ def rectify_position():
         # put the background map first
         ctx.drawImage(img, 0, 0)
 
-        # put the centers
+        # put the centers (phase 1)
         variant_data.render(ctx)
 
         # put the position
         position_data.render(ctx)
 
-        # put the legends at the end
-        variant_data.render_legends(ctx)
+        # put the legends at the end (phase 2)
+        variant_data.render(ctx)
 
         # do not put the orders here
 
