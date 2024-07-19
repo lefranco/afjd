@@ -170,6 +170,9 @@ def show_position(direct_last_moves):
                     if dislodged is not selected_hovered_object:
                         dislodged.highlite(ctx, False)
 
+            # redraw all arrows
+            # no
+
     def callback_canvas_mouse_enter(event):
         """ callback_canvas_mouse_enter """
 

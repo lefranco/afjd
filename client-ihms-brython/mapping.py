@@ -106,7 +106,7 @@ def fill_zone(ctx, zone_area, fill_colour, transparency):
             ctx.moveTo(p.x_pos, p.y_pos)
         else:
             ctx.lineTo(p.x_pos, p.y_pos)
-    ctx.fill(); ctx.stroke(); ctx.closePath()
+    ctx.fill(); ctx.closePath()
 
     # restore transparency
     ctx.globalAlpha = prev_global_alpha
@@ -116,16 +116,16 @@ class Renderable:
     """ Renderable """
 
     @abstractmethod
-    def render(self, ctx, active=False) -> None:
+    def render(self, ctx) -> None:
         """ render = display """
 
 
-class Highliteable(Renderable):
+class Highliteable:
     """ Highliteable """
 
     @abstractmethod
     def highlite(self, ctx, active) -> None:
-        """ highlited when mouses passes over """
+        """ active means mouse is over object, False means it is not """
 
     @abstractmethod
     def description(self) -> str:
@@ -260,30 +260,38 @@ class Center(Renderable):
         # the owner at start of the game
         self._owner_start = None
 
-    def render(self, ctx, active=False):
-        """ put me on screen (active means start actually for this class) """
+    def render(self, ctx):
+        """ put me on screen """
+
+        ctx.lineWidth = 1
 
         fill_color = CENTER_COLOUR
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
-        ctx.lineWidth = 1
         ctx.fillStyle = fill_color.str_value()  # for a center
 
         position = self._region.zone.variant.position_table[self]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
-        # distinguish start centers
-        if active:
-            if self._owner_start:
-                ctx.beginPath()
-                ctx.arc(x, y, center_design.CENTER_RAY + 2, 0, 2 * pi, False)
-                ctx.stroke(); ctx.closePath()
-            return
-
         # show a center
         ctx.beginPath()
         ctx.arc(x, y, center_design.CENTER_RAY, 0, 2 * pi, False)
         ctx.fill(); ctx.stroke(); ctx.closePath()
+
+    def render_start(self, ctx):
+        """ render_start """
+
+        if not self._owner_start:
+            return
+
+        ctx.lineWidth = 1
+
+        position = self._region.zone.variant.position_table[self]
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        ctx.beginPath()
+        ctx.arc(x, y, center_design.CENTER_RAY + 2, 0, 2 * pi, False)
+        ctx.stroke(); ctx.closePath()
 
     @property
     def region(self) -> 'Region':
@@ -383,24 +391,10 @@ class Zone(Highliteable, Renderable):
         # variant
         self._variant = variant
 
-    def highlite(self, ctx, active) -> None:
-        self.render(ctx, active)
+    def actual_draw(self, ctx, outline_colour):
+        """ actual_draw """
 
-    def render(self, ctx, active=False):
-        """ put me on screen """
-
-        # -----------------
-        # the legend (only if not active)
-        # -----------------
-
-        # -----------------
-        # the outline
-        # -----------------
-
-        # alteration (highlite)
-        outline_colour = OUTLINE_COLOUR_HIGHLITED if active else (SPECIAL_COAST_OUTLINE_COLOUR if self._coast_type else OUTLINE_COLOUR)
-
-        # if bigger, leaves a trace of where mous has been (larger boundaries)
+        # if bigger, leaves a trace of where mouse has been (larger boundaries)
         ctx.lineWidth = 1
 
         path = self._variant.path_table[self]
@@ -415,8 +409,13 @@ class Zone(Highliteable, Renderable):
         ctx.strokeStyle = stroke_color.str_value()
         ctx.stroke(); ctx.closePath()
 
-    def render2(self, ctx, role):
-        """ put me on screen - fill me because geographically belong to role"""
+    def render(self, ctx):
+        """ put me on screen """
+        outline_colour = OUTLINE_COLOUR
+        self.actual_draw(ctx, outline_colour)
+
+    def render_geographical(self, ctx, role):
+        """ put me on screen - fill me because geographically belong to role """
 
         # Filling the zone because it geographically belongs to a role (priority rank = 3)
 
@@ -424,8 +423,10 @@ class Zone(Highliteable, Renderable):
         background_fill_color = self._variant.background_colour_table[role]
         fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
 
-    def render3(self, ctx):
-        """ put me on screen - fill me because foggy"""
+    def render_foggy(self, ctx):
+        """ put me on screen - fill me because foggy """
+
+        # Filling the zone because foggy here
 
         path = self._variant.path_table[self]
         fill_zone(ctx, path, FOG_COLOUR, TRANSPARENCY_FOG)
@@ -455,6 +456,20 @@ class Zone(Highliteable, Renderable):
         text_width = ctx.measureText(legend).width
         ctx.font = LEGEND_FONT
         ctx.fillText(legend, x_pos - text_width / 2, y_pos)
+
+    def highlite(self, ctx, active) -> None:
+        """ highlite (if active otherwise not) """
+
+        if active:
+            outline_colour = OUTLINE_COLOUR_HIGHLITED
+        else:
+            if self._coast_type:
+                outline_colour = SPECIAL_COAST_OUTLINE_COLOUR
+            else:
+                outline_colour = OUTLINE_COLOUR
+
+        # alteration (highlite)
+        self.actual_draw(ctx, outline_colour)
 
     def description(self):
         """ description for helping """
@@ -670,6 +685,9 @@ class Variant(Renderable):
     def __init__(self, name: str, raw_variant_content, raw_parameters_content) -> None:
 
         self._name = name
+
+        # because is rendered in two steps
+        self._display_state = 0
 
         # =================
         # from variant file
@@ -983,40 +1001,51 @@ class Variant(Renderable):
 
         return closest_zone
 
-    def render(self, ctx, active=False) -> None:
+    def reset_display(self):
+        """ reste_display """
+        self._display_state = 0
+
+    def render(self, ctx) -> None:
         """ put me on screen """
 
-        # put centers
-        for center in self._centers.values():
-            center.render(ctx)
+        if self._display_state == 0:
 
-    def render_legends(self, ctx) -> None:
-        """ render the legends only """
+            # put centers
+            for center in self._centers.values():
+                center.render(ctx)
 
-        # put legends actually
-        for zone in self._zones.values():
-            zone.render_legend(ctx)
+        if self._display_state == 1:
 
-        ctx.font = MAP_TEXT_FONT
+            # distinguish start centers
+            for center in self._centers.values():
+                center.render_start(ctx)
 
-        info_colour = AUTHORS_COLOUR
-        ctx.fillStyle = info_colour.str_value()  # for a text
+            # put legends actually
+            for zone in self._zones.values():
+                zone.render_legend(ctx)
 
-        # put the authors
-        ctx.fillText(f"Variante : {self._variant_author}", VARIANT_AUTHOR_X_POS, VARIANT_AUTHOR_Y_POS)
-        ctx.fillText(f"Carte : {self._map_author}", MAP_AUTHOR_X_POS, MAP_AUTHOR_Y_POS)
+            ctx.font = MAP_TEXT_FONT
 
-        info_colour = ADDITIONAL_COLOUR
-        ctx.fillStyle = info_colour.str_value()  # for a text
+            info_colour = AUTHORS_COLOUR
+            ctx.fillStyle = info_colour.str_value()  # for a text
 
-        # put the additional
-        ctx.font = MAP_ADDITIONAL_TEXT_FONT
-        x_pos = ADDITIONAL_X_POS
-        num_lines = len(self._additional_text.split('\n'))
-        start_y_pos = self._map_size.y_pos - TEXT_HEIGHT_PIXEL * (num_lines - 1)
-        for num, chunk in enumerate(self._additional_text.split('\n')):
-            y_pos = start_y_pos + TEXT_HEIGHT_PIXEL * num - ADDITIONAL_Y_POS
-            ctx.fillText(chunk, x_pos, y_pos)
+            # put the authors
+            ctx.fillText(f"Variante : {self._variant_author}", VARIANT_AUTHOR_X_POS, VARIANT_AUTHOR_Y_POS)
+            ctx.fillText(f"Carte : {self._map_author}", MAP_AUTHOR_X_POS, MAP_AUTHOR_Y_POS)
+
+            info_colour = ADDITIONAL_COLOUR
+            ctx.fillStyle = info_colour.str_value()  # for a text
+
+            # put the additional
+            ctx.font = MAP_ADDITIONAL_TEXT_FONT
+            x_pos = ADDITIONAL_X_POS
+            num_lines = len(self._additional_text.split('\n'))
+            start_y_pos = self._map_size.y_pos - TEXT_HEIGHT_PIXEL * (num_lines - 1)
+            for num, chunk in enumerate(self._additional_text.split('\n')):
+                y_pos = start_y_pos + TEXT_HEIGHT_PIXEL * num - ADDITIONAL_Y_POS
+                ctx.fillText(chunk, x_pos, y_pos)
+
+        self._display_state += 1
 
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
@@ -1183,11 +1212,37 @@ class Unit(Highliteable, Renderable):
         self._dislodged_origin = dislodged_origin
         self._imagined = imagined
 
-    def is_disloged(self):
+    def is_dislodged(self):
         """ dislodged """
         return self._dislodged_origin is not None
 
-    def render(self, ctx, active=False) -> None:
+    def actual_draw(self, ctx):
+        """ actual_draw """
+
+        if self._zone:
+            position = self._position.variant.position_table[self._zone]
+        else:
+            position = DUMMY_POSITION
+
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        # shift for dislodged units
+        transpose = False
+        if self.is_dislodged():
+            x += DISLODGED_SHIFT_X  # pylint: disable=invalid-name
+            y += DISLODGED_SHIFT_Y  # pylint: disable=invalid-name
+            transpose = True
+        # actual display of unit
+        if isinstance(self, Army):
+            unit_design.stabbeur_army(x, y, transpose, ctx)
+        if isinstance(self, Fleet):
+            unit_design.stabbeur_fleet(x, y, transpose, ctx)
+
+        # more stuff if dislodged
+        if self.is_dislodged():
+            self.render_as_dislodged(x, y, ctx)
+
+    def render(self, ctx) -> None:
 
         # Filling the zone because occupied by a unit (priority rank = 2)
 
@@ -1195,7 +1250,7 @@ class Unit(Highliteable, Renderable):
         if self._zone:
 
             # must not be dislodged
-            if self._dislodged_origin is None:
+            if not self.is_dislodged():
 
                 # must not be on a center
                 if not self._zone.region.center:
@@ -1208,12 +1263,9 @@ class Unit(Highliteable, Renderable):
                         path = self._position.variant.path_table[zone]
                         background_fill_color = self._position.variant.background_colour_table[self._role]
                         fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
+                        self._zone.render_legend(ctx)
 
         fill_color = self._position.variant.item_colour_table[self._role]
-
-        # alteration (highlite)
-        if active:
-            fill_color = fill_color.highlite_colour()
 
         if self._imagined:
             prev_shadow_color = ctx.shadowColor
@@ -1222,38 +1274,10 @@ class Unit(Highliteable, Renderable):
             ctx.shadowBlur = BLUR_VALUE
 
         ctx.fillStyle = fill_color.str_value()  # for unit
-
         outline_colour = fill_color.outline_colour()
-
-        # alteration (highlite)
-        if active:
-            outline_colour = outline_colour.highlite_colour()
-
         ctx.strokeStyle = outline_colour.str_value()
 
-        if self._zone:
-            position = self._position.variant.position_table[self._zone]
-        else:
-            position = DUMMY_POSITION
-
-        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
-
-        # shift for dislodged units
-        transpose = False
-        if self._dislodged_origin is not None:
-            x += DISLODGED_SHIFT_X  # pylint: disable=invalid-name
-            y += DISLODGED_SHIFT_Y  # pylint: disable=invalid-name
-            transpose = True
-
-        # actual display of unit
-        if isinstance(self, Army):
-            unit_design.stabbeur_army(x, y, transpose, ctx)
-        if isinstance(self, Fleet):
-            unit_design.stabbeur_fleet(x, y, transpose, ctx)
-
-        # more stuff if dislodged
-        if self._dislodged_origin is not None:
-            self.render_as_dislodged(x, y, ctx)
+        self.actual_draw(ctx)
 
         if self._imagined:
             ctx.shadowColor = prev_shadow_color
@@ -1287,26 +1311,19 @@ class Unit(Highliteable, Renderable):
         ctx.font = DISLODGED_FONT
         ctx.fillText(dislodger_legend, x_pos + 13, y_pos - 9)
 
-    def save_json(self):
-        """ Save to  dict """
-
-        type_unit = None
-        if isinstance(self, Fleet):
-            type_unit = UnitTypeEnum.FLEET_UNIT
-        if isinstance(self, Army):
-            type_unit = UnitTypeEnum.ARMY_UNIT
-
-        json_dict = {
-            "type_unit": UnitTypeEnum.to_code(type_unit),
-            "role": self._role.identifier,
-            "zone": self._zone.identifier
-        }
-        if self._dislodged_origin is not None:
-            json_dict.update({"dislodged_origin": self._dislodged_origin.identifier})
-        return json_dict
-
     def highlite(self, ctx, active) -> None:
-        self.render(ctx, active)
+        """ highlite """
+
+        fill_color = self._position.variant.item_colour_table[self._role]
+        # alteration (highlite)
+        if active:
+            fill_color = fill_color.highlite_colour()
+        ctx.fillStyle = fill_color.str_value()  # for unit
+
+        outline_colour = fill_color.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+
+        self.actual_draw(ctx)
 
     def description(self):
         """ description for helping """
@@ -1337,6 +1354,24 @@ class Unit(Highliteable, Renderable):
         imagined_info = ' imaginée' if self._imagined else ''
 
         return f"Une {type_name}{imagined_info} appartenant au joueur {adjective} positionnée à/en {zone_full_name}{dislodged_info}."
+
+    def save_json(self):
+        """ Save to  dict """
+
+        type_unit = None
+        if isinstance(self, Fleet):
+            type_unit = UnitTypeEnum.FLEET_UNIT
+        if isinstance(self, Army):
+            type_unit = UnitTypeEnum.ARMY_UNIT
+
+        json_dict = {
+            "type_unit": UnitTypeEnum.to_code(type_unit),
+            "role": self._role.identifier,
+            "zone": self._zone.identifier
+        }
+        if self._dislodged_origin is not None:
+            json_dict.update({"dislodged_origin": self._dislodged_origin.identifier})
+        return json_dict
 
     @property
     def zone(self) -> Zone:
@@ -1397,27 +1432,49 @@ class Ownership(Highliteable, Renderable):
         self._role = role
         self._center = center
 
+    def actual_draw(self, ctx) -> None:
+        """ render"""
+
+        if self._center:
+            position = self._position.variant.position_table[self._center]
+        else:
+            position = DUMMY_POSITION
+
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+        center_design.stabbeur_center(x, y, ctx)
+
+    def render(self, ctx) -> None:
+        """ render"""
+
+        # Filling the zone because center is owned (priority rank = 1)
+
+        if self._center:
+            zone = self._center.region.zone
+            path = self._position.variant.path_table[zone]
+            background_fill_color = self._position.variant.background_colour_table[self._role]
+            fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
+
+        item_fill_color = self._position.variant.item_colour_table[self._role]
+        ctx.fillStyle = item_fill_color.str_value()  # for an ownership
+
+        outline_colour = item_fill_color.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+
+        self.actual_draw(ctx)
+
     def highlite(self, ctx, active) -> None:
-        pass
+        """ highlite """
 
-    @property
-    def role(self) -> Role:
-        """ property """
-        return self._role
+        item_fill_color = self._position.variant.item_colour_table[self._role]
+        # alteration (highlite)
+        if active:
+            item_fill_color = item_fill_color.highlite_colour()
+        ctx.fillStyle = item_fill_color.str_value()  # for an ownership
 
-    @property
-    def center(self) -> Center:
-        """ property """
-        return self._center
+        outline_colour = item_fill_color.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
 
-    def save_json(self):
-        """ Save to  dict """
-
-        json_dict = {
-            "role": self._role.identifier,
-            "center_num": self._center.identifier
-        }
-        return json_dict
+        self.actual_draw(ctx)
 
     def description(self):
         """ description for helping """
@@ -1433,30 +1490,24 @@ class Ownership(Highliteable, Renderable):
 
         return f"Un centre appartenant au joueur {adjective} positionné à/en {zone_full_name}."
 
-    def render(self, ctx, active=False) -> None:
+    def save_json(self):
+        """ Save to  dict """
 
-        # Filling the zone  because center is owned (priority rank = 1)
+        json_dict = {
+            "role": self._role.identifier,
+            "center_num": self._center.identifier
+        }
+        return json_dict
 
-        if self._center:
-            zone = self._center.region.zone
-            path = self._position.variant.path_table[zone]
-            background_fill_color = self._position.variant.background_colour_table[self._role]
-            fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
+    @property
+    def role(self) -> Role:
+        """ property """
+        return self._role
 
-        # the little disk ("old way")
-
-        item_fill_color = self._position.variant.item_colour_table[self._role]
-        ctx.fillStyle = item_fill_color.str_value()  # for an ownership
-        outline_colour = item_fill_color.outline_colour()
-        ctx.strokeStyle = outline_colour.str_value()
-
-        if self._center:
-            position = self._position.variant.position_table[self._center]
-        else:
-            position = DUMMY_POSITION
-
-        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
-        center_design.stabbeur_center(x, y, ctx)
+    @property
+    def center(self) -> Center:
+        """ property """
+        return self._center
 
 
 class Forbidden(Highliteable, Renderable):
@@ -1466,23 +1517,7 @@ class Forbidden(Highliteable, Renderable):
         self._position = position
         self._region = region
 
-    def highlite(self, ctx, active) -> None:
-        pass
-
-    def description(self):
-        """ description for helping """
-
-        variant = self._position.variant
-
-        # role
-
-        # zone
-        zone = self._region.zone
-        zone_full_name = variant.full_zone_name_table[zone]
-
-        return f"Un région bloquée suite à conflit en {zone_full_name}."
-
-    def render(self, ctx, active=False) -> None:
+    def render(self, ctx) -> None:
 
         outline_colour = ColourRecord(red=255, green=0, blue=0)
         ctx.strokeStyle = outline_colour.str_value()
@@ -1501,6 +1536,23 @@ class Forbidden(Highliteable, Renderable):
         ctx.moveTo(x + 6, y - 6)
         ctx.lineTo(x - 6, y + 6)
         ctx.stroke(); ctx.closePath()
+
+    def highlite(self, ctx, active) -> None:
+        # Do not highlite Forbiddens for the moment
+        pass
+
+    def description(self):
+        """ description for helping """
+
+        variant = self._position.variant
+
+        # role
+
+        # zone
+        zone = self._region.zone
+        zone_full_name = variant.full_zone_name_table[zone]
+
+        return f"Un région bloquée suite à conflit en {zone_full_name}."
 
     @property
     def region(self) -> Region:
@@ -1623,9 +1675,12 @@ class Position(Renderable):
         self._units = []
         self._occupant_table = {}
 
-    def render(self, ctx, active=False) -> None:
+    def render(self, ctx) -> None:
 
         for zone in self._variant.zones.values():
+
+            # put boundaries
+            zone.render(ctx)
 
             # must geographically belong to a role
             if zone not in self._variant.geographic_owner_table:
@@ -1640,11 +1695,7 @@ class Position(Renderable):
                 continue
 
             role = self._variant.geographic_owner_table[zone]
-            zone.render2(ctx, role)
-
-        # empty centers
-        for center in self._variant.centers.values():
-            center.render(ctx)
+            zone.render_geographical(ctx, role)
 
         # ownerships
         for ownership in self._ownerships:
@@ -1662,15 +1713,11 @@ class Position(Renderable):
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
 
-        # *start* centers hence the True value for parameter 'active' - put an extra circle
-        for center in self._variant.centers.values():
-            center.render(ctx, True)
-
         # foggy
         if self._seen_regions:
             for zone in self._variant.zones.values():
                 if zone.region.identifier not in self._seen_regions:
-                    zone.render3(ctx)
+                    zone.render_foggy(ctx)
 
     def save_json(self) -> str:
         """ export as list of dict """
@@ -1720,7 +1767,7 @@ class Position(Renderable):
         for unit in search_list:
             zone = unit.zone
             unit_pos = self._variant.position_table[zone]
-            if unit.is_disloged():
+            if unit.is_dislodged():
                 unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
             distance = designated_pos.distance(unit_pos)
             if distance < distance_closest:
@@ -1743,7 +1790,7 @@ class Position(Renderable):
         for unit in search_list:
             zone = unit.zone
             unit_pos = self._variant.position_table[zone]
-            if unit.is_disloged():
+            if unit.is_dislodged():
                 unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
             distance = designated_pos.distance(unit_pos)
             if distance >= MAX_PROXIMITY_ITEM_UNIT:
@@ -1862,7 +1909,7 @@ class Position(Renderable):
         # test because a dislodging unit is not in the table
         if region in self._occupant_table:
             del self._occupant_table[region]
-        if unit.is_disloged():
+        if unit.is_dislodged():
             self._dislodged_units.remove(unit)
         else:
             self._units.remove(unit)
@@ -1922,7 +1969,7 @@ class Order(Renderable):
         self._passive_unit = passive_unit
         self._destination_zone = destination_zone
 
-    def render(self, ctx, active=False) -> None:
+    def render(self, ctx) -> None:
 
         # -- moves --
 
@@ -2345,12 +2392,13 @@ class Orders(Renderable):
             order = Order(self._position, OrderTypeEnum.HOLD_ORDER, unordered_unit, None, None)
             self.insert_order(order)
 
-    def render(self, ctx, active=False) -> None:
+    def render(self, ctx) -> None:
 
         # orders
         for order in self._orders:
             order.render(ctx)
 
+        # The little rectangle
         if self._communication_orders_present:
             fill_zone(ctx, COMMUNICATION_ORDER_PATH, COMMUNICATION_ORDER_COLOR, 1)
 

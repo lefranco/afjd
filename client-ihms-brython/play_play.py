@@ -1958,16 +1958,12 @@ def submit_communication_orders():
             else:
                 helper <= "_"
 
+            # redraw dislodged if applicable
+            # no
+
             # redraw all arrows
             if prev_selected_hovered_object is not None or selected_hovered_object is not None:
                 orders_data.render(ctx)
-
-            # redraw dislodged if applicable
-            if isinstance(prev_selected_hovered_object, mapping.Unit):
-                if prev_selected_hovered_object in play_low.POSITION_DATA.dislodging_table:
-                    dislodged = play_low.POSITION_DATA.dislodging_table[prev_selected_hovered_object]
-                    if dislodged is not selected_hovered_object:
-                        dislodged.highlite(ctx, False)
 
     def callback_canvas_mouse_enter(event):
         """ callback_canvas_mouse_enter """
@@ -2871,7 +2867,7 @@ def vote():
     play_low.MY_SUB_PANEL <= html.DIV("Règles du vote d'arrêt de la partie", Class='note')
     rules = html.UL()
     rules <= html.LI("Le vote individuel est confidentiel mais le nombre de votes exprimés est public.")
-    rules <= html.LI("Seules les voix des joueurs encore en jeu compte (ceux qui ont encore un centre et/ou une unité).")
+    rules <= html.LI("Seules les voix des joueurs encore en jeu comptent (ceux qui ont encore un centre et/ou une unité).")
     rules <= html.LI("Les non votants sont considérés en faveur de la continuation de la partie.")
     rules <= html.LI("L'unanimité (pour l'arrêt de la partie) est requise pour que l'arrêt soit voté.")
     rules <= html.LI("La décision est prise en attendant les ordres d'ajustement.")
