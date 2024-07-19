@@ -247,7 +247,7 @@ class OrderTypeEnum:
         return False
 
 
-class Center(Renderable):
+class Center(Highliteable, Renderable):
     """ A Center """
 
     def __init__(self, identifier: int, region: 'Region') -> None:
@@ -260,23 +260,18 @@ class Center(Renderable):
         # the owner at start of the game
         self._owner_start = None
 
-    def render(self, ctx):
-        """ put me on screen """
+    def actual_draw(self, ctx):
+        """ actual_draw """
 
         ctx.lineWidth = 1
-
-        fill_color = CENTER_COLOUR
-        outline_colour = fill_color.outline_colour()
-        ctx.strokeStyle = outline_colour.str_value()
-        ctx.fillStyle = fill_color.str_value()  # for a center
 
         position = self._region.zone.variant.position_table[self]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
-        # show a center
+        # show a center (just the circle)
         ctx.beginPath()
         ctx.arc(x, y, center_design.CENTER_RAY, 0, 2 * pi, False)
-        ctx.fill(); ctx.stroke(); ctx.closePath()
+        ctx.stroke(); ctx.closePath()
 
     def render_start(self, ctx):
         """ render_start """
@@ -286,7 +281,7 @@ class Center(Renderable):
 
         ctx.lineWidth = 1
 
-        fill_color = CENTER_COLOUR
+        fill_color = CENTER_FILL_COLOUR
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
         ctx.fillStyle = fill_color.str_value()  # for a center
@@ -297,6 +292,47 @@ class Center(Renderable):
         ctx.beginPath()
         ctx.arc(x, y, center_design.CENTER_RAY + 2, 0, 2 * pi, False)
         ctx.stroke(); ctx.closePath()
+
+    def render(self, ctx):
+        """ put me on screen """
+
+        fill_color = CENTER_FILL_COLOUR
+        ctx.fillStyle = fill_color.str_value()  # for a center
+
+        position = self._region.zone.variant.position_table[self]
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        # show a center (just the disk)
+        ctx.beginPath()
+        ctx.arc(x, y, center_design.CENTER_RAY, 0, 2 * pi, False)
+        ctx.fill(); ctx.stroke(); ctx.closePath()
+
+        outline_colour = OUTLINE_COLOUR
+        ctx.strokeStyle = outline_colour.str_value()  # for an ownership
+
+        self.actual_draw(ctx)
+
+    def highlite(self, ctx, active) -> None:
+        """ highlite (if active otherwise not) """
+
+        outline_colour = OUTLINE_COLOUR
+        # alteration (highlite)
+        if active:
+            outline_colour = OUTLINE_COLOUR_HIGHLITED
+        ctx.strokeStyle = outline_colour.str_value()  # for an ownership
+
+        self.actual_draw(ctx)
+
+    def description(self):
+        """ description for helping """
+
+        variant = self._region.zone.variant
+
+        # zone
+        zone = self.region.zone
+        zone_full_name = variant.full_zone_name_table[zone]
+
+        return f"Un centre neutre positionné dans la région {zone_full_name}."
 
     @property
     def region(self) -> 'Region':
@@ -674,7 +710,7 @@ TEXT_HEIGHT_PIXEL = 16
 
 
 # center
-CENTER_COLOUR = ColourRecord(red=200, green=200, blue=200)  # light grey
+CENTER_FILL_COLOUR = ColourRecord(red=200, green=200, blue=200)  # light grey
 
 # fog
 FOG_COLOUR = ColourRecord(red=100, green=100, blue=100)  # dark grey
@@ -1355,7 +1391,7 @@ class Unit(Highliteable, Renderable):
 
         imagined_info = ' imaginée' if self._imagined else ''
 
-        return f"Une {type_name}{imagined_info} appartenant au joueur {adjective} positionnée à/en {zone_full_name}{dislodged_info}."
+        return f"Une {type_name}{imagined_info} appartenant au joueur {adjective} positionnée dans la région {zone_full_name}{dislodged_info}."
 
     def save_json(self):
         """ Save to  dict """
@@ -1490,7 +1526,7 @@ class Ownership(Highliteable, Renderable):
         zone = self._center.region.zone
         zone_full_name = variant.full_zone_name_table[zone]
 
-        return f"Un centre appartenant au joueur {adjective} positionné à/en {zone_full_name}."
+        return f"Un centre appartenant au joueur {adjective} positionné dans la région {zone_full_name}."
 
     def save_json(self):
         """ Save to  dict """
@@ -1829,6 +1865,17 @@ class Position(Renderable):
                 continue
             if distance < distance_closest:
                 closest_object = ownership
+                distance_closest = distance
+
+        # search in the centers (must be after ownerships otherwise the latter have no chance)
+
+        for center in self._variant.centers.values():
+            center_pos = self._variant.position_table[center]
+            distance = designated_pos.distance(center_pos)
+            if distance >= MAX_PROXIMITY_ITEM_UNIT:
+                continue
+            if distance < distance_closest:
+                closest_object = center
                 distance_closest = distance
 
         for forbidden in self._forbiddens:
