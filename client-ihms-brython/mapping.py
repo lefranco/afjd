@@ -125,7 +125,7 @@ class Highliteable:
 
     @abstractmethod
     def highlite(self, ctx, active) -> None:
-        """ active means mouse is over object, False means it is not """
+        """ active means mouse is over object, not active means it is not """
 
     @abstractmethod
     def description(self) -> str:
@@ -432,11 +432,7 @@ class Zone(Highliteable, Renderable):
         fill_zone(ctx, path, FOG_COLOUR, TRANSPARENCY_FOG)
 
     def render_legend(self, ctx):
-        """ put me on screen """
-
-        # -----------------
-        # the legend
-        # -----------------
+        """ render_legend """
 
         legend_colour = LEGEND_COLOUR
         ctx.fillStyle = legend_colour.str_value()  # for a text
@@ -1243,6 +1239,7 @@ class Unit(Highliteable, Renderable):
             self.render_as_dislodged(x, y, ctx)
 
     def render(self, ctx) -> None:
+        """ put me on screen """
 
         # Filling the zone because occupied by a unit (priority rank = 2)
 
@@ -1312,7 +1309,7 @@ class Unit(Highliteable, Renderable):
         ctx.fillText(dislodger_legend, x_pos + 13, y_pos - 9)
 
     def highlite(self, ctx, active) -> None:
-        """ highlite """
+        """ highlite (if active otherwise not) """
 
         fill_color = self._position.variant.item_colour_table[self._role]
         # alteration (highlite)
@@ -1444,7 +1441,7 @@ class Ownership(Highliteable, Renderable):
         center_design.stabbeur_center(x, y, ctx)
 
     def render(self, ctx) -> None:
-        """ render"""
+        """ put me on screen """
 
         # Filling the zone because center is owned (priority rank = 1)
 
@@ -1463,7 +1460,7 @@ class Ownership(Highliteable, Renderable):
         self.actual_draw(ctx)
 
     def highlite(self, ctx, active) -> None:
-        """ highlite """
+        """ highlite (if active otherwise not) """
 
         item_fill_color = self._position.variant.item_colour_table[self._role]
         # alteration (highlite)
@@ -1510,6 +1507,9 @@ class Ownership(Highliteable, Renderable):
         return self._center
 
 
+FORBIDDEN_COLOR = ColourRecord(red=255, green=0, blue=0)
+
+
 class Forbidden(Highliteable, Renderable):
     """ Forbidden """
 
@@ -1517,10 +1517,9 @@ class Forbidden(Highliteable, Renderable):
         self._position = position
         self._region = region
 
-    def render(self, ctx) -> None:
+    def actual_draw(self, ctx) -> None:
+        """ actual_draw """
 
-        outline_colour = ColourRecord(red=255, green=0, blue=0)
-        ctx.strokeStyle = outline_colour.str_value()
         ctx.lineWidth = 2  # Need to really see it
         # ctx.fillStyle is not used
 
@@ -1537,9 +1536,23 @@ class Forbidden(Highliteable, Renderable):
         ctx.lineTo(x - 6, y + 6)
         ctx.stroke(); ctx.closePath()
 
+    def render(self, ctx) -> None:
+        """ put me on screen """
+
+        outline_colour = FORBIDDEN_COLOR
+        ctx.strokeStyle = outline_colour.str_value()
+
+        self.actual_draw(ctx)
+
     def highlite(self, ctx, active) -> None:
-        # Do not highlite Forbiddens for the moment
-        pass
+        """ highlite (if active otherwise not) """
+
+        outline_colour = FORBIDDEN_COLOR
+        if active:
+            outline_colour = outline_colour.highlite_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+
+        self.actual_draw(ctx)
 
     def description(self):
         """ description for helping """
@@ -1552,7 +1565,7 @@ class Forbidden(Highliteable, Renderable):
         zone = self._region.zone
         zone_full_name = variant.full_zone_name_table[zone]
 
-        return f"Un région bloquée suite à conflit en {zone_full_name}."
+        return f"Une région bloquée suite à conflit en {zone_full_name}."
 
     @property
     def region(self) -> Region:
@@ -1676,7 +1689,9 @@ class Position(Renderable):
         self._occupant_table = {}
 
     def render(self, ctx) -> None:
+        """ put me on screen """
 
+        # put zones and geographical regions
         for zone in self._variant.zones.values():
 
             # put boundaries
@@ -1697,23 +1712,23 @@ class Position(Renderable):
             role = self._variant.geographic_owner_table[zone]
             zone.render_geographical(ctx, role)
 
-        # ownerships
+        # put ownerships
         for ownership in self._ownerships:
             ownership.render(ctx)
 
-        # units
+        # put units
         for unit in self._units:
             unit.render(ctx)
 
-        # forbiddens
+        # put forbiddens
         for forbidden in self._forbiddens:
             forbidden.render(ctx)
 
-        # dislodged_units
+        # put dislodged_units
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
 
-        # foggy
+        # put foggy regions
         if self._seen_regions:
             for zone in self._variant.zones.values():
                 if zone.region.identifier not in self._seen_regions:
@@ -1970,6 +1985,7 @@ class Order(Renderable):
         self._destination_zone = destination_zone
 
     def render(self, ctx) -> None:
+        """ put me on screen """
 
         # -- moves --
 
@@ -2393,6 +2409,7 @@ class Orders(Renderable):
             self.insert_order(order)
 
     def render(self, ctx) -> None:
+        """ put me on screen """
 
         # orders
         for order in self._orders:
@@ -2414,7 +2431,7 @@ class Orders(Renderable):
         """" how many (builds) """
         return len(self._orders)
 
-    def display(self) -> str:
+    def text_version(self) -> str:
         """" nice to read """
 
         text = ""

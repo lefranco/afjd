@@ -303,14 +303,17 @@ def show_position(direct_last_moves):
             # put the background map first
             ctx.drawImage(img, 0, 0)
 
-            # put the centers
+            # because we display from scratch
+            play_low.VARIANT_DATA.reset_display()
+
+            # put the centers (pĥase 1)
             play_low.VARIANT_DATA.render(ctx)
 
             # put the position
             position_data.render(ctx)
 
-            # put the legends at the end
-            play_low.VARIANT_DATA.render_legends(ctx)
+            # put the legends at the end (phase 2)
+            play_low.VARIANT_DATA.render(ctx)
 
             # put the orders (if history)
             if orders_data:
@@ -357,7 +360,7 @@ def show_position(direct_last_moves):
                 orders_data = mapping.Orders(orders_loaded, position_data, communication_orders_are_present)
 
                 # make a text version (for fog mainly)
-                orders_data_txt = orders_data.display()
+                orders_data_txt = orders_data.text_version()
 
             else:
 

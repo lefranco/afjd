@@ -1092,14 +1092,17 @@ def submit_orders():
             # put the background map first
             ctx.drawImage(img, 0, 0)
 
-            # put the centers
+            # because we display from scratch
+            play_low.VARIANT_DATA.reset_display()
+
+            # put the centers (phase 1)
             play_low.VARIANT_DATA.render(ctx)
 
             # put the position
             play_low.POSITION_DATA.render(ctx)
 
-            # put the legends at the end
-            play_low.VARIANT_DATA.render_legends(ctx)
+            # put the legends at the end (phase 2)
+            play_low.VARIANT_DATA.render(ctx)
 
             # save
             save_context(ctx)
@@ -2029,14 +2032,17 @@ def submit_communication_orders():
             # put the background map first
             ctx.drawImage(img, 0, 0)
 
-            # put the centers
+            # because we display from scratch
+            play_low.VARIANT_DATA.reset_display()
+
+            # put the centers (phase 1)
             play_low.VARIANT_DATA.render(ctx)
 
             # put the position
             play_low.POSITION_DATA.render(ctx)
 
-            # put the legends at the end
-            play_low.VARIANT_DATA.render_legends(ctx)
+            # put the legends at the end (phase 2)
+            play_low.VARIANT_DATA.render(ctx)
 
             # save
             save_context(ctx)
@@ -2517,14 +2523,17 @@ def imagine_units():
             # put the background map first
             ctx.drawImage(img, 0, 0)
 
-            # put the centers
+            # because we display from scratch
+            play_low.VARIANT_DATA.reset_display()
+
+            # put the centers (phase 1)
             play_low.VARIANT_DATA.render(ctx)
 
             # put the position
             play_low.POSITION_DATA.render(ctx)
 
-            # put the legends at the end
-            play_low.VARIANT_DATA.render_legends(ctx)
+            # put the legends at the end (phase 2)
+            play_low.VARIANT_DATA.render(ctx)
 
             # save
             save_context(ctx)

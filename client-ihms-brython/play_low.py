@@ -838,14 +838,17 @@ def show_board(panel):
         # put the background map first
         ctx.drawImage(img, 0, 0)
 
-        # put the centers
+        # because we display from scratch
+        VARIANT_DATA.reset_display()
+
+        # put the centers (phase 1)
         VARIANT_DATA.render(ctx)
 
         # put the position
         POSITION_DATA.render(ctx)
 
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
+        # put the legends at the end (phase 2)
+        VARIANT_DATA.render(ctx)
 
         # the orders if applicable
         if orders_data:
