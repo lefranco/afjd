@@ -286,6 +286,11 @@ class Center(Renderable):
 
         ctx.lineWidth = 1
 
+        fill_color = CENTER_COLOUR
+        outline_colour = fill_color.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+        ctx.fillStyle = fill_color.str_value()  # for a center
+
         position = self._region.zone.variant.position_table[self]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
