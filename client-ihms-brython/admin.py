@@ -785,6 +785,8 @@ def rectify_position():
         nonlocal selected_hovered_object
         if selected_hovered_object == selected_erase_unit:
             selected_hovered_object = None
+        if selected_hovered_object == selected_erase_ownership:
+            selected_hovered_object = None
 
         # update map
         callback_render(True)
@@ -885,6 +887,8 @@ def rectify_position():
 
         # put the background map first
         ctx.drawImage(img, 0, 0)
+
+        variant_data.reset_display()
 
         # put the centers (phase 1)
         variant_data.render(ctx)
