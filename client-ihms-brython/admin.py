@@ -889,15 +889,10 @@ def rectify_position():
         # put the background map first
         ctx.drawImage(img, 0, 0)
 
-        variant_data.reset_display()
-
-        # put the centers (phase 1)
-        variant_data.render(ctx)
-
-        # put the position
+        # put the position and neutral centers
         position_data.render(ctx)
 
-        # put the legends at the end (phase 2)
+        # put the legends
         variant_data.render(ctx)
 
         # do not put the orders here
