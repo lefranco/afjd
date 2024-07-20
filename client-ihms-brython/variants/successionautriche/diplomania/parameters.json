@@ -7,7 +7,7 @@
     },
     "regions": {
         "1": {
-            "name": "Cote"
+            "name": "Côte"
         },
         "2": {
             "name": "Terre"
@@ -18,7 +18,7 @@
     },
     "units": {
         "1": {
-            "name": "Armee"
+            "name": "Armée"
         },
         "2": {
             "name": "Flotte"
@@ -78,7 +78,7 @@
         },
         "3": {
             "name": "Angleterre",
-            "adjective_name": "Anglais",
+            "adjective_name": "anglais",
             "letter_name": "E",
             "red": [
                 217,
@@ -95,7 +95,7 @@
         },
         "4": {
             "name": "Espagne",
-            "adjective_name": "Espagnol",
+            "adjective_name": "espagnol",
             "letter_name": "S",
             "red": [
                 86,
@@ -112,7 +112,7 @@
         },
         "5": {
             "name": "France",
-            "adjective_name": "Francais",
+            "adjective_name": "français",
             "letter_name": "F",
             "red": [
                 121,
@@ -129,7 +129,7 @@
         },
         "6": {
             "name": "Ottoman",
-            "adjective_name": "Ottoman",
+            "adjective_name": "ottoman",
             "letter_name": "T",
             "red": [
                 152,
@@ -146,7 +146,7 @@
         },
         "7": {
             "name": "Piemont",
-            "adjective_name": "Piemontais",
+            "adjective_name": "piémontais",
             "letter_name": "I",
             "red": [
                 165,
@@ -163,7 +163,7 @@
         },
         "8": {
             "name": "Prusse",
-            "adjective_name": "Prussien",
+            "adjective_name": "prussien",
             "letter_name": "U",
             "red": [
                 250,
@@ -180,7 +180,7 @@
         },
         "9": {
             "name": "Russie",
-            "adjective_name": "Russe",
+            "adjective_name": "russe",
             "letter_name": "R",
             "red": [
                 225,
@@ -198,16 +198,20 @@
     },
     "coasts": {
         "1": {
-            "name": "ce"
+            "name": "ce",
+            "full_name": "côte est"
         },
         "2": {
-            "name": "cn"
+            "name": "cn",
+            "full_name": "côte nord"
         },
         "3": {
-            "name": "cs"
+            "name": "cs",
+            "full_name": "côte sud"
         },
         "4": {
-            "name": "co"
+            "name": "co",
+            "full_name": "côte ouest"
         }
     },
     "zones": {
@@ -1339,7 +1343,7 @@
             "name": "Printemps"
         },
         "2": {
-            "name": "Ete"
+            "name": "Eté"
         },
         "3": {
             "name": "Automne"
@@ -1359,7 +1363,7 @@
             "name": "Soutenir offensivement"
         },
         "3": {
-            "name": "Soutenir defensivement"
+            "name": "Soutenir défensivement"
         },
         "4": {
             "name": "Tenir"

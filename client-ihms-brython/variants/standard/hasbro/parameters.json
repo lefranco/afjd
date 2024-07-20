@@ -164,13 +164,20 @@
     },
     "coasts": {
         "1": {
-            "name": "ec"
+            "name": "ec",
+            "full_name": "est coast"
         },
         "2": {
-            "name": "nc"
+            "name": "nc",
+            "full_name": "north coast"
         },
         "3": {
-            "name": "sc"
+            "name": "sc",
+            "full_name": "south coast"
+        },
+        "4": {
+            "name": "wc",
+            "full_name": "west coast"
         }
     },
     "zones": {
@@ -1004,48 +1011,48 @@
     },
     "seasons": {
         "1": {
-            "name": "Printemps"
+            "name": "Spring"
         },
         "2": {
-            "name": "Ete"
+            "name": "Summer"
         },
         "3": {
-            "name": "Automne"
+            "name": "Autumn"
         },
         "4": {
-            "name": "Hiver"
+            "name": "Winter"
         },
         "5": {
-            "name": "Ajustements"
+            "name": "Adjustements"
         }
     },
     "orders": {
         "1": {
-            "name": "Attaquer"
+            "name": "Attack"
         },
         "2": {
-            "name": "Soutenir offensivement"
+            "name": "Support offensivly"
         },
         "3": {
-            "name": "Soutenir defensivement"
+            "name": "Support defensively"
         },
         "4": {
-            "name": "Tenir"
+            "name": "Hold"
         },
         "5": {
-            "name": "Convoyer"
+            "name": "Convoy"
         },
         "6": {
-            "name": "Retraiter"
+            "name": "Retreat"
         },
         "7": {
-            "name": "Disperser"
+            "name": "Disperse"
         },
         "8": {
-            "name": "Construire"
+            "name": "Build"
         },
         "9": {
-            "name": "Supprimer"
+            "name": "Remove"
         }
     },
     "zone_areas": {

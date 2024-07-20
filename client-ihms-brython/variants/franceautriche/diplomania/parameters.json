@@ -7,7 +7,7 @@
     },
     "regions": {
         "1": {
-            "name": "Cote"
+            "name": "Côte"
         },
         "2": {
             "name": "Terre"
@@ -18,7 +18,7 @@
     },
     "units": {
         "1": {
-            "name": "Armee"
+            "name": "Armée"
         },
         "2": {
             "name": "Flotte"
@@ -44,7 +44,7 @@
         },
         "1": {
             "name": "France",
-            "adjective_name": "francais",
+            "adjective_name": "français",
             "letter_name": "F",
             "red": [
                 83,
@@ -79,13 +79,16 @@
     },
     "coasts": {
         "1": {
-            "name": "ce"
+            "name": "ce",
+            "full_name": "côte est"
         },
         "2": {
-            "name": "cn"
+            "name": "cn",
+            "full_name": "côte nord"
         },
         "3": {
-            "name": "cs"
+            "name": "cs",
+            "full_name": "côte sud"
         }
     },
     "zones": {
@@ -893,7 +896,7 @@
             "name": "Printemps"
         },
         "2": {
-            "name": "Ete"
+            "name": "Eté"
         },
         "3": {
             "name": "Automne"
@@ -913,7 +916,7 @@
             "name": "Soutenir offensivement"
         },
         "3": {
-            "name": "Soutenir defensivement"
+            "name": "Soutenir défensivement"
         },
         "4": {
             "name": "Tenir"

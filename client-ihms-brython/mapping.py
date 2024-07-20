@@ -715,6 +715,15 @@ CENTER_FILL_COLOUR = ColourRecord(red=200, green=200, blue=200)  # light grey
 # fog
 FOG_COLOUR = ColourRecord(red=100, green=100, blue=100)  # dark grey
 
+ASCII_CONVERSION_TABLE = {
+    "àâ": 'a',
+    "éèê": 'e',
+    "î": 'i',
+    "ô": 'o',
+    "ù": 'u',
+    "ç": 'c',
+}
+
 
 class Variant(Renderable):
     """ A variant """
@@ -850,6 +859,7 @@ class Variant(Renderable):
         self._unit_name_table = {}
         self._role_name_table = {}
         self._coast_name_table = {}
+        self._coast_full_name_table = {}
         self._zone_name_table = {}
         self._full_zone_name_table = {}
         self._season_name_table = {}
@@ -920,6 +930,7 @@ class Variant(Renderable):
             coast_type_num = int(coast_type_num_str)
             coast_type = self._coast_types[coast_type_num]
             self._coast_name_table[coast_type] = data_dict['name']
+            self._coast_full_name_table[coast_type] = data_dict['full_name']
 
         # load the zones names and localisations (units and legends)
         assert len(raw_parameters_content['zones']) == len(self._zones)
@@ -929,12 +940,19 @@ class Variant(Renderable):
 
             # special zones have a special name
             if zone.coast_type:
+
+                # name
                 region_name = self._zone_name_table[zone.region.zone]
-                region_full_name = self._full_zone_name_table[zone.region.zone]
                 coast_name = self._coast_name_table[zone.coast_type]
                 name = f"{region_name}{coast_name}"
-                full_name = f"{region_full_name} ({coast_name})"
+
+                # full name
+                region_full_name = self._full_zone_name_table[zone.region.zone]
+                coast_full_name = self._coast_full_name_table[zone.coast_type]
+                full_name = f"{region_full_name} {coast_full_name}"
+
             else:
+                # much simpler !
                 name = data_dict['name']
                 full_name = data_dict['full_name']
 
@@ -1087,10 +1105,21 @@ class Variant(Renderable):
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
 
+        def make_ascii(word):
+
+            def replacement(letter):
+                for candidates, target in ASCII_CONVERSION_TABLE.items():
+                    if letter in candidates:
+                        return target
+                assert letter.isascii(), f"Please tell me how to simplify '{letter}'"
+                return letter
+
+            return ''.join(map(replacement, word))
+
         def extract_role_data(role):
             """ extract_role_data """
             additional = self._role_add_table[role]
-            return [self._role_name_table[role], additional[0], additional[1]]
+            return [self._role_name_table[role], make_ascii(additional[0]), additional[1]]
 
         def extract_zone_data(zone):
             """ extract_zone_data """
