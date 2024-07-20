@@ -7,7 +7,7 @@
     },
     "regions": {
         "1": {
-            "name": "Cote"
+            "name": "Côte"
         },
         "2": {
             "name": "Terre"
@@ -18,7 +18,7 @@
     },
     "units": {
         "1": {
-            "name": "Armee"
+            "name": "Armée"
         },
         "2": {
             "name": "Flotte"
@@ -112,7 +112,7 @@
         },
         "5": {
             "name": "Egypte",
-            "adjective_name": "egyptien",
+            "adjective_name": "égyptien",
             "letter_name": "E",
             "red": [
                 219,
@@ -935,7 +935,7 @@
             "name": "Printemps"
         },
         "2": {
-            "name": "Ete"
+            "name": "Eté"
         },
         "3": {
             "name": "Automne"
@@ -955,7 +955,7 @@
             "name": "Soutenir offensivement"
         },
         "3": {
-            "name": "Soutenir defensivement"
+            "name": "Soutenir défensivement"
         },
         "4": {
             "name": "Tenir"

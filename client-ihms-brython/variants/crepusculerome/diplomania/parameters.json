@@ -7,7 +7,7 @@
     },
     "regions": {
         "1": {
-            "name": "Cote"
+            "name": "Côte"
         },
         "2": {
             "name": "Terre"
@@ -18,7 +18,7 @@
     },
     "units": {
         "1": {
-            "name": "Armee"
+            "name": "Armée"
         },
         "2": {
             "name": "Flotte"
@@ -181,16 +181,20 @@
     },
     "coasts": {
         "1": {
-            "name": "ce"
+            "name": "ce",
+            "full_name": "côte est"
         },
         "2": {
-            "name": "cn"
+            "name": "cn",
+            "full_name": "côte nord"
         },
         "3": {
-            "name": "cs"
+            "name": "cs",
+            "full_name": "côte sud"
         },
         "4": {
-            "name": "co"
+            "name": "co",
+            "full_name": "côte ouest"
         }
     },
     "zones": {
@@ -212,7 +216,7 @@
         },
         "3": {
             "name": "LON",
-            "full_name": "London",
+            "full_name": "Londres",
             "x_pos": 153,
             "y_pos": 50,
             "x_legend_pos": 186,
@@ -1295,7 +1299,7 @@
             "name": "Printemps"
         },
         "2": {
-            "name": "Ete"
+            "name": "Eté"
         },
         "3": {
             "name": "Automne"
@@ -1315,7 +1319,7 @@
             "name": "Soutenir offensivement"
         },
         "3": {
-            "name": "Soutenir defensivement"
+            "name": "Soutenir défensivement"
         },
         "4": {
             "name": "Tenir"

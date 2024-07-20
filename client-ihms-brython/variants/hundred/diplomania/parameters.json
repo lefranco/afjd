@@ -7,7 +7,7 @@
     },
     "regions": {
         "1": {
-            "name": "Cote"
+            "name": "Côte"
         },
         "2": {
             "name": "Terre"
@@ -18,7 +18,7 @@
     },
     "units": {
         "1": {
-            "name": "Armee"
+            "name": "Armée"
         },
         "2": {
             "name": "Flotte"
@@ -61,7 +61,7 @@
         },
         "2": {
             "name": "France",
-            "adjective_name": "francais",
+            "adjective_name": "français",
             "letter_name": "F",
             "red": [
                 9,
@@ -78,7 +78,7 @@
         },
         "3": {
             "name": "Bourgogne",
-            "adjective_name": "bourguigon",
+            "adjective_name": "bourguignon",
             "letter_name": "B",
             "red": [
                 215,
@@ -96,16 +96,20 @@
     },
     "coasts": {
         "1": {
-            "name": "ce"
+            "name": "ce",
+            "full_name": "côte est"
         },
         "2": {
-            "name": "cn"
+            "name": "cn",
+            "full_name": "côte nord"
         },
         "3": {
-            "name": "cs"
+            "name": "cs",
+            "full_name": "côte sud"
         },
         "4": {
-            "name": "co"
+            "name": "co",
+            "full_name": "côte ouest"
         }
     },
     "zones": {
@@ -568,7 +572,7 @@
             "name": "Printemps"
         },
         "2": {
-            "name": "Ete"
+            "name": "Eté"
         },
         "3": {
             "name": "Automne"
@@ -588,7 +592,7 @@
             "name": "Soutenir offensivement"
         },
         "3": {
-            "name": "Soutenir defensivement"
+            "name": "Soutenir défensivement"
         },
         "4": {
             "name": "Tenir"
