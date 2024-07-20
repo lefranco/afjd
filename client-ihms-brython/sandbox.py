@@ -844,16 +844,10 @@ def sandbox():
             # put the background map first
             ctx.drawImage(img, 0, 0)
 
-            # because we display from scratch
-            VARIANT_DATA.reset_display()
-
-            # put the centers (phase 1)
-            VARIANT_DATA.render(ctx)
-
-            # put the position
+            # put the position and the neutral centers
             POSITION_DATA.render(ctx)
 
-            # put the legends at the end (phase 2)
+            # put the legends
             VARIANT_DATA.render(ctx)
 
             # save

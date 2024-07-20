@@ -732,9 +732,6 @@ class Variant(Renderable):
 
         self._name = name
 
-        # because is rendered in two steps
-        self._display_state = 0
-
         # =================
         # from variant file
         # =================
@@ -1056,51 +1053,37 @@ class Variant(Renderable):
 
         return closest_zone
 
-    def reset_display(self):
-        """ reste_display """
-        self._display_state = 0
-
     def render(self, ctx) -> None:
         """ put me on screen """
 
-        if self._display_state == 0:
+        # distinguish start centers
+        for center in self._centers.values():
+            center.render_start(ctx)
 
-            # put centers
-            for center in self._centers.values():
-                center.render(ctx)
+        # put legends actually
+        for zone in self._zones.values():
+            zone.render_legend(ctx)
 
-        if self._display_state == 1:
+        ctx.font = MAP_TEXT_FONT
 
-            # distinguish start centers
-            for center in self._centers.values():
-                center.render_start(ctx)
+        info_colour = AUTHORS_COLOUR
+        ctx.fillStyle = info_colour.str_value()  # for a text
 
-            # put legends actually
-            for zone in self._zones.values():
-                zone.render_legend(ctx)
+        # put the authors
+        ctx.fillText(f"Variante : {self._variant_author}", VARIANT_AUTHOR_X_POS, VARIANT_AUTHOR_Y_POS)
+        ctx.fillText(f"Carte : {self._map_author}", MAP_AUTHOR_X_POS, MAP_AUTHOR_Y_POS)
 
-            ctx.font = MAP_TEXT_FONT
+        info_colour = ADDITIONAL_COLOUR
+        ctx.fillStyle = info_colour.str_value()  # for a text
 
-            info_colour = AUTHORS_COLOUR
-            ctx.fillStyle = info_colour.str_value()  # for a text
-
-            # put the authors
-            ctx.fillText(f"Variante : {self._variant_author}", VARIANT_AUTHOR_X_POS, VARIANT_AUTHOR_Y_POS)
-            ctx.fillText(f"Carte : {self._map_author}", MAP_AUTHOR_X_POS, MAP_AUTHOR_Y_POS)
-
-            info_colour = ADDITIONAL_COLOUR
-            ctx.fillStyle = info_colour.str_value()  # for a text
-
-            # put the additional
-            ctx.font = MAP_ADDITIONAL_TEXT_FONT
-            x_pos = ADDITIONAL_X_POS
-            num_lines = len(self._additional_text.split('\n'))
-            start_y_pos = self._map_size.y_pos - TEXT_HEIGHT_PIXEL * (num_lines - 1)
-            for num, chunk in enumerate(self._additional_text.split('\n')):
-                y_pos = start_y_pos + TEXT_HEIGHT_PIXEL * num - ADDITIONAL_Y_POS
-                ctx.fillText(chunk, x_pos, y_pos)
-
-        self._display_state += 1
+        # put the additional
+        ctx.font = MAP_ADDITIONAL_TEXT_FONT
+        x_pos = ADDITIONAL_X_POS
+        num_lines = len(self._additional_text.split('\n'))
+        start_y_pos = self._map_size.y_pos - TEXT_HEIGHT_PIXEL * (num_lines - 1)
+        for num, chunk in enumerate(self._additional_text.split('\n')):
+            y_pos = start_y_pos + TEXT_HEIGHT_PIXEL * num - ADDITIONAL_Y_POS
+            ctx.fillText(chunk, x_pos, y_pos)
 
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
@@ -1797,6 +1780,11 @@ class Position(Renderable):
         # put dislodged_units
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
+
+        # put centers (only neutral ones)
+        neutral_centers = set(self._variant.centers.values()) - {o.center for o in self._ownerships}
+        for center in neutral_centers:
+            center.render(ctx)
 
         # put foggy regions
         if self._seen_regions:
