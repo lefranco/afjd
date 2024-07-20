@@ -760,8 +760,9 @@ def rectify_position():
         or when pressing 'x' in which case a None is passed
         """
 
-        # the aim is to give this variable a value
+        # the aim is to give these variable a value
         selected_erase_unit = None
+        selected_erase_ownership = None
 
         # where is the click
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
