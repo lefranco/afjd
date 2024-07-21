@@ -911,7 +911,7 @@ def sandbox():
     def put_download(buttons_right):
         """ put_export """
 
-        input_export = html.INPUT(type="submit", value="Télécharger cette position", Class='btn-inside')
+        input_export = html.INPUT(type="submit", value="Télécharger la carte", Class='btn-inside')
         input_export.bind("click", download_callback)
         buttons_right <= html.BR()
         buttons_right <= input_export
