@@ -1,0 +1,19 @@
+{
+    "sample" : 
+    {
+        "role_id" : 1,
+        "variant_name" : "standard",
+        "game_parameter_name": "sample game", 
+        "game_parameter_description": "sample description", 
+        "game_parameter_current_advancement": 30, 
+        "position_data" : {
+            "ownerships": {"20": 1},
+            "dislodged_ones": {},
+            "units": {"1": [ [1, 10] ] }, 
+            "forbiddens": [], 
+            "imagined_units": {}
+        },
+        "orders_expected" : {
+        }
+    }
+}
