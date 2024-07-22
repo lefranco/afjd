@@ -55,6 +55,8 @@ GAME_PARAMETERS_LOADED = {
     'finished': False,
     'soloed': False
 }
+TUNED_GAME_PARAMETERS_LOADED = None
+POSITION_LOADED = None
 POSITION_DATA = None
 ORDERS_EXPECTED = None
 
@@ -296,6 +298,21 @@ def load_static_stuff():
     else:
         INFORCED_VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, inforced_interface_parameters_read)
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = INFORCED_VARIANT_DATA
+
+
+def load_dynamic_stuff():
+    """ load_dynamic_stuff : loads global data """
+
+    # now game parameters (dynamic since advancement is dynamic)
+    GAME_PARAMETERS_LOADED['variant'] = VARIANT_NAME_LOADED
+    GAME_PARAMETERS_LOADED['name'] = TUNED_GAME_PARAMETERS_LOADED['game_parameters_name']
+    GAME_PARAMETERS_LOADED['description'] = TUNED_GAME_PARAMETERS_LOADED['game_parameters_description']
+    GAME_PARAMETERS_LOADED['current_advancement'] = TUNED_GAME_PARAMETERS_LOADED['game_parameters_current_advancement']
+    GAME_PARAMETERS_LOADED['deadline'] = int(time()) + 5 * 60
+
+    # digest the position
+    global POSITION_DATA
+    POSITION_DATA = mapping.Position(POSITION_LOADED, VARIANT_DATA)
 
 
 def submit_training_orders():
@@ -1396,7 +1413,8 @@ def install_training():
             global ROLE_ID
             global VARIANT_NAME_LOADED
             global ORDERS_EXPECTED
-            global POSITION_DATA
+            global POSITION_LOADED
+            global TUNED_GAME_PARAMETERS_LOADED
 
             content = reader.result
             content_dict = json.loads(content)
@@ -1404,20 +1422,17 @@ def install_training():
             # the role for the trainee
             ROLE_ID = content_dict['role_id']
 
-            # the varfiant we use
+            # the variant we use
             VARIANT_NAME_LOADED = content_dict['variant_name']
 
-            # relevant game parameteres
-            GAME_PARAMETERS_LOADED['variant'] = VARIANT_NAME_LOADED
-            GAME_PARAMETERS_LOADED['name'] = content_dict['game_parameters_name']
-            GAME_PARAMETERS_LOADED['description'] = content_dict['game_parameter_description']
-            GAME_PARAMETERS_LOADED['current_advancement'] = content_dict['game_parameter_current_advancement']
-            GAME_PARAMETERS_LOADED['deadline'] = int(time()) + 5 * 60
+            # the position
+            POSITION_LOADED = content_dict['position']
 
-            # the position (
-            POSITION_DATA = content_dict['position_data']
+            # tuned parameters
+            TUNED_GAME_PARAMETERS_LOADED = {k: v for k, v in content_dict.items() if k.startswith('game_parameters')}
 
             load_static_stuff()
+            load_dynamic_stuff()
 
             # TODO : use it !
             # what orders are expected from trainee
