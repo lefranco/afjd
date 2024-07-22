@@ -344,7 +344,7 @@ def sandbox():
         # submitting position and orders for simulation : do not need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def download_callback(_):
+    def download_map_callback(_):
         """ download_callback """
 
         # make a random like label
@@ -912,7 +912,7 @@ def sandbox():
         """ put_export """
 
         input_export = html.INPUT(type="submit", value="Télécharger la carte", Class='btn-inside')
-        input_export.bind("click", download_callback)
+        input_export.bind("click", download_map_callback)
         buttons_right <= html.BR()
         buttons_right <= input_export
         buttons_right <= html.BR()
@@ -1126,7 +1126,7 @@ def sandbox():
     display_very_left <= html.BR()
 
     display_very_left <= html.BR()
-    display_very_left <= html.DIV("Vous pouvez exporter (bouton 'télécharger cette position') cette carte au format PNG pour vous en servir à titre d'illustration (dans un quizz par exemple)", Class='important')
+    display_very_left <= html.DIV("Vous pouvez exporter (bouton 'télécharger la carte') cette position au format PNG pour vous en servir à titre d'illustration (dans un quizz par exemple)", Class='important')
     display_very_left <= html.BR()
 
     map_size = VARIANT_DATA.map_size
