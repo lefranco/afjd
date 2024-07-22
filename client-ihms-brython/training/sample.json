@@ -1,7 +1,6 @@
 {
     "role_id" : 3,
     "variant_name" : "standard",
-    "game_parameters_name": "sample game", 
     "game_parameters_description": "sample description", 
     "game_parameters_current_advancement": 30, 
     "position" : {

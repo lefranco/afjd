@@ -14,7 +14,7 @@ import geometry
 import mapping
 import interface
 import memoize
-
+import variants
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -56,6 +56,7 @@ GAME_PARAMETERS_LOADED = {
     'soloed': False
 }
 TUNED_GAME_PARAMETERS_LOADED = None
+GAME_STATUS = None
 POSITION_LOADED = None
 POSITION_DATA = None
 ORDERS_EXPECTED = None
@@ -117,7 +118,57 @@ def restore_context(ctx):
     ctx.drawImage(BACKUP_CANVAS, 0, 0)
 
 
-DEFAULT_SCORING_CODE = "CDIP"
+def get_game_status():
+    """ get_game__status """
+
+    def show_variant_callback(ev, variant_name):  # pylint: disable=invalid-name
+        """ show_variant_callback """
+
+        ev.preventDefault()
+
+        arrival = 'variant'
+
+        # so that will go to proper page
+        variants.set_arrival(arrival, variant_name)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        variants.render(PANEL_MIDDLE)
+
+    game_description = GAME_PARAMETERS_LOADED['description']
+    game_variant = GAME_PARAMETERS_LOADED['variant']
+
+    advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
+    nb_max_cycles_to_play = GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
+    game_season = common.get_full_season(advancement_loaded, VARIANT_DATA, nb_max_cycles_to_play, True)
+
+    game_status_table = html.TABLE()
+
+    row = html.TR()
+
+    # season
+    col = html.TD(f"Saison {game_season}")
+    row <= col
+
+    # variant + link
+    form = html.FORM()
+    input_show_variant = html.INPUT(type="submit", value=game_variant, Class='btn-inside')
+    input_show_variant.attrs['style'] = 'font-size: 10px'
+    input_show_variant.bind("click", lambda e, v=game_variant: show_variant_callback(e, v))
+    form <= input_show_variant
+    col = html.TD(form)
+    row <= col
+
+    game_status_table <= row
+
+    row = html.TR()
+
+    col = html.TD(game_description, colspan="2")
+    row <= col
+
+    game_status_table <= row
+
+    return game_status_table
 
 
 def stack_role_flag(frame):
@@ -305,10 +356,12 @@ def load_dynamic_stuff():
 
     # now game parameters (dynamic since advancement is dynamic)
     GAME_PARAMETERS_LOADED['variant'] = VARIANT_NAME_LOADED
-    GAME_PARAMETERS_LOADED['name'] = TUNED_GAME_PARAMETERS_LOADED['game_parameters_name']
     GAME_PARAMETERS_LOADED['description'] = TUNED_GAME_PARAMETERS_LOADED['game_parameters_description']
     GAME_PARAMETERS_LOADED['current_advancement'] = TUNED_GAME_PARAMETERS_LOADED['game_parameters_current_advancement']
     GAME_PARAMETERS_LOADED['deadline'] = int(time()) + 5 * 60
+
+    global GAME_STATUS
+    GAME_STATUS = get_game_status()
 
     # digest the position
     global POSITION_DATA
@@ -1306,6 +1359,12 @@ def submit_training_orders():
         buttons_right <= html.BR()
 
     # now we can display
+
+    # header
+
+    # game status
+    MY_SUB_PANEL <= GAME_STATUS
+    MY_SUB_PANEL <= html.BR()
 
     advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
     advancement_season, _ = common.get_short_season(advancement_loaded, VARIANT_DATA)
