@@ -478,7 +478,7 @@ def stack_role_builds(frame):
         role = VARIANT_DATA.roles[ROLE_ID]
         nb_builds, nb_ownerships, nb_units, nb_free_centers = POSITION_DATA.role_builds(role)
         free_info = f" et {nb_free_centers} emplacement(s) libre(s)" if nb_ownerships > nb_units else ""
-        frame <= html.DIV(f"Vous avez {nb_ownerships} centre(s) pour {nb_units} unité(s){free_info}. Vous {'construisez' if nb_builds > 0 else 'détruisez'} donc {abs(nb_builds)} fois.", Class='note')
+        frame <= html.DIV(f"Vous avez {nb_ownerships} centre(s) pour {nb_units} unité(s){free_info}. Vous {'construisez' if nb_builds >= 0 else 'détruisez'} donc {abs(nb_builds)} fois.", Class='note')
 
 
 def stack_possibilities(frame, advancement_season):
