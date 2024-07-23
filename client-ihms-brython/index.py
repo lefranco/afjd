@@ -292,6 +292,12 @@ def load_option(_, item_name):
             if not common.check_admin():
                 continue
 
+        # TODO TEMPORARY
+        # do not display menu administrate if not administrator
+        if possible_item_name == 'Entraînement':
+            if not common.check_admin():
+                continue
+
         if possible_item_name == ITEM_NAME_SELECTED:
             item_name_bold_or_not = html.B(possible_item_name)
         else:
