@@ -18,6 +18,10 @@ import variants
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
+# Different trainings
+TRAINING_INDEX = 0
+TRAINING_LIST = []
+
 # From json file
 ROLE_ID = None
 VARIANT_NAME_LOADED = None
@@ -119,9 +123,17 @@ def restore_context(ctx):
 
 def next_previous_training(previous: bool):
     """ next_previous_training """
+    global TRAINING_INDEX
 
-    # TODO
-    alert("TODO")
+    if previous:
+        if TRAINING_INDEX > 0:
+            TRAINING_INDEX -= 1
+    else:
+        if TRAINING_INDEX < len(TRAINING_LIST) - 1:
+            TRAINING_INDEX += 1
+
+    # go for next training
+    install_training()
 
 
 def get_game_status():
@@ -152,12 +164,8 @@ def get_game_status():
 
     row = html.TR()
 
-    # TODO
-    index_exercise = 1
-    number_exercises = 3
-
     # was game, now is indicatior
-    col = html.TD(f"{index_exercise}/{number_exercises}")
+    col = html.TD(f"{TRAINING_INDEX + 1}/{len(TRAINING_LIST)}")
     row <= col
 
     # season
@@ -1463,43 +1471,57 @@ def submit_training_orders():
 def install_training():
     """ install_training """
 
+    global ROLE_ID
+    global VARIANT_NAME_LOADED
+    global ORDERS_EXPECTED
+    global POSITION_LOADED
+    global TUNED_GAME_PARAMETERS_LOADED
+
+    content_dict = TRAINING_LIST[TRAINING_INDEX]
+
+    # the role for the trainee
+    ROLE_ID = content_dict['role_id']
+
+    # the variant we use
+    VARIANT_NAME_LOADED = content_dict['variant_name']
+
+    # the position
+    POSITION_LOADED = content_dict['position']
+
+    # tuned parameters
+    TUNED_GAME_PARAMETERS_LOADED = {k: v for k, v in content_dict.items() if k.startswith('game_parameters')}
+
+    load_static_stuff()
+    load_dynamic_stuff()
+
+    # TODO : use it !
+    # what orders are expected from trainee
+    ORDERS_EXPECTED = content_dict['orders_expected']
+
+    # Activate later on ;-)
+    MY_SUB_PANEL.clear()
+    submit_training_orders()
+
+
+def load_training_data():
+    """ install_training """
+
     def load_file_callback(ev, input_file):  # pylint: disable=invalid-name
         """ load_file_callback """
 
         def onload_callback(_):
             """ onload_callback """
 
-            global ROLE_ID
-            global VARIANT_NAME_LOADED
-            global ORDERS_EXPECTED
-            global POSITION_LOADED
-            global TUNED_GAME_PARAMETERS_LOADED
+            global TRAINING_LIST
+            global TRAINING_INDEX
 
             content = reader.result
-            content_dict = json.loads(content)
+            TRAINING_LIST = json.loads(content)
+            print(f"{TRAINING_LIST=}")
+            TRAINING_INDEX = 0
 
-            # the role for the trainee
-            ROLE_ID = content_dict['role_id']
-
-            # the variant we use
-            VARIANT_NAME_LOADED = content_dict['variant_name']
-
-            # the position
-            POSITION_LOADED = content_dict['position']
-
-            # tuned parameters
-            TUNED_GAME_PARAMETERS_LOADED = {k: v for k, v in content_dict.items() if k.startswith('game_parameters')}
-
-            load_static_stuff()
-            load_dynamic_stuff()
-
-            # TODO : use it !
-            # what orders are expected from trainee
-            ORDERS_EXPECTED = content_dict['orders_expected']
-
-            # Activate later on ;-)
-            MY_SUB_PANEL.clear()
-            submit_training_orders()
+            # go for first training
+            install_training()
 
         ev.preventDefault()
 
@@ -1508,7 +1530,7 @@ def install_training():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            install_training()
+            load_training_data()
             return
 
         # Create a new DOM FileReader instance
@@ -1521,7 +1543,7 @@ def install_training():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        install_training()
+        load_training_data()
 
     MY_SUB_PANEL <= html.H3("Séléction de fichier d'entrainement")
 
@@ -1554,5 +1576,5 @@ def render(panel_middle):
     PANEL_MIDDLE = panel_middle
 
     MY_SUB_PANEL.clear()
-    install_training()
+    load_training_data()
     panel_middle <= MY_SUB_PANEL

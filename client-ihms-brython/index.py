@@ -293,9 +293,12 @@ def load_option(_, item_name):
                 continue
 
         # TODO TEMPORARY
-        # do not display menu administrate if not administrator
+        # do not display menu training if not OrangeCar or Noob
         if possible_item_name == 'Entraînement':
-            if not common.check_admin():
+            if 'PSEUDO' not in storage:
+                continue
+            pseudo = storage['PSEUDO']
+            if pseudo not in ['OrangeCar', 'Mr_Noob']:
                 continue
 
         if possible_item_name == ITEM_NAME_SELECTED:
