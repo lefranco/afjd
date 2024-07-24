@@ -1,0 +1,47 @@
+[
+{
+    "role_id" : 3,
+    "variant_name" : "standard",
+    "game_parameters_description": "test de mouvement", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {"3": 3},
+        "dislodged_ones": {},
+        "units": {"3": [ [1, 10] ] }, 
+        "forbiddens": []
+    },
+    "orders_expected" : {
+    }
+},
+
+{
+    "role_id" : 3,
+    "variant_name" : "standard",
+    "game_parameters_description": "test de retraite", 
+    "game_parameters_current_advancement": 1, 
+    "position" : {
+        "ownerships": {"3": 3},
+        "dislodged_ones": {"3": [ [1, 54, 16] ] },
+        "units": {"2" : [ [1, 54]] }, 
+        "forbiddens": [16]
+    },
+    "orders_expected" : {
+    }
+},
+
+{
+    "role_id" : 3,
+    "variant_name" : "standard",
+    "game_parameters_description": "test d'ajustement'", 
+    "game_parameters_current_advancement": 4, 
+    "position" : {
+        "ownerships": {"2": 3, "1": 3, "3": 3},
+        "dislodged_ones": {},
+        "units": {"3": [ [1, 57] ] }, 
+        "forbiddens": []
+    },
+    "orders_expected" : {
+    }
+}
+
+]
