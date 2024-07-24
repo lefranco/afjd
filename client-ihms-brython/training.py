@@ -69,7 +69,6 @@ VARIANT_CONTENT_LOADED = None
 INTERFACE_CHOSEN = None
 INTERFACE_PARAMETERS_READ = None
 VARIANT_DATA = None
-INFORCED_VARIANT_DATA = None
 
 MY_PANEL = html.DIV()
 MY_SUB_PANEL = html.DIV(id="page")
@@ -328,28 +327,6 @@ def load_static_stuff():
         VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, INTERFACE_PARAMETERS_READ)
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = VARIANT_DATA
 
-    # now for official map
-
-    # like above
-    interface_inforced = interface.get_inforced_interface_from_variant(VARIANT_NAME_LOADED)
-
-    # optimization
-    if (VARIANT_NAME_LOADED, interface_inforced) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
-        inforced_interface_parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
-    else:
-        inforced_interface_parameters_read = common.read_parameters(VARIANT_NAME_LOADED, interface_inforced)
-        memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = inforced_interface_parameters_read
-
-    # build variant data
-    global INFORCED_VARIANT_DATA
-
-    # optimization
-    if (VARIANT_NAME_LOADED, interface_inforced) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
-        INFORCED_VARIANT_DATA = memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
-    else:
-        INFORCED_VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, inforced_interface_parameters_read)
-        memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = INFORCED_VARIANT_DATA
-
 
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
@@ -406,10 +383,6 @@ def submit_training_orders():
             # use a strip to remove trainling "\n"
             messages = "<br>".join(req_result['msg'].strip().split('\n'))
 
-            # to better undestand what is going on, on can use code below :
-            #  debug_message = req_result['debug_message'].split('\n')
-            #  mydialog.InfoDialog("Information", f"debug_message : {debug_message}", True)
-
             if messages:
                 mydialog.InfoDialog("Information", f"Ordres validés avec le(s) message(s) : {messages}", True)
             else:
@@ -435,9 +408,6 @@ def submit_training_orders():
         names_dict = VARIANT_DATA.extract_names()
         names_dict_json = dumps(names_dict)
 
-        inforced_names_dict = INFORCED_VARIANT_DATA.extract_names()
-        inforced_names_dict_json = dumps(inforced_names_dict)
-
         # units
         units_list_dict = POSITION_DATA.save_json()
         units_list_dict_json = dumps(units_list_dict)
@@ -451,8 +421,7 @@ def submit_training_orders():
             'names': names_dict_json,
             'units': units_list_dict_json,
             'orders': orders_list_dict_json,
-            'role_id': ROLE_ID,
-            'adjudication_names': inforced_names_dict_json
+            'role_id': ROLE_ID
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
