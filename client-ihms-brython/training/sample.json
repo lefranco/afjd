@@ -11,8 +11,7 @@
         "units": {"3": [ [1, 10] ] }, 
         "forbiddens": []
     },
-    "orders_expected" : {
-    }
+    "orders_expected" : { }
 },
 
 {
@@ -27,15 +26,14 @@
         "units": {"2" : [ [1, 54]] }, 
         "forbiddens": [16]
     },
-    "orders_expected" : {
-    }
+    "orders_expected" : { }
 },
 
 {
     "introduction" : "Saurez vous entrer un ordre d'ajustement' ?<br>L'Allemagne construit une fois... <br>En avant !",
     "role_id" : 3,
     "variant_name" : "standard",
-    "game_parameters_description": "test d'ajustement'", 
+    "game_parameters_description": "test d'ajustement", 
     "game_parameters_current_advancement": 4, 
     "position" : {
         "ownerships": {"2": 3, "1": 3, "3": 3},
@@ -43,8 +41,7 @@
         "units": {"3": [ [1, 57] ] }, 
         "forbiddens": []
     },
-    "orders_expected" : {
-    }
+    "orders_expected" : { }
 }
 
 ]
