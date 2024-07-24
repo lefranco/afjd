@@ -117,6 +117,13 @@ def restore_context(ctx):
     ctx.drawImage(BACKUP_CANVAS, 0, 0)
 
 
+def next_previous_training(previous: bool):
+    """ next_previous_training """
+
+    # TODO
+    alert("TODO")
+
+
 def get_game_status():
     """ get_game__status """
 
@@ -145,6 +152,14 @@ def get_game_status():
 
     row = html.TR()
 
+    # TODO
+    index_exercise = 1
+    number_exercises = 3
+
+    # was game, now is indicatior
+    col = html.TD(f"{index_exercise}/{number_exercises}")
+    row <= col
+
     # season
     col = html.TD(f"Saison {game_season}")
     row <= col
@@ -162,7 +177,23 @@ def get_game_status():
 
     row = html.TR()
 
-    col = html.TD(game_description, colspan="2")
+    form = html.FORM()
+    input_previous_training = html.INPUT(type="submit", value="exercice précédent", Class='btn-inside')
+    input_previous_training.attrs['style'] = 'font-size: 10px'
+    input_previous_training.bind("click", lambda e: next_previous_training(True))
+    form <= input_previous_training
+    col = html.TD(form)
+    row <= col
+
+    col = html.TD(game_description)
+    row <= col
+
+    form = html.FORM()
+    input_next_training = html.INPUT(type="submit", value="exercice suivant", Class='btn-inside')
+    input_next_training.attrs['style'] = 'font-size: 10px'
+    input_next_training.bind("click", lambda e: next_previous_training(False))
+    form <= input_next_training
+    col = html.TD(form)
     row <= col
 
     game_status_table <= row
