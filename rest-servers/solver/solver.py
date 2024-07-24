@@ -278,31 +278,31 @@ def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.D
 
         if type_order in [8]:  # build
             if active_zone_num not in fake_unit_type_table:
-                flask_restful.abort(400, msg="ERROR - active_zone_num (build) is wrong")
+                flask_restful.abort(400, msg=f"ERROR - {active_zone_num=} (build) is wrong for {role_name=}")
             active_type = fake_unit_type_table[active_zone_num]
         elif type_order in [6, 7]:  # retreat
             if active_zone_num not in dislodged_unit_type_table:
-                flask_restful.abort(400, msg="ERROR - active_zone_num (retreat) is wrong")
+                flask_restful.abort(400, msg=f"ERROR - {active_zone_num=} (retreat) is wrong for {role_name=}")
             active_type = dislodged_unit_type_table[active_zone_num]
         else:  # not build nor retreat
             if active_zone_num not in unit_type_table:
-                flask_restful.abort(400, msg="ERROR - active_zone_num (not build nor retreat) is wrong")
+                flask_restful.abort(400, msg=f"ERROR - {active_zone_num=} (not build nor retreat) is wrong for {role_name=}")
             active_type = unit_type_table[active_zone_num]
 
         if not int(active_zone_num) - 1 < len(zone_names):
-            flask_restful.abort(400, msg="ERROR - active_zone_num is wrong")
+            flask_restful.abort(400, msg=f"ERROR - {active_zone_num=} is wrong")
         active_zone = zone_names[int(active_zone_num) - 1]
 
         if passive_zone_num:
             if not int(passive_zone_num) - 1 < len(zone_names):
-                flask_restful.abort(400, msg="ERROR - passive_zone_num is wrong")
+                flask_restful.abort(400, msg=f"ERROR - {passive_zone_num=} is wrong")
             passive_zone = zone_names[int(passive_zone_num) - 1]
         else:
             passive_zone = None
 
         if dest_zone_num:
             if not int(dest_zone_num) - 1 < len(zone_names):
-                flask_restful.abort(400, msg="ERROR - dest_zone_num is wrong")
+                flask_restful.abort(400, msg=f"ERROR - {dest_zone_num=} is wrong")
             dest_zone = zone_names[int(dest_zone_num) - 1]
         else:
             dest_zone = None
@@ -326,7 +326,7 @@ def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.D
         elif type_order == 9:  # remove
             result.append(f"- {active_type} {active_zone}")
         else:
-            flask_restful.abort(400, msg="ERROR - type_order is wrong")
+            flask_restful.abort(400, msg=f"ERROR - {type_order=} is wrong")
 
     result.append("")
     return result
