@@ -11,7 +11,8 @@
         "units": {"3": [ [1, 10] ] }, 
         "forbiddens": []
     },
-    "orders_expected" : { }
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "other_orders" : { "fake_units":[], "orders":[]}
 },
 
 {
@@ -26,7 +27,8 @@
         "units": {"2" : [ [1, 54]] }, 
         "forbiddens": [16]
     },
-    "orders_expected" : { }
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "other_orders" : { "fake_units":[], "orders":[]}
 },
 
 {
@@ -41,7 +43,8 @@
         "units": {"3": [ [1, 57] ] }, 
         "forbiddens": []
     },
-    "orders_expected" : { }
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "other_orders" : { "fake_units":[], "orders":[]}
 }
 
 ]

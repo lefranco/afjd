@@ -64,7 +64,7 @@ TUNED_GAME_PARAMETERS_LOADED = None
 GAME_STATUS = None
 POSITION_LOADED = None
 POSITION_DATA = None
-ORDERS_EXPECTED = None
+EXPECTED_ORDERS = None
 
 # constant
 ORDERS_LOADED = {'fake_units': [], 'orders': []}
@@ -412,27 +412,30 @@ def submit_training_orders():
 
         def reply_callback(req):
 
-            nonlocal orders_in
+            if req:
+                req_result = loads(req.text)
+                if req.status != 201:
+                    if 'message' in req_result:
+                        alert(f"Erreur à la soumission d'ordres d'entrainenemt : {req_result['message']}")
+                    elif 'msg' in req_result:
+                        alert(f"Problème à la soumission d'ordres d'entrainenemt : {req_result['msg']}")
+                    else:
+                        alert("Réponse du serveur imprévue et non documentée")
+                    return
 
-            req_result = loads(req.text)
-            if req.status != 201:
-                if 'message' in req_result:
-                    alert(f"Erreur à la soumission d'ordres d'entrainenemt : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la soumission d'ordres d'entrainenemt : {req_result['msg']}")
+                # use a strip to remove trainling "\n"
+                messages = "<br>".join(req_result['msg'].strip().split('\n'))
+
+                if messages:
+                    mydialog.InfoDialog("Information", f"Ordres validés avec le(s) message(s) : {messages}", True)
                 else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
+                    mydialog.InfoDialog("Information", "Ordres validés !")
 
-            # use a strip to remove trainling "\n"
-            messages = "<br>".join(req_result['msg'].strip().split('\n'))
-
-            if messages:
-                mydialog.InfoDialog("Information", f"Ordres validés avec le(s) message(s) : {messages}", True)
-            else:
-                mydialog.InfoDialog("Information", "Ordres validés !")
-
-            # TODO : compare with expected orders of course !
+            # compare with expected orders
+            print("compare")
+            print(f"{repr(orders_data)=}")
+            expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, False)
+            print(f"{repr(expected)=}")
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             role = VARIANT_DATA.roles[ROLE_ID]
@@ -473,7 +476,9 @@ def submit_training_orders():
         url = f"{host}:{port}/training"
 
         # submitting position and orders for training : do not need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        # TODO PUTBACK
+        # ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        reply_callback(None)
 
         # TODO build endpoint training similer to simulation
 
@@ -1396,7 +1401,6 @@ def submit_training_orders():
 
     # digest the orders
     orders_data = mapping.Orders(ORDERS_LOADED, POSITION_DATA, False)
-    orders_in = not orders_data.empty()
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -1479,7 +1483,7 @@ def install_training():
     global INTRODUCTION
     global ROLE_ID
     global VARIANT_NAME_LOADED
-    global ORDERS_EXPECTED
+    global EXPECTED_ORDERS
     global POSITION_LOADED
     global TUNED_GAME_PARAMETERS_LOADED
 
@@ -1503,9 +1507,8 @@ def install_training():
     load_static_stuff()
     load_dynamic_stuff()
 
-    # TODO : use it !
     # what orders are expected from trainee
-    ORDERS_EXPECTED = content_dict['orders_expected']
+    EXPECTED_ORDERS = content_dict['expected_orders']
 
     # Popup
     mydialog.InfoDialog("Information", INTRODUCTION, True)
