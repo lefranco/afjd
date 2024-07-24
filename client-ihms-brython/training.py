@@ -186,22 +186,26 @@ def get_game_status():
 
     row = html.TR()
 
-    form = html.FORM()
-    input_previous_training = html.INPUT(type="submit", value="exercice précédent", Class='btn-inside')
-    input_previous_training.attrs['style'] = 'font-size: 10px'
-    input_previous_training.bind("click", lambda e: next_previous_training(True))
-    form <= input_previous_training
+    form = ""
+    if TRAINING_INDEX > 0:
+        form = html.FORM()
+        input_previous_training = html.INPUT(type="submit", value="exercice précédent", Class='btn-inside')
+        input_previous_training.attrs['style'] = 'font-size: 10px'
+        input_previous_training.bind("click", lambda e: next_previous_training(True))
+        form <= input_previous_training
     col = html.TD(form)
     row <= col
 
     col = html.TD(game_description)
     row <= col
 
-    form = html.FORM()
-    input_next_training = html.INPUT(type="submit", value="exercice suivant", Class='btn-inside')
-    input_next_training.attrs['style'] = 'font-size: 10px'
-    input_next_training.bind("click", lambda e: next_previous_training(False))
-    form <= input_next_training
+    form = ""
+    if TRAINING_INDEX < len(TRAINING_LIST) - 1:
+        form = html.FORM()
+        input_next_training = html.INPUT(type="submit", value="exercice suivant", Class='btn-inside')
+        input_next_training.attrs['style'] = 'font-size: 10px'
+        input_next_training.bind("click", lambda e: next_previous_training(False))
+        form <= input_next_training
     col = html.TD(form)
     row <= col
 
