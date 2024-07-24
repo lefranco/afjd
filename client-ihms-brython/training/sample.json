@@ -1,5 +1,6 @@
 [
 {
+    "introduction" : "Saurez vous entrer un ordre de mouvement pour l'Allemagne et sont armée à Berlin ?<br>En avant !",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_description": "test de mouvement", 
@@ -15,6 +16,7 @@
 },
 
 {
+    "introduction" : "Saurez vous entrer un ordre de retraite ?<br>L'Allemagne doit faire retraiter son armée en Roumanie... <br>En avant !",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_description": "test de retraite", 
@@ -30,6 +32,7 @@
 },
 
 {
+    "introduction" : "Saurez vous entrer un ordre d'ajustement' ?<br>L'Allemagne construit une fois... <br>En avant !",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_description": "test d'ajustement'", 

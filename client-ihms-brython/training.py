@@ -23,6 +23,7 @@ TRAINING_INDEX = 0
 TRAINING_LIST = []
 
 # From json file
+INTRODUCTION = ""
 ROLE_ID = None
 VARIANT_NAME_LOADED = None
 GAME_PARAMETERS_LOADED = {
@@ -1471,6 +1472,7 @@ def submit_training_orders():
 def install_training():
     """ install_training """
 
+    global INTRODUCTION
     global ROLE_ID
     global VARIANT_NAME_LOADED
     global ORDERS_EXPECTED
@@ -1478,6 +1480,9 @@ def install_training():
     global TUNED_GAME_PARAMETERS_LOADED
 
     content_dict = TRAINING_LIST[TRAINING_INDEX]
+
+    # the role for the trainee
+    INTRODUCTION = content_dict['introduction']
 
     # the role for the trainee
     ROLE_ID = content_dict['role_id']
@@ -1498,6 +1503,9 @@ def install_training():
     # what orders are expected from trainee
     ORDERS_EXPECTED = content_dict['orders_expected']
 
+    # Popup
+    mydialog.InfoDialog("Information", INTRODUCTION, True)
+
     # Activate later on ;-)
     MY_SUB_PANEL.clear()
     submit_training_orders()
@@ -1517,7 +1525,6 @@ def load_training_data():
 
             content = reader.result
             TRAINING_LIST = json.loads(content)
-            print(f"{TRAINING_LIST=}")
             TRAINING_INDEX = 0
 
             # go for first training
