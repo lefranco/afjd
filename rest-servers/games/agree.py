@@ -690,8 +690,13 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
     # first adjudication
     adj_status, adjudicated, adj_message = adjudicate(game_id, game, variant_data, names, sql_executor)
 
+    if not adj_status:
+        status = False
+        debug_message = f"Failed within first adjudication {adj_message} !"
+        return status, late, unsafe, missing, adjudicated, debug_message
+
     if not adjudicated:
-        debug_message = f"Failed first adjudication {adj_message} !"
+        debug_message = f"Did not perform first adjudication {adj_message} !"
         return status, late, unsafe, missing, adjudicated, debug_message
 
     # get all messages
@@ -744,8 +749,8 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
 
         # error adjudicating : stop now (safer, but should not happen)
         if not adj_status:
-            debug_message = "\n".join(debug_messages)
             status = False
+            debug_message = "\n".join(debug_messages)
             return status, late, unsafe, missing, adjudicated, debug_message
 
         # did not= adjudicate : stop now (happens if game is over)
