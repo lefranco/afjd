@@ -126,7 +126,7 @@ def submit_orders():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            # use a strip to remove trainling "\n"
+            # use a strip to remove trailing "\n"
             messages = "<br>".join(req_result['msg'].strip().split('\n'))
 
             # to better undestand what is going on, on can use code below :
