@@ -13,7 +13,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[] },
-    "other_orders" : { "fake_units":[], "orders":[]},
     "pointers" : [[248, 436, 10]]
 },
 
@@ -30,7 +29,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[] },
-    "other_orders" : { "fake_units":[], "orders":[]},
     "pointers" : [ [247, 417, 10]]
 },
 
@@ -47,7 +45,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[] },
-    "other_orders" : { "fake_units":[], "orders":[]},
     "pointers" : [[276, 459, 10]]
 },
 
@@ -64,7 +61,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 4, 10, 0, 0]] },
-    "other_orders" : { "fake_units":[], "orders":[]},
     "pointers" : []
 },
 
@@ -81,7 +77,6 @@
         "forbiddens": [16]
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 6, 54, 0, 69]] },
-    "other_orders" : { "fake_units":[], "orders":[]},
     "pointers" : []
 },
 
@@ -98,7 +93,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[[0, 1, 10, 3, 0, 0]], "orders":[[0, 0, 8, 10, 0, 0]] },
-    "other_orders" : { "fake_units":[], "orders":[]},
     "pointers" : []
 }
 
