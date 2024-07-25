@@ -1,6 +1,6 @@
 [
 {
-    "introduction" : "Saurez vous entrer un ordre de mouvement pour l'Allemagne et sont armée à Berlin ?<br>En avant !",
+    "introduction" : "Saurez vous entrer un ordre de tenir en place pour l'Allemagne et son armée à Berlin ?<br>En avant !",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_description": "test de mouvement", 
@@ -11,12 +11,12 @@
         "units": {"3": [ [1, 10] ] }, 
         "forbiddens": []
     },
-    "expected_orders" : {"fake_units":[], "orders":[] },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 4, 10, 0, 0]] },
     "other_orders" : { "fake_units":[], "orders":[]}
 },
 
 {
-    "introduction" : "Saurez vous entrer un ordre de retraite ?<br>L'Allemagne doit faire retraiter son armée en Roumanie... <br>En avant !",
+    "introduction" : "Saurez vous entrer un ordre de retraite ?<br>L'Allemagne doit faire retraiter son armée de Roumanie en Ukraine... <br>En avant !",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_description": "test de retraite", 
@@ -27,12 +27,12 @@
         "units": {"2" : [ [1, 54]] }, 
         "forbiddens": [16]
     },
-    "expected_orders" : {"fake_units":[], "orders":[] },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 6, 54, 0, 69]] },
     "other_orders" : { "fake_units":[], "orders":[]}
 },
 
 {
-    "introduction" : "Saurez vous entrer un ordre d'ajustement' ?<br>L'Allemagne construit une fois... <br>En avant !",
+    "introduction" : "Saurez vous entrer un ordre d'ajustement' ?<br>L'Allemagne construit une fois...une armée à Berlin <br>En avant !",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_description": "test d'ajustement", 
@@ -43,7 +43,7 @@
         "units": {"3": [ [1, 57] ] }, 
         "forbiddens": []
     },
-    "expected_orders" : {"fake_units":[], "orders":[] },
+    "expected_orders" : {"fake_units":[[0, 1, 10, 3, 0, 0]], "orders":[[0, 0, 8, 10, 0, 0]] },
     "other_orders" : { "fake_units":[], "orders":[]}
 }
 
