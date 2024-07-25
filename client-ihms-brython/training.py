@@ -372,6 +372,13 @@ def load_static_stuff():
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = VARIANT_DATA
 
 
+def  same_orders(orders1, orders2):
+    """same_orders"""
+
+    # same if write same
+    return sorted(map(str, orders1.orders)) == sorted(map(str, orders2.orders))
+
+
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
 
@@ -432,10 +439,11 @@ def submit_training_orders():
                     mydialog.InfoDialog("Information", "Ordres validés !")
 
             # compare with expected orders
-            print("compare")
-            print(f"{repr(orders_data)=}")
             expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, False)
-            print(f"{repr(expected)=}")
+            if same_orders(orders_data,expected):
+                mydialog.InfoDialog("Information", "Correct, ce sont bien les ordres attendus !", True)
+            else:
+                mydialog.InfoDialog("Information", "Hélas non, ce ne sont pas les ordres attendus :-(", True)
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             role = VARIANT_DATA.roles[ROLE_ID]

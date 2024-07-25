@@ -2338,6 +2338,8 @@ class Order(Renderable):
 
 # rectangle
 COMMUNICATION_ORDER_PATH = geometry.Polygon([geometry.PositionRecord(*t) for t in [(10, 30), (40, 30), (40, 45), (10, 45), (10, 30)]])
+
+
 # magenta (like text)
 COMMUNICATION_ORDER_COLOR = ColourRecord(red=255, green=0, blue=255)
 
