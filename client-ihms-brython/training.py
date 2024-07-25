@@ -136,6 +136,12 @@ def next_previous_training(previous: bool):
     # go for next training
     install_training()
 
+def reset_training_callback(ev):
+    """ reset_training_callback """
+    ev.preventDefault()
+    MY_SUB_PANEL.clear()
+    load_training_data()
+
 
 def get_game_status():
     """ get_game__status """
@@ -165,7 +171,16 @@ def get_game_status():
 
     row = html.TR()
 
-    # was game, now is indicatior
+    # variant + link
+    form = html.FORM()
+    input_reset_training = html.INPUT(type="submit", value="reset", Class='btn-inside')
+    input_reset_training.attrs['style'] = 'font-size: 10px'
+    input_reset_training.bind("click", reset_training_callback)
+    form <= input_reset_training
+    col = html.TD(form)
+    row <= col
+
+    # indicatior
     col = html.TD(f"{TRAINING_INDEX + 1}/{len(TRAINING_LIST)}")
     row <= col
 
@@ -196,7 +211,7 @@ def get_game_status():
     col = html.TD(form)
     row <= col
 
-    col = html.TD(game_description)
+    col = html.TD(game_description, colspan="2")
     row <= col
 
     form = ""
