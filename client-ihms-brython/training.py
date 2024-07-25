@@ -1,7 +1,7 @@
 """ training """
-import json
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
+from math import pi
 from json import loads, dumps
 from time import time
 
@@ -65,6 +65,9 @@ GAME_STATUS = None
 POSITION_LOADED = None
 POSITION_DATA = None
 EXPECTED_ORDERS = None
+
+POINTERS = []
+POINTER_COLOUR = mapping.ColourRecord(255, 0, 0)  # black
 
 # constant
 ORDERS_LOADED = {'fake_units': [], 'orders': []}
@@ -135,6 +138,7 @@ def next_previous_training(previous: bool):
 
     # go for next training
     install_training()
+
 
 def reset_training_callback(ev):
     """ reset_training_callback """
@@ -387,7 +391,7 @@ def load_static_stuff():
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = VARIANT_DATA
 
 
-def  same_orders(orders1, orders2):
+def same_orders(orders1, orders2):
     """same_orders"""
 
     # same if write same
@@ -455,7 +459,7 @@ def submit_training_orders():
 
             # compare with expected orders
             expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, False)
-            if same_orders(orders_data,expected):
+            if same_orders(orders_data, expected):
                 mydialog.InfoDialog("Information", "Correct, ce sont bien les ordres attendus !", True)
             else:
                 mydialog.InfoDialog("Information", "Hélas non, ce ne sont pas les ordres attendus :-(", True)
@@ -1340,6 +1344,9 @@ def submit_training_orders():
             # restore
             restore_context(ctx)
 
+        # pointers
+        draw_pointers(ctx)
+
         # put the orders
         orders_data.render(ctx)
 
@@ -1398,6 +1405,18 @@ def submit_training_orders():
         buttons_right <= input_submit
         buttons_right <= html.BR()
         buttons_right <= html.BR()
+
+    def draw_pointers(ctx):
+        """ draw_pointers """
+
+        pointer_colour = POINTER_COLOUR
+        ctx.strokeStyle = pointer_colour.str_value()
+        ctx.lineWidth = 2
+        for x_pos, y_pos, ray in POINTERS:
+            ctx.beginPath()
+            ctx.arc(x_pos, y_pos, ray, 0, 2 * pi, False)
+            ctx.stroke()
+            ctx.closePath()
 
     # now we can display
 
@@ -1507,6 +1526,7 @@ def install_training():
     global ROLE_ID
     global VARIANT_NAME_LOADED
     global EXPECTED_ORDERS
+    global POINTERS
     global POSITION_LOADED
     global TUNED_GAME_PARAMETERS_LOADED
 
@@ -1533,10 +1553,13 @@ def install_training():
     # what orders are expected from trainee
     EXPECTED_ORDERS = content_dict['expected_orders']
 
+    # pointers to show on map
+    POINTERS = content_dict['pointers']
+
     # Popup
     mydialog.InfoDialog("Information", INTRODUCTION, True)
 
-    # Activate later on ;-)
+    # display map and order console
     MY_SUB_PANEL.clear()
     submit_training_orders()
 
@@ -1554,7 +1577,7 @@ def load_training_data():
             global TRAINING_INDEX
 
             content = reader.result
-            TRAINING_LIST = json.loads(content)
+            TRAINING_LIST = loads(content)
             TRAINING_INDEX = 0
 
             # go for first training

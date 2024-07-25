@@ -1,4 +1,56 @@
 [
+
+{
+    "introduction" : "Repérez tout d'abord les centres <br> Pour cet exercice, pas d'ordres à entrer ! <br>Le centre de Paris a été entouré pour vous aider à les repérer<br>Cliquez directement sur 'exercice suivant'",
+    "role_id" : 7,
+    "variant_name" : "standard",
+    "game_parameters_description": "repérage", 
+    "game_parameters_current_advancement": 1, 
+    "position" : {
+        "ownerships": {"20": 2},
+        "dislodged_ones": {},
+        "units": {"2": [ [1, 17], [2, 48] ] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "other_orders" : { "fake_units":[], "orders":[]},
+    "pointers" : [[248, 436, 10]]
+},
+
+{
+    "introduction" : "Repérez ensuite les flottes<br> Pour cet exercice, pas d'ordres à entrer ! <br>La flotte en Picardie a été entourée pour vous aider à les repérer<br>Cliquez directement sur 'exercice suivant'",
+    "role_id" : 7,
+    "variant_name" : "standard",
+    "game_parameters_description": "repérage", 
+    "game_parameters_current_advancement": 1, 
+    "position" : {
+        "ownerships": {"20": 2},
+        "dislodged_ones": {},
+        "units": {"2": [ [1, 17], [2, 48] ] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "other_orders" : { "fake_units":[], "orders":[]},
+    "pointers" : [ [247, 417, 10]]
+},
+
+{
+    "introduction" : "Repérez enfin les armées<br> Pour cet exercice, pas d'ordres à entrer ! <br>L'armée en Bourggogne a été entourée pour vous aider à les repérer<br>Cliquez directement sur 'exercice suivant'",
+    "role_id" : 7,
+    "variant_name" : "standard",
+    "game_parameters_description": "repérage", 
+    "game_parameters_current_advancement": 1, 
+    "position" : {
+        "ownerships": {"20": 2},
+        "dislodged_ones": {},
+        "units": {"2": [ [1, 17], [2, 48] ] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "other_orders" : { "fake_units":[], "orders":[]},
+    "pointers" : [[276, 459, 10]]
+},
+
 {
     "introduction" : "Saurez vous entrer un ordre de tenir en place pour l'Allemagne et son armée à Berlin ?<br>En avant !",
     "role_id" : 3,
@@ -12,7 +64,8 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 4, 10, 0, 0]] },
-    "other_orders" : { "fake_units":[], "orders":[]}
+    "other_orders" : { "fake_units":[], "orders":[]},
+    "pointers" : []
 },
 
 {
@@ -28,7 +81,8 @@
         "forbiddens": [16]
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 6, 54, 0, 69]] },
-    "other_orders" : { "fake_units":[], "orders":[]}
+    "other_orders" : { "fake_units":[], "orders":[]},
+    "pointers" : []
 },
 
 {
@@ -44,7 +98,8 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[[0, 1, 10, 3, 0, 0]], "orders":[[0, 0, 8, 10, 0, 0]] },
-    "other_orders" : { "fake_units":[], "orders":[]}
+    "other_orders" : { "fake_units":[], "orders":[]},
+    "pointers" : []
 }
 
 ]
