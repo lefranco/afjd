@@ -159,7 +159,7 @@ def get_trainings_list():
 def get_training(training_name):
     """ get_training """
 
-    training = None
+    training = {}
 
     def reply_callback(req):
         nonlocal training
@@ -202,7 +202,7 @@ def next_previous_training(previous: bool):
     install_training()
 
 
-def reset_training_callback(ev):
+def reset_training_callback(ev):  # pylint: disable=invalid-name
     """ reset_training_callback """
     ev.preventDefault()
     MY_SUB_PANEL.clear()
@@ -544,9 +544,15 @@ def submit_training_orders():
         names_dict = VARIANT_DATA.extract_names()
         names_dict_json = dumps(names_dict)
 
-        # units
-        units_list_dict = POSITION_DATA.save_json()
-        units_list_dict_json = dumps(units_list_dict)
+        # situation
+        situation_dict = {
+            'ownerships': POSITION_DATA.save_json2(),
+            'dislodged_ones': POSITION_DATA.save_json3(),
+            'units': POSITION_DATA.save_json(),
+            'forbiddens': POSITION_DATA.save_json4(),
+        }
+
+        situation_dict_json = dumps(situation_dict)
 
         # orders
         orders_list_dict = orders_data.save_json()
@@ -556,7 +562,7 @@ def submit_training_orders():
             'advancement': GAME_PARAMETERS_LOADED['current_advancement'],
             'variant_name': VARIANT_NAME_LOADED,
             'names': names_dict_json,
-            'units': units_list_dict_json,
+            'situation': situation_dict_json,
             'orders': orders_list_dict_json,
             'role_id': ROLE_ID
         }
@@ -1634,6 +1640,10 @@ def select_training_data():
         ev.preventDefault()
 
         content = get_training(input_sequence_name)
+
+        if not content:
+            alert("No training data !")
+            return
 
         TRAINING_LIST = content['exercises']
         TRAINING_INDEX = 0

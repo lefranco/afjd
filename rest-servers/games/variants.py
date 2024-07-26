@@ -9,7 +9,6 @@ Handles the variants
 import typing
 import json
 import pathlib
-import os
 
 import mylogger
 
@@ -39,7 +38,6 @@ class Variant:
 
         assert isinstance(json_data, dict)
         return json_data
-
 
 
 if __name__ == '__main__':

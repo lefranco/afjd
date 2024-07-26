@@ -1796,7 +1796,8 @@ class Position(Renderable):
         """ export as list of dict """
         json_data = []
         for unit in self._units:
-            json_data.append(unit.save_json())
+            if not unit.is_dislodged():
+                json_data.append(unit.save_json())
         return json_data
 
     def save_json2(self) -> str:
@@ -1804,6 +1805,21 @@ class Position(Renderable):
         json_data = []
         for ownership in self._ownerships:
             json_data.append(ownership.save_json())
+        return json_data
+
+    def save_json3(self) -> str:
+        """ export as list of dict """
+        json_data = []
+        for unit in self._units:
+            if unit.is_dislodged():
+                json_data.append(unit.save_json())
+        return json_data
+
+    def save_json4(self) -> str:
+        """ export as list of dict """
+        json_data = []
+        for forbidden in self._forbiddens:
+            json_data.append(forbidden.region.identifier)
         return json_data
 
     def closest_ownership(self, designated_pos: geometry.PositionRecord):
