@@ -7982,7 +7982,7 @@ class AccessSubmissionLogsRessource(flask_restful.Resource):  # type: ignore
 class TrainingOrdersRessource(flask_restful.Resource):  # type: ignore
     """ TrainingOrdersRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Submit training orders (and situation)
         EXPOSED
@@ -8025,9 +8025,10 @@ class TrainingOrdersRessource(flask_restful.Resource):  # type: ignore
         except json.JSONDecodeError:
             flask_restful.abort(400, msg="Did you convert orders from json to text ?")
 
+        dummy_game_id = 0
         orders_list = []
         for the_order in the_orders:
-            order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
+            order = orders.Order(dummy_game_id, 0, 0, 0, 0, 0)
             order.load_json(the_order)
             order_export = order.export()
             orders_list.append(order_export)
