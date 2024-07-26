@@ -1,0 +1,22 @@
+{
+"title": "un autre exemple de tutoriel (vide !)",
+"exercises": 
+[
+{
+    "introduction" : "rien",
+    "role_id" : 2,
+    "variant_name" : "standard",
+    "game_parameters_description": "rien", 
+    "game_parameters_current_advancement": 1, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "pointers" : []
+}
+
+]
+}
