@@ -125,6 +125,68 @@ def restore_context(ctx):
     ctx.drawImage(BACKUP_CANVAS, 0, 0)
 
 
+def get_trainings_list():
+    """ get_trainings_list """
+
+    trainings_list = {}
+
+    def reply_callback(req):
+        nonlocal trainings_list
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des entraînements : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des entraînements : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        trainings_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/trainings-list"
+
+    # getting trainings list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return trainings_list
+
+
+def get_training(training_name):
+    """ get_training """
+
+    training = None
+
+    def reply_callback(req):
+        nonlocal training
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de l'entraînement : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de l'entraînement : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        training = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/trainings/{training_name}"
+
+    # getting training list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return training
+
+
 def next_previous_training(previous: bool):
     """ next_previous_training """
     global TRAINING_INDEX
@@ -144,7 +206,7 @@ def reset_training_callback(ev):
     """ reset_training_callback """
     ev.preventDefault()
     MY_SUB_PANEL.clear()
-    load_training_data()
+    select_training_data()
 
 
 def get_game_status():
@@ -449,7 +511,7 @@ def submit_training_orders():
                         alert("Réponse du serveur imprévue et non documentée")
                     return
 
-                # use a strip to remove trainling "\n"
+                # use a strip to remove trailing "\n"
                 messages = "<br>".join(req_result['msg'].strip().split('\n'))
 
                 if messages:
@@ -491,6 +553,7 @@ def submit_training_orders():
         orders_list_dict_json = dumps(orders_list_dict)
 
         json_dict = {
+            'advancement': GAME_PARAMETERS_LOADED['current_advancement'],
             'variant_name': VARIANT_NAME_LOADED,
             'names': names_dict_json,
             'units': units_list_dict_json,
@@ -500,14 +563,10 @@ def submit_training_orders():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/training"
+        url = f"{host}:{port}/training-orders"
 
         # submitting position and orders for training : do not need a token
-        # TODO PUTBACK
-        # ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-        reply_callback(None)
-
-        # TODO build endpoint training similer to simulation
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def rest_hold_callback(_):
         """ rest_hold_callback """
@@ -846,10 +905,9 @@ def submit_training_orders():
             # information retreats/builds
             stack_possibilities(buttons_right, advancement_season)
 
-            # gm can pass orders on archive games
-            if ROLE_ID != 0 and selected_active_unit.role != VARIANT_DATA.roles[ROLE_ID]:
+            if selected_active_unit is None or selected_active_unit.role != VARIANT_DATA.roles[ROLE_ID]:
 
-                alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
+                alert("Bien essayé, pas d'unité ici ou cette unité ne vous appartient pas ou vous n'avez pas d'ordre à valider.")
 
                 selected_active_unit = None
 
@@ -1564,8 +1622,24 @@ def install_training():
     submit_training_orders()
 
 
-def load_training_data():
-    """ install_training """
+def select_training_data():
+    """ select_training_data """
+
+    def load_sequence_callback(ev, input_sequence_name): # pylint: disable=invalid-name
+        """ load_sequence_callback """
+
+        global TRAINING_LIST
+        global TRAINING_INDEX
+
+        ev.preventDefault()
+
+        content = get_training(input_sequence_name)
+
+        TRAINING_LIST = content['exercises']
+        TRAINING_INDEX = 0
+
+        # go for first training
+        install_training()
 
     def load_file_callback(ev, input_file):  # pylint: disable=invalid-name
         """ load_file_callback """
@@ -1576,8 +1650,9 @@ def load_training_data():
             global TRAINING_LIST
             global TRAINING_INDEX
 
-            content = reader.result
-            TRAINING_LIST = loads(content)
+            content_json = reader.result
+            content = loads(content_json)
+            TRAINING_LIST = content['exercises']
             TRAINING_INDEX = 0
 
             # go for first training
@@ -1590,7 +1665,7 @@ def load_training_data():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            load_training_data()
+            select_training_data()
             return
 
         # Create a new DOM FileReader instance
@@ -1603,27 +1678,57 @@ def load_training_data():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        load_training_data()
+        select_training_data()
 
-    MY_SUB_PANEL <= html.H3("Séléction de fichier d'entrainement")
+    trainings_list = get_trainings_list()
 
-    form = html.FORM()
+    MY_SUB_PANEL <= html.H3("Choisissez la séquence d'entrainement")
 
-    fieldset = html.FIELDSET()
-    legend_name = html.LEGEND("Ficher JSON")
-    fieldset <= legend_name
-    form <= fieldset
+    trainings_table = html.TABLE()
 
-    input_file = html.INPUT(type="file", accept='.json', Class='btn-inside')
-    form <= input_file
-    form <= html.BR()
-    form <= html.BR()
+    for title, name in trainings_list.items():
 
-    input_load_training_file = html.INPUT(type="submit", value="Charger le fichier", Class='btn-inside')
-    input_load_training_file.bind("click", lambda e, i=input_file: load_file_callback(e, i))
-    form <= input_load_training_file
+        row = html.TR()
 
-    MY_SUB_PANEL <= form
+        col = html.TD()
+        col <= title
+        row <= col
+
+        col = html.TD()
+
+        form = html.FORM()
+        input_load_training_sequence = html.INPUT(type="submit", value=name, Class='btn-inside')
+        input_load_training_sequence.bind("click", lambda e, n=name: load_sequence_callback(e, n))
+        form <= input_load_training_sequence
+        col <= form
+
+        row <= col
+
+        trainings_table <= row
+
+    MY_SUB_PANEL <= trainings_table
+
+    if common.check_admin():
+
+        MY_SUB_PANEL <= html.H3("Séléction de fichier pour la mise au point")
+
+        form = html.FORM()
+
+        fieldset = html.FIELDSET()
+        legend_name = html.LEGEND("Ficher JSON")
+        fieldset <= legend_name
+        form <= fieldset
+
+        input_file = html.INPUT(type="file", accept='.json', Class='btn-inside')
+        form <= input_file
+        form <= html.BR()
+        form <= html.BR()
+
+        input_load_training_file = html.INPUT(type="submit", value="Charger le fichier", Class='btn-inside')
+        input_load_training_file.bind("click", lambda e, i=input_file: load_file_callback(e, i))
+        form <= input_load_training_file
+
+        MY_SUB_PANEL <= form
 
 
 PANEL_MIDDLE = None
@@ -1636,5 +1741,5 @@ def render(panel_middle):
     PANEL_MIDDLE = panel_middle
 
     MY_SUB_PANEL.clear()
-    load_training_data()
+    select_training_data()
     panel_middle <= MY_SUB_PANEL

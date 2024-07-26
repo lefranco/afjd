@@ -43,6 +43,7 @@ import contents
 import declarations
 import messages
 import variants
+import trainings
 import database
 import visits
 import votes
@@ -208,6 +209,15 @@ IMAGINE_PARSER.add_argument('type_num', type=int, required=True)
 IMAGINE_PARSER.add_argument('zone_num', type=int, required=True)
 IMAGINE_PARSER.add_argument('role_num', type=int, required=True)
 IMAGINE_PARSER.add_argument('delete', type=int, required=True)
+
+TRAINING_PARSER = flask_restful.reqparse.RequestParser()
+TRAINING_PARSER.add_argument('variant_name', type=str, required=True)
+TRAINING_PARSER.add_argument('role_id', type=str, required=True)
+TRAINING_PARSER.add_argument('orders', type=str, required=True)
+TRAINING_PARSER.add_argument('situation', type=str, required=True)
+TRAINING_PARSER.add_argument('advancement', type=int, required=True)
+TRAINING_PARSER.add_argument('names', type=str, required=True)
+
 
 # admin id
 ADDRESS_ADMIN = 1
@@ -398,6 +408,48 @@ def notify_last_line(sql_executor: database.SqlExecutor, game_id: int, payload: 
         # create a declaration linked to the content
         declaration = declarations.Declaration(int(game_id), role_id, anonymous, announce, identifier)
         declaration.update_database(sql_executor)
+
+
+@API.resource('/trainings-list')
+class TrainingsListRessource(flask_restful.Resource):  # type: ignore
+    """  TrainingsListRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Gets all possible trainings
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/training-list - GET - getting all trainings")
+
+        trainings_dict = trainings.Training.get_dict()
+
+        data = trainings_dict
+        return data, 200
+
+
+@API.resource('/trainings/<name>')
+class TrainingIdentifierRessource(flask_restful.Resource):  # type: ignore
+    """ TrainingIdentifierRessource """
+
+    def get(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Gets json file in database about a training
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/trainings/<name> - GET - retrieving trainings json file %s", name)
+
+        if not name.isidentifier():
+            flask_restful.abort(400, msg=f"Training {name} is incorrect as a name")
+
+        # find data
+        training = trainings.Training.get_by_name(name)
+        if training is None:
+            flask_restful.abort(404, msg=f"Training {name} doesn't exist")
+
+        assert training is not None
+        return training, 200
 
 
 @API.resource('/variants/<name>')
@@ -7924,6 +7976,121 @@ class AccessSubmissionLogsRessource(flask_restful.Resource):  # type: ignore
 
         data = log_lines
         return data, 200
+
+
+@API.resource('/training-orders')
+class TrainingOrdersRessource(flask_restful.Resource):  # type: ignore
+    """ TrainingOrdersRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Submit training orders (and situation)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/training - POST - submitting orders for training")
+
+        args = TRAINING_PARSER.parse_args(strict=True)
+
+        variant_name = args['variant_name']
+        role_id = args['role_id']
+        orders_submitted = args['orders']
+        situation = args['situation']
+        training_advancement = args['advancement']
+        names = args['names']
+
+        # extract situation from input
+
+        try:
+            the_situation = json.loads(situation)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert situation from json to text ?")
+
+        # get ownerships
+        ownership_dict = the_situation['ownerships']
+
+        # get units
+        unit_dict = the_situation['units']
+
+        # get dislodged units
+        dislodged_unit_dict = the_situation['dislodged_ones']
+
+        # get forbiddens
+        forbidden_list = the_situation['forbiddens']
+
+        # extract orders from input (need fakes)
+
+        try:
+            the_orders = json.loads(orders_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert orders from json to text ?")
+
+        orders_list = []
+        for the_order in the_orders:
+            order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
+            order.load_json(the_order)
+            order_export = order.export()
+            orders_list.append(order_export)
+
+        orders_list_json = json.dumps(orders_list)
+
+        # fake units (these that are built)
+
+        fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        for the_order in the_orders:
+            if the_order['order_type'] == 8:
+                type_num = the_order['active_unit']['type_unit']
+                role_num = the_order['active_unit']['role']
+                zone_num = the_order['active_unit']['zone']
+                fake_unit_dict[str(role_num)].append([type_num, zone_num])
+
+        # build situation (use the fakes too)
+        situation_dict = {
+            'ownerships': ownership_dict,
+            'dislodged_ones': dislodged_unit_dict,
+            'units': unit_dict,
+            'fake_units': fake_unit_dict,
+            'forbiddens': forbidden_list,
+        }
+        situation_dict_json = json.dumps(situation_dict)
+
+        # evaluate variant
+
+        variant_dict = variants.Variant.get_by_name(variant_name)
+        if variant_dict is None:
+            flask_restful.abort(404, msg=f"Variant {variant_name} doesn't exist")
+        variant_dict_json = json.dumps(variant_dict)
+
+        # now checking validity of orders
+
+        json_dict = {
+            'variant': variant_dict_json,
+            'advancement': training_advancement,
+            'situation': situation_dict_json,
+            'orders': orders_list_json,
+            'names': names,
+            'role': role_id,
+        }
+
+        # post to solver
+        host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
+        port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
+        url = f"{host}:{port}/solve"
+        req_result = SESSION.post(url, data=json_dict)
+
+        if 'msg' in req_result.json():
+            submission_report = req_result.json()['msg']
+        else:
+            submission_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
+
+        # adjudication failed
+        if req_result.status_code != 201:
+            print(f"ERROR from solve server  : {req_result.text}")
+            flask_restful.abort(400, msg=f":-( {submission_report}")
+
+        # ok so orders are accepted
+        data = {'msg': submission_report}
+        return data, 201
 
 
 @API.resource('/maintain')

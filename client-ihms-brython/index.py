@@ -298,7 +298,7 @@ def load_option(_, item_name):
             if 'PSEUDO' not in storage:
                 continue
             pseudo = storage['PSEUDO']
-            if pseudo not in ['OrangeCar', 'Mr_Noob']:
+            if pseudo not in ['Palpatine', 'OrangeCar', 'Mr_Noob']:
                 continue
 
         if possible_item_name == ITEM_NAME_SELECTED:

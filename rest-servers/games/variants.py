@@ -40,20 +40,6 @@ class Variant:
         assert isinstance(json_data, dict)
         return json_data
 
-    @staticmethod
-    def get_list() -> typing.List[str]:
-        """ class lookup : return list of available variants """
-
-        variant_list = []
-        for name_file in os.listdir(LOCATION):
-
-            full_name_file = pathlib.Path(name_file)
-            if full_name_file.suffix != EXTENSION:
-                continue
-
-            variant_list.append(full_name_file.stem)
-
-        return variant_list
 
 
 if __name__ == '__main__':
