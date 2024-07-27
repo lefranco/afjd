@@ -1796,8 +1796,7 @@ class Position(Renderable):
         """ export as list of dict """
         json_data = []
         for unit in self._units:
-            if not unit.is_dislodged():
-                json_data.append(unit.save_json())
+            json_data.append(unit.save_json())
         return json_data
 
     def save_json2(self) -> str:
@@ -1810,9 +1809,8 @@ class Position(Renderable):
     def save_json3(self) -> str:
         """ export as list of dict """
         json_data = []
-        for unit in self._units:
-            if unit.is_dislodged():
-                json_data.append(unit.save_json())
+        for unit in self._dislodged_units:
+            json_data.append(unit.save_json())
         return json_data
 
     def save_json4(self) -> str:
