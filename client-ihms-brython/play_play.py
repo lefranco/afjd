@@ -585,9 +585,9 @@ def submit_orders():
             play_low.stack_possibilities(buttons_right, advancement_season)
 
             # gm can pass orders on archive games
-            if play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]:
+            if selected_active_unit is None or (play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]):
 
-                alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
+                alert("Bien essayé, mais pas d'unité ici ou cette unité ne vous appartient pas ou vous n'avez pas d'ordre à valider.")
 
                 selected_active_unit = None
 
@@ -1676,9 +1676,9 @@ def submit_communication_orders():
             play_low.stack_last_moves_button(buttons_right)
 
             # gm can pass orders on archive games
-            if play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]:
+            if selected_active_unit is None or (play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]):
 
-                alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
+                alert("Bien essayé, mais pas d'unité ici ou cette unité ne vous appartient pas ou vous n'avez pas d'ordre à valider.")
 
                 selected_active_unit = None
 
