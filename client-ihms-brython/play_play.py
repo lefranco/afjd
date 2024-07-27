@@ -230,7 +230,7 @@ def submit_orders():
         document.unbind("keypress")
 
         # complete orders
-        orders_data.rest_hold(play_low.ROLE_ID if play_low.ROLE_ID != 0 else None)
+        orders_data.rest_hold(play_low.ROLE_ID)
 
         # update displayed map
         callback_render(False)
@@ -313,7 +313,7 @@ def submit_orders():
         stack_orders(buttons_right)
 
         # do not put erase all
-        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+        if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
             put_rest_hold(buttons_right)
         if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             buttons_right <= html.BR()
@@ -355,7 +355,7 @@ def submit_orders():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
-            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+            if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 buttons_right <= html.BR()
@@ -529,7 +529,7 @@ def submit_orders():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
-            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+            if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 buttons_right <= html.BR()
@@ -654,7 +654,7 @@ def submit_orders():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
-            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+            if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 buttons_right <= html.BR()
@@ -771,7 +771,7 @@ def submit_orders():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
-            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+            if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 buttons_right <= html.BR()
@@ -825,7 +825,7 @@ def submit_orders():
                 stack_orders(buttons_right)
                 if not orders_data.empty():
                     put_erase_all(buttons_right)
-                if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+                if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                     put_rest_hold(buttons_right)
                 if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                     buttons_right <= html.BR()
@@ -853,7 +853,7 @@ def submit_orders():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
-            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+            if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 buttons_right <= html.BR()
@@ -949,7 +949,7 @@ def submit_orders():
         stack_orders(buttons_right)
         if not orders_data.empty():
             put_erase_all(buttons_right)
-        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+        if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
             put_rest_hold(buttons_right)
         if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             buttons_right <= html.BR()
@@ -1446,7 +1446,7 @@ def submit_orders():
     stack_orders(buttons_right)
     if not orders_data.empty():
         put_erase_all(buttons_right)
-    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+    if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
         put_rest_hold(buttons_right)
     if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
         buttons_right <= html.BR()

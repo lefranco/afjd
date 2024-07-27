@@ -1979,10 +1979,6 @@ class Position(Renderable):
         nb_builds = min(nb_ownerships - nb_units, nb_free_centers)
         return nb_builds, nb_ownerships, nb_units, nb_free_centers
 
-    def units_list(self):
-        """ units_list """
-        return self._units
-
     def role_ratings(self):
         """ a rating of roles """
         raw_dict = {self._variant.role_name_table[self._variant.roles[i]]: len([o for o in self._ownerships if o.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0}
@@ -2455,6 +2451,21 @@ class Orders(Renderable):
                 return True
         return False
 
+    def all_ordered(self, role_id: int) -> bool:
+        """ is_ordered """
+
+        for unit in self._position.units:
+
+            # must be of role if given
+            if role_id not in (0,  unit.role.identifier):
+                continue
+
+            # must have order
+            if not self.is_ordered(unit):
+                return False
+
+        return True
+
     def closest_unit_or_built_unit(self, designated_pos: geometry.PositionRecord):
         """ closest_unit_or_built_unit """
 
@@ -2462,7 +2473,7 @@ class Orders(Renderable):
         distance_closest = inf
 
         # search units from position (make a copy)
-        search_list = list(self._position.units_list())
+        search_list = list(self._position.units())
 
         # add units from build orders
         search_list += list(self._fake_units.values())
@@ -2490,9 +2501,18 @@ class Orders(Renderable):
 
         # should be in season for move orders - not checked here
 
-        unordered_units = [u for u in self._position.units_list() if (role_id is None or u.role.identifier == role_id) and not self.is_ordered(u)]
-        for unordered_unit in unordered_units:
-            order = Order(self._position, OrderTypeEnum.HOLD_ORDER, unordered_unit, None, None)
+        for unit in self._position.units:
+
+            # must not hgave an order
+            if self.is_ordered(unit):
+                continue
+
+            # must be of role if role is given
+            if role_id not in (0, unit.role.identifier):
+                continue
+
+            # receive order
+            order = Order(self._position, OrderTypeEnum.HOLD_ORDER, unit, None, None)
             self.insert_order(order)
 
     def render(self, ctx) -> None:

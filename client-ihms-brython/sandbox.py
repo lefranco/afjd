@@ -191,7 +191,7 @@ def sandbox():
         document.unbind("keypress")
 
         # complete orders
-        ORDERS_DATA.rest_hold(None)
+        ORDERS_DATA.rest_hold(0)
 
         # update displayed map
         callback_render(False)
@@ -448,7 +448,7 @@ def sandbox():
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
-            if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
+            if not ORDERS_DATA.all_ordered(0):
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
@@ -521,7 +521,7 @@ def sandbox():
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
-            if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
+            if not ORDERS_DATA.all_ordered(0):
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
@@ -569,7 +569,7 @@ def sandbox():
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
-            if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
+            if not ORDERS_DATA.all_ordered(0):
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
@@ -612,7 +612,7 @@ def sandbox():
                     put_erase_all(buttons_right)
                 if not ORDERS_DATA.empty():
                     put_erase_orders(buttons_right)
-                if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
+                if not ORDERS_DATA.all_ordered(0):
                     put_rest_hold(buttons_right)
                 if not ORDERS_DATA.empty():
                     put_submit(buttons_right)
@@ -640,7 +640,7 @@ def sandbox():
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
-            if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
+            if not ORDERS_DATA.all_ordered(0):
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
@@ -715,7 +715,7 @@ def sandbox():
             put_erase_all(buttons_right)
         if not ORDERS_DATA.empty():
             put_erase_orders(buttons_right)
-        if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
+        if not ORDERS_DATA.all_ordered(0):
             put_rest_hold(buttons_right)
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
@@ -1018,7 +1018,7 @@ def sandbox():
             put_erase_all(buttons_right)
         if not ORDERS_DATA.empty():
             put_erase_orders(buttons_right)
-        if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
+        if not ORDERS_DATA.all_ordered(0):
             put_rest_hold(buttons_right)
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
@@ -1183,7 +1183,7 @@ def sandbox():
         put_erase_all(buttons_right)
     if not ORDERS_DATA.empty():
         put_erase_orders(buttons_right)
-    if len(POSITION_DATA.units) > len(ORDERS_DATA.orders):
+    if not ORDERS_DATA.all_ordered(0):
         put_rest_hold(buttons_right)
     if not ORDERS_DATA.empty():
         put_submit(buttons_right)
