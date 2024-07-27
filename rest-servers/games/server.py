@@ -8007,16 +8007,37 @@ class TrainingOrdersRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg="Did you convert situation from json to text ?")
 
         # get ownerships
-        ownership_dict = the_situation['ownerships']
+        the_ownerships = the_situation['ownerships']
+        ownership_dict: typing.Dict[str, int] = {}
+        for the_ownership in the_ownerships:
+            role_num = the_ownership['role']
+            center_num = the_ownership['center_num']
+            ownership_dict[str(center_num)] = role_num
 
         # get units
-        unit_dict = the_situation['units']
+        the_units = the_situation['units']
+        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        for the_unit in the_units:
+            type_num = the_unit['type_unit']
+            role_num = the_unit['role']
+            zone_num = the_unit['zone']
+            unit_dict[str(role_num)].append([type_num, zone_num])
 
-        # get dislodged units
-        dislodged_unit_dict = the_situation['dislodged_ones']
+        # get units ad dislodged units
+        the_dislodged_ones = the_situation['dislodged_ones']
+        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        for the_unit in the_dislodged_ones:
+            type_num = the_unit['type_unit']
+            role_num = the_unit['role']
+            zone_num = the_unit['zone']
+            dislodged_origin_num = the_unit['dislodged_origin']
+            dislodged_unit_dict[str(role_num)].append([type_num, zone_num, dislodged_origin_num])
 
         # get forbiddens
-        forbidden_list = the_situation['forbiddens']
+        the_forbiddens = the_situation['forbiddens']
+        forbidden_list: typing.List[int] = []
+        for the_forbidden in the_forbiddens:
+            forbidden_list.append(the_forbidden)
 
         # extract orders from input (need fakes)
 
