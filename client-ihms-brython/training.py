@@ -913,7 +913,7 @@ def submit_training_orders():
 
             if selected_active_unit is None or selected_active_unit.role != VARIANT_DATA.roles[ROLE_ID]:
 
-                alert("Bien essayé, pas d'unité ici ou cette unité ne vous appartient pas ou vous n'avez pas d'ordre à valider.")
+                alert("Bien essayé, mais pas d'unité ici ou cette unité ne vous appartient pas ou vous n'avez pas d'ordre à valider.")
 
                 selected_active_unit = None
 
@@ -1631,7 +1631,7 @@ def install_training():
 def select_training_data():
     """ select_training_data """
 
-    def load_sequence_callback(ev, input_sequence_name): # pylint: disable=invalid-name
+    def load_sequence_callback(ev, input_sequence_name):  # pylint: disable=invalid-name
         """ load_sequence_callback """
 
         global TRAINING_LIST
