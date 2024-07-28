@@ -1696,7 +1696,7 @@ def select_training_data():
 
     trainings_table = html.TABLE()
 
-    for title, name in trainings_list.items():
+    for title, name in sorted(trainings_list.items(), key=lambda t: t[0]):
 
         row = html.TR()
 
