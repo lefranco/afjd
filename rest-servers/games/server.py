@@ -6834,6 +6834,8 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
 
             # select only incidents with current player
             for _, role_id, advancement, player_id, duration_incident, date_incident in incidents_list:
+                if role_id not in current_players_dict:
+                    continue
                 if player_id != current_players_dict[role_id]:
                     continue
                 late_list.append((game_id, role_id, advancement, duration_incident, date_incident))
