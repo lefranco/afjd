@@ -940,9 +940,12 @@ def show_scoring():
                 pass
             RATING_TABLE[name] = val
 
+        # must be sorted
+        rating_table = dict(sorted(RATING_TABLE.items(), key=lambda i: i[1], reverse=True))
+
         # scoring
         centers_variant = variant_data.number_centers()
-        score_table = scoring.scoring(SCORING_REQUESTED, centers_variant, RATING_TABLE)
+        score_table = scoring.scoring(SCORING_REQUESTED, centers_variant, rating_table)
 
         score_desc = "\n".join([f"{k} : {v} points" for k, v in score_table.items()])
         alert(f"Dans cette configuration la marque est :\n{score_desc}")

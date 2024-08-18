@@ -10,26 +10,27 @@ Un système de carré élève au carré le nombre de centres puis alloue aux jou
 
 $ Description
 
+$$ Définitions
+On définit la constante d'ajustement "Av" (dépendante de la variante) à la valeur entière arrondie par défaut du nombre de centres divisé par le nombre de joueurs.
+.
+Note : Cette valeur est à *4* pour la variante standard puisque 34 (centres) / 7 (joueurs) = 4.85 arrondi par défaut à 4.
+.
+.
+On notera NJv le nombre de joueurs de la variante.
+
 $$ Cas général
 
-On défini la constante d'ajustement "A" à la valeur entière arrondie par défaut du nombre de centres divisé par le nombre de joueurs.
-.
-.
-Note : La valeur est à *4* pour la variante standard puisque 34 / 7 = 4.85 arrondi par défaut à 4.
-.
-.
-On calcule pour chaque joueur sa performace Pj en fonction de son nombre de centres Cj :
+On calcule ensuite pour chaque joueur sa performance Pj en fonction de son nombre de centres Cj :
 .
 
 .
-Pj \= Cj \^ 2 \+ 4 x Cj \+ A
+Pj \= Cj \^ 2 \+ 4 x Cj \+ Av
 .
 .
-On calcule pour chaque joueur survivant sa marque égale à :
+On calcule finalement pour chaque joueur survivant sa marque Mj égale à :
 .
 .
-M = 100 x Pj / Somme des Pj
-
+Mj = 100 x Pj x NJv / Somme des Pj
 
 $$ Elimination
 
@@ -37,7 +38,7 @@ Un joueur éliminé marque *zéro*
 
 $$ Solo
 
-Un joueur qui réalise un solo marque *75* points, et les autres *zéro*.
+Un joueur qui réalise un solo marque *75* x NJv points, et les autres *zéro*.
 
 $ Utilisé dans les tournois
 
