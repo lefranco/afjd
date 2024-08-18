@@ -32,7 +32,7 @@ OPTIONS = {
     'Appariement': "Se mettre dans la partie ou la quitter",
     'Paramètres': "Consulter tous les paramètres de la partie",
     'Retards': "Consulter les incidents sur la partiue (retards, abandons, désordres civils)",
-    'Superviser': "Observer une partie en direct"
+    'Superviser': "Superviser (arbitrage automatique) une partie en direct"
 }
 
 ARRIVAL = None

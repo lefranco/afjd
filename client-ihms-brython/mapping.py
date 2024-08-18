@@ -2455,7 +2455,7 @@ class Orders(Renderable):
         for unit in self._position.units:
 
             # must be of role if given
-            if role_id not in (0,  unit.role.identifier):
+            if role_id not in (0, unit.role.identifier):
                 continue
 
             # must have order
