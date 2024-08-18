@@ -981,10 +981,13 @@ def show_scoring():
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, interface_parameters_read)
 
-    form = html.FORM()
+    information = html.DIV(Class='important')
+    information <= "Pour se placer dans une autre variante, sélectionner une partie de cette variante au préalable."
+    MY_SUB_PANEL <= information
 
-    title_enter_centers = html.H4("Entrer les nombre de centres")
-    form <= title_enter_centers
+    MY_SUB_PANEL <= html.H4("Entrer les nombre de centres")
+
+    form = html.FORM()
 
     ratings_input = {}
     for num, role in variant_data.roles.items():
