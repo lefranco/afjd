@@ -364,8 +364,7 @@ def manorcon(centers_variant, ratings):
 
     # take floor value it seems
     nb_players = len(ratings)
-    center_value = int(centers_variant / nb_players)
-    add_param = center_value ** 2
+    add_param = int(centers_variant / nb_players)
 
     solo_reward = 75
 
@@ -375,7 +374,7 @@ def manorcon(centers_variant, ratings):
     # detect solo
     best_role_name = list(ratings.keys())[0]
     if ratings[best_role_name] > solo_threshold:
-        score[best_role_name] = solo_reward
+        score[best_role_name] = solo_reward * nb_players
         return score
 
     # total points
@@ -390,7 +389,7 @@ def manorcon(centers_variant, ratings):
     for role_name in survivers:
         center_num = ratings[role_name]
         share = center_num ** 2 + 4 * center_num + add_param
-        score[role_name] = 100 * (share / total)
+        score[role_name] = 100 * nb_players * (share / total)
 
     return score
 
