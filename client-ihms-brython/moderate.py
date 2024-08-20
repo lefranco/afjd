@@ -1296,7 +1296,7 @@ def show_player_games(pseudo_player, game_list):
 
         selected_pseudo_player = input_player.value
 
-        player_id = players_dict[selected_pseudo_player]
+        player_id = players_dict2[selected_pseudo_player]
 
         player_games = get_this_player_games_playing_in(player_id)
         if player_games is None:
@@ -1309,23 +1309,45 @@ def show_player_games(pseudo_player, game_list):
         MY_SUB_PANEL.clear()
         show_player_games(selected_pseudo_player, game_list)
 
-    MY_SUB_PANEL <= html.H3("Toutes les parties d'un compte")
+    MY_SUB_PANEL <= html.H3("Toutes les parties d'un joueur")
 
     if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
-    players_dict = common.get_players()
-    if not players_dict:
-        return
-
-    # all players can be investigated
-    possible_players = set(players_dict.keys())
-
     games_dict = common.get_games_data()
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+    games_dict = dict(games_dict)
+
+    players_dict = common.get_players_data()
+    if not players_dict:
+        return
+
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
+    masters_alloc = allocations_data['game_masters_dict']
+
+    # gather game to master
+    game_master_dict = {}
+    for master_id, games_id in masters_alloc.items():
+        master = players_dict[str(master_id)]['pseudo']
+        for game_id in games_id:
+            if str(game_id) in games_dict:
+                game = games_dict[str(game_id)]['name']
+                game_master_dict[game] = master
+
+    players_dict2 = common.get_players()
+    if not players_dict2:
+        return
+
+    # all players can be investigated
+    possible_players = set(players_dict2.keys())
 
     form = html.FORM()
 
@@ -1367,12 +1389,12 @@ def show_player_games(pseudo_player, game_list):
         games_table = html.TABLE()
 
         # the display order
-        fields = ['current_state', 'name', 'go_game', 'deadline', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type']
+        fields = ['current_state', 'name', 'go_game', 'deadline', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type', 'master']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'current_state': 'état', 'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie'}[field]
+            field_fr = {'current_state': 'état', 'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'master': 'arbitre'}[field]
             col = html.TD(field_fr)
             thead <= col
         games_table <= thead
@@ -1383,6 +1405,7 @@ def show_player_games(pseudo_player, game_list):
         for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0]), reverse=True):
 
             data['go_game'] = None
+            data['master'] = None
 
             game_id = int(game_id_str)
             if game_id not in game_list:
@@ -1470,6 +1493,12 @@ def show_player_games(pseudo_player, game_list):
 
                 if field == 'game_type':
                     value = game_type_conv[value]
+
+                if field == 'master':
+                    game_name = data['name']
+                    # some games do not have a game master
+                    master_name = game_master_dict.get(game_name, '')
+                    value = master_name
 
                 col = html.TD(value)
                 if colour is not None:
