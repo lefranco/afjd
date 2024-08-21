@@ -1957,16 +1957,10 @@ def submit_communication_orders():
             # put the background map first
             ctx.drawImage(img, 0, 0)
 
-            # because we display from scratch
-            play_low.VARIANT_DATA.reset_display()
-
-            # put the centers (phase 1)
-            play_low.VARIANT_DATA.render(ctx)
-
-            # put the position
+            # put the position and the neutral centers
             play_low.POSITION_DATA.render(ctx)
 
-            # put the legends at the end (phase 2)
+            # put the legends
             play_low.VARIANT_DATA.render(ctx)
 
             # save
@@ -2448,16 +2442,10 @@ def imagine_units():
             # put the background map first
             ctx.drawImage(img, 0, 0)
 
-            # because we display from scratch
-            play_low.VARIANT_DATA.reset_display()
-
-            # put the centers (phase 1)
-            play_low.VARIANT_DATA.render(ctx)
-
-            # put the position
+            # put the position and the neutral centers
             play_low.POSITION_DATA.render(ctx)
 
-            # put the legends at the end (phase 2)
+            # put the legends
             play_low.VARIANT_DATA.render(ctx)
 
             # save
