@@ -190,11 +190,13 @@ def next_previous_training(previous: bool):
     global TRAINING_INDEX
 
     if previous:
-        if TRAINING_INDEX > 0:
-            TRAINING_INDEX -= 1
+        if TRAINING_INDEX <= 0:
+            return
+        TRAINING_INDEX -= 1
     else:
-        if TRAINING_INDEX < len(TRAINING_LIST) - 1:
-            TRAINING_INDEX += 1
+        if TRAINING_INDEX >= len(TRAINING_LIST) - 1:
+            return
+        TRAINING_INDEX += 1
 
     # go for next training
     install_training()
@@ -518,7 +520,8 @@ def submit_training_orders():
             # compare with expected orders
             expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, False)
             if same_orders(orders_data, expected):
-                mydialog.InfoDialog("Information", "Correct, ce sont bien les ordres attendus !", True)
+                mydialog.InfoDialog("Information", "Correct, ce sont bien les ordres attendus !", False)
+                next_previous_training(False)
             else:
                 mydialog.InfoDialog("Information", "Hélas non, ce ne sont pas les ordres attendus :-(", True)
 
