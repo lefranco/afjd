@@ -12,6 +12,9 @@ TIPS_CONTENT_TABLE = {
     "Pour soutenir offensivement ou convoyer une unité invisible (parties à visibilité restreinte dites “brouillard”)":
     "Utiliser le sous menu “Imaginer” depuis la page de la partie.",
 
+    "Pour effacer un ordre déjà saisi (surtout une construction)":
+    "Utiliser le double-clic",
+
     "Pour entrer des 'faux' ordres (parties sans communication possible)":
     "Utiliser le sous menu “Taguer” depuis la page de la partie.",
 

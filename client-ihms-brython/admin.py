@@ -38,8 +38,6 @@ OPTIONS = {
     'Maintenance': "Opération de maintenance à définir"
 }
 
-LONG_DURATION_LIMIT_SEC = 1.0
-
 DOWNLOAD_LOG = False
 
 # max size in bytes of image (before b64)
@@ -691,8 +689,6 @@ def rectify_parameters():
 def rectify_position():
     """rectify_position """
 
-    stored_event = None
-    down_click_time = None
     selected_hovered_object = None
 
     def submit_callback(_):
@@ -732,8 +728,8 @@ def rectify_position():
         # submitting position (units ownerships) for rectification : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def callback_canvas_short_click(event):
-        """ callback_canvas_short_click """
+    def callback_canvas_click(event):
+        """ callback_canvas_click """
 
         # the aim is to give this variable a value
         selected_erase_ownership = None
@@ -754,10 +750,9 @@ def rectify_position():
         # update map
         callback_render(True)
 
-    def callback_canvas_long_click(event):
+    def callback_canvas_dblclick(event):
         """
-        called when there is a click down then a click up separated by more than 'LONG_DURATION_LIMIT_SEC' sec
-        or when pressing 'x' in which case a None is passed
+        called when there is a double click or when pressing 'x' in which case a None is passed
         """
 
         # the aim is to give these variable a value
@@ -791,36 +786,6 @@ def rectify_position():
 
         # update map
         callback_render(True)
-
-    def callback_canvas_mousedown(event):
-        """ callback_mousedow : store event"""
-
-        nonlocal stored_event
-        nonlocal down_click_time
-
-        down_click_time = time()
-        stored_event = event
-
-    def callback_canvas_mouseup(_):
-        """ callback_mouseup : retrieve event and pass it"""
-
-        nonlocal down_click_time
-
-        if down_click_time is None:
-            return
-
-        # get click duration
-        up_click_time = time()
-        click_duration = up_click_time - down_click_time
-        down_click_time = None
-
-        # slow : call
-        if click_duration > LONG_DURATION_LIMIT_SEC:
-            callback_canvas_long_click(stored_event)
-            return
-
-        callback_canvas_short_click(stored_event)
-        return
 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
@@ -1154,9 +1119,9 @@ def rectify_position():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
 
-    # now we need to be more clever and handle the state of the mouse (up or down)
-    canvas.bind("mouseup", callback_canvas_mouseup)
-    canvas.bind("mousedown", callback_canvas_mousedown)
+    # click and double click
+    canvas.bind("click", callback_canvas_click)
+    canvas.bind("dblclick", callback_canvas_dblclick)
 
     # dragging related events
     canvas.bind('dragover', dragover)
