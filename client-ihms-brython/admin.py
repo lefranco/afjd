@@ -765,6 +765,13 @@ def rectify_position():
         # update map
         callback_render(True)
 
+    def callback_canvas_dblclick(_):
+        """
+        called when there is a double click
+        """
+        alert("Ne pas utiliser le double clic.")
+
+ 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
 
@@ -1099,6 +1106,7 @@ def rectify_position():
 
     # click only
     canvas.bind("click", callback_canvas_click)
+    canvas.bind("dblclick", callback_canvas_dblclick)
 
     # dragging related events
     canvas.bind('dragover', dragover)
