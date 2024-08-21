@@ -771,7 +771,6 @@ def rectify_position():
         """
         alert("Ne pas utiliser le double clic.")
 
- 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
 
