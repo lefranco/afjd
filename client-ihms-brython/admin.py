@@ -731,49 +731,27 @@ def rectify_position():
     def callback_canvas_click(event):
         """ callback_canvas_click """
 
-        # the aim is to give this variable a value
-        selected_erase_ownership = None
-
         # where is the click
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         # select unit
-        selected_erase_ownership = position_data.closest_ownership(pos)
-
-        # center must be selected
-        if selected_erase_ownership is None:
-            return
-
-        # remove center
-        position_data.remove_ownership(selected_erase_ownership)
-
-        # update map
-        callback_render(True)
-
-    def callback_canvas_dblclick(event):
-        """
-        called when there is a double click or when pressing 'x' in which case a None is passed
-        """
-
-        # the aim is to give these variable a value
-        selected_erase_unit = None
-        selected_erase_ownership = None
-
-        # where is the click
-        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-
-        # select unit (cannot be dislodged - issue - maybe later)
         selected_erase_object = position_data.closest_object(pos)
 
-        # must be unit or center
+        # something must be selected
+        if selected_erase_object is None:
+            return
+
+        # must be unit or ownership
         if isinstance(selected_erase_object, mapping.Unit):
             # remove unit
+            selected_erase_ownership = None
             selected_erase_unit = selected_erase_object
             position_data.remove_unit(selected_erase_unit)
         elif isinstance(selected_erase_object, mapping.Ownership):
             # remove ownership
             selected_erase_ownership = selected_erase_object
             position_data.remove_ownership(selected_erase_ownership)
+            selected_erase_unit = None
         else:
             return
 
@@ -1119,9 +1097,8 @@ def rectify_position():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
 
-    # click and double click
+    # click only
     canvas.bind("click", callback_canvas_click)
-    canvas.bind("dblclick", callback_canvas_dblclick)
 
     # dragging related events
     canvas.bind('dragover', dragover)
@@ -1151,7 +1128,7 @@ def rectify_position():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-    legend_select_unit = html.DIV("Clic-long sur une unité pour l'effacer, clic-court sur une possession pour l'effacer", Class='instruction')
+    legend_select_unit = html.DIV("Clic sur une unité ou une possession pour l'effacer", Class='instruction')
     buttons_right <= legend_select_unit
 
     put_submit(buttons_right)
