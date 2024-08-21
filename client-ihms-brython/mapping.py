@@ -2471,7 +2471,7 @@ class Orders(Renderable):
         distance_closest = inf
 
         # search units from position (make a copy)
-        search_list = list(self._position.units())
+        search_list = list(self._position.units)
 
         # add units from build orders
         search_list += list(self._fake_units.values())
