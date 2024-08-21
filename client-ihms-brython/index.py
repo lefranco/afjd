@@ -292,15 +292,6 @@ def load_option(_, item_name):
             if not common.check_admin():
                 continue
 
-        # TODO TEMPORARY
-        # do not display menu training if not OrangeCar or Noob
-        if possible_item_name == 'Entraînement':
-            if 'PSEUDO' not in storage:
-                continue
-            pseudo = storage['PSEUDO']
-            if pseudo not in ['Palpatine', 'OrangeCar', 'Mr_Noob']:
-                continue
-
         if possible_item_name == ITEM_NAME_SELECTED:
             item_name_bold_or_not = html.B(possible_item_name)
         else:
