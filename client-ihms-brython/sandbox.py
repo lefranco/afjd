@@ -15,8 +15,6 @@ import mapping
 import interface
 import geometry
 
-LONG_DURATION_LIMIT_SEC = 1.0
-
 
 ARRIVAL = None
 
@@ -176,8 +174,6 @@ def sandbox():
     selected_order_type = None
     selected_hovered_object = None
     automaton_state = None
-    stored_event = None
-    down_click_time = None
     buttons_right = None
     report_window = None
 
@@ -200,7 +196,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -241,7 +237,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -271,7 +267,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -423,7 +419,7 @@ def sandbox():
                 # update map
                 callback_render(False)
 
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -561,7 +557,7 @@ def sandbox():
             # update map
             callback_render(False)
 
-            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
             buttons_right <= legend_select_unit
 
             stack_orders(buttons_right)
@@ -601,7 +597,7 @@ def sandbox():
                 # update map
                 callback_render(False)
 
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -654,10 +650,9 @@ def sandbox():
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
 
-    def callback_canvas_long_click(event):
+    def callback_canvas_dblclick(event):
         """
-        called when there is a click down then a click up separated by more than 'LONG_DURATION_LIMIT_SEC' sec
-        or when pressing 'x' in which case a None is passed
+        called when there is a double click or when pressing 'x' in which case a None is passed
         """
 
         nonlocal automaton_state
@@ -706,7 +701,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -725,36 +720,6 @@ def sandbox():
 
         my_sub_panel2 <= buttons_right
         MY_SUB_PANEL <= my_sub_panel2
-
-    def callback_canvas_mousedown(event):
-        """ callback_mousedow : store event"""
-
-        nonlocal down_click_time
-        nonlocal stored_event
-
-        down_click_time = time()
-        stored_event = event
-
-    def callback_canvas_mouseup(_):
-        """ callback_mouseup : retrieve event and pass it"""
-
-        nonlocal down_click_time
-
-        if down_click_time is None:
-            return
-
-        # get click duration
-        up_click_time = time()
-        click_duration = up_click_time - down_click_time
-        down_click_time = None
-
-        # slow : call
-        if click_duration > LONG_DURATION_LIMIT_SEC:
-            callback_canvas_long_click(stored_event)
-            return
-
-        # normal : call
-        callback_canvas_click(stored_event)
 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
@@ -826,7 +791,7 @@ def sandbox():
         # order removal : special
         if char == 'x':
             # pass to double click
-            callback_canvas_long_click(None)
+            callback_canvas_dblclick(None)
             return
 
         # order shortcut
@@ -1009,7 +974,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -1138,9 +1103,9 @@ def sandbox():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
 
-    # now we need to be more clever and handle the state of the mouse (up or down)
-    canvas.bind("mouseup", callback_canvas_mouseup)
-    canvas.bind("mousedown", callback_canvas_mousedown)
+    # click and double click
+    canvas.bind("click", callback_canvas_click)
+    canvas.bind("dblclick", callback_canvas_dblclick)
 
     # dragging related events
     canvas.bind('dragover', dragover)
@@ -1174,7 +1139,7 @@ def sandbox():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-    legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+    legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
     buttons_right <= legend_select_unit
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 

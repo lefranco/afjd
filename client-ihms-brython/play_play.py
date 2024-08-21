@@ -18,9 +18,6 @@ import play  # circular import
 import play_low
 
 
-LONG_DURATION_LIMIT_SEC = 1.0
-
-
 class AutomatonStateEnum:
     """ AutomatonStateEnum """
 
@@ -73,8 +70,6 @@ def submit_orders():
     selected_build_zone = None
     selected_hovered_object = None
     automaton_state = None
-    stored_event = None
-    down_click_time = None
     buttons_right = None
     orders_status = None
 
@@ -249,7 +244,7 @@ def submit_orders():
         play_low.stack_possibilities(buttons_right, advancement_season)
 
         # we are in spring or autumn
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
 
         my_sub_panel2 <= buttons_right
@@ -294,12 +289,12 @@ def submit_orders():
         play_low.stack_possibilities(buttons_right, advancement_season)
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
+            legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (double-clic pour effacer)", Class='instruction')
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum.inventory():
                 if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
@@ -451,7 +446,7 @@ def submit_orders():
                 # update map
                 callback_render(False)
 
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -492,7 +487,7 @@ def submit_orders():
                 # update map
                 callback_render(False)
 
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -593,13 +588,13 @@ def submit_orders():
 
                 # switch back to initial state selecting unit
                 if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                    legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+                    legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
                     buttons_right <= legend_select_unit
 
                     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
                 if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                    legend_select_unit = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
+                    legend_select_unit = html.DIV("Sélectionner l'ordre d'ajustement (double-clic pour effacer)", Class='instruction')
                     buttons_right <= legend_select_unit
                     for order_type in mapping.OrderTypeEnum.inventory():
                         if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
@@ -754,11 +749,11 @@ def submit_orders():
             callback_render(False)
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                legend_select_unit = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Sélectionner l'ordre d'ajustement (double-clic pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
                 for order_type in mapping.OrderTypeEnum.inventory():
                     if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
@@ -816,7 +811,7 @@ def submit_orders():
                 # update map
                 callback_render(False)
 
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -868,10 +863,9 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
 
-    def callback_canvas_long_click(event):
+    def callback_canvas_dblclick(event):
         """
-        called when there is a click down then a click up separated by more than 'LONG_DURATION_LIMIT_SEC' sec
-        or when pressing 'x' in which case a None is passed
+        called when there is a double click or when pressing 'x' in which case a None is passed
         """
 
         nonlocal automaton_state
@@ -930,12 +924,12 @@ def submit_orders():
         play_low.stack_possibilities(buttons_right, advancement_season)
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
+            legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (double-clic pour effacer)", Class='instruction')
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum.inventory():
                 if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
@@ -960,36 +954,6 @@ def submit_orders():
 
         my_sub_panel2 <= buttons_right
         play_low.MY_SUB_PANEL <= my_sub_panel2
-
-    def callback_canvas_mousedown(event):
-        """ callback_mousedow : store event"""
-
-        nonlocal down_click_time
-        nonlocal stored_event
-
-        down_click_time = time()
-        stored_event = event
-
-    def callback_canvas_mouseup(_):
-        """ callback_mouseup : retrieve event and pass it"""
-
-        nonlocal down_click_time
-
-        if down_click_time is None:
-            return
-
-        # get click duration
-        up_click_time = time()
-        click_duration = up_click_time - down_click_time
-        down_click_time = None
-
-        # slow : call
-        if click_duration > LONG_DURATION_LIMIT_SEC:
-            callback_canvas_long_click(stored_event)
-            return
-
-        # normal : call s
-        callback_canvas_click(stored_event)
 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
@@ -1074,7 +1038,7 @@ def submit_orders():
         # order removal : special
         if char == 'x':
             # pass to double click
-            callback_canvas_long_click(None)
+            callback_canvas_dblclick(None)
             return
 
         # order shortcut
@@ -1319,9 +1283,9 @@ def submit_orders():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return False
 
-    # now we need to be more clever and handle the state of the mouse (up or down)
-    canvas.bind("mouseup", callback_canvas_mouseup)
-    canvas.bind("mousedown", callback_canvas_mousedown)
+    # click and double click
+    canvas.bind("click", callback_canvas_click)
+    canvas.bind("dblclick", callback_canvas_dblclick)
 
     # get the orders from server
     orders_loaded = play_low.game_orders_reload(play_low.GAME_ID)
@@ -1414,7 +1378,7 @@ def submit_orders():
     play_low.stack_possibilities(buttons_right, advancement_season)
 
     if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -1425,7 +1389,7 @@ def submit_orders():
         role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
         nb_builds, _, _, _ = play_low.POSITION_DATA.role_builds(role)
 
-        legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
+        legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (double-clic pour effacer)", Class='instruction')
         buttons_right <= legend_select_order
         for order_type in mapping.OrderTypeEnum.inventory():
             if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
@@ -1475,8 +1439,6 @@ def submit_communication_orders():
     selected_order_type = None
     selected_hovered_object = None
     automaton_state = None
-    stored_event = None
-    down_click_time = None
     buttons_right = None
 
     def submit_orders_callback(_):
@@ -1533,7 +1495,7 @@ def submit_communication_orders():
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -1613,7 +1575,7 @@ def submit_communication_orders():
                 # update map
                 callback_render(False)
 
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -1683,7 +1645,7 @@ def submit_communication_orders():
                 selected_active_unit = None
 
                 # switch back to initial state selecting unit
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -1759,7 +1721,7 @@ def submit_communication_orders():
             # update map
             callback_render(False)
 
-            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
             buttons_right <= legend_select_unit
 
             stack_orders(buttons_right)
@@ -1798,7 +1760,7 @@ def submit_communication_orders():
                 # update map
                 callback_render(False)
 
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -1837,10 +1799,9 @@ def submit_communication_orders():
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
 
-    def callback_canvas_long_click(event):
+    def callback_canvas_dblclick(event):
         """
-        called when there is a click down then a click up separated by more than 'LONG_DURATION_LIMIT_SEC' sec
-        or when pressing 'x' in which case a None is passed
+        called when there is a double click or when pressing 'x' in which case a None is passed
         """
 
         nonlocal automaton_state
@@ -1886,7 +1847,7 @@ def submit_communication_orders():
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -1898,36 +1859,6 @@ def submit_communication_orders():
 
         my_sub_panel2 <= buttons_right
         play_low.MY_SUB_PANEL <= my_sub_panel2
-
-    def callback_canvas_mousedown(event):
-        """ callback_mousedow : store event"""
-
-        nonlocal down_click_time
-        nonlocal stored_event
-
-        down_click_time = time()
-        stored_event = event
-
-    def callback_canvas_mouseup(_):
-        """ callback_mouseup : retrieve event and pass it"""
-
-        nonlocal down_click_time
-
-        if down_click_time is None:
-            return
-
-        # get click duration
-        up_click_time = time()
-        click_duration = up_click_time - down_click_time
-        down_click_time = None
-
-        # slow : call
-        if click_duration > LONG_DURATION_LIMIT_SEC:
-            callback_canvas_long_click(stored_event)
-            return
-
-        # normal : call s
-        callback_canvas_click(stored_event)
 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
@@ -2008,7 +1939,7 @@ def submit_communication_orders():
         # order removal : special
         if char == 'x':
             # pass to double click
-            callback_canvas_long_click(None)
+            callback_canvas_dblclick(None)
             return
 
         # order shortcut
@@ -2167,9 +2098,9 @@ def submit_communication_orders():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return False
 
-    # now we need to be more clever and handle the state of the mouse (up or down)
-    canvas.bind("mouseup", callback_canvas_mouseup)
-    canvas.bind("mousedown", callback_canvas_mousedown)
+    # click and double click
+    canvas.bind("click", callback_canvas_click)
+    canvas.bind("dblclick", callback_canvas_dblclick)
 
     # get the orders from server
     communication_orders_loaded = play_low.game_communication_orders_reload(play_low.GAME_ID)
@@ -2219,7 +2150,7 @@ def submit_communication_orders():
     # button last moves
     play_low.stack_last_moves_button(buttons_right)
 
-    legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+    legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
     buttons_right <= legend_select_unit
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
