@@ -67,6 +67,8 @@ EXPECTED_ORDERS = None
 POINTERS = []
 POINTER_COLOUR = mapping.ColourRecord(255, 0, 0)  # black
 
+SEQUENCE_NAME = ""
+
 # constant
 ORDERS_LOADED = {'fake_units': [], 'orders': []}
 
@@ -81,6 +83,13 @@ MY_SUB_PANEL = html.DIV(id="page")
 MY_SUB_PANEL.attrs['style'] = 'display: table-row'
 MY_PANEL <= MY_SUB_PANEL
 
+ARRIVAL = None
+
+
+def set_arrival(arrival):
+    """ set_arrival """
+    global ARRIVAL
+    ARRIVAL = arrival
 
 class AutomatonStateEnum:
     """ AutomatonStateEnum """
@@ -1501,6 +1510,10 @@ def submit_training_orders():
     display_left <= rating_colours_window
     display_left <= html.BR()
 
+    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
+    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    display_left <= html.BR()
+
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
@@ -1604,8 +1617,10 @@ def select_training_data():
 
         global TRAINING_LIST
         global TRAINING_INDEX
+        global SEQUENCE_NAME
 
-        ev.preventDefault()
+        if ev is not None:
+            ev.preventDefault()
 
         content = get_training(input_sequence_name)
 
@@ -1615,6 +1630,8 @@ def select_training_data():
 
         TRAINING_LIST = content['exercises']
         TRAINING_INDEX = 0
+
+        SEQUENCE_NAME = input_sequence_name
 
         # go for first training
         install_training()
@@ -1659,6 +1676,13 @@ def select_training_data():
         select_training_data()
 
     trainings_list = get_trainings_list()
+
+    global ARRIVAL
+    if ARRIVAL:
+        sequence_name = ARRIVAL
+        ARRIVAL = None
+        load_sequence_callback(None, sequence_name)
+        return
 
     MY_SUB_PANEL <= html.H3("Choisissez la séquence d'entrainement")
 
