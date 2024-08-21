@@ -398,6 +398,13 @@ elif 'variant' in document.query:
     load_option(None, 'Accueil')
     PANEL_MIDDLE.clear()
     variants.render(PANEL_MIDDLE)
+elif 'sequence' in document.query:
+    query_sequence_name = document.query['sequence']
+    training.set_arrival(query_sequence_name)
+    window.history.pushState({}, document.title, "/")
+    load_option(None, 'Accueil')
+    PANEL_MIDDLE.clear()
+    training.render(PANEL_MIDDLE)
 elif 'rescue' in document.query:
     if 'pseudo' in document.query:
         passed_pseudo = document.query['pseudo']
