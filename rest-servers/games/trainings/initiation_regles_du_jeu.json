@@ -129,7 +129,7 @@
     "game_parameters_description": "entrée d'ordre d'ajustement élémentaire", 
     "game_parameters_current_advancement": 4, 
     "position" : {
-        "ownerships": {"2": 3, "1": 3, "3": 3},
+        "ownerships": {"2": 3, "3": 3},
         "dislodged_ones": {},
         "units": {"3": [ [1, 57] ] }, 
         "forbiddens": []
