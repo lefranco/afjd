@@ -67,6 +67,8 @@ EXPECTED_ORDERS = None
 POINTERS = []
 POINTER_COLOUR = mapping.ColourRecord(255, 0, 0)  # black
 
+HELP = ""
+
 SEQUENCE_NAME = ""
 
 # constant
@@ -90,6 +92,7 @@ def set_arrival(arrival):
     """ set_arrival """
     global ARRIVAL
     ARRIVAL = arrival
+
 
 class AutomatonStateEnum:
     """ AutomatonStateEnum """
@@ -218,6 +221,11 @@ def reset_training_callback(ev):  # pylint: disable=invalid-name
     select_training_data()
 
 
+def ask_help_callback(ev):  # pylint: disable=invalid-name
+    """ ask_help_callback """
+    ev.preventDefault()
+    alert(HELP)
+
 def get_game_status():
     """ get_game__status """
 
@@ -235,7 +243,7 @@ def get_game_status():
         PANEL_MIDDLE.clear()
         variants.render(PANEL_MIDDLE)
 
-    game_description = GAME_PARAMETERS_LOADED['description']
+    description = GAME_PARAMETERS_LOADED['description']
     game_variant = GAME_PARAMETERS_LOADED['variant']
 
     advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
@@ -246,7 +254,7 @@ def get_game_status():
 
     row = html.TR()
 
-    # variant + link
+    # reset
     form = html.FORM()
     input_reset_training = html.INPUT(type="submit", value="reset", Class='btn-inside')
     input_reset_training.attrs['style'] = 'font-size: 10px'
@@ -255,7 +263,7 @@ def get_game_status():
     col = html.TD(form)
     row <= col
 
-    # indicatior
+    # indicator
     col = html.TD(f"{TRAINING_INDEX + 1}/{len(TRAINING_LIST)}")
     row <= col
 
@@ -286,7 +294,16 @@ def get_game_status():
     col = html.TD(form)
     row <= col
 
-    col = html.TD(game_description, colspan="2")
+    # help
+    form = html.FORM()
+    input_help = html.INPUT(type="submit", value="un peu d'aide", Class='btn-inside')
+    input_help.attrs['style'] = 'font-size: 10px'
+    input_help.bind("click", ask_help_callback)
+    form <= input_help
+    col = html.TD(form)
+    row <= col
+
+    col = html.TD(description)
     row <= col
 
     form = ""
@@ -1572,6 +1589,7 @@ def install_training():
     global VARIANT_NAME_LOADED
     global EXPECTED_ORDERS
     global POINTERS
+    global HELP
     global POSITION_LOADED
     global TUNED_GAME_PARAMETERS_LOADED
 
@@ -1600,6 +1618,9 @@ def install_training():
 
     # pointers to show on map
     POINTERS = content_dict['pointers']
+
+    # help content
+    HELP = content_dict['help']
 
     # Popup
     mydialog.InfoDialog("Information", INTRODUCTION, True)
