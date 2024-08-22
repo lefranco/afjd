@@ -15,7 +15,8 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[] },
-    "pointers" : []
+    "pointers" : [],
+    "help": "XXX"
 }
 
 ]
