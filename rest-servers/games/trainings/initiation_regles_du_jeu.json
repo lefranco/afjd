@@ -1,0 +1,144 @@
+{
+"title": "01 apprendre rapidement les règles du jeu de Diplomatie",
+"exercises": 
+[
+
+{
+    "introduction" : "L'objectif du jeu est d'être la première puissance à posséder plus de la moitié des centres de la carte<br> Pour y arriver, il faut prendre des centres neutres et des centres des autres joueurs<br>Pour prendre un centre, il faut l'occuper à l'autome (les tours de jeux pairs). Quand on gagne des centres, on construit des unités, et quand on perd des centres, on supprime des unités !<br><br><b>Apprenez à repérer un centre</b><br><br>Pour cet exercice, pas d'ordres à entrer !<br>Le centre de Paris a été entouré pour vous aider à le trouver<br>Cliquez directement sur 'exercice suivant'",
+    "role_id" : 2,
+    "variant_name" : "standard",
+    "game_parameters_description": "repérage de centre", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {"20": 2},
+        "dislodged_ones": {},
+        "units": {}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "pointers" : [[248, 436, 10]],
+    "help": "Le centre de Paris a été entouré pour vous le monter !"
+},
+
+{
+    "introduction" : "Les unités sont de deux sortes : les flottes et les armées.<br>Une flotte peut aller en mer ou en côte.<br><br><b>Apprenez à repérez une flotte</b><br><br>Pour cet exercice, pas d'ordres à entrer ! <br>La flotte en Picardie a été entourée pour vous aider à la trouver<br>Cliquez directement sur 'exercice suivant'",
+    "role_id" : 7,
+    "variant_name" : "standard",
+    "game_parameters_description": "repérage de flotte", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"2": [ [2, 48] ] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "pointers" : [ [247, 417, 10]],
+    "help": "La flotte en Picardie a été entourée pour vous la monter !"
+},
+
+{
+    "introduction" : "Et maintenant...<br><b>apprenez à repérer une armée !</b><br><br>Une armée peut aller en côte ou en terre (régions enclavées).<br>Pour cet exercice, pas d'ordres à entrer ! <br>L'armée en Bourgogne a été entourée pour vous aider à la trouver<br>Cliquez directement sur 'exercice suivant'",
+    "role_id" : 7,
+    "variant_name" : "standard",
+    "game_parameters_description": "repérage d'armée", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"2": [ [1, 17] ] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "pointers" : [[276, 459, 10]],
+    "help": "L'armée en Bourgogne a été entourée pour vous la monter !"
+},
+
+{
+    "introduction" : "Maintenant il s'agit de passer des ordres les plus basiques.<br>Phase de mouvements.<br>Saurez vous entrer un ordre de tenir en place pour l'Allemagne et son armée à Berlin ?",
+    "role_id" : 3,
+    "variant_name" : "standard",
+    "game_parameters_description": "entrée d'ordre de mouvement élémentaire - tenir en place", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {"3": 3},
+        "dislodged_ones": {},
+        "units": {"3": [ [1, 10] ] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 4, 10, 0, 0]] },
+    "pointers" : [],
+    "help": "Cliquez sur l'armée à Berlin deux fois de suite (clics pas trop rapprochés)"
+},
+
+{
+    "introduction" : "Phase de mouvements (suite).<br>Saurez vous entrer un ordre pour la France et son armée à Paris d'aller en Bourgogne ?",
+    "role_id" : 2,
+    "variant_name" : "standard",
+    "game_parameters_description": "entrée d'ordre de mouvement élémentaire - attaquer/ se déplacer", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {"20": 2},
+        "dislodged_ones": {},
+        "units": {"2":[[1, 47]] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 1, 47, 0, 17]] },
+    "pointers" : [],
+    "help": "Cliquez sue l'armée à Paris puis sur la Région de Bourgogne"
+},
+
+{
+    "introduction" : "Phase de mouvements (suite et fin).<br>Saurez vous entrer un ordre pour l'Angleterre et sa flotte en Mer du Nord de convoyer l'armée Russe de Norvège en Hollande ?",
+    "role_id" : 1,
+    "variant_name" : "standard",
+    "game_parameters_description": "entrée d'ordre de mouvement élémentaire - convoyer", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {"13": 1, "19": 6},
+        "dislodged_ones": {},
+        "units": {"1":[[2, 45]], "6": [[1, 46]] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 5, 45, 46, 30]] },
+    "pointers" : [],
+    "help": "Cliquez sur la flotte, puis 'convoyer', puis l'armée, puis la destination (la région de Hollande)"
+},
+
+{
+    "introduction" : "Phase de retraites<br>Quand une unité est attaquée par plus fort qu'elle, elle retraites.<br>Saurez vous entrer un ordre de retraite ?<br>L'Allemagne doit faire retraiter son armée de Roumanie en Ukraine...",
+    "role_id" : 3,
+    "variant_name" : "standard",
+    "game_parameters_description": "entrée d'ordre de retraite élémentaire", 
+    "game_parameters_current_advancement": 1, 
+    "position" : {
+        "ownerships": {"3": 3},
+        "dislodged_ones": {"3": [ [1, 54, 16] ] },
+        "units": {"2" : [ [1, 54]] }, 
+        "forbiddens": [16]
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 6, 54, 0, 69]] },
+    "pointers" : [],
+  "help": "Cliquez sur l'armée délogée (retournée) de Bulgarie puis sur la région d'Ukraine"
+},
+
+{
+    "introduction" : "Phase d'ajustements<br>Quand une puissance a plus de centres que d'unités, elle peut construire<br>Saurez vous entrer un ordre d'ajustement' ?<br>L'Allemagne construit une fois...une armée à Berlin...",
+    "role_id" : 3,
+    "variant_name" : "standard",
+    "game_parameters_description": "entrée d'ordre d'ajustement élémentaire", 
+    "game_parameters_current_advancement": 4, 
+    "position" : {
+        "ownerships": {"2": 3, "1": 3, "3": 3},
+        "dislodged_ones": {},
+        "units": {"3": [ [1, 57] ] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[[0, 1, 10, 3, 0, 0]], "orders":[[0, 0, 8, 10, 0, 0]] },
+    "pointers" : [],
+  "help": "Cliquez sur 'Construire' puis 'Armée' puis sur le centre à Berlin"
+}
+
+
+]
+}
