@@ -55,7 +55,7 @@
 },
 
 {
-    "introduction" : "Maintenant il s'agit de passer des ordres les plus basiques.<br>Phase de mouvements.<br>Saurez vous entrer un ordre de tenir en place pour l'Allemagne et son armée à Berlin ?",
+    "introduction" : "Maintenant il s'agit de passer des ordres les plus basiques.<br>Phase de mouvements.<br>Une unité peut très bien décider de ne rien faire et rester en place<br>Saurez-vous entrer un ordre de tenir en place pour l'Allemagne et son armée à Berlin ?",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_description": "entrée d'ordre de mouvement élémentaire - tenir en place", 
@@ -72,7 +72,7 @@
 },
 
 {
-    "introduction" : "Phase de mouvements (suite).<br>Saurez vous entrer un ordre pour la France et son armée à Paris d'aller en Bourgogne ?",
+    "introduction" : "Phase de mouvements (suite).<br>Plus souvent, les unités se déplacent, dans le but d'aller occuper un centre<br>Saurez-vous entrer un ordre pour la France et son armée à Paris d'aller en Bourgogne ?",
     "role_id" : 2,
     "variant_name" : "standard",
     "game_parameters_description": "entrée d'ordre de mouvement élémentaire - attaquer/ se déplacer", 
@@ -89,7 +89,7 @@
 },
 
 {
-    "introduction" : "Phase de mouvements (suite et fin).<br>Saurez vous entrer un ordre pour l'Angleterre et sa flotte en Mer du Nord de convoyer l'armée Russe de Norvège en Hollande ?",
+    "introduction" : "Phase de mouvements (suite et fin).<br>Une flotte en mer peut transporter une armée adjacente d'une côte à une autre. Il en est de même pour une suite de flotte format une chaîne<br>Saurez-vous entrer un ordre pour l'Angleterre et sa flotte en Mer du Nord de convoyer l'armée Russe de Norvège en Hollande ?",
     "role_id" : 1,
     "variant_name" : "standard",
     "game_parameters_description": "entrée d'ordre de mouvement élémentaire - convoyer", 
@@ -106,7 +106,7 @@
 },
 
 {
-    "introduction" : "Phase de retraites<br>Quand une unité est attaquée par plus fort qu'elle, elle retraites.<br>Saurez vous entrer un ordre de retraite ?<br>L'Allemagne doit faire retraiter son armée de Roumanie en Ukraine...",
+    "introduction" : "Phase de retraites<br>Quand une unité est attaquée par plus fort qu'elle, elle retraites.<br>Saurez-vous entrer un ordre de retraite ?<br>L'Allemagne doit faire retraiter son armée de Roumanie en Ukraine...",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_description": "entrée d'ordre de retraite élémentaire", 
@@ -123,7 +123,7 @@
 },
 
 {
-    "introduction" : "Phase d'ajustements<br>Quand une puissance a plus de centres que d'unités, elle peut construire<br>Saurez vous entrer un ordre d'ajustement' ?<br>L'Allemagne construit une fois...une armée à Berlin...",
+    "introduction" : "Phase d'ajustements<br>Quand une puissance a plus de centres que d'unités, elle peut construire<br>Saurez-vous entrer un ordre d'ajustement' ?<br>L'Allemagne construit une fois...une armée à Berlin...",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_description": "entrée d'ordre d'ajustement élémentaire", 
