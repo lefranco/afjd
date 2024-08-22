@@ -1692,10 +1692,6 @@ def select_training_data():
         reader.bind("load", onload_callback)
         reader.readAsText(file_name)
 
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        select_training_data()
-
     trainings_list = get_trainings_list()
 
     global ARRIVAL
