@@ -226,6 +226,7 @@ def ask_help_callback(ev):  # pylint: disable=invalid-name
     ev.preventDefault()
     alert(HELP)
 
+
 def get_game_status():
     """ get_game__status """
 
@@ -287,7 +288,7 @@ def get_game_status():
     form = ""
     if TRAINING_INDEX > 0:
         form = html.FORM()
-        input_previous_training = html.INPUT(type="submit", value="exercice précédent", Class='btn-inside')
+        input_previous_training = html.INPUT(type="submit", value="planche précédente", Class='btn-inside')
         input_previous_training.attrs['style'] = 'font-size: 10px'
         input_previous_training.bind("click", lambda e: next_previous_training(True))
         form <= input_previous_training
@@ -309,7 +310,7 @@ def get_game_status():
     form = ""
     if TRAINING_INDEX < len(TRAINING_LIST) - 1:
         form = html.FORM()
-        input_next_training = html.INPUT(type="submit", value="exercice suivant", Class='btn-inside')
+        input_next_training = html.INPUT(type="submit", value="planche suivante", Class='btn-inside')
         input_next_training.attrs['style'] = 'font-size: 10px'
         input_next_training.bind("click", lambda e: next_previous_training(False))
         form <= input_next_training
@@ -503,8 +504,201 @@ def load_dynamic_stuff():
     POSITION_DATA = mapping.Position(POSITION_LOADED, VARIANT_DATA)
 
 
-def submit_training_orders():
-    """ submit_training_orders """
+def slide_just_display():
+    """ slide_just_display """
+
+    selected_hovered_object = None
+
+    def callback_canvas_mouse_move(event):
+        """ callback_canvas_mouse_move """
+
+        nonlocal selected_hovered_object
+
+        prev_selected_hovered_object = selected_hovered_object
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        selected_hovered_object = POSITION_DATA.closest_object(pos)
+
+        if selected_hovered_object != prev_selected_hovered_object:
+
+            helper.clear()
+
+            # unhightlite previous
+            if prev_selected_hovered_object is not None:
+                prev_selected_hovered_object.highlite(ctx, False)
+
+            # hightlite object where mouse is
+            if selected_hovered_object is not None:
+                selected_hovered_object.highlite(ctx, True)
+                helper <= selected_hovered_object.description()
+            else:
+                helper <= "_"
+
+            # redraw all arrows
+            if prev_selected_hovered_object is not None or selected_hovered_object is not None:
+                orders_data.render(ctx)
+
+            # redraw dislodged if applicable
+            if isinstance(prev_selected_hovered_object, mapping.Unit):
+                if prev_selected_hovered_object in POSITION_DATA.dislodging_table:
+                    dislodged = POSITION_DATA.dislodging_table[prev_selected_hovered_object]
+                    if dislodged is not selected_hovered_object:
+                        dislodged.highlite(ctx, False)
+
+    def callback_canvas_mouse_enter(event):
+        """ callback_canvas_mouse_enter """
+
+        nonlocal selected_hovered_object
+
+        helper.clear()
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        selected_hovered_object = POSITION_DATA.closest_object(pos)
+
+        # hightlite object where mouse is
+        if selected_hovered_object is not None:
+            selected_hovered_object.highlite(ctx, True)
+            helper <= selected_hovered_object.description()
+        else:
+            helper <= "_"
+
+    def callback_canvas_mouse_leave(_):
+        """ callback_canvas_mouse_leave """
+
+        if selected_hovered_object is not None:
+
+            selected_hovered_object.highlite(ctx, False)
+
+            # redraw all arrows
+            orders_data.render(ctx)
+
+            # redraw dislodged if applicable
+            if isinstance(selected_hovered_object, mapping.Unit):
+                if selected_hovered_object in POSITION_DATA.dislodging_table:
+                    dislodged = POSITION_DATA.dislodging_table[selected_hovered_object]
+                    if dislodged is not selected_hovered_object:
+                        dislodged.highlite(ctx, False)
+
+        helper.clear()
+        helper <= "_"
+
+    def callback_render(refresh):
+        """ callback_render """
+
+        if refresh:
+
+            # put the background map first
+            ctx.drawImage(img, 0, 0)
+
+            # put the position and the neutral centers
+            POSITION_DATA.render(ctx)
+
+            # put the legends
+            VARIANT_DATA.render(ctx)
+
+            # save
+            save_context(ctx)
+
+        else:
+
+            # restore
+            restore_context(ctx)
+
+        # pointers
+        draw_pointers(ctx)
+
+        # put the orders
+        orders_data.render(ctx)
+
+    def draw_pointers(ctx):
+        """ draw_pointers """
+
+        pointer_colour = POINTER_COLOUR
+        ctx.strokeStyle = pointer_colour.str_value()
+        ctx.lineWidth = 2
+        for x_pos, y_pos, ray in POINTERS:
+            ctx.beginPath()
+            ctx.arc(x_pos, y_pos, ray, 0, 2 * pi, False)
+            ctx.stroke()
+            ctx.closePath()
+
+    def put_submit(buttons_right):
+        """ put_submit """
+
+        input_submit = html.INPUT(type="submit", value="La suite !", Class='btn-inside')
+        input_submit.bind("click", lambda e: next_previous_training(False))
+        buttons_right <= html.BR()
+        buttons_right <= input_submit
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+    # now we can display
+
+    # header
+
+    # game status
+    MY_SUB_PANEL <= GAME_STATUS
+    MY_SUB_PANEL <= html.BR()
+
+    # create canvas
+    map_size = VARIANT_DATA.map_size
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return
+
+    # digest the orders
+    orders_data = mapping.Orders(ORDERS_LOADED, POSITION_DATA, False)
+
+    # hovering effect
+    canvas.bind("mousemove", callback_canvas_mouse_move)
+    canvas.bind("mouseenter", callback_canvas_mouse_enter)
+    canvas.bind("mouseleave", callback_canvas_mouse_leave)
+
+    # put background (this will call the callback that display the whole map)
+    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    img.bind('load', lambda _: callback_render(True))
+
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN)
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    display_left <= canvas
+
+    helper = html.DIV(Class='helper')
+    display_left <= helper
+
+    display_left <= html.BR()
+    display_left <= rating_colours_window
+    display_left <= html.BR()
+
+    buttons_right = html.DIV(id='buttons_right')
+    buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
+    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    display_left <= html.BR()
+
+    # overall
+    my_sub_panel2 = html.DIV()
+    my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left
+    my_sub_panel2 <= buttons_right
+
+    # All there is is a button "Ok nexty please"
+    put_submit(buttons_right)
+
+    MY_SUB_PANEL <= my_sub_panel2
+
+
+def slide_submit_orders():
+    """ slide_submit_orders : ask user to submit orders and check they are correct """
 
     selected_active_unit = None
     selected_passive_unit = None
@@ -546,7 +740,7 @@ def submit_training_orders():
             # compare with expected orders
             expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, False)
             if same_orders(orders_data, expected):
-                mydialog.InfoDialog("Information", "Correct, ce sont bien les ordres attendus !", False)
+                mydialog.InfoDialog("Information", "Félicitations, ce sont bien les ordres attendus ! (On passe à la planche suivante)", False)
                 next_previous_training(False)
             else:
                 mydialog.InfoDialog("Information", "Hélas non, ce ne sont pas les ordres attendus :-(", True)
@@ -1581,6 +1775,269 @@ def submit_training_orders():
     MY_SUB_PANEL <= my_sub_panel2
 
 
+def slide_show_adjudication():
+    """ slide_show_adjudication """
+
+    selected_hovered_object = None
+
+    def cancel_submit_orders_callback(_, dialog):
+        dialog.close(None)
+
+    def submit_orders_callback(_, warned=False, dialog2=None):
+        """ submit_orders_callback """
+
+        def reply_callback(req):
+
+            if req:
+                req_result = loads(req.text)
+                if req.status != 201:
+                    if 'message' in req_result:
+                        alert(f"Erreur à la soumission d'ordres d'entrainenemt : {req_result['message']}")
+                    elif 'msg' in req_result:
+                        alert(f"Problème à la soumission d'ordres d'entrainenemt : {req_result['msg']}")
+                    else:
+                        alert("Réponse du serveur imprévue et non documentée")
+                    return
+
+                # use a strip to remove trailing "\n"
+                messages = "<br>".join(req_result['msg'].strip().split('\n'))
+
+                if messages:
+                    mydialog.InfoDialog("Information", f"Ordres validés avec le(s) message(s) : {messages}", True)
+                else:
+                    mydialog.InfoDialog("Information", "Ordres validés !")
+
+            # compare with expected orders
+            expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, False)
+            if same_orders(orders_data, expected):
+                mydialog.InfoDialog("Information", "Correct, ce sont bien les ordres attendus !", False)
+                next_previous_training(False)
+            else:
+                mydialog.InfoDialog("Information", "Hélas non, ce ne sont pas les ordres attendus :-(", True)
+
+        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+            role = VARIANT_DATA.roles[ROLE_ID]
+            nb_builds, _, _, _ = POSITION_DATA.role_builds(role)
+            if nb_builds > 0:
+                nb_builds_done = orders_data.number()
+                if nb_builds_done < nb_builds:
+                    if not warned:
+                        dialog = mydialog.Dialog(f"Vous construisez {nb_builds_done} unités alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
+                        dialog.ok_button.bind("click", lambda e, w=True, d=dialog: submit_orders_callback(e, w, d))
+                        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_submit_orders_callback(e, d))
+                        return
+
+        if dialog2:
+            dialog2.close()
+
+        names_dict = VARIANT_DATA.extract_names()
+        names_dict_json = dumps(names_dict)
+
+        # situation
+        situation_dict = {
+            'ownerships': POSITION_DATA.save_json2(),
+            'dislodged_ones': POSITION_DATA.save_json3(),
+            'units': POSITION_DATA.save_json(),
+            'forbiddens': POSITION_DATA.save_json4(),
+        }
+
+        situation_dict_json = dumps(situation_dict)
+
+        # orders
+        orders_list_dict = orders_data.save_json()
+        orders_list_dict_json = dumps(orders_list_dict)
+
+        json_dict = {
+            'advancement': GAME_PARAMETERS_LOADED['current_advancement'],
+            'variant_name': VARIANT_NAME_LOADED,
+            'names': names_dict_json,
+            'situation': situation_dict_json,
+            'orders': orders_list_dict_json,
+            'role_id': ROLE_ID
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/training-orders"
+
+        # submitting position and orders for training : do not need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def callback_canvas_mouse_move(event):
+        """ callback_canvas_mouse_move """
+
+        nonlocal selected_hovered_object
+
+        prev_selected_hovered_object = selected_hovered_object
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        selected_hovered_object = POSITION_DATA.closest_object(pos)
+
+        if selected_hovered_object != prev_selected_hovered_object:
+
+            helper.clear()
+
+            # unhightlite previous
+            if prev_selected_hovered_object is not None:
+                prev_selected_hovered_object.highlite(ctx, False)
+
+            # hightlite object where mouse is
+            if selected_hovered_object is not None:
+                selected_hovered_object.highlite(ctx, True)
+                helper <= selected_hovered_object.description()
+            else:
+                helper <= "_"
+
+            # redraw all arrows
+            if prev_selected_hovered_object is not None or selected_hovered_object is not None:
+                orders_data.render(ctx)
+
+            # redraw dislodged if applicable
+            if isinstance(prev_selected_hovered_object, mapping.Unit):
+                if prev_selected_hovered_object in POSITION_DATA.dislodging_table:
+                    dislodged = POSITION_DATA.dislodging_table[prev_selected_hovered_object]
+                    if dislodged is not selected_hovered_object:
+                        dislodged.highlite(ctx, False)
+
+    def callback_canvas_mouse_enter(event):
+        """ callback_canvas_mouse_enter """
+
+        nonlocal selected_hovered_object
+
+        helper.clear()
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        selected_hovered_object = POSITION_DATA.closest_object(pos)
+
+        # hightlite object where mouse is
+        if selected_hovered_object is not None:
+            selected_hovered_object.highlite(ctx, True)
+            helper <= selected_hovered_object.description()
+        else:
+            helper <= "_"
+
+    def callback_canvas_mouse_leave(_):
+        """ callback_canvas_mouse_leave """
+
+        if selected_hovered_object is not None:
+
+            selected_hovered_object.highlite(ctx, False)
+
+            # redraw all arrows
+            orders_data.render(ctx)
+
+            # redraw dislodged if applicable
+            if isinstance(selected_hovered_object, mapping.Unit):
+                if selected_hovered_object in POSITION_DATA.dislodging_table:
+                    dislodged = POSITION_DATA.dislodging_table[selected_hovered_object]
+                    if dislodged is not selected_hovered_object:
+                        dislodged.highlite(ctx, False)
+
+        helper.clear()
+        helper <= "_"
+
+    def callback_render(refresh):
+        """ callback_render """
+
+        if refresh:
+
+            # put the background map first
+            ctx.drawImage(img, 0, 0)
+
+            # put the position and the neutral centers
+            POSITION_DATA.render(ctx)
+
+            # put the legends
+            VARIANT_DATA.render(ctx)
+
+            # save
+            save_context(ctx)
+
+        else:
+
+            # restore
+            restore_context(ctx)
+
+        # put the orders
+        orders_data.render(ctx)
+
+    def put_submit(buttons_right):
+        """ put_submit """
+
+        input_submit = html.INPUT(type="submit", value="Soumettre au module d'entrainement", Class='btn-inside')
+        input_submit.bind("click", submit_orders_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_submit
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+    # now we can display
+
+    # header
+
+    # game status
+    MY_SUB_PANEL <= GAME_STATUS
+    MY_SUB_PANEL <= html.BR()
+
+    advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
+    advancement_season, _ = common.get_short_season(advancement_loaded, VARIANT_DATA)
+
+    # create canvas
+    map_size = VARIANT_DATA.map_size
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return
+
+    # digest the orders
+    orders_data = mapping.Orders(ORDERS_LOADED, POSITION_DATA, False)
+
+    # hovering effect
+    canvas.bind("mousemove", callback_canvas_mouse_move)
+    canvas.bind("mouseenter", callback_canvas_mouse_enter)
+    canvas.bind("mouseleave", callback_canvas_mouse_leave)
+
+    # put background (this will call the callback that display the whole map)
+    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    img.bind('load', lambda _: callback_render(True))
+
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN)
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    display_left <= canvas
+
+    helper = html.DIV(Class='helper')
+    display_left <= helper
+
+    display_left <= html.BR()
+    display_left <= rating_colours_window
+    display_left <= html.BR()
+
+    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
+    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    display_left <= html.BR()
+
+    buttons_right = html.DIV(id='buttons_right')
+    buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+    put_submit(buttons_right)
+
+    # overall
+    my_sub_panel2 = html.DIV()
+    my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left
+    my_sub_panel2 <= buttons_right
+
+    MY_SUB_PANEL <= my_sub_panel2
+
+
 def install_training():
     """ install_training """
 
@@ -1627,7 +2084,16 @@ def install_training():
 
     # display map and order console
     MY_SUB_PANEL.clear()
-    submit_training_orders()
+
+    # consider passive and active mode
+    if content_dict['type'] == 'display':
+        slide_just_display()
+    elif content_dict['type'] == 'submit':
+        slide_submit_orders()
+    elif content_dict['type'] == 'adjudication':
+        slide_show_adjudication()
+    else:
+        alert("Type de diapositive inconnu")
 
 
 def select_training_data():
@@ -1649,7 +2115,7 @@ def select_training_data():
             alert("No training data !")
             return
 
-        TRAINING_LIST = content['exercises']
+        TRAINING_LIST = content['slides']
         TRAINING_INDEX = 0
 
         SEQUENCE_NAME = input_sequence_name
@@ -1668,7 +2134,7 @@ def select_training_data():
 
             content_json = reader.result
             content = loads(content_json)
-            TRAINING_LIST = content['exercises']
+            TRAINING_LIST = content['slides']
             TRAINING_INDEX = 0
 
             # go for first training
