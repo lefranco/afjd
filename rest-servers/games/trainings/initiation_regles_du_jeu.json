@@ -1,10 +1,11 @@
 {
 "title": "01 apprendre rapidement les règles du jeu de Diplomatie",
-"exercises": 
+"slides": 
 [
 
 {
-    "introduction" : "L'objectif du jeu est d'être la première puissance à posséder plus de la moitié des centres de la carte<br> Pour y arriver, il faut prendre des centres neutres et des centres des autres joueurs<br>Pour prendre un centre, il faut l'occuper à l'autome (les tours de jeux pairs). Quand on gagne des centres, on construit des unités, et quand on perd des centres, on supprime des unités !<br><br><b>Apprenez à repérer un centre</b><br><br>Pour cet exercice, pas d'ordres à entrer !<br>Le centre de Paris a été entouré pour vous aider à le trouver<br>Cliquez directement sur 'exercice suivant'",
+    "type": "display",
+    "introduction" : "L'objectif du jeu est d'être la première puissance à posséder plus de la moitié des centres de la carte<br> Pour y arriver, il faut prendre des centres neutres et des centres des autres joueurs<br>Pour prendre un centre, il faut l'occuper à l'autome (les tours de jeux pairs). Quand on gagne des centres, on construit des unités, et quand on perd des centres, on supprime des unités !<br><br><b>Apprenez à repérer un centre</b><br><br>Pour cet exercice, pas d'ordres à entrer !<br>Le centre de Paris a été entouré pour vous aider à le trouver",
     "role_id" : 2,
     "variant_name" : "standard",
     "game_parameters_description": "repérage de centre", 
@@ -21,7 +22,8 @@
 },
 
 {
-    "introduction" : "Les unités sont de deux sortes : les flottes et les armées.<br>Une flotte peut aller en mer ou en côte.<br><br><b>Apprenez à repérez une flotte</b><br><br>Pour cet exercice, pas d'ordres à entrer ! <br>La flotte en Picardie a été entourée pour vous aider à la trouver<br>Cliquez directement sur 'exercice suivant'",
+    "type": "display",
+    "introduction" : "Les unités sont de deux sortes : les flottes et les armées.<br>Une flotte peut aller en mer ou en côte.<br><br><b>Apprenez à repérez une flotte</b><br><br>Pour cet exercice, pas d'ordres à entrer ! <br>La flotte en Picardie a été entourée pour vous aider à la trouver",
     "role_id" : 7,
     "variant_name" : "standard",
     "game_parameters_description": "repérage de flotte", 
@@ -38,6 +40,7 @@
 },
 
 {
+    "type": "display",
     "introduction" : "Et maintenant...<br><b>apprenez à repérer une armée !</b><br><br>Une armée peut aller en côte ou en terre (régions enclavées).<br>Pour cet exercice, pas d'ordres à entrer ! <br>L'armée en Bourgogne a été entourée pour vous aider à la trouver<br>Cliquez directement sur 'exercice suivant'",
     "role_id" : 7,
     "variant_name" : "standard",
@@ -55,6 +58,7 @@
 },
 
 {
+    "type": "submit",
     "introduction" : "Maintenant il s'agit de passer des ordres les plus basiques.<br>Phase de mouvements.<br>Une unité peut très bien décider de ne rien faire et rester en place<br>Saurez-vous entrer un ordre de tenir en place pour l'Allemagne et son armée à Berlin ?",
     "role_id" : 3,
     "variant_name" : "standard",
@@ -72,6 +76,7 @@
 },
 
 {
+    "type": "submit",
     "introduction" : "Phase de mouvements (suite).<br>Plus souvent, les unités se déplacent, dans le but d'aller occuper un centre<br>Saurez-vous entrer un ordre pour la France et son armée à Paris d'aller en Bourgogne ?",
     "role_id" : 2,
     "variant_name" : "standard",
@@ -89,6 +94,7 @@
 },
 
 {
+    "type": "submit",
     "introduction" : "Phase de mouvements (suite et fin).<br>Une flotte en mer peut transporter une armée adjacente d'une côte à une autre. Il en est de même pour une suite de flotte format une chaîne<br>Saurez-vous entrer un ordre pour l'Angleterre et sa flotte en Mer du Nord de convoyer l'armée Russe de Norvège en Hollande ?",
     "role_id" : 1,
     "variant_name" : "standard",
@@ -106,7 +112,8 @@
 },
 
 {
-    "introduction" : "Phase de retraites<br>Quand une unité est attaquée par plus fort qu'elle, elle retraites.<br>Saurez-vous entrer un ordre de retraite ?<br>L'Allemagne doit faire retraiter son armée de Roumanie en Ukraine...",
+    "type": "submit",
+    "introduction" : "Phase de retraites<br>Quand une unité est attaquée par plus fort qu'elle, elle retraite.<br>Saurez-vous entrer un ordre de retraite ?<br>L'Allemagne doit faire retraiter son armée de Roumanie en Ukraine...",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_description": "entrée d'ordre de retraite élémentaire", 
@@ -123,6 +130,7 @@
 },
 
 {
+    "type": "submit",
     "introduction" : "Phase d'ajustements<br>Quand une puissance a plus de centres que d'unités, elle peut construire<br>Saurez-vous entrer un ordre d'ajustement' ?<br>L'Allemagne construit une fois...une armée à Berlin...",
     "role_id" : 3,
     "variant_name" : "standard",
