@@ -625,8 +625,8 @@ def slide_just_display():
             ctx.stroke()
             ctx.closePath()
 
-    def put_submit(buttons_right):
-        """ put_submit """
+    def put_submit_next(buttons_right):
+        """ put_submit_next """
 
         input_submit = html.INPUT(type="submit", value="La suite !", Class='btn-inside')
         input_submit.bind("click", lambda e: next_previous_training(False))
@@ -692,8 +692,8 @@ def slide_just_display():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    # All there is is a button "Ok nexty please"
-    put_submit(buttons_right)
+    # All there is is a button "Ok next please"
+    put_submit_next(buttons_right)
 
     MY_SUB_PANEL <= my_sub_panel2
 
@@ -731,7 +731,7 @@ def slide_submit_orders():
                     return
 
                 # use a strip to remove trailing "\n"
-                messages = "<br>".join(req_result['msg'].strip().split('\n'))
+                messages = "<br>".join(req_result['submission_report'].strip().split('\n'))
 
                 if messages:
                     mydialog.InfoDialog("Information", f"Ordres validés avec le(s) message(s) : {messages}", True)
@@ -789,7 +789,7 @@ def slide_submit_orders():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/training-orders"
+        url = f"{host}:{port}/training"
 
         # submitting position and orders for training : do not need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -1597,9 +1597,6 @@ def slide_submit_orders():
             # restore
             restore_context(ctx)
 
-        # pointers
-        draw_pointers(ctx)
-
         # put the orders
         orders_data.render(ctx)
 
@@ -1659,18 +1656,6 @@ def slide_submit_orders():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-    def draw_pointers(ctx):
-        """ draw_pointers """
-
-        pointer_colour = POINTER_COLOUR
-        ctx.strokeStyle = pointer_colour.str_value()
-        ctx.lineWidth = 2
-        for x_pos, y_pos, ray in POINTERS:
-            ctx.beginPath()
-            ctx.arc(x_pos, y_pos, ray, 0, 2 * pi, False)
-            ctx.stroke()
-            ctx.closePath()
-
     # now we can display
 
     # header
@@ -1709,6 +1694,10 @@ def slide_submit_orders():
     rating_colours_window = make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN)
 
     # left side
+
+    time_stamp_now = time()
+    fake_report_loaded = {'time_stamp': time_stamp_now, 'content': ""}
+    report_window = common.make_report_window(fake_report_loaded)
 
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
@@ -1780,30 +1769,34 @@ def slide_show_adjudication():
     """ slide_show_adjudication """
 
     selected_hovered_object = None
+    input_submit = None
 
     def submit_orders_callback(_):
         """ submit_orders_callback """
 
         def reply_callback(req):
-
-            if req:
-                req_result = loads(req.text)
-                if req.status != 201:
-                    if 'message' in req_result:
-                        alert(f"Erreur à la soumission d'ordres d'entrainenemt : {req_result['message']}")
-                    elif 'msg' in req_result:
-                        alert(f"Problème à la soumission d'ordres d'entrainenemt : {req_result['msg']}")
-                    else:
-                        alert("Réponse du serveur imprévue et non documentée")
-                    return
-
-                # use a strip to remove trailing "\n"
-                messages = "<br>".join(req_result['msg'].strip().split('\n'))
-
-                if messages:
-                    mydialog.InfoDialog("Information", f"Ordres validés avec le(s) message(s) : {messages}", True)
+            req_result = loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la soumission d'ordres d'entrainenemt : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la soumission d'ordres d'entrainenemt : {req_result['msg']}")
                 else:
-                    mydialog.InfoDialog("Information", "Ordres validés !")
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            # remove button
+            buttons_right.removeChild(input_submit)
+
+            # put adjudication result
+            time_stamp_now = time()
+            report_txt = req_result['orders_result']
+            fake_report_loaded = {'time_stamp': time_stamp_now, 'content': report_txt}
+            report_window = common.make_report_window(fake_report_loaded)
+            buttons_right <= report_window
+
+            # put button for next
+            put_submit_next(buttons_right)
 
         names_dict = VARIANT_DATA.extract_names()
         names_dict_json = dumps(names_dict)
@@ -1833,7 +1826,7 @@ def slide_show_adjudication():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/training-orders"
+        url = f"{host}:{port}/training"
 
         # submitting position and orders for training : do not need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -1938,10 +1931,21 @@ def slide_show_adjudication():
         # put the orders
         orders_data.render(ctx)
 
+    def put_submit_next(buttons_right):
+        """ put_submit_next """
+
+        input_submit = html.INPUT(type="submit", value="La suite !", Class='btn-inside')
+        input_submit.bind("click", lambda e: next_previous_training(False))
+        buttons_right <= html.BR()
+        buttons_right <= input_submit
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
     def put_submit(buttons_right):
         """ put_submit """
+        nonlocal input_submit
 
-        input_submit = html.INPUT(type="submit", value="Résolution", Class='btn-inside')
+        input_submit = html.INPUT(type="submit", value="Demander la résolution", Class='btn-inside')
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -2052,14 +2056,14 @@ def install_training():
         POINTERS = content_dict['pointers']
         slide_just_display()
     elif content_dict['type'] == 'submit':
-        # what orders are expected from trainee
         ROLE_ID = content_dict['role_id']
+        # orders expected from trainee
         EXPECTED_ORDERS = content_dict['expected_orders']
         HELP = content_dict['help']
         slide_submit_orders()
     elif content_dict['type'] == 'adjudicate':
-        # what orders are expected from trainee
         ROLE_ID = 0
+        # orders to show
         SHOWN_ORDERS = content_dict['shown_orders']
         slide_show_adjudication()
     else:
