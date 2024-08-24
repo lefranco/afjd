@@ -7980,9 +7980,9 @@ class AccessSubmissionLogsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/training-orders')
-class TrainingOrdersRessource(flask_restful.Resource):  # type: ignore
-    """ TrainingOrdersRessource """
+@API.resource('/training')
+class TrainingRessource(flask_restful.Resource):  # type: ignore
+    """ TrainingRessource """
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
@@ -8112,8 +8112,14 @@ class TrainingOrdersRessource(flask_restful.Resource):  # type: ignore
             print(f"ERROR from solve server  : {req_result.text}")
             flask_restful.abort(400, msg=f":-( {submission_report}")
 
+        # extract new report
+        orders_result = req_result.json()['orders_result']
+
         # ok so orders are accepted
-        data = {'msg': submission_report}
+        data = {
+            'submission_report': submission_report,
+            'orders_result': f"{orders_result}"
+        }
         return data, 201
 
 
