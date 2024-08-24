@@ -1781,8 +1781,8 @@ def slide_show_adjudication():
 
     selected_hovered_object = None
 
-    def submit_adjudication_callback(_):
-        """ submit_adjudication_callback """
+    def submit_orders_callback(_):
+        """ submit_orders_callback """
 
         def reply_callback(req):
 
@@ -1827,12 +1827,13 @@ def slide_show_adjudication():
             'variant_name': VARIANT_NAME_LOADED,
             'names': names_dict_json,
             'situation': situation_dict_json,
-            'orders': orders_list_dict_json
+            'orders': orders_list_dict_json,
+            'role_id': ROLE_ID
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/training-adjudication"
+        url = f"{host}:{port}/training-orders"
 
         # submitting position and orders for training : do not need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -1941,7 +1942,7 @@ def slide_show_adjudication():
         """ put_submit """
 
         input_submit = html.INPUT(type="submit", value="Résolution", Class='btn-inside')
-        input_submit.bind("click", submit_adjudication_callback)
+        input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
         buttons_right <= html.BR()
@@ -2039,7 +2040,6 @@ def install_training():
     load_static_stuff()
     load_dynamic_stuff()
 
-
     # Popup
     mydialog.InfoDialog("Information", INTRODUCTION, True)
 
@@ -2059,6 +2059,7 @@ def install_training():
         slide_submit_orders()
     elif content_dict['type'] == 'adjudicate':
         # what orders are expected from trainee
+        ROLE_ID = 0
         SHOWN_ORDERS = content_dict['shown_orders']
         slide_show_adjudication()
     else:
