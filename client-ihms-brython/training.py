@@ -63,6 +63,7 @@ GAME_STATUS = None
 POSITION_LOADED = None
 POSITION_DATA = None
 EXPECTED_ORDERS = None
+SHOWN_ORDERS = None
 
 POINTERS = []
 POINTER_COLOUR = mapping.ColourRecord(255, 0, 0)  # black
@@ -1780,11 +1781,8 @@ def slide_show_adjudication():
 
     selected_hovered_object = None
 
-    def cancel_submit_orders_callback(_, dialog):
-        dialog.close(None)
-
-    def submit_orders_callback(_, warned=False, dialog2=None):
-        """ submit_orders_callback """
+    def submit_adjudication_callback(_):
+        """ submit_adjudication_callback """
 
         def reply_callback(req):
 
@@ -1806,29 +1804,6 @@ def slide_show_adjudication():
                     mydialog.InfoDialog("Information", f"Ordres validés avec le(s) message(s) : {messages}", True)
                 else:
                     mydialog.InfoDialog("Information", "Ordres validés !")
-
-            # compare with expected orders
-            expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, False)
-            if same_orders(orders_data, expected):
-                mydialog.InfoDialog("Information", "Correct, ce sont bien les ordres attendus !", False)
-                next_previous_training(False)
-            else:
-                mydialog.InfoDialog("Information", "Hélas non, ce ne sont pas les ordres attendus :-(", True)
-
-        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            role = VARIANT_DATA.roles[ROLE_ID]
-            nb_builds, _, _, _ = POSITION_DATA.role_builds(role)
-            if nb_builds > 0:
-                nb_builds_done = orders_data.number()
-                if nb_builds_done < nb_builds:
-                    if not warned:
-                        dialog = mydialog.Dialog(f"Vous construisez {nb_builds_done} unités alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
-                        dialog.ok_button.bind("click", lambda e, w=True, d=dialog: submit_orders_callback(e, w, d))
-                        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_submit_orders_callback(e, d))
-                        return
-
-        if dialog2:
-            dialog2.close()
 
         names_dict = VARIANT_DATA.extract_names()
         names_dict_json = dumps(names_dict)
@@ -1852,13 +1827,12 @@ def slide_show_adjudication():
             'variant_name': VARIANT_NAME_LOADED,
             'names': names_dict_json,
             'situation': situation_dict_json,
-            'orders': orders_list_dict_json,
-            'role_id': ROLE_ID
+            'orders': orders_list_dict_json
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/training-orders"
+        url = f"{host}:{port}/training-adjudication"
 
         # submitting position and orders for training : do not need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -1966,8 +1940,8 @@ def slide_show_adjudication():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="Soumettre au module d'entrainement", Class='btn-inside')
-        input_submit.bind("click", submit_orders_callback)
+        input_submit = html.INPUT(type="submit", value="Résolution", Class='btn-inside')
+        input_submit.bind("click", submit_adjudication_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
         buttons_right <= html.BR()
@@ -1981,9 +1955,6 @@ def slide_show_adjudication():
     MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
-    advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
-    advancement_season, _ = common.get_short_season(advancement_loaded, VARIANT_DATA)
-
     # create canvas
     map_size = VARIANT_DATA.map_size
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
@@ -1993,7 +1964,7 @@ def slide_show_adjudication():
         return
 
     # digest the orders
-    orders_data = mapping.Orders(ORDERS_LOADED, POSITION_DATA, False)
+    orders_data = mapping.Orders(SHOWN_ORDERS, POSITION_DATA, False)
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -2045,6 +2016,7 @@ def install_training():
     global ROLE_ID
     global VARIANT_NAME_LOADED
     global EXPECTED_ORDERS
+    global SHOWN_ORDERS
     global POINTERS
     global HELP
     global POSITION_LOADED
@@ -2054,9 +2026,6 @@ def install_training():
 
     # the role for the trainee
     INTRODUCTION = content_dict['introduction']
-
-    # the role for the trainee
-    ROLE_ID = content_dict['role_id']
 
     # the variant we use
     VARIANT_NAME_LOADED = content_dict['variant_name']
@@ -2070,14 +2039,6 @@ def install_training():
     load_static_stuff()
     load_dynamic_stuff()
 
-    # what orders are expected from trainee
-    EXPECTED_ORDERS = content_dict['expected_orders']
-
-    # pointers to show on map
-    POINTERS = content_dict['pointers']
-
-    # help content
-    HELP = content_dict['help']
 
     # Popup
     mydialog.InfoDialog("Information", INTRODUCTION, True)
@@ -2087,13 +2048,21 @@ def install_training():
 
     # consider passive and active mode
     if content_dict['type'] == 'display':
+        # pointers to show on map
+        POINTERS = content_dict['pointers']
         slide_just_display()
     elif content_dict['type'] == 'submit':
+        # what orders are expected from trainee
+        ROLE_ID = content_dict['role_id']
+        EXPECTED_ORDERS = content_dict['expected_orders']
+        HELP = content_dict['help']
         slide_submit_orders()
-    elif content_dict['type'] == 'adjudication':
+    elif content_dict['type'] == 'adjudicate':
+        # what orders are expected from trainee
+        SHOWN_ORDERS = content_dict['shown_orders']
         slide_show_adjudication()
     else:
-        alert("Type de diapositive inconnu")
+        alert("Type de tranche inconnu")
 
 
 def select_training_data():
