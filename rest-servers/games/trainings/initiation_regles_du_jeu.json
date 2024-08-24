@@ -71,7 +71,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 4, 10, 0, 0]] },
-    "pointers" : [],
     "help": "Cliquez sur l'armée à Berlin deux fois de suite (clics pas trop rapprochés)"
 },
 
@@ -89,7 +88,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 1, 47, 0, 17]] },
-    "pointers" : [],
     "help": "Cliquez sue l'armée à Paris puis sur la Région de Bourgogne"
 },
 
@@ -107,7 +105,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 5, 45, 46, 30]] },
-    "pointers" : [],
     "help": "Cliquez sur la flotte, puis 'convoyer', puis l'armée, puis la destination (la région de Hollande)"
 },
 
@@ -125,8 +122,7 @@
         "forbiddens": [16]
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 6, 54, 0, 69]] },
-    "pointers" : [],
-  "help": "Cliquez sur l'armée délogée (retournée) de Bulgarie puis sur la région d'Ukraine"
+    "help": "Cliquez sur l'armée délogée (retournée) de Bulgarie puis sur la région d'Ukraine"
 },
 
 {
@@ -143,8 +139,7 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[[0, 1, 10, 3, 0, 0]], "orders":[[0, 0, 8, 10, 0, 0]] },
-    "pointers" : [],
-  "help": "Cliquez sur 'Construire' puis 'Armée' puis sur le centre à Berlin"
+    "help": "Cliquez sur 'Construire' puis 'Armée' puis sur le centre à Berlin"
 }
 
 
