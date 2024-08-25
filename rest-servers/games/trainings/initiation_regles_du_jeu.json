@@ -140,7 +140,59 @@
     },
     "expected_orders" : {"fake_units":[[0, 1, 10, 3, 0, 0]], "orders":[[0, 0, 8, 10, 0, 0]] },
     "help": "Cliquez sur 'Construire' puis 'Armée' puis sur le centre à Berlin"
+},
+
+{
+    "type": "adjudicate",
+    "introduction" : "Bien entendu, vous n'êtes pas seul sur l'affaire ! Tous les joueurs tentent également de prendre des centres pour augmenter leur puissance<br>Or, toutes les unités ont la même force.<br>Dans cet exemple l'Italien et le Turc tentent chacun de son côté de prendre Apulie, c'est du un contre un, ce qui produit un rebond (un échec)...",
+    "variant_name" : "standard",
+    "game_parameters_description": "rebond simple", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"4":[[1, 70]], "7":[[2, 31]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 70, 0, 5], [0, 0, 1, 31, 0, 5]] },
+    "help": "Sans objet"
+},
+
+{
+    "type": "adjudicate",
+    "introduction" : "De la même manière, une unité qui reste en place (sur un centre par exeempe) suffit à en empĉher une autre de venir prendre le centre. Dans cet exemple l'armée Tuque à Ankara n'est pas affectée par l'attaque de la flotte Russe depuis la Mer Noire",
+    "variant_name" : "standard",
+    "game_parameters_description": "attaque manquée", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"6":[[2, 11]], "7":[[1, 4]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 11, 0, 4], [0, 0, 4, 4, 0, 0]] },
+    "help": "Sans objet"
+
+},
+
+{
+    "type": "adjudicate",
+    "introduction" : "La clé du jeu ce sont les soutiens ! Un soutien permet à une attaque de prendre plus de force et déloger une unité ennemie. Commençons par un soutien le plus simple possible. L'allemand soutient son attaque de Prusse vers l'armée et le centre de Varsovie par son autre armée en Silésie'",
+    "variant_name" : "standard",
+    "game_parameters_description": "soutien simple", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {"34": 6},
+        "dislodged_ones": {},
+        "units": {"3":[[1, 51], [1, 57]], "6":[[1, 73]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0]] },
+    "help": "Sans objet"
+
 }
+
+
 
 
 ]
