@@ -2064,16 +2064,17 @@ def install_training():
     # display map and order console
     MY_SUB_PANEL.clear()
 
+    POINTERS = content_dict['pointers']
+    HELP = content_dict['help']
+
     # consider passive and active mode
     if content_dict['type'] == 'display':
         # pointers to show on map
-        POINTERS = content_dict['pointers']
         slide_just_display()
     elif content_dict['type'] == 'submit':
         ROLE_ID = content_dict['role_id']
         # orders expected from trainee
         EXPECTED_ORDERS = content_dict['expected_orders']
-        HELP = content_dict['help']
         slide_submit_orders()
     elif content_dict['type'] == 'adjudicate':
         ROLE_ID = 0
