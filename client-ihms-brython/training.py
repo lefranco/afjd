@@ -670,12 +670,6 @@ def slide_just_display():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    # advertise
-    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
-    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
-    display_left <= html.BR()
-    display_left <= html.BR()
-
     display_left <= canvas
 
     helper = html.DIV(Class='helper')
@@ -696,6 +690,12 @@ def slide_just_display():
 
     # All there is is a button "Ok next please"
     put_submit_next(buttons_right)
+
+    # advertise
+    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
+    MY_SUB_PANEL <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= my_sub_panel2
 
@@ -1699,12 +1699,6 @@ def slide_submit_orders():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    # advertise
-    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
-    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
-    display_left <= html.BR()
-    display_left <= html.BR()
-
     display_left <= canvas
 
     helper = html.DIV(Class='helper')
@@ -1761,6 +1755,12 @@ def slide_submit_orders():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
+    # advertise
+    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
+    MY_SUB_PANEL <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= my_sub_panel2
 
 
@@ -1792,7 +1792,7 @@ def slide_show_adjudication():
                 buttons_right.removeChild(input_submit)
 
                 # say where is adjudication reult
-                legend_adjudication_result_location = html.DIV("Le resultat de ma résolution est sous la carte.", Class='instruction')
+                legend_adjudication_result_location = html.DIV("Le resultat de la résolution est sous la carte.", Class='instruction')
                 buttons_right <= legend_adjudication_result_location
 
                 # put new
@@ -1999,12 +1999,6 @@ def slide_show_adjudication():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    # advertise
-    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
-    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
-    display_left <= html.BR()
-    display_left <= html.BR()
-
     display_left <= canvas
 
     helper = html.DIV(Class='helper')
@@ -2024,6 +2018,12 @@ def slide_show_adjudication():
     my_sub_panel2.attrs['style'] = 'display:table-row'
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
+
+    # advertise
+    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
+    MY_SUB_PANEL <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= my_sub_panel2
 
