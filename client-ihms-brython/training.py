@@ -1694,11 +1694,6 @@ def slide_submit_orders():
     rating_colours_window = make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN)
 
     # left side
-
-    time_stamp_now = time()
-    fake_report_loaded = {'time_stamp': time_stamp_now, 'content': ""}
-    report_window = common.make_report_window(fake_report_loaded)
-
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
