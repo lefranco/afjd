@@ -670,6 +670,12 @@ def slide_just_display():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
+    # advertise
+    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
+    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    display_left <= html.BR()
+    display_left <= html.BR()
+
     display_left <= canvas
 
     helper = html.DIV(Class='helper')
@@ -681,10 +687,6 @@ def slide_just_display():
 
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-
-    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
-    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
-    display_left <= html.BR()
 
     # overall
     my_sub_panel2 = html.DIV()
@@ -1697,6 +1699,12 @@ def slide_submit_orders():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
+    # advertise
+    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
+    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    display_left <= html.BR()
+    display_left <= html.BR()
+
     display_left <= canvas
 
     helper = html.DIV(Class='helper')
@@ -1704,10 +1712,6 @@ def slide_submit_orders():
 
     display_left <= html.BR()
     display_left <= rating_colours_window
-    display_left <= html.BR()
-
-    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
-    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
     display_left <= html.BR()
 
     buttons_right = html.DIV(id='buttons_right')
@@ -1765,11 +1769,13 @@ def slide_show_adjudication():
 
     selected_hovered_object = None
     input_submit = None
+    report_window = None
 
     def submit_orders_callback(_):
         """ submit_orders_callback """
 
         def reply_callback(req):
+            nonlocal report_window
             req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -1780,15 +1786,22 @@ def slide_show_adjudication():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            # remove button
-            buttons_right.removeChild(input_submit)
+            if 'orders_result' in req_result:
 
-            # put adjudication result
-            time_stamp_now = time()
-            report_txt = req_result['orders_result']
-            fake_report_loaded = {'time_stamp': time_stamp_now, 'content': report_txt}
-            report_window = common.make_report_window(fake_report_loaded)
-            buttons_right <= report_window
+                # remove button
+                buttons_right.removeChild(input_submit)
+
+                # say where is adjudication reult
+                legend_adjudication_result_location = html.DIV("Le resultat de ma résolution est sous la carte.", Class='instruction')
+                buttons_right <= legend_adjudication_result_location
+
+                # put new
+                time_stamp_now = time()
+                report_txt = req_result['orders_result']
+                fake_report_loaded = {'time_stamp': time_stamp_now, 'content': report_txt}
+                report_window = common.make_report_window(fake_report_loaded)
+                display_left <= html.BR()
+                display_left <= report_window
 
             # put button for next
             put_submit_next(buttons_right)
@@ -1955,6 +1968,10 @@ def slide_show_adjudication():
     MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
+    time_stamp_now = time()
+    fake_report_loaded = {'time_stamp': time_stamp_now, 'content': ""}
+    report_window = common.make_report_window(fake_report_loaded)
+
     # create canvas
     map_size = VARIANT_DATA.map_size
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
@@ -1982,6 +1999,12 @@ def slide_show_adjudication():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
+    # advertise
+    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
+    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    display_left <= html.BR()
+    display_left <= html.BR()
+
     display_left <= canvas
 
     helper = html.DIV(Class='helper')
@@ -1989,10 +2012,6 @@ def slide_show_adjudication():
 
     display_left <= html.BR()
     display_left <= rating_colours_window
-    display_left <= html.BR()
-
-    url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
-    display_left <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
     display_left <= html.BR()
 
     buttons_right = html.DIV(id='buttons_right')
