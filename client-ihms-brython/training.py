@@ -297,11 +297,13 @@ def get_game_status():
     row <= col
 
     # help
-    form = html.FORM()
-    input_help = html.INPUT(type="submit", value="un peu d'aide", Class='btn-inside')
-    input_help.attrs['style'] = 'font-size: 10px'
-    input_help.bind("click", ask_help_callback)
-    form <= input_help
+    form = ""
+    if HELP:
+        form = html.FORM()
+        input_help = html.INPUT(type="submit", value="un peu d'aide", Class='btn-inside')
+        input_help.attrs['style'] = 'font-size: 10px'
+        input_help.bind("click", ask_help_callback)
+        form <= input_help
     col = html.TD(form)
     row <= col
 
@@ -2055,6 +2057,8 @@ def install_training():
     # tuned parameters
     TUNED_GAME_PARAMETERS_LOADED = {k: v for k, v in content_dict.items() if k.startswith('game_parameters')}
 
+    HELP = content_dict.get('help', '')
+
     load_static_stuff()
     load_dynamic_stuff()
 
@@ -2065,7 +2069,6 @@ def install_training():
     MY_SUB_PANEL.clear()
 
     POINTERS = content_dict['pointers']
-    HELP = content_dict['help']
 
     # consider passive and active mode
     if content_dict['type'] == 'display':
