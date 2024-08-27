@@ -17,8 +17,7 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[] },
-    "pointers" : [[248, 436, 10]],
-    "help": "Le centre de Paris a été entouré pour vous le monter !"
+    "pointers" : [[248, 436, 10]]
 },
 
 {
@@ -35,8 +34,7 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[] },
-    "pointers" : [ [247, 417, 10]],
-    "help": "La flotte en Picardie a été entourée pour vous la monter !"
+    "pointers" : [ [247, 417, 10]]
 },
 
 {
@@ -53,8 +51,7 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[] },
-    "pointers" : [[276, 459, 10]],
-    "help": "L'armée en Bourgogne a été entourée pour vous la monter !"
+    "pointers" : [[276, 459, 10]]
 },
 
 {
@@ -90,7 +87,7 @@
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 1, 47, 0, 17]] },
     "pointers" : [],
-    "help": "Cliquez sue l'armée à Paris puis sur la Région de Bourgogne"
+    "help": "Cliquez sur l'armée à Paris puis sur la Région de Bourgogne"
 },
 
 {
@@ -178,8 +175,7 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 70, 0, 5], [0, 0, 1, 31, 0, 5]] },
-    "pointers" : [],
-    "help": "Sans objet"
+    "pointers" : []
 },
 
 {
@@ -195,8 +191,7 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 11, 0, 4], [0, 0, 4, 4, 0, 0]] },
-    "pointers" : [],
-    "help": "Sans objet"
+    "pointers" : []
 },
 
 {
@@ -212,8 +207,7 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0]] },
-    "pointers" : [],
-    "help": "Sans objet"
+    "pointers" : []
 },
 
 {
@@ -229,8 +223,7 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0]] },
-    "pointers" : [],
-    "help": "Sans objet"
+    "pointers" : []
 },
 
 {
@@ -246,8 +239,7 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 2, 25, 51, 73]] },
-    "pointers" : [],
-    "help": "Sans objet"
+    "pointers" : []
 },
 
 {
@@ -263,8 +255,7 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 2, 25, 51, 73], [0, 0, 3, 69, 73, 0]] },
-    "pointers" : [],
-    "help": "Sans objet"
+    "pointers" : []
 },
 
 {
@@ -280,8 +271,7 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 1, 56, 0, 39]] },
-    "pointers" : [],
-    "help": "Sans objet"
+    "pointers" : []
 },
 
 {
@@ -297,13 +287,12 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 1, 12, 0, 57]] },
-    "pointers" : [],
-    "help": "Sans objet"
+    "pointers" : []
 },
 
 {
     "type": "adjudicate",
-    "introduction" : "Lorsqu'une flotte convoit une armée d'une côte à une autre, elle est, dans une certain mesure, vulnérable à une attaque. Deux possibilités : soit la flotte n'est pas forcée à retraiter (on dit 'délogée'), alors elle assure correctement le convoi, soit elle l'est' et le convoi est rompu.<br>Dans notre exemple, le français se lance à l'assaut de l'île de l'anglais, ce qui n'est pas du goût de ce dernier. Il tente donc de convoyer son armée de Bretagne en Pays de Galles par le biais de sa flotte en Manche. L'anglais, de son coté, espère empêcher le convoi par une attaque de la flotte en Manche par sa propre flotte en Mer du Nord soutenue par sa flotte en Belgique. Heureusement pour le français, il (le français) dispose d'une flotte en Atlantique qui peut défendre sa flotte en Manche et sauver ainsi le convoi. L'armée française parvient donc aux Pays de Galles...Hourra !",
+    "introduction" : "Lorsqu'une flotte convoit une armée d'une côte à une autre, elle est, dans une certain mesure, vulnérable à une attaque. Deux possibilités : soit la flotte n'est pas forcée à retraiter (on dit 'délogée'), alors elle assure correctement le convoi, soit elle l'est' et le convoi est rompu.<br>Dans notre exemple, le français se lance à l'assaut de l'île de l'anglais, ce qui n'est pas du goût de ce dernier. Il tente donc de convoyer son armée de Bretagne en Pays de Galles par le biais de sa flotte en Manche. L'anglais, de son coté, espère empêcher le convoi par une attaque de la flotte en Manche par sa propre flotte en Mer du Nord soutenue par sa flotte en Belgique. Heureusement pour le français, il (le français) dispose d'une flotte en Atlantique qui peut défendre sa flotte en Manche et sauver ainsi le convoi. L'armée française parvient donc aux Pays de Galles...<br>Hourra !",
     "variant_name" : "standard",
     "game_parameters_description": "attaque de convoi", 
     "game_parameters_current_advancement": 2, 
@@ -314,8 +303,7 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 9, 0, 23], [0, 0, 2, 45, 9, 23], [0, 0, 1, 14, 0, 72], [0, 0, 5, 23, 14, 72], [0, 0, 3, 38, 23, 0]] },
-    "pointers" : [],
-    "help": "Sans objet"
+    "pointers" : []
 },
 
 {
@@ -331,8 +319,7 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[] },
-    "pointers" : [],
-    "help": "A bientôt !"
+    "pointers" : []
 }
 
 ]
