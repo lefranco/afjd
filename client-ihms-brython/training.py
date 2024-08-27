@@ -2068,11 +2068,10 @@ def install_training():
     # display map and order console
     MY_SUB_PANEL.clear()
 
-    POINTERS = content_dict['pointers']
-
     # consider passive and active mode
     if content_dict['type'] == 'display':
         # pointers to show on map
+        POINTERS = content_dict.get('pointers', [])
         slide_just_display()
     elif content_dict['type'] == 'submit':
         ROLE_ID = content_dict['role_id']
