@@ -54,7 +54,7 @@ OPTIONS = {
     'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
     'Classements': "Différents classements sur les joueurs du site (obtenir une liste de joueurs) et les scorages disponibles",
     'Bac à sable': "Pour essayer le moteur de résolution hors d'une parte sur un cas concret",
-    'Entraînement': "Pour s'entrainer à passer des ordres et comprendre les règles",
+    'Tutoriels et défis': "Pour s'entrainer à passer des ordres et comprendre les règles",
     'Technique': "Différents articles techniques (pour les joueurs chevronnés)",
     'Variantes': "Explications sur les variantes de jeu pratiquées sur le site",
     'Wiki': "Un wiki de partage de contenu sur le jeu en général",
@@ -227,7 +227,7 @@ def load_option(_, item_name):
         ratings.render(PANEL_MIDDLE)
     if item_name == 'Bac à sable':
         sandbox.render(PANEL_MIDDLE)
-    if item_name == 'Entraînement':
+    if item_name == 'Tutoriels et défis':
         training.render(PANEL_MIDDLE)
     if item_name == 'Technique':
         technical.render(PANEL_MIDDLE)

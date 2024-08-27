@@ -2158,7 +2158,7 @@ def select_training_data():
         load_sequence_callback(None, sequence_name)
         return
 
-    MY_SUB_PANEL <= html.H3("Choisissez la séquence d'entrainement")
+    MY_SUB_PANEL <= html.H3("Choisissez un tutoriel, une séquence d'entrainement ou un défi...")
 
     trainings_table = html.TABLE()
 
