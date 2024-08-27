@@ -23,6 +23,7 @@ MAX_LEN_EMAIL = 100
 OPTIONS = {
     # communication
     'Changer nouvelles': "Changer nouvelles du site pour le modérateur",
+    'Effacer le chat': "Effacer le contenu des discussions en ligne (chat) en cours",
     'Préparer un publipostage': "Préparer un publipostage vers tous les utilisateurs du site",
     'Annoncer dans toutes les parties': "Annoncer dans toutes les parties en cours du site",
     'Annoncer dans la partie': "Annoncer dans la partie séléctionnée",
@@ -227,6 +228,57 @@ def change_news_modo():
     form <= html.BR()
 
     MY_SUB_PANEL <= form
+
+
+def erase_chat_content():
+    """ erase_chat_content """
+
+    def erase_chat_callback(ev):  # pylint: disable=invalid-name
+        """ erase_chat_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'effacement des chats : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'effacement des chats : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Le contenu des disussions a été effacé ! {messages}")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            erase_chat_content()
+
+        ev.preventDefault()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['EMAIL']['HOST']
+        port = config.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/chat-messages"
+
+        # getting email: need token
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        erase_chat_content()
+
+    MY_SUB_PANEL <= html.H3("Effacer le contenu des discussions en ligne (chat)")
+
+    if not common.check_modo():
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    button = html.BUTTON("Raser la bête",  Class='btn-inside')
+    button.bind("click", erase_chat_callback)
+
+    MY_SUB_PANEL <= button
 
 
 def prepare_mailing():
@@ -2118,6 +2170,8 @@ def load_option(_, item_name):
     # communication
     if item_name == 'Changer nouvelles':
         change_news_modo()
+    if item_name == 'Effacer le chat':
+        erase_chat_content()
     if item_name == 'Préparer un publipostage':
         prepare_mailing()
     if item_name == 'Annoncer dans toutes les parties':

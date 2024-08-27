@@ -281,6 +281,20 @@ class ChatMessageRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': 'Chat message was inserted'}
         return data, 201
 
+    def delete(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Deletes all chats
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/chat-messages - DELETE - clearing all chats")
+
+        global CHATS
+        CHATS = []
+
+        data = {'msg': 'Chat messages were cleared'}
+        return data, 200
+
 
 def load_support_config() -> None:
     """ load_support_config """
