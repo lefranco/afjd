@@ -68,7 +68,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 4, 10, 0, 0]] },
-    "pointers" : [],
     "help": "Cliquez sur l'armée à Berlin deux fois de suite (clics pas trop rapprochés)"
 },
 
@@ -86,7 +85,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 1, 47, 0, 17]] },
-    "pointers" : [],
     "help": "Cliquez sur l'armée à Paris puis sur la Région de Bourgogne"
 },
 
@@ -104,26 +102,24 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 5, 45, 46, 30]] },
-    "pointers" : [],
     "help": "Cliquez sur la flotte, puis 'convoyer', puis l'armée, puis la destination (la région de Hollande)"
 },
 
 {
     "type": "submit",
     "introduction" : "Phase de retraites<br>Quand une unité est attaquée par plus fort qu'elle (on verra plus tard comment cela peut arriver !), elle doit reculer (on dit 'retraiter')').<br><br><b>Saurez-vous entrer un ordre de retraite ?</b><br><br>L'Allemagne doit faire retraiter son armée de Roumanie en Ukraine...",
-    "role_id" : 3,
+    "role_id" : 6,
     "variant_name" : "standard",
     "game_parameters_description": "entrée d'ordre de retraite élémentaire", 
     "game_parameters_current_advancement": 1, 
     "position" : {
-        "ownerships": {"3": 3},
-        "dislodged_ones": {"3": [ [1, 54, 16] ] },
-        "units": {"2" : [ [1, 54]] }, 
-        "forbiddens": [16]
+        "ownerships": {"23": 6},
+        "dislodged_ones": {"6": [ [1, 54, 16] ] },
+        "units": {"7" : [ [1, 54]] }, 
+        "forbiddens": [55]
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 6, 54, 0, 69]] },
-    "pointers" : [],
-    "help": "Cliquez sur l'armée délogée (retournée) de Bulgarie puis sur la région d'Ukraine"
+    "help": "Cliquez sur l'armée délogée (retournée) de Roumanie puis sur la région d'Ukraine"
 },
 
 {
@@ -140,7 +136,6 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[[0, 1, 10, 3, 0, 0]], "orders":[[0, 0, 8, 10, 0, 0]] },
-    "pointers" : [],
     "help": "Cliquez sur 'Construire' puis 'Armée' puis sur le centre à Berlin"
 },
 
@@ -158,24 +153,22 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 9, 7, 0, 0]] },
-    "pointers" : [],
     "help": "Cliquez sur 'Supprimer' puis la flotte en Mer Baltique"
 },
 
 {
     "type": "adjudicate",
-    "introduction" : "Bien entendu, vous n'êtes pas seul sur l'affaire ! Tous les joueurs tentent également de prendre des centres pour augmenter leur puissance<br>Or, toutes les unités ont la même force.<br>Dans cet exemple l'Italien et le Turc tentent chacun de son côté de prendre Apulie pour se rapprocher de Rome. C'est du un contre un, ce qui produit un échec (on dit 'rebond')...",
+    "introduction" : "Bien entendu, vous n'êtes pas seul sur l'affaire ! Tous les joueurs tentent également de prendre des centres pour augmenter leur puissance.<br>Or, toutes les unités ont la même force.<br>Dans cet exemple l'Italien et le Turc tentent chacun de son côté de prendre Apulie pour se rapprocher de Rome.<br>C'est du un contre un, ce qui produit un échec (on dit 'rebond')...",
     "variant_name" : "standard",
     "game_parameters_description": "rebond simple", 
     "game_parameters_current_advancement": 2, 
     "position" : {
-        "ownerships": {},
+        "ownerships": {"32": 4},
         "dislodged_ones": {},
         "units": {"4":[[1, 70]], "7":[[2, 31]] }, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 70, 0, 5], [0, 0, 1, 31, 0, 5]] },
-    "pointers" : []
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 70, 0, 5], [0, 0, 1, 31, 0, 5]] }
 },
 
 {
@@ -190,8 +183,7 @@
         "units": {"6":[[2, 11]], "7":[[1, 4]] }, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 11, 0, 4], [0, 0, 4, 4, 0, 0]] },
-    "pointers" : []
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 11, 0, 4], [0, 0, 4, 4, 0, 0]] }
 },
 
 {
@@ -206,8 +198,7 @@
         "units": {"3":[[1, 51], [1, 57]], "6":[[1, 73]] }, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0]] },
-    "pointers" : []
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0]] }
 },
 
 {
@@ -217,13 +208,12 @@
     "game_parameters_description": "soutien simple pour tenir", 
     "game_parameters_current_advancement": 2, 
     "position" : {
-        "ownerships": {"34": 6},
+        "ownerships": {"16": 6, "34": 6},
         "dislodged_ones": {},
         "units": {"3":[[1, 51], [1, 57]], "6":[[1, 73], [1, 39]] }, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0]] },
-    "pointers" : []
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0]] }
 },
 
 {
@@ -233,13 +223,12 @@
     "game_parameters_description": "soutien à trois contre deux", 
     "game_parameters_current_advancement": 2, 
     "position" : {
-        "ownerships": {"34": 6},
+        "ownerships": {"16": 6, "34": 6},
         "dislodged_ones": {},
         "units": {"3":[[1, 51], [1, 57]], "5": [[1, 25]], "6":[[1, 73], [1, 39]] }, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 2, 25, 51, 73]] },
-    "pointers" : []
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 2, 25, 51, 73]] }
 },
 
 {
@@ -249,13 +238,12 @@
     "game_parameters_description": "soutien à trois contre trois", 
     "game_parameters_current_advancement": 2, 
     "position" : {
-        "ownerships": {"34": 6},
+        "ownerships": {"16": 6, "34": 6},
         "dislodged_ones": {},
         "units": {"3":[[1, 51], [1, 57]], "5": [[1, 25]], "6":[[1, 73], [1, 39]], "7":[[1, 69]] }, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 2, 25, 51, 73], [0, 0, 3, 69, 73, 0]] },
-    "pointers" : []
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 2, 25, 51, 73], [0, 0, 3, 69, 73, 0]] }
 },
 
 {
@@ -265,13 +253,12 @@
     "game_parameters_description": "soutien défensif coupé", 
     "game_parameters_current_advancement": 2, 
     "position" : {
-        "ownerships": {"34": 6},
+        "ownerships": {"16": 6, "34": 6, "25": 7},
         "dislodged_ones": {},
         "units": {"3":[[1, 51], [1, 57]], "6":[[1, 73], [1, 39]], "7":[[1, 56]] }, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 1, 56, 0, 39]] },
-    "pointers" : []
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 1, 56, 0, 39]] }
 },
 
 {
@@ -286,8 +273,7 @@
         "units": {"3":[[1, 51], [1, 57]], "5":[[1, 12]], "6":[[1, 73]] }, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 1, 12, 0, 57]] },
-    "pointers" : []
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 1, 12, 0, 57]] }
 },
 
 {
@@ -297,13 +283,12 @@
     "game_parameters_description": "attaque de convoi", 
     "game_parameters_current_advancement": 2, 
     "position" : {
-        "ownerships": {"34": 6},
+        "ownerships": {"2": 1, "13": 1, "4": 2, "34": 6},
         "dislodged_ones": {},
         "units": {"1":[[2, 9], [2, 45]], "2":[[1, 14], [2, 23], [2, 38]] }, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 9, 0, 23], [0, 0, 2, 45, 9, 23], [0, 0, 1, 14, 0, 72], [0, 0, 5, 23, 14, 72], [0, 0, 3, 38, 23, 0]] },
-    "pointers" : []
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 9, 0, 23], [0, 0, 2, 45, 9, 23], [0, 0, 1, 14, 0, 72], [0, 0, 5, 23, 14, 72], [0, 0, 3, 38, 23, 0]] }
 },
 
 {
@@ -318,8 +303,7 @@
         "units": {}, 
         "forbiddens": []
     },
-    "expected_orders" : {"fake_units":[], "orders":[] },
-    "pointers" : []
+    "expected_orders" : {"fake_units":[], "orders":[] }
 }
 
 ]
