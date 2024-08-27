@@ -275,7 +275,7 @@ def erase_chat_content():
         alert("Pas le bon compte (pas modo)")
         return
 
-    button = html.BUTTON("Raser la bête",  Class='btn-inside')
+    button = html.BUTTON("Raser la bête", Class='btn-inside')
     button.bind("click", erase_chat_callback)
 
     MY_SUB_PANEL <= button
