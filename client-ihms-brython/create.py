@@ -280,9 +280,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         time_stamp_now = time()
         time_creation = mydatetime.fromtimestamp(time_stamp_now)
         time_creation_str = mydatetime.strftime(*time_creation)
-        variant = json_dict['variant']
-        scoring_used = json_dict['scoring']
-        description = f"Partie créée par batch (sur le modèle de {current_game_name}) le {time_creation_str} par {current_pseudo} variante {variant}. Scorage {scoring_used}."
+        description = f"Partie créée par batch (sur le modèle de {current_game_name}) le {time_creation_str} par {current_pseudo}."
         json_dict['description'] = description
 
         # logically : manual allocation (otherwise at start random allocation will spoil csv file allocation)

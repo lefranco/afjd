@@ -333,22 +333,7 @@ def create_game(json_dict):
         time_creation = mydatetime.fromtimestamp(time_stamp_now)
         time_creation_str = mydatetime.strftime(*time_creation)
 
-        specific_data = ""
-        if fog:
-            specific_data += "brouillard de guerre "
-        if archive:
-            specific_data += "archive "
-        if manual:
-            specific_data += "manuelle "
-        if anonymous:
-            specific_data += "anonyme "
-        if fast:
-            specific_data += "en direct "
-
-        if not specific_data:
-            specific_data = "(sans particularité) "
-
-        description = f"Partie créée le {time_creation_str} par {pseudo} variante {variant}. Cette partie est {specific_data}. Type {game_type}. Scorage {scoring}."
+        description = f"Partie créée le {time_creation_str} par {pseudo} variante {variant}."
         state = 0
 
         # conversion
