@@ -9,10 +9,10 @@ import tips
 import ezml_render
 
 OPTIONS = {
-    'Règles simplifiées': "Un règle simplifiée du jeu Diplomatie",
     'Foire aux questions': "Foire Aux Questions du site",
     'Les petits tuyaux': "Différentes petites choses à savoir pour mieux jouer sur le site",
     'Charte du bon diplomate': "Document indiquant les règles de bonne conduite en jouant les parties",
+    'Règles simplifiées': "Un règle simplifiée du jeu Diplomatie par Edi Birsan",
     'Youtube Diplomacy': "Lien une vidéo Youtube qui présente simplement les règles du jeu avec humour",
     'Youtube Diplomania Jeu': "Lien une vidéo Youtube qui présente simplement comment jouer sur ce site",
     'Youtube Diplomania Arbitrage': "Lien une vidéo Youtube qui présente simplement comment arbitrer sur ce site",
@@ -182,14 +182,14 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Règles simplifiées':
-        show_simplified_rules()
     if item_name == 'Foire aux questions':
         show_faq()
     if item_name == 'Les petits tuyaux':
         show_tips()
     if item_name == 'Charte du bon diplomate':
         show_diplomat_chart()
+    if item_name == 'Règles simplifiées':
+        show_simplified_rules()
     if item_name == 'Youtube Diplomacy':
         tutorial_game()
     if item_name == 'Youtube Diplomania Jeu':
