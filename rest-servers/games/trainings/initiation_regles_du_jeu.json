@@ -5,6 +5,22 @@
 
 {
     "type": "display",
+"introduction" : "Les pays en puissance<br>Chaque joueur incarne un des sept pays de la liste ci-dessous :<b><br><br>Angleterre<br>France<br>Allemagne<br>Italie<br>Autriche<br>Russie<br>Turquie</b><br><br>Repérez les sur la carte ! (Vous pouvez cliquer sur 'standard' en haut à droite pour obtenir plus d'informations - mais il faudra reprendre le tutoriel depuis le début...)<br><br>Pour cet exercice, pas d'ordres à entrer !",
+    "role_id" : 7,
+    "variant_name" : "standard",
+    "game_parameters_description": "repérage des puissances", 
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] }
+},
+
+{
+    "type": "display",
     "introduction" : "L'objectif du jeu est d'être la première puissance à posséder plus de la moitié des centres de la carte<br> Pour y arriver, il faut prendre des centres neutres et des centres des autres joueurs (et idéalement conserver le plus possible des siens !)<br>Pour prendre un centre, il faut l'occuper à l'automne (c'est à dire 'les tours de jeux pairs). Quand on gagne des centres, on construit des unités, et quand on perd des centres, on supprime des unités !<br><br><b>Apprenez à repérer un centre !</b><br><br>Pour cet exercice, pas d'ordres à entrer !<br>Le centre de Paris a été entouré pour vous aider à le trouver...",
     "role_id" : 2,
     "variant_name" : "standard",
