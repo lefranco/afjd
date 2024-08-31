@@ -335,6 +335,11 @@ def load_option(_, item_name):
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
 
+    else:
+        figure = html.FIGURE()
+        image = html.IMG(src="images/logo_AFJD.jpg", alt="AFJD", title="Association Frarcophone des Joueurs de Diplomacy")
+        figure <= image
+        MENU_LEFT <= figure
 
 # we read ip now if necessary
 if 'IPADDRESS' not in storage:
