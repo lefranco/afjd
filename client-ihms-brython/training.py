@@ -1653,7 +1653,7 @@ def slide_submit_orders():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="Soumettre au module d'entrainement", Class='btn-inside')
+        input_submit = html.INPUT(type="submit", value="Soumettre", Class='btn-inside')
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
