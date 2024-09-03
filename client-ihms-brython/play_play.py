@@ -1178,7 +1178,7 @@ def submit_orders():
         buttons_right <= input_never
         buttons_right <= html.BR()
 
-        input_submit = html.INPUT(type="submit", value="Soumettre ces ordres", Class='btn-inside')
+        input_submit = html.INPUT(type="submit", value="Soumettre", Class='btn-inside')
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -2779,7 +2779,7 @@ def vote():
     play_low.MY_SUB_PANEL <= input_abstention
     play_low.MY_SUB_PANEL <= html.BR()
 
-    input_submit = html.INPUT(type="submit", value="Soumettre ce vote", Class='btn-inside')
+    input_submit = html.INPUT(type="submit", value="Soumettre", Class='btn-inside')
     input_submit.bind("click", submit_vote_callback)
     play_low.MY_SUB_PANEL <= html.BR()
     play_low.MY_SUB_PANEL <= input_submit

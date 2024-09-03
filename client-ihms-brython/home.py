@@ -991,7 +991,7 @@ def declare_incident(json_dict_params):
     fieldset <= "Il est toujours bienvenu de fournir une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu..."
     form <= fieldset
 
-    input_submit_incident = html.INPUT(type="submit", value="Soumettre l'incident", Class='btn-inside')
+    input_submit_incident = html.INPUT(type="submit", value="Soumettre cet ncident", Class='btn-inside')
     input_submit_incident.bind("click", submit_incident_callback)
     form <= input_submit_incident
 

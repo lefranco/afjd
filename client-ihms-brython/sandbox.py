@@ -876,7 +876,7 @@ def sandbox():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="Soumettre au simulateur", Class='btn-inside')
+        input_submit = html.INPUT(type="submit", value="Soumettre", Class='btn-inside')
         input_submit.bind("click", submit_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
