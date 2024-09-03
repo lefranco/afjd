@@ -341,9 +341,11 @@ def load_option(_, item_name):
         figure <= image
         MENU_LEFT <= figure
 
+
 # we read ip now if necessary
 if 'IPADDRESS' not in storage:
     read_ip()
+
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
