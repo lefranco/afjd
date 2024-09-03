@@ -202,14 +202,14 @@ def sandbox():
 
         stack_orders(buttons_right)
         if not POSITION_DATA.empty():
+            put_download(buttons_right)
+        if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
         if not ORDERS_DATA.empty():
             put_erase_orders(buttons_right)
         # do not put rest hold
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
-        if not POSITION_DATA.empty():
-            put_download(buttons_right)
         buttons_right <= html.BR()
 
         my_sub_panel2 <= buttons_right
@@ -441,6 +441,8 @@ def sandbox():
 
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
+                put_download(buttons_right)
+            if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
@@ -448,8 +450,6 @@ def sandbox():
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
-            if not POSITION_DATA.empty():
-                put_download(buttons_right)
             buttons_right <= html.BR()
 
             my_sub_panel2 <= buttons_right
@@ -514,6 +514,8 @@ def sandbox():
 
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
+                put_download(buttons_right)
+            if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
@@ -521,8 +523,6 @@ def sandbox():
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
-            if not POSITION_DATA.empty():
-                put_download(buttons_right)
             buttons_right <= html.BR()
 
             my_sub_panel2 <= buttons_right
@@ -562,6 +562,8 @@ def sandbox():
 
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
+                put_download(buttons_right)
+            if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
@@ -569,8 +571,6 @@ def sandbox():
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
-            if not POSITION_DATA.empty():
-                put_download(buttons_right)
             buttons_right <= html.BR()
 
             my_sub_panel2 <= buttons_right
@@ -605,6 +605,8 @@ def sandbox():
 
                 stack_orders(buttons_right)
                 if not POSITION_DATA.empty():
+                    put_download(buttons_right)
+                if not POSITION_DATA.empty():
                     put_erase_all(buttons_right)
                 if not ORDERS_DATA.empty():
                     put_erase_orders(buttons_right)
@@ -612,8 +614,6 @@ def sandbox():
                     put_rest_hold(buttons_right)
                 if not ORDERS_DATA.empty():
                     put_submit(buttons_right)
-                if not POSITION_DATA.empty():
-                    put_download(buttons_right)
                 buttons_right <= html.BR()
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -633,6 +633,8 @@ def sandbox():
 
             stack_orders(buttons_right)
             if not POSITION_DATA.empty():
+                put_download(buttons_right)
+            if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
@@ -640,8 +642,6 @@ def sandbox():
                 put_rest_hold(buttons_right)
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
-            if not POSITION_DATA.empty():
-                put_download(buttons_right)
             buttons_right <= html.BR()
 
             my_sub_panel2 <= buttons_right
@@ -707,6 +707,8 @@ def sandbox():
 
         stack_orders(buttons_right)
         if not POSITION_DATA.empty():
+            put_download(buttons_right)
+        if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
         if not ORDERS_DATA.empty():
             put_erase_orders(buttons_right)
@@ -714,8 +716,6 @@ def sandbox():
             put_rest_hold(buttons_right)
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
-        if not POSITION_DATA.empty():
-            put_download(buttons_right)
         buttons_right <= html.BR()
 
         my_sub_panel2 <= buttons_right
@@ -864,6 +864,15 @@ def sandbox():
         buttons_right <= input_rest_hold
         buttons_right <= html.BR()
 
+    def put_download(buttons_right):
+        """ put_download """
+
+        input_export = html.INPUT(type="submit", value="Télécharger la carte", Class='btn-inside')
+        input_export.bind("click", download_map_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_export
+        buttons_right <= html.BR()
+
     def put_submit(buttons_right):
         """ put_submit """
 
@@ -871,15 +880,6 @@ def sandbox():
         input_submit.bind("click", submit_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
-        buttons_right <= html.BR()
-
-    def put_download(buttons_right):
-        """ put_export """
-
-        input_export = html.INPUT(type="submit", value="Télécharger la carte", Class='btn-inside')
-        input_export.bind("click", download_map_callback)
-        buttons_right <= html.BR()
-        buttons_right <= input_export
         buttons_right <= html.BR()
 
     # callbacks pour le glisser / deposer
@@ -980,6 +980,8 @@ def sandbox():
 
         stack_orders(buttons_right)
         if not POSITION_DATA.empty():
+            put_download(buttons_right)
+        if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
         if not ORDERS_DATA.empty():
             put_erase_orders(buttons_right)
@@ -987,8 +989,6 @@ def sandbox():
             put_rest_hold(buttons_right)
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
-        if not POSITION_DATA.empty():
-            put_download(buttons_right)
         buttons_right <= html.BR()
 
         my_sub_panel2 <= buttons_right
@@ -1145,6 +1145,8 @@ def sandbox():
 
     stack_orders(buttons_right)
     if not POSITION_DATA.empty():
+        put_download(buttons_right)
+    if not POSITION_DATA.empty():
         put_erase_all(buttons_right)
     if not ORDERS_DATA.empty():
         put_erase_orders(buttons_right)
@@ -1152,8 +1154,6 @@ def sandbox():
         put_rest_hold(buttons_right)
     if not ORDERS_DATA.empty():
         put_submit(buttons_right)
-    if not POSITION_DATA.empty():
-        put_download(buttons_right)
     buttons_right <= html.BR()
 
     # overall
