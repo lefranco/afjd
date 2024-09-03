@@ -333,7 +333,7 @@ def create_game(json_dict):
         time_creation = mydatetime.fromtimestamp(time_stamp_now)
         time_creation_str = mydatetime.strftime(*time_creation)
 
-        description = f"Partie créée le {time_creation_str} par {pseudo} variante {variant}."
+        description = f"Partie créée le {time_creation_str} par {pseudo}."
         state = 0
 
         # conversion
