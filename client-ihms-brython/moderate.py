@@ -23,7 +23,7 @@ MAX_LEN_EMAIL = 100
 OPTIONS = {
     # communication
     'Changer nouvelles': "Changer nouvelles du site pour le modérateur",
-    'Effacer le chat': "Effacer le contenu des discussions en ligne (chat) en cours",
+    'Effacer les messages en ligne': "Effacer le contenu des discussions en ligne",
     'Préparer un publipostage': "Préparer un publipostage vers tous les utilisateurs du site",
     'Annoncer dans toutes les parties': "Annoncer dans toutes les parties en cours du site",
     'Annoncer dans la partie': "Annoncer dans la partie séléctionnée",
@@ -275,7 +275,7 @@ def erase_chat_content():
         alert("Pas le bon compte (pas modo)")
         return
 
-    button = html.BUTTON("Raser la bête", Class='btn-inside')
+    button = html.BUTTON("Effacer les messages en ligne", Class='btn-inside')
     button.bind("click", erase_chat_callback)
 
     MY_SUB_PANEL <= button
@@ -2170,7 +2170,7 @@ def load_option(_, item_name):
     # communication
     if item_name == 'Changer nouvelles':
         change_news_modo()
-    if item_name == 'Effacer le chat':
+    if item_name == 'Effacer les messages en ligne':
         erase_chat_content()
     if item_name == 'Préparer un publipostage':
         prepare_mailing()

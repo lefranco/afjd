@@ -22,7 +22,7 @@ THRESHOLD_DRIFT_ALERT_SEC = 59
 
 OPTIONS = {
     'Vue d\'ensemble': "Vue d'ensemble du site",
-    'Chatter en direct': "Echanger des messages volatiles à court terme",
+    'Discuter en ligne': "Echanger des messages volatiles à court terme",
     'Déclarer un incident': "Déclarer un incident par courriel à l'administrateur",
     'Données personnelles': "Explications sur la manière dont le site gère les données personnelles",
 }
@@ -262,7 +262,7 @@ def show_news():
     # ==A5==============================
 
     div_a5 = html.DIV(Class='tooltip')
-    title1 = html.H4("Remplacements urgents et dernier chats")
+    title1 = html.H4("Remplacements urgents et dernier message des dicsussions ligne")
     div_a5 <= title1
 
     # ----
@@ -295,12 +295,12 @@ def show_news():
         last_chat_author = last_chat[1]
         last_chat_message = last_chat[2]
         div_a5 <= html.BR()
-        div_a5 <= html.H5("Dernier chat :")
+        div_a5 <= html.H5("Dernier message :")
         div_a5 <= html.DIV(f"{last_chat_author} : {last_chat_message}", Class='chat_sample')
 
     # ----
 
-    div_a5_tip = html.SPAN("Plus de détail dans le menu “Les parties“ sous menu 'Rejoindre une partie' et dans le menu 'Chatter en direct'", Class='tooltiptext')
+    div_a5_tip = html.SPAN("Plus de détail dans le menu “Les parties“ sous menu 'Rejoindre une partie' et dans le menu 'Discuter en ligne'", Class='tooltiptext')
     div_a5 <= div_a5_tip
     div_homepage <= div_a5
 
@@ -638,9 +638,9 @@ def live_chat():
             req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Erreur à l'ajout de message chat : {req_result['message']}")
+                    alert(f"Erreur à l'ajout de message en ligne : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à l'ajout de message chat : {req_result['msg']}")
+                    alert(f"Problème à l'ajout de message en ligne : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
@@ -689,9 +689,9 @@ def live_chat():
             req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la récupération des messages chats : {req_result['message']}")
+                    alert(f"Erreur à la récupération des messages en ligne : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la récupération des messages chats : {req_result['msg']}")
+                    alert(f"Problème à la récupération des messages en ligne : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
@@ -710,7 +710,7 @@ def live_chat():
 
         return chat_messages
 
-    title4 = html.H3("Chatter en direct")
+    title4 = html.H3("Discuter en direct avec des messsages en ligne")
     MY_SUB_PANEL <= title4
 
     chats = chats_reload_callback(None)
@@ -768,10 +768,10 @@ def live_chat():
     form2 <= input_say_message
 
     information1 = html.DIV(Class='important')
-    information1 <= "La première vocation du chat est de fournir une aide rapide aux nouveaux arrivants sur le site."
+    information1 <= "La première vocation de cette petite messagerie est de fournir une aide rapide aux nouveaux arrivants sur le site."
 
     information2 = html.DIV(Class='note')
-    information2 <= "Les messages persistent au moins 24 heures. Ce chat rustique n'a pas destination à remplacer le salon Discord"
+    information2 <= "Les messages persistent au moins 24 heures. Cet outil n'a pas destination à remplacer le salon Discord"
 
     # display items
 
@@ -1048,7 +1048,7 @@ def load_option(_, item_name):
 
     if item_name == 'Vue d\'ensemble':
         show_news()
-    if item_name == 'Chatter en direct':
+    if item_name == 'Discuter en ligne':
         live_chat()
     if item_name == 'Déclarer un incident':
         declare_incident(None)
