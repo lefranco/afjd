@@ -4,11 +4,11 @@
 [
 
 {
+    "title": "repérage des puissances", 
     "type": "display",
 "introduction" : "Chaque joueur incarne un des sept pays de la liste ci-dessous (en 1901) :<b><br><br>Angleterre<br>France<br>Allemagne<br>Italie<br>Autriche<br>Russie<br>Turquie</b><br><br>Repérez les sur la carte ! (Vous pouvez cliquer sur 'standard' en haut à droite pour obtenir plus d'informations - mais il faudra reprendre le tutoriel depuis le début...)<br><br>Pour cet exercice, pas d'ordres à entrer !",
     "role_id" : 7,
     "variant_name" : "standard",
-    "game_parameters_description": "repérage des puissances", 
     "game_parameters_current_advancement": 0, 
     "position" : {
         "ownerships": {},
@@ -20,11 +20,11 @@
 },
 
 {
+    "title": "repérage de centre", 
     "type": "display",
-    "introduction" : "Le jeu se déroule sur une carte composée de zones purement maritimes et de provinces côtières ou enclavées.<br>Certaines provinces comportent un centre symbolisé par un petit cercle. L'objectif du jeu est d'être la première puissance à posséder plus de la moitié des centres de la carte<br> Pour y arriver, il faut prendre des centres neutres et des centres des autres joueurs (et idéalement conserver le plus possible des siens !)<br>Pour prendre un centre, il faut l'occuper à l'automne (c'est à dire 'les tours de jeux pairs). Quand on gagne des centres, on construit des unités, et quand on perd des centres, on supprime des unités !<br><br><b>Apprenez à repérer un centre !</b><br><br>Pour cet exercice, pas d'ordres à entrer !<br>Le centre de Paris a été entouré pour vous aider à le trouver...",
+    "introduction" : "Le jeu se déroule sur une carte composée de zones purement maritimes et de provinces côtières ou enclavées.<br>Certaines provinces comportent un centre symbolisé par un petit cercle. L'objectif du jeu est d'être la première puissance à posséder plus de la moitié des centres de la carte<br> Pour y arriver, il faut prendre des centres neutres et des centres des autres joueurs (et idéalement conserver le plus possible des siens !)<br>Pour prendre un centre, il faut l'occuper à l'automne (c'est à dire 'les tours de jeux pairs). Quand on gagne des centres, on construit des unités, et quand on perd des centres, on supprime des unités !<br><br><b>Apprenez à repérer un centre !</b><br><br>Pour cet exercice, pas d'ordres à entrer !<br>Le centre de Paris a été entouré en rouge pour vous aider à le trouver...",
     "role_id" : 2,
     "variant_name" : "standard",
-    "game_parameters_description": "repérage de centre", 
     "game_parameters_current_advancement": 0, 
     "position" : {
         "ownerships": {"20": 2},
@@ -33,49 +33,32 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[] },
-    "pointers" : [[248, 436, 10]]
+    "pointers" : [{"center": [248, 436], "ray": 10, "color": [255, 0, 0] }]
 },
 
 {
+    "title": "repérage de flotte et d'armée'", 
     "type": "display",
-    "introduction" : "Les unités sont de deux sortes : les flottes et les armées.<br>Une flotte peut aller en mer ou en côte.<br><br><b>Apprenez à repérez une flotte !</b><br><br>Pour cet exercice, pas d'ordres à entrer ! <br>La flotte en Picardie a été entourée pour vous aider à la trouver...",
+    "introduction" : "Les unités sont de deux sortes : les flottes et les armées.<br>Une flotte peut aller en mer ou en côte.<br>Une armée, quant à elle,  peut aller en côte ou en terre (régions enclavées).<br><br><b>Apprenez à repérez une armée et une flotte !</b><br><br>Pour cet exercice, pas d'ordres à entrer ! <br>L'armée en Bourgogne a été entourée en bleu pour vous aider à la trouver..<br>La flotte en Picardie a été entourée en vert pour vous aider à la trouver...",
     "role_id" : 7,
     "variant_name" : "standard",
-    "game_parameters_description": "repérage de flotte", 
     "game_parameters_current_advancement": 0, 
     "position" : {
         "ownerships": {},
         "dislodged_ones": {},
-        "units": {"2": [ [2, 48] ] }, 
+        "units": {"2": [  [1, 17], [2, 48] ] }, 
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[] },
-    "pointers" : [ [247, 417, 10]]
+    "pointers" : [{"center": [247, 417], "ray": 10, "color": [0, 255, 0] }, {"center": [276, 459], "ray": 10, "color": [0, 0, 255] }]
 },
 
 {
-    "type": "display",
-    "introduction" : "Une armée, quant à elle,  peut aller en côte ou en terre (régions enclavées).<br><br><b>Apprenez à repérez une armée !</b><br><br>Pour cet exercice, pas d'ordres à entrer ! <br>L'armée en Bourgogne a été entourée pour vous aider à la trouver...",
-    "role_id" : 7,
-    "variant_name" : "standard",
-    "game_parameters_description": "repérage d'armée", 
-    "game_parameters_current_advancement": 0, 
-    "position" : {
-        "ownerships": {},
-        "dislodged_ones": {},
-        "units": {"2": [ [1, 17] ] }, 
-        "forbiddens": []
-    },
-    "expected_orders" : {"fake_units":[], "orders":[] },
-    "pointers" : [[276, 459, 10]]
-},
-
-{
+    "title": "entrée d'ordre de mouvement élémentaire - tenir en place", 
     "type": "submit",
     "introduction" : "Maintenant il s'agit de passer des ordres les plus basiques lors d'une phase de mouvements.<br><br>Une unité peut très bien décider de ne rien faire et rester en place<br><br><b>Saurez-vous entrer un ordre de tenir en place pour l'Allemagne et son armée à Berlin ?</b>",
     "role_id" : 3,
     "variant_name" : "standard",
-    "game_parameters_description": "entrée d'ordre de mouvement élémentaire - tenir en place", 
     "game_parameters_current_advancement": 2, 
     "position" : {
         "ownerships": {"3": 3},
@@ -88,11 +71,11 @@
 },
 
 {
+    "title": "entrée d'ordre de mouvement élémentaire - attaquer/se déplacer", 
     "type": "submit",
     "introduction" : "Phase de mouvements (suite).<br>Plus souvent, les unités se déplacent, dans le but d'aller occuper un centre bien sur !<br><br><b>Saurez-vous entrer un ordre pour la France et son armée à Paris d'aller en Bourgogne ?</b>",
     "role_id" : 2,
     "variant_name" : "standard",
-    "game_parameters_description": "entrée d'ordre de mouvement élémentaire - attaquer/se déplacer", 
     "game_parameters_current_advancement": 2, 
     "position" : {
         "ownerships": {"20": 2},
@@ -105,11 +88,11 @@
 },
 
 {
+    "title": "entrée d'ordre de mouvement élémentaire - convoyer", 
     "type": "submit",
     "introduction" : "Phase de mouvements (suite et fin).<br>Une flotte en mer peut transporter (on dit 'convoyer') une armée adjacente d'une côte à une autre.<br><br><b>Saurez-vous entrer un ordre pour l'Angleterre et sa flotte en Mer du Nord de convoyer l'armée Russe de Norvège en Hollande ?</b>",
     "role_id" : 1,
     "variant_name" : "standard",
-    "game_parameters_description": "entrée d'ordre de mouvement élémentaire - convoyer", 
     "game_parameters_current_advancement": 2, 
     "position" : {
         "ownerships": {"13": 1, "19": 6},
@@ -122,11 +105,146 @@
 },
 
 {
+    "title": "rebond simple", 
+    "type": "adjudicate",
+    "introduction" : "Bien entendu, vous n'êtes pas seul sur l'affaire ! Tous les joueurs tentent également de prendre des centres pour augmenter leur puissance.<br>Or, toutes les unités ont la même force.<br>Dans cet exemple l'Italien et le Turc tentent chacun de son côté de prendre Apulie pour se rapprocher de Rome.<br>C'est du un contre un, ce qui produit un échec (on dit 'rebond')...",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"32": 4},
+        "dislodged_ones": {},
+        "units": {"4":[[1, 70]], "7":[[2, 31]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 70, 0, 5], [0, 0, 1, 31, 0, 5]] }
+},
+
+{
+    "title": "attaque manquée", 
+    "type": "adjudicate",
+    "introduction" : "De la même manière, une unité qui reste en place (sur un centre par exemple) suffit à en empêcher une autre de venir prendre le centre.<br>Dans cet exemple l'armée turque à Ankara n'est pas affectée par l'attaque de la flotte russe depuis la Mer Noire",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"1": 7},
+        "dislodged_ones": {},
+        "units": {"6":[[2, 11]], "7":[[1, 4]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 11, 0, 4], [0, 0, 4, 4, 0, 0]] }
+},
+
+{
+    "title": "soutien simple pour attaquer", 
+    "type": "adjudicate",
+    "introduction" : "La clé du jeu ce sont les soutiens !<br><br>Un soutien permet à une attaque de prendre plus de force et déloger une unité ennemie.<br><br>Commençons par un soutien le plus simple possible : un soutien pour attaquer (on dit 'offensif'). L'allemand soutient son attaque de Prusse vers l'armée et le centre de Varsovie par son autre armée en Silésie. L'attaque passe et le centre est pris !",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"34": 6},
+        "dislodged_ones": {},
+        "units": {"3":[[1, 51], [1, 57]], "6":[[1, 73]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0]] }
+},
+
+{
+    "title": "soutien simple pour tenir", 
+    "type": "adjudicate",
+    "introduction" : "Continuons par un soutien pour tenir (on dit 'défensif'). Pareil que précedemment mais cette fois, le russe se soutient par son armée à Moscou. L'attaque est en échec, en effet c'est du deux contre deux.'",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"16": 6, "34": 6},
+        "dislodged_ones": {},
+        "units": {"3":[[1, 51], [1, 57]], "6":[[1, 73], [1, 39]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0]] }
+},
+
+{
+    "title": "soutien à trois contre deux", 
+    "type": "adjudicate",
+    "introduction" : "Continuons sur les soutiens.  Pareil que précedemment mais cette fois une armée autrichienne positionnée en Galicie vient prêter main forte à l'attaque allemande. L'attaque fonctionne cette fois (et l'allemand prend le centre à Varsovie), en effet : c'est du trois contre contre deux.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"16": 6, "34": 6},
+        "dislodged_ones": {},
+        "units": {"3":[[1, 51], [1, 57]], "5": [[1, 25]], "6":[[1, 73], [1, 39]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 2, 25, 51, 73]] }
+},
+
+{
+    "title": "soutien à trois contre trois", 
+    "type": "adjudicate",
+    "introduction" : "Toujours les soutiens. Pareil que précedemment mais cette fois une armée turque en Ukraine vient aider le russe à se défendre en soutenant Varsovie. L'attaque est à nouveau tenue en échec : c'est du trois contre contre trois !",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"16": 6, "34": 6},
+        "dislodged_ones": {},
+        "units": {"3":[[1, 51], [1, 57]], "5": [[1, 25]], "6":[[1, 73], [1, 39]], "7":[[1, 69]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 2, 25, 51, 73], [0, 0, 3, 69, 73, 0]] }
+},
+
+{
+    "title": "soutien défensif coupé", 
+    "type": "adjudicate",
+    "introduction" : "Un soutien n'est pas toujours garanti !<br><br>Une unité ne peut effectuer un soutien que si elle n'est pas elle-même attaquée. Si elle est attaquée, elle abandonne le soutien pour se défendre (on dit 'couper le soutien').<br>Retour à une situation un peu plus simple. L'allemand soutient toujours son attaque de Prusse vers l'armée et le centre de Varsovie par son autre armée en Silésie, le russe se soutient toujours par son armée à Moscou. (L'armée autrichienne a disparu.) Mais attention ! Cette fois une armée turque est à Sébastopol et a décidé de jouer les trouble-fête. Elle attaque l'armée russe à Moscou, ''coupant'' le soutien.  De ce fait l'attaque est couronnée de succès (et l'allemand prend le centre de Varsovie): c'est du deux contre contre un.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"16": 6, "34": 6, "25": 7},
+        "dislodged_ones": {},
+        "units": {"3":[[1, 51], [1, 57]], "6":[[1, 73], [1, 39]], "7":[[1, 56]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 1, 56, 0, 39]] }
+},
+
+{
+    "title": "soutien offensif coupé", 
+    "type": "adjudicate",
+    "introduction" : "Un soutien offensif peut être coupé pour les mêmes raisons.<br>L'allemand soutient toujours son attaque de Prusse vers l'armée et le centre de Varsovie par son autre armée en Silésie. L'armée russe est maintenant esseulée à Moscou pour défendre le centre. Mais attention ! Cette fois c'est une armée autrichienne en Sébastopol qui va jouer les trouble-fête. Elle attaque l'armée allemande en Silésie, coupant le soutien offensif. L'attaque échoue : c'est du un contre un.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"34": 6},
+        "dislodged_ones": {},
+        "units": {"3":[[1, 51], [1, 57]], "5":[[1, 12]], "6":[[1, 73]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 1, 12, 0, 57]] }
+},
+
+{
+    "title": "attaque de convoi", 
+    "type": "adjudicate",
+    "introduction" : "Lorsqu'une flotte convoie une armée d'une côte à une autre, elle est, dans une certain mesure, vulnérable à une attaque. Deux possibilités : soit la flotte n'est pas forcée à retraiter (on dit 'délogée'), alors elle assure correctement le convoi, soit elle l'est' et le convoi est rompu.<br>Dans notre exemple, le français se lance à l'assaut de l'île de l'anglais, ce qui n'est pas du goût de ce dernier. Il tente donc de convoyer son armée de Bretagne en Pays de Galles par le biais de sa flotte en Manche. L'anglais, de son coté, espère empêcher le convoi par une attaque de la flotte en Manche par sa propre flotte en Mer du Nord soutenue par sa flotte en Belgique. Heureusement pour le français, il (le français) dispose d'une flotte en Atlantique qui peut défendre sa flotte en Manche et sauver ainsi le convoi. L'armée française parvient donc aux Pays de Galles...<br>Hourra !",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"2": 1, "13": 1, "4": 2, "34": 6},
+        "dislodged_ones": {},
+        "units": {"1":[[2, 9], [2, 45]], "2":[[1, 14], [2, 23], [2, 38]] }, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 9, 0, 23], [0, 0, 2, 45, 9, 23], [0, 0, 1, 14, 0, 72], [0, 0, 5, 23, 14, 72], [0, 0, 3, 38, 23, 0]] }
+},
+
+{
+    "title": "entrée d'ordre de retraite élémentaire", 
     "type": "submit",
-    "introduction" : "Phase de retraites<br>Quand une unité est attaquée par plus fort qu'elle (on verra plus tard comment cela peut arriver !), elle doit reculer (on dit 'retraiter')').<br><br><b>Saurez-vous entrer un ordre de retraite ?</b><br><br>L'Allemagne doit faire retraiter son armée de Roumanie en Ukraine...",
+    "introduction" : "Phase de retraites.<br>Bon, ça s'est mal passé, votre unité doit reculer.<br>Quand une unité est attaquée par plus fort qu'elle, elle doit reculer (on dit 'retraiter')').<br><br><b>Saurez-vous entrer un ordre de retraite ?</b><br><br>L'Allemagne doit faire retraiter son armée de Roumanie en Ukraine...",
     "role_id" : 6,
     "variant_name" : "standard",
-    "game_parameters_description": "entrée d'ordre de retraite élémentaire", 
     "game_parameters_current_advancement": 1, 
     "position" : {
         "ownerships": {"23": 6},
@@ -139,11 +257,28 @@
 },
 
 {
+    "title": "entrée d'ordre de retraite élémentaire", 
     "type": "submit",
-    "introduction" : "Phase d'ajustements (début)<br>Quand une puissance a plus de centres que d'unités, elle a le plaisir de construire<br><br><b>Saurez-vous entrer un ordre de construction ?</b><br><br>L'Allemagne construit une fois...une armée à Berlin...",
+    "introduction" : "Phase de retraites (suite et fin).<br>Dans cette même situation, vous pouvez disperser l'unité, c'est à dire la retirer purement et simplement de la carte..<br><br><b>Saurez-vous entrer un ordre de retraite de dispersion ?</b><br><br>L'Allemagne doit faire disperser son armée de Roumanie...",
+    "role_id" : 6,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 1, 
+    "position" : {
+        "ownerships": {"23": 6},
+        "dislodged_ones": {"6": [ [1, 54, 16] ] },
+        "units": {"7" : [ [1, 54]] }, 
+        "forbiddens": [55]
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 7, 54, 0, 0]] },
+    "help": "Cliquez deux fois pas trop rapprochées sur l'armée délogée (retournée) de Roumanie"
+},
+
+{
+    "title": "entrée d'ordre d'ajustement élémentaire (construction)", 
+    "type": "submit",
+    "introduction" : "Phase d'ajustement.<br>Bon, vous avez réussi à prendre une nouveau centre.<br>Quand une puissance a plus de centres que d'unités, elle a le plaisir de construire<br><br><b>Saurez-vous entrer un ordre de construction ?</b><br><br>L'Allemagne construit une fois...une armée à Berlin...",
     "role_id" : 3,
     "variant_name" : "standard",
-    "game_parameters_description": "entrée d'ordre d'ajustement élémentaire (construction)", 
     "game_parameters_current_advancement": 4, 
     "position" : {
         "ownerships": {"2": 3, "3": 3},
@@ -156,11 +291,11 @@
 },
 
 {
+    "title": "entrée d'ordre d'ajustement élémentaire (suppression)", 
     "type": "submit",
-    "introduction" : "Phase d'ajustements (fin)<br>Quand une puissance a moins de centres que d'unités, elle a la douleur de supprimer.<br><br><b>Saurez-vous entrer un ordre de suppression ?</b><br><br>L'Allemagne supprime une fois...sa flotte en Baltique...",
+    "introduction" : "Phase d'ajustement (suite et fin).<br>Hélas, vous avez perdu un centre !<br>Quand une puissance a moins de centres que d'unités, elle a la douleur de supprimer.<br><br><b>Saurez-vous entrer un ordre de suppression ?</b><br><br>L'Allemagne supprime une fois...sa flotte en Baltique...",
     "role_id" : 3,
     "variant_name" : "standard",
-    "game_parameters_description": "entrée d'ordre d'ajustement élémentaire (suppression)", 
     "game_parameters_current_advancement": 4, 
     "position" : {
         "ownerships": {"12": 3, "3": 3},
@@ -173,145 +308,10 @@
 },
 
 {
-    "type": "adjudicate",
-    "introduction" : "Bien entendu, vous n'êtes pas seul sur l'affaire ! Tous les joueurs tentent également de prendre des centres pour augmenter leur puissance.<br>Or, toutes les unités ont la même force.<br>Dans cet exemple l'Italien et le Turc tentent chacun de son côté de prendre Apulie pour se rapprocher de Rome.<br>C'est du un contre un, ce qui produit un échec (on dit 'rebond')...",
-    "variant_name" : "standard",
-    "game_parameters_description": "rebond simple", 
-    "game_parameters_current_advancement": 2, 
-    "position" : {
-        "ownerships": {"32": 4},
-        "dislodged_ones": {},
-        "units": {"4":[[1, 70]], "7":[[2, 31]] }, 
-        "forbiddens": []
-    },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 70, 0, 5], [0, 0, 1, 31, 0, 5]] }
-},
-
-{
-    "type": "adjudicate",
-    "introduction" : "De la même manière, une unité qui reste en place (sur un centre par exemple) suffit à en empêcher une autre de venir prendre le centre.<br>Dans cet exemple l'armée turque à Ankara n'est pas affectée par l'attaque de la flotte russe depuis la Mer Noire",
-    "variant_name" : "standard",
-    "game_parameters_description": "attaque manquée", 
-    "game_parameters_current_advancement": 2, 
-    "position" : {
-        "ownerships": {"1": 7},
-        "dislodged_ones": {},
-        "units": {"6":[[2, 11]], "7":[[1, 4]] }, 
-        "forbiddens": []
-    },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 11, 0, 4], [0, 0, 4, 4, 0, 0]] }
-},
-
-{
-    "type": "adjudicate",
-    "introduction" : "La clé du jeu ce sont les soutiens !<br><br>Un soutien permet à une attaque de prendre plus de force et déloger une unité ennemie.<br><br>Commençons par un soutien le plus simple possible : un soutien pour attaquer (on dit 'offensif'). L'allemand soutient son attaque de Prusse vers l'armée et le centre de Varsovie par son autre armée en Silésie. L'attaque passe et le centre est pris !",
-    "variant_name" : "standard",
-    "game_parameters_description": "soutien simple pour attaquer", 
-    "game_parameters_current_advancement": 2, 
-    "position" : {
-        "ownerships": {"34": 6},
-        "dislodged_ones": {},
-        "units": {"3":[[1, 51], [1, 57]], "6":[[1, 73]] }, 
-        "forbiddens": []
-    },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0]] }
-},
-
-{
-    "type": "adjudicate",
-    "introduction" : "Continuons par un soutien pour tenir (on dit 'défensif'). Pareil que précedemment mais cette fois, le russe se soutient par son armée à Moscou. L'attaque est en échec, en effet c'est du deux contre deux.'",
-    "variant_name" : "standard",
-    "game_parameters_description": "soutien simple pour tenir", 
-    "game_parameters_current_advancement": 2, 
-    "position" : {
-        "ownerships": {"16": 6, "34": 6},
-        "dislodged_ones": {},
-        "units": {"3":[[1, 51], [1, 57]], "6":[[1, 73], [1, 39]] }, 
-        "forbiddens": []
-    },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0]] }
-},
-
-{
-    "type": "adjudicate",
-    "introduction" : "Continuons sur les soutiens.  Pareil que précedemment mais cette fois une armée autrichienne positionnée en Galicie vient prêter main forte à l'attaque allemande. L'attaque fonctionne cette fois (et l'allemand prend le centre à Varsovie), en effet : c'est du trois contre contre deux.",
-    "variant_name" : "standard",
-    "game_parameters_description": "soutien à trois contre deux", 
-    "game_parameters_current_advancement": 2, 
-    "position" : {
-        "ownerships": {"16": 6, "34": 6},
-        "dislodged_ones": {},
-        "units": {"3":[[1, 51], [1, 57]], "5": [[1, 25]], "6":[[1, 73], [1, 39]] }, 
-        "forbiddens": []
-    },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 2, 25, 51, 73]] }
-},
-
-{
-    "type": "adjudicate",
-    "introduction" : "Toujours les soutiens. Pareil que précedemment mais cette fois une armée turque en Ukraine vient aider le russe à se défendre en soutenant Varsovie. L'attaque est à nouveau tenue en échec : c'est du trois contre contre trois !",
-    "variant_name" : "standard",
-    "game_parameters_description": "soutien à trois contre trois", 
-    "game_parameters_current_advancement": 2, 
-    "position" : {
-        "ownerships": {"16": 6, "34": 6},
-        "dislodged_ones": {},
-        "units": {"3":[[1, 51], [1, 57]], "5": [[1, 25]], "6":[[1, 73], [1, 39]], "7":[[1, 69]] }, 
-        "forbiddens": []
-    },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 2, 25, 51, 73], [0, 0, 3, 69, 73, 0]] }
-},
-
-{
-    "type": "adjudicate",
-    "introduction" : "Un soutien n'est pas toujours garanti !<br><br>Une unité ne peut effectuer un soutien que si elle n'est pas elle-même attaquée. Si elle est attaquée, elle abandonne le soutien pour se défendre (on dit 'couper le soutien').<br>Rtour à une situation un peu plus simple. L'allemand soutient toujours son attaque de Prusse vers l'armée et le centre de Varsovie par son autre armée en Silésie, le russe se soutient toujours par son armée à Moscou. (L'armée autrichienne a disparu.) Mais attention ! Cette fois une armée turque est à Sébastopol et a décidé de jouer les trouble-fête. Elle attaque l'armée russe à Moscou, ''coupant'' le soutien.  De ce fait l'attaque est couronnée de succès (et l'allemand prend le centre de Varsovie): c'est du deux contre contre un.",
-    "variant_name" : "standard",
-    "game_parameters_description": "soutien défensif coupé", 
-    "game_parameters_current_advancement": 2, 
-    "position" : {
-        "ownerships": {"16": 6, "34": 6, "25": 7},
-        "dislodged_ones": {},
-        "units": {"3":[[1, 51], [1, 57]], "6":[[1, 73], [1, 39]], "7":[[1, 56]] }, 
-        "forbiddens": []
-    },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0], [0, 0, 1, 56, 0, 39]] }
-},
-
-{
-    "type": "adjudicate",
-    "introduction" : "Un soutien offensif peut être coupé pour les mêmes raisons.<br>L'allemand soutient toujours son attaque de Prusse vers l'armée et le centre de Varsovie par son autre armée en Silésie. L'armée russe est maintenant esseulée à Moscou pour défendre le centre. Mais attention ! Cette fois c'est une armée autrichienne en Sébastopol qui va jouer les trouble-fête. Elle attaque l'armée allemande en Silésie, coupant le soutien offensif. L'attaque échoue : c'est du un contre un.",
-    "variant_name" : "standard",
-    "game_parameters_description": "soutien offensif coupé", 
-    "game_parameters_current_advancement": 2, 
-    "position" : {
-        "ownerships": {"34": 6},
-        "dislodged_ones": {},
-        "units": {"3":[[1, 51], [1, 57]], "5":[[1, 12]], "6":[[1, 73]] }, 
-        "forbiddens": []
-    },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 1, 12, 0, 57]] }
-},
-
-{
-    "type": "adjudicate",
-    "introduction" : "Lorsqu'une flotte convoit une armée d'une côte à une autre, elle est, dans une certain mesure, vulnérable à une attaque. Deux possibilités : soit la flotte n'est pas forcée à retraiter (on dit 'délogée'), alors elle assure correctement le convoi, soit elle l'est' et le convoi est rompu.<br>Dans notre exemple, le français se lance à l'assaut de l'île de l'anglais, ce qui n'est pas du goût de ce dernier. Il tente donc de convoyer son armée de Bretagne en Pays de Galles par le biais de sa flotte en Manche. L'anglais, de son coté, espère empêcher le convoi par une attaque de la flotte en Manche par sa propre flotte en Mer du Nord soutenue par sa flotte en Belgique. Heureusement pour le français, il (le français) dispose d'une flotte en Atlantique qui peut défendre sa flotte en Manche et sauver ainsi le convoi. L'armée française parvient donc aux Pays de Galles...<br>Hourra !",
-    "variant_name" : "standard",
-    "game_parameters_description": "attaque de convoi", 
-    "game_parameters_current_advancement": 2, 
-    "position" : {
-        "ownerships": {"2": 1, "13": 1, "4": 2, "34": 6},
-        "dislodged_ones": {},
-        "units": {"1":[[2, 9], [2, 45]], "2":[[1, 14], [2, 23], [2, 38]] }, 
-        "forbiddens": []
-    },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 9, 0, 23], [0, 0, 2, 45, 9, 23], [0, 0, 1, 14, 0, 72], [0, 0, 5, 23, 14, 72], [0, 0, 3, 38, 23, 0]] }
-},
-
-{
+    "title": "conclusion", 
     "type": "display",
     "introduction" : "Si vous avez aperçu une  coquille dans le tutoriel, manifestez-vous (sur le forum idéalement) ! D'autres sont a venir, plus techniques encore. Si ce tutoriel vous a plu, n'hésitez à diffuser le lien pour qu'il profite à d'autres néopĥytes...",
     "variant_name" : "standard",
-    "game_parameters_description": "conclusion", 
     "game_parameters_current_advancement": 0, 
     "position" : {
         "ownerships": {},

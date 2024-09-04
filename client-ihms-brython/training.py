@@ -66,7 +66,6 @@ EXPECTED_ORDERS = None
 SHOWN_ORDERS = None
 
 POINTERS = []
-POINTER_COLOUR = mapping.ColourRecord(255, 0, 0)  # black
 
 HELP = ""
 
@@ -495,7 +494,7 @@ def load_dynamic_stuff():
 
     # now game parameters (dynamic since advancement is dynamic)
     GAME_PARAMETERS_LOADED['variant'] = VARIANT_NAME_LOADED
-    GAME_PARAMETERS_LOADED['description'] = TUNED_GAME_PARAMETERS_LOADED['game_parameters_description']
+    GAME_PARAMETERS_LOADED['description'] = TUNED_GAME_PARAMETERS_LOADED['title']
     GAME_PARAMETERS_LOADED['current_advancement'] = TUNED_GAME_PARAMETERS_LOADED['game_parameters_current_advancement']
     GAME_PARAMETERS_LOADED['deadline'] = int(time()) + 5 * 60
 
@@ -618,10 +617,13 @@ def slide_just_display():
     def draw_pointers(ctx):
         """ draw_pointers """
 
-        pointer_colour = POINTER_COLOUR
-        ctx.strokeStyle = pointer_colour.str_value()
         ctx.lineWidth = 2
-        for x_pos, y_pos, ray in POINTERS:
+        for pointer in POINTERS:
+            x_pos, y_pos = pointer['center']
+            ray = pointer['ray']
+            red, green, blue = pointer['color']
+            pointer_colour = mapping.ColourRecord(red, green, blue)
+            ctx.strokeStyle = pointer_colour.str_value()
             ctx.beginPath()
             ctx.arc(x_pos, y_pos, ray, 0, 2 * pi, False)
             ctx.stroke()
@@ -2055,7 +2057,7 @@ def install_training():
     POSITION_LOADED = content_dict['position']
 
     # tuned parameters
-    TUNED_GAME_PARAMETERS_LOADED = {k: v for k, v in content_dict.items() if k.startswith('game_parameters')}
+    TUNED_GAME_PARAMETERS_LOADED = {k: v for k, v in content_dict.items() if k in ['title', 'game_parameters_current_advancement']}
 
     HELP = content_dict.get('help', '')
 
