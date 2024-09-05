@@ -212,7 +212,7 @@
 {
     "title": "soutien offensif coupé", 
     "type": "adjudicate",
-    "introduction" : "Un soutien offensif peut être coupé pour les mêmes raisons.<br>L'allemand soutient toujours son attaque de Prusse vers l'armée et le centre de Varsovie par son autre armée en Silésie. L'armée russe est maintenant esseulée à Moscou pour défendre le centre. Mais attention ! Cette fois c'est une armée autrichienne en Sébastopol qui va jouer les trouble-fête. Elle attaque l'armée allemande en Silésie, coupant le soutien offensif. L'attaque échoue : c'est du un contre un.",
+    "introduction" : "Un soutien offensif peut être coupé pour les mêmes raisons.<br>L'allemand soutient toujours son attaque de Prusse vers l'armée et le centre de Varsovie par son autre armée en Silésie. L'armée russe est maintenant esseulée à Moscou pour défendre le centre. Mais attention ! Cette fois c'est une armée autrichienne en Bohème qui va jouer les trouble-fête. Elle attaque l'armée allemande en Silésie, coupant le soutien offensif. L'attaque échoue : c'est du un contre un.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -227,7 +227,7 @@
 {
     "title": "attaque de convoi", 
     "type": "adjudicate",
-    "introduction" : "Lorsqu'une flotte convoie une armée d'une côte à une autre, elle est, dans une certain mesure, vulnérable à une attaque. Deux possibilités : soit la flotte n'est pas forcée à retraiter (on dit 'délogée'), alors elle assure correctement le convoi, soit elle l'est' et le convoi est rompu.<br>Dans notre exemple, le français se lance à l'assaut de l'île de l'anglais, ce qui n'est pas du goût de ce dernier. Il tente donc de convoyer son armée de Bretagne en Pays de Galles par le biais de sa flotte en Manche. L'anglais, de son coté, espère empêcher le convoi par une attaque de la flotte en Manche par sa propre flotte en Mer du Nord soutenue par sa flotte en Belgique. Heureusement pour le français, il (le français) dispose d'une flotte en Atlantique qui peut défendre sa flotte en Manche et sauver ainsi le convoi. L'armée française parvient donc aux Pays de Galles...<br>Hourra !",
+    "introduction" : "Lorsqu'une flotte convoie une armée d'une côte à une autre, elle est, dans une certain mesure, vulnérable à une attaque. Deux possibilités : soit la flotte n'est pas forcée à retraiter (on dit 'délogée'), alors elle assure correctement le convoi, soit elle l'est' et le convoi est rompu.<br>Dans notre exemple, le français se lance à l'assaut de l'île de l'anglais, ce qui n'est pas du goût de ce dernier. Il tente donc de convoyer son armée de Bretagne en Pays de Galles par le biais de sa flotte en Manche. L'anglais, de son coté, espère empêcher le convoi par une attaque de la flotte en Manche par sa propre flotte en Belgique soutenue par sa flotte en Mer du Nord. Heureusement pour le français, il (le français) dispose d'une flotte en Atlantique qui peut défendre sa flotte en Manche et sauver ainsi le convoi. L'armée française parvient donc aux Pays de Galles...<br>Hourra !",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -242,7 +242,7 @@
 {
     "title": "entrée d'ordre de retraite élémentaire", 
     "type": "submit",
-    "introduction" : "Phase de retraites.<br>Bon, ça s'est mal passé, votre unité doit reculer.<br>Quand une unité est attaquée par plus fort qu'elle, elle doit reculer (on dit 'retraiter')').<br><br><b>Saurez-vous entrer un ordre de retraite ?</b><br><br>L'Allemagne doit faire retraiter son armée de Roumanie en Ukraine...",
+    "introduction" : "Phase de retraites.<br>Bon, ça s'est mal passé, votre unité doit reculer.<br>Quand une unité est attaquée par plus fort qu'elle, elle doit reculer (on dit 'retraiter')').<br><br><b>Saurez-vous entrer un ordre de retraite ?</b><br><br>La Russie doit faire retraiter son armée de Roumanie en Ukraine...",
     "role_id" : 6,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 1, 
@@ -259,7 +259,7 @@
 {
     "title": "entrée d'ordre de retraite élémentaire", 
     "type": "submit",
-    "introduction" : "Phase de retraites (suite et fin).<br>Dans cette même situation, vous pouvez disperser l'unité, c'est à dire la retirer purement et simplement de la carte..<br><br><b>Saurez-vous entrer un ordre de retraite de dispersion ?</b><br><br>L'Allemagne doit faire disperser son armée de Roumanie...",
+    "introduction" : "Phase de retraites (suite et fin).<br>Dans cette même situation, vous pouvez disperser l'unité, c'est à dire la retirer purement et simplement de la carte..<br><br><b>Saurez-vous entrer un ordre de retraite de dispersion ?</b><br><br>La Russie doit faire disperser son armée de Roumanie...",
     "role_id" : 6,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 1, 
@@ -310,7 +310,7 @@
 {
     "title": "conclusion", 
     "type": "display",
-    "introduction" : "Si vous avez aperçu une  coquille dans le tutoriel, manifestez-vous (sur le forum idéalement) ! D'autres sont a venir, plus techniques encore. Si ce tutoriel vous a plu, n'hésitez à diffuser le lien pour qu'il profite à d'autres néopĥytes...",
+    "introduction" : "Si vous avez aperçu une  coquille dans le tutoriel, manifestez-vous (sur le forum idéalement) ! D'autres sont a venir, plus techniques encore. Si ce tutoriel vous a plu, n'hésitez pas à diffuser le lien pour qu'il profite à d'autres néopĥytes...",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 0, 
     "position" : {
