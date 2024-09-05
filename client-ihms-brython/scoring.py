@@ -394,6 +394,31 @@ def manorcon(centers_variant, ratings):
     return score
 
 
+def calhammer(centers_variant, ratings):
+    """ the calhammer scoring system """
+
+    # solo
+    solo_threshold = centers_variant // 2
+
+    solo_reward = 100
+
+    # default score
+    score = {role_name: 0 for role_name in ratings}
+
+    # detect solo
+    best_role_name = list(ratings.keys())[0]
+    if ratings[best_role_name] > solo_threshold:
+        score[best_role_name] = solo_reward
+        return score
+
+    # only survivors score
+    survivers = [r for r in ratings if ratings[r]]
+    for role_name in survivers:
+        score[role_name] = solo_reward // len(survivers)
+
+    return score
+
+
 def scoring(game_scoring, centers_variant, ratings):
     """ scoring """
 
@@ -416,5 +441,7 @@ def scoring(game_scoring, centers_variant, ratings):
         score_table = bangkok(centers_variant, ratings)
     if game_scoring == 'MANO':
         score_table = manorcon(centers_variant, ratings)
+    if game_scoring == 'CALH':
+        score_table = calhammer(centers_variant, ratings)
 
     return score_table

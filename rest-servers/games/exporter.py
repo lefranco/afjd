@@ -72,7 +72,8 @@ SCORING_CONVERSION_TABLE = {
     'NOMG': 'OpenMindTheGap',
     'CNAM': 'CDiploNamur',
     'BOUC': 'Boucher',
-    'MANO': 'Manorcon'
+    'MANO': 'Manorcon',
+    'CALH': 'Calhammer'
 }
 
 

@@ -1,0 +1,33 @@
+CALHAMMER
+
+$ Histoire
+
+SDU
+
+
+$ Philosophie
+
+Pour les parties qui ne finissent que sur solo (ou vote d'arrêt)
+
+$ Description
+
+On marque selon le nombre de survivants.
+
+$$ Cas général
+
+Chaque joueur marque 100 divisé par le nombre de survivants.
+
+
+$$ Elimination
+
+Un joueur éliminé marque 0 points
+
+$$ Solo
+
+La valeur du solo est fixée à 100
+.
+Un joueur qui réalise un solo marque la valeur du solo, et les autres *zéro*.
+
+$ Utilisé dans les tournois
+
+SDU
