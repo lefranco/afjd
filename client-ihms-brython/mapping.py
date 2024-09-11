@@ -700,8 +700,6 @@ def map_additional_text_font() -> str:
 MAP_TEXT_FONT = map_text_font()
 VARIANT_AUTHOR_X_POS = 10
 VARIANT_AUTHOR_Y_POS = 12
-MAP_AUTHOR_X_POS = 10
-MAP_AUTHOR_Y_POS = 25
 
 MAP_ADDITIONAL_TEXT_FONT = map_additional_text_font()
 ADDITIONAL_X_POS = 10
@@ -738,7 +736,6 @@ class Variant(Renderable):
 
         # load the authors
         self._variant_author = raw_variant_content['author']
-        self._map_author = raw_parameters_content['author']
 
         # load the additional_text
         self._additional_text = raw_parameters_content['additional_text']
@@ -1070,8 +1067,7 @@ class Variant(Renderable):
         ctx.fillStyle = info_colour.str_value()  # for a text
 
         # put the authors
-        ctx.fillText(f"Variante : {self._variant_author}", VARIANT_AUTHOR_X_POS, VARIANT_AUTHOR_Y_POS)
-        ctx.fillText(f"Carte : {self._map_author}", MAP_AUTHOR_X_POS, MAP_AUTHOR_Y_POS)
+        ctx.fillText(f"{self._variant_author}", VARIANT_AUTHOR_X_POS, VARIANT_AUTHOR_Y_POS)
 
         info_colour = ADDITIONAL_COLOUR
         ctx.fillStyle = info_colour.str_value()  # for a text
