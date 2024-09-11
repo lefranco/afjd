@@ -341,6 +341,9 @@ def load_option(_, item_name):
         figure <= image
         MENU_LEFT <= figure
 
+    MENU_LEFT <= html.BR()
+    MENU_LEFT <= html.BR()
+    MENU_LEFT <= html.SMALL("Testé avec Firefox.")
 
 # we read ip now if necessary
 if 'IPADDRESS' not in storage:
