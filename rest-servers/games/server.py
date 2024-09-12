@@ -3055,10 +3055,10 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
         game_master_id = game.get_role(sql_executor, 0)
 
-        # must be game master
-        if user_id != game_master_id:
+        # must be game master or commuter
+        if user_id != game_master_id and pseudo != COMMUTER_ACCOUNT:
             del sql_executor
-            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game or the commuter")
 
         if role_id == 0:
             del sql_executor
@@ -3877,10 +3877,10 @@ class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
         game_master_id = game.get_role(sql_executor, 0)
 
-        # must be game master
-        if user_id != game_master_id:
+        # must be game master or commuter
+        if user_id != game_master_id and pseudo != COMMUTER_ACCOUNT:
             del sql_executor
-            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game of the commuter")
 
         if role_id == 0:
             del sql_executor
@@ -4309,9 +4309,9 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
             the_moderators = req_result.json()
 
             # check pseudo in moderator list
-            if pseudo not in the_moderators:
+            if pseudo not in the_moderators and pseudo != COMMUTER_ACCOUNT:
                 del sql_executor
-                flask_restful.abort(403, msg="You do not seem to play or master the game (or to be site moderator) so you are not alowed to see the submissions!")
+                flask_restful.abort(403, msg="You do not seem to play or master the game (or to be site moderator or the commuter) so you are not alowed to see the submissions!")
 
         # submissions_list : those who submitted orders
         submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
