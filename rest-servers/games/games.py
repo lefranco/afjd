@@ -258,13 +258,13 @@ class Game:
         if 'grace_duration' in json_dict and json_dict['grace_duration'] is not None and json_dict['grace_duration'] != self._grace_duration:
             self._grace_duration = json_dict['grace_duration']
             # safety
-            self._grace_duration = max(1 if self._fast else 2, self._grace_duration)
+            self._grace_duration = max(1, self._grace_duration)
             changed = True
 
         if 'speed_moves' in json_dict and json_dict['speed_moves'] is not None and json_dict['speed_moves'] != self._speed_moves:
             self._speed_moves = json_dict['speed_moves']
             # safety
-            self._speed_moves = max(1 if self._fast else 2, self._speed_moves)
+            self._speed_moves = max(1, self._speed_moves)
             changed = True
 
         if 'cd_possible_moves' in json_dict and json_dict['cd_possible_moves'] is not None and json_dict['cd_possible_moves'] != self._cd_possible_moves:
@@ -274,7 +274,7 @@ class Game:
         if 'speed_retreats' in json_dict and json_dict['speed_retreats'] is not None and json_dict['speed_retreats'] != self._speed_retreats:
             self._speed_retreats = json_dict['speed_retreats']
             # safety
-            self._speed_retreats = max(1 if self._fast else 2, self._speed_retreats)
+            self._speed_retreats = max(1, self._speed_retreats)
             changed = True
 
         if 'cd_possible_retreats' in json_dict and json_dict['cd_possible_retreats'] is not None and json_dict['cd_possible_retreats'] != self._cd_possible_retreats:
@@ -284,7 +284,7 @@ class Game:
         if 'speed_adjustments' in json_dict and json_dict['speed_adjustments'] is not None and json_dict['speed_adjustments'] != self._speed_adjustments:
             self._speed_adjustments = json_dict['speed_adjustments']
             # safety
-            self._speed_adjustments = max(1 if self._fast else 2, self._speed_adjustments)
+            self._speed_adjustments = max(1, self._speed_adjustments)
             changed = True
 
         if 'cd_possible_builds' in json_dict and json_dict['cd_possible_builds'] is not None and json_dict['cd_possible_builds'] != self._cd_possible_builds:
