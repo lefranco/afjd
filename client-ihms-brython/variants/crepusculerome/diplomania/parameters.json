@@ -1,5 +1,4 @@
 {
-    "author": "Inconnu",
     "additional_text": "Informations importantes à lire pour jouer la variante :\n-\nCON (Constantinople) s'étale de part et d'autre du détroit du Bosphore.\n-\nLe rectangle blanc en haut à droite symbolise les steppes.\nC'est en réalité un indicateur d'adjacence.\nIl y a trois provinces de steppe à l'intérieur du rectangle :\nLes régions S1, S2 et S3.\nChacune de ces régions :\n1) peut être occupée comme une province normale,\n2) est adjacente aux deux autres,\n3) est adjacente à toutes les provinces voisines du rectangle.\n(à savoir : POL, SEV, SAB, BAC et KIM)\n Note : Les trois steppes sont des terres.",
     "map": {
         "width": 1297,
