@@ -21,6 +21,12 @@ FAQ_CONTENT_TABLE = {
     "C'est tout ?":
     "Non. Si au moins un joueur a coché “d'accord pour résoudre à la date limite“ il faudra attendre l'automate. Ce dernier vient, toutes les heures,  regarder les parties dont la date limite est passée. Il se charge de soigneusement transformer tout “d'accord pour résoudre à la date limite“ en “d'accord pour résoudre maintenant“ toujours avec les mêmes conséquences.",
 
+    "Et les parties 'Désordre Civil' ?":
+    "Pour de telles partie l'arbitre peut forcer les choses après la résolution. L'automate le fera automatiquement après la grâce.",
+
+    "A qui sert la grâce ?":
+    "Cf. paragraphe précédent. Pour les parties en direct, un autre mécanisme force les choses après la grâce (typiquement une minute) petit à petit et aléatoirement.",
+
     "La D.L. est passée, je suis arbitre, je vois que tous les ordres sont là, mais la partie n'a pas avancé, au secours !":
     "C'est parce qu'un joueur a coché “d'accord pour résoudre à la date limite“. Il faut attendre le passage de l'automate (toutes les heures)",
 
@@ -33,17 +39,16 @@ FAQ_CONTENT_TABLE = {
       - Jaune signifie que la date limite est proche (24h).<br>
       - Or qu'elle est passée de moins de 5 secondes (délai de prise en compte de l'automate).<br>
       - Orange qu'elle est passée de plus de 5 secondes.<br>
-      - Rouge que la grâce est aussi passée (en général 24 heures).<br>
+      - Rouge que la grâce est aussi passée (en général 24 heures) (se reporter au paragraphe sur les grâces).<br>
       - Rouge foncé qu'elle est passée d'une semaine (partie que l'on qualifiera pudiquemment d'être en “mauvaise santé“).<br>
       - Argent que la partie est finie.<br>
-    Le dépassement de la grace n'a aucune incidence sur le jeu (mais entraîne des plus grandes pénalités dans certains tournois). Pour les parties en direct on utilise les minutes au lieu des heures, la grace à une incidence puisque passée elle entraîne des désordre civils en mode supervisé
     """,
 
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
     "Passer ses ordres signifie réaliser une transition “pas d'accord pour résoudre“ (ou pas d'information) -> “d'accord pour résoudre“ (maintenant ou à la date limite, peu importe). Un retard signifie que cela est réalisé après la date limite. Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels (on l'a déjà dit ?) !",
 
     "Comment sont comptés les retards ?":
-    " Toute heure de retard entamée est due. Cela signifie qu'un retard indiqué “2“ (2 heures) est un retard d'au moins une heure et d'au plus deux heures (par rapport à la date limite au moment de la soumission)",
+    "Toute heure de retard entamée est due. Cela signifie qu'un retard indiqué “2“ (2 heures) est un retard d'au moins une heure et d'au plus deux heures (par rapport à la date limite au moment de la soumission)",
 
     "Est ce que je peux écrire n'importe quoi dans les messages et les presses ?":
     "Non ! Les messages sont certes privés entre émetteur et destinataire(s). Les presses sont certes privées dans la partie et avec le modérateur du site (qui peut les lire et en écrire). Dans les deux cas le contenu doit respecter la charte. L'administrateur peut sur demande lire un message de déclaration ou de négociation pour vérifier. Contenu inaproprié ? Déclarez un incident ! (repérez le message par son id)",
