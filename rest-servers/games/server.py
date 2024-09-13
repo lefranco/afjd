@@ -3101,7 +3101,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
             # this may have caused player to be late
             if late:
-                subject = f"L'arbitre de la partie {game.name} a forcé votre accord, ce qui vous inflige un retard !"
+                subject = f"L'arbitre de la partie {game.name} ou l'automate a forcé votre accord, ce qui vous inflige un retard !"
                 game_id = game.identifier
                 allocations_list = allocations.Allocation.list_by_role_id_game_id(sql_executor, role_id, game_id)
                 addressees = []
@@ -3110,7 +3110,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
                 body = "Bonjour !\n"
                 body += "\n"
-                body += "L'arbitre a forcé votre accord sur cette partie et vous étiez en retard !\n"
+                body += "Votre accord a été forcé sur cette partie et vous étiez en retard !\n"
                 body += "\n"
                 body += "Conclusion : vous avez un retard sur cette partie...\n"
                 body += "\n"
@@ -3145,7 +3145,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
                 if not (game.fast or game.archive):
 
-                    subject = f"La partie {game.name} a avancé (avec l'aide de l'arbitre)!"
+                    subject = f"La partie {game.name} a avancé (avec l'aide de l'arbitre ou de l'automate)!"
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
                     addressees = []
