@@ -221,6 +221,12 @@ def reset_training_callback(ev):  # pylint: disable=invalid-name
     select_training_data()
 
 
+def reload_text_callback(ev):  # pylint: disable=invalid-name
+    """ reload_text_callback """
+    ev.preventDefault()
+    mydialog.InfoDialog("Information", INTRODUCTION, True)
+
+
 def ask_help_callback(ev):  # pylint: disable=invalid-name
     """ ask_help_callback """
     ev.preventDefault()
@@ -264,6 +270,10 @@ def get_game_status():
     col = html.TD(form)
     row <= col
 
+    # title
+    col = html.TD(html.I(SEQUENCE_NAME))
+    row <= col
+
     # indicator
     col = html.TD(f"{TRAINING_INDEX + 1}/{len(TRAINING_LIST)}")
     row <= col
@@ -295,6 +305,15 @@ def get_game_status():
     col = html.TD(form)
     row <= col
 
+    # reload
+    form = html.FORM()
+    input_help = html.INPUT(type="submit", value="recharger l'explication", Class='btn-inside')
+    input_help.attrs['style'] = 'font-size: 10px'
+    input_help.bind("click", reload_text_callback)
+    form <= input_help
+    col = html.TD(form)
+    row <= col
+
     # help
     form = ""
     if HELP:
@@ -306,7 +325,7 @@ def get_game_status():
     col = html.TD(form)
     row <= col
 
-    col = html.TD(description)
+    col = html.TD(html.B(description))
     row <= col
 
     form = ""
