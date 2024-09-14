@@ -37,7 +37,7 @@
 },
 
 {
-    "title": "Repérage de flotte et d'armée'", 
+    "title": "Repérage de flotte et d'armée", 
     "type": "display",
     "introduction" : "Les unités sont de deux sortes : les flottes et les armées.<br>Une flotte peut aller en mer ou en côte.<br>Une armée, quant à elle,  peut aller en côte ou en terre (régions enclavées).<br><br><b>Apprenez à repérez une armée et une flotte !</b><br><br>Pour cet exercice, pas d'ordres à entrer ! <br>L'armée en Bourgogne a été entourée en bleu pour vous aider à la trouver..<br>La flotte en Picardie a été entourée en vert pour vous aider à la trouver...",
     "role_id" : 7,
@@ -73,7 +73,7 @@
 {
     "title": "Entrée d'ordre de mouvement élémentaire - attaquer/se déplacer", 
     "type": "submit",
-    "introduction" : "Phase de mouvements (suite).<br>Plus souvent, les unités se déplacent, dans le but d'aller occuper un centre bien sur !<br><br><b>Saurez-vous entrer un ordre pour la France et son armée à Paris d'aller en Bourgogne ?</b>",
+    "introduction" : "Phase de mouvements (suite).<br>Plus souvent, les unités se déplacent, dans le but d'aller occuper un centre bien sûr !<br><br><b>Saurez-vous entrer un ordre pour la France et son armée à Paris d'aller en Bourgogne ?</b>",
     "role_id" : 2,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
@@ -88,7 +88,7 @@
 },
 
 {
-    "title": "entrée d'ordre de mouvement élémentaire - convoyer", 
+    "title": "Entrée d'ordre de mouvement élémentaire - convoyer", 
     "type": "submit",
     "introduction" : "Phase de mouvements (suite et fin).<br>Une flotte en mer peut transporter (on dit 'convoyer') une armée adjacente d'une côte à une autre.<br><br><b>Saurez-vous entrer un ordre pour l'Angleterre et sa flotte en Mer du Nord de convoyer l'armée Russe de Norvège en Hollande ?</b>",
     "role_id" : 1,
@@ -150,6 +150,23 @@
 },
 
 {
+    "title": "Entrée d'ordre de soutien élémentaire - soutenir pour attaquer", 
+    "type": "submit",
+    "introduction" : "Petite parenthèse. Profitons-en pour apprendre à passer un ordre de soutien (lors d'une phase de mouvements).<br><br><b>Saurez-vous entrer un ordre de soutien offensif pour l'Autriche et son armée à Trieste qui va aider l'armée de son allié allemand à descendre du Tyrol à Venise pour s'emparer du centre italien ?</b>",
+    "role_id" : 5,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"30": 5, "32": 4},
+        "dislodged_ones": {},
+        "units": {"5": [ [1, 64] ], "3": [ [1, 68] ], "4": [ [2, 70] ] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 2, 64, 68, 70]] },
+    "help": "Cliquez sur l'armée à Trieste puis sur 'Soutenir offensivement' puis  sur l'armée allemand en Tyrol et enfin sur la région de Venise"
+},
+
+{
     "title": "Soutien simple pour tenir", 
     "type": "adjudicate",
     "introduction" : "Continuons par un soutien pour tenir (on dit 'défensif'). Pareil que précedemment mais cette fois, le russe se soutient par son armée à Moscou. L'attaque est en échec, en effet c'est du deux contre deux.'",
@@ -162,6 +179,23 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 51, 0, 73], [0, 0, 2, 57, 51, 73], [0, 0, 4, 73, 0, 0], [0, 0, 3, 39, 73, 0]] }
+},
+
+{
+    "title": "Entrée d'ordre de soutien élémentaire - soutenir pour tenir", 
+    "type": "submit",
+    "introduction" : "Nouvelle petite parenthèse. C'est donc le moment d' apprendre à passer le second type d'ordre de soutien (lors d'une phase de mouvements).<br><br><b>Saurez-vous entrer un ordre de soutien défensif pour l'Autriche et son armée à Trieste qui va aider son allié italien à rester à Venise malgré les menaces françaises en Piémont et Toscane ?</b>",
+    "role_id" : 5,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"30": 5, "32": 4},
+        "dislodged_ones": {},
+        "units": {"5": [ [1, 64] ], "4": [ [2, 70] ], "2" : [[1, 49], [1, 66] ] }, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 3, 64, 70, 0]] },
+    "help": "Cliquez sur l'armée à Trieste puis sur 'Soutenir défensivement' l'armée italienne à Venise"
 },
 
 {
