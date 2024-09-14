@@ -766,7 +766,7 @@ def slide_submit_orders():
             # compare with expected orders
             expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, False)
             if same_orders(orders_data, expected):
-                mydialog.InfoDialog("Information", "Félicitations, ce sont bien les ordres attendus ! (On passe à la planche suivante)", False)
+                mydialog.InfoDialog("Information", "Félicitations, ce sont bien les ordres attendus !<br><br>(On passe automatiquement à la planche suivante)", False)
                 next_previous_training(False)
             else:
                 mydialog.InfoDialog("Information", "Hélas non, ce ne sont pas les ordres attendus :-(", True)
