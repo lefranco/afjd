@@ -105,31 +105,31 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
     url = f"{host}:{port}/game-commute-agree-solve/{game_id}"
     req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
     if req_result.status_code == 201:
-        mylogger.LOGGER.info("=== Hurray, game '%s' was commuted !", game_name)
+        mylogger.LOGGER.info("=== Hurray, game '%s' was happily commuted!", game_name)
         return True
 
     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
     mylogger.LOGGER.info("Failed to commute game %s : %s...", game_name, message)
-    mylogger.LOGGER.info("Let's check for civil disorder setting...")
+    mylogger.LOGGER.info("Let's check for civil disorder settings now...")
 
     # Games does not use civil disorders
     # what is the season next to play ?
     if game_full_dict['current_advancement'] % 5 in [0, 2]:
         if not game_full_dict['cd_possible_moves']:
-            mylogger.LOGGER.info("Civil disorder not allowed for moves (currently expected) for game %s", game_name)
+            mylogger.LOGGER.info("No. Civil disorder not allowed for moves (currently expected) for game %s", game_name)
             return False
     elif game_full_dict['current_advancement'] % 5 in [1, 3]:
         if not game_full_dict['cd_possible_retreats']:
-            mylogger.LOGGER.info("Civil disorder not allowed for retreats (currently expected) for game %s", game_name)
+            mylogger.LOGGER.info("No. Civil disorder not allowed for retreats (currently expected) for game %s", game_name)
             return False
     else:
         if not game_full_dict['cd_possible_builds']:
-            mylogger.LOGGER.info("Civil disorder not allowed for builds (currently expected) for game %s", game_name)
+            mylogger.LOGGER.info("No. Civil disorder not allowed for builds (currently expected) for game %s", game_name)
             return False
 
     # not after deadline + grace
     if now <= game_full_dict['deadline'] + game_full_dict['grace_duration'] * 3600:
-        mylogger.LOGGER.info("Not after grace for game %s", game_name)
+        mylogger.LOGGER.info("No. Not after grace for game %s", game_name)
         return False
 
     # Ok if we reach this point we may put civil disorder
@@ -155,6 +155,12 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
     agreed_now_roles_list = submitted_data['agreed_now']
     needed_roles_list = submitted_data['needed']
 
+    # If no orders (moves expected) it makes no senses to push the game
+    if game_full_dict['current_advancement'] % 5 in [0, 2]:
+        if len(submitted_roles_list) == len(variant_content_loaded['disorder']):
+            mylogger.LOGGER.info("No. Moves expected and nobody submitted anything for game %s", game_name)
+            return False
+
     for role_id in needed_roles_list:
 
         if role_id in submitted_roles_list:
@@ -173,10 +179,10 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
         if req_result.status_code != 201:
             if 'msg' in req_result.json():
                 mylogger.LOGGER.error(req_result.json()['msg'])
-            mylogger.LOGGER.error("ERROR: Failed to set civil disorder orders for role_id %d for game %s", role_id, game_name)
+            mylogger.LOGGER.error("ERROR: Failed to set civil disorder orders for role_id %d in game %s", role_id, game_name)
             return False
 
-        mylogger.LOGGER.info("Civil disorder orders set for role_id %d game %s", role_id, game_name)
+        mylogger.LOGGER.info("Civil disorder orders set for role_id %d in game %s", role_id, game_name)
 
     mylogger.LOGGER.info("Civil disorder orders set for game %s", game_name)
 
@@ -198,10 +204,10 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
         if req_result.status_code != 201:
             if 'msg' in req_result.json():
                 mylogger.LOGGER.error(req_result.json()['msg'])
-            mylogger.LOGGER.error("ERROR: Failed to force agreement for role_id %d game %s", role_id, game_name)
+            mylogger.LOGGER.error("ERROR: Failed to force agreement for role_id %d in game %s", role_id, game_name)
             return False
 
-        mylogger.LOGGER.info("Agreements forced for role_id %d game %s", role_id, game_name)
+        mylogger.LOGGER.info("Agreements forced for role_id %d in game %s", role_id, game_name)
 
     mylogger.LOGGER.info("Agreements forced for game %s", game_name)
 
@@ -260,6 +266,16 @@ def check_all_games(jwt_token: str, now: float) -> None:
             continue
 
         game_full_dict = req_result.json()
+
+        # game finished
+        if game_full_dict['finished']:
+            mylogger.LOGGER.info("Ignoring game '%s' that is finished !", game_name)
+            continue
+
+        # game soloed
+        if game_full_dict['soloed']:
+            mylogger.LOGGER.info("Ignoring game '%s' that is soloed !", game_name)
+            continue
 
         mylogger.LOGGER.info("Trying game '%s'...", game_name)
 
