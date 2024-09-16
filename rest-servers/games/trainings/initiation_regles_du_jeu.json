@@ -279,7 +279,7 @@
     "introduction" : "Phase de retraites.<br>Bon, ça s'est mal passé, votre unité doit reculer.<br>Quand une unité est attaquée par plus fort qu'elle, elle doit reculer (on dit 'retraiter')').<br><br><b>Saurez-vous entrer un ordre de retraite ?</b><br><br>La Russie doit faire retraiter son armée de Roumanie en Ukraine...",
     "role_id" : 6,
     "variant_name" : "standard",
-    "game_parameters_current_advancement": 1, 
+    "game_parameters_current_advancement": 3, 
     "position" : {
         "ownerships": {"23": 6},
         "dislodged_ones": {"6": [ [1, 54, 16] ] },
@@ -296,7 +296,7 @@
     "introduction" : "Phase de retraites (suite et fin).<br>Dans cette même situation, vous pouvez disperser l'unité, c'est à dire la retirer purement et simplement de la carte..<br><br><b>Saurez-vous entrer un ordre de retraite de dispersion ?</b><br><br>La Russie doit faire disperser son armée de Roumanie...",
     "role_id" : 6,
     "variant_name" : "standard",
-    "game_parameters_current_advancement": 1, 
+    "game_parameters_current_advancement": 3, 
     "position" : {
         "ownerships": {"23": 6},
         "dislodged_ones": {"6": [ [1, 54, 16] ] },
