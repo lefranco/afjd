@@ -1,0 +1,150 @@
+{
+"title": "02 points essentiels à connaître sur les règles fondamentales du jeu de Diplomatie",
+"slides": 
+[
+
+{
+    "title": "Les côtes spéciales", 
+    "type": "submit",
+    "introduction" : "La Bulgarie, l'Espagne et Saint Pétérsbourg comporte ce que l'on appelle des 'côtes spéciales'. Une flotte entrant d'un côté peut ensuite aller seulement dans une zone adjacentes à cette côte. Néanmoins, elle est considérée comme occupant l'intégralité de la région. Si une flotte peut accéder à plusieurs des différentes côtes, il est impératif de précise laquelle.<br><br><b>Pouvez-vous ordonner à la flotte turque de Constantinople d'aller en Bulgarie, mais en côte sud, pas en côte est ?</b>",
+    "role_id" : 7,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"7": 7},
+        "dislodged_ones": {},
+        "units": {"7": [[2, 19]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 1, 19, 0, 77]] },
+    "help": "Refaire le tutoriel d'initiation ;-)"
+},
+
+
+{
+    "title": "Particularités de la carte standard 1/2", 
+    "type": "display",
+    "introduction" : "Kiel et Constantinople ne font qu'un seule côte, du fait des voies d'eau qui les traversent. Une flotte peut aller de la Mer Noire à Constantinople puis de Constantinople en Mer d'Egée. Les armée peut pareillement franchir les voies d'eau.<br><br><b>Kiel et Constantinople  ont été distingués sur la carte par un cercle rouge.</b>",
+    "role_id" : 7,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] },
+    "pointers" : [{"center": [600, 550], "ray": 40, "color": [255, 0, 0] }, {"center": [320, 370], "ray": 40, "color": [255, 0, 0] }]
+},
+
+{
+    "title": "Particularités de la carte standard 2/2", 
+    "type": "submit",
+    "introduction" : "Suède et Danemark sont adjacents. Une armée ou une flotte peut aller de l'un à l'autre et vice-versa. Une flotte en Mer Baltique ne peut pas aller directement en Skaggerak. Le Danemark n'est pas adjacent à Berlin.<br><br><b>Essayez donc d'ordonner le mouvement Baltique -> Skaggerak...puis ordonnez à la flotte d'aller en Suède.</b>",
+    "role_id" : 3,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"3": [[2, 7]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 1, 7, 0, 62]] }
+},
+
+{
+    "title": "Echange impossible", 
+    "type": "adjudicate",
+    "introduction" : "Pour échanger deux unités il faut utiliser un convoi. Même en utilisant les côtes spéciales ! Espagne côte nord et sud sont la même région, donc il s'agit d'une attaque frontale.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"21": 1, "27": 2},
+        "dislodged_ones": {},
+        "units": {"1": [[2, 50]],"2": [[2, 79]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 50, 0, 78], [0, 0, 1, 79, 0, 50]] }
+},
+
+{
+    "title": "Permutation", 
+    "type": "adjudicate",
+    "introduction" : "Une permutation à trois unité (ou plus) est toujours possible",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"1": [[2, 30], [2, 9]],"2": [[2, 45]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 30, 0, 9], [0, 0, 1, 9, 0, 45], [0, 0, 1, 45, 0, 30]] }
+},
+
+{
+    "title": "Embouteillage", 
+    "type": "adjudicate",
+    "introduction" : "Une unité qui ne parvient pas à bouger peut empêcher celles qui la suivent de le faire.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"3": [[2, 33], [1, 10]],"6": [[1, 51]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 33, 0, 10], [0, 0, 1, 10, 0, 51], [0, 0, 4, 51, 0, 0]] }
+},
+
+{
+    "title": "Soutien offensif 1/2", 
+    "type": "adjudicate",
+    "introduction" : "Le soutien offensif doit correspondre au mouvement soutenu. Voyons ce cas simple dans lequel le mouvement ne correspond pas au soutien...",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"17": 3},
+        "dislodged_ones": {},
+        "units": {"3": [[1, 12], [1, 40]],"4": [[1, 68]], "6": [[1, 57]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 2, 12, 40, 57], [0, 0, 1, 40, 0, 68], [0, 0, 4, 68, 0, 0]] }
+},
+
+
+{
+    "title": "Soutien offensif 2/2", 
+    "type": "adjudicate",
+"introduction" : "Le soutien offensif doit correspondre au mouvement soutenu. Attention, selon les dernières règles officielles, même la côte doit correspondre. Ceci a fait l'objet d'amples débats dans la comunauté puisque les règles précédente étaient un peu... disons... sujettes à interprêtation à ce sujet. NEANMOINS, l'implémentation de diplomania a choisi d'accepter une différence de côte. Voyons ce cas plus complexe dans lequel le mouvement ne correspond pas EXACTEMENT au soutien... A l'issue nous avons un italien qui retrouve la flotte anglaise bien prlus proche de son territoire qu'il ne l'avait escompté au départ...'",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"1": [[2, 38]], "4": [[2, 74]],"2": [[1, 60]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 2, 74, 38, 78], [0, 0, 1, 38, 0, 79], [0, 0, 4, 60, 0, 0]] }
+},
+
+{
+    "title": "Unité délogée", 
+    "type": "adjudicate",
+    "introduction" : "Une unité délogé n'a pas d'effet sur la région d'où vient l'unité qui l'attaque.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"6": [[1, 54], [1, 56], [1, 55]], "7": [[1, 16]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 16, 0, 54], [0, 0, 1, 54, 0, 16], [0, 0, 2, 55, 54, 16], [0, 0, 1, 56, 0, 54]] }
+}
+
+
+]
+}
