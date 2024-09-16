@@ -52,7 +52,7 @@ GAME_PARAMETERS_LOADED = {
     'access_restriction_regularity': 0,
     'access_restriction_performance': 0,
     'current_advancement': 1,  # to be precised
-    'nb_max_cycles_to_play': 30,
+    'nb_max_cycles_to_play': 7,
     'current_state': 1,
     'game_type': 0,
     'finished': False,
