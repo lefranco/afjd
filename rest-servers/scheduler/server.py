@@ -68,8 +68,10 @@ def load_credentials_config() -> None:
 def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typing.Dict[str, typing.Any]) -> bool:
     """ commute_game """
 
-    variant_name_loaded = game_full_dict['variant']
     game_name = game_full_dict['name']
+    mylogger.LOGGER.info("So now trying to commute game '%s'...", game_name)
+
+    variant_name_loaded = game_full_dict['variant']
 
     # get variant data
     host = lowdata.SERVER_CONFIG['GAME']['HOST']
@@ -105,7 +107,6 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
     url = f"{host}:{port}/game-commute-agree-solve/{game_id}"
     req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
     if req_result.status_code == 201:
-        mylogger.LOGGER.info("=== Hurray, game '%s' was happily commuted!", game_name)
         return True
 
     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -134,7 +135,7 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
 
     # Ok if we reach this point we may put civil disorder
 
-    # Get the missing orders and agreements
+    # Get the missing orders and the missing agreements
 
     json_dict = {}
 
@@ -231,30 +232,27 @@ def check_all_games(jwt_token: str, now: float) -> None:
         return
     games_dict = req_result.json()
 
-    # scan games
-    for game_id, game_dict in games_dict.items():
+    # scan games (use game identifier order)
+    for game_id, game_dict in sorted(games_dict.items(), key=lambda t: int(t[0])):
+
+        game_name = game_dict['name']
+
+        mylogger.LOGGER.info("DEBUG: considering game '%s'", game_name)  # TODO REMOVE
+
+        # not after deadline
+        if now <= game_dict['deadline']:
+            mylogger.LOGGER.info("DEBUG: no because we are not after deadline - deadline is %f now is %f", game_dict['deadline'], now)  # TODO REMOVE
+            continue
 
         # fast game
         if game_dict['fast']:
+            mylogger.LOGGER.info("DEBUG: no because fast")  # TODO REMOVE
             continue
 
         # archive game
         if game_dict['archive']:
+            mylogger.LOGGER.info("DEBUG: no because archive")  # TODO REMOVE
             continue
-
-        # not ongoing game (for safety since we selected only ongoing games)
-        if game_dict['current_state'] != state_expected:
-            continue
-
-        # game actually finished (for safety and optim since this is checked later as game_full_dict['finished']
-        if game_dict['current_advancement'] % 5 == 4 and (game_dict['current_advancement'] + 1) // 5 >= game_dict['nb_max_cycles_to_play']:
-            continue
-
-        # not after deadline
-        if now <= game_dict['deadline']:
-            continue
-
-        game_name = game_dict['name']
 
         # get full game data
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
@@ -279,9 +277,9 @@ def check_all_games(jwt_token: str, now: float) -> None:
             mylogger.LOGGER.info("Ignoring game '%s' that is soloed !", game_name)
             continue
 
-        mylogger.LOGGER.info("Trying game '%s'...", game_name)
-
-        _ = commute_game(jwt_token, now, game_id, game_full_dict)
+        result = commute_game(jwt_token, now, game_id, game_full_dict)
+        if result:
+            mylogger.LOGGER.info("=== Hurray, game '%s' was happily commuted!", game_name)
 
         # easy on the server !
         time.sleep(INTER_COMMUTATION_TIME_SEC)
