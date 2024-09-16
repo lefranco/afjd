@@ -116,15 +116,15 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
     # what is the season next to play ?
     if game_full_dict['current_advancement'] % 5 in [0, 2]:
         if not game_full_dict['cd_possible_moves']:
-            mylogger.LOGGER.info("No. Civil disorder not allowed for moves (currently expected) for game %s", game_name)
+            mylogger.LOGGER.info("No. Civil disorder not allowed for moves (which are currently expected) for game %s", game_name)
             return False
     elif game_full_dict['current_advancement'] % 5 in [1, 3]:
         if not game_full_dict['cd_possible_retreats']:
-            mylogger.LOGGER.info("No. Civil disorder not allowed for retreats (currently expected) for game %s", game_name)
+            mylogger.LOGGER.info("No. Civil disorder not allowed for retreats (which are currently expected) for game %s", game_name)
             return False
     else:
         if not game_full_dict['cd_possible_builds']:
-            mylogger.LOGGER.info("No. Civil disorder not allowed for builds (currently expected) for game %s", game_name)
+            mylogger.LOGGER.info("No. Civil disorder not allowed for builds (which are currently expected) for game %s", game_name)
             return False
 
     # not after deadline + grace
@@ -217,10 +217,12 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
 def check_all_games(jwt_token: str, now: float) -> None:
     """ check_all_games """
 
+    state_expected = 1
+
     # get all games
     host = lowdata.SERVER_CONFIG['GAME']['HOST']
     port = lowdata.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games"
+    url = f"{host}:{port}/games-in-state/{state_expected}"
     req_result = SESSION.get(url)
     if req_result.status_code != 200:
         if 'msg' in req_result.json():
@@ -240,11 +242,11 @@ def check_all_games(jwt_token: str, now: float) -> None:
         if game_dict['archive']:
             continue
 
-        # not ongoing game
-        if game_dict['current_state'] != 1:
+        # not ongoing game (for safety since we selected only ongoing games)
+        if game_dict['current_state'] != state_expected:
             continue
 
-        # game actually finished
+        # game actually finished (for safety and optim since this is checked later as game_full_dict['finished']
         if game_dict['current_advancement'] % 5 == 4 and (game_dict['current_advancement'] + 1) // 5 >= game_dict['nb_max_cycles_to_play']:
             continue
 
