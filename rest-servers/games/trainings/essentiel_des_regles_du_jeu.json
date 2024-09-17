@@ -20,7 +20,6 @@
     "help": "Refaire le tutoriel d'initiation ;-)"
 },
 
-
 {
     "title": "Particularités de la carte standard 1/2", 
     "type": "display",
@@ -159,7 +158,6 @@
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 12, 0, 40], [0, 0, 2, 68, 12, 40], [0, 0, 1, 40, 0, 57], [0, 0, 2, 10, 40, 57], [0, 0, 1, 73, 0, 57], [0, 0, 2, 51, 73, 57]] }
 },
 
-
 {
     "title": "Soutien coupé : cas 1/3", 
     "type": "adjudicate",
@@ -204,7 +202,6 @@
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 4, 10, 0, 0], [0, 0, 1, 40, 0, 57], [0, 0, 1, 51, 0, 10], [0, 0, 2, 57, 51, 10], [0, 0, 1, 12, 0, 40], [0, 0, 2, 68, 12, 40]] }
 },
-
 
 {
     "title": "Convoi multiple", 
@@ -269,7 +266,7 @@
 },
 
 {
-    "title": "Interdictions en retraite 1/2", 
+    "title": "Interdictions en retraite 2/2", 
     "type": "submit",
     "introduction" : "Il est interdit de retraiter vers les régions bloquées, objet de conflits lors de la phase de mouvement précédente, matérialisées par une croix rouge ici.<br><br><b>Vérifiez le en tentant de retraiter l'armée de Roumanie vers la Serbie... puis rectifiez pour disperser l'unité.</b>",
     "role_id" : 6,
@@ -282,6 +279,57 @@
         "forbiddens": [55]
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 7, 54, 0, 0]] },
+    "help": "Refaire le tutoriel d'initiation ;-)"
+},
+
+{
+    "title": "Construction en région avec côtes spéciales", 
+    "type": "submit",
+    "introduction" : "Lors d'une construction d'une flotte sur une région avec côtes spéciales, la côte doit bien entedu être précisée'.<br><br><b>Construisez une flotte à Saint Petersbourg côte nord.</b>",
+    "role_id" : 6,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 4, 
+    "position" : {
+        "ownerships": {"28": 6},
+        "dislodged_ones": {},
+        "units": {}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[[0, 2, 80, 6, 0, 0]], "orders":[[0, 0, 8, 80, 0, 0]] },
+    "help": "Refaire le tutoriel d'initiation ;-)"
+},
+
+{
+    "title": "Construction à l'intérieur des terres", 
+    "type": "submit",
+    "introduction" : "Lors d'une construction à l'intérieur des terres, seule une armée est possible.<br><br><b>Tentez de construire une flotte à Paris puis rectifiez pour une armée.</b>",
+    "role_id" : 2,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 4, 
+    "position" : {
+        "ownerships": {"20": 2},
+        "dislodged_ones": {},
+        "units": {}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[[0, 1, 47, 2, 0, 0]], "orders":[[0, 0, 8, 47, 0, 0]] },
+    "help": "Refaire le tutoriel d'initiation ;-)"
+},
+
+{
+    "title": "Refus de construction", 
+    "type": "submit",
+    "introduction" : "Si vous n'avez pas de centre de départ de libre, vous ne pouvez pas construire, même si vous avez gagné des centres. Idem si vous ne possédez plus aucun centre - auquel cas la partie est mal engagé pourt vous.<br><br>Par ailleurs, il est possible de refuser une construction (en général pour des raisons diplomatiques).<br>Dans cette situation, le français a pris trois centres dès le débvut de la partie, ce qui effraie ses voisins. Il décide donc de ne construire  que deux fois : flotte à Brest et armée à Paris (en étant allié avec l'italien)<br><br><b>Pouvez vous réaliser ses constructions ? Le système va produire des avertissement et vous demander confirmation.</b>",
+    "role_id" : 2,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 4, 
+    "position" : {
+        "ownerships": {"20": 2, "4": 2, "15": 2, "27": 2, "21": 2, "2": 2},
+        "dislodged_ones": {},
+        "units": {"2": [[1, 50], [2, 78], [1, 9]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[[0, 1, 47, 2, 0, 0], [0, 2, 14, 2, 0, 0]], "orders":[[0, 0, 8, 47, 0, 0], [0, 0, 8, 14, 0, 0]] },
     "help": "Refaire le tutoriel d'initiation ;-)"
 }
 
