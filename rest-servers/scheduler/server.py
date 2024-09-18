@@ -237,21 +237,16 @@ def check_all_games(jwt_token: str, now: float) -> None:
 
         game_name = game_dict['name']
 
-        mylogger.LOGGER.info("DEBUG: considering game '%s'", game_name)  # TODO REMOVE
-
         # not after deadline
         if now <= game_dict['deadline']:
-            mylogger.LOGGER.info("DEBUG: no because we are not after deadline - deadline is %f now is %f", game_dict['deadline'], now)  # TODO REMOVE
             continue
 
         # fast game
         if game_dict['fast']:
-            mylogger.LOGGER.info("DEBUG: no because fast")  # TODO REMOVE
             continue
 
         # archive game
         if game_dict['archive']:
-            mylogger.LOGGER.info("DEBUG: no because archive")  # TODO REMOVE
             continue
 
         # get full game data
