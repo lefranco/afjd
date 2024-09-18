@@ -3405,20 +3405,20 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # must be player
         if user_id != player_id:
-            orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-5-NOT-PLAYER")
+            orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-5-NOT-PLAYER")
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
 
         # not allowed for game master
         if role_id == 0 and not game.archive:
-            orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-6-NOT-POSSIBLE-MASTER")
+            orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-6-NOT-POSSIBLE-MASTER")
             del sql_executor
             flask_restful.abort(403, msg="Submitting orders is not possible for game master for non archive games")
 
         # archive games and fast games stick to agree now
         if game.fast or game.archive:
             if definitive_value == 2:
-                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR_7-AFTER-FAST-ARCHIVE")
+                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR_7-AFTER-FAST-ARCHIVE")
                 del sql_executor
                 flask_restful.abort(403, msg="Submitting agreement after deadine is not possible for fast or archive games")
 
@@ -3427,13 +3427,13 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
             # must not be soloed
             if game.soloed:
-                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-8-SOLOED")
+                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-8-SOLOED")
                 del sql_executor
                 flask_restful.abort(403, msg="Game is soloed!")
 
             # must not be finished
             if game.finished:
-                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-9-FINISHED")
+                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-9-FINISHED")
                 del sql_executor
                 flask_restful.abort(403, msg="Game is finished!")
 
@@ -3443,7 +3443,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
                 needed_list = [o[1] for o in actives_list]
                 if role_id not in needed_list:
-                    orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-10-NO-ORDER-REQUIRED")
+                    orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-10-NO-ORDER-REQUIRED")
                     del sql_executor
                     flask_restful.abort(403, msg="This role does not seem to require any orders")
 
@@ -3451,7 +3451,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             try:
                 the_orders = json.loads(orders_submitted)
             except json.JSONDecodeError:
-                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-11-JSON")
+                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-11-JSON")
                 del sql_executor
                 flask_restful.abort(400, msg="Did you convert orders from json to text ?")
 
@@ -3459,17 +3459,17 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             for the_order in the_orders:
                 if game.current_advancement % 5 in [0, 2]:
                     if the_order['order_type'] not in [1, 2, 3, 4, 5]:
-                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-12-WRONG-PHASE-1")
+                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-12-WRONG-PHASE-1")
                         del sql_executor
                         flask_restful.abort(400, msg="Seems we have a move phase, you must provide move orders! (or more probably, you submitted twice or game changed just before you submitted)")
                 if game.current_advancement % 5 in [1, 3]:
                     if the_order['order_type'] not in [6, 7]:
-                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-13-WRONG-PHASE-2")
+                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-13-WRONG-PHASE-2")
                         del sql_executor
                         flask_restful.abort(400, msg="Seems we have a retreat phase, you must provide retreat orders! (or more probably, you submitted twice or game changed just before you submitted")
                 if game.current_advancement % 5 in [4]:
                     if the_order['order_type'] not in [8, 9]:
-                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-14-WRONG-PHASE-3")
+                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-14-WRONG-PHASE-3")
                         del sql_executor
                         flask_restful.abort(400, msg="Seems we have a adjustements phase, you must provide adjustments orders! (or more probably, you submitted twice or game changed just before you submitted")
 
@@ -3497,7 +3497,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 if the_order['order_type'] == 8:
                     zone_num = the_order['active_unit']['zone']
                     if zone_num in occupied_zones:
-                        orders_logger.LOGGER.warning("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "15-BUILD-ALREADY")
+                        orders_logger.LOGGER.warning("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "15-BUILD-ALREADY")
                         del sql_executor
                         flask_restful.abort(400, msg="Trying to build in a zone where there is already a unit")
 
@@ -3519,7 +3519,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             variant_name = game.variant
             variant_dict = variants.Variant.get_by_name(variant_name)
             if variant_dict is None:
-                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-16-NO-VARIANT")
+                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-16-NO-VARIANT")
                 del sql_executor
                 flask_restful.abort(404, msg=f"Variant {variant_name} doesn't exist")
             variant_dict_json = json.dumps(variant_dict)
@@ -3624,7 +3624,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     fake_unit.delete_database(sql_executor)  # noqa: F821
 
                 print(f"ERROR from solve server  : {req_result.text}")
-                orders_logger.LOGGER.warning("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "17-ORDERS-REJECTED")
+                orders_logger.LOGGER.warning("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "17-ORDERS-REJECTED")
                 del sql_executor
                 flask_restful.abort(400, msg=f":-( {submission_report}")
 
@@ -3666,7 +3666,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             status, late, unsafe, missing, adjudicated, debug_message = agree.fake_post(now, game_id, role_id, definitive_value, adjudication_names, sql_executor)  # noqa: F821
 
             if not status:
-                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-18-FAILED-AGREE")
+                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-18-FAILED-AGREE")
                 del sql_executor  # noqa: F821
                 flask_restful.abort(400, msg=f"Failed to agree to adjudicate : {debug_message}")
 
@@ -3709,7 +3709,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     if req_result.status_code != 200:
                         print(f"ERROR from server  : {req_result.text}")
                         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-19-FAILED-SEND-NOTIFICATION")
+                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-19-FAILED-SEND-NOTIFICATION")
                         del sql_executor
                         flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
@@ -3730,7 +3730,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     role_id = int(role_id_str)
                     status, _, message = agree.disorder(game_id, role_id, game, variant_data, adjudication_names, sql_executor)  # noqa: F821
                     if not status:
-                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "ERR-20-FAILED-SET-DISORDER")
+                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-20-FAILED-SET-DISORDER")
                         del sql_executor
                         flask_restful.abort(400, msg=f"Failed to set power {role_id} in disorder : {message}")
 
@@ -3738,7 +3738,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             del sql_executor  # noqa: F821
             # end of protected section
 
-        orders_logger.LOGGER.info("pseudo=%s game=%s role=%d deadline=%s info=%s", pseudo, game.name, role_id, game_deadline, "100-SUBMITTED!")
+        orders_logger.LOGGER.info("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "100-SUBMITTED!")
 
         data = {'late': late, 'unsafe': unsafe, 'missing': missing, 'adjudicated': adjudicated, 'debug_message': debug_message, 'msg': submission_report}
 
