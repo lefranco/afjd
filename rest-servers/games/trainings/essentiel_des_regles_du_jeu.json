@@ -1,12 +1,12 @@
 {
-"title": "02 points essentiels de règles du jeu de Diplomatie à connaître (pour compléter le tutoreil initiation)",
+"title": "02 Les points essentiels de règles du jeu de Diplomatie à connaître (pour compléter le tutoreil initiation)",
 "slides": 
 [
 
 {
     "title": "Les côtes spéciales", 
     "type": "submit",
-    "introduction" : "La Bulgarie, l'Espagne et Saint Pétérsbourg comporte ce que l'on appelle des 'côtes spéciales'. Une flotte entrant d'un côté peut ensuite aller seulement dans une zone adjacentes à cette côte. Néanmoins, elle est considérée comme occupant l'intégralité de la région. Si une flotte peut accéder à plusieurs des différentes côtes, il est impératif de précise laquelle.<br><br><b>Pouvez-vous ordonner à la flotte turque de Constantinople d'aller en Bulgarie, mais en côte sud, pas en côte est ?</b>",
+    "introduction" : "La Bulgarie, l'Espagne et Saint-Pétersbourg comportent ce que l'on appelle des 'côtes spéciales'. Une flotte entrant d'un côté peut ensuite aller seulement dans une zone adjacentes à la côte par laquelle elle est entrée. Néanmoins, elle est considérée comme occupant l'intégralité de la région. Si une flotte peut accéder (déplacement ou soutien) à plusieurs des différentes côtes, il est impératif de préciser laquelle.<br><br><b>Pouvez-vous ordonner à la flotte turque de Constantinople d'aller en Bulgarie, mais en côte sud, pas en côte est ?</b>",
     "role_id" : 7,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
@@ -23,7 +23,7 @@
 {
     "title": "Particularités de la carte standard 1/2", 
     "type": "display",
-    "introduction" : "Kiel et Constantinople ne font qu'un seule côte, du fait des voies d'eau qui les traversent.<br>Une flotte peut aller de la Mer Baltique à Kiel puis de Kiel à la Baike de Héligoland.<br>Une flotte peut aller de la Mer Noire à Constantinople puis de Constantinople en Mer d'Egée.<br><br>Les armée peut pareillement franchir les voies d'eau.<br><br><b>Kiel et Constantinople  ont été distingués sur la carte par un cercle rouge.</b>",
+    "introduction" : "Kiel et Constantinople ne font qu'un seule côte, du fait des voies d'eau qui les traversent.<br>Une flotte peut aller de la Mer Baltique à Kiel puis de Kiel à la Baie de Héligoland.<br>Une flotte peut aller de la Mer Noire à Constantinople puis de Constantinople en Mer d'Egée.<br>Les armée peut pareillement franchir les voies d'eau.<br><br><b>Kiel et Constantinople  ont été distingués sur la carte par un cercle rouge.</b>",
     "role_id" : 7,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
@@ -56,7 +56,7 @@
 {
     "title": "Echange impossible", 
     "type": "adjudicate",
-    "introduction" : "Pour échanger deux unités il faut utiliser un convoi. Même en utilisant les côtes spéciales ! Espagne côte nord et sud sont la même région, donc il s'agit d'une attaque frontale.",
+    "introduction" : "Pour échanger deux unités il faut utiliser un convoi. Même en utilisant les côtes spéciales ! Espagne côte nord et côte sud sont la même région, donc il s'agit d'une attaque frontale.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -75,9 +75,9 @@
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
-        "ownerships": {},
+        "ownerships": {"2": 1, "11": 1},
         "dislodged_ones": {},
-        "units": {"1": [[2, 30], [2, 9]],"2": [[2, 45]]}, 
+        "units": {"1": [[1, 30], [2, 9]],"2": [[2, 45]]}, 
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 30, 0, 9], [0, 0, 1, 9, 0, 45], [0, 0, 1, 45, 0, 30]] }
@@ -86,7 +86,7 @@
 {
     "title": "Embouteillage", 
     "type": "adjudicate",
-    "introduction" : "Une unité qui ne parvient pas à bouger peut empêcher celles qui la suivent de le faire.",
+    "introduction" : "Une unité qui ne parvient pas à bouger peut empêcher une ou plusieurs autres qui la suivent de le faire.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -101,7 +101,7 @@
 {
     "title": "Soutien offensif 1/2", 
     "type": "adjudicate",
-    "introduction" : "Le soutien offensif doit correspondre au mouvement soutenu. Voyons ce cas simple dans lequel le mouvement ne correspond pas au soutien...",
+    "introduction" : "Le soutien offensif doit correspondre au mouvement soutenu.<br><br><b>Examinez ce cas simple dans lequel le mouvement ne correspond pas au soutien...</b>",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -116,7 +116,7 @@
 {
     "title": "Soutien offensif 2/2", 
     "type": "adjudicate",
-    "introduction" : "Le soutien offensif doit correspondre au mouvement soutenu. Attention, selon les dernières règles officielles, même la côte doit correspondre. Ceci a fait l'objet d'amples débats dans la comunauté puisque les règles précédente étaient un peu... disons... sujettes à interprêtation à ce sujet. NEANMOINS, l'implémentation de diplomania a choisi d'accorder le soutien même en cas de différence de côte. Voyons ce cas plus complexe dans lequel le mouvement ne correspond pas EXACTEMENT au soutien... A l'issue nous avons un italien qui retrouve la flotte anglaise bien prlus proche de son territoire qu'il ne l'avait escompté au départ...'",
+    "introduction" : "Attention, selon les dernières règles officielles, même la côte doit correspondre. Ceci avait fait l'objet - dans le passé - d'amples débats dans la comunauté puisque les règles précédente étaient un peu... disons... sujettes à interprêtation à ce sujet. NEANMOINS, l'implémentation de diplomania, très antérieure à la règle actuelle, a choisi d'accorder le soutien même en cas de différence de côte.<br><br><b>Examinez ce cas plus complexe dans lequel le mouvement ne correspond pas EXACTEMENT au soutien... A l'issue nous avons un italien qui retrouve la flotte anglaise bien prlus proche de son territoire qu'il ne l'avait escompté au départ...</b>",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -191,7 +191,7 @@
 {
     "title": "Soutien coupé 3/3", 
     "type": "adjudicate",
-    "introduction" : "Une unité délogée par une région peut néanmoins couper le soutien par une autre.",
+    "introduction" : "Une unité délogée par une région peut néanmoins couper le soutien exercé par une unité depuis une autre région.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -204,7 +204,7 @@
 },
 
 {
-    "title": "Convoi multiple", 
+    "title": "Chaîne de convois", 
     "type": "adjudicate",
     "introduction" : "Une armée peut emprunter une chemin de convoi constitué de plusieurs flottes différentes et/ou de plusieurs nationalités différentes.",
     "variant_name" : "standard",
@@ -216,6 +216,22 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 34, 0, 65], [0, 0, 5, 23, 34, 65], [0, 0, 5, 38, 34, 65], [0, 0, 5, 74, 34, 65]] }
+},
+
+
+{
+    "title": "Convoi attaqué", 
+    "type": "adjudicate",
+    "introduction" : "Une flotte convoyeuse attaquée mais pas délogée continue à assurer le convoi.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"27": 2},
+        "dislodged_ones": {},
+        "units": {"2": [[1, 60], [2, 27], [2, 67]], "4": [[2, 31]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 60, 0, 42], [0, 0, 5, 27, 60, 42], [0, 0, 5, 67, 60, 42], [0, 0, 1, 31, 0, 67]] }
 },
 
 {
@@ -285,7 +301,7 @@
 {
     "title": "Construction en région avec côtes spéciales", 
     "type": "submit",
-    "introduction" : "Lors d'une construction d'une flotte sur une région avec côtes spéciales, la côte doit bien entedu être précisée'.<br><br><b>Construisez une flotte à Saint Petersbourg côte nord.</b>",
+    "introduction" : "Lors d'une construction d'une flotte sur une région avec côtes spéciales, la côte doit bien entedu être précisée.<br><br><b>Construisez une flotte à Saint Petersbourg côte nord.</b>",
     "role_id" : 6,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 4, 
@@ -302,7 +318,7 @@
 {
     "title": "Construction à l'intérieur des terres", 
     "type": "submit",
-    "introduction" : "Lors d'une construction à l'intérieur des terres, seule une armée est possible.<br><br><b>Tentez de construire une flotte à Paris puis rectifiez pour une armée.</b>",
+    "introduction" : "Pour une construction à l'intérieur des terres, seule une armée est possible.<br><br><b>Tentez de construire une flotte à Paris puis rectifiez pour une armée.</b>",
     "role_id" : 2,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 4, 
@@ -331,6 +347,40 @@
     },
     "expected_orders" : {"fake_units":[[0, 1, 47, 2, 0, 0], [0, 2, 14, 2, 0, 0]], "orders":[[0, 0, 8, 47, 0, 0], [0, 0, 8, 14, 0, 0]] },
     "help": "Refaire le tutoriel d'initiation ;-)"
+},
+
+{
+    "title": "Dix huit centres !", 
+    "type": "submit",
+    "introduction" : "Il y a 34 centres en tout. Si vous arrivez à en posséder la moitié plus un - donc dix huit - la partie s'arrête immédiatement et la vitoire est votre.<br><br><b>Pouvez-vous prendre le centre manquant pour la victoire absolue dans cette position (en réalisant Livonie - Varsovie et tout le reste tient) ?</b>",
+    "role_id" : 2,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 52, 
+    "position" : {
+        "ownerships": {"20": 2},
+        "dislodged_ones": {},
+        "units": {"2": [[1, 50]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 4, 50, 0, 0]] },
+    "help": "Refaire le tutoriel d'initiation ;-)"
+},
+
+
+
+{
+    "title": "Conclusion...", 
+    "type": "display",
+    "introduction" : "Si vous avez aperçu une  coquille dans le tutoriel, manifestez-vous (sur le forum idéalement) ! D'autres sont a venir, plus techniques encore. Si ce tutoriel vous a plu, n'hésitez pas à diffuser le lien pour qu'il profite à d'autres néopĥytes...",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] }
 }
 
 
