@@ -307,7 +307,7 @@ def get_game_status():
 
     # reload
     form = html.FORM()
-    input_help = html.INPUT(type="submit", value="recharger l'explication", Class='btn-inside')
+    input_help = html.INPUT(type="submit", value="Ré-afficher l'explication", Class='btn-inside')
     input_help.attrs['style'] = 'font-size: 10px'
     input_help.bind("click", reload_text_callback)
     form <= input_help
