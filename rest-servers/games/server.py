@@ -3256,8 +3256,9 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
             submitted_list = [o[1] for o in submissions_list]
             if set(submitted_list) != set(needed_list):
+                missing_list = list(set(needed_list) - set(submitted_list))
                 del sql_executor
-                flask_restful.abort(400, msg="There is at least a role that does not seem to have submitted orders yet")
+                flask_restful.abort(400, msg=f"There is at least a role that does not seem to have submitted orders yet : {missing_list}")
 
             # check some orders are submitted agreed but after
             definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
