@@ -263,7 +263,7 @@ def get_game_status():
 
     # reset
     form = html.FORM()
-    input_reset_training = html.INPUT(type="submit", value="reset", Class='btn-inside')
+    input_reset_training = html.INPUT(type="submit", value="quitter", Class='btn-inside')
     input_reset_training.attrs['style'] = 'font-size: 10px'
     input_reset_training.bind("click", reset_training_callback)
     form <= input_reset_training
@@ -307,7 +307,7 @@ def get_game_status():
 
     # reload
     form = html.FORM()
-    input_help = html.INPUT(type="submit", value="Ré-afficher l'explication", Class='btn-inside')
+    input_help = html.INPUT(type="submit", value="ré-afficher l'explication", Class='btn-inside')
     input_help.attrs['style'] = 'font-size: 10px'
     input_help.bind("click", reload_text_callback)
     form <= input_help
