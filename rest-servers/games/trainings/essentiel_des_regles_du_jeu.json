@@ -367,7 +367,7 @@
 {
     "title": "Dix huit centres ! 2/2", 
     "type": "submit",
-    "introduction" : "Sur le slide précédent le français a pris son 18ème centre. Le compteur de centres est passé à 18. Reste au russe à effectuer sa retraite pour que la partie se finisse ! <br><br>Dans une partie sur site le solo est détecté à l'issue de cette phase de retraites d'Automne (appelée ici 'Hiver')<br><br><b>Pouvez-vous réaliser la retraite russe de Varsovie en Galicie (elle n'a aucune importance pour la partie)?</b>",
+    "introduction" : "Sur le slide précédent le français a pris son 18ème centre. Le compteur de centres passera à 18 après la retraite russe. Reste au russe à effectuer sa retraite pour que la partie se finisse ! <br><br>Dans une partie sur site le solo est détecté à l'issue de cette phase de retraites d'Automne (appelée ici 'Hiver')<br><br><b>Pouvez-vous réaliser la retraite russe de Varsovie en Galicie (elle n'a aucune importance pour la partie) ?</b>",
     "role_id" : 6,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 53, 
