@@ -173,10 +173,6 @@
         "3": {
             "name": "sc",
             "full_name": "south coast"
-        },
-        "4": {
-            "name": "wc",
-            "full_name": "west coast"
         }
     },
     "zones": {
