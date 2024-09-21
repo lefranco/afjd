@@ -218,6 +218,8 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
 def check_all_games(jwt_token: str, now: float) -> None:
     """ check_all_games """
 
+    mylogger.LOGGER.info("Trying all games with reference time=%d...", now)
+
     state_expected = 1
 
     # get all games
@@ -286,10 +288,10 @@ def time_next_and_to_wait() -> typing.Tuple[float, float]:
     timestamp_now = time.time()
     next_hour_time = (round(timestamp_now) // (60 * 60)) * (60 * 60) + (60 * 60)
 
-    # time of next try : make sure we are before theoretical
-    next_time = next_hour_time - EPSILON_SEC
+    # time of next try : make sure we are after theoretical
+    next_time = next_hour_time + EPSILON_SEC
 
-    # time to wait before next try : make sure we are after theoretical
+    # time to wait before next try: make sure we are after theoretical
     wait_time = next_hour_time - timestamp_now
     wait_time += EPSILON_SEC
 
@@ -337,8 +339,6 @@ def acting_threaded_procedure() -> None:
         next_time = None
 
         while True:
-
-            mylogger.LOGGER.info("Trying all games...")
 
             # try to commute all games
             now = next_time if next_time is not None else time.time()
