@@ -391,7 +391,7 @@
         "26": {
             "name": "Gas",
             "full_name": "Gascony",
-            "x_pos": 254,
+            "x_pos": 227,
             "y_pos": 507,
             "x_legend_pos": 227,
             "y_legend_pos": 493,
@@ -577,7 +577,7 @@
         "48": {
             "name": "Pic",
             "full_name": "Picardy",
-            "x_pos": 279,
+            "x_pos": 247,
             "y_pos": 417,
             "x_legend_pos": 252,
             "y_legend_pos": 404,
@@ -586,7 +586,7 @@
         "49": {
             "name": "Pie",
             "full_name": "Piedmont",
-            "x_pos": 355,
+            "x_pos": 317,
             "y_pos": 504,
             "x_legend_pos": 331,
             "y_legend_pos": 495,
