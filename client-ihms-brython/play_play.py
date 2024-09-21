@@ -547,6 +547,10 @@ def submit_orders():
         nonlocal selected_build_zone
         nonlocal buttons_right
 
+        if event.detail != 1:
+            # Otherwise confusion click/double-click
+            return
+
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         # this is a shortcut
@@ -621,7 +625,7 @@ def submit_orders():
                     buttons_right <= legend_select_order21
                     buttons_right <= html.BR()
 
-                    for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                    for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer"]:
                         legend_select_order22 = html.I(info)
                         buttons_right <= legend_select_order22
                         buttons_right <= html.BR()
@@ -865,32 +869,33 @@ def submit_orders():
 
     def callback_canvas_dblclick(event):
         """
-        called when there is a double click or when pressing 'x' in which case a None is passed
+        called when there is a double click
         """
 
         nonlocal automaton_state
         nonlocal buttons_right
 
+        if event.detail != 2:
+            # Otherwise confusion click/double-click
+            return
+
         # the aim is to give this variable a value
         selected_erase_unit = None
 
-        # first : take from event
-        if event:
+        # where is the click
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
-            # where is the click
-            pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        # moves : select unit : easy case
+        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
+            selected_erase_unit = play_low.POSITION_DATA.closest_unit(pos, False)
 
-            # moves : select unit : easy case
-            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
-                selected_erase_unit = play_low.POSITION_DATA.closest_unit(pos, False)
+        # retreat : select dislodged unit : easy case
+        if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+            selected_erase_unit = play_low.POSITION_DATA.closest_unit(pos, True)
 
-            # retreat : select dislodged unit : easy case
-            if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                selected_erase_unit = play_low.POSITION_DATA.closest_unit(pos, True)
-
-            #  builds : tougher case : we take the build units into account
-            if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                selected_erase_unit = orders_data.closest_unit_or_built_unit(pos)
+        #  builds : tougher case : we take the build units into account
+        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+            selected_erase_unit = orders_data.closest_unit_or_built_unit(pos)
 
         # event is None when coming from x pressed, then take 'selected_active_unit' (that can be None)
         if selected_erase_unit is None:
@@ -1034,12 +1039,6 @@ def submit_orders():
         """ callback_keypress """
 
         char = chr(event.charCode).lower()
-
-        # order removal : special
-        if char == 'x':
-            # pass to double click
-            callback_canvas_dblclick(None)
-            return
 
         # order shortcut
         selected_order = mapping.OrderTypeEnum.shortcut(char)
@@ -1663,7 +1662,7 @@ def submit_communication_orders():
                 buttons_right <= legend_select_order21
                 buttons_right <= html.BR()
 
-                for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer"]:
                     legend_select_order22 = html.I(info)
                     buttons_right <= legend_select_order22
                     buttons_right <= html.BR()
@@ -1801,7 +1800,7 @@ def submit_communication_orders():
 
     def callback_canvas_dblclick(event):
         """
-        called when there is a double click or when pressing 'x' in which case a None is passed
+        called when there is a double click
         """
 
         nonlocal automaton_state
@@ -1935,12 +1934,6 @@ def submit_communication_orders():
         """ callback_keypress """
 
         char = chr(event.charCode).lower()
-
-        # order removal : special
-        if char == 'x':
-            # pass to double click
-            callback_canvas_dblclick(None)
-            return
 
         # order shortcut
         selected_order = mapping.OrderTypeEnum.shortcut(char)

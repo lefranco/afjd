@@ -1127,6 +1127,10 @@ def slide_submit_orders():
         nonlocal selected_build_zone
         nonlocal buttons_right
 
+        if event.detail != 1:
+            # Otherwise confusion click/double-click
+            return
+
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         # this is a shortcut
@@ -1197,7 +1201,7 @@ def slide_submit_orders():
                     buttons_right <= legend_select_order21
                     buttons_right <= html.BR()
 
-                    for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                    for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer"]:
                         legend_select_order22 = html.I(info)
                         buttons_right <= legend_select_order22
                         buttons_right <= html.BR()
@@ -1423,11 +1427,15 @@ def slide_submit_orders():
 
     def callback_canvas_dblclick(event):
         """
-        called when there is a double click or when pressing 'x' in which case a None is passed
+        called when there is a double click
         """
 
         nonlocal automaton_state
         nonlocal buttons_right
+
+        if event.detail != 2:
+            # Otherwise confusion click/double-click
+            return
 
         # the aim is to give this variable a value
         selected_erase_unit = None
@@ -1586,12 +1594,6 @@ def slide_submit_orders():
         """ callback_keypress """
 
         char = chr(event.charCode).lower()
-
-        # order removal : special
-        if char == 'x':
-            # pass to double click
-            callback_canvas_dblclick(None)
-            return
 
         # order shortcut
         selected_order = mapping.OrderTypeEnum.shortcut(char)
