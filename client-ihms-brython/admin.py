@@ -735,6 +735,15 @@ def rectify_position():
             # Otherwise confusion click/double-click
             return
 
+    def callback_canvas_dblclick(event):
+        """
+        called when there is a double click
+        """
+
+        if event.detail != 2:
+            # Otherwise confusion click/double-click
+            return
+
         # where is the click
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
@@ -768,16 +777,6 @@ def rectify_position():
 
         # update map
         callback_render(True)
-
-    def callback_canvas_dblclick(event):
-        """
-        called when there is a double click
-        """
-        if event.detail != 2:
-            # Otherwise confusion click/double-click
-            return
-
-        alert("Ne pas utiliser le double clic.")
 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
