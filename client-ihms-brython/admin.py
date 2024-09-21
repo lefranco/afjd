@@ -1261,7 +1261,7 @@ def rectify_current_state():
         MY_SUB_PANEL <= html.BR()
 
 
-LINES_SUBMISSION_LOGS = 600
+LINES_SUBMISSION_LOGS = 1000
 
 
 def show_submissions_logs():
@@ -2010,7 +2010,7 @@ def show_idle_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
 
 
-LINES_SCHEDULER_LOGS = 300
+LINES_SCHEDULER_LOGS = 600
 
 
 def show_scheduler_logs():
