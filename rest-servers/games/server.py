@@ -6471,6 +6471,8 @@ class GameCancelLastAdjudicationRessource(flask_restful.Resource):  # type: igno
 
         # extract transition data
         assert last_transition is not None
+
+        # situation
         the_situation = json.loads(last_transition.situation_json)
         the_ownerships = the_situation['ownerships']
         the_units = the_situation['units']
@@ -6520,6 +6522,24 @@ class GameCancelLastAdjudicationRessource(flask_restful.Resource):  # type: igno
         for (_, rol_id, _, zone_num, _, _) in orders.Order.list_by_game_id(sql_executor, game_id):
             order = orders.Order(int(game_id), rol_id, 0, zone_num, 0, 0)
             order.delete_database(sql_executor)
+
+        # orders
+        the_orders1 = json.loads(last_transition.orders_json)
+        the_fakes_units = the_orders1['fake_units']
+        the_orders = the_orders1['orders']
+
+        print(f"{the_fakes_units=}", file=sys.stderr)
+        print(f"{the_orders=}", file=sys.stderr)
+
+        # insert new fake units
+        for (_, type_num, zone_num, role_num, _, _) in the_fakes_units:
+            unit = units.Unit(int(game_id), type_num, zone_num, int(role_num), 0, 1)
+            unit.update_database(sql_executor)
+
+        # insert new orders
+        for (_, role_num, order_type, zone_num, passive_num, dest_num) in the_orders:
+            order = orders.Order(int(game_id), role_num, order_type, zone_num, passive_num, dest_num)
+            order.update_database(sql_executor)
 
         # rollback game
         game.rollback()
