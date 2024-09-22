@@ -697,23 +697,25 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 # we are starting the game
                 # ----
 
-                # check enough players
+                # check enough players if game is not archive
 
-                nb_players_allocated = game.number_allocated(sql_executor)
-                variant_name = game.variant
-                variant_data = variants.Variant.get_by_name(variant_name)
-                assert variant_data is not None
-                number_players_expected = variant_data['roles']['number']
+                if not game.archive:
 
-                if nb_players_allocated < number_players_expected:
-                    data = {'name': name, 'msg': 'Not enough players !'}
-                    del sql_executor
-                    return data, 400
+                    nb_players_allocated = game.number_allocated(sql_executor)
+                    variant_name = game.variant
+                    variant_data = variants.Variant.get_by_name(variant_name)
+                    assert variant_data is not None
+                    number_players_expected = variant_data['roles']['number']
 
-                if nb_players_allocated > number_players_expected:
-                    data = {'name': name, 'msg': 'Too many players !'}
-                    del sql_executor
-                    return data, 400
+                    if nb_players_allocated < number_players_expected:
+                        data = {'name': name, 'msg': 'Not enough players !'}
+                        del sql_executor
+                        return data, 400
+
+                    if nb_players_allocated > number_players_expected:
+                        data = {'name': name, 'msg': 'Too many players !'}
+                        del sql_executor
+                        return data, 400
 
                 # start the game
                 game.start(sql_executor)
@@ -6392,6 +6394,144 @@ class GameDropoutsManageRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'msg': 'Ok dropout removed if present'}
+        return data, 200
+
+
+@API.resource('/game-cancel-last-adjudication/<game_id>')
+class GameCancelLastAdjudicationRessource(flask_restful.Resource):  # type: ignore
+    """ GameCancelLastAdjudicationRessource """
+
+    def delete(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Cancels last adjudication of game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-cancel-last-adjudication/<game_id> - DELETE - canceling last adjudication  game id=%s", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Game with id {game_id} doesn't exist")
+
+        # check this is game_master
+        assert game is not None
+        if game.get_role(sql_executor, 0) != user_id:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+
+        # check game is archive
+        if not game.archive:
+            del sql_executor
+            flask_restful.abort(400, msg="Game is not archive")
+
+        # check game is ongoing
+        if game.current_state != 1:
+            del sql_executor
+            flask_restful.abort(400, msg="Game is not ongoing")
+
+        # get current_advancement
+        last_advancement_played = game.current_advancement - 1
+
+        # check game as a transition
+        last_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
+
+        if not last_transition:
+            del sql_executor
+            flask_restful.abort(400, msg="There is not last transition")
+
+        # extract transition data
+        assert last_transition is not None
+        the_situation = json.loads(last_transition.situation_json)
+        the_ownerships = the_situation['ownerships']
+        the_units = the_situation['units']
+        the_dislodged_units = the_situation['dislodged_ones']
+        the_forbiddens = the_situation['forbiddens']
+
+        # purge previous ownerships
+        for (_, center_num, role_num) in ownerships.Ownership.list_by_game_id(sql_executor, int(game_id)):
+            ownership = ownerships.Ownership(int(game_id), center_num, role_num)
+            ownership.delete_database(sql_executor)
+
+        # purge previous units
+        for (_, type_num, role_num, zone_num, zone_dislodged_from_num, fake) in units.Unit.list_by_game_id(sql_executor, int(game_id)):
+            unit = units.Unit(int(game_id), type_num, role_num, zone_num, zone_dislodged_from_num, fake)
+            unit.delete_database(sql_executor)
+
+        # purge previous forbiddens
+        for (_, center_num) in forbiddens.Forbidden.list_by_game_id(sql_executor, int(game_id)):
+            forbidden = forbiddens.Forbidden(int(game_id), center_num)
+            forbidden.delete_database(sql_executor)
+
+        # insert
+
+        # insert new ownerships
+        for center_num, role in the_ownerships.items():
+            ownership = ownerships.Ownership(int(game_id), int(center_num), role)
+            ownership.update_database(sql_executor)
+
+        # insert new units
+        for role_num, the_unit_role in the_units.items():
+            for type_num, zone_num in the_unit_role:
+                unit = units.Unit(int(game_id), type_num, zone_num, int(role_num), 0, 0)
+                unit.update_database(sql_executor)
+
+        # insert new dislodged units
+        for role_num, the_unit_role in the_dislodged_units.items():
+            for type_num, zone_num, zone_dislodged_from_num in the_unit_role:
+                unit = units.Unit(int(game_id), type_num, zone_num, int(role_num), zone_dislodged_from_num, 0)
+                unit.update_database(sql_executor)
+
+        # insert new forbiddens
+        for region_num in the_forbiddens:
+            forbidden = forbiddens.Forbidden(int(game_id), region_num)
+            forbidden.update_database(sql_executor)
+
+        # remove orders
+        for (_, rol_id, _, zone_num, _, _) in orders.Order.list_by_game_id(sql_executor, game_id):
+            order = orders.Order(int(game_id), rol_id, 0, zone_num, 0, 0)
+            order.delete_database(sql_executor)
+
+        # rollback game
+        game.rollback()
+        game.update_database(sql_executor)
+
+        # delete transition
+        last_transition.delete_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': f'Ok last adjudication {last_advancement_played} cancelled'}
         return data, 200
 
 

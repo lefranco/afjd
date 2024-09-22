@@ -735,13 +735,17 @@ class Game:
         self._nopress_current = False
 
     def terminate(self) -> None:
-        """ start the game """
+        """ terminate the game """
 
         # clear restrictions (to make sure)
         self.debrief()
 
         # set a fake deadline far in future
         self._deadline = 10000000000
+
+    def rollback(self) -> None:
+        """ rollback the game """
+        self._current_advancement -= 1
 
     @property
     def identifier(self) -> int:
