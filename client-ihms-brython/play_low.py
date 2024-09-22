@@ -283,6 +283,33 @@ def game_transition_reload(game_id, advancement):
     return transition_loaded
 
 
+def cancel_last_adjudication_callback(_):
+    """ cancel_last_adjudication_callback """
+
+    def reply_callback(req):
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la demande d'annulation de dernière résolution de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la demande d'annulation de dernière résolution de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        messages = "<br>".join(req_result['msg'].split('\n'))
+        alert(f"Dernière résolution effacée : {messages}!<br>Attention ! Il faut recharger la partie maintenant...")
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-cancel-last-adjudication/{GAME_ID}"
+
+    # cancel last adjudication a game : need token
+    ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
@@ -446,6 +473,16 @@ def stack_last_moves_button(frame):
     input_last_moves = html.INPUT(type="submit", value="Derniers mouvements", Class='btn-inside')
     input_last_moves.bind("click", lambda e: play.load_option(e, 'Consulter', True))
     frame <= input_last_moves
+    frame <= html.BR()
+    frame <= html.BR()
+
+
+def stack_cancel_last_adjudication_button(frame):
+    """ stack_cancel_last_adjudication_button """
+
+    input_erase = html.INPUT(type="submit", value="Effacer dernière résolution", Class='btn-inside')
+    input_erase.bind("click", cancel_last_adjudication_callback)
+    frame <= input_erase
     frame <= html.BR()
     frame <= html.BR()
 

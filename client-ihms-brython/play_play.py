@@ -237,6 +237,10 @@ def submit_orders():
         # role flag
         play_low.stack_role_flag(buttons_right)
 
+        # button erase for archive games
+        if play_low.GAME_PARAMETERS_LOADED['archive']:
+            play_low.stack_cancel_last_adjudication_button(buttons_right)
+
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
 
@@ -281,6 +285,10 @@ def submit_orders():
 
         # role flag
         play_low.stack_role_flag(buttons_right)
+
+        # button erase for archive games
+        if play_low.GAME_PARAMETERS_LOADED['archive']:
+            play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
@@ -338,6 +346,10 @@ def submit_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
+            # button erase for archive games
+            if play_low.GAME_PARAMETERS_LOADED['archive']:
+                play_low.stack_cancel_last_adjudication_button(buttons_right)
+
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
 
@@ -394,6 +406,10 @@ def submit_orders():
 
             # role flag
             play_low.stack_role_flag(buttons_right)
+
+            # button erase for archive games
+            if play_low.GAME_PARAMETERS_LOADED['archive']:
+                play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
@@ -577,6 +593,10 @@ def submit_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
+            # button erase for archive games
+            if play_low.GAME_PARAMETERS_LOADED['archive']:
+                play_low.stack_cancel_last_adjudication_button(buttons_right)
+
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
 
@@ -680,6 +700,10 @@ def submit_orders():
 
             # role flag
             play_low.stack_role_flag(buttons_right)
+
+            # button erase for archive games
+            if play_low.GAME_PARAMETERS_LOADED['archive']:
+                play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
@@ -799,6 +823,10 @@ def submit_orders():
 
             # role flag
             play_low.stack_role_flag(buttons_right)
+
+            # button erase for archive games
+            if play_low.GAME_PARAMETERS_LOADED['archive']:
+                play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
@@ -921,6 +949,10 @@ def submit_orders():
 
         # role flag
         play_low.stack_role_flag(buttons_right)
+
+        # button erase for archive games
+        if play_low.GAME_PARAMETERS_LOADED['archive']:
+            play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
@@ -1369,6 +1401,10 @@ def submit_orders():
 
     # role flag
     play_low.stack_role_flag(buttons_right)
+
+    # button erase for archive games
+    if play_low.GAME_PARAMETERS_LOADED['archive']:
+        play_low.stack_cancel_last_adjudication_button(buttons_right)
 
     # button last moves
     play_low.stack_last_moves_button(buttons_right)
