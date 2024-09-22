@@ -6528,9 +6528,6 @@ class GameCancelLastAdjudicationRessource(flask_restful.Resource):  # type: igno
         the_fakes_units = the_orders1['fake_units']
         the_orders = the_orders1['orders']
 
-        print(f"{the_fakes_units=}", file=sys.stderr)
-        print(f"{the_orders=}", file=sys.stderr)
-
         # insert new fake units
         for (_, type_num, zone_num, role_num, _, _) in the_fakes_units:
             unit = units.Unit(int(game_id), type_num, zone_num, int(role_num), 0, 1)
