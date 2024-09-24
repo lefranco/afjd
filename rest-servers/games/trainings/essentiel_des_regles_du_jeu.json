@@ -4,6 +4,23 @@
 [
 
 {
+    "title": "La Suisse et les zones neutres", 
+    "type": "submit",
+    "introduction" : "La Suisse est hors-jeu, c'est pourquoi elle est matérialisée dans une couleur plus sombre.<br><br><b>Pouvez-vous tenter d'ordonner à l'armée de Bourgogne de s'y rendre ? - Impossible ! - Entrez finalement pour cette armée un ordre de tenir en place pour continuer le tutoriel... ?</b>",
+    "role_id" : 2,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"2": [[1, 17]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 4, 17, 0, 0]] },
+    "help": "Refaire le tutoriel d'initiation ;-)"
+},
+
+{
     "title": "Les côtes spéciales", 
     "type": "submit",
     "introduction" : "La Bulgarie, l'Espagne et Saint-Pétersbourg comportent ce que l'on appelle des 'côtes spéciales'. Une flotte entrant d'un côté peut ensuite aller seulement dans une zone adjacentes à la côte par laquelle elle est entrée. Néanmoins, elle est considérée comme occupant l'intégralité de la région. Si une flotte peut accéder (déplacement ou soutien) à plusieurs des différentes côtes, il est impératif de préciser laquelle.<br><br><b>Pouvez-vous ordonner à la flotte turque de Constantinople d'aller en Bulgarie, mais en côte sud, pas en côte est ?</b>",
