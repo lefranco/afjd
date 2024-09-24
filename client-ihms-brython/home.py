@@ -262,7 +262,7 @@ def show_news():
     # ==A5==============================
 
     div_a5 = html.DIV(Class='tooltip')
-    title1 = html.H4("Remplacements urgents et dernier message des dicsussions ligne")
+    title1 = html.H4("Remplacements urgents et dernier message des discussions en ligne")
     div_a5 <= title1
 
     # ----
