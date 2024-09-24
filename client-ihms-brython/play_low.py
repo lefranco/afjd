@@ -733,7 +733,7 @@ def get_game_status():
     col = html.TD(form)
     row <= col
 
-    col = html.TD(game_description, colspan="10")
+    col = html.TD("<br>".join(game_description.split('\n')), colspan="10")
     row <= col
 
     form = html.FORM()
