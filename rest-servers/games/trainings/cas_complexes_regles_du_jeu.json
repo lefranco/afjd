@@ -3,6 +3,173 @@
 "slides": 
 [
 
+
+{
+    "title": "Impossible de se déloger 1/5", 
+    "type": "adjudicate",
+    "introduction" : "Il est impossible de déloger une de ses propres unités. L'armée française à Paris ne peut pas déloger so armée compatriote en Bourgogne.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"20": 1, "15": 1},
+        "dislodged_ones": {},
+        "units": {"2": [[1, 47],[1, 37],[1, 17]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 47, 0, 17], [0, 0, 2, 37, 47, 17], [0, 0, 4, 17, 0, 0]] }
+},
+
+{
+    "title": "Impossible de se déloger 2/5", 
+    "type": "adjudicate",
+    "introduction" : "Il est impossible de contribuer à déloger une de ses propres unités. L'armée française à Paris ne peut pas contribuer à aider l'armée allemande à déloger son armée compatriote en Bourgogne.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"20": 2, "15": 2},
+        "dislodged_ones": {},
+        "units": {"2": [[1, 47], [1, 17]], "3": [[1, 53]], "4": [[1, 37]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 47, 0, 17], [0, 0, 1, 17, 0, 37], [0, 0, 2, 53, 47, 17], [0, 0, 1, 37, 0, 17]] }
+},
+
+{
+    "title": "Impossible de se déloger 3/5", 
+    "type": "adjudicate",
+    "introduction" : "L'armée française à Paris ne peut pas contribuer à aider l'armée allemande en Rhénanie à déloger son armée compatriote en Bourgogne. Il eût fallu que l'allemand mette à contribution son armée à Munich pour réussir...",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"20": 2, "17": 3},
+        "dislodged_ones": {},
+        "units": {"3": [[1, 53], [1, 40]], "2": [[1, 47], [1, 17]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 53, 0, 17], [0, 0, 4, 40, 0, 0], [0, 0, 2, 47, 53, 17], [0, 0, 4, 17, 0, 0]] }
+},
+
+{
+    "title": "Impossible de se déloger 4/5", 
+    "type": "adjudicate",
+    "introduction" : "L'armée allemande de Munich et l'armee autrichienne du Tyrol s'opposent. L'allemand tente de créée un stand off en Munich avec ses armées de Silésie et Rhénanie. Néanmoins, l'autriche donne un soutien inattendu à Silésie pour qu'elle aille en Munich. Habiltuellement cela fonctionnerait, mais pas dans ce cas car cela lui ferait déloger une unité compatriote.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"17": 3},
+        "dislodged_ones": {},
+        "units": {"3": [[1, 40], [1, 53], [1, 57]], "5": [[1, 68], [1, 12]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 40, 0, 68], [0, 0, 1, 53, 0, 40], [0, 0, 1, 57, 0, 40], [0, 0, 1, 68, 0, 40], [0, 0, 2, 12, 57, 40]] }
+},
+
+{
+    "title": "Impossible de se déloger 5/5", 
+    "type": "adjudicate",
+    "introduction" : "L'anglais ne peut pas déloger sa propre unité mais son soutien n'est pas pas perdu puisqu'il sert à empêcher l'unité russe soutenue d'entrer dans Kiel.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"3": 6, "12": 3, "8": 1},
+        "dislodged_ones": {},
+        "units": {"1": [[2, 20], [2, 45], [2, 29]], "6": [[1, 10], [2, 58], [2, 7]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 20, 0, 33], [0, 0, 1, 45, 0, 20], [0, 0, 2, 29, 45, 20], [0, 0, 1, 10, 0, 33], [0, 0, 1, 58, 0, 20], [0, 0, 2, 7, 58, 20]] }
+},
+
+{
+    "title": "Self Standoff", 
+    "type": "adjudicate",
+    "introduction" : "L'autrichien tente de contrôler à la fois la Serbie, Budapest et Vienne avec deux unités, en laissant Budapest vacant par un standoff. Toutefois, le russe, en embuscade, soutient le mouvement de la Serbie tant et si bien que ce dernier mouvement réussit !",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"5": 5, "33": 5, "24": 5},
+        "dislodged_ones": {},
+        "units": {"5": [[1, 55], [1, 71]], "6": [ [1, 25]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 55, 0, 15], [0, 0, 1, 71, 0, 15], [0, 0, 2, 25, 55, 15]] }
+},
+
+{
+    "title": "Impossible de couper son propre soutien.", 
+    "type": "adjudicate",
+    "introduction" : "Une attaque d'une unité compatriote n'en coupe pas le soutien.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"13": 1, "2": 2, "4": 2},
+        "dislodged_ones": {},
+        "units": {"1": [[2, 34]], "2": [[2, 9], [2, 14], [1, 26]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 34, 0, 23], [0, 0, 1, 9, 0, 23], [0, 0, 2, 14, 9, 23], [0, 0, 1, 26, 0, 14]] }
+},
+
+
+{
+    "title": "Echange par convoi", 
+    "type": "adjudicate",
+    "introduction" : "Deux unités peuvent échanger leur place si l'un ou les deux sont convoyées.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"13": 1, "2": 2},
+        "dislodged_ones": {},
+        "units": {"1": [[1, 34], [2, 45]], "2": [[1, 9], [2, 23]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 34, 0, 9], [0, 0, 5, 45, 34, 9], [0, 0, 1, 9, 0, 34], [0, 0, 5, 23, 9, 34]] }
+},
+
+{
+    "title": "Voie terrestre et maritime", 
+    "type": "adjudicate",
+    "introduction" : "Pour des raisons d'implémentation datant de l'époque où la règle de langue française 'Jeux Descartes' faisait autorité en France, lorsqu'un mouvement peut être à la fois réalisé par voie terrestre et martime, c'est la première qui est tentée en premier. Il suffit qu'un des deux fonctionne pour que le déplacement ait lieu. La notion de 'par convoi' mentionnée dans les règles anglophones postérieures n'est pas utilisée ici. A NOTER : cette règles n'est pas officielle mais simplifie à la fois les résolutions et l'implémentation.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"8": 3, "19": 3, "29": 6},
+        "dislodged_ones": {},
+        "units": {"6": [[2, 7], [2, 62]], "3": [[1, 20], [1, 24], [2, 46]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 5, 7, 20, 62], [0, 0, 1, 62, 0, 20], [0, 0, 1, 20, 0, 62], [0, 0, 2, 24, 20, 62], [0, 0, 2, 46, 20, 62]] }
+},
+
+{
+    "title": "Plusieurs voies maritimes possibles", 
+    "type": "adjudicate",
+    "introduction" : "Si une armée a plusieurs routes alternatives pour réaliser un convoi, il suffit qu'une seule réussisse pour que le convoi ait lieu.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"13": 1, "4": 2, "2": 3},
+        "dislodged_ones": {},
+        "units": {"1": [[1, 34], [2, 23], [2, 45]], "2": [[2, 14], [2, 32]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 34, 0, 9], [0, 0, 5, 23, 34, 9], [0, 0, 5, 45, 34, 9], [0, 0, 1, 14, 0, 23], [0, 0, 2, 32, 14, 23]] }
+},
+
+{
+    "title": "Une attaque par convoi ne coupe pas certains soutiens", 
+    "type": "adjudicate",
+    "introduction" : "Une armée convoyée ne coupe paas le soutien qui s'exerce à l'encontre d'une des flottes qui l'a convoyée.",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 2, 
+    "position" : {
+        "ownerships": {"31": 2, "18": 4},
+        "dislodged_ones": {},
+        "units": {"2": [[1, 65], [2, 67]], "4": [[2, 31], [2, 42]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 65, 0, 42], [0, 0, 5, 67, 65, 42], [0, 0, 1, 31, 0, 67], [0, 0, 2, 42, 31, 67]] }
+},
+
 {
     "title": "Conclusion...", 
     "type": "display",
