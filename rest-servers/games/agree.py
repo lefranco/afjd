@@ -759,10 +759,10 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
             return status, late, unsafe, missing, adjudicated, debug_message
 
     # update deadline
-    game.push_deadline(now)
-    game.update_database(sql_executor)
-
-    debug_messages.append("Deadline adjusted!")
+    if not game.archive:
+        game.push_deadline(now)
+        game.update_database(sql_executor)
+        debug_messages.append("Deadline adjusted!")
 
     # note : commit will be done by caller
 
