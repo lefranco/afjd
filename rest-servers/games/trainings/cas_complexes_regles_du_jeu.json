@@ -7,7 +7,7 @@
 {
     "title": "Impossible de se déloger 1/5", 
     "type": "adjudicate",
-    "introduction" : "Il est impossible de déloger une de ses propres unités. L'armée française à Paris ne peut pas déloger so armée compatriote en Bourgogne.",
+    "introduction" : "Il est impossible de déloger une de ses propres unités. L'armée française à Paris ne peut pas déloger son armée compatriote en Bourgogne.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -22,7 +22,7 @@
 {
     "title": "Impossible de se déloger 2/5", 
     "type": "adjudicate",
-    "introduction" : "Il est impossible de contribuer à déloger une de ses propres unités. L'armée française à Paris ne peut pas contribuer à aider l'armée allemande à déloger son armée compatriote en Bourgogne.",
+    "introduction" : "Il est impossible de contribuer à déloger une de ses propres unités. L'armée française à Paris, bien que soutenue par l'armée allemande en Ruhr, ne peut pas déloger son armée compatriote en Bourgogne qui n'a pas réussi à quitter la Bourgogne du fait de la confrontation avec l'armée italienne à Marseille.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -37,7 +37,7 @@
 {
     "title": "Impossible de se déloger 3/5", 
     "type": "adjudicate",
-    "introduction" : "L'armée française à Paris ne peut pas contribuer à aider l'armée allemande en Rhénanie à déloger son armée compatriote en Bourgogne. Il eût fallu que l'allemand mette à contribution son armée à Munich pour réussir...",
+    "introduction" : "L'armée française à Paris ne peut pas contribuer à aider l'armée allemande en Ruhr à déloger son armée compatriote en Bourgogne. Il eût fallu que l'allemand mette à contribution son armée à Munich pour réussir...",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -52,7 +52,7 @@
 {
     "title": "Impossible de se déloger 4/5", 
     "type": "adjudicate",
-    "introduction" : "L'armée allemande de Munich et l'armee autrichienne du Tyrol s'opposent. L'allemand tente de créée un stand off en Munich avec ses armées de Silésie et Rhénanie. Néanmoins, l'autriche donne un soutien inattendu à Silésie pour qu'elle aille en Munich. Habiltuellement cela fonctionnerait, mais pas dans ce cas car cela lui ferait déloger une unité compatriote.",
+    "introduction" : "L'armée allemande de Munich et l'armee autrichienne du Tyrol s'opposent. L'allemand tente de créer un rebond (c'est à dire un conflit équilibré - se reporter aux tutoriels précédents) en Munich avec ses armées de Silésie et Ruhr. Néanmoins, l'autriche donne un soutien inattendu à Silésie pour qu'elle aille en Munich. Habiltuellement cela fonctionnerait, mais pas dans ce cas car cela lui ferait déloger une unité compatriote.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -80,9 +80,9 @@
 },
 
 {
-    "title": "Self Standoff", 
+    "title": "Auto rebond", 
     "type": "adjudicate",
-    "introduction" : "L'autrichien tente de contrôler à la fois la Serbie, Budapest et Vienne avec deux unités, en laissant Budapest vacant par un standoff. Toutefois, le russe, en embuscade, soutient le mouvement de la Serbie tant et si bien que ce dernier mouvement réussit !",
+    "introduction" : "L'autrichien tente de contrôler à la fois la Serbie, Budapest et Vienne avec deux unités, en laissant Budapest vacant par un rebond. Toutefois, le russe, en embuscade, soutient le mouvement de la Serbie tant et si bien que ce dernier mouvement réussit !",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -128,7 +128,7 @@
 {
     "title": "Voie terrestre et maritime", 
     "type": "adjudicate",
-    "introduction" : "Pour des raisons d'implémentation datant de l'époque où la règle de langue française 'Jeux Descartes' faisait autorité en France, lorsqu'un mouvement peut être à la fois réalisé par voie terrestre et martime, c'est la première qui est tentée en premier. Il suffit qu'un des deux fonctionne pour que le déplacement ait lieu. La notion de 'par convoi' mentionnée dans les règles anglophones postérieures n'est pas utilisée ici. A NOTER : cette règles n'est pas officielle mais simplifie à la fois les résolutions et l'implémentation.",
+    "introduction" : "Le moteur de résolution a été implémenté à l'époque où la règle de langue française 'Jeux Descartes' faisait autorité en France. Cette règle indiquait que lorsqu'un mouvement peut être à la fois réalisé par voie terrestre et maritime, c'est la première qui est tentée en premier.<br>Il suffit qu'un des deux fonctionne pour que le déplacement ait lieu.<br>La notion de 'par convoi' mentionnée dans les règles anglophones postérieures n'est pas utilisée ici.<br>A NOTER : cette règle n'est pas officielle mais simplifie à la fois les résolutions et l'implémentation.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -158,7 +158,7 @@
 {
     "title": "Une attaque par convoi ne coupe pas certains soutiens", 
     "type": "adjudicate",
-    "introduction" : "Une armée convoyée ne coupe paas le soutien qui s'exerce à l'encontre d'une des flottes qui l'a convoyée.",
+    "introduction" : "Une armée convoyée ne coupe pas le soutien qui s'exerce à l'encontre d'une des flottes qui l'a convoyée.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
