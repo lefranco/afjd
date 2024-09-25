@@ -6,7 +6,7 @@
 {
     "title": "La Suisse et les zones neutres", 
     "type": "submit",
-    "introduction" : "La Suisse est hors-jeu, c'est pourquoi elle est matérialisée dans une couleur plus sombre.<br><br><b>Pouvez-vous tenter d'ordonner à l'armée de Bourgogne de s'y rendre ? - Impossible ! - Entrez finalement pour cette armée un ordre de tenir en place pour continuer le tutoriel... ?</b>",
+    "introduction" : "La Suisse est hors-jeu, c'est pourquoi elle est matérialisée dans une couleur plus sombre. Pareil pour l'Islande, l'Irlande, la Corse, la Sardaigne, la Sicile et la Crète.<br><br><b>Pouvez-vous tenter d'ordonner à l'armée de Bourgogne de se rendre en Suisse ? - Impossible ! - Entrez finalement pour cette armée un ordre de tenir en place pour continuer le tutoriel... ?</b>",
     "role_id" : 2,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
