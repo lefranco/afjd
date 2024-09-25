@@ -239,8 +239,8 @@ def check_all_games(jwt_token: str, now: float) -> None:
 
         game_name = game_dict['name']
 
-        # not after deadline
-        if now <= game_dict['deadline']:
+        # not after deadline (we should be after when deciding so we add epsilon)
+        if now + EPSILON_SEC <= game_dict['deadline']:
             continue
 
         # fast game
@@ -274,7 +274,8 @@ def check_all_games(jwt_token: str, now: float) -> None:
             mylogger.LOGGER.info("Ignoring game '%s' that is soloed !", game_name)
             continue
 
-        result = commute_game(jwt_token, now, game_id, game_full_dict)
+        # when calculating deadline will round it to next hour
+        result = commute_game(jwt_token, now - EPSILON_SEC, game_id, game_full_dict)
         if result:
             mylogger.LOGGER.info("=== Hurray, game '%s' was happily commuted!", game_name)
 
@@ -288,14 +289,10 @@ def time_next_and_to_wait() -> typing.Tuple[float, float]:
     timestamp_now = time.time()
     next_hour_time = (round(timestamp_now) // (60 * 60)) * (60 * 60) + (60 * 60)
 
-    # time of next try : make sure we are after theoretical
-    next_time = next_hour_time + EPSILON_SEC
-
     # time to wait before next try: make sure we are after theoretical
-    wait_time = next_hour_time - timestamp_now
-    wait_time += EPSILON_SEC
+    must_wait_time_sec = (next_hour_time - timestamp_now) + EPSILON_SEC
 
-    return next_time, wait_time
+    return next_hour_time, must_wait_time_sec
 
 
 def acting_threaded_procedure() -> None:
@@ -336,12 +333,11 @@ def acting_threaded_procedure() -> None:
         timestamp_token = time.time()
 
         # time of adjudications
-        next_time = None
+        now = time.time()
 
         while True:
 
             # try to commute all games
-            now = next_time if next_time is not None else time.time()
             try:
                 check_all_games(jwt_token, now)
             except:  # noqa: E722 pylint: disable=bare-except
@@ -394,9 +390,10 @@ def acting_threaded_procedure() -> None:
                     timestamp_token = time.time()
 
             # go to sleep
-            next_time, wait_time = time_next_and_to_wait()
-            mylogger.LOGGER.info("Done for routine tasks. Back to sleep for %s secs...", wait_time)
-            time.sleep(wait_time)
+            next_hour_time, must_wait_time_sec = time_next_and_to_wait()
+            mylogger.LOGGER.info("Done for routine tasks. Back to sleep for %s secs...", must_wait_time_sec)
+            time.sleep(must_wait_time_sec)
+            now = next_hour_time
 
 
 @API.resource('/access-logs/<lines>')
