@@ -11,6 +11,7 @@ import mydialog
 import config
 import common
 import login
+import welcome
 
 OPTIONS = {
     'Editer': "Modifier une information personnelle",
@@ -174,7 +175,7 @@ def create_account(json_dict):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.InfoDialog("Information", f"Votre compte a été créé : {messages}")
-            alert("Maintenant vous devez vous identifier par le menu “Connexion“")
+            alert(welcome.MESSAGE)
 
         ev.preventDefault()
 
