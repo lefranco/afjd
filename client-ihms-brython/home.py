@@ -12,6 +12,7 @@ import user_config
 import config
 import common
 import helping
+import training
 import ezml_render
 import mydatetime
 import mydialog
@@ -251,6 +252,15 @@ def show_news():
         PANEL_MIDDLE.clear()
         helping.render(PANEL_MIDDLE)
 
+    def show_tutorial_callback(ev):  # pylint: disable=invalid-name
+        """ show_chart_callback """
+
+        ev.preventDefault()
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        training.render(PANEL_MIDDLE)
+
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
     div_homepage = html.DIV(id='grid')
@@ -425,6 +435,12 @@ def show_news():
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/tuto.jpg")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
     img = html.IMG(src="./images/chart.png")
     col <= img
     row <= col
@@ -444,6 +460,16 @@ def show_news():
     link5 = html.A(href="https://discord.com/invite/wAHgMWQG4Z", target="_blank")
     link5 <= "Feedback et support du site diplomania sur Discord !"
     col <= link5
+    row <= col
+
+    col = html.TD()
+    form = html.FORM()
+    input_show_tutorial = html.INPUT(type="submit", value="Le tutoriel", Class='btn-inside')
+    input_show_tutorial.attrs['style'] = 'font-size: 10px'
+    input_show_tutorial.bind("click", show_tutorial_callback)
+    form <= input_show_tutorial
+    col <= form
+    col <= "Tutoriel intertactif pour les règles et le site !"
     row <= col
 
     col = html.TD()
@@ -479,6 +505,9 @@ def show_news():
     col <= img
     row <= col
 
+    col = html.TD()
+    row <= col
+
     # ............
 
     row = html.TR()
@@ -505,6 +534,9 @@ def show_news():
     note_bene_content <= note_bene_content_table
     div_a2 <= note_bene_content
     div_homepage <= div_a2
+
+    col = html.TD()
+    row <= col
 
     # ----
 
