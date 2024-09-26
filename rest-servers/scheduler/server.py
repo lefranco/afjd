@@ -218,7 +218,7 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
 def check_all_games(jwt_token: str, now: float) -> None:
     """ check_all_games """
 
-    mylogger.LOGGER.info("Trying all games with reference time=%d...", now)
+    mylogger.LOGGER.info("Trying adjudication of all games with reference time=%d...", now)
 
     state_expected = 1
 
@@ -282,6 +282,9 @@ def check_all_games(jwt_token: str, now: float) -> None:
         # easy on the server !
         time.sleep(INTER_COMMUTATION_TIME_SEC)
 
+    # log that adjudications are done
+    mylogger.LOGGER.info("Done for adjudications for the moment...")
+
 
 def time_next_and_to_wait() -> typing.Tuple[float, float]:
     """ time_next_and_to_wait """
@@ -343,9 +346,6 @@ def acting_threaded_procedure() -> None:
             except:  # noqa: E722 pylint: disable=bare-except
                 mylogger.LOGGER.error("Exception occured checking all games for commuting, stack is below")
                 mylogger.LOGGER.error("%s", traceback.format_exc())
-
-            # log that adjudications are done
-            mylogger.LOGGER.info("Done for adjudications...")
 
             # Now scheduled tasks
             timestamp_now = time.time()
