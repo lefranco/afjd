@@ -8,6 +8,7 @@ The server
 """
 
 import typing
+import math
 import collections
 import json
 import datetime
@@ -1449,18 +1450,25 @@ class AllocationStateListRessource(flask_restful.Resource):  # type: ignore
                 continue
             game_masters_dict[player_id].append(game_id)
 
-        # players_dict
+        # players_dict and active dict
         players_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
+        active_dict: typing.Dict[int, int] = {}
         for (game_id, player_id, role_id) in allocations_list:
             if game_id not in relevant_games:
                 continue
-            if game_id not in allowed_games:
-                continue
             if role_id == 0:
+                continue
+            if player_id not in active_dict:
+                active_dict[player_id] = 0
+            active_dict[player_id] += 1
+            if game_id not in allowed_games:
                 continue
             players_dict[player_id].append(game_id)
 
-        data = {'game_masters_dict': game_masters_dict, 'players_dict': players_dict}
+        # some kind of ofuscation
+        active_dict = {k: int(math.sqrt(v)) ** 2 for k, v in active_dict.items()}
+
+        data = {'game_masters_dict': game_masters_dict, 'players_dict': players_dict, 'active_dict': active_dict}
         return data, 200
 
 

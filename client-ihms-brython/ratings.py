@@ -796,10 +796,32 @@ def show_players_masters_data():
         alert("Erreur chargement allocations")
         return
 
-    masters_alloc = allocations_data['game_masters_dict']
-    players_alloc = allocations_data['players_dict']
+    # get the link (allocations) of players for ongoing games
+    state = 1
+    allocations_data_ongoing = common.get_allocations_data(state)
+    if not allocations_data_ongoing:
+        alert("Erreur chargement allocations en cours")
+        return
+
+    active_dict = allocations_data_ongoing['active_dict']
+    player_activity_dict = {}
+    for player_id, number in active_dict.items():
+        player = players_dict[str(player_id)]['pseudo']
+        player_activity_dict[player] = number
+
+    # gather games to players ongoing
+    players_alloc_ongoing = allocations_data_ongoing['players_dict']
+    player_games_ongoing_dict = {}
+    for player_id, games_id in players_alloc_ongoing.items():
+        player = players_dict[str(player_id)]['pseudo']
+        if player not in player_games_ongoing_dict:
+            player_games_ongoing_dict[player] = []
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            player_games_ongoing_dict[player].append(game)
 
     # gather games to players
+    players_alloc = allocations_data['players_dict']
     player_games_dict = {}
     for player_id, games_id in players_alloc.items():
         player = players_dict[str(player_id)]['pseudo']
@@ -809,7 +831,11 @@ def show_players_masters_data():
             game = games_dict[str(game_id)]['name']
             player_games_dict[player].append(game)
 
+    # others
+    player_others_dict = {player: sorted(set(all_games) - set(player_games_ongoing_dict.get(player, []))) for player, all_games in player_games_dict.items()}
+
     # gather games to masters
+    masters_alloc = allocations_data['game_masters_dict']
     master_games_dict = {}
     for master_id, games_id in masters_alloc.items():
         master = players_dict[str(master_id)]['pseudo']
@@ -821,12 +847,13 @@ def show_players_masters_data():
 
     players_masters_table = html.TABLE()
 
-    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'played_games', 'mastered_games', 'replaces', 'roles']
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'activity', 'ongoing_played_games', 'other_played_games', 'mastered_games', 'replaces', 'site_roles']
 
     # header
+
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'played_games': 'parties jouées', 'mastered_games': 'parties arbitrées', 'replaces': 'remplaçant', 'roles': 'roles'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'activity': 'activité', 'ongoing_played_games': 'parties en cours', 'other_played_games': 'autres parties', 'mastered_games': 'parties arbitrées', 'replaces': 'remplaçant', 'site_roles': 'rôles sur le site'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_masters_table <= thead
@@ -841,10 +868,12 @@ def show_players_masters_data():
     for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):
         row = html.TR()
 
-        data['played_games'] = None
+        data['activity'] = None
+        data['ongoing_played_games'] = None
+        data['other_played_games'] = None
         data['mastered_games'] = None
         data['replaces'] = None
-        data['roles'] = None
+        data['site_roles'] = None
 
         for field in fields:
 
@@ -855,9 +884,16 @@ def show_players_masters_data():
                 country_name = code_country_table[code]
                 value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
 
-            if field == 'played_games':
+            if field == 'activity':
+                value = ""
                 player = data['pseudo']
-                games = player_games_dict.get(player, [])
+                if player in player_activity_dict:
+                    value = f"&#8805;{player_activity_dict[player]}"
+                    count2 += 1
+
+            if field == 'ongoing_played_games':
+                player = data['pseudo']
+                games = player_games_ongoing_dict.get(player, [])
                 value = ""
                 if games:
                     nb_games = len(games)
@@ -865,7 +901,17 @@ def show_players_masters_data():
                     games_list = ' '.join(sorted(games))
                     button.bind("click", lambda e, gl=games_list: show_games(e, gl))
                     value = button
-                    count2 += 1
+
+            if field == 'other_played_games':
+                player = data['pseudo']
+                games = player_others_dict.get(player, [])
+                value = ""
+                if games:
+                    nb_games = len(games)
+                    button = html.BUTTON(f"Voir les {nb_games} partie(s)", title="Voir", Class='btn-menu')
+                    games_list = ' '.join(sorted(games))
+                    button.bind("click", lambda e, gl=games_list: show_games(e, gl))
+                    value = button
 
             if field == 'mastered_games':
                 player = data['pseudo']
@@ -885,7 +931,7 @@ def show_players_masters_data():
                     value = "oui"
                     count4 += 1
 
-            if field == 'roles':
+            if field == 'site_roles':
                 value = ""
                 if data['pseudo'] in creators_list:
                     value += "créateur "
@@ -901,9 +947,10 @@ def show_players_masters_data():
         count1 += 1
 
     MY_SUB_PANEL <= html.H3("Les joueurs, arbitres et remplaçants et les rôles")
+    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte (sauf pour 'activité')", Class='note')
+    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= players_masters_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count1} inscrits dont {count2} joueurs et {count3} arbitres pour {count4} remplaçants potentiels.")
-    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
+    MY_SUB_PANEL <= html.P(f"Il y a {count1} inscrits dont {count2} joueurs actifs et {count3} arbitres pour {count4} remplaçants potentiels.")
 
 
 RATING_TABLE = {}
