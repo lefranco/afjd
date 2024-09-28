@@ -594,7 +594,14 @@ def create_many_games():
     game = storage['GAME']
 
     if not WARNED:
-        alert(f"La partie modèle est le partie '{game}'. Vérifiez que cela convient !")
+
+        GAME_PARAMETERS_LOADED = common.game_parameters_reload(game)
+        if not GAME_PARAMETERS_LOADED:
+            alert("Erreur chargement paramètres partie modèle")
+            return
+
+        anonymity = "Oui" if GAME_PARAMETERS_LOADED['anonymous'] else "Non"
+        alert(f"La partie modèle est le partie '{game}'.\nNotamment l'anonymat qui est à {anonymity}.\nVérifiez très soigneusement que cela convient ;-)\nSinon, sélectionnez la bonne partie et recommencez !")
         WARNED = True
 
     form = html.FORM()
