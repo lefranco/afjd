@@ -1392,7 +1392,7 @@ def game_master():
         form = ""
         if not pseudo_there:
 
-            if not possible_given_role:
+            if not possible_given_role and play_low.GAME_PARAMETERS_LOADED['current_state'] == 1:
 
                 form = html.FORM()
                 input_contact_replacers = html.INPUT(type="submit", value="Contacter les remplaçants", title="Ceci contactera tous les remplaçants déclarés volontaires du site", display='inline', Class='btn-inside')
