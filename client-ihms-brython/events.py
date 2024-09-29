@@ -1036,7 +1036,7 @@ def handle_joiners():
 
         adressees = list(joiners_dict.keys()).copy()
 
-        alert("Attention : l'envoi des messages est lent. Merci de bien attendre passivement l'aletre de fin d'envoi des messages...")
+        alert("Attention : l'envoi des messages est lent. Merci de bien attendre passivement l'alerte de fin d'envoi des messages...")
 
         send_next()
         global SENDER_TIMER
