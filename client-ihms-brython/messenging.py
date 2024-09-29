@@ -21,18 +21,15 @@ OPTIONS = {
 }
 
 
-# the idea is not to loose the content of a message if not destinee were specified
-CONTENT_BACKUP = None
 
-
-def private_messages(dest_user_id):
+def private_messages(dest_user_id, initial_content):
     """ private_messages """
 
     def answer_callback(ev, dest_id):  # pylint: disable=invalid-name
         """ answer_callback """
         ev.preventDefault()
         MY_SUB_PANEL.clear()
-        private_messages(dest_id)
+        private_messages(dest_id, "")
 
     def suppress_message_callback(ev, message_id):  # pylint: disable=invalid-name
         """ suppress_message_callback """
@@ -52,10 +49,8 @@ def private_messages(dest_user_id):
             mydialog.InfoDialog("Information", f"Le message privé a été supprimé ! {messages}")
 
             # back to where we started
-            global CONTENT_BACKUP
-            CONTENT_BACKUP = None
             MY_SUB_PANEL.clear()
-            private_messages(None)
+            private_messages(None, "")
 
         ev.preventDefault()
 
@@ -86,30 +81,24 @@ def private_messages(dest_user_id):
             mydialog.InfoDialog("Information", f"Le message privé a été envoyé ! {messages}")
 
             # back to where we started
-            global CONTENT_BACKUP
-            CONTENT_BACKUP = None
             MY_SUB_PANEL.clear()
-            private_messages(dest_user_id)
+            private_messages(None, content)
 
         ev.preventDefault()
 
         content = input_message.value
         dest_user_id = players_dict[input_addressed.value]
 
-        # keep a backup
-        global CONTENT_BACKUP
-        CONTENT_BACKUP = content
-
         if not content:
             alert("Pas de contenu pour ce message !")
             MY_SUB_PANEL.clear()
-            private_messages(dest_user_id)
+            private_messages(dest_user_id, content)
             return
 
         if not dest_user_id:
             alert("Pas de destinataire pour ce message !")
             MY_SUB_PANEL.clear()
-            private_messages(dest_user_id)
+            private_messages(dest_user_id, content)
             return
 
         json_dict = {
@@ -179,8 +168,7 @@ def private_messages(dest_user_id):
     legend_declaration = html.LEGEND("Votre message", title="Qu'avez vous à lui dire ?")
     fieldset <= legend_declaration
     input_message = html.TEXTAREA(type="text", rows=8, cols=80)
-    if CONTENT_BACKUP is not None:
-        input_message <= CONTENT_BACKUP
+    input_message <= initial_content
     fieldset <= input_message
     form <= fieldset
 
@@ -311,7 +299,7 @@ def load_option(_, item_name):
     window.scroll(0, 0)
 
     if item_name == 'Messages personnels':
-        private_messages(None)
+        private_messages(None, "")
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
