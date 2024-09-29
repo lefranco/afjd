@@ -933,6 +933,9 @@ def edit_event():
     MY_SUB_PANEL <= form
 
 
+SENDER_TIMER = None
+
+
 def handle_joiners():
     """ handle_joiners """
 
@@ -973,6 +976,8 @@ def handle_joiners():
     def sendmess_callback(ev):  # pylint: disable=invalid-name
         """ sendmess_callback """
 
+        adressees = None
+
         def reply_callback(req):
             req_result = loads(req.text)
             if req.status != 201:
@@ -985,7 +990,31 @@ def handle_joiners():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le message privé a été envoyé ! {messages}")
+            mydialog.InfoDialog("Information", f"Le message privé a été envoyé (Soyez patient : il en reste encore {len(adressees)}!) {messages}")
+
+        def send_next():
+
+            if not adressees:
+                timer.clear_interval(SENDER_TIMER)
+                alert("Tous les message ont été envoyés !")
+                return
+
+            dest_user_id = adressees.pop(0)
+
+            json_dict = {
+                'dest_user_id': dest_user_id,
+                'content': content
+            }
+
+            host = config.SERVER_CONFIG['PLAYER']['HOST']
+            port = config.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/private-messages"
+
+            # sending private message : need token
+            ajax.post(url, blocking=True,
+                      headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']},
+                      timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback,
+                      ontimeout=common.noreply_callback)
 
         ev.preventDefault()
 
@@ -1005,17 +1034,13 @@ def handle_joiners():
 
         content = '\n\n'.join([f"[Evénement {event_name}]", input_message.value])
 
-        json_dict = {
-            'dest_user_id': dest_user_id,
-            'content': content
-        }
+        adressees = list(joiners_dict.keys()).copy()
 
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/private-messages"
+        alert("Attention : l'envoi des messages est lent. Merci de bien attendre passivement l'aletre de fin d'envoi des messages...")
 
-        # sending private message : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        send_next()
+        global SENDER_TIMER
+        SENDER_TIMER = timer.set_interval(send_next, (NO_REPEAT_DELAY_SEC * 1.1) * 1000)
 
         # back to where we started
         MY_SUB_PANEL.clear()
