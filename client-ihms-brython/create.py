@@ -595,12 +595,12 @@ def create_many_games():
 
     if not WARNED:
 
-        GAME_PARAMETERS_LOADED = common.game_parameters_reload(game)
-        if not GAME_PARAMETERS_LOADED:
+        game_parameters_loaded = common.game_parameters_reload(game)
+        if not game_parameters_loaded:
             alert("Erreur chargement paramètres partie modèle")
             return
 
-        anonymity = "Oui" if GAME_PARAMETERS_LOADED['anonymous'] else "Non"
+        anonymity = "Oui" if game_parameters_loaded['anonymous'] else "Non"
         alert(f"La partie modèle est le partie '{game}'.\nNotamment l'anonymat qui est à {anonymity}.\nVérifiez très soigneusement que cela convient ;-)\nSinon, sélectionnez la bonne partie et recommencez !")
         WARNED = True
 
