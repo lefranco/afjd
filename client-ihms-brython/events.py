@@ -4,7 +4,7 @@
 
 from json import loads, dumps
 
-from browser import html, alert, ajax, document, window  # pylint: disable=import-error
+from browser import html, alert, ajax, timer, document, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
@@ -29,6 +29,9 @@ MAX_LEN_EVENT_LOCATION = 20
 DEFAULT_EVENT_LOCATION = "Diplomania"
 
 ARRIVAL = False
+
+# to avoid repeat messages/declarations
+NO_REPEAT_DELAY_SEC = 15
 
 
 def set_arrival():
@@ -967,6 +970,57 @@ def handle_joiners():
         MY_SUB_PANEL.clear()
         handle_joiners()
 
+    def sendmess_callback(ev):  # pylint: disable=invalid-name
+        """ sendmess_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'envoi de message dans les messages privés : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'envoi de message dans les messages privés : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Le message privé a été envoyé ! {messages}")
+
+        ev.preventDefault()
+
+        if 'PSEUDO' not in storage:
+            alert("Il faut être identifié")
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            handle_joiners()
+            return
+
+        if not input_message.value:
+            alert("Contenu du message vide")
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            handle_joiners()
+            return
+
+        content = '\n\n'.join([f"[Evénement {event_name}]", input_message.value])
+
+        json_dict = {
+            'dest_user_id': dest_user_id,
+            'content': content
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/private-messages"
+
+        # sending private message : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        handle_joiners()
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -1084,6 +1138,27 @@ def handle_joiners():
         joiners_table <= row
 
     MY_SUB_PANEL <= joiners_table
+
+    title = html.H3(f"Envoyer un message personnel à tous les inscrits à l'événement {event_name}")
+    MY_SUB_PANEL <= title
+
+    broadcast_form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_message = html.LEGEND("Votre message", title="Qu'avez vous à leur dire ?")
+    fieldset <= legend_message
+    input_message = html.TEXTAREA(type="text", rows=8, cols=80)
+    fieldset <= input_message
+    broadcast_form <= fieldset
+
+    broadcast_form <= html.DIV("Votre message leur parviendra par messagerie privée.")
+    broadcast_form <= html.BR()
+
+    input_broadcast_message = html.INPUT(type="submit", value="Diffuser le message privé", Class='btn-inside')
+    input_broadcast_message.bind("click", sendmess_callback)
+    broadcast_form <= input_broadcast_message
+
+    MY_SUB_PANEL <= broadcast_form
 
 
 def delete_event():
