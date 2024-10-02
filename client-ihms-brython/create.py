@@ -625,7 +625,7 @@ def create_many_games():
     # just to  get 'number_players_expected'
     variant_name_loaded = storage['GAME_VARIANT']
     variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-    number_players_expected = variant_content_loaded['roles']['number']
+    number_players_expected = variant_content_loaded['roles']['number'] - len(variant_content_loaded['disorder'])
 
 
 def explain_stuff():
