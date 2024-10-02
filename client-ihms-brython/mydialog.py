@@ -137,7 +137,6 @@ class Dialog(html.DIV):
                 self.popup_pos = popup_pos
                 break
         else:
-            alert("Trop de popups !")
             self.popup_pos = -1
 
         # Move popup according to slot taken
