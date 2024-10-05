@@ -481,7 +481,7 @@ def show_rating_reliability():
         sort_by = storage['SORT_BY_REL_RATINGS']
         reverse_needed = bool(storage['REVERSE_NEEDED_REL_RATINGS'] == 'True')
 
-        # 0 player_id / 1 reliability / 2 number_delays/ 3 number_dropouts / 4 non_obsolesence / 5 number advancements
+        # 0 player_id / 1 reliability / 2 number_delays/ 3 number_dropouts / 4 non_obsolescence / 5 number advancements
 
         if sort_by == 'player':
             def key_function(r): return num2pseudo[r[0]].upper() if r[0] in num2pseudo else ""  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
@@ -599,27 +599,27 @@ def show_rating_regularity():
             seniority = round(started_playing_days / 7)
 
             # how recent is the activity - that is a ratio
-            non_obsolesence = round(exp(- finished_playing_days / 365.2), 3)
+            non_obsolescence = round(exp(- finished_playing_days / 365.2), 3)
 
             # how continuous (there must a few gaps as possible)
             play_duration = max(started_playing_days - finished_playing_days, 0.5)
             continuity = round(100 * max(activity_days, 0.5) / play_duration, 2)
 
             # verdict - just a product
-            regularity = round(seniority * non_obsolesence * continuity * number_games / 100, 2)
+            regularity = round(seniority * non_obsolescence * continuity * number_games / 100, 2)
 
-            rating = (player_id, regularity, seniority, non_obsolesence, continuity, number_games)
+            rating = (player_id, regularity, seniority, non_obsolescence, continuity, number_games)
             rating_list.append(rating)
 
         ratings_table = html.TABLE()
 
         # the display order
-        fields = ['rank', 'player', 'regularity', 'seniority', 'non_obsolesence', 'continuity', 'number']
+        fields = ['rank', 'player', 'regularity', 'seniority', 'non_obsolescence', 'continuity', 'number']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'rank': 'rang', 'player': 'joueur', 'regularity': 'régularité', 'seniority': 'ancienneté', 'non_obsolesence': 'non obsolesence', 'continuity': 'continuité', 'number': 'nombre de parties'}[field]
+            field_fr = {'rank': 'rang', 'player': 'joueur', 'regularity': 'régularité', 'seniority': 'ancienneté', 'non_obsolescence': 'non obsolescence', 'continuity': 'continuité', 'number': 'nombre de parties'}[field]
             col = html.TD(field_fr)
             thead <= col
         ratings_table <= thead
@@ -627,7 +627,7 @@ def show_rating_regularity():
         row = html.TR()
         for field in fields:
             buttons = html.DIV()
-            if field in ['player', 'regularity', 'seniority', 'non_obsolesence', 'continuity', 'number']:
+            if field in ['player', 'regularity', 'seniority', 'non_obsolescence', 'continuity', 'number']:
 
                 # button for sorting
                 button = html.BUTTON("<>", Class='btn-inside')
@@ -641,7 +641,7 @@ def show_rating_regularity():
         sort_by = storage['SORT_BY_REG_RATINGS']
         reverse_needed = bool(storage['REVERSE_NEEDED_REG_RATINGS'] == 'True')
 
-        # 0 player_id / 1 regularity / 2 seniority/ 3 non_obsolesence / 4 continuity / 5 number games
+        # 0 player_id / 1 regularity / 2 seniority/ 3 non_obsolescence / 4 continuity / 5 number games
 
         if sort_by == 'player':
             def key_function(r): return num2pseudo[r[0]].upper() if r[0] in num2pseudo else ""  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
@@ -649,7 +649,7 @@ def show_rating_regularity():
             def key_function(r): return r[1]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'seniority':
             def key_function(r): return r[2]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        elif sort_by == 'non_obsolesence':
+        elif sort_by == 'non_obsolescence':
             def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'continuity':
             def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
@@ -682,7 +682,7 @@ def show_rating_regularity():
                 if field == 'seniority':
                     value = rating[2]
 
-                if field == 'non_obsolesence':
+                if field == 'non_obsolescence':
                     value = rating[3]
 
                 if field == 'continuity':
