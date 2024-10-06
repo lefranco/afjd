@@ -103,6 +103,7 @@ GAME_PARSER.add_argument('game_type', type=int, required=False)
 
 # for game parameter alteration
 GAME_PARSER2 = flask_restful.reqparse.RequestParser()
+GAME_PARSER2.add_argument('name', type=str, required=False)
 GAME_PARSER2.add_argument('used_for_elo', type=int, required=False)
 GAME_PARSER2.add_argument('fast', type=int, required=False)
 GAME_PARSER2.add_argument('archive', type=int, required=False)
@@ -651,6 +652,12 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
+        # prevent master from renaming the game
+        if 'name' in args:
+            if args['name'] != game.name:
+                del sql_executor
+                flask_restful.abort(404, msg="You are not allowed to change the name of the game - see with administrator")
+
         # pay more attention to deadline
         entered_deadline = args['deadline']
 
@@ -1057,7 +1064,11 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
             data = {'name': name, 'msg': 'Ok but no change !'}
             return data, 200
 
-        # check we have a 'legal' transition and take actgion
+        # check we have a 'legal' transition and take action
+
+        if games.Game.find_by_name(sql_executor, game.name):
+            del sql_executor
+            flask_restful.abort(404, msg=f"There is already a game named {game.name}!")
 
         if current_state_before == 1 and game.current_state == 0:
             # ongoing to waiting

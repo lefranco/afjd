@@ -27,6 +27,7 @@ OPTIONS = {
     'Rectifier les paramètres': "Rectifier les paramètres de la partie sélectionnée",
     'Rectifier la position': "Rectifier la position de la partie sélectionnée",
     'Rectifier l\'état': "Rectifier l\'état de la partie sélectionnée",
+    'Rectifier le nom': "Rectifier le nom de la partie sélectionnée",
     'Logs des soumissions d\'ordres': "Les soumissions d'ordres sur le site",
     'Dernières connexions': "Les connexions réussies sur le site",
     'Connexions manquées': "Les connexions manquées sur le site",
@@ -43,6 +44,8 @@ DOWNLOAD_LOG = False
 # max size in bytes of image (before b64)
 # let 's say one 0.5 Mo
 MAX_SIZE_IMAGE = 500000
+
+MAX_LEN_GAME_NAME = 50
 
 
 def get_active_data():
@@ -1268,6 +1271,120 @@ def rectify_current_state():
         MY_SUB_PANEL <= html.BR()
 
 
+def rectify_name():
+    """ rectify_name """
+
+    # declare the values
+    name_loaded = None
+
+    def change_name_reload():
+        """ change_name_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ local_noreply_callback """
+            nonlocal status
+            alert("Problème (pas de réponse de la part du serveur)")
+            status = False
+
+        def reply_callback(req):
+            nonlocal status
+            nonlocal name_loaded
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération du nom de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération du nom de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                status = False
+                return
+
+            name_loaded = req_result['name']
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # getting game data : no need for token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_name_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification du nom de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification du nom de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Le nom de la partie a été modifié : {messages}")
+
+            # Important otherwise we are lost ;-)
+            storage['GAME'] = name_selected
+
+        ev.preventDefault()
+
+        name_selected = input_name.value
+
+        json_dict = {
+            'name': name_selected,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/alter_games/{game}"
+
+        # altering game  : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        rectify_name()
+
+    MY_SUB_PANEL <= html.H3("Rectifier le nom de la partie")
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    status = change_name_reload()
+    if not status:
+        return
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_name = html.LEGEND("nom", title="Nom de la partie (faites court et simple)")
+    fieldset <= legend_name
+    input_name = html.INPUT(type="text", value=name_loaded, size=MAX_LEN_GAME_NAME, Class='btn-inside')
+    fieldset <= input_name
+    form <= fieldset
+
+    input_rename_game = html.INPUT(type="submit", value="Renommer la partie", Class='btn-inside')
+    input_rename_game.bind("click", change_name_callback)
+    form <= input_rename_game
+
+    MY_SUB_PANEL <= form
+
+
 LINES_SUBMISSION_LOGS = 1000
 
 
@@ -2163,6 +2280,8 @@ def load_option(_, item_name):
         rectify_position()
     if item_name == 'Rectifier l\'état':
         rectify_current_state()
+    if item_name == 'Rectifier le nom':
+        rectify_name()
     if item_name == 'Logs des soumissions d\'ordres':
         show_submissions_logs()
     if item_name == 'Dernières connexions':
