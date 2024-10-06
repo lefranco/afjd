@@ -1,0 +1,84 @@
+Créations de partie par batch
+
+$ Philosophie générale
+
+Cette création de parties "par batch" utilise deux entrées :
+.
+.
+
+= Entrées du module de creation de parties par batch
+| Entrée | Objectif |
+| partie modèle  | définit les paramètres de toutes les parties créée |
+| fichier CSV  | définit les parties à créée, leur nom et les joueurs à mettre dedans |
+=
+
+$ La partie modéle
+
+*Attention : cette partie  n'est pas jouée !*
+.
+.
+En principe :
+- le nom de cette partie ne comporte que des majuscules.
+- la partie est dans l'état distinguée
+
+Exemple :  les parties TBLITZ, ASTROCUP, DIPLOLIGUE etc...
+
+
+
+$ Le fichier CSV
+
+Note : un fichier CSV, c'est juste un fichier texte dans lequel les données sont séparées par des virgules. Pour le site, il doit avoir l'extension ”CSV” (ou ”csv”)
+.
+.
+Chaque partie est déclarée sur une ligne du fichier, tout simplement, de la manière suivante:
+.
+.
+= Contenu d'une ligne du fichier CSV
+| Nom de partie | Arbitre (forcément votre pseudo) | premier joueur | deuxième joueur | etc |
+=
+.
+Exemple de contenu :
+.
+.
+
+_dummy1,OrangeCar,one,two,three,four,five,six,seven_
+.
+_dummy2,OrangeCar,seven,one,two,three,four,five,six_
+.
+.
+L'ordre des joueurs est celui de la description officielle de la partie sur le site, obtenu dans le menu “Variantes” sous menu “_nom-de-la-variante_”.  Donc, pour la variante standard (par exemple) c'est:
+Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie.
+
+$ Tournoi avec plusieurs arbitres
+
+Puisqu'on ne peut que créer ses propres parties, si le tournoi comporte plusieurs arbitres, transmettre à chaque arbitre les lignes du fichier qui le concernent (ou le fichier complet, charge à lui de couper)
+
+$ Procédure détaillée pour les arbitres assistants
+
+# Vous avez dû recevoir un fichier CSV avec les donnees de vos parties à importer.
+# Allez sur le site. 
+# Séléction de la partie modéle
+## Choisissez le menu “Les parties” sous menu “Sélectionner une partie”. Restreignez le choix dans la fenêtre “sélection de l'état” aux parties “distinguées”. Eventuellement filtrez aussi sur la variante. Sélectionnez finalement la partie modèle du tournoi (T-BLITZ par exemple). Cette étape est pertinente, car c’est cette partie qui définira presque toutes les caractéristiques des parties que vous allez créer.
+# Création des parties
+## Allez dans le menu “Création”. Si vous ne voyez pas le menu, demandez les droits à l'administrateur poiur l'obtenir.
+## Allez dans le sous menu “Créer plusieurs parties”.
+## Confirmez que la partie modèle est la bonne
+## Cliquez sur “parcourir” pour choisir le fichier et selectionnez le fichier CSV que vous avez reçu qui est sur votre ordinateur
+## Cliquez sur “Créer les parties”
+## Confirmez la création des parties...
+## Si votre connexion est lente, ignorez les messages bizarres comme par exemple “le navigateur attend une reponse du site”. C’est long, ça mouline, mais à la fin ça doit aboutir.
+## Si les parties se sont créées normalement, un sympathique message comme quoi tout s'est bien passé apparaît à la fin
+## Les parties sont créés mais elles sont restées dans l'état “en attente”
+# Démarrage des parties
+## Allez dans le menu “Mes parties”
+## Cliquez sur “en attente” pour sélectionner les parties en attente, les nouvelles parties doivent apparaître.
+## Cliquez sur le bouton “basculer en mode avec colonnes action” si besoin.
+## Démarrez chacune des parties nouvellement créée une par une en cliquant sur les fusées.
+## Les parties sont démarrées ! Félicitations !
+# Bonus
+## Vous pouvez mettre un message de bienvenue dans chaque partie en passant par le menu “Déclarer“
+
+En cas de souci contactez l'administateur ;-)
+
+
+
