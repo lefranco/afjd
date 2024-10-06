@@ -814,10 +814,18 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                         del sql_executor
                         flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
+            elif current_state_before == 0 and game.current_state == 3:
+                # ----
+                # we are distinguishing a waiting game
+                # ----
+
+                # nothing to do actually
+                pass
+
             elif current_state_before == 2 and game.current_state == 3:
 
                 # ----
-                # we are distinguishing the game
+                # we are distinguishing a finished  game
                 # ----
 
                 # nothing to do actually
