@@ -16,6 +16,7 @@ import interface
 import mapping
 import memoize
 import scoring
+import ezml_render
 
 
 OPTIONS = {
@@ -604,6 +605,11 @@ def create_many_games():
         alert(f"La partie modèle est le partie '{game}'.\nNotamment l'anonymat qui est à {anonymity}.\nVérifiez très soigneusement que cela convient ;-)\nSinon, sélectionnez la bonne partie et recommencez !")
         WARNED = True
 
+    information = html.DIV(Class='important')
+    information <= "Consultez le sous menu d'explications pour de plus amples information sur le procédé !"
+    MY_SUB_PANEL <= information
+    MY_SUB_PANEL <= html.BR()
+
     form = html.FORM()
 
     fieldset = html.FIELDSET()
@@ -635,49 +641,9 @@ def explain_stuff():
         alert("Pas le bon compte (pas créateur)")
         return
 
-    MY_SUB_PANEL <= html.H3("Spécifications  du fichier CSV")
-
-    information1 = html.DIV()
-    information1 <= "Vous devez composer un fichier CSV"
-    information1 <= html.BR()
-    information1 <= "Une ligne par partie"
-    information1 <= html.BR()
-    information1 <= "Sur chaque ligne, séparés pas des virgules (ou des points-virgules):"
-    items = html.UL()
-    items <= html.LI("le nom de la partie")
-    items <= html.LI("l'arbitre de la partie (cette colonne est redondante : c'est forcément votre pseudo)")
-    items <= html.LI("le premier joueur de la partie")
-    items <= html.LI("le deuxième joueur de la partie")
-    items <= html.LI("etc....")
-    information1 <= items
-    information1 <= "Utilisez l'ordre suivant pour la variante standard : Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie"
-    information1 <= html.BR()
-    information1 <= "Il est impossible d'attribuer l'arbitrage d'une partie à un autre joueur, donc vous pouvez mettre dans le fichier un arbitre différent à des fins de vérification mais la création des parties n'aura pas lieu."
-    information1 <= html.BR()
-    information1 <= "Les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée, dont la description - donc pensez bien à la modifier dans la partie modèle avant de créer les parties..."
-
-    MY_SUB_PANEL <= information1
-
-    MY_SUB_PANEL <= html.H3("Rappel de la procédure pour les arbitres assistants")
-
-    information2 = html.DIV()
-    modus = html.OL()
-    modus <= html.LI("Vous avez dû recevoir un fichier csv avec les donnees de vos parties à importer.")
-    modus <= html.LI("Allez sur le site. Choisissez le menu “Rejoindre une partie” sous menu “Sélectionner une partie”. Restreignez le choix dans la fenêtre “sélection de l'état” aux parties “distinguées”. Eventuellement filtrez aussi sur la variante. Sélectionnez finalement la partie modèle (T-BLITZ par exemple). Cette etape est pertinente, car c’est cette partie qui definira presque toutes les caracteristiques des parties que vous allez créer.")
-    modus <= html.LI("Allez dans le menu “Création”. Si vous ne voyez pas le menu, demandez les droits à l'administrateur")
-    modus <= html.LI("Cliquez sur “parcourir” pour choisir le fichier et selectionnez le fichier csv que vous avez reçu")
-    modus <= html.LI("Confirmez la création des parties...")
-    modus <= html.LI("Si votre connexion est lente, ignorez les messages bizarres comme par exemple “le navigateur attend une reponse du site”. C’est long, ça mouline, mais à la fin ça doit aboutir.")
-    modus <= html.LI("Si les parties se sont créées normalement, un sympathique message comme quoi tout s'est bien passé apparaît.")
-    modus <= html.LI("Les parties sont créés mais dans l'état “en attente”")
-    modus <= html.LI("Allez dans le menu “mes parties”, cliquez sur “en attente”, cliquez sur le bouton “basculer en mode avec colonnes action” si besoin.")
-    modus <= html.LI("Démarrez chacune des parties nouvelement créée une par une en cliquant sur les fusées.")
-    modus <= html.LI("Les parties sont démarrées ! Félicitations !")
-    modus <= html.LI("Vous pouvez mettre un message de bienvenue dans chaque partie en passant par le menu “Déclarer“")
-    modus <= html.LI("En cas de souci contactez l'administateur")
-    information2 <= modus
-
-    MY_SUB_PANEL <= information2
+    ezml_file = "./docs/batch.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
 
 
 def tournament_result():
