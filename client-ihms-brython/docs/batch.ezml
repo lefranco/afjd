@@ -6,13 +6,15 @@ Cette création de parties "par batch" utilise deux entrées :
 .
 .
 
-= Entrées du module de creation de parties par batch
-| Entrée | Objectif |
-| partie modèle  | définit les paramètres de toutes les parties créée |
-| fichier CSV  | définit les parties à créée, leur nom et les joueurs à mettre dedans |
+= Entrées du module de création de parties par batch
+| Entrée | Définit |
+| partie modèle  | les paramètres de toutes les parties créée |
+| fichier CSV  | les noms des parties et les joueurs à mettre dedans |
 =
 
-$ La partie modéle
+_
+
+$ La partie modèle
 
 *Attention : cette partie  n'est pas jouée !*
 .
@@ -22,19 +24,21 @@ En principe :
 - la partie est dans l'état distinguée
 
 Exemple :  les parties TBLITZ, ASTROCUP, DIPLOLIGUE etc...
-
-
+.
+.
+Les propriétés/paramètres de la partie modèle seront recopiés dans les parties qui vont être créées. Il est important de paramétrer cette partie avec soin pour éviter soit de tout recommencer, soit de devoir modifier les parties du tournoi une par une en cas d'erreur.
 
 $ Le fichier CSV
 
-Note : un fichier CSV, c'est juste un fichier texte dans lequel les données sont séparées par des virgules. Pour le site, il doit avoir l'extension ”CSV” (ou ”csv”)
+Note : un fichier CSV, c'est juste un fichier texte dans lequel les données sont séparées par des virgules (voire des points-virgule). Pour le site, son nom doit avoir l'extension ”CSV” (ou ”csv”)
 .
 .
 Chaque partie est déclarée sur une ligne du fichier, tout simplement, de la manière suivante:
 .
 .
 = Contenu d'une ligne du fichier CSV
-| Nom de partie | Arbitre (forcément votre pseudo) | premier joueur | deuxième joueur | etc |
+| Nom de partie | Arbitre | Premier joueur | Deuxième joueur | etc |
+| Note : chaque partie se finit probablement par un numéro différent | Son pseudo (forcément le vôtre) | son pseudo | son pseudo | etc |
 =
 .
 Exemple de contenu :
@@ -46,15 +50,42 @@ _dummy1,OrangeCar,one,two,three,four,five,six,seven_
 _dummy2,OrangeCar,seven,one,two,three,four,five,six_
 .
 .
-L'ordre des joueurs est celui de la description officielle de la partie sur le site, obtenu dans le menu “Variantes” sous menu “_nom-de-la-variante_”.  Donc, pour la variante standard (par exemple) c'est:
-Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie.
+L'ordre des joueurs est celui de la description officielle de la partie sur le site, obtenu dans le menu “Variantes” sous menu “_nom-de-la-variante_”.  Donc, pour la variante standard (par exemple) c'est : Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie.
+.
+.
+Dans notre exemple pour la partie ”dummy1”, c'est le joueur de pseudo ”one” qui prend l'Angleterre...
+
+$ Procédure générale
+
+# Si besoin :
+## Créer la partie modèle 
+### utiliser le module de création de partie
+## La passer distinguée 
+### utiliser la console d'arbitrage de la partie
+# Sélectionner la partie modèle
+## d'une manière ou d'une autre 
+## elle doit apparaître en bas à gauche de la page
+# Si besoin :
+## Créer le fichier CSV
+## Distribuer aux arbitres assistants le fichier CSV
+# Créer les parties du tournoi (dont on est arbitre) à partir du fichier CSV 
+## Utiliser le menu ”Création” sous menu ”Créer plusieurs parties”
+# Démarrer les parties du tournoi une par une 
+## Utiliser la page ”Mes parties”
+### Le plus pratique
 
 $ Tournoi avec plusieurs arbitres
 
-Puisqu'on ne peut que créer ses propres parties, si le tournoi comporte plusieurs arbitres, transmettre à chaque arbitre les lignes du fichier qui le concernent (ou le fichier complet, charge à lui de couper)
+Puisqu'on ne peut que créer ses propres parties, si le tournoi comporte plusieurs arbitres, transmettre à chaque arbitre les lignes du fichier qui le concernent (ou le fichier complet, charge à lui d'enlever du fichier les lignes qui ne le concernet pas)
+
+_
 
 $ Procédure détaillée pour les arbitres assistants
 
+(Qu'est ce qu'un arbitre assistant ?)
+Arbitre d'uns sous ensemble des parties d'un tournoi qui a reçu un petit fichier CSV et à qui on a demanda de créer les parties puis les arbitrer.
+
+(La procédure)
 # Vous avez dû recevoir un fichier CSV avec les donnees de vos parties à importer.
 # Allez sur le site. 
 # Séléction de la partie modéle
@@ -77,4 +108,5 @@ $ Procédure détaillée pour les arbitres assistants
 ## Les parties sont démarrées ! Félicitations !
 # Bonus
 ## Vous pouvez mettre un message de bienvenue dans chaque partie en passant par le menu “Déclarer“
+
 

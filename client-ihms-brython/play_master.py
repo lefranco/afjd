@@ -67,10 +67,26 @@ SUPERVISE_REFRESH_PERIOD_SEC = 15
 
 
 def information_about_start_game():
-    """ information_about_account """
+    """ information_about_start_game """
 
     information = html.DIV(Class='important')
     information <= "Si la partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !"
+    return information
+
+
+def information_about_distinguish_game1():
+    """ information_about_distinguish_game1 """
+
+    information = html.DIV(Class='important')
+    information <= "Une partie en attente ne doit être distinguée que si elle doit servir de modèle à une creation de tournoi."
+    return information
+
+
+def information_about_distinguish_game2():
+    """ information_about_distinguish_game2 """
+
+    information = html.DIV(Class='important')
+    information <= "Une partie terminée ne doit être distinguée que si elle est copie d'une partie jouée ailleurs."
     return information
 
 
@@ -1754,18 +1770,23 @@ def game_master():
 
     form = html.FORM()
 
-    if state_loaded == 0:
-        form <= information_about_start_game()
-        form <= html.BR()
-
     fieldset = html.FIELDSET()
     legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours, terminée ou distinguée.")
     fieldset <= legend_state
 
     if state_loaded == 0:
+        form <= information_about_start_game()
+        form <= html.BR()
         input_start_game = html.INPUT(type="submit", value="Démarrer la partie", Class='btn-inside')
         input_start_game.bind("click", lambda e, s=1: change_state_game_callback(e, None, s))
         form <= input_start_game
+        form <= html.BR()
+        form <= html.BR()
+        form <= information_about_distinguish_game1()
+        form <= html.BR()
+        input_distinguish_game = html.INPUT(type="submit", value="Distinguer la partie", Class='btn-inside')
+        input_distinguish_game.bind("click", lambda e, s=3: change_state_game_callback(e, None, s))
+        form <= input_distinguish_game
 
     if state_loaded == 1:
         input_stop_game = html.INPUT(type="submit", value="Arrêter la partie", Class='btn-inside')
@@ -1773,14 +1794,17 @@ def game_master():
         form <= input_stop_game
 
     if state_loaded == 2:
-        input_stop_game = html.INPUT(type="submit", value="Distinguer la partie", Class='btn-inside')
-        input_stop_game.bind("click", lambda e, s=3: change_state_game_callback(e, None, s))
-        form <= input_stop_game
+        if play_low.GAME_PARAMETERS_LOADED['archive']:
+            form <= information_about_distinguish_game2()
+            form <= html.BR()
+            input_distinguish_game = html.INPUT(type="submit", value="Distinguer la partie", Class='btn-inside')
+            input_distinguish_game.bind("click", lambda e, s=3: change_state_game_callback(e, None, s))
+            form <= input_distinguish_game
 
     if state_loaded == 3:
-        input_stop_game = html.INPUT(type="submit", value="Ne plus distinguer la partie", Class='btn-inside')
-        input_stop_game.bind("click", lambda e, s=2: change_state_game_callback(e, None, s))
-        form <= input_stop_game
+        input_undistinguish_game = html.INPUT(type="submit", value="Ne plus distinguer la partie", Class='btn-inside')
+        input_undistinguish_game.bind("click", lambda e, s=2: change_state_game_callback_confirm(e, s))
+        form <= input_undistinguish_game
 
     play_low.MY_SUB_PANEL <= form
 
