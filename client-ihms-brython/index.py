@@ -48,7 +48,7 @@ OPTIONS = {
     'Aide': "Pour obtenir de l'aide et découvrir simplement le jeu et le site par des vidéos, des tutoriels etc...",
     'Connexion': "Se connecter au site par mot de passe",
     'Mon compte': "Pour éditer les paramètres de son compte sur le site (il faut être connecté)",
-    'Les parties': "Se mettrtea dans une partie, créer ujne partie, rectifier une partie, liste des parties...",
+    'Les parties': "Se mettre dans une partie, créer une partie, rectifier une partie, liste des parties...",
     'Mes parties': "La liste des parties dans laquelle vous jouez (il faut être connecté)",
     'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
     'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
