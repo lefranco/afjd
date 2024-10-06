@@ -2011,9 +2011,13 @@ def change_director():
     game = storage['GAME']
 
     tournament_dict = common.get_tournament_data(game)
-    if not tournament_dict:
-        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+    if tournament_dict is None:
+        alert("Problème au chargement liste des parties du tournoi")
         return
+    if not tournament_dict:
+        alert("Pas de tournoi pour cette partie")
+        return
+    tournament_dict = dict(tournament_dict)
 
     tournament_name = tournament_dict['name']
     tournament_id = tournament_dict['identifier']

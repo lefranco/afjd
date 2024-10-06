@@ -123,11 +123,12 @@ def show_games():
         alert("Il faut choisir la partie au préalable")
         return
 
-    game = storage['GAME']
-
+    global TOURNAMENT_DICT
     if not TOURNAMENT_DICT:
-        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        alert("Pas de tournoi pour cette partie - il est possible de créer ce tournoi !")
         return
+
+    TOURNAMENT_DICT = dict(TOURNAMENT_DICT)
 
     # title
     tournament_name = TOURNAMENT_DICT['name']
@@ -441,8 +442,12 @@ def show_games():
 def show_players():
     """ show_players """
 
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
     if not TOURNAMENT_DICT:
-        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        alert("Pas de tournoi pour cette partie")
         return
 
     # title
@@ -500,7 +505,7 @@ def show_incidents():
         return
 
     if not TOURNAMENT_DICT:
-        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        alert("Pas de tournoi pour cette partie")
         return
 
     # title
@@ -702,8 +707,12 @@ def show_powers_results():
 
     overall_time_before = time()
 
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
     if not TOURNAMENT_DICT:
-        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        alert("Pas de tournoi pour cette partie")
         return
 
     tournament_id = TOURNAMENT_DICT['identifier']
@@ -900,7 +909,7 @@ def create_tournament():
             global TOURNAMENT_DICT
             TOURNAMENT_DICT = common.get_tournament_data(game)
             if not TOURNAMENT_DICT:
-                alert("Impossible de retrouver le tournoi qui vient juste d'être créée.")
+                alert("Etrange. Impossible de retrouver le tournoi qui vient juste d'être créée.")
 
         ev.preventDefault()
 
@@ -1092,8 +1101,10 @@ def edit_tournament():
     global TOURNAMENT_DICT
     TOURNAMENT_DICT = common.get_tournament_data(game)
     if not TOURNAMENT_DICT:
-        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        alert("Pas de tournoi pour cette partie")
         return
+
+    TOURNAMENT_DICT = dict(TOURNAMENT_DICT)
 
     # title
     tournament_name = TOURNAMENT_DICT['name']
@@ -1208,11 +1219,9 @@ def delete_tournament():
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.InfoDialog("Information", f"Le tournoi a été supprimé : {messages}")
 
-            global TOURNAMENT_DICT
-            TOURNAMENT_DICT = common.get_tournament_data(game)
-            if not TOURNAMENT_DICT:
-                alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-                return
+            # back somewhere else
+            MY_SUB_PANEL.clear()
+            create_tournament()
 
         ev.preventDefault()
 
@@ -1240,21 +1249,23 @@ def delete_tournament():
         MY_SUB_PANEL.clear()
         delete_tournament()
 
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
     global TOURNAMENT_DICT
     TOURNAMENT_DICT = common.get_tournament_data(game)
     if not TOURNAMENT_DICT:
-        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        alert("Pas de tournoi pour cette partie")
         return
+
+    TOURNAMENT_DICT = dict(TOURNAMENT_DICT)
 
     # title
     tournament_name = TOURNAMENT_DICT['name']
