@@ -63,7 +63,7 @@ $ Procédure générale
 ## La passer distinguée 
 ### utiliser la console d'arbitrage de la partie
 # Sélectionner la partie modèle
-## d'une manière ou d'une autre 
+## d'une manière ou d'une autre (pas besoin si on vient de la créer)
 ## elle doit apparaître en bas à gauche de la page
 # Si besoin :
 ## Créer le fichier CSV
@@ -72,11 +72,25 @@ $ Procédure générale
 ## Utiliser le menu ”Création” sous menu ”Créer plusieurs parties”
 # Démarrer les parties du tournoi une par une 
 ## Utiliser la page ”Mes parties”
-### Le plus pratique
+### Sélectionner les parties ”En attente” 
+### Utiliser ”Basculer en mode avec colonnes action” 
+### Démarrer les parties avec la fusée
+#### (Le plus pratique)
 
 $ Tournoi avec plusieurs arbitres
 
 Puisqu'on ne peut que créer ses propres parties, si le tournoi comporte plusieurs arbitres, transmettre à chaque arbitre les lignes du fichier qui le concernent (ou le fichier complet, charge à lui d'enlever du fichier les lignes qui ne le concernet pas)
+
+$ Création du tournoi lui-même
+
+En général les parties d'un tournoi sont regroupées.
+(La procédure)
+# Sélectionner une des parties du tournoi
+# Utiliser le menu ”Interface tournoi” sous menu ”Créer un tournoi”
+# Donner un nom au tournoi et clique ”Créer le tournoi”
+# Utiliser le menu ”Interface tournoi” sous menu ”Editer le tournoi”
+# Mettre les parties dans le tournoi une par une
+
 
 _
 
