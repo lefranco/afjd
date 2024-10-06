@@ -822,9 +822,9 @@ def game_parameters_reload(game):
 
 
 def get_tournament_data(game):
-    """ get_tournament_data : returns empty dict if problem """
+    """ get_tournament_data : returns None if problem """
 
-    tournament_dict = {}
+    tournament_dict = None
 
     def reply_callback(req):
         nonlocal tournament_dict
