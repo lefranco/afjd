@@ -17,6 +17,7 @@ import login
 import mapping
 import geometry
 import mydialog
+import allgames
 
 import index
 
@@ -1333,6 +1334,7 @@ def rectify_name():
 
             # Important otherwise we are lost ;-)
             storage['GAME'] = name_selected
+            allgames.show_game_selected()
 
         ev.preventDefault()
 
