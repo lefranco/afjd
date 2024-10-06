@@ -21,7 +21,6 @@ OPTIONS = {
 }
 
 
-
 def private_messages(dest_user_id, initial_content):
     """ private_messages """
 
