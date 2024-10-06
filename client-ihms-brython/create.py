@@ -606,7 +606,7 @@ def create_many_games():
         WARNED = True
 
     information = html.DIV(Class='important')
-    information <= "Consultez le sous menu d'explications pour de plus amples information sur le procédé !"
+    information <= "Consultez le sous menu d'explications pour des informations sur le procédé !"
     MY_SUB_PANEL <= information
     MY_SUB_PANEL <= html.BR()
 
