@@ -3,7 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 
-from browser import document, html, window, alert  # pylint: disable=import-error
+from browser import document, html, window  # pylint: disable=import-error
 
 # pylint: disable=invalid-name
 style_sheet = """
