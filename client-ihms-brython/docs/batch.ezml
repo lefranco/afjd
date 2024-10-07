@@ -70,12 +70,14 @@ $ Procédure générale
 ## Distribuer aux arbitres assistants le fichier CSV
 # Créer les parties du tournoi (dont on est arbitre) à partir du fichier CSV 
 ## Utiliser le menu ”Création” sous menu ”Créer plusieurs parties”
-# Démarrer les parties du tournoi une par une 
-## Utiliser la page ”Mes parties”
-### Sélectionner les parties ”En attente” 
-### Utiliser ”Basculer en mode avec colonnes action” 
-### Démarrer les parties avec la fusée
-#### (Le plus pratique)
+# Démarrer les parties du tournoi
+## Utiliser le menu ”Mes parties”
+## Sélectionner les parties ”En attente” 
+### Les parties créées précédemment doivent apparaître !
+## Activer ”Basculer en mode avec colonnes action” si nécessaire
+## Démarrer les parties une par une avec la fusée
+### (C'est le plus pratique)
+## Désactiver ”Basculer en mode avec colonnes action” par sécurité
 
 $ Tournoi avec plusieurs arbitres
 
