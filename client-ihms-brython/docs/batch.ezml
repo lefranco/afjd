@@ -50,7 +50,7 @@ _dummy1,OrangeCar,one,two,three,four,five,six,seven_
 _dummy2,OrangeCar,seven,one,two,three,four,five,six_
 .
 .
-L'ordre des joueurs est celui de la description officielle de la partie sur le site, obtenu dans le menu “Variantes” sous menu “_nom-de-la-variante_”.  Donc, pour la variante standard (par exemple) c'est : Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie.
+L'ordre des joueurs est celui de la description officielle de la partie sur le site, obtenu dans le menu “Variantes” sous menu “_nom-de-la-variante_”.  Donc, pour la variante standard (par exemple) c'est : Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie. A noter : pour les variantes avec un pays neutre, ne pas le mentionner (par exemple l'Italie pour la variante GrandeGuerre)
 .
 .
 Dans notre exemple pour la partie ”dummy1”, c'est le joueur de pseudo ”one” qui prend l'Angleterre...
