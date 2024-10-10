@@ -1062,6 +1062,7 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
 
         # keep a note of game state before
+        name_before = game.name
         current_state_before = game.current_state
 
         changed = game.load_json(args)
@@ -1074,9 +1075,13 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
 
         # check we have a 'legal' transition and take action
 
-        if games.Game.find_by_name(sql_executor, game.name):
-            del sql_executor
-            flask_restful.abort(404, msg=f"There is already a game named {game.name}!")
+        # only if we rename game
+        if 'name' in args:
+            new_name = args['name']
+            if new_name != name_before:
+                if games.Game.find_by_name(sql_executor, new_name):
+                    del sql_executor
+                    flask_restful.abort(404, msg=f"There is already a game named {new_name}!")
 
         if current_state_before == 1 and game.current_state == 0:
             # ongoing to waiting
