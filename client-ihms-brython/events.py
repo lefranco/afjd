@@ -856,6 +856,12 @@ def edit_event():
     event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
 
+    # check allowed
+    manager_id = event_dict['manager_id']
+    if player_id != manager_id:
+        alert("Vous n'êtes pas responsablme de cet événement")
+        return
+
     start_date = event_dict['start_date']
     start_hour = event_dict['start_hour']
     end_date = event_dict['end_date']
@@ -1086,6 +1092,13 @@ def handle_joiners():
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
 
+    # check allowed
+    event_dict = get_event_data(event_id)
+    manager_id = event_dict['manager_id']
+    if player_id != manager_id:
+        alert("Vous n'êtes pas responsable de cet événement")
+        return
+
     joiners = get_registrations(event_id)
     joiners_dict = {}
     for joiner in joiners:
@@ -1258,6 +1271,13 @@ def delete_event():
     events_dict = common.get_events_data()
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
+
+    # check alllowed
+    event_dict = get_event_data(event_id)
+    manager_id = event_dict['manager_id']
+    if player_id != manager_id:
+        alert("Vous n'êtes pas responsable de cet événement")
+        return
 
     form = html.FORM()
 
