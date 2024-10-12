@@ -1083,6 +1083,12 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
                     del sql_executor
                     flask_restful.abort(404, msg=f"There is already a game named {new_name}!")
 
+                # change the lock !
+                if name_before in MOVE_GAME_LOCK_TABLE:
+                    lock = MOVE_GAME_LOCK_TABLE[name_before]
+                    del MOVE_GAME_LOCK_TABLE[name_before]
+                    MOVE_GAME_LOCK_TABLE[new_name] = lock
+
         if current_state_before == 1 and game.current_state == 0:
             # ongoing to waiting
             # suppress lock file
