@@ -318,7 +318,8 @@ def load_option(_, item_name):
             figure = html.FIGURE()
             image = html.IMG(src=f"data:image/jpeg;base64,{SITE_IMAGE_DICT['image']}", width=SITE_IMAGE_DISPLAY_SIZE, height=SITE_IMAGE_DISPLAY_SIZE, alt="Image du site", title="Cliquer sur l'image pour l'agrandir et bien la visualiser")
             figure <= image
-            legend = html.FIGCAPTION(SITE_IMAGE_DICT['legend'])
+            legend_text = SITE_IMAGE_DICT['legend'].replace('\n', '<br>')
+            legend = html.FIGCAPTION(legend_text)
             figure <= legend
             figure.bind("click", show_site_image)
 
