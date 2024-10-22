@@ -1159,6 +1159,9 @@ def game_master():
     # role flag
     play_low.stack_role_flag(play_low.MY_SUB_PANEL)
 
+    ############################################
+    play_low.MY_SUB_PANEL <= html.H3("Gestion")
+
     role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
     submitted_data = play_low.get_roles_submitted_orders(play_low.GAME_ID)
@@ -1433,95 +1436,106 @@ def game_master():
 
         game_admin_table <= row
 
-    deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
-
-    # form for debrief
-
-    deadline_form = html.FORM()
-
-    dl_gmt = html.DIV("ATTENTION : vous devez entrer une date limite en temps GMT", Class='important')
-    special_legend = html.LEGEND(dl_gmt)
-    deadline_form <= special_legend
-    deadline_form <= html.BR()
-
-    # get GMT date and time
-    time_stamp_now = time()
-    date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
-    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
-
-    # convert 'deadline_loaded' to human editable format
-
-    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
-    deadline_loaded_day, deadline_loaded_hour, _ = datetime_deadline_loaded_str.split(' ')
-
-    fieldset = html.FIELDSET()
-    legend_deadline_day = html.LEGEND("Jour de la date limite (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
-    fieldset <= legend_deadline_day
-    input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day, Class='btn-inside')
-    fieldset <= input_deadline_day
-    deadline_form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_deadline_hour = html.LEGEND("Heure de la date limite (hh:mm ou selon les réglages du navigateur)", title="La date limite. Dernière heure du jour pour soumettre les ordres. Après le joueur est en retard.")
-    fieldset <= legend_deadline_hour
-    input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour, step=1, Class='btn-inside')
-    fieldset <= input_deadline_hour
-    deadline_form <= fieldset
-
-    input_change_deadline_game = html.INPUT(type="submit", value="Changer la date limite de la partie à cette valeur", Class='btn-inside')
-    input_change_deadline_game.bind("click", change_deadline_game_callback)
-    deadline_form <= input_change_deadline_game
-
-    deadline_form <= html.BR()
-    deadline_form <= html.BR()
-    deadline_form <= html.BR()
-
-    input_push_deadline_game = html.INPUT(type="submit", value="Reporter la date limite de 24 heures (une minute pour une partie en direct)", Class='btn-inside')
-    input_push_deadline_game.bind("click", push_deadline_game_callback)
-    deadline_form <= input_push_deadline_game
-
-    deadline_form <= html.BR()
-    deadline_form <= html.BR()
-    deadline_form <= html.BR()
-
-    input_push_deadline_game = html.INPUT(type="submit", value="Mettre la date limite à maintenant", Class='btn-inside')
-    input_push_deadline_game.bind("click", sync_deadline_game_callback)
-    deadline_form <= input_push_deadline_game
-
-    # form for debrief
-
-    debrief_form = html.FORM()
-
-    debrief_action = html.DIV("Lève l'anonymat et ouvre les canaux de communication (réversible)", Class='None')
-    special_legend = html.LEGEND(debrief_action)
-    debrief_form <= special_legend
-
-    debrief_form <= html.BR()
-    input_debrief_game = html.INPUT(type="submit", value="Debrief !", Class='btn-inside')
-    input_debrief_game.bind("click", debrief_game_callback)
-    debrief_form <= input_debrief_game
-
-    play_low.MY_SUB_PANEL <= html.H3("Gestion")
-
     play_low.MY_SUB_PANEL <= game_admin_table
 
+    ############################################
     if play_low.GAME_PARAMETERS_LOADED['current_state'] in [0, 1]:
 
         play_low.MY_SUB_PANEL <= html.H3("Date limite")
 
-        play_low.MY_SUB_PANEL <= deadline_form
-        play_low.MY_SUB_PANEL <= html.BR()
+        # form for deadlines
 
+        deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
+
+        table = html.TABLE()
+        row = html.TR()
+
+        deadline_form = html.FORM()
+
+        dl_gmt = html.DIV("ATTENTION : vous devez entrer une date limite en temps GMT", Class='important')
+        special_legend = html.LEGEND(dl_gmt)
+        deadline_form <= special_legend
+        deadline_form <= html.BR()
+
+        # get GMT date and time
+        time_stamp_now = time()
+        date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
+        date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+
+        # convert 'deadline_loaded' to human editable format
+
+        datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+        datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
+        deadline_loaded_day, deadline_loaded_hour, _ = datetime_deadline_loaded_str.split(' ')
+
+        fieldset = html.FIELDSET()
+        legend_deadline_day = html.LEGEND("Jour de la date limite (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
+        fieldset <= legend_deadline_day
+        input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day, Class='btn-inside')
+        fieldset <= input_deadline_day
+        deadline_form <= fieldset
+
+        fieldset = html.FIELDSET()
+        legend_deadline_hour = html.LEGEND("Heure de la date limite (hh:mm ou selon les réglages du navigateur)", title="La date limite. Dernière heure du jour pour soumettre les ordres. Après le joueur est en retard.")
+        fieldset <= legend_deadline_hour
+        input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour, step=1, Class='btn-inside')
+        fieldset <= input_deadline_hour
+        deadline_form <= fieldset
+
+        input_change_deadline_game = html.INPUT(type="submit", value="Changer la date limite de la partie à cette valeur", Class='btn-inside')
+        input_change_deadline_game.bind("click", change_deadline_game_callback)
+        deadline_form <= input_change_deadline_game
+
+        col = html.TD()
+        col <= deadline_form
+        row <= col
+
+        deadline_form2 = html.FORM()
+        input_push_deadline_game = html.INPUT(type="submit", value="Reporter la date limite de 24 heures", Class='btn-inside')
+        input_push_deadline_game.bind("click", push_deadline_game_callback)
+        deadline_form2 <= input_push_deadline_game
+
+        col = html.TD()
+        col <= deadline_form2
+        row <= col
+
+        deadline_form3 = html.FORM()
+        input_push_deadline_game = html.INPUT(type="submit", value="Mettre la date limite à maintenant", Class='btn-inside')
+        input_push_deadline_game.bind("click", sync_deadline_game_callback)
+        deadline_form3 <= input_push_deadline_game
+
+        col = html.TD()
+        col <= deadline_form3
+        row <= col
+
+        table <= row
+        play_low.MY_SUB_PANEL <= table
+
+        play_low.MY_SUB_PANEL <= html.BR()
         play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
+
+    ############################################
+    if play_low.GAME_PARAMETERS_LOADED['finished'] or play_low.GAME_PARAMETERS_LOADED['soloed']:
 
         play_low.MY_SUB_PANEL <= html.H3("Debrief de la partie")
 
-        if not (play_low.GAME_PARAMETERS_LOADED['finished'] or play_low.GAME_PARAMETERS_LOADED['soloed']):
-            play_low.MY_SUB_PANEL <= "Partie toujours en cours..."
-        else:
-            play_low.MY_SUB_PANEL <= debrief_form
+        # form for debrief
 
+        debrief_form = html.FORM()
+
+        debrief_action = html.DIV("Lève l'anonymat et ouvre les canaux de communication (réversible)", Class='None')
+        special_legend = html.LEGEND(debrief_action)
+        debrief_form <= special_legend
+
+        debrief_form <= html.BR()
+        input_debrief_game = html.INPUT(type="submit", value="Debrief !", Class='btn-inside')
+        input_debrief_game.bind("click", debrief_game_callback)
+        debrief_form <= input_debrief_game
+
+        play_low.MY_SUB_PANEL <= html.BR()
+        play_low.MY_SUB_PANEL <= debrief_form
+
+    ############################################
     play_low.MY_SUB_PANEL <= html.H3("Déplacement de joueurs")
 
     row = html.TR()
@@ -1609,15 +1623,14 @@ def game_master():
     col = html.TD()
     col <= form
     row <= col
-#   play_low.MY_SUB_PANEL <= form
 
     table = html.TABLE()
     table <= row
     play_low.MY_SUB_PANEL <= table
 
+    ############################################
     play_low.MY_SUB_PANEL <= html.H3("Suppression des incidents")
 
-    # quitters
     play_low.MY_SUB_PANEL <= html.H4("Suppression d'abandons")
 
     # get the actual dropouts of the game
@@ -1755,6 +1768,7 @@ def game_master():
     play_low.MY_SUB_PANEL <= game_incidents_table
     play_low.MY_SUB_PANEL <= html.BR()
 
+    ############################################
     play_low.MY_SUB_PANEL <= html.H3("Rectifier les paramètres de la partie")
 
     form = html.FORM()
@@ -1764,6 +1778,7 @@ def game_master():
     form <= input_rectify_game
     play_low.MY_SUB_PANEL <= form
 
+    ############################################
     play_low.MY_SUB_PANEL <= html.H3("Changer l'état de la partie")
 
     state_loaded = play_low.GAME_PARAMETERS_LOADED['current_state']
@@ -1808,6 +1823,7 @@ def game_master():
 
     play_low.MY_SUB_PANEL <= form
 
+    ############################################
     play_low.MY_SUB_PANEL <= html.H3("Supprimer la partie")
 
     form = html.FORM()
