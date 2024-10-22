@@ -7422,7 +7422,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
 
         # games very late
         limit = int(time.time()) - CRITICAL_DELAY_DAY * 24 * 3600
-        dying_games = [g.name for g in games_list if g.current_state == 1 and not g.finished and g.deadline < limit]
+        dying_games = [g.name for g in games_list if g.current_state == 1 and not g.finished and not g.soloed and g.deadline < limit]
 
         # stats about games
 
