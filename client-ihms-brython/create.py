@@ -17,6 +17,7 @@ import mapping
 import memoize
 import scoring
 import ezml_render
+import allgames
 
 
 OPTIONS = {
@@ -480,6 +481,28 @@ def create_many_games():
 
     global WARNED
 
+    def select_game_callback(ev, input_game, game_data_sel):  # pylint: disable=invalid-name
+        """ select_game_callback """
+
+        global WARNED
+
+        ev.preventDefault()
+
+        game_name = input_game.value
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        allgames.show_game_selected()
+
+        WARNED = False
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        create_many_games()
+
     def create_games_callback(ev, input_file):  # pylint: disable=invalid-name
         """ create_games_callback """
 
@@ -594,6 +617,11 @@ def create_many_games():
 
     game = storage['GAME']
 
+    games_dict = common.get_games_data()
+    if games_dict is None:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
     if not WARNED:
 
         game_parameters_loaded = common.game_parameters_reload(game)
@@ -602,13 +630,45 @@ def create_many_games():
             return
 
         anonymity = "Oui" if game_parameters_loaded['anonymous'] else "Non"
-        alert(f"La partie modèle est le partie '{game}'.\nNotamment l'anonymat qui est à {anonymity}.\nVérifiez très soigneusement que cela convient ;-)\nSinon, sélectionnez la bonne partie et recommencez !")
+        alert(f"La partie modèle est le partie '{game}'.\nNotamment l'anonymat qui est à {anonymity}.\nVérifiez très soigneusement que cela convient ;-)\nSi la partie souhaitée n'est pas dans la liste de cette page, c'est qu'elle n'est pas distinguée.\nSinon, sélectionnez la bonne partie et recommencez !")
         WARNED = True
 
     information = html.DIV(Class='important')
     information <= "Consultez le sous menu d'explications pour des informations sur le procédé !"
     MY_SUB_PANEL <= information
-    MY_SUB_PANEL <= html.BR()
+
+    # game selector
+    # ----------------
+    MY_SUB_PANEL <= html.H4("Sélection de partie modèle (si besoin)")
+
+    form = html.FORM()
+    fieldset = html.FIELDSET()
+    legend_game = html.LEGEND("Sélection de la partie", title="Sélection de la partie modèle")
+    fieldset <= legend_game
+
+    # list the games we have
+    game_list = sorted([g['name'] for g in games_dict.values() if g['current_state'] == 3 and not g['archive']], key=lambda n: n.upper())
+
+    input_game = html.SELECT(type="select-one", value="", Class='btn-inside')
+    for game in game_list:
+        option = html.OPTION(game)
+        if 'GAME' in storage:
+            if storage['GAME'] == game:
+                option.selected = True
+        input_game <= option
+    fieldset <= input_game
+    form <= fieldset
+
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
+    input_select_game = html.INPUT(type="submit", value="Sélectionner", Class='btn-inside')
+    input_select_game.bind("click", lambda e, ig=input_game, gds=game_data_sel: select_game_callback(e, ig, gds))
+    form <= input_select_game
+
+    MY_SUB_PANEL <= form
+
+    MY_SUB_PANEL <= html.H4("Création des parties")
 
     form = html.FORM()
 
