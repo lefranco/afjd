@@ -258,7 +258,7 @@ class Game:
         if 'grace_duration' in json_dict and json_dict['grace_duration'] is not None and json_dict['grace_duration'] != self._grace_duration:
             self._grace_duration = json_dict['grace_duration']
             # safety
-            self._grace_duration = max(1, self._grace_duration)
+            self._grace_duration = max(0, self._grace_duration)
             changed = True
 
         if 'speed_moves' in json_dict and json_dict['speed_moves'] is not None and json_dict['speed_moves'] != self._speed_moves:
