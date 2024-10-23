@@ -98,7 +98,7 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
     inforced_names_dict_json = json.dumps(inforced_names_dict)
 
     json_dict = {
-        'now': now,
+        'now': now - EPSILON_SEC,
         'adjudication_names': inforced_names_dict_json
     }
 
@@ -129,7 +129,7 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
             return False
 
     # not after deadline + grace
-    if now <= game_full_dict['deadline'] + game_full_dict['grace_duration'] * 3600:
+    if now + EPSILON_SEC <= game_full_dict['deadline'] + game_full_dict['grace_duration'] * 3600:
         mylogger.LOGGER.info("No. Not after grace for game %s", game_name)
         return False
 
@@ -275,7 +275,7 @@ def check_all_games(jwt_token: str, now: float) -> None:
             continue
 
         # when calculating deadline will round it to next hour
-        result = commute_game(jwt_token, now - EPSILON_SEC, game_id, game_full_dict)
+        result = commute_game(jwt_token, now, game_id, game_full_dict)
         if result:
             mylogger.LOGGER.info("=== Hurray, game '%s' was happily commuted!", game_name)
 
