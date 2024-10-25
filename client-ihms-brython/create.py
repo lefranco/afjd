@@ -480,11 +480,13 @@ def create_many_games():
     """ create_many_games """
 
     global WARNED
+    model_game_name = None
 
     def select_game_callback(ev, input_game, game_data_sel):  # pylint: disable=invalid-name
         """ select_game_callback """
 
         global WARNED
+        nonlocal model_game_name
 
         ev.preventDefault()
 
@@ -494,6 +496,9 @@ def create_many_games():
         storage['GAME_ID'] = game_id
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
+
+        # changed
+        model_game_name = game_name
 
         allgames.show_game_selected()
 
@@ -516,7 +521,7 @@ def create_many_games():
             def create_games_callback2(_, dialog):
                 """ create_games_callback2 """
                 dialog.close(None)
-                perform_batch(pseudo, game, games_to_create)
+                perform_batch(pseudo, model_game_name, games_to_create)
 
             games_to_create = {}
 
@@ -615,7 +620,7 @@ def create_many_games():
         alert("Il faut choisir la partie au préalable")
         return
 
-    game = storage['GAME']
+    model_game_name = storage['GAME']
 
     games_dict = common.get_games_data()
     if games_dict is None:
@@ -624,13 +629,14 @@ def create_many_games():
 
     if not WARNED:
 
-        game_parameters_loaded = common.game_parameters_reload(game)
+        game_parameters_loaded = common.game_parameters_reload(model_game_name)
         if not game_parameters_loaded:
             alert("Erreur chargement paramètres partie modèle")
             return
 
         anonymity = "Oui" if game_parameters_loaded['anonymous'] else "Non"
-        alert(f"La partie modèle est le partie '{game}'.\nNotamment l'anonymat qui est à {anonymity}.\nVérifiez très soigneusement que cela convient ;-)\nSi la partie souhaitée n'est pas dans la liste de cette page, c'est qu'elle n'est pas distinguée.\nSinon, sélectionnez la bonne partie et recommencez !")
+        alert(f"La partie modèle est le partie '{model_game_name}'.\nNotamment l'anonymat qui est à {anonymity}.\nVérifiez très soigneusement que cela convient ;-)\nSi la partie souhaitée n'est pas dans la liste de cette page, c'est qu'elle n'est pas distinguée.\nSinon, sélectionnez la bonne partie et recommencez !")
+
         WARNED = True
 
     information = html.DIV(Class='important')
