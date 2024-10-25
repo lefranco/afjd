@@ -1,5 +1,5 @@
 # run with command ""ruff -check""
-
+# derogation : # noqa F401
 
 [lint]
 
