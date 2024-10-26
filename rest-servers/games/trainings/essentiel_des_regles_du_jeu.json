@@ -73,7 +73,7 @@
 {
     "title": "Echange impossible", 
     "type": "adjudicate",
-    "introduction" : "Pour échanger deux unités il faut utiliser un convoi. Même en utilisant les côtes spéciales ! Espagne côte nord et côte sud sont la même région, donc il s'agit d'une attaque frontale.",
+    "introduction" : "Pour échanger deux unités il faut utiliser un convoi. Deux armées en attaque frontale l'une contre l'autre  sans convoi n'échangent pas leur position. Ce, même en utilisant les côtes spéciales ! Espagne côte nord et côte sud sont la même région, donc il s'agit d'une attaque frontale.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
