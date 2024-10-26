@@ -27,6 +27,7 @@ HELP_CONTENT_TABLE = {
     "Comment changer des joueurs ?": "1) retirer le rôle au partant 2) retirer de la partie sélectionnée le partant 3) mettre dans la partie sélectionnée l'arrivant 4) attribuer le role à l'arrivant",
     "Comment bénéficier du bouton permettant de contacter tous les remplaçants ?": "1) et 2) ci-dessus",
     "Comment modifier un paramètre de la partie ?": "menu “Les partie“ sous menu “Rectifier paramètres“",
+    "Comment forcer la fin de la partie (un joueur tarde à entrer une retraite sans importance) ?": "1) Rectifier le paramètre pour mettre la partie en DC autorisé pour cette saison (si besoin) 2) mettre la DL à maintenant 3) forcer un DC pour ce joueur 4) Annuler la première action (car la partie a été jouée sans DC)",
 }
 
 
