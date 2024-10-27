@@ -1,12 +1,12 @@
 {
-    "author": "(Inconnu)",
+    "additional_text" : "",
     "map": {
         "width": 1000,
         "height": 784
     },
     "regions": {
         "1": {
-            "name": "Cote"
+            "name": "Côte"
         },
         "2": {
             "name": "Terre"
@@ -17,7 +17,7 @@
     },
     "units": {
         "1": {
-            "name": "Armee"
+            "name": "Armée"
         },
         "2": {
             "name": "Flotte"
@@ -77,7 +77,7 @@
         },
         "3": {
             "name": "Angleterre",
-            "adjective_name": "Anglais",
+            "adjective_name": "anglais",
             "letter_name": "E",
             "red": [
                 217,
@@ -94,7 +94,7 @@
         },
         "4": {
             "name": "Espagne",
-            "adjective_name": "Espagnol",
+            "adjective_name": "espagnol",
             "letter_name": "S",
             "red": [
                 86,
@@ -111,7 +111,7 @@
         },
         "5": {
             "name": "France",
-            "adjective_name": "Francais",
+            "adjective_name": "français",
             "letter_name": "F",
             "red": [
                 121,
@@ -128,7 +128,7 @@
         },
         "6": {
             "name": "Ottoman",
-            "adjective_name": "Ottoman",
+            "adjective_name": "ottoman",
             "letter_name": "T",
             "red": [
                 152,
@@ -145,7 +145,7 @@
         },
         "7": {
             "name": "Piemont",
-            "adjective_name": "Piemontais",
+            "adjective_name": "piémontais",
             "letter_name": "I",
             "red": [
                 165,
@@ -162,7 +162,7 @@
         },
         "8": {
             "name": "Prusse",
-            "adjective_name": "Prussien",
+            "adjective_name": "prussien",
             "letter_name": "U",
             "red": [
                 250,
@@ -179,7 +179,7 @@
         },
         "9": {
             "name": "Russie",
-            "adjective_name": "Russe",
+            "adjective_name": "russe",
             "letter_name": "R",
             "red": [
                 225,
@@ -197,16 +197,20 @@
     },
     "coasts": {
         "1": {
-            "name": "ce"
+            "name": "ce",
+            "full_name": "côte est"
         },
         "2": {
-            "name": "cn"
+            "name": "cn",
+            "full_name": "côte nord"
         },
         "3": {
-            "name": "cs"
+            "name": "cs",
+            "full_name": "côte sud"
         },
         "4": {
-            "name": "co"
+            "name": "co",
+            "full_name": "côte ouest"
         }
     },
     "zones": {
@@ -225,7 +229,8 @@
             "x_pos": 795,
             "y_pos": 618,
             "x_legend_pos": 773,
-            "y_legend_pos": 585
+            "y_legend_pos": 585,
+            "display": 6
         },
         "3": {
             "name": "GRE",
@@ -233,7 +238,8 @@
             "x_pos": 671,
             "y_pos": 627,
             "x_legend_pos": 671,
-            "y_legend_pos": 613
+            "y_legend_pos": 613,
+            "display": 6
         },
         "4": {
             "name": "ALB",
@@ -268,7 +274,8 @@
             "x_pos": 717,
             "y_pos": 568,
             "x_legend_pos": 717,
-            "y_legend_pos": 554
+            "y_legend_pos": 554,
+            "display": 6
         },
         "8": {
             "name": "BEL",
@@ -309,7 +316,8 @@
             "x_pos": 879,
             "y_pos": 340,
             "x_legend_pos": 879,
-            "y_legend_pos": 326
+            "y_legend_pos": 326,
+            "display": 9
         },
         "13": {
             "name": "MOS",
@@ -317,7 +325,8 @@
             "x_pos": 904,
             "y_pos": 156,
             "x_legend_pos": 904,
-            "y_legend_pos": 142
+            "y_legend_pos": 142,
+            "display": 9
         },
         "14": {
             "name": "STP",
@@ -325,7 +334,8 @@
             "x_pos": 746,
             "y_pos": 47,
             "x_legend_pos": 746,
-            "y_legend_pos": 33
+            "y_legend_pos": 33,
+            "display": 9
         },
         "15": {
             "name": "RIG",
@@ -395,10 +405,11 @@
         "23": {
             "name": "PRU",
             "full_name": "Prusse",
-            "x_pos": 616,
-            "y_pos": 261,
+            "x_pos": 623,
+            "y_pos": 279,
             "x_legend_pos": 621,
-            "y_legend_pos": 280
+            "y_legend_pos": 261,
+            "display": 8
         },
         "24": {
             "name": "POS",
@@ -414,7 +425,8 @@
             "x_pos": 522,
             "y_pos": 320,
             "x_legend_pos": 535,
-            "y_legend_pos": 301
+            "y_legend_pos": 301,
+            "display": 8
         },
         "26": {
             "name": "MEK",
@@ -438,7 +450,8 @@
             "x_pos": 499,
             "y_pos": 333,
             "x_legend_pos": 483,
-            "y_legend_pos": 331
+            "y_legend_pos": 331,
+            "display": 8
         },
         "29": {
             "name": "SAX",
@@ -454,7 +467,8 @@
             "x_pos": 559,
             "y_pos": 369,
             "x_legend_pos": 544,
-            "y_legend_pos": 366
+            "y_legend_pos": 366,
+            "display": 1
         },
         "31": {
             "name": "BOH",
@@ -471,7 +485,8 @@
             "x_pos": 487,
             "y_pos": 430,
             "x_legend_pos": 480,
-            "y_legend_pos": 419
+            "y_legend_pos": 419,
+            "display": 2
         },
         "33": {
             "name": "MUN",
@@ -479,7 +494,8 @@
             "x_pos": 470,
             "y_pos": 450,
             "x_legend_pos": 488,
-            "y_legend_pos": 450
+            "y_legend_pos": 450,
+            "display": 2
         },
         "34": {
             "name": "TYR",
@@ -496,7 +512,8 @@
             "x_pos": 529,
             "y_pos": 450,
             "x_legend_pos": 529,
-            "y_legend_pos": 436
+            "y_legend_pos": 436,
+            "display": 1
         },
         "36": {
             "name": "CAR",
@@ -513,7 +530,8 @@
             "x_pos": 579,
             "y_pos": 475,
             "x_legend_pos": 579,
-            "y_legend_pos": 461
+            "y_legend_pos": 461,
+            "display": 1
         },
         "38": {
             "name": "BUD",
@@ -521,7 +539,8 @@
             "x_pos": 603,
             "y_pos": 431,
             "x_legend_pos": 603,
-            "y_legend_pos": 417
+            "y_legend_pos": 417,
+            "display": 1
         },
         "39": {
             "name": "TSY",
@@ -562,7 +581,8 @@
             "x_pos": 413,
             "y_pos": 344,
             "x_legend_pos": 418,
-            "y_legend_pos": 321
+            "y_legend_pos": 321,
+            "display": 2
         },
         "44": {
             "name": "HOL",
@@ -595,8 +615,7 @@
             "x_pos": 384,
             "y_pos": 433,
             "x_legend_pos": 379,
-            "y_legend_pos": 420,
-            "display": 5
+            "y_legend_pos": 420
         },
         "48": {
             "name": "SAV",
@@ -604,7 +623,8 @@
             "x_pos": 387,
             "y_pos": 520,
             "x_legend_pos": 384,
-            "y_legend_pos": 508
+            "y_legend_pos": 508,
+            "display": 7
         },
         "49": {
             "name": "PIE",
@@ -612,7 +632,9 @@
             "x_pos": 413,
             "y_pos": 540,
             "x_legend_pos": 413,
-            "y_legend_pos": 526
+            "y_legend_pos": 526,
+            "display": 7
+            
         },
         "50": {
             "name": "MIL",
@@ -620,7 +642,8 @@
             "x_pos": 444,
             "y_pos": 546,
             "x_legend_pos": 438,
-            "y_legend_pos": 531
+            "y_legend_pos": 531,
+            "display": 1
         },
         "51": {
             "name": "VEN",
@@ -641,8 +664,8 @@
         "53": {
             "name": "PAP",
             "full_name": "Papauté",
-            "x_pos": 500,
-            "y_pos": 568,
+            "x_pos": 495,
+            "y_pos": 579,
             "x_legend_pos": 482,
             "y_legend_pos": 546
         },
@@ -661,7 +684,8 @@
             "x_pos": 568,
             "y_pos": 648,
             "x_legend_pos": 547,
-            "y_legend_pos": 640
+            "y_legend_pos": 640,
+            "display": 4
         },
         "56": {
             "name": "SAR",
@@ -669,7 +693,8 @@
             "x_pos": 428,
             "y_pos": 669,
             "x_legend_pos": 428,
-            "y_legend_pos": 643
+            "y_legend_pos": 643,
+            "display": 7
         },
         "57": {
             "name": "SIC",
@@ -677,7 +702,8 @@
             "x_pos": 539,
             "y_pos": 718,
             "x_legend_pos": 510,
-            "y_legend_pos": 715
+            "y_legend_pos": 715,
+            "display": 4
         },
         "58": {
             "name": "TUN",
@@ -699,9 +725,9 @@
             "name": "MAR",
             "full_name": "Maroc",
             "x_pos": 125,
-            "y_pos": 765,
+            "y_pos": 766,
             "x_legend_pos": 125,
-            "y_legend_pos": 751
+            "y_legend_pos": 752
         },
         "61": {
             "name": "AND",
@@ -709,7 +735,8 @@
             "x_pos": 140,
             "y_pos": 687,
             "x_legend_pos": 140,
-            "y_legend_pos": 673
+            "y_legend_pos": 673,
+            "display": 4
         },
         "62": {
             "name": "POR",
@@ -725,7 +752,8 @@
             "x_pos": 161,
             "y_pos": 591,
             "x_legend_pos": 161,
-            "y_legend_pos": 577
+            "y_legend_pos": 577,
+            "display": 4
         },
         "64": {
             "name": "ARA",
@@ -733,7 +761,8 @@
             "x_pos": 243,
             "y_pos": 608,
             "x_legend_pos": 243,
-            "y_legend_pos": 594
+            "y_legend_pos": 594,
+            "display": 4
         },
         "65": {
             "name": "AQU",
@@ -768,7 +797,8 @@
             "x_pos": 294,
             "y_pos": 499,
             "x_legend_pos": 294,
-            "y_legend_pos": 485
+            "y_legend_pos": 485,
+            "display": 5
         },
         "69": {
             "name": "BOU",
@@ -794,7 +824,8 @@
             "x_pos": 296,
             "y_pos": 448,
             "x_legend_pos": 296,
-            "y_legend_pos": 434
+            "y_legend_pos": 434,
+            "display": 5
         },
         "72": {
             "name": "BRE",
@@ -802,7 +833,8 @@
             "x_pos": 253,
             "y_pos": 441,
             "x_legend_pos": 240,
-            "y_legend_pos": 429
+            "y_legend_pos": 429,
+            "display": 5
         },
         "73": {
             "name": "PIC",
@@ -810,7 +842,8 @@
             "x_pos": 322,
             "y_pos": 398,
             "x_legend_pos": 326,
-            "y_legend_pos": 375
+            "y_legend_pos": 375,
+            "display": 5
         },
         "74": {
             "name": "LON",
@@ -818,7 +851,8 @@
             "x_pos": 304,
             "y_pos": 332,
             "x_legend_pos": 279,
-            "y_legend_pos": 337
+            "y_legend_pos": 337,
+            "display": 3
         },
         "75": {
             "name": "BRI",
@@ -826,7 +860,8 @@
             "x_pos": 249,
             "y_pos": 328,
             "x_legend_pos": 243,
-            "y_legend_pos": 306
+            "y_legend_pos": 306,
+            "display": 3
         },
         "76": {
             "name": "IRL",
@@ -834,7 +869,8 @@
             "x_pos": 187,
             "y_pos": 273,
             "x_legend_pos": 187,
-            "y_legend_pos": 259
+            "y_legend_pos": 259,
+            "display": 3
         },
         "77": {
             "name": "YOR",
@@ -851,7 +887,8 @@
             "x_pos": 261,
             "y_pos": 207,
             "x_legend_pos": 252,
-            "y_legend_pos": 194
+            "y_legend_pos": 194,
+            "display": 3
         },
         "79": {
             "name": "DAN",
@@ -912,10 +949,10 @@
         "86": {
             "name": "mORI",
             "full_name": "Mediteranée Orientale",
-            "x_pos": 883,
-            "y_pos": 735,
-            "x_legend_pos": 883,
-            "y_legend_pos": 721
+            "x_pos": 682,
+            "y_pos": 760,
+            "x_legend_pos": 682,
+            "y_legend_pos": 746
         },
         "87": {
             "name": "mION",
@@ -992,10 +1029,10 @@
         "96": {
             "name": "oEXT",
             "full_name": "Atlantique Extérieur",
-            "x_pos": 108,
-            "y_pos": 108,
-            "x_legend_pos": 108,
-            "y_legend_pos": 94
+            "x_pos": 27,
+            "y_pos": 319,
+            "x_legend_pos": 27,
+            "y_legend_pos": 305
         },
         "97": {
             "name": "mNVG",
@@ -1257,7 +1294,7 @@
         },
         "41": {
             "x_pos": 262,
-            "y_pos": 518
+            "y_pos": 519
         },
         "42": {
             "x_pos": 316,
@@ -1305,7 +1342,7 @@
             "name": "Printemps"
         },
         "2": {
-            "name": "Ete"
+            "name": "Été"
         },
         "3": {
             "name": "Automne"
@@ -1325,7 +1362,7 @@
             "name": "Soutenir offensivement"
         },
         "3": {
-            "name": "Soutenir defensivement"
+            "name": "Soutenir défensivement"
         },
         "4": {
             "name": "Tenir"
@@ -2822,16 +2859,8 @@
                     248
                 ],
                 [
-                    158,
-                    252
-                ],
-                [
-                    155,
-                    252
-                ],
-                [
-                    155,
-                    255
+                    156,
+                    256
                 ],
                 [
                     159,
@@ -3278,8 +3307,12 @@
                     714
                 ],
                 [
-                    116,
-                    720
+                    119,
+                    723
+                ],
+                [
+                    127,
+                    727
                 ],
                 [
                     128,
@@ -7159,7 +7192,7 @@
                 ],
                 [
                     561,
-                    697
+                    700
                 ],
                 [
                     557,
@@ -8230,16 +8263,20 @@
                     741
                 ],
                 [
-                    132,
-                    731
-                ],
-                [
-                    129,
+                    131,
                     731
                 ],
                 [
                     127,
                     729
+                ],
+                [
+                    130,
+                    725
+                ],
+                [
+                    133,
+                    725
                 ],
                 [
                     140,
@@ -8918,11 +8955,19 @@
                     709
                 ],
                 [
-                    561,
+                    558,
+                    706
+                ],
+                [
+                    559,
+                    702
+                ],
+                [
+                    562,
                     700
                 ],
                 [
-                    564,
+                    565,
                     705
                 ],
                 [
@@ -10886,12 +10931,12 @@
                     723
                 ],
                 [
-                    129,
-                    724
+                    126,
+                    726
                 ],
                 [
-                    126,
-                    727
+                    120,
+                    723
                 ],
                 [
                     115,
@@ -11270,28 +11315,12 @@
                     508
                 ],
                 [
-                    259,
-                    521
+                    256,
+                    515
                 ],
                 [
-                    263,
-                    522
-                ],
-                [
-                    265,
-                    519
-                ],
-                [
-                    260,
-                    517
-                ],
-                [
-                    263,
-                    516
-                ],
-                [
-                    259,
-                    516
+                    258,
+                    515
                 ],
                 [
                     257,
@@ -14698,44 +14727,12 @@
                     619
                 ],
                 [
-                    480,
-                    601
+                    486,
+                    606
                 ],
                 [
-                    481,
-                    599
-                ],
-                [
-                    487,
-                    603
-                ],
-                [
-                    491,
-                    602
-                ],
-                [
-                    495,
-                    597
-                ],
-                [
-                    494,
-                    593
-                ],
-                [
-                    491,
-                    590
-                ],
-                [
-                    484,
-                    590
-                ],
-                [
-                    480,
-                    595
-                ],
-                [
-                    480,
-                    600
+                    483,
+                    605
                 ],
                 [
                     478,
