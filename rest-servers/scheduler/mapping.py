@@ -396,9 +396,9 @@ class Variant:
     def extract_names(self) -> typing.Dict[str, typing.Any]:
         """ extract the names we are using to pass them to adjudicator """
 
-        def make_ascii(word):
+        def make_ascii(word: str) -> str:
 
-            def replacement(letter):
+            def replacement(letter: str) -> str:
                 for candidates, target in ASCII_CONVERSION_TABLE.items():
                     if letter in candidates:
                         return target
