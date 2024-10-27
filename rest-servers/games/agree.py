@@ -619,13 +619,14 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
     # if incident created
     late = False
 
-    if after_deadline:
+    # there cannot be delays for archive games
+    if not game.archive:
 
-        # do we have a transition disagree -> agree (means actual submission of orders)
-        if definitive_before == 0:
+        # there cannot be delays before deadline of course
+        if after_deadline:
 
-            # there cannot be delays for archive games
-            if not game.archive:
+            # do we have a transition disagree -> agree (means actual submission of orders)
+            if definitive_before == 0:
 
                 # here we are : insert this incident
 
