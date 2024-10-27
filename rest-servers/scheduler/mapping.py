@@ -218,6 +218,16 @@ class Role:
         return self._identifier
 
 
+ASCII_CONVERSION_TABLE = {
+    "àâ": 'a',
+    "éèê": 'e',
+    "î": 'i',
+    "ô": 'o',
+    "ù": 'u',
+    "ç": 'c',
+}
+
+
 class Variant:
     """ A variant """
 
@@ -386,10 +396,21 @@ class Variant:
     def extract_names(self) -> typing.Dict[str, typing.Any]:
         """ extract the names we are using to pass them to adjudicator """
 
+        def make_ascii(word):
+
+            def replacement(letter):
+                for candidates, target in ASCII_CONVERSION_TABLE.items():
+                    if letter in candidates:
+                        return target
+                assert letter.isascii(), f"Please tell me how to simplify '{letter}'"
+                return letter
+
+            return ''.join(map(replacement, word))
+
         def extract_role_data(role: Role) -> typing.List[str]:
             """ extract_role_data """
             additional = self._role_add_table[role]
-            return [self._role_name_table[role], additional[0], additional[1]]
+            return [self._role_name_table[role], make_ascii(additional[0]), additional[1]]
 
         def extract_zone_data(zone: Zone) -> str:
             """ extract_zone_data """

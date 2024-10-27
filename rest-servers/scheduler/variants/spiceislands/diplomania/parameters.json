@@ -1,5 +1,4 @@
 {
-    "author": "(inconnu)",
     "additional_text": "",
     "map": {
         "width": 1000,
@@ -7,7 +6,7 @@
     },
     "regions": {
         "1": {
-            "name": "Cote"
+            "name": "Côte"
         },
         "2": {
             "name": "Terre"
@@ -18,7 +17,7 @@
     },
     "units": {
         "1": {
-            "name": "Armee"
+            "name": "Armée"
         },
         "2": {
             "name": "Flotte"
@@ -47,16 +46,16 @@
             "adjective_name": "Brunei",
             "letter_name": "B",
             "red": [
-                176,
-                196
+                174,
+                194
             ],
             "green": [
-                176,
-                196
+                197,
+                217
             ],
             "blue": [
-                176,
-                196
+                226,
+                246
             ]
         },
         "2": {
@@ -64,16 +63,16 @@
             "adjective_name": "Majapahit",
             "letter_name": "J",
             "red": [
-                33,
-                53
+                39,
+                59
             ],
             "green": [
-                31,
-                51
+                36,
+                56
             ],
             "blue": [
-                130,
-                150
+                235,
+                255
             ]
         },
         "3": {
@@ -81,16 +80,16 @@
             "adjective_name": "Tondo",
             "letter_name": "L",
             "red": [
-                235,
-                255
+                131,
+                151
             ],
             "green": [
-                182,
-                202
+                94,
+                114
             ],
             "blue": [
-                28,
-                8
+                1,
+                21
             ]
         },
         "4": {
@@ -98,16 +97,16 @@
             "adjective_name": "Malacca",
             "letter_name": "M",
             "red": [
-                50,
-                70
+                0,
+                20
             ],
             "green": [
-                121,
-                141
+                131,
+                151
             ],
             "blue": [
-                53,
-                73
+                16,
+                36
             ]
         },
         "5": {
@@ -115,16 +114,16 @@
             "adjective_name": "Ayutthaya",
             "letter_name": "S",
             "red": [
-                235,
-                253
+                234,
+                254
             ],
             "green": [
-                23,
-                43
+                36,
+                56
             ],
             "blue": [
-                26,
-                46
+                27,
+                47
             ]
         },
         "6": {
@@ -132,16 +131,16 @@
             "adjective_name": "Ternate",
             "letter_name": "T",
             "red": [
-                159,
-                179
+                172,
+                192
             ],
             "green": [
-                75,
-                95
+                81,
+                101
             ],
             "blue": [
-                163,
-                183
+                181,
+                201
             ]
         },
         "7": {
@@ -149,49 +148,53 @@
             "adjective_name": "DaiViet",
             "letter_name": "V",
             "red": [
-                221,
-                241
+                232,
+                252
             ],
             "green": [
-                223,
-                243
+                234,
+                254
             ],
             "blue": [
-                88,
-                108
+                60,
+                80
             ]
         }
     },
     "coasts": {
         "1": {
-            "name": "ce"
+            "name": "ce",
+            "full_name": "côte est"
         },
         "2": {
-            "name": "cn"
+            "name": "cn",
+            "full_name": "côte nord"
         },
         "3": {
-            "name": "cs"
+            "name": "cs",
+            "full_name": "côte sud"
         },
         "4": {
-            "name": "co"
+            "name": "co",
+            "full_name": "côte ouest"
         }
     },
     "zones": {
         "1": {
             "name": "Ace",
             "full_name": "Aceh",
-            "x_pos": 34,
-            "y_pos": 558,
+            "x_pos": 45,
+            "y_pos": 572,
             "x_legend_pos": 34,
-            "y_legend_pos": 544
+            "y_legend_pos": 558
         },
         "2": {
             "name": "Ava",
             "full_name": "Ava",
-            "x_pos": 43,
-            "y_pos": 50,
-            "x_legend_pos": 43,
-            "y_legend_pos": 36
+            "x_pos": 27,
+            "y_pos": 86,
+            "x_legend_pos": 27,
+            "y_legend_pos": 72
         },
         "3": {
             "name": "Ayu",
@@ -257,8 +260,8 @@
             "full_name": "Chaiya",
             "x_pos": 123,
             "y_pos": 460,
-            "x_legend_pos": 123,
-            "y_legend_pos": 446
+            "x_legend_pos": 122,
+            "y_legend_pos": 448
         },
         "11": {
             "name": "Chp",
@@ -398,8 +401,8 @@
             "full_name": "Javadvipa",
             "x_pos": 416,
             "y_pos": 892,
-            "x_legend_pos": 404,
-            "y_legend_pos": 884,
+            "x_legend_pos": 379,
+            "y_legend_pos": 880,
             "display": 2
         },
         "28": {
@@ -594,10 +597,10 @@
         "51": {
             "name": "Pal",
             "full_name": "Palawan",
-            "x_pos": 637,
-            "y_pos": 433,
-            "x_legend_pos": 613,
-            "y_legend_pos": 457,
+            "x_pos": 633,
+            "y_pos": 434,
+            "x_legend_pos": 599,
+            "y_legend_pos": 450,
             "display": 1
         },
         "52": {
@@ -843,7 +846,7 @@
             "full_name": "",
             "x_pos": 141,
             "y_pos": 472,
-            "x_legend_pos": 137,
+            "x_legend_pos": 136,
             "y_legend_pos": 458
         },
         "82": {
@@ -851,7 +854,7 @@
             "full_name": "",
             "x_pos": 102,
             "y_pos": 455,
-            "x_legend_pos": 102,
+            "x_legend_pos": 107,
             "y_legend_pos": 441
         },
         "83": {
@@ -883,8 +886,8 @@
             "full_name": "",
             "x_pos": 433,
             "y_pos": 875,
-            "x_legend_pos": 433,
-            "y_legend_pos": 888
+            "x_legend_pos": 411,
+            "y_legend_pos": 882
         },
         "87": {
             "name": "",
@@ -915,8 +918,8 @@
             "full_name": "",
             "x_pos": 422,
             "y_pos": 744,
-            "x_legend_pos": 422,
-            "y_legend_pos": 730
+            "x_legend_pos": 418,
+            "y_legend_pos": 732
         }
     },
     "seasons": {
@@ -924,7 +927,7 @@
             "name": "Printemps"
         },
         "2": {
-            "name": "Ete"
+            "name": "Été"
         },
         "3": {
             "name": "Automne"
@@ -944,7 +947,7 @@
             "name": "Soutenir offensivement"
         },
         "3": {
-            "name": "Soutenir defensivement"
+            "name": "Soutenir défensivement"
         },
         "4": {
             "name": "Tenir"
