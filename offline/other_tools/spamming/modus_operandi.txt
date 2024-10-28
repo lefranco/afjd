@@ -1,38 +1,37 @@
-A REVOIR
-
 Comment faire un publipostage
 
 1) récupérer les emails depuis la liste du précédent publipostage et nettoyer :
 On suppose que la liste est dans le fichier victims_before
 
-cat victims_before | tr '[:upper:]' '[:lower:]' | sort -u  > victims
+cat victims_before | tr '[:upper:]' '[:lower:]' | sort -u  > possible_victims
 
-2) récupérer les "oui" depuis le site et nettoyer :
-liste dans le fichier current_yes
-(prend la colonne avec les emails, trie, met en minuscules)
+2) récupérer les "oui" depuis le site (compte modérateur, préparer un publipostage, télécharger la liste des courriels) :
+liste dans le fichier emails_yes_for_mailing.txt
 
-cat current_yes | cut -f 2  | tr '[:upper:]' '[:lower:]' | sort -u > yes
+cat emails_yes_for_mailing.txt | tr '[:upper:]' '[:lower:]' | sort -u > yes
 
-3) récupérer les "non" depuis le site et nettoyer :
-liste dans le fichier current_no
-(prend la colonne avec les emails, trie, met en minuscules)
+3) récupérer les "non" depuis le site (idem oui) :
+liste dans le fichier emails_no_for_mailing.txt
 
-cat current_no | cut -f 2 | tr '[:upper:]' '[:lower:]' | sort -u  > no
+cat emails_no_for_mailing.txt | tr '[:upper:]' '[:lower:]' | sort -u  > no
 
 4) enlever les oui des non
+(cette commande ne conserve que les lignes dans le deuxième fichier et pas le premier)
+
 comm -13 yes no > new_no
 
 5) ajouter les oui et trier
 
-cat yes >> victims
-sort -u victims -o victims
+cat yes >> possible_victims
+sort -u possible_victims -o possible_victims
 
 6) retirer les non 
 (cette commande ne conserve que les lignes dans le deuxième fichier et pas le premier)
 
-comm -13 new_no victims > actual_victims
+comm -13 new_no possible_victims > actual_victims
 
 => On peut spammer sur 'actual_victims'
+
 
 7) après le spam, gérer les retours en erreur
 

@@ -24,11 +24,11 @@ SUBJECT = "Le courrier du Diplomate de l'Association Francophone des Joueurs de 
 
 # mailing body
 BODY = """
-Cher membre de Diplomania,
+Cher joueur de Diplomacy,
 
-Tu trouveras en pièce jointe le courrier du diplomate #7, une publication que nous espérons rendre mensuelle.
+Tu trouveras en pièce jointe les informations sur le prochain Championnat de France en face à face à venir.
 
-En te souhaitant une bonne lecture,
+En souhaitant t'y rencontrer d'une part, et une bonne lecture d'autre part,
 
 Ludiquement
 Lei
@@ -43,7 +43,7 @@ SENDER = "afjd_serveur_jeu@diplomania-gen.fr"
 REPLY_TO = "afjdiplo@gmail.com"
 
 # list of attached files (must be PDF)
-PDF_ATT_FILES = ['Newsletter_AFJD_Mars_2024.pdf']
+PDF_ATT_FILES = ['xleme_championnat_de_france_2024.pdf']
 
 
 MAILER = None
@@ -135,7 +135,7 @@ def main() -> None:
 
         with open(victim_list_file, encoding='utf-8') as filepointer:
 
-            victims = [l.rstrip('\n').lower() for l in filepointer if not l.startswith("#")]
+            victims = [l.rstrip('\n').lower() for l in filepointer if l and not l.startswith("#")]
             nb_victims = len(victims)
             print(f"We have {nb_victims} victims... ")
 
