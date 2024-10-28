@@ -284,7 +284,7 @@ def erase_chat_content():
 def prepare_mailing():
     """ prepare_mailing """
 
-    def download_emails_callback(ev):  # pylint: disable=invalid-name
+    def download_emails_callback(ev, yes):  # pylint: disable=invalid-name
 
         ev.preventDefault()
 
@@ -292,9 +292,9 @@ def prepare_mailing():
         MY_SUB_PANEL <= html.A(id='download_link')
 
         # perform actual exportation
-        text_file_as_blob = window.Blob.new(['\n'.join(emails_list)], {'type': 'text/plain'})
+        text_file_as_blob = window.Blob.new(['\n'.join(emails_yes_list if yes else emails_no_list)], {'type': 'text/plain'})
         download_link = document['download_link']
-        download_link.download = "emails_for_mailing.txt"
+        download_link.download = "emails_yes_for_mailing.txt" if yes else "emails_no_for_mailing.txt"
         download_link.href = window.URL.createObjectURL(text_file_as_blob)
         document['download_link'].click()
 
@@ -405,7 +405,7 @@ def prepare_mailing():
         thead <= col
     emails_table <= thead
 
-    emails_list = []
+    emails_yes_list = []
 
     for pseudo, (email, family_name, first_name, confirmed, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
 
@@ -423,7 +423,7 @@ def prepare_mailing():
         col = html.TD(first_name)
         row <= col
 
-        emails_list.append(email)
+        emails_yes_list.append(email)
 
         col = html.TD(email)
         if not confirmed:
@@ -471,6 +471,8 @@ def prepare_mailing():
         thead <= col
     emails_table2 <= thead
 
+    emails_no_list = []
+
     for pseudo, (email, family_name, first_name, confirmed, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
 
         if newsletter:
@@ -486,6 +488,8 @@ def prepare_mailing():
 
         col = html.TD(first_name)
         row <= col
+
+        emails_no_list.append(email)
 
         col = html.TD(email)
         if not confirmed:
@@ -522,12 +526,17 @@ def prepare_mailing():
     MY_SUB_PANEL <= emails_table
 
     MY_SUB_PANEL <= html.BR()
-    input_export_emails = html.INPUT(type="submit", value="Télécharger la liste des courriels", Class='btn-inside')
-    input_export_emails.bind("click", download_emails_callback)
+    input_export_emails = html.INPUT(type="submit", value="Télécharger la liste des courriels avec accord", Class='btn-inside')
+    input_export_emails.bind("click", lambda e, y=True: download_emails_callback(e, y))
     MY_SUB_PANEL <= input_export_emails
 
     MY_SUB_PANEL <= html.H4("Ceux qui ne le sont pas (pour information)")
     MY_SUB_PANEL <= emails_table2
+
+    MY_SUB_PANEL <= html.BR()
+    input_export_emails = html.INPUT(type="submit", value="Télécharger la liste des courriels sans accord", Class='btn-inside')
+    input_export_emails.bind("click", lambda e, y=False: download_emails_callback(e, y))
+    MY_SUB_PANEL <= input_export_emails
 
 
 def general_announce():
