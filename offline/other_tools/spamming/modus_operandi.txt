@@ -36,7 +36,7 @@ comm -13 new_no possible_victims > actual_victims
 7) après le spam, gérer les retours en erreur
 
 Si depuis le site :
-  marquer non confirmé
+  marquer non confirmé (enlever la confirmation)
   
 Si depuis l'annuaire :
-  supprimer de l'annuaire
+  supprimer de l'annuaire (ou plus simplement de la liste dont on repartira au prochain publipostage)
