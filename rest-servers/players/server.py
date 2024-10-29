@@ -1048,13 +1048,15 @@ class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # check user has right to get list of emails (moderator)
+        # check user has right to get list of emails (moderator or admin)
 
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
         moderators_list = moderators.Moderator.inventory(sql_executor)
         the_moderators = [m[0] for m in moderators_list]
-        if pseudo not in the_moderators:
+
+        if not (pseudo in the_moderators or pseudo == admin_pseudo):
             del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to get list of emails (need to be moderator)!")
+            flask_restful.abort(403, msg="You are not allowed to get list of emails (need to be moderator or admin)!")
 
         players_list = players.Player.inventory(sql_executor)
         del sql_executor
