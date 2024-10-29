@@ -697,7 +697,7 @@ def show_events_in_game():
 
     if game_incidents2:
         play_low.MY_SUB_PANEL <= html.BR()
-        play_low.MY_SUB_PANEL <= html.DIV("Un désordre civil signifie que l'arbitre a forcé des ordres pour le joueur", Class='note')
+        play_low.MY_SUB_PANEL <= html.DIV("Un désordre civil signifie que l'arbitre (ou l'automate de résolution) a forcé des ordres pour le joueur", Class='note')
 
     # quitters
     play_low.MY_SUB_PANEL <= html.H3("Abandons")
