@@ -601,6 +601,7 @@ def show_game_parameters():
             'access_restriction_performance': ("restriction d'accès sur la performance",         "entier", "Un minimum de performance est exigé pour rejoindre la partie"),  # noqa: E241
             'nb_max_cycles_to_play':          ("nombre maximum de cycles (années) à jouer",      "entier", "Durée de la partie : Le système déclare la partie terminée si autant de cycles ont été joués"),  # noqa: E241
             'game_type':                      ("type de la partie",                              "choix sur liste", "Type de la partie : Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : communication publique uniquement... BlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) pour parler d'autre chose que la partie"),  # noqa: E241
+            'force_wait':                     ("forçage d'attente de la date lmimite",           "oui ou non", "Si oui, la résolution n'aura pas lieu avant la data limite, même si tous les joueurs ont donné leur accord"),  # noqa: E241
 
         }[key]
 
