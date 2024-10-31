@@ -356,6 +356,10 @@ def show_games():
                     datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                     value = datetime_deadline_loaded_str
 
+                    # Emphasize if forced to wait
+                    if data['force_wait']:
+                        value = html.B(value)
+
                     if data['fast']:
                         factor = 60
                     else:

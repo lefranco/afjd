@@ -133,7 +133,7 @@ class Game:
         sql_executor.execute("CREATE TABLE games (identifier INTEGER UNIQUE PRIMARY KEY, name STR, game_data game)")
         sql_executor.execute("CREATE UNIQUE INDEX name_game ON games (name)")
 
-    def __init__(self, identifier: int, name: str, description: str, variant: str, fog: bool, archive: bool, anonymous: bool, finished: bool, soloed: bool, nomessage_current: bool, nopress_current: bool, fast: bool, scoring: str, deadline: int, deadline_hour: int, deadline_sync: bool, grace_duration: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, used_for_elo: bool, play_weekend: bool, manual: bool, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, current_state: int, game_type: int) -> None:
+    def __init__(self, identifier: int, name: str, description: str, variant: str, fog: bool, archive: bool, anonymous: bool, finished: bool, soloed: bool, nomessage_current: bool, nopress_current: bool, fast: bool, scoring: str, deadline: int, deadline_hour: int, deadline_sync: bool, grace_duration: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, used_for_elo: bool, play_weekend: bool, manual: bool, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, current_state: int, game_type: int, force_wait: bool) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -172,6 +172,7 @@ class Game:
         self._nb_max_cycles_to_play = nb_max_cycles_to_play
         self._current_state = current_state
         self._game_type = game_type
+        self._force_wait = force_wait
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
@@ -354,6 +355,10 @@ class Game:
             self._game_type = json_dict['game_type']
             changed = True
 
+        if 'force_wait' in json_dict and json_dict['force_wait'] is not None and json_dict['force_wait'] != self._force_wait:
+            self._force_wait = json_dict['force_wait']
+            changed = True
+
         return changed
 
     def save_json(self) -> typing.Dict[str, typing.Any]:
@@ -386,12 +391,13 @@ class Game:
             'access_restriction_reliability': self._access_restriction_reliability,
             'access_restriction_regularity': self._access_restriction_regularity,
             'access_restriction_performance': self._access_restriction_performance,
+            'finished': self._finished,
+            'soloed': self._soloed,
             'current_advancement': self._current_advancement,
             'nb_max_cycles_to_play': self._nb_max_cycles_to_play,
             'current_state': self._current_state,
             'game_type': self._game_type,
-            'finished': self._finished,
-            'soloed': self._soloed,
+            'force_wait': self._force_wait,
         }
         return json_dict
 
@@ -828,11 +834,6 @@ class Game:
         return self._used_for_elo
 
     @property
-    def game_type(self) -> int:
-        """ property """
-        return self._game_type
-
-    @property
     def finished(self) -> bool:
         """ property """
         return self._finished
@@ -842,6 +843,16 @@ class Game:
         """ property """
         return self._soloed
 
+    @property
+    def game_type(self) -> int:
+        """ property """
+        return self._game_type
+
+    @property
+    def force_wait(self) -> bool:
+        """ property """
+        return self._force_wait
+
     def __str__(self) -> str:
         return f"name={self._name} variant={self._variant} fog={self._fog} description={self._description} archive={self._archive} anonymous={self._anonymous} finished={self._finished} soloed={self._soloed} nomessage_current={self._nomessage_current} nopress_current={self._nopress_current} fast={self._fast} scoring={self._scoring} deadline={self._deadline} deadline_hour={self._deadline_hour} deadline_sync={self._deadline_sync} grace_duration={self._grace_duration} speed_moves={self._speed_moves} cd_possible_moves={self._cd_possible_moves} speed_retreats={self._speed_retreats} cd_possible_retreats={self._cd_possible_retreats} speed_adjustments={self._speed_adjustments} cd_possible_builds={self._cd_possible_builds} used_for_elo={self._used_for_elo} play_weekend={self._play_weekend} manual={self._manual} access_restriction_reliability={self._access_restriction_reliability} access_restriction_regularity={self._access_restriction_regularity} access_restriction_performance={self._access_restriction_performance} current_advancement={self._current_advancement} nb_max_cycles_to_play={self._nb_max_cycles_to_play} current_state={self._current_state} game_type={self._game_type}"
 
@@ -849,7 +860,7 @@ class Game:
         """ To put an object in database """
 
         compressed_description = database.compress_text(self._description)
-        return (f"{self._identifier}{database.STR_SEPARATOR}{self._name}{database.STR_SEPARATOR}{compressed_description}{database.STR_SEPARATOR}{self._variant}{database.STR_SEPARATOR}{int(bool(self._archive))}{database.STR_SEPARATOR}{int(bool(self._anonymous))}{database.STR_SEPARATOR}{int(bool(self._finished))}{database.STR_SEPARATOR}{int(bool(self._soloed))}{database.STR_SEPARATOR}{int(bool(self._nomessage_current))}{database.STR_SEPARATOR}{int(bool(self._nopress_current))}{database.STR_SEPARATOR}{int(bool(self._fast))}{database.STR_SEPARATOR}{self._scoring}{database.STR_SEPARATOR}{self._deadline}{database.STR_SEPARATOR}{self._deadline_hour}{database.STR_SEPARATOR}{int(bool(self._deadline_sync))}{database.STR_SEPARATOR}{self._grace_duration}{database.STR_SEPARATOR}{self._speed_moves}{database.STR_SEPARATOR}{int(bool(self._cd_possible_moves))}{database.STR_SEPARATOR}{self._speed_retreats}{database.STR_SEPARATOR}{int(bool(self._cd_possible_retreats))}{database.STR_SEPARATOR}{self._speed_adjustments}{database.STR_SEPARATOR}{int(bool(self._cd_possible_builds))}{database.STR_SEPARATOR}{int(bool(self._used_for_elo))}{database.STR_SEPARATOR}{int(bool(self._play_weekend))}{database.STR_SEPARATOR}{int(bool(self._manual))}{database.STR_SEPARATOR}{self._access_restriction_reliability}{database.STR_SEPARATOR}{self._access_restriction_regularity}{database.STR_SEPARATOR}{self._access_restriction_performance}{database.STR_SEPARATOR}{self._current_advancement}{database.STR_SEPARATOR}{self._nb_max_cycles_to_play}{database.STR_SEPARATOR}{int(bool(self._fog))}{database.STR_SEPARATOR}{self._current_state}{database.STR_SEPARATOR}{self._game_type}").encode('ascii')
+        return (f"{self._identifier}{database.STR_SEPARATOR}{self._name}{database.STR_SEPARATOR}{compressed_description}{database.STR_SEPARATOR}{self._variant}{database.STR_SEPARATOR}{int(bool(self._archive))}{database.STR_SEPARATOR}{int(bool(self._anonymous))}{database.STR_SEPARATOR}{int(bool(self._finished))}{database.STR_SEPARATOR}{int(bool(self._soloed))}{database.STR_SEPARATOR}{int(bool(self._nomessage_current))}{database.STR_SEPARATOR}{int(bool(self._nopress_current))}{database.STR_SEPARATOR}{int(bool(self._fast))}{database.STR_SEPARATOR}{self._scoring}{database.STR_SEPARATOR}{self._deadline}{database.STR_SEPARATOR}{self._deadline_hour}{database.STR_SEPARATOR}{int(bool(self._deadline_sync))}{database.STR_SEPARATOR}{self._grace_duration}{database.STR_SEPARATOR}{self._speed_moves}{database.STR_SEPARATOR}{int(bool(self._cd_possible_moves))}{database.STR_SEPARATOR}{self._speed_retreats}{database.STR_SEPARATOR}{int(bool(self._cd_possible_retreats))}{database.STR_SEPARATOR}{self._speed_adjustments}{database.STR_SEPARATOR}{int(bool(self._cd_possible_builds))}{database.STR_SEPARATOR}{int(bool(self._used_for_elo))}{database.STR_SEPARATOR}{int(bool(self._play_weekend))}{database.STR_SEPARATOR}{int(bool(self._manual))}{database.STR_SEPARATOR}{self._access_restriction_reliability}{database.STR_SEPARATOR}{self._access_restriction_regularity}{database.STR_SEPARATOR}{self._access_restriction_performance}{database.STR_SEPARATOR}{self._current_advancement}{database.STR_SEPARATOR}{self._nb_max_cycles_to_play}{database.STR_SEPARATOR}{int(bool(self._fog))}{database.STR_SEPARATOR}{self._current_state}{database.STR_SEPARATOR}{self._game_type}{database.STR_SEPARATOR}{int(bool(self._force_wait))}").encode('ascii')
 
 
 def convert_game(buffer: bytes) -> Game:
@@ -892,8 +903,9 @@ def convert_game(buffer: bytes) -> Game:
     fog = bool(int(tab[30].decode()))
     current_state = int(tab[31].decode())
     game_type = int(tab[32].decode())
+    force_wait = bool(int(tab[33].decode()))
 
-    game = Game(identifier, name, description, variant, fog, archive, anonymous, finished, soloed, nomessage_current, nopress_current, fast, scoring, deadline, deadline_hour, deadline_sync, grace_duration, speed_moves, cd_possible_moves, speed_retreats, cd_possible_retreats, speed_adjustments, cd_possible_builds, used_for_elo, play_weekend, manual, access_restriction_reliability, access_restriction_regularity, access_restriction_performance, current_advancement, nb_max_cycles_to_play, current_state, game_type)
+    game = Game(identifier, name, description, variant, fog, archive, anonymous, finished, soloed, nomessage_current, nopress_current, fast, scoring, deadline, deadline_hour, deadline_sync, grace_duration, speed_moves, cd_possible_moves, speed_retreats, cd_possible_retreats, speed_adjustments, cd_possible_builds, used_for_elo, play_weekend, manual, access_restriction_reliability, access_restriction_regularity, access_restriction_performance, current_advancement, nb_max_cycles_to_play, current_state, game_type, force_wait)
     return game
 
 
