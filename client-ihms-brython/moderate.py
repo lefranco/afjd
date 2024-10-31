@@ -1158,6 +1158,10 @@ def all_missing_orders():
                 else:
                     factor = 60 * 60
 
+                # Emphasize if forced to wait
+                if data['force_wait']:
+                    value = html.B(value)
+
                 # game over
                 if gameover_table[game_id]:
                     # should not happen here

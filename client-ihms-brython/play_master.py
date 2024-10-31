@@ -677,6 +677,42 @@ def game_master():
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    def force_wait_game_callback(ev, force):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au forçage attente date limite à la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au forçage attente de la date limite à la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Le forçage d'attente à été mis à {'Vrai' if force else 'Faux'} : {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            play_low.load_dynamic_stuff()
+            game_master()
+
+        ev.preventDefault()
+
+        # push on server
+        json_dict = {
+            'name': play_low.GAME,
+            'force_wait': force,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{play_low.GAME}"
+
+        # changing game deadline : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     def send_recall_orders_email_callback(ev, role_id):  # pylint: disable=invalid-name
         """ send_recall_orders_email_callback """
 
@@ -1513,6 +1549,21 @@ def game_master():
 
             col = html.TD()
             col <= deadline_form3
+            row <= col
+
+            deadline_form4 = html.FORM()
+
+            if play_low.GAME_PARAMETERS_LOADED['force_wait']:
+                input_force_wait_game = html.INPUT(type="submit", value="Autoriser la résolution avant la date limite", Class='btn-inside')
+                input_force_wait_game.bind("click", lambda e, f=False: force_wait_game_callback(e, f))
+            else:
+                input_force_wait_game = html.INPUT(type="submit", value="Empêcher la résolution avant la date limite", Class='btn-inside')
+                input_force_wait_game.bind("click", lambda e, f=True: force_wait_game_callback(e, f))
+
+            deadline_form4 <= input_force_wait_game
+
+            col = html.TD()
+            col <= deadline_form4
             row <= col
 
             table <= row

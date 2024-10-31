@@ -1747,6 +1747,10 @@ def my_opportunities():
                     datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                     value = datetime_deadline_loaded_str
 
+                    # Emphasize if forced to wait
+                    if data['force_wait']:
+                        value = html.B(value)
+
             if field == 'current_state':
                 state_loaded = value
                 for possible_state_code, possible_state_desc in config.STATE_CODE_TABLE.items():
@@ -2273,6 +2277,10 @@ def all_games(state_name):
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
                     datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                     value = datetime_deadline_loaded_str
+
+                    # Emphasize if forced to wait
+                    if data['force_wait']:
+                        value = html.B(value)
 
                     if data['fast']:
                         factor = 60
