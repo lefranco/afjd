@@ -643,6 +643,14 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
 
                 late = True
 
+        else:
+
+            # check master did not set the force wait
+            if game.force_wait:
+                # we must be before deadline (otherwise 2 would have been muted to 1)
+                debug_message = "Game master forced to wait deadline"
+                return status, late, unsafe, missing, adjudicated, debug_message
+
     # needed list : those who need to submit orders
     actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
     needed_list = [o[1] for o in actives_list]
