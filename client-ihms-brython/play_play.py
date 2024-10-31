@@ -150,6 +150,10 @@ def submit_orders():
             if unsafe:
                 alert("Vous n'avez pas mis l'accord, donc vos ordres sont juste enregistrés (pour vous-même) mais vous risquez encore un retard...")
 
+            # forced to wait
+            if definitive_value == 1 and play_low.GAME_PARAMETERS_LOADED['force_wait']:
+                alert("Attention l'arbitre a forcé l'attente de la date limite !")
+
             # why no adjudication
             #  missing = req_result['missing']
             # we certainly *could* use it if server filled it in...
