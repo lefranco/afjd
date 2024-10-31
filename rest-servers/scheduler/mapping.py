@@ -239,6 +239,9 @@ class Variant:
         # from variant file
         # =================
 
+        # extra_requirement_solo
+        self._extra_requirement_solo = raw_variant_content['extra_requirement_solo']
+
         # load the regions
         self._regions = {}
         for num, code in enumerate(raw_variant_content['regions']):
@@ -437,3 +440,8 @@ class Variant:
     def roles(self) -> typing.Dict[int, Role]:
         """ property """
         return self._roles
+
+    @property
+    def extra_requirement_solo(self) -> bool:
+        """ property """
+        return self._extra_requirement_solo

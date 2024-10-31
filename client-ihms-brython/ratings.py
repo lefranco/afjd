@@ -992,7 +992,9 @@ def show_scoring():
 
         # scoring
         centers_variant = variant_data.number_centers()
-        score_table = scoring.scoring(SCORING_REQUESTED, centers_variant, rating_table)
+        extra_requirement_solo = variant_data.extra_requirement_solo
+        solo_threshold = centers_variant // 2 + extra_requirement_solo
+        score_table = scoring.scoring(SCORING_REQUESTED, centers_variant, solo_threshold, rating_table)
 
         score_desc = "\n".join([f"{k} : {v} points" for k, v in score_table.items()])
         alert(f"Dans cette configuration la marque est :\n{score_desc}")

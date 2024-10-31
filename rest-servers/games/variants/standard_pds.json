@@ -61,6 +61,7 @@
     "increment" : 1,
 
     "ignore_solo" : true,
+    "extra_requirement_solo" : 16,
     "build_everywhere" : false,
     "disorder" : {},
 

@@ -743,8 +743,8 @@ class Variant(Renderable):
         # build everywhere
         self._build_everywhere = raw_variant_content['build_everywhere']
 
-        # ignore_solo
-        self._ignore_solo = raw_variant_content['ignore_solo']
+        # extra_requirement_solo
+        self._extra_requirement_solo = raw_variant_content['extra_requirement_solo']
 
         # load the regions
         self._regions = {}
@@ -1237,9 +1237,9 @@ class Variant(Renderable):
         return self._build_everywhere
 
     @property
-    def ignore_solo(self) -> bool:
+    def extra_requirement_solo(self) -> bool:
         """ property """
-        return self._ignore_solo
+        return self._extra_requirement_solo
 
 
 # imagined units
