@@ -103,12 +103,13 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
         before = time.time()
         raw_ratings = {num2rolename[n]: centers_number_dict[str(n)] if str(n) in centers_number_dict else 0 for n in variant_data.roles if n >= 1}
         ratings = dict(sorted(raw_ratings.items(), key=lambda i: i[1], reverse=True))  # type: ignore
-        solo_threshold = variant_data.number_centers() // 2
 
         # use clone of unit in front end (scoring)
         # no typing in this code from front end
         centers_variant = variant_data.number_centers()
-        score_table = scoring.scoring(game_scoring_name, centers_variant, ratings)  # type: ignore
+        extra_requirement_solo = variant_data.extra_requirement_solo
+        solo_threshold = centers_variant // 2 + extra_requirement_solo
+        score_table = scoring.scoring(game_scoring_name, centers_variant, solo_threshold, ratings)  # type: ignore
 
         # check
         if not any(map(lambda s: s > 0, score_table.values())):

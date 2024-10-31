@@ -28,6 +28,7 @@ import scoring
 SESSION = requests.Session()
 
 CENTER_NUMBER = 34
+SOLO_THRESHOLD = 17
 
 POWER_NAME = [
     'England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey'
@@ -216,7 +217,7 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
     ratings = dict(sorted(center_table.items(), key=lambda i: i[1], reverse=True))
 
     # use clone of unit in front end (scoring)
-    score_table = scoring.scoring(game_scoring, CENTER_NUMBER, ratings)  # type: ignore
+    score_table = scoring.scoring(game_scoring, CENTER_NUMBER, SOLO_THRESHOLD, ratings)  # type: ignore
 
     # need ranking
     ranking = {}

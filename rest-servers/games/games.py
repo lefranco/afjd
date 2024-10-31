@@ -576,10 +576,6 @@ class Game:
         variant_data = variants.Variant.get_by_name(variant_name)
         assert variant_data is not None
 
-        # some variants ignore solo
-        if variant_data['ignore_solo']:
-            return False
-
         game_id = self.identifier
 
         # situation: get ownerships
@@ -588,11 +584,8 @@ class Game:
         counter = collections.Counter(list_owners)
         _, ncentersmax = counter.most_common(1)[0]
 
-        # game over when adjustments to play
-        if ncentersmax > len(variant_data['centers']) // 2:
-            return True
-
-        return False
+        # solo when more than int(c/2) + extra
+        return ncentersmax > len(variant_data['centers']) // 2 + int(variant_data['extra_requirement_solo'])
 
     def advance(self, sql_executor: database.SqlExecutor) -> None:
         """ advance the game """

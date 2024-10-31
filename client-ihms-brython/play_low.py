@@ -121,7 +121,9 @@ def make_rating_colours_window(fog_of_war, game_over, variant_data, position_dat
 
     # scoring
     centers_variant = variant_data.number_centers()
-    score_table = scoring.scoring(game_scoring, centers_variant, ratings1)
+    extra_requirement_solo = variant_data.extra_requirement_solo
+    solo_threshold = centers_variant // 2 + extra_requirement_solo
+    score_table = scoring.scoring(game_scoring, centers_variant, solo_threshold, ratings1)
 
     # get scoring name
     name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}

@@ -6,11 +6,8 @@
 # mypy: ignore-errors
 
 
-def c_diplo(centers_variant, ratings):
+def c_diplo(_, solo_threshold, ratings):
     """ the c-diplo scoring system """
-
-    # solo
-    solo_threshold = centers_variant // 2
 
     rank_points_list = [38, 14, 7]
     solo_reward = 73
@@ -52,11 +49,8 @@ def c_diplo(centers_variant, ratings):
     return score
 
 
-def win_namur(centers_variant, ratings):
+def win_namur(_, solo_threshold, ratings):
     """ the win namur scoring system """
-
-    # solo
-    solo_threshold = centers_variant // 2
 
     center_bonus_list = [0, 5, 9, 12, 14, 16, 18]
     rank_points_list = [18]
@@ -112,7 +106,7 @@ def win_namur(centers_variant, ratings):
     return score
 
 
-def diplo_league(_, ratings):
+def diplo_league(_, __, ratings):
     """ the diplo_league scoring system (variant_data is not used) """
 
     rank_points_list = [16, 14, 12, 10, 8, 6, 4]
@@ -147,11 +141,8 @@ def diplo_league(_, ratings):
     return score
 
 
-def nexus_omg(centers_variant, ratings):
+def nexus_omg(_, solo_threshold, ratings):
     """ the nexus_omg scoring system """
-
-    # solo
-    solo_threshold = centers_variant // 2
 
     solo_reward = 100
     center_worth = 1.5
@@ -217,11 +208,8 @@ def nexus_omg(centers_variant, ratings):
     return score
 
 
-def c_diplo_namur(centers_variant, ratings):
+def c_diplo_namur(_, solo_threshold, ratings):
     """ the c-diplo namur scoring system """
-
-    # solo
-    solo_threshold = centers_variant // 2
 
     rank_points_list = [38, 14, 7]
     center_bonus_list = [0, 5, 9, 12, 14, 16, 18]
@@ -269,11 +257,8 @@ def c_diplo_namur(centers_variant, ratings):
     return score
 
 
-def butcher(centers_variant, ratings):
+def butcher(_, solo_threshold, ratings):
     """ the butcher scoring system """
-
-    # solo
-    solo_threshold = centers_variant // 2
 
     solo_reward = 7
     no_elimination_reward = 0.5
@@ -302,11 +287,8 @@ def butcher(centers_variant, ratings):
     return score
 
 
-def bangkok(centers_variant, ratings):
+def bangkok(centers_variant, solo_threshold, ratings):
     """ the bangkok scoring system """
-
-    # solo
-    solo_threshold = centers_variant // 2
 
     nb_players = len(ratings)
 
@@ -356,25 +338,86 @@ def bangkok(centers_variant, ratings):
     return score
 
 
-def scoring(game_scoring, centers_variant, ratings):
+def manorcon(centers_variant, solo_threshold, ratings):
+    """ the manorcon scoring system """
+
+    # take floor value it seems
+    nb_players = len(ratings)
+    add_param = int(centers_variant / nb_players)
+
+    solo_reward = 75
+
+    # default score
+    score = {role_name: 0 for role_name in ratings}
+
+    # detect solo
+    best_role_name = list(ratings.keys())[0]
+    if ratings[best_role_name] > solo_threshold:
+        score[best_role_name] = solo_reward * nb_players
+        return score
+
+    # total points
+    total = 0
+    for role_name in score:
+        center_num = ratings[role_name]
+        share = center_num ** 2 + 4 * center_num + add_param
+        total += share
+
+    # only survivors score
+    survivers = [r for r in ratings if ratings[r]]
+    for role_name in survivers:
+        center_num = ratings[role_name]
+        share = center_num ** 2 + 4 * center_num + add_param
+        score[role_name] = 100 * nb_players * (share / total)
+
+    return score
+
+
+def calhammer(_, solo_threshold, ratings):
+    """ the calhammer scoring system """
+
+    solo_reward = 100
+
+    # default score
+    score = {role_name: 0 for role_name in ratings}
+
+    # detect solo
+    best_role_name = list(ratings.keys())[0]
+    if ratings[best_role_name] > solo_threshold:
+        score[best_role_name] = solo_reward
+        return score
+
+    # only survivors score
+    survivers = [r for r in ratings if ratings[r]]
+    for role_name in survivers:
+        score[role_name] = solo_reward // len(survivers)
+
+    return score
+
+
+def scoring(game_scoring, centers_variant, solo_threshold, ratings):
     """ scoring """
 
     score_table = {}
 
     # selected scoring game parameter
     if game_scoring == 'CDIP':
-        score_table = c_diplo(centers_variant, ratings)
+        score_table = c_diplo(centers_variant, solo_threshold, ratings)
     if game_scoring == 'WNAM':
-        score_table = win_namur(centers_variant, ratings)
+        score_table = win_namur(centers_variant, solo_threshold, ratings)
     if game_scoring == 'DLIG':
-        score_table = diplo_league(centers_variant, ratings)
+        score_table = diplo_league(centers_variant, solo_threshold, ratings)
     if game_scoring == 'NOMG':
-        score_table = nexus_omg(centers_variant, ratings)
+        score_table = nexus_omg(centers_variant, solo_threshold, ratings)
     if game_scoring == 'CNAM':
-        score_table = c_diplo_namur(centers_variant, ratings)
+        score_table = c_diplo_namur(centers_variant, solo_threshold, ratings)
     if game_scoring == 'BOUC':
-        score_table = butcher(centers_variant, ratings)
+        score_table = butcher(centers_variant, solo_threshold, ratings)
     if game_scoring == 'BANG':
-        score_table = bangkok(centers_variant, ratings)
+        score_table = bangkok(centers_variant, solo_threshold, ratings)
+    if game_scoring == 'MANO':
+        score_table = manorcon(centers_variant, solo_threshold, ratings)
+    if game_scoring == 'CALH':
+        score_table = calhammer(centers_variant, solo_threshold, ratings)
 
     return score_table
