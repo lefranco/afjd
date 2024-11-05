@@ -705,7 +705,7 @@ def rectify_parameters_game():
 
         if input_cd_possible_moves.checked or input_cd_possible_retreats.checked or input_cd_possible_builds.checked:
             if not information_displayed_disorder:
-                alert("Attention : autoriser le Désordre Civil sur une partie (quelque soit la saison) lui enlève automatiquement l'éligibilité pour le calcul du ELO")
+                alert("Attention : autoriser le Désordre Civil sur une partie enlève théoriquement l'éligibilité pour le calcul du ELO")
                 information_displayed_disorder = True
 
     def rectify_parameters_reload():
