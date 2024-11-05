@@ -601,10 +601,15 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
     # are we after deadline ?
     after_deadline = game.past_deadline()
 
-    # commute value if after deadline
     if after_deadline:
+        # commute value if after deadline
         if definitive_value == 2:
             definitive_value = 1
+    else:
+        # commute value if before deadline and forced
+        if game.force_wait:
+            if definitive_value == 1:
+                definitive_value = 2
 
     # update db here for agreement
     definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
