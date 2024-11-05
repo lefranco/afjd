@@ -2854,9 +2854,9 @@ class PrivateMessagesDeleteRessource(flask_restful.Resource):  # type: ignore
         sql_executor = database.SqlExecutor()
 
         # check owner
-        addressee_id = messages.Message.addressee_by_message_id(sql_executor, message_id)
-        if player_id != addressee_id:
-            flask_restful.abort(403, msg=f"Not owner of message {addressee_id=} != {player_id=}")
+        addressee_id, read = messages.Message.addressee_read_by_message_id(sql_executor, message_id)
+        if not (player_id == addressee_id or read):
+            flask_restful.abort(403, msg=f"Not owner of message {addressee_id=} != {player_id=} or message read")
 
         # remove message
         message = messages.Message(0, 0, False, int(message_id))
