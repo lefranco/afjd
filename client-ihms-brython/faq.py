@@ -44,6 +44,11 @@ FAQ_CONTENT_TABLE = {
       - Bleu clair que la partie est finie sur solo.<br>
     """,
 
+    "Pourquoi certaines dates limites sont elles en gras?":
+    """
+    Cela signifie que l'arbitre a forcé l'attente de la date limite pour la partie. Cela se justifie surtout pour les parties en avance dans les tournois dont on souhaite la synchronisation.
+    """,
+
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
     "Passer ses ordres signifie réaliser une transition “pas d'accord pour résoudre“ (ou pas d'information) -> “d'accord pour résoudre“ (maintenant ou à la date limite, peu importe). Un retard signifie que cela est réalisé après la date limite. Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels (on l'a déjà dit ?) !",
 
