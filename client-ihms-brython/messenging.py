@@ -249,7 +249,7 @@ def private_messages(dest_user_id, initial_content):
         row <= col
 
         col = html.TD()
-        if dest_user_id2 == pseudo_id:
+        if dest_user_id2 == pseudo_id or read:
             button = html.BUTTON("Supprimer", Class='btn-inside')
             button.bind("click", lambda e, i=id_: suppress_message_callback(e, i))
             col <= button

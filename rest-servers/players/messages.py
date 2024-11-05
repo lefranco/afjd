@@ -22,10 +22,10 @@ class Message:
         sql_executor.execute("DELETE FROM messages WHERE ? in (author_num, addressee_num)", (player_id,))
 
     @staticmethod
-    def addressee_by_message_id(sql_executor: database.SqlExecutor, message_id: int) -> int:
+    def addressee_read_by_message_id(sql_executor: database.SqlExecutor, message_id: int) -> typing.Tuple[int, int]:
         """ class lookup : finds the object in database from message_id """
-        messages_found = sql_executor.execute("SELECT addressee_num FROM messages WHERE content_id = ?", (message_id,), need_result=True)
-        return messages_found[0][0]  # type: ignore
+        messages_found = sql_executor.execute("SELECT addressee_num, read FROM messages WHERE content_id = ?", (message_id,), need_result=True)
+        return messages_found[0]  # type: ignore
 
     @staticmethod
     def list_with_content_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, int, int, int, int, contents.Content]]:
