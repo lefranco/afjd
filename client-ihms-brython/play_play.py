@@ -152,7 +152,7 @@ def submit_orders():
 
             # forced to wait
             if definitive_value == 1 and play_low.GAME_PARAMETERS_LOADED['force_wait']:
-                alert("Attention l'arbitre a forcé l'attente de la date limite !")
+                alert("Attention l'arbitre a forcé l'attente de la date limite ! Il se peut que l'interface ne montre pas le réel statut de vos ordres. Cliquez sur ordonner si besoin.")
 
             # why no adjudication
             #  missing = req_result['missing']
