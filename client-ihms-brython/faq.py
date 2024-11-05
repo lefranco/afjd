@@ -37,11 +37,11 @@ FAQ_CONTENT_TABLE = {
     """
     Le code de couleur est assez conventionnel.<br>
       - Jaune signifie que la date limite est proche (24h).<br>
-      - Or qu'elle est passée de moins de 5 secondes (délai de prise en compte de l'automate).<br>
-      - Orange qu'elle est passée de plus de 5 secondes.<br>
+      - Orange qu'elle est passée.<br>
       - Rouge que la grâce est aussi passée (en général 24 heures) (se reporter au paragraphe sur les grâces).<br>
-      - Rouge foncé qu'elle est passée d'une semaine (partie que l'on qualifiera pudiquemment d'être en “mauvaise santé“).<br>
-      - Argent que la partie est finie.<br>
+      - Marron qu'elle est passée d'une semaine (partie que l'on qualifiera pudiquemment d'être en “mauvaise santé“).<br>
+      - Argent que la partie est finie sur échéance.<br>
+      - Bleu clair que la partie est finie sur solo.<br>
     """,
 
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
