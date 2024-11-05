@@ -1122,15 +1122,11 @@ def my_games(state_name):
                     # we are after deadline + grace
                     elif time_stamp_now > deadline_loaded + factor * data['grace_duration']:
                         colour = config.PASSED_GRACE_COLOUR
-                        explanation = "La date limite est dépassée"
-                    # we are after deadline + slight
-                    elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
-                        colour = config.PASSED_DEADLINE_COLOUR
-                        explanation = "La date limite est légèrement dépassée"
-                    # we are slightly after deadline
+                        explanation = "La date limite est dépassée (ainsi que la grâce)"
+                    # we are after deadline
                     elif time_stamp_now > deadline_loaded:
-                        colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
-                        explanation = "La date limite est tout juste dépassée"
+                        colour = config.PASSED_DEADLINE_COLOUR
+                        explanation = "La date limite est dépassée"
                     # deadline is today
                     elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
                         colour = config.APPROACHING_DEADLINE_COLOUR
