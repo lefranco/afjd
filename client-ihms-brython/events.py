@@ -547,7 +547,7 @@ def registrations():
     if not external:
         url = f"https://diplomania-gen.fr?event={name}"
         input_copy_url_register = html.INPUT(type="text", value=url)
-        button_copy_url_register = html.BUTTON("Copier le lien pour inviter un joueur à s'inscrire à cet événement,", Class='btn-inside')
+        button_copy_url_register = html.BUTTON("Copier le lien pour inviter un joueur à s'inscrire à cet événement.", Class='btn-inside')
         button_copy_url_register.bind("click", copy_url_register_callback)
         MY_SUB_PANEL <= button_copy_url_register
 
