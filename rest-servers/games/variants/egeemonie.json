@@ -232,7 +232,6 @@
     ],
     "year_zero": -605,
     "increment": 5,
-    "ignore_solo" : false,
     "extra_requirement_solo": 0,
     "build_everywhere": false,
     "disorder": {},
