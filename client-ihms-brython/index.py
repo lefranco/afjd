@@ -367,7 +367,7 @@ if 'game' in document.query:
             # so that will go to proper page and/or do proper action
             play.set_arrival(arrival)
         # stick to game name
-        window.history.pushState({}, document.title, f"?game={QUERY_GAME_NAME}")
+        window.history.pushState({}, document.title, "/")
         load_option(None, 'Accueil')
         PANEL_MIDDLE.clear()
         play.render(PANEL_MIDDLE)
@@ -378,7 +378,7 @@ elif 'edit_game' in document.query:
     QUERY_GAME_NAME = document.query['edit_game']
     if load_game(QUERY_GAME_NAME):
         # stick to game name
-        window.history.pushState({}, document.title, f"?edit_game={QUERY_GAME_NAME}")
+        window.history.pushState({}, document.title, "/")
         PANEL_MIDDLE.clear()
         allgames.set_arrival()
         allgames.render(PANEL_MIDDLE)
