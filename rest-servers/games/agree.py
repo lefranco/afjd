@@ -274,6 +274,9 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     if game.soloed:
         return True, False, "INFORMATION : game is soloed !"
 
+    if game.end_voted:
+        return True, False, "INFORMATION : game is end-voted !"
+
     if game.finished:
         return True, False, "INFORMATION : game is finished !"
 
