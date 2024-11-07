@@ -1053,7 +1053,7 @@ def all_missing_orders():
 
     time_stamp_now = time()
 
-    gameover_table = {int(game_id_str): data['soloed'] or data['finished'] for game_id_str, data in games_dict.items()}
+    gameover_table = {int(game_id_str): data['soloed'] or data['end_voted'] or data['finished'] for game_id_str, data in games_dict.items()}
 
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
@@ -1168,6 +1168,9 @@ def all_missing_orders():
                     if data['soloed']:
                         colour = config.SOLOED_COLOUR
                         value = "(solo)"
+                    elif data['end_voted']:
+                        colour = config.END_VOTED_COLOUR
+                        value = "(fin votée)"
                     elif data['finished']:
                         colour = config.FINISHED_COLOUR
                         value = "(terminée)"
@@ -1441,7 +1444,7 @@ def show_player_games(pseudo_player, game_list):
 
     if game_list:
 
-        gameover_table = {int(game_id_str): data['soloed'] or data['finished'] for game_id_str, data in games_dict.items()}
+        gameover_table = {int(game_id_str): data['soloed'] or data['end_voted'] or data['finished'] for game_id_str, data in games_dict.items()}
 
         # conversion
         game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
@@ -1522,6 +1525,9 @@ def show_player_games(pseudo_player, game_list):
                         if data['soloed']:
                             colour = config.SOLOED_COLOUR
                             value = "(solo)"
+                        elif data['end_voted']:
+                            colour = config.END_VOTED_COLOUR
+                            value = "(fin votée)"
                         elif data['finished']:
                             colour = config.FINISHED_COLOUR
                             value = "(terminée)"

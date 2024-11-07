@@ -417,7 +417,7 @@ def show_position(direct_last_moves):
         display_left <= html.BR()
 
         fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
-        game_over = play_low.GAME_PARAMETERS_LOADED['finished'] or play_low.GAME_PARAMETERS_LOADED['soloed']
+        game_over = play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']
         game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
         rating_colours_window = play_low.make_rating_colours_window(fog_of_war, game_over, play_low.VARIANT_DATA, position_data, play_low.INTERFACE_CHOSEN, game_scoring)
 
@@ -571,7 +571,7 @@ def show_game_parameters():
 
     for key, value in play_low.GAME_PARAMETERS_LOADED.items():
 
-        if key in ['name', 'description', 'variant', 'deadline', 'current_state', 'current_advancement', 'finished', 'soloed']:
+        if key in ['name', 'description', 'variant', 'deadline', 'current_state', 'current_advancement', 'soloed', 'end_voted', 'finished']:
             continue
 
         row = html.TR()

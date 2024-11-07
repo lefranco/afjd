@@ -291,8 +291,9 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # remove these two so that they get copied from their xxx_game clone
         del json_dict['nopress_current']
         del json_dict['nomessage_current']
-        del json_dict['finished']
         del json_dict['soloed']
+        del json_dict['end_voted']
+        del json_dict['finished']
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']

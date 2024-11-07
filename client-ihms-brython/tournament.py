@@ -238,7 +238,7 @@ def show_games():
     sort_by = storage['SORT_BY_TOURNAMENT']
     reverse_needed = bool(storage['REVERSE_NEEDED_TOURNAMENT'] == 'True')
 
-    gameover_table = {int(game_id_str): data['soloed'] or data['finished'] for game_id_str, data in games_dict.items()}
+    gameover_table = {int(game_id_str): data['soloed'] or data['end_voted'] or data['finished'] for game_id_str, data in games_dict.items()}
 
     # conversion
     game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
@@ -346,6 +346,9 @@ def show_games():
                     if data['soloed']:
                         colour = config.SOLOED_COLOUR
                         value = "(solo)"
+                    if data['end_voted']:
+                        colour = config.END_VOTED_COLOUR
+                        value = "(fin votée)"
                     elif data['finished']:
                         colour = config.FINISHED_COLOUR
                         value = "(terminée)"

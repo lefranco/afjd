@@ -1208,7 +1208,11 @@ def game_master():
     if play_low.GAME_PARAMETERS_LOADED['soloed']:
         alert("La partie est terminée parce qu'un solo a été réalisé !")
 
-    # check game finished (if not soloed)
+    # check game end voted
+    if play_low.GAME_PARAMETERS_LOADED['end_voted']:
+        alert("La partie est terminée sur un vote de fin unanime !")
+
+    # check game finished (if not soloed nor end voted)
     elif play_low.GAME_PARAMETERS_LOADED['finished']:
         alert("La partie est arrivée à échéance")
 
@@ -1617,7 +1621,7 @@ def game_master():
             play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
 
         ############################################
-        if play_low.GAME_PARAMETERS_LOADED['finished'] or play_low.GAME_PARAMETERS_LOADED['soloed']:
+        if play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']:
 
             play_low.MY_SUB_PANEL <= html.H3("Debrief de la partie")
 

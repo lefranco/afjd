@@ -660,6 +660,10 @@ def get_game_status():
         # keep value only for game master
         if ROLE_ID is None or ROLE_ID != 0:
             content = "(solo)"
+    elif GAME_PARAMETERS_LOADED['end_voted']:
+        # keep value only for game master
+        if ROLE_ID is None or ROLE_ID != 0:
+            content = "(fin votée)"
     elif GAME_PARAMETERS_LOADED['finished']:
         # keep value only for game master
         if ROLE_ID is None or ROLE_ID != 0:
@@ -917,7 +921,7 @@ def show_board(panel):
 
     # ratings
     fog_of_war = GAME_PARAMETERS_LOADED['fog']
-    game_over = GAME_PARAMETERS_LOADED['finished'] or GAME_PARAMETERS_LOADED['soloed']
+    game_over = GAME_PARAMETERS_LOADED['soloed'] or GAME_PARAMETERS_LOADED['end_voted'] or GAME_PARAMETERS_LOADED['finished']
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
     rating_colours_window = make_rating_colours_window(fog_of_war, game_over, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, game_scoring)
     panel <= rating_colours_window
