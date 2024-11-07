@@ -48,11 +48,8 @@
 		{"1" : [10, 40, 15, 71, 19, 59], "2" : [ 33, 64, 4]} ,
 		{"1" : [52, 70], "2" : [ 42]} 
 	],
- 
-	"year_zero" : 1913,
+ 	"year_zero" : 1913,
 	"increment" : 1,
-
-    "ignore_solo" : true,
     "extra_requirement_solo" : 16,
 	"build_everywhere" : false,
 	"disorder" : {"3" : "Italie"},
