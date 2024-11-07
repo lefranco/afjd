@@ -55,8 +55,9 @@ GAME_PARAMETERS_LOADED = {
     'nb_max_cycles_to_play': 7,
     'current_state': 1,
     'game_type': 0,
+    'soloed': False,
+    'end_voted': False,
     'finished': False,
-    'soloed': False
 }
 TUNED_GAME_PARAMETERS_LOADED = None
 GAME_STATUS = None

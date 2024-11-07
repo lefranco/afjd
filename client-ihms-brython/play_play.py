@@ -1299,7 +1299,13 @@ def submit_orders():
         play.load_option(None, 'Consulter')
         return False
 
-    # check game finished (if not soloed)
+    # check game end voted
+    if play_low.GAME_PARAMETERS_LOADED['end_voted']:
+        alert("La partie est terminée sur un vote de fin unanime !")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # check game finished (if not soloed nor end voted)
     if play_low.GAME_PARAMETERS_LOADED['finished']:
         alert("La partie est terminée parce qu'arrivée à échéance")
         play.load_option(None, 'Consulter')
@@ -1349,7 +1355,7 @@ def submit_orders():
     img.bind('load', lambda _: callback_render(True))
 
     fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
-    game_over = play_low.GAME_PARAMETERS_LOADED['finished'] or play_low.GAME_PARAMETERS_LOADED['soloed']
+    game_over = play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']
     game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
     rating_colours_window = play_low.make_rating_colours_window(fog_of_war, game_over, play_low.VARIANT_DATA, play_low.POSITION_DATA, play_low.INTERFACE_CHOSEN, game_scoring)
 
@@ -2109,7 +2115,13 @@ def submit_communication_orders():
         play.load_option(None, 'Consulter')
         return False
 
-    # check game finished (if not soloed)
+    # check game end voted
+    if play_low.GAME_PARAMETERS_LOADED['end_voted']:
+        alert("La partie est terminée sur un vote de fin unanime !")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # check game finished (if not soloed not end voted)
     if play_low.GAME_PARAMETERS_LOADED['finished']:
         alert("La partie est terminée parce qu'arrivée à échéance")
         play.load_option(None, 'Consulter')
@@ -2155,7 +2167,7 @@ def submit_communication_orders():
     img.bind('load', lambda _: callback_render(True))
 
     fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
-    game_over = play_low.GAME_PARAMETERS_LOADED['finished'] or play_low.GAME_PARAMETERS_LOADED['soloed']
+    game_over = play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']
     game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
     rating_colours_window = play_low.make_rating_colours_window(fog_of_war, game_over, play_low.VARIANT_DATA, play_low.POSITION_DATA, play_low.INTERFACE_CHOSEN, game_scoring)
 
@@ -2558,7 +2570,7 @@ def imagine_units():
 
     # variant must be foggy
     if not play_low.GAME_PARAMETERS_LOADED['fog']:
-        alert("La variante ne restrint pas la visibilité")
+        alert("La variante ne restreint pas la visibilité")
         play.load_option(None, 'Consulter')
         return False
 
@@ -2581,7 +2593,13 @@ def imagine_units():
         play.load_option(None, 'Consulter')
         return False
 
-    # check game finished (if not soloed)
+    # check game end voted
+    if play_low.GAME_PARAMETERS_LOADED['end_voted']:
+        alert("La partie est terminée sur un vote de fin unanime !")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # check game finished (if not soloed nor end voted)
     if play_low.GAME_PARAMETERS_LOADED['finished']:
         alert("La partie est arrivée à échéance")
         play.load_option(None, 'Consulter')
@@ -2617,7 +2635,7 @@ def imagine_units():
     img.bind('load', lambda _: callback_render(True))
 
     fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
-    game_over = play_low.GAME_PARAMETERS_LOADED['finished'] or play_low.GAME_PARAMETERS_LOADED['soloed']
+    game_over = play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']
     game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
     rating_colours_window = play_low.make_rating_colours_window(fog_of_war, game_over, play_low.VARIANT_DATA, play_low.POSITION_DATA, play_low.INTERFACE_CHOSEN, game_scoring)
 

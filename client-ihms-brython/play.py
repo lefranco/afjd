@@ -236,6 +236,8 @@ def countdown():
     # game finished or solo
     if play_low.GAME_PARAMETERS_LOADED['soloed']:
         colour = config.SOLOED_COLOUR
+    elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
+        colour = config.END_VOTED_COLOUR
     elif play_low.GAME_PARAMETERS_LOADED['finished']:
         colour = config.FINISHED_COLOUR
     # we are after everything !
