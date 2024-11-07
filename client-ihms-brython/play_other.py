@@ -295,6 +295,20 @@ def show_position(direct_last_moves):
         nonlocal helper
         nonlocal ctx
 
+        def copy_url_consult_callback(_):
+            """ copy_url_consult_callback """
+            input_copy_url_consult.select()
+            # ev.setSelectionRange(0, 99999) # For mobile devices
+            window.navigator.clipboard.writeText(input_copy_url_consult.value)
+            alert(f"Lien '{input_copy_url_consult.value}' copié dans le presse papier...")
+
+        def copy_url_join_callback(_):
+            """ copy_url_join_callback """
+            input_copy_url_join.select()
+            # ev.setSelectionRange(0, 99999) # For mobile devices
+            window.navigator.clipboard.writeText(input_copy_url_join.value)
+            alert(f"Lien '{input_copy_url_join.value}' copié dans le presse papier...")
+
         def callback_render(_):
             """ callback_render """
 
@@ -510,22 +524,28 @@ def show_position(direct_last_moves):
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
+        url = f"https://diplomania-gen.fr?game={play_low.GAME}"
+        input_copy_url_consult = html.INPUT(type="text", value=url)
+        button_copy_url_consult = html.BUTTON("Copier le lien pour inviter un joueur à consulter la partie", Class='btn-inside')
+        button_copy_url_consult.bind("click", copy_url_consult_callback)
+        buttons_right <= button_copy_url_consult
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+        url = f"https://diplomania-gen.fr?game={play_low.GAME}&arrival=rejoindre"
+        input_copy_url_join = html.INPUT(type="text", value=url)
+        button_copy_url_join = html.BUTTON("Copier le lien pour inviter un joueur à rejoindre la partie", Class='btn-inside')
+        button_copy_url_join.bind("click", copy_url_join_callback)
+        buttons_right <= button_copy_url_join
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
         if play_low.VARIANT_DATA.name.startswith('standard'):
             input_download_game_json = html.INPUT(type="submit", value="Télécharger la partie au format JSON", Class='btn-inside')
             input_download_game_json.bind("click", callback_download_game_json)
             buttons_right <= input_download_game_json
             buttons_right <= html.BR()
             buttons_right <= html.BR()
-
-        url = f"https://diplomania-gen.fr?game={play_low.GAME}"
-        buttons_right <= f"Pour inviter un joueur à consulter la partie, lui envoyer le lien : '{url}'"
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
-
-        url = f"https://diplomania-gen.fr?game={play_low.GAME}&arrival=rejoindre"
-        buttons_right <= f"Pour inviter un joueur à rejoindre la partie, lui envoyer le lien : '{url}'"
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']

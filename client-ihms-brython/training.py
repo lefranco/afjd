@@ -659,6 +659,13 @@ def slide_just_display():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
+    def copy_url_realise_callback(_):
+        """ copy_url_consult_callback """
+        input_copy_url_realise.select()
+        # ev.setSelectionRange(0, 99999) # For mobile devices
+        window.navigator.clipboard.writeText(input_copy_url_realise.value)
+        alert(f"Lien '{input_copy_url_realise.value}' copié dans le presse papier...")
+
     # now we can display
 
     # header
@@ -717,7 +724,10 @@ def slide_just_display():
 
     # advertise
     url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
-    MY_SUB_PANEL <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    input_copy_url_realise = html.INPUT(type="text", value=url)
+    button_copy_url_realise = html.BUTTON("Copier le lien pour inviter un joueur à tenter cette séquence", Class='btn-inside')
+    button_copy_url_realise.bind("click", copy_url_realise_callback)
+    MY_SUB_PANEL <= button_copy_url_realise
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
@@ -1684,6 +1694,13 @@ def slide_submit_orders():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
+    def copy_url_realise_callback(_):
+        """ copy_url_consult_callback """
+        input_copy_url_realise.select()
+        # ev.setSelectionRange(0, 99999) # For mobile devices
+        window.navigator.clipboard.writeText(input_copy_url_realise.value)
+        alert(f"Lien '{input_copy_url_realise.value}' copié dans le presse papier...")
+
     # now we can display
 
     # header
@@ -1783,7 +1800,10 @@ def slide_submit_orders():
 
     # advertise
     url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
-    MY_SUB_PANEL <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    input_copy_url_realise = html.INPUT(type="text", value=url)
+    button_copy_url_realise = html.BUTTON("Copier le lien pour inviter un joueur à tenter cette séquence", Class='btn-inside')
+    button_copy_url_realise.bind("click", copy_url_realise_callback)
+    MY_SUB_PANEL <= button_copy_url_realise
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
@@ -1986,6 +2006,13 @@ def slide_show_adjudication():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
+    def copy_url_realise_callback(_):
+        """ copy_url_consult_callback """
+        input_copy_url_realise.select()
+        # ev.setSelectionRange(0, 99999) # For mobile devices
+        window.navigator.clipboard.writeText(input_copy_url_realise.value)
+        alert(f"Lien '{input_copy_url_realise.value}' copié dans le presse papier...")
+
     # now we can display
 
     # header
@@ -2047,7 +2074,10 @@ def slide_show_adjudication():
 
     # advertise
     url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
-    MY_SUB_PANEL <= f"Pour inviter un joueur à réaliser cette séquence, lui envoyer le lien : '{url}'"
+    input_copy_url_realise = html.INPUT(type="text", value=url)
+    button_copy_url_realise = html.BUTTON("Copier le lien pour inviter un joueur à tenter cette séquence", Class='btn-inside')
+    button_copy_url_realise.bind("click", copy_url_realise_callback)
+    MY_SUB_PANEL <= button_copy_url_realise
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
