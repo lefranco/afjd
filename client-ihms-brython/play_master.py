@@ -578,6 +578,10 @@ def game_master():
 
         deadline_timestamp = mydatetime.totimestamp(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
 
+        deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
+        if deadline_timestamp < deadline_loaded:
+            alert("Attention, vous êtes en train de reculer la date limite !")
+
         time_stamp_now = time()
         if deadline_timestamp < time_stamp_now:
             alert("Désolé, il est interdit de positionner une date limite dans le passé")
