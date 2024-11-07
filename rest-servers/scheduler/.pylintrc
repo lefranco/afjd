@@ -15,7 +15,7 @@ disable=
 
 # all the "too many"
 ## code
-	too-many-locals,,too-many-statements,too-many-branches,too-many-nested-blocks,too-many-lines,
+	too-many-locals,too-many-statements,too-many-branches,too-many-nested-blocks,too-many-lines,too-many-boolean-expressions,
 ## functions
 	too-many-arguments, too-many-return-statements,
 ## classes
