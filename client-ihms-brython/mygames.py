@@ -1092,13 +1092,13 @@ def my_games(state_name):
                 if gameover_table[game_id]:
 
                     if data['soloed']:
-                        stats = "(solo)"
+                        value = "(solo)"
                         colour = config.SOLOED_COLOUR
                     elif data['end_voted']:
-                        stats = "(fin votée)"
+                        value = "(fin votée)"
                         colour = config.END_VOTED_COLOUR
                     elif data['finished']:
-                        stats = "(terminée)"
+                        value = "(terminée)"
                         colour = config.FINISHED_COLOUR
 
                     # keep value only for game master
