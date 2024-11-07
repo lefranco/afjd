@@ -117,6 +117,13 @@ def show_games():
         MY_SUB_PANEL.clear()
         show_games()
 
+    def copy_url_consult_callback(_):
+        """ copy_url_consult_callback """
+        input_copy_url_consult.select()
+        # ev.setSelectionRange(0, 99999) # For mobile devices
+        window.navigator.clipboard.writeText(input_copy_url_consult.value)
+        alert(f"Lien '{input_copy_url_consult.value}' copié dans le presse papier...")
+
     overall_time_before = time()
 
     if 'GAME' not in storage:
@@ -429,7 +436,10 @@ def show_games():
     MY_SUB_PANEL <= html.BR()
 
     url = f"https://diplomania-gen.fr?tournament={tournament_name}"
-    MY_SUB_PANEL <= f"Pour inviter un joueur à consulter le tournoi, lui envoyer le lien : '{url}'"
+    input_copy_url_consult = html.INPUT(type="text", value=url)
+    button_copy_url_consult = html.BUTTON("Copier le lien pour inviter un joueur à consulter le tournoi", Class='btn-inside')
+    button_copy_url_consult.bind("click", copy_url_consult_callback)
+    MY_SUB_PANEL <= button_copy_url_consult
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
