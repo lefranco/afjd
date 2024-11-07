@@ -725,7 +725,7 @@ def slide_just_display():
     # advertise
     url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
     input_copy_url_realise = html.INPUT(type="text", value=url)
-    button_copy_url_realise = html.BUTTON("Copier le lien pour inviter un joueur à tenter cette séquence", Class='btn-inside')
+    button_copy_url_realise = html.BUTTON("Copier le lien pour inviter un joueur à tenter cette séquence.", Class='btn-inside')
     button_copy_url_realise.bind("click", copy_url_realise_callback)
     MY_SUB_PANEL <= button_copy_url_realise
     MY_SUB_PANEL <= html.BR()
@@ -1801,7 +1801,7 @@ def slide_submit_orders():
     # advertise
     url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
     input_copy_url_realise = html.INPUT(type="text", value=url)
-    button_copy_url_realise = html.BUTTON("Copier le lien pour inviter un joueur à tenter cette séquence", Class='btn-inside')
+    button_copy_url_realise = html.BUTTON("Copier le lien pour inviter un joueur à tenter cette séquence.", Class='btn-inside')
     button_copy_url_realise.bind("click", copy_url_realise_callback)
     MY_SUB_PANEL <= button_copy_url_realise
     MY_SUB_PANEL <= html.BR()
@@ -2075,7 +2075,7 @@ def slide_show_adjudication():
     # advertise
     url = f"https://diplomania-gen.fr?sequence={SEQUENCE_NAME}"
     input_copy_url_realise = html.INPUT(type="text", value=url)
-    button_copy_url_realise = html.BUTTON("Copier le lien pour inviter un joueur à tenter cette séquence", Class='btn-inside')
+    button_copy_url_realise = html.BUTTON("Copier le lien pour inviter un joueur à tenter cette séquence.", Class='btn-inside')
     button_copy_url_realise.bind("click", copy_url_realise_callback)
     MY_SUB_PANEL <= button_copy_url_realise
     MY_SUB_PANEL <= html.BR()

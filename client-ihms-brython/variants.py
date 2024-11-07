@@ -230,6 +230,13 @@ def show_variant():
             # restore
             restore_context(ctx)
 
+    def copy_url_show_callback(_):
+        """ copy_url_show_callback """
+        input_copy_url_show.select()
+        # ev.setSelectionRange(0, 99999) # For mobile devices
+        window.navigator.clipboard.writeText(input_copy_url_show.value)
+        alert(f"Lien '{input_copy_url_show.value}' copié dans le presse papier...")
+
     # you get variant from game except if coming from home page
 
     # make sure we have a variant name
@@ -276,9 +283,20 @@ def show_variant():
     input_export_sandbox = html.INPUT(type="submit", value="Exporter la position vers le bac à sable", Class='btn-inside')
     input_export_sandbox.bind("click", callback_export_sandbox)
     buttons_right <= input_export_sandbox
+    buttons_right <= html.BR()
+    buttons_right <= html.BR()
+
+    url = f"https://diplomania-gen.fr?variant={VARIANT_NAME}"
+    input_copy_url_show = html.INPUT(type="text", value=url)
+    button_copy_url_show = html.BUTTON("Copier le lien pour inviter un joueur à consulter cette variante.", Class='btn-inside')
+    button_copy_url_show.bind("click", copy_url_show_callback)
+    buttons_right <= button_copy_url_show
+
     my_sub_panel2 <= buttons_right
 
     MY_SUB_PANEL <= html.H2(f"La variante {VARIANT_NAME}")
+
+
     MY_SUB_PANEL <= my_sub_panel2
     MY_SUB_PANEL <= html.BR()
 
