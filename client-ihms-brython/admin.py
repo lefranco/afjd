@@ -518,6 +518,7 @@ def rectify_parameters():
     archive_loaded = None
     game_type_loaded = None
     finished_loaded = None
+    end_voted_loaded = None
     nb_max_cycles_to_play_loaded = None
 
     def change_parameters_reload():
@@ -538,6 +539,7 @@ def rectify_parameters():
             nonlocal archive_loaded
             nonlocal game_type_loaded
             nonlocal finished_loaded
+            nonlocal end_voted_loaded
             nonlocal nb_max_cycles_to_play_loaded
             req_result = loads(req.text)
             if req.status != 200:
@@ -555,6 +557,7 @@ def rectify_parameters():
             archive_loaded = req_result['archive']
             game_type_loaded = req_result['game_type']
             finished_loaded = req_result['finished']
+            end_voted_loaded = req_result['end_voted']
             nb_max_cycles_to_play_loaded = req_result['nb_max_cycles_to_play']
 
         json_dict = {}
@@ -592,6 +595,7 @@ def rectify_parameters():
         game_type = input_game_type.value
         game_type_code = config.GAME_TYPES_CODE_TABLE[game_type]
         finished = int(input_finished.checked)
+        end_voted = int(input_end_voted.checked)
         nb_max_cycles_to_play = int(input_nb_max_cycles_to_play.value)
 
         json_dict = {
@@ -600,6 +604,7 @@ def rectify_parameters():
             'archive': archive,
             'game_type': game_type_code,
             'finished': finished,
+            'end_voted': end_voted,
             'nb_max_cycles_to_play': nb_max_cycles_to_play
         }
 
@@ -681,11 +686,18 @@ def rectify_parameters():
     fieldset <= input_finished
     form <= fieldset
 
+    fieldset = html.FIELDSET()
+    legend_end_voted = html.LEGEND("fin votée", title="La fin de la partie a été votée")
+    fieldset <= legend_end_voted
+    input_end_voted = html.INPUT(type="checkbox", checked=end_voted_loaded, Class='btn-inside')
+    fieldset <= input_end_voted
+    form <= fieldset
+
     form <= html.BR()
 
-    input_change_used_for_elo_game = html.INPUT(type="submit", value="Changer les paramètres de la partie", Class='btn-inside')
-    input_change_used_for_elo_game.bind("click", change_parameters_game_callback)
-    form <= input_change_used_for_elo_game
+    input_change_parameters_game = html.INPUT(type="submit", value="Changer les paramètres de la partie", Class='btn-inside')
+    input_change_parameters_game.bind("click", change_parameters_game_callback)
+    form <= input_change_parameters_game
 
     MY_SUB_PANEL <= form
 

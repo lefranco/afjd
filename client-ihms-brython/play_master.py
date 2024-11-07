@@ -26,8 +26,8 @@ HELP_CONTENT_TABLE = {
 
     "Comment changer des joueurs ?": "1) retirer le rôle au partant 2) retirer de la partie sélectionnée le partant 3) mettre dans la partie sélectionnée l'arrivant 4) attribuer le role à l'arrivant",
     "Comment bénéficier du bouton permettant de contacter tous les remplaçants ?": "1) et 2) ci-dessus",
-    "Comment modifier un paramètre de la partie ?": "menu “Les partie“ sous menu “Rectifier paramètres“",
     "Comment forcer la fin de la partie (un joueur tarde à entrer une retraite sans importance) ?": "1) Rectifier le paramètre pour mettre la partie en DC autorisé pour cette saison (si besoin) 2) mettre la DL à maintenant 3) forcer un DC pour ce joueur 4) Annuler la première action (car la partie a été jouée sans DC)",
+    "Comment annuler toute mauvaise manipulation (dont la mise du vote de fin de la partie) ?": "Contacter l'administrateur",
 }
 
 
@@ -144,6 +144,46 @@ def game_master():
         play_low.PANEL_MIDDLE.clear()
         allgames.set_arrival()
         allgames.render(play_low.PANEL_MIDDLE)
+
+    def end_game_vote_callback(ev):  # pylint: disable=invalid-name
+        """ edit_game_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la mise en l'état 'fin votée' de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la mise en l'état 'fin votée' de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # fail but refresh
+                play_low.MY_SUB_PANEL.clear()
+                game_master()
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"La partie a été mise dans l'état 'fin votée' : {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            play_low.load_dynamic_stuff()
+            game_master()
+
+        ev.preventDefault()
+
+        json_dict = {
+            'name': play_low.GAME,
+            'end_voted': 1,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{play_low.GAME}"
+
+        # changing game state : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def cancel_change_state_game_callback(_, dialog):
         """ cancel_delete_account_callback """
@@ -1827,7 +1867,21 @@ def game_master():
     play_low.MY_SUB_PANEL <= game_incidents_table
 
     ############################################
-    play_low.MY_SUB_PANEL <= html.H3("Rectifier les paramètres de la partie")
+    if play_low.GAME_PARAMETERS_LOADED['current_state'] == 1:
+
+        play_low.MY_SUB_PANEL <= html.H3("Vote de fin de partie")
+
+        if play_low.GAME_PARAMETERS_LOADED['end_voted']:
+            play_low.MY_SUB_PANEL <= html.DIV("La fin de partie est déjà votée dans cette partie", Class='note')
+        else:
+            form = html.FORM()
+            input_end_vote_game = html.INPUT(type="submit", value="Déclarer la partie finie par vote unanime", Class='btn-inside')
+            input_end_vote_game.bind("click", end_game_vote_callback)
+            form <= input_end_vote_game
+            play_low.MY_SUB_PANEL <= form
+
+    ############################################
+    play_low.MY_SUB_PANEL <= html.H3("Paramètres de la partie")
 
     form = html.FORM()
 
@@ -1837,7 +1891,7 @@ def game_master():
     play_low.MY_SUB_PANEL <= form
 
     ############################################
-    play_low.MY_SUB_PANEL <= html.H3("Changer l'état de la partie")
+    play_low.MY_SUB_PANEL <= html.H3("Etat de la partie")
 
     state_loaded = play_low.GAME_PARAMETERS_LOADED['current_state']
 
@@ -1882,7 +1936,7 @@ def game_master():
     play_low.MY_SUB_PANEL <= form
 
     ############################################
-    play_low.MY_SUB_PANEL <= html.H3("Supprimer la partie")
+    play_low.MY_SUB_PANEL <= html.H3("Existence de la partie")
 
     form = html.FORM()
 

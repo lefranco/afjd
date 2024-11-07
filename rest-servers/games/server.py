@@ -101,6 +101,7 @@ GAME_PARSER.add_argument('current_state', type=int, required=False)
 GAME_PARSER.add_argument('just_play', type=int, required=False)
 GAME_PARSER.add_argument('game_type', type=int, required=False)
 GAME_PARSER.add_argument('force_wait', type=int, required=False)
+GAME_PARSER.add_argument('end_voted', type=int, required=False)
 
 # for game parameter alteration
 GAME_PARSER2 = flask_restful.reqparse.RequestParser()
@@ -111,6 +112,7 @@ GAME_PARSER2.add_argument('archive', type=int, required=False)
 GAME_PARSER2.add_argument('game_type', type=int, required=False)
 GAME_PARSER2.add_argument('current_state', type=int, required=False)
 GAME_PARSER2.add_argument('finished', type=int, required=False)
+GAME_PARSER2.add_argument('end_voted', type=int, required=False)
 GAME_PARSER2.add_argument('nb_max_cycles_to_play', type=int, required=False)
 
 GAMES_SELECT_PARSER = flask_restful.reqparse.RequestParser()
@@ -561,10 +563,10 @@ class DebriefGameRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg="Game is not ongoing")
 
-        # game must be finished or soloed
-        if not (game.soloed or game.finished):
+        # game must be soled or end-voted or finished
+        if not (game.soloed or game.end_voted or game.finished):
             del sql_executor
-            flask_restful.abort(404, msg="Game is not soloed or finished")
+            flask_restful.abort(404, msg="Game is not soloed or end-voted or finished")
 
         # debrief
         game.debrief()
@@ -1142,7 +1144,7 @@ class GameStateListRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed} for g in games_list if g.current_state == int(current_state)}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed, 'end_voted': g.end_voted} for g in games_list if g.current_state == int(current_state)}
 
         return data, 200
 
@@ -1165,7 +1167,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed} for g in games_list}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed, 'end_voted': g.end_voted} for g in games_list}
 
         return data, 200
 
@@ -1274,7 +1276,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
             # create game here
             identifier = games.Game.free_identifier(sql_executor)
-            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0, False)
+            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0, False, False)
             _ = game.load_json(args)
             game.update_database(sql_executor)
 
@@ -2483,8 +2485,8 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
 
-        # game not ongoing or game master or game actually finished or soloed: you get get a clear picture
-        if game.current_state != 1 or (role_id != 'None' and int(role_id) == 0) or game.soloed or game.finished:
+        # game not ongoing or game master or game actually soloed or end-voted or finished : you get get a clear picture
+        if game.current_state != 1 or (role_id != 'None' and int(role_id) == 0) or game.soloed or game.end_voted or game.finished:
             del sql_executor
             data = {
                 'ownerships': ownership_dict,
@@ -2773,8 +2775,8 @@ class GameFogOfWarReportRessource(flask_restful.Resource):  # type: ignore
 
         assert report is not None
 
-        # game not ongoing or game master or game actually finished or soloed: you get get a clear picture
-        if game.current_state != 1 or (role_id != 'None' and int(role_id) == 0) or game.soloed or game.finished:
+        # game not ongoing or game master or game actually soloed or game-voted or finished: you get get a clear picture
+        if game.current_state != 1 or (role_id != 'None' and int(role_id) == 0) or game.soloed or game.end_voted or game.finished:
             # extract report data
             content = report.content
             del sql_executor
@@ -2909,8 +2911,8 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         the_orders = json.loads(transition.orders_json)
         report_txt = transition.report_txt
 
-        # game not ongoing or game master or game actually finished or soloed: you get get a clear picture
-        if game.current_state != 1 or (role_id != 'None' and int(role_id) == 0) or game.soloed or game.finished:
+        # game not ongoing or game master or game actually soloed or end-voted or finished: you get get a clear picture
+        if game.current_state != 1 or (role_id != 'None' and int(role_id) == 0) or game.soloed or game.end_voted or game.finished:
             del sql_executor
             data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
             return data, 200
@@ -3272,10 +3274,15 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         # begin of protected section
         with MOVE_GAME_LOCK_TABLE[game.name]:
 
-            # game must not be actually finished
+            # game must not be soloed
             if game.soloed:
                 del sql_executor
                 flask_restful.abort(403, msg="Game seems to be actually soloed")
+
+            # game must not be end voted
+            if game.end_voted:
+                del sql_executor
+                flask_restful.abort(403, msg="Game seems to be actually end-voted")
 
             # game must not be actually finished
             if game.finished:
@@ -3467,6 +3474,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-8-SOLOED")
                 del sql_executor
                 flask_restful.abort(403, msg="Game is soloed!")
+
+            # must not be end voted
+            if game.end_voted:
+                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-8bis-END-VOTED")
+                del sql_executor
+                flask_restful.abort(403, msg="Game is end-voted!")
 
             # must not be finished
             if game.finished:
@@ -7226,7 +7239,7 @@ class ClearOldDelaysRessource(flask_restful.Resource):  # type: ignore
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
-        maintain
+        clear old delays
         EXPOSED
         """
 
@@ -7423,7 +7436,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
 
         # games very late
         limit = int(time.time()) - CRITICAL_DELAY_DAY * 24 * 3600
-        dying_games = [g.name for g in games_list if g.current_state == 1 and not g.finished and not g.soloed and g.deadline < limit]
+        dying_games = [g.name for g in games_list if g.current_state == 1 and not g.soloed and not g.end_voted and not g.finished and g.deadline < limit]
 
         # stats about games
 
@@ -8359,16 +8372,18 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
-        sql_executor = database.SqlExecutor()
 
-        # insert specific code here
-        for game in games.Game.inventory(sql_executor):
-            print(game.name, file=sys.stderr)
-            game.update_database(sql_executor)
+        # sql_executor = database.SqlExecutor()
+        #
+        # # insert specific code here
+        # for game in games.Game.inventory(sql_executor):
+        #     print(game.name, file=sys.stderr)
+        #     game.update_database(sql_executor)
+        #
+        # sql_executor.commit()
+        #
+        # del sql_executor
 
-        sql_executor.commit()
-
-        del sql_executor
         print("MAINTENANCE - done !!!", file=sys.stderr)
 
         data = {'msg': "maintenance done"}
