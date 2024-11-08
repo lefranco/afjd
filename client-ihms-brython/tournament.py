@@ -277,6 +277,8 @@ def show_games():
     per_advancement_table = {}
     for game_id in games_in:
         data = games_dict[str(game_id)]
+        if data['current_state'] != 1 or data['soloed'] or data['end_voted'] or data['finished']:
+            continue
         advancement = data['current_advancement']
         deadline_day = data['deadline'] // (24 * 3600)
         if advancement not in per_advancement_table:
@@ -300,6 +302,8 @@ def show_games():
     add_game_table = {}
     for game_id in games_in:
         data = games_dict[str(game_id)]
+        if data['current_state'] != 1 or data['soloed'] or data['end_voted'] or data['finished']:
+            continue
         advancement = data['current_advancement']
         deadline_day = data['deadline'] // (24 * 3600)
         add_game_table[game_id] = add_group_table[advancement] + (per_advancement_table[advancement] - deadline_day)
@@ -457,7 +461,9 @@ def show_games():
                 value = html.DIV(stats, title=explanation)
 
             if field == 'adjust':
-                value = add_game_table[game_id]
+                value = '-'
+                if data['current_state'] == 1 and not data['soloed'] and not data['end_voted'] and not data['finished']:
+                    value = add_game_table[game_id]
 
             col = html.TD(value)
             if colour is not None:
