@@ -472,7 +472,7 @@ def show_games():
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
 
-    url = f"https://diplomania-gen.fr?tournament={tournament_name}"
+    url = f"{config.SITE_ADDRESS}?tournament={tournament_name}"
     input_copy_url_consult = html.INPUT(type="text", value=url)
     button_copy_url_consult = html.BUTTON("Copier le lien pour inviter un joueur à consulter le tournoi.", Class='btn-inside')
     button_copy_url_consult.bind("click", copy_url_consult_callback)

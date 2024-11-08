@@ -16,6 +16,6 @@ WHYNOT_CONTENT_TABLE = {
     "Cette contrainte est venue pour des raisons de simplicité, pour que les parties et les pseudo apparaissent simplement dans les liens URL. Le jeu en vaut-il la chandelle ?",
 
     "Pourquoi il n'y a pas de fiche joueur ?":
-    "C'est prévu dans un avenir très proche. Néanmoins les participations aux parties anonymes resteront invisibles...",
+    "C'est prévu dans un avenir assez proche. Néanmoins les participations aux parties anonymes resteront invisibles...",
 
 }

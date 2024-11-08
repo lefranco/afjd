@@ -784,7 +784,7 @@ def game_master():
             alert("Attendez que la date limite soit passée pour réclamer les ordres, sinon le joueur va crier à l'injustice :-)")
             return
 
-        subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site https://diplomania-gen.fr (AFJD)"
+        subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site {config.SITE_ADDRESS} (AFJD)"
 
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
@@ -796,7 +796,7 @@ def game_master():
         body += f"Pour rappel votre rôle est {role_name}."
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
-        body += f"https://diplomania-gen.fr?game={play_low.GAME}"
+        body += f"{config.SITE_ADDRESS}?game={play_low.GAME}"
 
         player_id_str = role2pseudo[role_id]
         player_id = int(player_id_str)
@@ -846,7 +846,7 @@ def game_master():
             alert("Attendez que la date limite soit passée pour réclamer l'accord, sinon le joueur va crier à l'injustice :-)")
             return
 
-        subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site https://diplomania-gen.fr (AFJD)"
+        subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site {config.SITE_ADDRESS} (AFJD)"
 
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
@@ -858,7 +858,7 @@ def game_master():
         body += f"Pour rappel votre rôle est {role_name}."
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
-        body += f"https://diplomania-gen.fr?game={play_low.GAME}"
+        body += f"{config.SITE_ADDRESS}?game={play_low.GAME}"
 
         player_id_str = role2pseudo[role_id]
         player_id = int(player_id_str)
@@ -902,7 +902,7 @@ def game_master():
 
         ev.preventDefault()
 
-        subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site https://diplomania-gen.fr (AFJD)"
+        subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site {config.SITE_ADDRESS} (AFJD)"
 
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
@@ -914,7 +914,7 @@ def game_master():
         body += f"Le rôle qui vous a été attribué est {role_name}."
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
-        body += f"https://diplomania-gen.fr?game={play_low.GAME}"
+        body += f"{config.SITE_ADDRESS}?game={play_low.GAME}"
 
         player_id_str = role2pseudo[role_id]
         player_id = int(player_id_str)
@@ -962,7 +962,7 @@ def game_master():
 
         ev.preventDefault()
 
-        subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site https://diplomania-gen.fr (AFJD)"
+        subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site {config.SITE_ADDRESS} (AFJD)"
 
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
@@ -978,7 +978,7 @@ def game_master():
         body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
-        body += f"https://diplomania-gen.fr?game={play_low.GAME}"
+        body += f"{config.SITE_ADDRESS}?game={play_low.GAME}"
 
         # need to filter here otherwise there would be too many
         players_dict = common.get_players_data()

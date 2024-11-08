@@ -340,7 +340,7 @@ def show_news():
 
     # ----
 
-    news_events = html.OBJECT(data="https://diplomania-gen.fr/events/", width="100%", height="350", title="Evénements", alt="Evénements")
+    news_events = html.OBJECT(data=f"{config.SITE_ADDRESS}/events/", width="100%", height="350", title="Evénements", alt="Evénements")
     div_a4 <= news_events
 
     # ----
@@ -364,7 +364,7 @@ def show_news():
 
     # ----
 
-    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="700", title="Forums", alt="Forums")
+    news_forum = html.OBJECT(data=f"{config.SITE_ADDRESS}/external_page.php", width="100%", height="700", title="Forums", alt="Forums")
     div_b4 <= news_forum
 
     # ----
@@ -558,7 +558,7 @@ def show_news():
 
     # ----
 
-    news_wiki = html.IFRAME(src="https://diplomania-gen.fr/dokuwiki/doku.php?id=start&do=export_xhtml", width="100%", height="350", title="Wiki", alt="Wiki", allow="fullscreen")
+    news_wiki = html.IFRAME(src=f"{config.SITE_ADDRESS}/dokuwiki/doku.php?id=start&do=export_xhtml", width="100%", height="350", title="Wiki", alt="Wiki", allow="fullscreen")
     div_b2 <= news_wiki
 
     # ----
@@ -901,7 +901,7 @@ def declare_incident(json_dict_params):
             declare_incident(json_dict_params)
             return
 
-        subject = "Déclaration d'incident de la part du site https://diplomania-gen.fr (AFJD)"
+        subject = f"Déclaration d'incident de la part du site {config.SITE_ADDRESS} (AFJD)"
         body = ""
         body += f"pseudo : {pseudo}"
         body += "\n\n"
@@ -1023,7 +1023,7 @@ def declare_incident(json_dict_params):
     fieldset <= "Il est toujours bienvenu de fournir une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu..."
     form <= fieldset
 
-    input_submit_incident = html.INPUT(type="submit", value="Soumettre cet ncident", Class='btn-inside')
+    input_submit_incident = html.INPUT(type="submit", value="Soumettre cet incident", Class='btn-inside')
     input_submit_incident.bind("click", submit_incident_callback)
     form <= input_submit_incident
 
