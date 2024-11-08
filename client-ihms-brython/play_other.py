@@ -309,6 +309,13 @@ def show_position(direct_last_moves):
             window.navigator.clipboard.writeText(input_copy_url_join.value)
             alert(f"Lien '{input_copy_url_join.value}' copié dans le presse papier...")
 
+        def copy_url_extract_callback(_):
+            """ copy_url_extract_callback """
+            input_copy_url_extract.select()
+            # ev.setSelectionRange(0, 99999) # For mobile devices
+            window.navigator.clipboard.writeText(input_copy_url_extract.value)
+            alert(f"Lien '{input_copy_url_extract.value}' copié dans le presse papier...")
+
         def callback_render(_):
             """ callback_render """
 
@@ -540,6 +547,16 @@ def show_position(direct_last_moves):
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-export/{play_low.GAME_ID}"
+        input_copy_url_extract = html.INPUT(type="text", value=url)
+        button_copy_url_extract = html.BUTTON("Copier le lien pour une extraction automatique depuis le back-end.", Class='btn-inside')
+        button_copy_url_extract.bind("click", copy_url_extract_callback)
+        buttons_right <= button_copy_url_extract
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
         if play_low.VARIANT_DATA.name.startswith('standard'):
             input_download_game_json = html.INPUT(type="submit", value="Télécharger la partie au format JSON", Class='btn-inside')
             input_download_game_json.bind("click", callback_download_game_json)
@@ -547,12 +564,6 @@ def show_position(direct_last_moves):
             buttons_right <= html.BR()
             buttons_right <= html.BR()
 
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-export/{play_low.GAME_ID}"
-        buttons_right <= f"Pour une extraction automatique depuis le back-end utiliser : '{url}'"
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
 
     last_advancement = play_low.GAME_PARAMETERS_LOADED['current_advancement']
     adv_last_moves = last_advancement
