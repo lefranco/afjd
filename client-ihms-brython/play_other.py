@@ -564,7 +564,6 @@ def show_position(direct_last_moves):
             buttons_right <= html.BR()
             buttons_right <= html.BR()
 
-
     last_advancement = play_low.GAME_PARAMETERS_LOADED['current_advancement']
     adv_last_moves = last_advancement
     while True:
