@@ -189,12 +189,12 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'game_type']
+    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'game_type', 'adjust']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'adjust': 'ajustement'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -271,6 +271,39 @@ def show_games():
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
+    # calculate the adjust value
+
+    # gather games by set of same current_advancement
+    per_advancement_table = {}
+    for game_id in games_in:
+        data = games_dict[str(game_id)]
+        advancement = data['current_advancement']
+        deadline_day = data['deadline'] // (24 * 3600)
+        if advancement not in per_advancement_table:
+            per_advancement_table[advancement] = deadline_day
+        else:
+            found_deadline_day = per_advancement_table[advancement]
+            per_advancement_table[advancement] = max(deadline_day, found_deadline_day)
+
+    # calculate what to add to make groups sorted
+    cur_val = 0
+    add_group_table = {}
+    for advancement, deadline_day in sorted(per_advancement_table.items(), key=lambda x: x[0]):
+        if deadline_day > cur_val:
+            add_group_table[advancement] = 0
+            cur_val = deadline_day
+        else:
+            add_group_table[advancement] = cur_val - deadline_day + 1
+            cur_val += 1
+
+    # calculate what to add to make games sorted
+    add_game_table = {}
+    for game_id in games_in:
+        data = games_dict[str(game_id)]
+        advancement = data['current_advancement']
+        deadline_day = data['deadline'] // (24 * 3600)
+        add_game_table[game_id] = add_group_table[advancement] + (per_advancement_table[advancement] - deadline_day)
+
     # exception : games are sorted by name, not identifier
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
@@ -318,6 +351,7 @@ def show_games():
         data['master'] = None
         data['all_orders_submitted'] = None
         data['all_agreed'] = None
+        data['adjust'] = None
 
         row = html.TR()
         for field in fields:
@@ -421,6 +455,9 @@ def show_games():
                 explanation = common.TYPE_GAME_EXPLAIN_CONV[value]
                 stats = game_type_conv[value]
                 value = html.DIV(stats, title=explanation)
+
+            if field == 'adjust':
+                value = add_game_table[game_id]
 
             col = html.TD(value)
             if colour is not None:
