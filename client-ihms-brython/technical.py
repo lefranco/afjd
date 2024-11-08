@@ -6,6 +6,7 @@ from browser import document, html, alert, window  # pylint: disable=import-erro
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
+import config
 import interface
 import whynot
 import mydialog
@@ -269,7 +270,7 @@ def frequentation_evolution():
     # use button
     button = html.BUTTON("Lancement du calcul de fréquentation", id='frequentation_link', Class='btn-inside')
     MY_SUB_PANEL <= button
-    button.bind("click", lambda e: window.open("https://diplomania-gen.fr/frequentation"))
+    button.bind("click", lambda e: window.open(f"{config.SITE_ADDRESS}/frequentation"))
     document['frequentation_link'].click()
 
 

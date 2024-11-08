@@ -286,7 +286,7 @@ def show_variant():
     buttons_right <= html.BR()
     buttons_right <= html.BR()
 
-    url = f"https://diplomania-gen.fr?variant={VARIANT_NAME}"
+    url = f"{config.SITE_ADDRESS}?variant={VARIANT_NAME}"
     input_copy_url_show = html.INPUT(type="text", value=url)
     button_copy_url_show = html.BUTTON("Copier le lien pour inviter un joueur à consulter cette variante.", Class='btn-inside')
     button_copy_url_show.bind("click", copy_url_show_callback)

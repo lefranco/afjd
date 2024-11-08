@@ -82,3 +82,5 @@ NEED_REPLACEMENT = 'Fuchsia'
 MY_RATING = 'Cyan'
 
 FORCED_VARIANT_NAME = "standard"
+
+SITE_ADDRESS = "https://diplomania-gen.fr"
