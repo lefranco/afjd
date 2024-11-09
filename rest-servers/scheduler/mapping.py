@@ -240,7 +240,7 @@ class Variant:
         # =================
 
         # extra_requirement_solo
-        self._extra_requirement_solo = raw_variant_content['extra_requirement_solo']
+        self._extra_requirement_solo = bool(raw_variant_content['extra_requirement_solo'])
 
         # load the regions
         self._regions = {}
