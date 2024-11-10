@@ -42,6 +42,9 @@ DEFAULT_SPEED_MOVES = 72
 DEFAULT_SPEED_OTHERS = 24
 DEFAULT_NB_CYCLES = 7
 
+# initial deadline (in days) - how long before considering game has problems getting complete
+DELAY_FOR_COMPLETING_GAME_DAYS = 21
+
 
 ARRIVAL = False
 
@@ -252,7 +255,10 @@ def create_game(json_dict):
             show_game_selected()
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La partie a été créé : {messages}")
+            mydialog.InfoDialog("Information", f"La partie a été créé : {messages}.")
+
+            # we do not want stalled games
+            alert(f"Attention : elle devra être démarrée sous {DELAY_FOR_COMPLETING_GAME_DAYS} jours sous peine d'être probablement annulée.")
 
         ev.preventDefault()
 
