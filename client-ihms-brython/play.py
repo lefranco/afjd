@@ -217,42 +217,48 @@ COUNTDOWN_TIMER = None
 def countdown():
     """ countdown """
 
-    # only if game is ongoing
-    if int(play_low.GAME_PARAMETERS_LOADED['current_state']) != 1:
-        return
-
-    deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
-
-    # calculate display colour for deadline and countdown
-
     colour = None
     time_stamp_now = time()
+    deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
 
-    if play_low.GAME_PARAMETERS_LOADED['fast']:
-        factor = 60
+    # only if game is ongoing
+    if int(play_low.GAME_PARAMETERS_LOADED['current_state']) == 0:
+
+        if time_stamp_now > deadline_loaded:
+            colour = config.EXPIRED_WAIT_START_COLOUR
+
+    elif int(play_low.GAME_PARAMETERS_LOADED['current_state']) == 1:
+
+        # calculate display colour for deadline and countdown
+
+        if play_low.GAME_PARAMETERS_LOADED['fast']:
+            factor = 60
+        else:
+            factor = 60 * 60
+
+        # game finished or solo
+        if play_low.GAME_PARAMETERS_LOADED['soloed']:
+            colour = config.SOLOED_COLOUR
+        elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
+            colour = config.END_VOTED_COLOUR
+        elif play_low.GAME_PARAMETERS_LOADED['finished']:
+            colour = config.FINISHED_COLOUR
+        # we are after everything !
+        elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
+            colour = config.CRITICAL_COLOUR
+        # we are after deadline + grace
+        elif time_stamp_now > deadline_loaded + factor * play_low.GAME_PARAMETERS_LOADED['grace_duration']:
+            colour = config.PASSED_GRACE_COLOUR
+        # we are after deadline
+        elif time_stamp_now > deadline_loaded:
+            colour = config.PASSED_DEADLINE_COLOUR
+        # deadline is today
+        elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
+            colour = config.APPROACHING_DEADLINE_COLOUR
+
     else:
-        factor = 60 * 60
-
-    # game finished or solo
-    if play_low.GAME_PARAMETERS_LOADED['soloed']:
-        colour = config.SOLOED_COLOUR
-    elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
-        colour = config.END_VOTED_COLOUR
-    elif play_low.GAME_PARAMETERS_LOADED['finished']:
-        colour = config.FINISHED_COLOUR
-    # we are after everything !
-    elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
-        colour = config.CRITICAL_COLOUR
-    # we are after deadline + grace
-    elif time_stamp_now > deadline_loaded + factor * play_low.GAME_PARAMETERS_LOADED['grace_duration']:
-        colour = config.PASSED_GRACE_COLOUR
-    # we are after deadline
-    elif time_stamp_now > deadline_loaded:
-        colour = config.PASSED_DEADLINE_COLOUR
-    # deadline is today
-    elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
-        colour = config.APPROACHING_DEADLINE_COLOUR
-
+        return
+        
     # set the colour
     if colour is not None:
         play_low.DEADLINE_COL.style = {
