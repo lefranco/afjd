@@ -1085,8 +1085,12 @@ def my_games(state_name):
             if field == 'deadline':
 
                 deadline_loaded = value
-                value = ""
+                datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
+
                 explanation = ""
+                stats = ""
+                value = ""
 
                 # game over
                 if gameover_table[game_id]:
@@ -1107,11 +1111,23 @@ def my_games(state_name):
                     else:
                         explanation = "La date indiquée n'est pas une date limite, mais plutôt une date à laquelle il faudra agir sur cette partie que vous arbitrez"
 
+                elif int(data['current_state']) == 0:
+
+                    value = datetime_deadline_loaded_str
+                    if time_stamp_now > deadline_loaded:
+                        colour = config.EXPIRED_WAIT_START_COLOUR
+                        explanation = "La date limite d'attente que la partie soit complète est dépassée"
+
+                    stats = value
+                    value = html.DIV(stats, title=explanation)
+
                 elif int(data['current_state']) == 1:
 
-                    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
-                    stats = datetime_deadline_loaded_str
+                    value = datetime_deadline_loaded_str
+
+                    # Emphasize if forced to wait
+                    if data['force_wait']:
+                        value = html.B(value)
 
                     if data['fast']:
                         factor = 60
@@ -1135,6 +1151,7 @@ def my_games(state_name):
                         colour = config.APPROACHING_DEADLINE_COLOUR
                         explanation = "La date limite est bientôt"
 
+                    stats = value
                     value = html.DIV(stats, title=explanation)
 
             if field == 'current_advancement':

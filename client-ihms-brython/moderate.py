@@ -1148,15 +1148,11 @@ def all_missing_orders():
                     value <= html.BR()
 
             if field == 'deadline':
+
                 deadline_loaded = value
                 datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
                 datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
-                value = datetime_deadline_loaded_str
-
-                if data['fast']:
-                    factor = 60
-                else:
-                    factor = 60 * 60
+                value = ""
 
                 # Emphasize if forced to wait
                 if data['force_wait']:
@@ -1175,7 +1171,24 @@ def all_missing_orders():
                         colour = config.FINISHED_COLOUR
                         value = "(terminée)"
 
+                elif int(data['current_state']) == 0:
+
+                    value = datetime_deadline_loaded_str
+                    if time_stamp_now > deadline_loaded:
+                        colour = config.EXPIRED_WAIT_START_COLOUR
+
                 elif int(data['current_state']) == 1:
+
+                    value = datetime_deadline_loaded_str
+
+                    # Emphasize if forced to wait
+                    if data['force_wait']:
+                        value = html.B(value)
+
+                    if data['fast']:
+                        factor = 60
+                    else:
+                        factor = 60 * 60
 
                     # we are after everything !
                     if time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
@@ -1510,15 +1523,11 @@ def show_player_games(pseudo_player, game_list):
                         value = link
 
                 if field == 'deadline':
+
                     deadline_loaded = value
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
                     datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
-                    value = datetime_deadline_loaded_str
-
-                    if data['fast']:
-                        factor = 60
-                    else:
-                        factor = 60 * 60
+                    value = ""
 
                     # game over
                     if gameover_table[game_id]:
@@ -1532,7 +1541,24 @@ def show_player_games(pseudo_player, game_list):
                             colour = config.FINISHED_COLOUR
                             value = "(terminée)"
 
+                    elif int(data['current_state']) == 0:
+
+                        value = datetime_deadline_loaded_str
+                        if time_stamp_now > deadline_loaded:
+                            colour = config.EXPIRED_WAIT_START_COLOUR
+
                     elif int(data['current_state']) == 1:
+
+                        value = datetime_deadline_loaded_str
+
+                        # Emphasize if forced to wait
+                        if data['force_wait']:
+                            value = html.B(value)
+
+                        if data['fast']:
+                            factor = 60
+                        else:
+                            factor = 60 * 60
 
                         # we are after everything !
                         if time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:

@@ -58,28 +58,36 @@ VARIANT_NAMES_DICT = {
 }
 
 
-# yellow before that
+# before that we warn that deadline is approaching
 APPROACH_DELAY_SEC = 24 * 60 * 60
 
-# grey after that
+# after that we warn that game is suffering
 CRITICAL_DELAY_DAY = 7
 
 # colours
 ALL_ORDERS_IN_COLOUR = 'Chartreuse'
 
+# three possibles ends of the game
 SOLOED_COLOUR = 'Cyan'
 END_VOTED_COLOUR = 'White'
 FINISHED_COLOUR = 'Silver'
 
+# colors according to position commpared to deadline
 CRITICAL_COLOUR = 'Brown'
 PASSED_GRACE_COLOUR = 'Red'
 PASSED_DEADLINE_COLOUR = 'Orange'
 APPROACHING_DEADLINE_COLOUR = 'Yellow'
 
+# after that waiting game should be cancelled
+EXPIRED_WAIT_START_COLOUR = 'Chocolate'
+
+# colors for games not started
 NEED_START = 'YellowGreen'
 NEED_PLAYERS = 'Pink'
 NEED_REPLACEMENT = 'Fuchsia'
-MY_RATING = 'Cyan'
+
+# to distinguish own games
+MY_RATING = 'Blue'
 
 FORCED_VARIANT_NAME = "standard"
 
