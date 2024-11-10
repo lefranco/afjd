@@ -1631,6 +1631,8 @@ def my_opportunities():
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
+    time_stamp_now = time()
+
     for game_id_str, data in sorted(games_dict_recruiting.items(), key=key_function, reverse=reverse_needed):
 
         # ignore finished (or distinguished) games
@@ -1731,8 +1733,16 @@ def my_opportunities():
                 deadline_loaded = value
                 value = ""
 
-                # game over
-                if gameover_table[game_id]:
+                if int(data['current_state']) == 0:
+
+                    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
+                    value = datetime_deadline_loaded_str
+
+                    if time_stamp_now > deadline_loaded:
+                        colour = config.EXPIRED_WAIT_START_COLOUR
+
+                elif int(data['current_state']) == 1:
 
                     if data['soloed']:
                         colour = config.SOLOED_COLOUR
@@ -1744,15 +1754,10 @@ def my_opportunities():
                         colour = config.FINISHED_COLOUR
                         value = "(terminée)"
 
-                elif int(data['current_state']) == 1:
-
-                    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
-                    value = datetime_deadline_loaded_str
-
-                    # Emphasize if forced to wait
-                    if data['force_wait']:
-                        value = html.B(value)
+                    else:
+                        datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                        datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
+                        value = datetime_deadline_loaded_str
 
             if field == 'current_state':
                 state_loaded = value
@@ -1814,6 +1819,9 @@ def my_opportunities():
         games_table <= row
 
     MY_SUB_PANEL <= games_table
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= html.DIV("Pour les parties en attente, la date limite est pour le démarrage de la partie (pas le rendu des ordres)", Class='note')
     MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time()
@@ -2263,6 +2271,8 @@ def all_games(state_name):
             if field == 'deadline':
 
                 deadline_loaded = value
+                datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                 value = ""
 
                 # game over
@@ -2278,10 +2288,14 @@ def all_games(state_name):
                         colour = config.FINISHED_COLOUR
                         value = "(terminée)"
 
+                elif int(data['current_state']) == 0:
+
+                    value = datetime_deadline_loaded_str
+                    if time_stamp_now > deadline_loaded:
+                        colour = config.EXPIRED_WAIT_START_COLOUR
+
                 elif int(data['current_state']) == 1:
 
-                    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                     value = datetime_deadline_loaded_str
 
                     # Emphasize if forced to wait

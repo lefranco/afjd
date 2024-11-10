@@ -383,6 +383,8 @@ def show_games():
             if field == 'deadline':
 
                 deadline_loaded = value
+                datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                 value = ""
 
                 # game over
@@ -398,10 +400,14 @@ def show_games():
                         colour = config.FINISHED_COLOUR
                         value = "(terminée)"
 
+                elif int(data['current_state']) == 0:
+
+                    value = datetime_deadline_loaded_str
+                    if time_stamp_now > deadline_loaded:
+                        colour = config.EXPIRED_WAIT_START_COLOUR
+
                 elif int(data['current_state']) == 1:
 
-                    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                     value = datetime_deadline_loaded_str
 
                     # Emphasize if forced to wait
