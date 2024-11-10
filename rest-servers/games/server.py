@@ -243,6 +243,9 @@ COMMUTER_ACCOUNT = "TheCommuter"
 # if deadline is more away that this game is dying
 CRITICAL_DELAY_DAY = 7
 
+# initial deadline (in days) - how long before considering game has problems getting complete
+DELAY_FOR_COMPLETING_GAME_DAYS = 15
+
 
 def apply_supported(complete_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], orders_list: typing.List[typing.List[int]]) -> None:
     """ apply_supported
@@ -1243,25 +1246,10 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             args['nopress_current'] = 0
             args['nomessage_current'] = 1
 
-        # pay more attention to deadline
-        entered_deadline = args['deadline']
-
-        if entered_deadline is not None:
-
-            # check it
-            deadline_date = datetime.datetime.fromtimestamp(entered_deadline, datetime.timezone.utc)
-
-            # cannot be in past
-            if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
-                date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
-                flask_restful.abort(400, msg=f"You cannot set a deadline in the past from now!:'{date_desc}' (GMT)")
-
-        else:
-
-            # create it
-            time_stamp = time.time()
-            forced_deadline = int(time_stamp)
-            args['deadline'] = forced_deadline
+        # we do not want a deadline here, we make our own
+        time_stamp = time.time()
+        forced_deadline = int(time_stamp) + DELAY_FOR_COMPLETING_GAME_DAYS * 24 * 60 * 60
+        args['deadline'] = forced_deadline
 
         sql_executor = database.SqlExecutor()
 
