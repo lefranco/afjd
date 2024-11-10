@@ -244,7 +244,7 @@ COMMUTER_ACCOUNT = "TheCommuter"
 CRITICAL_DELAY_DAY = 7
 
 # initial deadline (in days) - how long before considering game has problems getting complete
-DELAY_FOR_COMPLETING_GAME_DAYS = 15
+DELAY_FOR_COMPLETING_GAME_DAYS = 21
 
 
 def apply_supported(complete_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], orders_list: typing.List[typing.List[int]]) -> None:
