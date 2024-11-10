@@ -7419,6 +7419,18 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
                 continue
             suffering_games.append(game.name)
 
+        # games stalled, waiting for too long to be complete
+        now = int(time.time())
+        stalled_games = []
+        for game_id in recruiting_games:
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+            if game.current_state != 0:
+                continue
+            if now < game.deadline:
+                continue
+            stalled_games.append(game.name)
+
         # a list of games
         games_list = games.Game.inventory(sql_executor)
 
@@ -7452,7 +7464,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         most_active_master_id = active_masters.most_common(1)[0][0]
         most_active_player_id = active_players.most_common(1)[0][0]
 
-        data = {'dying_games': dying_games, 'suffering_games': suffering_games, 'ongoing_games': len(ongoing_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set), 'most_active_master': most_active_master_id, 'most_active_player': most_active_player_id}
+        data = {'dying_games': dying_games, 'stalled_games': stalled_games, 'suffering_games': suffering_games, 'ongoing_games': len(ongoing_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set), 'most_active_master': most_active_master_id, 'most_active_player': most_active_player_id}
         return data, 200
 
 
