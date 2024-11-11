@@ -272,7 +272,7 @@ def show_news():
     # ==A5==============================
 
     div_a5 = html.DIV(Class='tooltip')
-    title1 = html.H4("Remplacements urgents et dernier message des discussions en ligne")
+    title1 = html.H4("Actions urgentes et dernier message des discussions en ligne")
     div_a5 <= title1
 
     # ----
@@ -299,7 +299,7 @@ def show_news():
     else:
         div_a5 <= "Aucune partie en cours n'a de besoin urgent de remplaçant(s)."
 
-    div_a5 <= html.H5("Démarrage difficle :")
+    div_a5 <= html.H5("Démarrages difficiles :")
     stalled_games_loaded = stats_content['stalled_games']
     if stalled_games_loaded:
         div_a5 <= "Les parties ci-dessous sont en en attente d'être complète pour démarrer depuis trop longtemps."
