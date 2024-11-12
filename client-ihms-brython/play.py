@@ -258,7 +258,7 @@ def countdown():
 
     else:
         return
-        
+
     # set the colour
     if colour is not None:
         play_low.DEADLINE_COL.style = {
