@@ -5,7 +5,7 @@
 from json import loads, dumps
 from time import time
 
-from browser import html, alert, ajax, window  # pylint: disable=import-error
+from browser import html, alert, ajax  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -22,9 +22,10 @@ import mydialog
 import index  # circular import
 
 
-OPTIONS = {
-    'Rejoindre une partie': "Pour rejoindre (I.e. se mettre dans) un partie afin d'y jouer",
-}
+MY_PANEL = html.DIV()
+MY_SUB_PANEL = html.DIV(id="page")
+MY_SUB_PANEL.attrs['style'] = 'display: table-row'
+MY_PANEL <= MY_SUB_PANEL
 
 
 def get_recruiting_games():
@@ -588,53 +589,6 @@ def recruiting_game():
     MY_SUB_PANEL <= html.BR()
 
 
-MY_PANEL = html.DIV()
-MY_PANEL.attrs['style'] = 'display: table-row'
-
-# menu-left
-MENU_LEFT = html.DIV()
-MENU_LEFT.attrs['style'] = 'display: table-cell; width:15%; vertical-align: top;'
-MY_PANEL <= MENU_LEFT
-
-# menu-selection
-MENU_SELECTION = html.UL()
-MENU_LEFT <= MENU_SELECTION
-
-ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
-
-MY_SUB_PANEL = html.DIV(id='page')
-MY_PANEL <= MY_SUB_PANEL
-
-
-def load_option(_, item_name):
-    """ load_option """
-
-    MY_SUB_PANEL.clear()
-    window.scroll(0, 0)
-
-    if item_name == 'Rejoindre une partie':
-        recruiting_game()
-
-    global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = item_name
-
-    MENU_LEFT.clear()
-
-    # items in menu
-    for possible_item_name, legend in OPTIONS.items():
-
-        if possible_item_name == ITEM_NAME_SELECTED:
-            item_name_bold_or_not = html.B(possible_item_name)
-        else:
-            item_name_bold_or_not = possible_item_name
-
-        button = html.BUTTON(item_name_bold_or_not, title=legend, Class='btn-menu')
-        button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
-        menu_item = html.LI(button)
-        menu_item.attrs['style'] = 'list-style-type: none'
-        MENU_LEFT <= menu_item
-
-
 PANEL_MIDDLE = None
 
 
@@ -642,12 +596,8 @@ def render(panel_middle):
     """ render """
 
     global PANEL_MIDDLE
-    global ITEM_NAME_SELECTED
-
     PANEL_MIDDLE = panel_middle
 
-    # always back to top
-    ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
-
-    load_option(None, ITEM_NAME_SELECTED)
-    panel_middle <= MY_PANEL
+    MY_SUB_PANEL.clear()
+    recruiting_game()
+    panel_middle <= MY_SUB_PANEL
