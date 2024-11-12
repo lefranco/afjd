@@ -20,6 +20,7 @@ import home
 import login
 import account
 import mygames
+import join
 import allgames
 import tournament
 import events
@@ -48,7 +49,8 @@ OPTIONS = {
     'Aide': "Pour obtenir de l'aide et découvrir simplement le jeu et le site par des vidéos, des tutoriels etc...",
     'Connexion': "Se connecter au site par mot de passe",
     'Mon compte': "Pour éditer les paramètres de son compte sur le site (il faut être connecté)",
-    'Les parties': "Se mettre dans une partie, créer une partie, rectifier une partie, liste des parties...",
+    'Rejoindre une partie': "Se mettre dans une partie",
+    'Les parties': "Créer une partie, rectifier une partie, liste des parties...",
     'Mes parties': "La liste des parties dans laquelle vous jouez (il faut être connecté)",
     'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
     'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
@@ -215,6 +217,8 @@ def load_option(_, item_name):
         login.render(PANEL_MIDDLE)
     if item_name == 'Mon compte':
         account.render(PANEL_MIDDLE)
+    if item_name == 'Rejoindre une partie':
+        join.render(PANEL_MIDDLE)
     if item_name == 'Les parties':
         allgames.render(PANEL_MIDDLE)
     if item_name == 'Mes parties':
