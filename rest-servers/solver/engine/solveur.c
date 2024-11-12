@@ -66,7 +66,7 @@ TPAYSCLASSES PAYSCLASSES;
 
 int ANNEEZERO, SAISON, SAISONMODIF;
 
-BOOL OPTIONE, OPTIONw, OPTIONs, OPTIONv, OPTIONR, OPTIONS;
+BOOL OPTIONE, OPTIONw, OPTIONs, OPTIONv, OPTIONR, OPTIONS, OPTIONL;
 char OPTIONO, OPTIONC, OPTIONp[NPAYSS], OPTIONx[NPAYSS];
 
 /****************************************************/
@@ -131,6 +131,8 @@ static void infos(void)
 	cherchechaine(__FILE__, 16, buf, 0); /*"-R			: Evite les destructions cas de defaut d'ordres de retraite"*/
 	(void) printf("%s\n", buf);
 	cherchechaine(__FILE__, 17, buf, 0); /*"-S			: La stabilite en centres entraine l'arret de la partie"*/
+	(void) printf("%s\n", buf);
+	cherchechaine(__FILE__, 17, buf, 0); /*"-L			: On ne parle plus des numeros de lignes"*/
 	(void) printf("%s\n", buf);
 	cherchechaine(__FILE__, 18, buf, 0); /*"-E			: Calcule les eloignements (sortie standard)"*/
 	(void) printf("%s\n", buf);
@@ -217,6 +219,10 @@ static void parametres(int argc, char **argv)
 				if (etat != PARAMINIT)
 					impromptu("'-S'");
 				OPTIONS = TRUE;
+			} else if (!strcmp(*argv, "-L")) {
+				if (etat != PARAMINIT)
+					impromptu("'-L'");
+				OPTIONL = TRUE;
 			} else if (!strcmp(*argv, "-C")) {
 				if (etat != PARAMINIT)
 					impromptu("'-C'");

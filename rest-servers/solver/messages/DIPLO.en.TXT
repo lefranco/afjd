@@ -418,6 +418,7 @@ solveur.c#18#-E		: Can build everywhere
 solveur.c#19#-C		: Checks the map
 solveur.c#20#-w		: Switches to verbose mode
 solveur.c#21#-v		: Displays program version
+solveur.c#22#-L		: Line numbers are not mentionned any more
 solveur.c#24#Option x
 solveur.c#25#Option P/p
 solveur.c#26#Option O
