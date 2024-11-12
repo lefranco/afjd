@@ -522,7 +522,8 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
             "-o", f"{tmpdirname}/orders.txt",
             "-f", f"{tmpdirname}/situation_result.dat",
             "-a", f"{tmpdirname}/orders_result.txt",
-            "-A", f"{tmpdirname}/active_roles.txt"
+            "-A", f"{tmpdirname}/active_roles.txt",
+            "-L"
         ]
 
         # in case we are checking partial orders
@@ -604,6 +605,7 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
             "./engine/solveur",
             "-i", f"{tmpdirname}/situation.dat",
             f"-P{initial_role}", f"{tmpdirname}/orders_result.txt",
+            "-L"
         ]
 
         # run solver

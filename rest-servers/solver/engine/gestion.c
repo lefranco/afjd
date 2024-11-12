@@ -263,6 +263,7 @@ _PAYS *chercheadjectifpays(char *s) {
 		if (!strcmp(p->adjectif, s))
 			return p;
 
+	/* We do not consider OPTIONL here */
 	for (p = PAYS.t; p < PAYS.t + PAYS.n; p++)
 		if (!strcmp(p->nom, s)) {
 			(void) sprintf(bufn1, "%d", noligne);
@@ -283,6 +284,7 @@ _CENTRE *cherchecentre(char *s) {
 		if (!strcmp(p->region->nom, s))
 			return p;
 
+	/* We do not consider OPTIONL here */
 	for (p = CENTRE.t; p < CENTRE.t + CENTRE.n; p++)
 		if (!strcmp(p->region->nom2, s)) {
 			(void) sprintf(bufn1, "%d", noligne);
@@ -308,6 +310,7 @@ _CENTREDEPART *cherchecentredepart(char *s) {
 		}
 	}
 
+	/* We do not consider OPTIONL here */
 	for (p = CENTREDEPART.t; p < CENTREDEPART.t + CENTREDEPART.n; p++) {
 		if ((*(p->centre->region->nom) == c) && /* Optimisation tres efficace */
 		!strcmp(p->centre->region->nom2, s)) {
@@ -340,6 +343,7 @@ _UNITE *chercheuniteavecpays(char *s) {
 		}
 	}
 
+	/* We do not consider OPTIONL here */
 	for (p = UNITE.t; p < UNITE.t + UNITE.n; p++) {
 		if (*(p->zone->region->nom) == c) { /* Optimisation tres efficace */
 			(void) strcpy(nomunite, p->zone->region->nom2);
@@ -376,6 +380,7 @@ _DELOGEE *cherchedelogee(char *s) {
 		}
 	}
 
+	/* We do not consider OPTIONL here */
 	for (p = DELOGEE.t; p < DELOGEE.t + DELOGEE.n; p++) {
 		if (*(p->unite->pays->nom) == c) { /* Optimisation tres efficace */
 			(void) strcpy(nomunite, p->unite->pays->nom);
@@ -404,6 +409,7 @@ _REGION *chercheregion(char *s) {
 		if (!strcmp(p->nom, s))
 			return p;
 
+	/* We do not consider OPTIONL here */
 	for (p = REGION.t; p < REGION.t + REGION.n; p++)
 		if (!strcmp(p->nom2, s)) {
 			(void) sprintf(bufn1, "%d", noligne);
@@ -445,6 +451,7 @@ _UNITE *chercheunite(char *s) {
 				return p;
 		}
 
+	/* We do not consider OPTIONL here */
 	for (p = UNITE.t; p < UNITE.t + UNITE.n; p++)
 		if (*(p->zone->region->nom2) == c) {
 			(void) strcpy(nomunite, p->zone->region->nom2);
@@ -476,6 +483,7 @@ _ZONE *cherchezone(char *s) {
 				return p;
 		}
 
+	/* We do not consider OPTIONL here */
 	for (p = ZONE.t; p < ZONE.t + ZONE.n; p++)
 		if (*(p->region->nom2) == c) { /* Optimisation tres efficace */
 			(void) strcpy(nomzone, p->region->nom2);

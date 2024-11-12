@@ -242,9 +242,17 @@ void erreurparse(_PAYS *pays, TYPEERREURPARSE typeerreurparse, BOOL finligne,
 		cherchechaine(__FILE__, 27, buf, 1, bufn1); /*"en ligne %1"*/
 	}
 
-	(void) sprintf(buf3, "%s%s\n%s : %s : %s : %s %s", image, buf2,
+	if (OPTIONL) { /* do not mention lines */
+		(void) sprintf(buf3, "%s%s\n%s : %s : %s : %s", image, buf2,
+			LECTURE[lecture], ERREURPARSE[typeerreurparse],
+			(pays == NULL ? "N/A" : pays->nom), mess);
+	} else {
+		(void) sprintf(buf3, "%s%s\n%s : %s : %s : %s %s", image, buf2,
 			LECTURE[lecture], ERREURPARSE[typeerreurparse],
 			(pays == NULL ? "N/A" : pays->nom), mess, buf);
+
+	}
+
 	erreur(pays, ERRPARSE, buf3);
 }
 
@@ -266,9 +274,15 @@ void erreurverif2(_PAYS *pays, TYPEERREURVERIF typeerreurverif, const char *mess
 	(void) sprintf(bufn1, "%d", noligne);
 	cherchechaine(__FILE__, 27, buf, 1, bufn1); /*"en ligne %1"*/
 
-	cherchechaine(__FILE__, 29, buf2, 0); /*"a la verification (pour les erreurs localisables)"*/
-	(void) sprintf(buf3, "%s : %s %s : %s %s", (pays == NULL ? "N/A"
+	if (OPTIONL) { /* do not mention lines */
+		cherchechaine(__FILE__, 29, buf2, 0); /*"a la verification (pour les erreurs localisables)"*/
+		(void) sprintf(buf3, "%s : %s %s : %s", (pays == NULL ? "N/A"
+			: pays->nom), ERREURVERIF[typeerreurverif], buf2, mess);
+	} else {
+		cherchechaine(__FILE__, 29, buf2, 0); /*"a la verification (pour les erreurs localisables)"*/
+		(void) sprintf(buf3, "%s : %s %s : %s %s", (pays == NULL ? "N/A"
 			: pays->nom), ERREURVERIF[typeerreurverif], buf2, mess, buf);
+	}
 	erreur(pays, ERRVERIF2, buf3);
 }
 

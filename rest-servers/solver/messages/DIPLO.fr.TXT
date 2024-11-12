@@ -418,6 +418,7 @@ solveur.c#18#-E		: Peut construire partout
 solveur.c#19#-C		: Verifie la carte
 solveur.c#20#-w		: Branche le mode bavard
 solveur.c#21#-v		: Affiche la version du programme
+solveur.c#22#-L		: On ne parle plus des numeros de lignes
 solveur.c#24#Option x
 solveur.c#25#Option P/p
 solveur.c#26#Option O
