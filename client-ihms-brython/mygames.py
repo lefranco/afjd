@@ -1383,6 +1383,10 @@ def my_games(state_name):
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()
 
+    if state_name == 'en attente':
+        MY_SUB_PANEL <= html.DIV("Pour les parties en attente, la date limite est pour le démarrage de la partie (pas le rendu des ordres)", Class='note')
+        MY_SUB_PANEL <= html.BR()
+
     for other_state_name in config.STATE_CODE_TABLE:
 
         if other_state_name != state_name:
