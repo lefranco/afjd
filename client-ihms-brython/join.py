@@ -59,8 +59,8 @@ def get_recruiting_games():
     return recruiting_games_list
 
 
-def recruiting_game():
-    """ recruiting_game """
+def recruiting_games():
+    """ recruiting_games """
 
     def create_account_callback(_):
         """ create_account_callback """
@@ -177,7 +177,7 @@ def recruiting_game():
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
         MY_SUB_PANEL.clear()
-        recruiting_game()
+        recruiting_games()
 
     def sort_by_callback(_, new_sort_by):
 
@@ -189,7 +189,7 @@ def recruiting_game():
             storage['REVERSE_NEEDED_OPPORTUNITIES'] = str(not bool(storage['REVERSE_NEEDED_OPPORTUNITIES'] == 'True'))
 
         MY_SUB_PANEL.clear()
-        recruiting_game()
+        recruiting_games()
 
     overall_time_before = time()
 
@@ -599,5 +599,5 @@ def render(panel_middle):
     PANEL_MIDDLE = panel_middle
 
     MY_SUB_PANEL.clear()
-    recruiting_game()
+    recruiting_games()
     panel_middle <= MY_SUB_PANEL
