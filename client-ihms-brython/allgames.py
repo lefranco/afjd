@@ -223,7 +223,7 @@ def create_game(json_dict):
             mydialog.InfoDialog("Information", f"La partie a été créé : {messages}.")
 
             # we do not want stalled games
-            alert(f"Attention : elle devra être démarrée sous {DELAY_FOR_COMPLETING_GAME_DAYS} jours sous peine d'être probablement annulée.")
+            alert(f"Attention : la partie devra être démarrée sous {DELAY_FOR_COMPLETING_GAME_DAYS} jours sous peine d'être probablement annulée.")
 
         ev.preventDefault()
 
@@ -298,6 +298,9 @@ def create_game(json_dict):
         except:  # noqa: E722 pylint: disable=bare-except
             nb_max_cycles_to_play = None
 
+        # to be able to create many same games
+        bypass = int(input_bypass.checked)
+
         # these are automatic
         time_stamp_now = time()
         time_creation = mydatetime.fromtimestamp(time_stamp_now)
@@ -371,6 +374,14 @@ def create_game(json_dict):
             create_game(json_dict)
             return
 
+        # special : check same game does not exist
+        if not bypass:
+            if any(g for g in games_dict.values() if all(g[vn] == json_dict[vn] for vn in ['variant', 'fog', 'fast', 'game_type'])):
+                alert("Une telle partie existe déjà dans celles en attente (mêmes valeurs pour variante/brouillard/en direct/type)")
+                MY_SUB_PANEL.clear()
+                create_game(json_dict)
+                return
+
         # send to server
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -389,6 +400,13 @@ def create_game(json_dict):
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
+
+    state = 0
+    games_dict = common.get_games_data(state)
+    if games_dict is None:
+        alert("Erreur chargement dictionnaire parties")
+        return
+    games_dict = dict(games_dict)
 
     pseudo = storage['PSEUDO']
 
@@ -624,15 +642,22 @@ def create_game(json_dict):
     fieldset <= input_nb_max_cycles_to_play
     form <= fieldset
 
-    title_access = html.H4("Spécial : rôle du créateur dans la partie")
+    title_access = html.H4("Spécial")
     form <= title_access
 
     fieldset = html.FIELDSET()
-    legend_just_play_game = html.LEGEND("Je veux juste jouer la partie", title="L'administrateur du site sera mis arbitre")
+    legend_just_play_game = html.LEGEND("Je veux juste jouer la partie, pas arbitrer", title="L'administrateur du site sera mis arbitre")
     fieldset <= legend_just_play_game
     input_just_play_game = html.INPUT(type="checkbox", checked=False, Class='btn-inside')
     input_just_play_game.bind("click", display_just_play_callback)
     fieldset <= input_just_play_game
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_bypass= html.LEGEND("Partie doublon (ne pas cocher)", title="Création d'une partie identique à une autre en attente")
+    fieldset <= legend_bypass
+    input_bypass = html.INPUT(type="checkbox", checked=False, Class='btn-inside')
+    fieldset <= input_bypass
     form <= fieldset
 
     form <= html.BR()
