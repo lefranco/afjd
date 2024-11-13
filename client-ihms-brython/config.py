@@ -65,7 +65,7 @@ APPROACH_DELAY_SEC = 24 * 60 * 60
 CRITICAL_DELAY_DAY = 7
 
 # colours
-ALL_ORDERS_IN_COLOUR = 'Chartreuse'
+READY_TO_START_COLOUR = 'Chartreuse'
 
 # three possibles ends of the game
 SOLOED_COLOUR = 'Cyan'

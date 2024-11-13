@@ -669,9 +669,9 @@ def get_game_status():
         if ROLE_ID is None or ROLE_ID != 0:
             content = "(terminée)"
 
-    # Emphasize if forced to wait
+    # Display if forced to wait
     if GAME_PARAMETERS_LOADED['force_wait']:
-        content = html.B(content)
+        content = f"[{content}]"
 
     DEADLINE_COL = html.TD(content)
     row <= DEADLINE_COL

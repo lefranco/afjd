@@ -1543,7 +1543,7 @@ def game_master():
 
         deadline_form = html.FORM()
 
-        dl_gmt = html.DIV("ATTENTION : vous devez entrer une date limite en temps GMT", Class='important')
+        dl_gmt = html.DIV("ATTENTION : vous devez entrer une valeur en temps GMT", Class='important')
         special_legend = html.LEGEND(dl_gmt)
         deadline_form <= special_legend
         deadline_form <= html.BR()
@@ -1560,20 +1560,20 @@ def game_master():
         deadline_loaded_day, deadline_loaded_hour, _ = datetime_deadline_loaded_str.split(' ')
 
         fieldset = html.FIELDSET()
-        legend_deadline_day = html.LEGEND("Jour de la date limite (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
+        legend_deadline_day = html.LEGEND("Jour de la prochaine D.L. (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
         fieldset <= legend_deadline_day
         input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day, Class='btn-inside')
         fieldset <= input_deadline_day
         deadline_form <= fieldset
 
         fieldset = html.FIELDSET()
-        legend_deadline_hour = html.LEGEND("Heure de la date limite (hh:mm ou selon les réglages du navigateur)", title="La date limite. Dernière heure du jour pour soumettre les ordres. Après le joueur est en retard.")
+        legend_deadline_hour = html.LEGEND("Heure de la prochaine D.L. (hh:mm ou selon les réglages du navigateur)", title="La date limite. Dernière heure du jour pour soumettre les ordres. Après le joueur est en retard.")
         fieldset <= legend_deadline_hour
         input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour, step=1, Class='btn-inside')
         fieldset <= input_deadline_hour
         deadline_form <= fieldset
 
-        input_change_deadline_game = html.INPUT(type="submit", value="Changer la date limite de la partie à cette valeur", Class='btn-inside')
+        input_change_deadline_game = html.INPUT(type="submit", value="Changer la prochaine D.L. de la partie à cette valeur", Class='btn-inside')
         input_change_deadline_game.bind("click", change_deadline_game_callback)
         deadline_form <= input_change_deadline_game
 
@@ -1584,7 +1584,7 @@ def game_master():
         if play_low.GAME_PARAMETERS_LOADED['current_state'] == 1:
 
             deadline_form2 = html.FORM()
-            input_push_deadline_game = html.INPUT(type="submit", value="Reporter la date limite de 24 heures", Class='btn-inside')
+            input_push_deadline_game = html.INPUT(type="submit", value="Reporter la prochaine D.L. de 24 heures", Class='btn-inside')
             input_push_deadline_game.bind("click", push_deadline_game_callback)
             deadline_form2 <= input_push_deadline_game
 
@@ -1593,7 +1593,7 @@ def game_master():
             row <= col
 
             deadline_form3 = html.FORM()
-            input_push_deadline_game = html.INPUT(type="submit", value="Mettre la date limite à maintenant", Class='btn-inside')
+            input_push_deadline_game = html.INPUT(type="submit", value="Mettre la prochaine D.L. à maintenant", Class='btn-inside')
             input_push_deadline_game.bind("click", sync_deadline_game_callback)
             deadline_form3 <= input_push_deadline_game
 
@@ -1604,10 +1604,10 @@ def game_master():
             deadline_form4 = html.FORM()
 
             if play_low.GAME_PARAMETERS_LOADED['force_wait']:
-                input_force_wait_game = html.INPUT(type="submit", value="Autoriser la résolution avant la date limite", Class='btn-inside')
+                input_force_wait_game = html.INPUT(type="submit", value="Autoriser les résolutions avant la D.L.", Class='btn-inside')
                 input_force_wait_game.bind("click", lambda e, f=False: force_wait_game_callback(e, f))
             else:
-                input_force_wait_game = html.INPUT(type="submit", value="Empêcher la résolution avant la date limite", Class='btn-inside')
+                input_force_wait_game = html.INPUT(type="submit", value="Empêcher les résolutions avant la D.L.", Class='btn-inside')
                 input_force_wait_game.bind("click", lambda e, f=True: force_wait_game_callback(e, f))
 
             deadline_form4 <= input_force_wait_game
