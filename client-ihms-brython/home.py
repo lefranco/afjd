@@ -17,12 +17,14 @@ import ezml_render
 import mydatetime
 import mydialog
 
+import index
 
 THRESHOLD_DRIFT_ALERT_SEC = 59
 
 
 OPTIONS = {
     'Vue d\'ensemble': "Vue d'ensemble du site",
+    'Tester le jeu': "Entrer dans une partie de démonstration pour y passer des ordres et échanger des messages",
     'Discuter en ligne': "Echanger des messages volatiles à court terme",
     'Déclarer un incident': "Déclarer un incident par courriel à l'administrateur",
     'Données personnelles': "Explications sur la manière dont le site gère les données personnelles",
@@ -666,6 +668,13 @@ def show_news():
         storage['RGPD_ACCEPTED'] = 'yes'
 
 
+def play_test():
+    """ play_test """
+
+    alert("TODO")
+    return
+
+
 RANDOM = common.Random()
 MAX_CHAT_NUMBER = 999
 CHAT_NUMBER = RANDOM.choice(list(range(1, MAX_CHAT_NUMBER + 1)))
@@ -800,7 +809,7 @@ def live_chat():
     form2 = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_message = html.LEGEND("Votre message", title="Qu'avez vous à dire ?")
+    legend_message = html.LEGEND("Votre message", title="Qu'avez-vous à dire ?")
     fieldset <= legend_message
     input_message = html.TEXTAREA(type="text", rows=4, cols=80)
     fieldset <= input_message
@@ -1091,6 +1100,8 @@ def load_option(_, item_name):
 
     if item_name == 'Vue d\'ensemble':
         show_news()
+    if item_name == 'Tester le jeu':
+        play_test()
     if item_name == 'Discuter en ligne':
         live_chat()
     if item_name == 'Déclarer un incident':

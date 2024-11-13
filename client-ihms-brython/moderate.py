@@ -1154,9 +1154,9 @@ def all_missing_orders():
                 datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
                 value = ""
 
-                # Emphasize if forced to wait
+                # Display if forced to wait
                 if data['force_wait']:
-                    value = html.B(value)
+                    value = f"[{value}]"
 
                 # game over
                 if gameover_table[game_id]:
@@ -1181,9 +1181,9 @@ def all_missing_orders():
 
                     value = datetime_deadline_loaded_str
 
-                    # Emphasize if forced to wait
+                    # Display if forced to wait
                     if data['force_wait']:
-                        value = html.B(value)
+                        value = f"[{value}]"
 
                     if data['fast']:
                         factor = 60
@@ -1551,9 +1551,9 @@ def show_player_games(pseudo_player, game_list):
 
                         value = datetime_deadline_loaded_str
 
-                        # Emphasize if forced to wait
+                        # Display if forced to wait
                         if data['force_wait']:
-                            value = html.B(value)
+                            value = f"[{value}]"
 
                         if data['fast']:
                             factor = 60

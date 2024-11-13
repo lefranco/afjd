@@ -42,6 +42,7 @@ FAQ_CONTENT_TABLE = {
       - Marron qu'elle est passée d'une semaine (partie que l'on qualifiera pudiquemment d'être en “mauvaise santé“).<br>
       - Argent que la partie est finie sur échéance.<br>
       - Bleu clair que la partie est finie sur solo.<br>
+      - Blanc que la partie est finie sur vote unanime d'arrêt.<br>
     """,
 
     "Pourquoi certaines dates limites sont elles en gras?":

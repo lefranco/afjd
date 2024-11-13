@@ -1764,9 +1764,9 @@ def all_games(state_name):
 
                     value = datetime_deadline_loaded_str
 
-                    # Emphasize if forced to wait
+                    # Display if forced to wait
                     if data['force_wait']:
-                        value = html.B(value)
+                        value = f"[{value}]"
 
                     if data['fast']:
                         factor = 60

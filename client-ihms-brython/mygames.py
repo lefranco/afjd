@@ -981,6 +981,7 @@ def my_games(state_name):
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
     startable_game_present = False
+    one_deadline_forced = False
 
     games_list = []
 
@@ -1125,9 +1126,10 @@ def my_games(state_name):
 
                     value = datetime_deadline_loaded_str
 
-                    # Emphasize if forced to wait
+                    # Display if forced to wait
                     if data['force_wait']:
-                        value = html.B(value)
+                        value = f"[{value}]"
+                        one_deadline_forced = True
 
                     if data['fast']:
                         factor = 60
@@ -1180,9 +1182,6 @@ def my_games(state_name):
                             nb_needed = len(needed_roles_list)
                             stats = f"{nb_submitted}/{nb_needed}"
                             value = html.DIV(stats, title="Combien de jeux d'ordres soumis / combien nécessaires")
-                            if nb_submitted >= nb_needed:
-                                # we have all orders : green
-                                colour = config.ALL_ORDERS_IN_COLOUR
 
             if field == 'all_agreed':
                 value = "-"
@@ -1366,11 +1365,6 @@ def my_games(state_name):
 
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
-    if startable_game_present:
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Si une partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !", Class='important')
-    MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time()
     elapsed = overall_time_after - overall_time_before
@@ -1382,6 +1376,14 @@ def my_games(state_name):
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()
+
+    if startable_game_present:
+        MY_SUB_PANEL <= html.DIV("Si une partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !", Class='important')
+        MY_SUB_PANEL <= html.BR()
+
+    if one_deadline_forced:
+        MY_SUB_PANEL <= html.DIV("Un date limite entre crochets signifie que l'arbitre force l'attente de la date limite", Class='note')
+        MY_SUB_PANEL <= html.BR()
 
     if state_name == 'en attente':
         MY_SUB_PANEL <= html.DIV("Pour les parties en attente, la date limite est pour le démarrage de la partie (pas le rendu des ordres)", Class='note')

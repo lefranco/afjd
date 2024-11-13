@@ -535,7 +535,7 @@ def recruiting_games():
                 stats = f"{allocated}/{capacity}"
                 value = html.DIV(stats, title="L'arbitre est compté dans le calcul")
                 if allocated >= capacity:
-                    colour = config.ALL_ORDERS_IN_COLOUR
+                    colour = config.READY_TO_START_COLOUR
 
             if field == 'used_for_elo':
                 stats = "Oui" if value else "Non"
