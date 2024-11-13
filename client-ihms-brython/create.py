@@ -22,7 +22,6 @@ import allgames
 
 OPTIONS = {
     'Editer les glorieux': "Changer nouvelles du site pour le createur (les glorieux)",
-    'Appariements de tournoi': "Créer un fichier CSV par exemple à partir d'une liste de joueurs",
     'Créer plusieurs parties': "Créer des parties à partir d'un fichier CSV",
     'Explications': "Explications sur la création de parties à partir d'un fichier CSV",
     'Résultats du tournoi': "Résultats détaillé du tournoi de la partie sélectionnée sans anonymat",
@@ -442,35 +441,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
 
     number_games = len(games_to_create_data)
     create_refresh_timer = timer.set_interval(create_one, CREATE_RETRY_PERIOD_MILLISEC)
-
-
-def info_allocate():
-    """ info_allocate """
-
-    MY_SUB_PANEL <= html.H3("Problème de l'allocation des pays")
-
-    information = ""
-    information += "Le site peut vous fournir une ressource pour vous aider à créer le fichier CSV pour votre tournoi. "
-    information += "Ce script permet de passer de la liste des joueurs (par exemple extraire de la page des inscriptions à l'événement) "
-    information += "à un fichier à fournir en entrée à l'outil du site permettant la création automatique des parties..."
-
-    MY_SUB_PANEL <= information
-
-    MY_SUB_PANEL <= html.P()
-
-    MY_SUB_PANEL <= "Prérequis : executer le script sur un ordinateur local disposant d'un interprêteur PYTHON"
-
-    MY_SUB_PANEL <= html.P()
-
-    link61 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
-    link61 <= "Explications sur comment allouer les joueurs dans les parties d'un tournoi de taille quelconque"
-    MY_SUB_PANEL <= link61
-
-    MY_SUB_PANEL <= html.P()
-
-    link62 = html.A(href="./scripts/allocate.py", target="_blank")
-    link62 <= "Téléchargement du script PYTHON à utiliser pour réaliser cette allocation (lire le document au préalable)"
-    MY_SUB_PANEL <= link62
 
 
 # so that we do not too much repeat the selected game
@@ -1040,8 +1010,6 @@ def load_option(_, item_name):
 
     if item_name == 'Editer les glorieux':
         change_glorious()
-    if item_name == 'Appariements de tournoi':
-        info_allocate()
     if item_name == 'Créer plusieurs parties':
         create_many_games()
     if item_name == 'Explications':

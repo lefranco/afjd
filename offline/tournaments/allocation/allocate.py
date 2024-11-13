@@ -2,22 +2,25 @@
 
 
 """
+File : allocate.py
+
 Solves the problem of allocating players in a Diplomacy tournament
-For 1000 players takes 35 seconds on an average laptop
+For 1000 players takes 54 seconds on a good laptop (linux)
+Limited to 275 players on windows
 """
 
-import typing
 import argparse
-import sys
+import cProfile
 import collections
-import time
-import random
 import faulthandler
 import itertools
-import signal
-
-import cProfile
+import math
 import pstats
+import random
+import signal
+import sys
+import time
+import typing
 
 PROFILE = False
 
@@ -42,6 +45,9 @@ def user_interrupt(_, __) -> None:  # type: ignore
     INTERRUPT = True
 
 
+PLAYERS_VARIANT = 0
+
+
 class Game:
     """ a game """
 
@@ -53,7 +59,7 @@ class Game:
         """ puts the player in this game """
 
         assert isinstance(role, int), "Internal error: role should be an int"
-        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
+        assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
 
         assert isinstance(player, Player), "Internal error: player should be a Player"
 
@@ -70,7 +76,7 @@ class Game:
         """ takes the player ou of this game """
 
         assert isinstance(role, int), "Internal error: role should be an int"
-        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
+        assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
 
         assert isinstance(player, Player), "Internal error: player should be a Player"
         assert player in self._allocation.values(), "Internal error: player should be in game already"
@@ -93,16 +99,16 @@ class Game:
 
     def has_role_in_game(self, role: int) -> bool:
         """ hios the someone with this role in the game ? """
-        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
+        assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
         return role in self._allocation
 
     def is_complete(self) -> bool:
         """ is the game complete ? """
-        return len(self._allocation) == len(ROLES_DATA)
+        return len(self._allocation) == PLAYERS_VARIANT
 
     def list_players(self) -> str:
         """ display list of players of the game """
-        return ";".join([str(self._allocation[r] if r in self._allocation else "_") for r in range(len(ROLES_DATA))])
+        return ";".join([str(self._allocation[r] if r in self._allocation else "_") for r in range(PLAYERS_VARIANT)])
 
     @property
     def name(self) -> str:
@@ -120,20 +126,22 @@ GAMES: typing.List[Game] = []
 class Player:
     """ a player """
 
-    def __init__(self, name: str, number: int) -> None:
+    def __init__(self, name: str, number: int, playing: bool) -> None:
 
         assert isinstance(name, str), "Internal error: name should be str"
         self._name = name
         assert isinstance(number, int), "Internal error: number should be int"
         self._number = number
         self._allocation: typing.Dict[int, Game] = {}
+        self._fully_allocated = False
         self._is_master = False
+        self._playing = playing
 
     def put_in_game(self, role: int, game: Game) -> None:
         """ put the player in a game """
 
         assert isinstance(role, int), "Internal error: number should be int"
-        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
+        assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
 
         assert isinstance(game, Game)
 
@@ -144,7 +152,7 @@ class Player:
         """ remove the player from a game """
 
         assert isinstance(role, int), "Internal error: role for player should be int"
-        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
+        assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
 
         assert isinstance(game, Game), "Internal error: game for player should be a Game"
 
@@ -157,12 +165,12 @@ class Player:
 
     def has_role(self, role: int) -> bool:
         """ does the players has this role ? """
-        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
+        assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
         return role in self._allocation
 
     def game_where_has_role(self, role: int) -> Game:
         """ game where the players has this role ? """
-        assert 0 <= role < len(ROLES_DATA), "Internal error: role should be in range"
+        assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
         assert role in self._allocation, "Internal error: player should have the role"
         return self._allocation[role]
 
@@ -193,6 +201,9 @@ class Player:
 # list of players
 PLAYERS: typing.List[Player] = []
 
+# list of masters
+MASTERS: typing.List[Player] = []
+
 # says how many times two players are in same game
 INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 
@@ -204,7 +215,7 @@ BEST_SWAPS: typing.List[typing.Tuple[int, Player, Player, Game, Game]] = []
 def try_and_error(depth: int) -> bool:
     """ try_and_error """
 
-    print(f"{depth // len(ROLES_DATA):5} ", end='\r', flush=True)
+    print(f"{depth // PLAYERS_VARIANT:5} ", end='\r', flush=True)
 
     # find a game where to fill up
     game = None
@@ -222,28 +233,31 @@ def try_and_error(depth: int) -> bool:
 
     # find a role
     role = None
-    for role_poss in range(len(ROLES_DATA)):
+    for role_poss in range(PLAYERS_VARIANT):
         # game already has someone for this role
         if not game.has_role_in_game(role_poss):
             role = role_poss
             break
 
     if role is None:
-        assert False, "Internal error : game has role or not !?"
+        assert False, "Internal error : game has role or not!?"
 
-    # objective acceptable players
+    # objective acceptable players : those not already in the game and do not already have the role
     acceptable_players = [p for p in PLAYERS if not p.has_role(role) and not game.is_player_in_game(p)]
 
-    # there cannot be more than one game master in the game
-    if any(p.is_master for p in game.players_in_game()):
-        acceptable_players = [p for p in acceptable_players if not p.is_master]
+    # there cannot be all game masters in same game (because it will not be possible to master the game)
+    if not any(p for p in MASTERS if not game.is_player_in_game(p)):
+        return False
 
     # players will be selected according to:
     # 1) fewest interactions with the ones in the game
     # 2) players which are in more games (more efficient than less games for some reason)
     # 3) identifier of player (for readability)
 
-    players_sorted = sorted(acceptable_players, key=lambda p: (sum(INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()), len(p.games_in()), p.number))  # type: ignore
+    players_sorted = sorted(acceptable_players,
+                            key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]),  # type:ignore
+                                           len(p.games_in()),
+                                           p.number))
 
     # find a player to put in
     for player in players_sorted:
@@ -251,7 +265,7 @@ def try_and_error(depth: int) -> bool:
         game.put_player_in(role, player)
         player.put_in_game(role, game)
 
-        # if we fail, we try otherwise !
+        # if we fail, we try otherwise!
         if try_and_error(depth + 1):
             return True
 
@@ -289,15 +303,24 @@ def perform_swap(role: int, player1: Player, player2: Player, game1: Game, game2
     player2.put_in_game(role, game1)
 
 
+REF_WORST = 0
+REF_WORST_NUMBER = 0
+REF_WORST_DUMP: typing.List[int] = []
+
+
 def hill_climb() -> bool:
     """ hill_climb """
 
+    global REF_WORST
+    global REF_WORST_NUMBER
+    global REF_WORST_DUMP
+
     while True:
 
-        evaluate()
-
         worst, worst_number, worst_dump = evaluate()
-        print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
+        if (worst, worst_number, worst_dump) < (REF_WORST, REF_WORST_NUMBER, REF_WORST_DUMP):
+            print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
+            REF_WORST, REF_WORST_NUMBER, REF_WORST_DUMP = worst, worst_number, worst_dump
 
         # are we done
         if worst == 1:
@@ -321,7 +344,7 @@ def hill_climb() -> bool:
         changed = False
         for player1, player2 in couples:
 
-            roles = list(range(len(ROLES_DATA)))
+            roles = list(range(PLAYERS_VARIANT))
             random.shuffle(roles)
 
             # find a swap
@@ -340,24 +363,34 @@ def hill_climb() -> bool:
                 # try the swap
                 perform_swap(role, player1, player2, game1, game2, False)
 
-                # evaluate
-                new_worst, new_worst_number, new_worst_dump = evaluate()
-
                 # do we accept ?
-                if (new_worst, new_worst_number, new_worst_dump) < (worst, worst_number, worst_dump):
-                    # memorize the swap
-                    SWAPS.append((role, player1, player2, game1, game2))
-                    changed = True
-                    break
+                rejected = False
 
-                # no : put it back
+                # there cannot be all game masters in same game (because it will not be possible to master the game)
+                if not any(p for p in MASTERS if not game1.is_player_in_game(p)):
+                    rejected = True
+                if not any(p for p in MASTERS if not game2.is_player_in_game(p)):
+                    rejected = True
+
+                if not rejected:
+
+                    # evaluate
+                    new_worst, new_worst_number, new_worst_dump = evaluate()
+
+                    # do we accept ? must improve...
+                    if (new_worst, new_worst_number, new_worst_dump) < (worst, worst_number, worst_dump):
+                        # memorize the swap
+                        SWAPS.append((role, player1, player2, game1, game2))
+                        changed = True
+                        break
+
+                # not accepted : put it back
                 perform_swap(role, player1, player2, game1, game2, True)
 
             if changed:
                 break
 
         if not changed:
-            print("")
             return False
 
 
@@ -366,57 +399,65 @@ def main() -> None:
 
     start_time = time.time()
 
-    global ROLES_DATA
     global PLAYERS_DATA
     global MASTERS_DATA
     global SWAPS
     global BEST_SWAPS
 
+    global REF_WORST
+    global REF_WORST_NUMBER
+    global REF_WORST_DUMP
+
+    global PLAYERS_VARIANT
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('-r', '--roles_file', required=True, help='file with names of roles')
+    parser.add_argument('-n', '--players_variant', required=True, type=int, help='number of players per game in the variant')
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
     parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
     parser.add_argument('-o', '--output_file', required=True, help='resulting file')
+    parser.add_argument('-s', '--show', required=False, action='store_true', help='show worst interactions')
+    parser.add_argument('-d', '--deterministic', required=False, action='store_true', help='make it deterministic')
     parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players of the file (for testing)')
     args = parser.parse_args()
 
-    # load roles file
-    with open(args.roles_file, "r", encoding='utf-8') as read_file:
-        ROLES_DATA = [p.rstrip() for p in read_file.readlines() if p.rstrip()]
-
-    # all roles must be different
-    assert len(set(ROLES_DATA)) == len(ROLES_DATA), "There are duplicate(s) in roles list"
+    # make it deterministic if requested
+    if args.deterministic:
+        random.seed(0)
 
     # load players file
     with open(args.players_file, "r", encoding='utf-8') as read_file:
         PLAYERS_DATA = [p.rstrip() for p in read_file.readlines() if p.rstrip()]
 
-    # for testing pupose we may limit to fewer players
+    # for testing purpose we may limit to fewer players
     if args.limit:
         assert args.limit <= len(PLAYERS_DATA), "Please set the limit to less than the number of players in file"
         PLAYERS_DATA = PLAYERS_DATA[:args.limit]
 
     # all players must be different
-    assert len(set(PLAYERS_DATA)) == len(PLAYERS_DATA), "There are duplicate(s) in players list"
+    assert len(set(PLAYERS_DATA)) == len(PLAYERS_DATA), "Duplicate in players"
 
-    # must be enough : that is at least number of players per game
-    assert len(PLAYERS_DATA) >= len(ROLES_DATA), "You need more players than that to hope success!"
+    PLAYERS_VARIANT = args.players_variant
+
+    # must be enough : that is at least 7
+    assert len(PLAYERS_DATA) >= PLAYERS_VARIANT, "With so few players you wont make a single game!"
 
     # make it harder to guess
     random.shuffle(PLAYERS_DATA)
 
     # make players
-    for player_id, name in enumerate(PLAYERS_DATA):
-        player = Player(name, player_id)
+    for player_id, _ in enumerate(PLAYERS_DATA):
+        name = PLAYERS_DATA[player_id]
+        player = Player(name, player_id, True)
         PLAYERS.append(player)
 
     # check game identifiers prefix
     assert args.game_names_prefix.isidentifier(), "Game prefix is incorrect, should look like an identifier"
 
     # make games (as many as players)
+    size = math.floor(math.log10(len(PLAYERS))) + 1
     for game_id, _ in enumerate(PLAYERS):
-        name = f"{args.game_names_prefix}_{game_id+1:02}"
+        name = f"{args.game_names_prefix}_{game_id+1:0{size}}"
         game = Game(name)
         GAMES.append(game)
 
@@ -424,28 +465,27 @@ def main() -> None:
     with open(args.masters_file, "r", encoding='utf-8') as read_file:
         MASTERS_DATA = [m.rstrip() for m in read_file.readlines() if m.rstrip()]
 
-    assert len(set(MASTERS_DATA)) == len(MASTERS_DATA), "There are duplicate(s) in masters list"
+    assert len(set(MASTERS_DATA)) == len(MASTERS_DATA), "Duplicate in masters"
 
     # must be more than 1
-    assert len(MASTERS_DATA) >= 1, "There must be at least one master for these games"
+    assert len(MASTERS_DATA) >= 1, "There must be at least one master for all these games"
 
     player_table = {p.name: p for p in PLAYERS}
-    masters_list = []
     for master_name in MASTERS_DATA:
         # a game master may not be playing
         if master_name not in player_table:
-            print(f"Game master {master_name} is not playing !")
-            player = Player(master_name, -1)
+            print(f"Game master {master_name} is not playing!")
+            player = Player(master_name, -1, False)
         else:
-            print(f"Game master {master_name} is playing !")
+            print(f"Game master {master_name} is playing!")
             player = player_table[master_name]
-            assert player.name == master_name, "Internal error: game master losts his/her name!"
+            assert player.name == master_name, "Internal error: game master lost his/her name!"
         player.is_master = True
-        masters_list.append(player)
+        MASTERS.append(player)
 
     # Print a recap
     nb_players = len(PLAYERS)
-    nb_non_playing_masters = len([p for p in masters_list if p.number == 1])
+    nb_non_playing_masters = len([p for p in MASTERS if p.number == -1])
     nb_playing_masters = len([p for p in PLAYERS if p.is_master])
 
     print(f"We have {nb_players} players, {nb_non_playing_masters} non playing masters and {nb_playing_masters} playing masters")
@@ -463,14 +503,17 @@ def main() -> None:
     # end line after displaying depth
     print("")
 
-    assert status, "Sorry : failed to make initial tournament ! Contact support !"
+    assert status, "Sorry : failed to make initial tournament! Contact support!"
 
     print("Press CTRL-C to interrupt")
-    print("Showing <number of interactions> (<Number of occurences>)")
+    print("Showing <number of interactions> (<Number of occurrences>)")
 
     signal.signal(signal.SIGINT, user_interrupt)
 
     best_worst, best_worst_number = nb_players, 0
+
+    REF_WORST, REF_WORST_NUMBER, REF_WORST_DUMP = evaluate()
+    print(f"{REF_WORST:2} ({REF_WORST_NUMBER:5})", end='\r', flush=True)
 
     while True:
 
@@ -500,40 +543,44 @@ def main() -> None:
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     if not status:
-        print("Sorry : failed to make a perfect tournament ! Contact support !")
+        print("Sorry : failed to make a perfect tournament! Contact support!")
         # still apply BEST SWAPS
         for (role, player1, player2, game1, game2) in BEST_SWAPS:
             perform_swap(role, player1, player2, game1, game2, False)
 
-    # assign game masters to games
+    # now we assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
     for game in GAMES:
-        master_select = sorted(masters_list, key=lambda m: len([g for g in GAMES if g in master_game_table and master_game_table[g] == m]))
+        master_select = sorted(MASTERS, key=lambda m: len([g for g in GAMES if g in master_game_table and master_game_table[g] == m]))
         master = None
         for master_poss in master_select:
             if not game.is_player_in_game(master_poss):
                 master = master_poss
                 break
-        assert master, f"Sorry : Could not put a master in game {game} ! Contact support !"
+        assert master, f"Sorry : Could not put a master in game {game}! Contact support!"
         master_game_table[game] = master
 
-    for master in masters_list:
+    for master in MASTERS:
         print(f"Game master {master.name} has {len([g for g in GAMES if master_game_table[g] == master])} games!")
-    print("")
+
+    worst, worst_number, _ = evaluate()
+    if worst > 1:
+        print(f"We have {worst_number} occurrences of two players interacting {worst} times")
+    else:
+        print("Allocation is perfect!")
+
+    if args.show:
+        print("Interactions more than once: ")
+        for player1, player2 in [cp for cp in INTERACTION if INTERACTION[cp] > 1]:
+            games = set(player1.games_in()) & set(player2.games_in())
+            print(f"{player1} and {player2} in games {' '.join([g.name for g in games])}")
 
     # output stuff
     if args.output_file:
         with open(args.output_file, "w", encoding='utf-8') as write_file:
             for game in GAMES:
                 write_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
-
-    worst, worst_number, _ = evaluate()
-    print(f"We have {worst_number} occurences of two players interacting {worst} times")
-
-    print("Interactions more than once: ")
-    for player1, player2 in [cp for cp in INTERACTION if INTERACTION[cp] > 1]:
-        games = set(player1.games_in()) & set(player2.games_in())
-        print(f"{player1} and {player2} in games {' '.join([g.name for g in games])}")
+        print(f"File {args.output_file} was written.")
 
     finished_time = time.time()
     elapsed = finished_time - start_time
@@ -549,12 +596,9 @@ if __name__ == '__main__':
     # windows can crash if too deep
     faulthandler.enable()
 
-    # this to know how long it takes
-    START = time.time()
-
     # this if script too slow and profile it
+    PR = cProfile.Profile()
     if PROFILE:
-        PR = cProfile.Profile()
         PR.enable()
 
     main()
@@ -565,9 +609,5 @@ if __name__ == '__main__':
         PS.strip_dirs()
         PS.sort_stats('time')
         PS.print_stats()  # uncomment to have profile stats
-
-    # how long it took
-    DONE = time.time()
-    print(f"Time elapsed : {DONE - START:f}".format())
 
     sys.exit(0)
