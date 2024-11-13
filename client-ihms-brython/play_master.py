@@ -1543,14 +1543,9 @@ def game_master():
 
         deadline_form = html.FORM()
 
-        dl_gmt = html.DIV("ATTENTION : vous devez entrer une valeur en temps GMT", Class='important')
+        dl_gmt = html.DIV("ATTENTION : vous devez entrer une valeur en temps GMT. Pour la DL applicable pour le reste de la partie, aller dans les paramètres.", Class='important')
         special_legend = html.LEGEND(dl_gmt)
         deadline_form <= special_legend
-        deadline_form <= html.BR()
-
-        dl_game = html.DIV(html.EM("Pour la DL applicable pour le reste de la partie, aller dans les paramètres"), Class='note')
-        special_legend2 = html.LEGEND(dl_game)
-        deadline_form <= special_legend2
         deadline_form <= html.BR()
 
         # get GMT date and time
