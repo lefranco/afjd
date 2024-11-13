@@ -1548,6 +1548,11 @@ def game_master():
         deadline_form <= special_legend
         deadline_form <= html.BR()
 
+        dl_game = html.DIV(html.EM("Pour la DL applicable pour le reste de la partie, aller dans les paramètres"), Class='note')
+        special_legend2 = html.LEGEND(dl_game)
+        deadline_form <= special_legend2
+        deadline_form <= html.BR()
+
         # get GMT date and time
         time_stamp_now = time()
         date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
