@@ -671,7 +671,7 @@ def get_game_status():
 
     # Display if forced to wait
     if GAME_PARAMETERS_LOADED['force_wait']:
-        content = f"[{content}]"
+        content = html.B(content)
 
     DEADLINE_COL = html.TD(content)
     row <= DEADLINE_COL
