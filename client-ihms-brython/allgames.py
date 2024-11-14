@@ -1766,7 +1766,7 @@ def all_games(state_name):
 
                     # Display if forced to wait
                     if data['force_wait']:
-                        value = f"[{value}]"
+                        value = html.B(value)
 
                     if data['fast']:
                         factor = 60
