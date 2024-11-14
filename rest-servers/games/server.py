@@ -685,6 +685,14 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     del sql_executor
                     flask_restful.abort(400, msg=f"You cannot set a deadline in the past from now!:'{date_desc}' (GMT)")
 
+                # cannot be weekend for some games
+                if not game.play_weekend:
+                    deadline_day = deadline_date.date()
+                    if deadline_day.weekday() in [5, 6]:
+                        date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
+                        del sql_executor
+                        flask_restful.abort(400, msg=f"You cannot set a deadline in the weekend for this game!:'{date_desc}' (GMT)")
+
         # keep a note of game state before
         current_state_before = game.current_state
 

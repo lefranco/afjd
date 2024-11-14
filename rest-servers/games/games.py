@@ -866,6 +866,11 @@ class Game:
         """ property """
         return self._end_voted
 
+    @property
+    def play_weekend(self) -> bool:
+        """ property """
+        return self._play_weekend
+
     def __str__(self) -> str:
         return f"name={self._name} variant={self._variant} fog={self._fog} description={self._description} archive={self._archive} anonymous={self._anonymous} finished={self._finished} soloed={self._soloed} nomessage_current={self._nomessage_current} nopress_current={self._nopress_current} fast={self._fast} scoring={self._scoring} deadline={self._deadline} deadline_hour={self._deadline_hour} deadline_sync={self._deadline_sync} grace_duration={self._grace_duration} speed_moves={self._speed_moves} cd_possible_moves={self._cd_possible_moves} speed_retreats={self._speed_retreats} cd_possible_retreats={self._cd_possible_retreats} speed_adjustments={self._speed_adjustments} cd_possible_builds={self._cd_possible_builds} used_for_elo={self._used_for_elo} play_weekend={self._play_weekend} manual={self._manual} access_restriction_reliability={self._access_restriction_reliability} access_restriction_regularity={self._access_restriction_regularity} access_restriction_performance={self._access_restriction_performance} current_advancement={self._current_advancement} nb_max_cycles_to_play={self._nb_max_cycles_to_play} current_state={self._current_state} force_wait={self._force_wait} end_voted={self._end_voted}"
 
