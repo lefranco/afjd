@@ -1535,15 +1535,15 @@ def game_master():
         play_low.MY_SUB_PANEL <= html.H3("Date limite")
 
         # form for deadlines
-
-        deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
+        play_low.MY_SUB_PANEL <= html.DIV("Pour la DL applicable pour le reste de la partie, aller dans les paramètres.", Class='note')
+        play_low.MY_SUB_PANEL <= html.BR()
 
         table = html.TABLE()
         row = html.TR()
 
         deadline_form = html.FORM()
 
-        dl_gmt = html.DIV("ATTENTION : vous devez entrer une valeur en temps GMT. Pour la DL applicable pour le reste de la partie, aller dans les paramètres.", Class='important')
+        dl_gmt = html.DIV("ATTENTION : vous devez entrer une valeur en temps GMT.", Class='important')
         special_legend = html.LEGEND(dl_gmt)
         deadline_form <= special_legend
         deadline_form <= html.BR()
@@ -1554,6 +1554,7 @@ def game_master():
         date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
 
         # convert 'deadline_loaded' to human editable format
+        deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
 
         datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
         datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
