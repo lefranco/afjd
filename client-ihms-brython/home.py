@@ -13,6 +13,8 @@ import config
 import common
 import helping
 import training
+import allgames
+import play
 import ezml_render
 import mydatetime
 import mydialog
@@ -667,17 +669,42 @@ def show_news():
         mydialog.InfoDialog("Règlement général sur la protection des données", "Vous êtes d'accord avec la manière dont le site utilise et conserve vos données personnelles. Si vous ne l'êtes pas, n'utilisez pas le site ! Plus de détail dans la page 'Données personnelles' accessible depuis le menu Accueil.", True)
         storage['RGPD_ACCEPTED'] = 'yes'
 
+RANDOM = common.Random()
+PSEUDOS_DEMO =['one', 'two', 'three', 'four', 'five', 'six', 'seven']
+GAME_DEMO = 'partie_demo'
 
 def play_test():
     """ play_test """
 
-    alert("TODO")
-    return
+    title = html.H3("Tester le jeu dans une partie")
+    MY_SUB_PANEL <= title
+
+    if 'PSEUDO' not in storage:
+        pseudo = RANDOM.choice(PSEUDOS_DEMO)
+        password = pseudo
+        MY_SUB_PANEL <= html.DIV(f"Vous n'êtes pas connecté. Connectez-vous (page 'Connexion') par exemple avec le compte '{pseudo}' mot de passe '{password}'", Class='important')
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("Vous arriverez automatiquement sur la  page 'Mes parties', cliquez sur l'icone comme ci-dessous :", Class='important')
+        MY_SUB_PANEL <= html.BR()
+        input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
+        MY_SUB_PANEL <= input_jump_game
+        return
+
+    pseudo = storage['PSEUDO']
+    if pseudo not in PSEUDOS_DEMO:
+        alert(f"Vous êtes connecté en tant que '{pseudo}'. Déconnectez-vous (page 'Connexion') et revenez sur cette page")
+        return
+
+    MY_SUB_PANEL <= html.DIV(f"Vous êtes connecté '{pseudo}', ce qui est très bien !", Class='important')
+    MY_SUB_PANEL <= html.DIV("Allez sur la page 'Mes parties', cliquez sur l'icone comme ci-dessous :", Class='important')
+    MY_SUB_PANEL <= html.BR()
+    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
+    MY_SUB_PANEL <= input_jump_game
 
 
-RANDOM = common.Random()
+MIN_CHAT_NUMBER = 100
 MAX_CHAT_NUMBER = 999
-CHAT_NUMBER = RANDOM.choice(list(range(1, MAX_CHAT_NUMBER + 1)))
+CHAT_NUMBER = RANDOM.choice(list(range(MIN_CHAT_NUMBER, MAX_CHAT_NUMBER + 1)))
 
 
 def live_chat():
