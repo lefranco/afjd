@@ -155,7 +155,7 @@ def submit_orders():
             # forced to wait
             if before_deadline:
                 if definitive_value == 1 and play_low.GAME_PARAMETERS_LOADED['force_wait']:
-                    alert("Attention : l'arbitre a forcé l'attente de la date limite et nous sommes avant la date limite, votre accord a probablement été commuté de 'maintenant' à 'à la date limite' ! Il se peut que l'interface ne montre pas le réel statut de vos ordres. Cliquez sur 'ordonner' si besoin.")
+                    alert("Attention : l'arbitre a forcé l'attente de la date limite (probablement pour synchroniser les parties d'un tournoi) et nous sommes avant la date limite, votre accord a probablement été commuté de 'maintenant' à 'à la date limite' ! Il se peut que l'interface ne montre pas le réel statut de vos ordres. Cliquez sur 'ordonner' si besoin.")
             else:
                 if definitive_value == 2:
                     alert("Attention : après la date limite, le système commute un accord 'à la date limite' en 'maintenant' ! Il se peut que l'interface ne montre pas le réel statut de vos ordres. Cliquez sur 'ordonner' si besoin.")
