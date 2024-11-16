@@ -654,7 +654,7 @@ def create_game(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_bypass= html.LEGEND("Partie doublon (ne pas cocher)", title="Création d'une partie identique à une autre en attente")
+    legend_bypass = html.LEGEND("Partie doublon (ne pas cocher)", title="Création d'une partie identique à une autre en attente")
     fieldset <= legend_bypass
     input_bypass = html.INPUT(type="checkbox", checked=False, Class='btn-inside')
     fieldset <= input_bypass
