@@ -13,13 +13,10 @@ import config
 import common
 import helping
 import training
-import allgames
-import play
 import ezml_render
 import mydatetime
 import mydialog
 
-import index
 
 THRESHOLD_DRIFT_ALERT_SEC = 59
 
@@ -669,9 +666,11 @@ def show_news():
         mydialog.InfoDialog("Règlement général sur la protection des données", "Vous êtes d'accord avec la manière dont le site utilise et conserve vos données personnelles. Si vous ne l'êtes pas, n'utilisez pas le site ! Plus de détail dans la page 'Données personnelles' accessible depuis le menu Accueil.", True)
         storage['RGPD_ACCEPTED'] = 'yes'
 
+
 RANDOM = common.Random()
-PSEUDOS_DEMO =['one', 'two', 'three', 'four', 'five', 'six', 'seven']
+PSEUDOS_DEMO = ['one', 'two', 'three', 'four', 'five', 'six', 'seven']
 GAME_DEMO = 'partie_demo'
+
 
 def play_test():
     """ play_test """
