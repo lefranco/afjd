@@ -1148,6 +1148,58 @@ def edit_tournament():
         # removing a game from a tournament : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    def change_name_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification du nom du tournoi : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification du nom du tournoi : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                edit_tournament()
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Le nom du tournoi a été modifié : {messages}")
+
+        ev.preventDefault()
+
+        name_selected = input_name.value
+
+        if not name_selected:
+            alert("Nom de tournoi manquant")
+            MY_SUB_PANEL.clear()
+            edit_tournament()
+            return
+
+        if len(name_selected) > MAX_LEN_TOURNAMENT_NAME:
+            alert("Nom de tournoi trop long")
+            MY_SUB_PANEL.clear()
+            edit_tournament()
+            return
+
+        json_dict = {
+            'name': name_selected,
+            'game_id': game_id,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/tournaments/{game}"
+
+        # altering game  : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        edit_tournament()
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -1157,6 +1209,12 @@ def edit_tournament():
         return
 
     game = storage['GAME']
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
 
     # get the tournament_id
 
@@ -1169,10 +1227,9 @@ def edit_tournament():
 
     TOURNAMENT_DICT = dict(TOURNAMENT_DICT)
 
-    # title
+    # title 1
     tournament_name = TOURNAMENT_DICT['name']
-    title = html.H3(f"Mettre dans ou enlever des parties du tournoi {tournament_name}")
-    MY_SUB_PANEL <= title
+    MY_SUB_PANEL <= html.H3(f"Mettre dans ou enlever des parties du tournoi {tournament_name}")
 
     tournament_id = TOURNAMENT_DICT['identifier']
     games_in = TOURNAMENT_DICT['games']
@@ -1255,6 +1312,24 @@ def edit_tournament():
     input_remove_from_tournament = html.INPUT(type="submit", value="Retirer du tournoi", Class='btn-inside')
     input_remove_from_tournament.bind("click", remove_from_tournament_callback)
     form <= input_remove_from_tournament
+
+    MY_SUB_PANEL <= form
+
+    # title 2
+    MY_SUB_PANEL <= html.H3(f"Renommer le tournoi {tournament_name}")
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_name = html.LEGEND("nom", title="Nom du tournoi")
+    fieldset <= legend_name
+    input_name = html.INPUT(type="text", value=tournament_name, size=MAX_LEN_TOURNAMENT_NAME, Class='btn-inside')
+    fieldset <= input_name
+    form <= fieldset
+
+    input_rename_game = html.INPUT(type="submit", value="Renommer le tournoi", Class='btn-inside')
+    input_rename_game.bind("click", change_name_callback)
+    form <= input_rename_game
 
     MY_SUB_PANEL <= form
 

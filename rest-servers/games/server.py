@@ -6669,6 +6669,104 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
+    def put(self, game_name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Change a tournament (just the name)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournaments/<game_name> - PUT - changing tournament from game name=%s", game_name)
+
+        args = TOURNAMENT_PARSER.parse_args(strict=True)
+
+        name = args['name']
+        # game_id not used
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_name(sql_executor, game_name)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Game {game_name} doesn't exist")
+
+        assert game is not None
+
+        game_id = game.identifier
+
+        # find the tournament from game
+        game_tournaments = groupings.Grouping.list_by_game_id(sql_executor, game_id)
+        if not game_tournaments:
+            del sql_executor
+            flask_restful.abort(400, msg="The game appears not to be in any tournament")
+
+        # the id of tournament
+        tournament_id: typing.Optional[int] = None
+        for tourn_id, _ in game_tournaments:
+            tournament_id = tourn_id
+            break
+        assert tournament_id is not None
+
+        # the object tournament
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Tournament with identfier {tournament_id} doesn't exist")
+
+        assert tournament is not None
+
+        # check actual change
+        if tournament.name == name:
+            del sql_executor
+            flask_restful.abort(404, msg="Tournament already has this name!")
+
+        # check there is not already a tournament by that name
+        other_tournament = tournaments.Tournament.find_by_name(sql_executor, name)
+        if other_tournament is not None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"A tournament with name {name} already exists")
+
+        # check that user is the creator of the tournament
+        if user_id != tournament.get_director(sql_executor):
+            del sql_executor
+            flask_restful.abort(404, msg="You do not seem to be director of that tournament")
+
+        # change the name
+        tournament.name = name
+        tournament.update_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'name': name, 'msg': 'Ok renamed'}
+        return data, 200
+
     def delete(self, game_name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Deletes a tournament
