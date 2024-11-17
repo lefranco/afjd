@@ -148,6 +148,11 @@ class Tournament:
         """ property """
         return self._name
 
+    @name.setter
+    def name(self, name: str) -> None:
+        """ setter """
+        self._name = name
+
     def __str__(self) -> str:
         return f"name={self._name}"
 
