@@ -590,6 +590,7 @@ def show_game_parameters():
 
     # conversion
     game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
+    force_wait_conv = {-1: 'Maintenant', 0: 'Pas de forçage', 1: 'A la date limite'}
 
     game_params_table = html.TABLE()
 
@@ -632,7 +633,7 @@ def show_game_parameters():
             'access_restriction_performance': ("restriction d'accès sur la performance",         "entier", "Un minimum de performance est exigé pour rejoindre la partie"),  # noqa: E241
             'nb_max_cycles_to_play':          ("nombre maximum de cycles (années) à jouer",      "entier", "Durée de la partie : Le système déclare la partie terminée si autant de cycles ont été joués"),  # noqa: E241
             'game_type':                      ("type de la partie",                              "choix sur liste", "Type de la partie : Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : communication publique uniquement... BlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) pour parler d'autre chose que la partie"),  # noqa: E241
-            'force_wait':                     ("forçage d'attente de la date lmimite",           "oui ou non", "Si oui, la résolution n'aura pas lieu avant la data limite, même si tous les joueurs ont donné leur accord"),  # noqa: E241
+            'force_wait':                     ("forçage d'attente ou maintenant",                "maintenant, pas de forçage, à la date limite", "L'arbitre peut forcer la résolution à maintenant ou à la date limite (ou ne rien forcer)"),  # noqa: E241
 
         }[key]
 
@@ -644,6 +645,8 @@ def show_game_parameters():
 
         if key == 'game_type':
             parameter_value = game_type_conv[value]
+        elif key == 'force_wait':
+            parameter_value = force_wait_conv[value]
         elif value is False:
             parameter_value = "Non"
         elif value is True:
