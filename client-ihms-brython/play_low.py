@@ -670,8 +670,10 @@ def get_game_status():
             content = "(terminée)"
 
     # Display if forced to wait
-    if GAME_PARAMETERS_LOADED['force_wait']:
+    if GAME_PARAMETERS_LOADED['force_wait'] == 1:
         content = html.B(content)
+    elif GAME_PARAMETERS_LOADED['force_wait'] == -1:
+        content = html.S(content)
 
     DEADLINE_COL = html.TD(content)
     row <= DEADLINE_COL

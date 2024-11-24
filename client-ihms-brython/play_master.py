@@ -735,7 +735,8 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le forçage d'attente à été mis à {'Vrai' if force else 'Faux'} : {messages}")
+            desc = {-1: 'Maintenant (au plus tôt)', 0: 'Pas de forçage', 1: 'A la date limite (au plus tard)'}[force]
+            mydialog.InfoDialog("Information", f"Le forçage d'attente à été mis à  {desc} : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1604,14 +1605,24 @@ def game_master():
 
             deadline_form4 = html.FORM()
 
-            if play_low.GAME_PARAMETERS_LOADED['force_wait']:
-                input_force_wait_game = html.INPUT(type="submit", value="Autoriser les résolutions avant la D.L.", Class='btn-inside')
-                input_force_wait_game.bind("click", lambda e, f=False: force_wait_game_callback(e, f))
-            else:
-                input_force_wait_game = html.INPUT(type="submit", value="Empêcher les résolutions avant la D.L.", Class='btn-inside')
-                input_force_wait_game.bind("click", lambda e, f=True: force_wait_game_callback(e, f))
-
-            deadline_form4 <= input_force_wait_game
+            if play_low.GAME_PARAMETERS_LOADED['force_wait'] != -1:
+                input_force_wait_game = html.INPUT(type="submit", value="Forcer les résolutions à maintenant (au plus tôt)", Class='btn-inside')
+                input_force_wait_game.bind("click", lambda e, f=-1: force_wait_game_callback(e, f))
+                deadline_form4 <= input_force_wait_game
+                deadline_form4 <= html.BR()
+                deadline_form4 <= html.BR()
+            if play_low.GAME_PARAMETERS_LOADED['force_wait'] != 0:
+                input_force_wait_game = html.INPUT(type="submit", value="Ne rien forcer", Class='btn-inside')
+                input_force_wait_game.bind("click", lambda e, f=0: force_wait_game_callback(e, f))
+                deadline_form4 <= input_force_wait_game
+                deadline_form4 <= html.BR()
+                deadline_form4 <= html.BR()
+            if play_low.GAME_PARAMETERS_LOADED['force_wait'] != 1:
+                input_force_wait_game = html.INPUT(type="submit", value="Forcer les résolutions à la D.L. (au plus tard)", Class='btn-inside')
+                input_force_wait_game.bind("click", lambda e, f=1: force_wait_game_callback(e, f))
+                deadline_form4 <= input_force_wait_game
+                deadline_form4 <= html.BR()
+                deadline_form4 <= html.BR()
 
             col = html.TD()
             col <= deadline_form4

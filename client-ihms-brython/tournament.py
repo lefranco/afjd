@@ -410,9 +410,11 @@ def show_games():
 
                     value = datetime_deadline_loaded_str
 
-                    # Display if forced to wait
-                    if data['force_wait']:
+                    # Display if forced to wait or now
+                    if data['force_wait'] == 1:
                         value = html.B(value)
+                    elif data['force_wait'] == -1:
+                        value = html.S(value)
 
                     if data['fast']:
                         factor = 60

@@ -981,7 +981,8 @@ def my_games(state_name):
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
     startable_game_present = False
-    one_deadline_forced = False
+    one_deadline_forced_wait = False
+    one_deadline_forced_now = False
 
     games_list = []
 
@@ -1126,10 +1127,13 @@ def my_games(state_name):
 
                     value = datetime_deadline_loaded_str
 
-                    # Display if forced to wait
-                    if data['force_wait']:
+                    # Display if forced to wait or now
+                    if data['force_wait'] == 1:
                         value = html.B(value)
-                        one_deadline_forced = True
+                        one_deadline_forced_wait = True
+                    elif data['force_wait'] == -1:
+                        value = html.S(value)
+                        one_deadline_forced_now = True
 
                     if data['fast']:
                         factor = 60
@@ -1381,8 +1385,12 @@ def my_games(state_name):
         MY_SUB_PANEL <= html.DIV("Si une partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !", Class='important')
         MY_SUB_PANEL <= html.BR()
 
-    if one_deadline_forced:
-        MY_SUB_PANEL <= html.DIV("Un date limite en gras signifie que l'arbitre force l'attente de la date limite", Class='note')
+    if one_deadline_forced_now:
+        MY_SUB_PANEL <= html.DIV("Un date limite barrée signifie que l'arbitre force la résolution immédiate (pour accélérer)", Class='note')
+        MY_SUB_PANEL <= html.BR()
+
+    if one_deadline_forced_wait:
+        MY_SUB_PANEL <= html.DIV("Un date limite en gras signifie que l'arbitre force l'attente de la date limite (pour ralentir)", Class='note')
         MY_SUB_PANEL <= html.BR()
 
     if state_name == 'en attente':
