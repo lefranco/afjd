@@ -45,9 +45,14 @@ FAQ_CONTENT_TABLE = {
       - Blanc que la partie est finie sur vote unanime d'arrêt.<br>
     """,
 
-    "Pourquoi certaines dates limites sont elles en gras?":
+    "Pourquoi certaines dates limites sont elles en gras ?":
     """
-    Cela signifie que l'arbitre a forcé l'attente de la date limite pour la partie. Cela se justifie surtout pour les parties en avance dans les tournois dont on souhaite la synchronisation.
+    Cela signifie que l'arbitre a forcé le bouton d'accord pour la résolution à 'à la date limite' pour la partie. Cela se justifie surtout pour les parties en avance dans les tournois dont on souhaite la synchronisation.
+    """,
+
+    "Pourquoi certaines dates limites sont elles barrées ?":
+    """
+    Cela signifie que l'arbitre a forcé le bouton d'accord pour la résolution à 'maintenant' pour la partie. Cela se justifie surtout pour les parties en retard dans les tournois dont on souhaite la synchronisation.
     """,
 
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
