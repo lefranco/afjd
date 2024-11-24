@@ -11,7 +11,7 @@
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
-        "ownerships": {"20": 1, "15": 1},
+        "ownerships": {"20": 2, "15": 2},
         "dislodged_ones": {},
         "units": {"2": [[1, 47],[1, 37],[1, 17]]}, 
         "forbiddens": []
@@ -22,11 +22,11 @@
 {
     "title": "Impossible de se déloger 2/5", 
     "type": "adjudicate",
-    "introduction" : "Il est impossible de contribuer à déloger une de ses propres unités. L'armée française à Paris, bien que soutenue par l'armée allemande en Ruhr, ne peut pas déloger son armée compatriote en Bourgogne qui n'a pas réussi à quitter la Bourgogne du fait de la confrontation avec l'armée italienne à Marseille.",
+    "introduction" : "Il est impossible de déloger une de ses propres unités. L'armée française à Paris, bien que soutenue par l'armée allemande en Ruhr, ne peut pas déloger son armée compatriote en Bourgogne qui n'a pas réussi à quitter la Bourgogne du fait de la confrontation avec l'armée italienne à Marseille.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
-        "ownerships": {"20": 2, "15": 2},
+        "ownerships": {"20": 2, "15": 4},
         "dislodged_ones": {},
         "units": {"2": [[1, 47], [1, 17]], "3": [[1, 53]], "4": [[1, 37]]}, 
         "forbiddens": []
@@ -37,7 +37,7 @@
 {
     "title": "Impossible de se déloger 3/5", 
     "type": "adjudicate",
-    "introduction" : "L'armée française à Paris ne peut pas contribuer à aider l'armée allemande en Ruhr à déloger son armée compatriote en Bourgogne. Il eût fallu que l'allemand mette à contribution son armée à Munich pour réussir...",
+    "introduction" : "Il est impossible de contribuer à déloger une de ses propres unités. L'armée française à Paris ne peut pas contribuer à aider l'armée allemande en Ruhr à déloger son armée compatriote en Bourgogne. Il eût fallu que l'allemand mette à contribution son armée à Munich pour réussir...",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -67,7 +67,7 @@
 {
     "title": "Impossible de se déloger 5/5", 
     "type": "adjudicate",
-    "introduction" : "L'anglais ne peut pas déloger sa propre unité mais son soutien n'est pas pas perdu puisqu'il sert à empêcher l'unité russe soutenue d'entrer dans Kiel.",
+    "introduction" : "L'anglais ne peut pas déloger sa propre unité mais son soutien n'est pas pas perdu puisqu'il sert à empêcher l'unité russe soutenue d'entrer au Danemark.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -113,7 +113,7 @@
 {
     "title": "Echange par convoi", 
     "type": "adjudicate",
-    "introduction" : "Deux unités peuvent échanger leur place si l'un ou les deux sont convoyées.",
+    "introduction" : "Deux unités peuvent échanger leur place si l'une ou les deux sont convoyées.",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
@@ -173,7 +173,7 @@
 {
     "title": "Conclusion...", 
     "type": "display",
-    "introduction" : "Si vous avez aperçu une  coquille dans le tutoriel, manifestez-vous (sur le forum idéalement) ! D'autres sont a venir, sur les variantes. Si ce tutoriel vous a plu, n'hésitez pas à diffuser le lien pour qu'il profite à d'autres néopĥytes...",
+    "introduction" : "Si vous avez aperçu une  coquille dans le tutoriel, manifestez-vous (sur le forum idéalement) ! D'autres sont à venir, sur les variantes. Si ce tutoriel vous a plu, n'hésitez pas à diffuser le lien pour qu'il profite à d'autres néopĥytes...",
     "variant_name" : "standard",
     "game_parameters_current_advancement": 0, 
     "position" : {
