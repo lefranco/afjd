@@ -87,7 +87,7 @@ NEED_PLAYERS = 'Pink'
 NEED_REPLACEMENT = 'Fuchsia'
 
 # to distinguish own games
-MY_RATING = 'Blue'
+MY_RATING = 'LightGrey'
 
 FORCED_VARIANT_NAME = "standard"
 
