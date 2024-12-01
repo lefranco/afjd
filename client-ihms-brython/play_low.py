@@ -559,6 +559,15 @@ COUNTDOWN_COL = None
 def get_game_status():
     """ get_game__status """
 
+    def input_explain_dl_callback(ev):  # pylint: disable=invalid-name
+        """ input_explain_dl_callback """
+
+        ev.preventDefault()
+        if GAME_PARAMETERS_LOADED['force_wait'] == 1:
+            alert("Pour ralentir la partie, l'arbitre a neutralisé le bouton 'résoudre maintenant'")
+        if GAME_PARAMETERS_LOADED['force_wait'] == -1:
+            alert("Pour accélérer la partie, l'arbitre a neutralisé le bouton 'résoudre à la date limite'")
+
     def show_dc_callback(ev, allowed):  # pylint: disable=invalid-name
         """ show_variant_callback """
 
@@ -670,12 +679,22 @@ def get_game_status():
             content = "(terminée)"
 
     # Display if forced to wait
+    need_explanation = False
     if GAME_PARAMETERS_LOADED['force_wait'] == 1:
         content = html.B(content)
+        need_explanation = True
     elif GAME_PARAMETERS_LOADED['force_wait'] == -1:
         content = html.S(content)
+        need_explanation = True
 
-    DEADLINE_COL = html.TD(content)
+    DEADLINE_COL = html.TD()
+    DEADLINE_COL <= content
+    if need_explanation:
+        input_explain_dl = html.INPUT(type="submit", value="?", Class='btn-inside')
+        input_explain_dl.attrs['style'] = 'font-size: 10px'
+        input_explain_dl.bind("click", input_explain_dl_callback)
+        DEADLINE_COL <= input_explain_dl
+
     row <= DEADLINE_COL
 
     global COUNTDOWN_COL
