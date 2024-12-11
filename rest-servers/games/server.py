@@ -750,11 +750,19 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 if not (game.fast or game.archive):
 
                     # notify players
+
+                    variant_name = game.variant
+                    variant_data = variants.Variant.get_by_name(variant_name)
+                    assert variant_data is not None
+
                     subject = f"La partie {game.name} a démarré !"
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
                     addressees = []
-                    for _, player_id, __ in allocations_list:
+                    for _, player_id, role_id in allocations_list:
+                        # no mailing for fake player in disorder from variant
+                        if role_id in map(int, variant_data['disorder'].keys()):
+                            continue
                         addressees.append(player_id)
                     body = "Bonjour !\n"
                     body += "\n"
@@ -797,11 +805,19 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 if not (game.fast or game.archive):
 
                     # notify players
+
+                    variant_name = game.variant
+                    variant_data = variants.Variant.get_by_name(variant_name)
+                    assert variant_data is not None
+
                     subject = f"La partie {game.name} s'est terminée !"
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
                     addressees = []
-                    for _, player_id, __ in allocations_list:
+                    for _, player_id, role_id in allocations_list:
+                        # no mailing for fake player in disorder from variant
+                        if role_id in map(int, variant_data['disorder'].keys()):
+                            continue
                         addressees.append(player_id)
                     body = "Bonjour !\n"
                     body += "\n"
@@ -3176,15 +3192,22 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 game = games.Game.find_by_identifier(sql_executor, game_id)
                 assert game is not None
 
-                # notify players
-
                 if not (game.fast or game.archive):
+
+                    # notify players
+
+                    variant_name = game.variant
+                    variant_data = variants.Variant.get_by_name(variant_name)
+                    assert variant_data is not None
 
                     subject = f"La partie {game.name} a avancé (avec l'aide de l'arbitre ou de l'automate)!"
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
                     addressees = []
-                    for _, player_id, __ in allocations_list:
+                    for _, player_id, role_id in allocations_list:
+                        # no mailing for fake player in disorder from variant
+                        if role_id in map(int, variant_data['disorder'].keys()):
+                            continue
                         addressees.append(player_id)
                     body = "Bonjour !\n"
                     body += "\n"
@@ -3333,11 +3356,18 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
                 # notify players
 
+                variant_name = game.variant
+                variant_data = variants.Variant.get_by_name(variant_name)
+                assert variant_data is not None
+
                 subject = f"La partie {game.name} a avancé (avec l'aide de l'automate)!"
                 game_id = game.identifier
                 allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
                 addressees = []
-                for ____, player_id, _____ in allocations_list:
+                for _, player_id, role_id in allocations_list:
+                    # no mailing for fake player in disorder from variant
+                    if role_id in map(int, variant_data['disorder'].keys()):
+                        continue
                     addressees.append(player_id)
                 body = "Vous pouvez continuer à jouer dans cette partie !\n"
                 body += "\n"
@@ -3725,11 +3755,19 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 if not (game.fast or game.archive):
 
                     # notify players
+
+                    variant_name = game.variant
+                    variant_data = variants.Variant.get_by_name(variant_name)
+                    assert variant_data is not None
+
                     subject = f"La partie {game.name} a avancé !"
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)  # noqa: F821
                     addressees = []
-                    for _, player_id, __ in allocations_list:
+                    for _, player_id, role_id in allocations_list:
+                        # no mailing for fake player in disorder from variant
+                        if role_id in map(int, variant_data['disorder'].keys()):
+                            continue
                         addressees.append(player_id)
                     body = "Bonjour !\n"
                     body += "\n"
