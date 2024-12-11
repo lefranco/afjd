@@ -393,7 +393,7 @@ def show_games():
                     if data['soloed']:
                         colour = config.SOLOED_COLOUR
                         value = "(solo)"
-                    if data['end_voted']:
+                    elif data['end_voted']:
                         colour = config.END_VOTED_COLOUR
                         value = "(fin votée)"
                     elif data['finished']:
