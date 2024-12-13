@@ -24,6 +24,9 @@ FAQ_CONTENT_TABLE = {
     "Et les parties 'Désordre Civil' ?":
     "Pour de telles partie l'arbitre peut forcer les choses après la résolution. L'automate le fera automatiquement après la grâce.",
 
+    "Pour les parties 'Désordre Civil', celui-ci est-il toujours possible ?":
+    "Non. Pas de DC si aucun joueur n'a mis d'ordre. Pas de DC au premier tour de jeu (printemps 1901 typiquement)",
+
     "A qui sert la grâce ?":
     "Cf. paragraphe précédent. Pour les parties en direct, un autre mécanisme force les choses après la grâce (typiquement une minute) petit à petit et aléatoirement.",
 
