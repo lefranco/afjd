@@ -665,6 +665,8 @@ def get_game_status():
 
     global DEADLINE_COL
     content = f"DL {datetime_deadline_loaded_str}"
+    need_explanation = False
+
     if GAME_PARAMETERS_LOADED['soloed']:
         # keep value only for game master
         if ROLE_ID is None or ROLE_ID != 0:
@@ -679,8 +681,7 @@ def get_game_status():
             content = "(terminée)"
 
     # Display if forced to wait
-    need_explanation = False
-    if GAME_PARAMETERS_LOADED['force_wait'] == 1:
+    elif GAME_PARAMETERS_LOADED['force_wait'] == 1:
         content = html.B(content)
         need_explanation = True
     elif GAME_PARAMETERS_LOADED['force_wait'] == -1:
