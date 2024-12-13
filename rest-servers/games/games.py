@@ -715,6 +715,10 @@ class Game:
     def civil_disorder_allowed(self) -> bool:
         """ civil_disorder_allowed """
 
+        # first season : never allowed
+        if self._current_advancement == 0:
+            return False
+
         # what is the season next to play ?
         if self._current_advancement % 5 in [0, 2]:
             return self._cd_possible_moves
