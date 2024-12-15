@@ -1188,7 +1188,12 @@ def submit_orders():
         option_now = "maintenant"
         label_now = html.LABEL(html.EM(option_now))
         buttons_right <= label_now
-        input_now = html.INPUT(type="radio", id="now", name="agreed", checked=(definitive_value == 1), Class='btn-inside')
+
+        if play_low.GAME_PARAMETERS_LOADED['force_wait'] == 1:
+            input_now = html.INPUT(type="radio", id="now", name="agreed", checked=(definitive_value == 1), disabled=True, Class='btn-inside')
+        else:
+            input_now = html.INPUT(type="radio", id="now", name="agreed", checked=(definitive_value == 1), Class='btn-inside')
+
         input_now.bind("click", update_select)
         buttons_right <= input_now
         buttons_right <= html.BR()
@@ -1197,7 +1202,7 @@ def submit_orders():
         label_after = html.LABEL(html.EM(option_after))
         buttons_right <= label_after
 
-        if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['archive']:
+        if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['archive'] or play_low.GAME_PARAMETERS_LOADED['force_wait'] == -1:
             input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), disabled=True, Class='btn-inside')
         else:
             input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), Class='btn-inside')
