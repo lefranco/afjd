@@ -21,6 +21,10 @@ a:visited{
     color: green;
 }
 
+label[disabled="disabled"]{
+    color: grey;
+}
+
 .btn-menu {
     width: 100%;
     display: inline-block;

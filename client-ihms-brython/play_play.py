@@ -1185,8 +1185,14 @@ def submit_orders():
         buttons_right <= label_definitive
         buttons_right <= html.BR()
 
-        option_now = "maintenant"
-        label_now = html.LABEL(html.EM(option_now))
+        # ---
+        option_now_text = "maintenant"
+        option_now_em = html.EM(option_now_text)
+        if play_low.GAME_PARAMETERS_LOADED['force_wait'] == 1:
+            option_now = html.LABEL(option_now_em, disabled="disabled")
+        else:
+            option_now = html.LABEL(option_now_em)
+        label_now = html.LABEL(option_now)
         buttons_right <= label_now
 
         if play_low.GAME_PARAMETERS_LOADED['force_wait'] == 1:
@@ -1198,8 +1204,13 @@ def submit_orders():
         buttons_right <= input_now
         buttons_right <= html.BR()
 
-        option_after = "à la date limite (*)"
-        label_after = html.LABEL(html.EM(option_after))
+        # ---
+        option_after_text = "à la date limite (*)"
+        option_after_em = html.EM(option_after_text)
+        if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['archive'] or play_low.GAME_PARAMETERS_LOADED['force_wait'] == -1:
+            label_after = html.LABEL(option_after_em, disabled="disabled")
+        else:
+            label_after = html.LABEL(option_after_em)
         buttons_right <= label_after
 
         if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['archive'] or play_low.GAME_PARAMETERS_LOADED['force_wait'] == -1:
@@ -1211,17 +1222,20 @@ def submit_orders():
         buttons_right <= input_after
         buttons_right <= html.BR()
 
-        option_never = "non"
-
+        # ---
+        option_never_text = "non"
         # warning for this button if after deadline
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
         time_stamp_now = time()
         if time_stamp_now > deadline_loaded:
-            option_never += " (ATTENTION : retard !)"
+            option_never_text += " (ATTENTION : retard !)"
 
-        label_never = html.LABEL(html.EM(option_never))
+        option_never_em = html.EM(option_never_text)
+        option_never = html.EM(option_never_em)
+        label_never = html.LABEL(option_never)
         buttons_right <= label_never
         input_never = html.INPUT(type="radio", id="never", name="agreed", checked=(definitive_value == 0), Class='btn-inside')
+
         input_never.bind("click", update_select)
         buttons_right <= input_never
         buttons_right <= html.BR()
