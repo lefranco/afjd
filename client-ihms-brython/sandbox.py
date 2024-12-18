@@ -177,6 +177,8 @@ def sandbox():
     buttons_right = None
     report_window = None
 
+    moved_item_id = None
+
     def rest_hold_callback(_):
         """ rest_hold_callback """
 
@@ -468,6 +470,11 @@ def sandbox():
         if event.detail != 1:
             # Otherwise confusion click/double-click
             return
+
+        if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
+            if moved_item_id:
+                callback_drop_item(event)
+                return
 
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
@@ -875,55 +882,34 @@ def sandbox():
         buttons_right <= input_export
         buttons_right <= html.BR()
 
-    def put_submit(buttons_right):
-        """ put_submit """
+    def callback_take_item(event):
+        """  take an item (unit or center)  """
 
-        input_submit = html.INPUT(type="submit", value="Soumettre", Class='btn-inside')
-        input_submit.bind("click", submit_callback)
-        buttons_right <= html.BR()
-        buttons_right <= input_submit
-        buttons_right <= html.BR()
+        nonlocal moved_item_id
 
-    # callbacks pour le glisser / deposer
+        # Need to be in this state
+        if automaton_state != AutomatonStateEnum.SELECT_ACTIVE_STATE:
+            return
 
-    def mouseover(event):
-        """Quand la souris passe sur l'objet déplaçable, changer le curseur."""
-        event.target.style.cursor = "pointer"
+        # take unit or center
+        moved_item_id = event.target.id
 
-    def dragstart(event):
-        """Fonction appelée quand l'utilisateur commence à déplacer l'objet."""
-
-        # associer une donnée au processus de glissement
-        event.dataTransfer.setData("text", event.target.id)
-        # permet à l'object d'être déplacé dans l'objet destination
-        event.dataTransfer.effectAllowed = "move"
-
-    def dragover(event):
-        event.data.dropEffect = 'move'
-        event.preventDefault()
-
-    def drop(event):
-        """Fonction attachée à la zone de destination.
-        Elle définit ce qui se passe quand l'objet est déposé, c'est-à-dire
-        quand l'utilisateur relâche la souris alors que l'objet est au-dessus de
-        la zone.
-        """
+    def callback_drop_item(event):
+        """  drop an item (unit or center)  """
 
         nonlocal automaton_state
         nonlocal buttons_right
 
-        # récupère les données stockées dans drag_start (l'id de l'objet déplacé)
-        src_id = event.dataTransfer.getData("text")
-        elt = document[src_id]
+        nonlocal moved_item_id
 
-        # enlever la fonction associée à mouseover
-        elt.unbind("mouseover")
-        elt.style.cursor = "auto"
-        event.preventDefault()
+        # Need to be in this state
+        if automaton_state != AutomatonStateEnum.SELECT_ACTIVE_STATE:
+            return
 
-        # put unit there
-        # get unit dragged
-        (type_unit, role) = unit_info_table[src_id]
+        if moved_item_id in unit_info_table:
+            assert moved_item_id is not None
+            (type_unit, role) = unit_info_table[moved_item_id]
+
         # get zone
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
         selected_drop_zone = VARIANT_DATA.closest_zone(pos)
@@ -968,6 +954,9 @@ def sandbox():
         # add to position
         POSITION_DATA.add_unit(new_unit)
 
+        # Forget about this moved unit
+        moved_item_id = None
+
         # refresh
         # unit added so refresh all
         callback_render(True)
@@ -978,7 +967,6 @@ def sandbox():
 
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
-        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         stack_orders(buttons_right)
         if not POSITION_DATA.empty():
@@ -995,6 +983,15 @@ def sandbox():
 
         my_sub_panel2 <= buttons_right
         MY_SUB_PANEL <= my_sub_panel2
+
+    def put_submit(buttons_right):
+        """ put_submit """
+
+        input_submit = html.INPUT(type="submit", value="Soumettre", Class='btn-inside')
+        input_submit.bind("click", submit_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_submit
+        buttons_right <= html.BR()
 
     # starts here
 
@@ -1046,21 +1043,19 @@ def sandbox():
             col = html.TD()
 
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
-                draggable_unit = mapping.Army(POSITION_DATA, role, None, None, False)
+                pickable_unit = mapping.Army(POSITION_DATA, role, None, None, False)
             if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-                draggable_unit = mapping.Fleet(POSITION_DATA, role, None, None, False)
+                pickable_unit = mapping.Fleet(POSITION_DATA, role, None, None, False)
 
             identifier = f"unit_{num}"
-            unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Draguez moi!")
+            unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Cliquez-moi dessus !")
             unit_info_table[identifier] = (type_unit, role)
             num += 1
 
-            unit_canvas.draggable = True
-            unit_canvas.bind("mouseover", mouseover)
-            unit_canvas.bind("dragstart", dragstart)
+            unit_canvas.bind("click", callback_take_item)
 
             ctx2 = unit_canvas.getContext("2d")
-            draggable_unit.render(ctx2)
+            pickable_unit.render(ctx2)
 
             col <= unit_canvas
             row <= col
@@ -1077,7 +1072,11 @@ def sandbox():
     display_very_left <= reserve_table
 
     display_very_left <= html.BR()
-    display_very_left <= html.DIV("Glissez/déposez ces unités sur la carte", Class='instruction')
+    display_very_left <= html.DIV("Cliquez sur une de ces unités, *puis* sur la carte", Class='instruction')
+    display_very_left <= html.BR()
+
+    display_very_left <= html.BR()
+    display_very_left <= html.DIV("Pour avoir la situation d'une partie, aller dans la partie puis cliquer 'exporter vers le bac à sable'", Class='instruction')
     display_very_left <= html.BR()
 
     display_very_left <= html.BR()
@@ -1085,15 +1084,11 @@ def sandbox():
     display_very_left <= html.BR()
 
     display_very_left <= html.BR()
-    display_very_left <= html.DIV("Pour avoir la situation d'une partie, aller dans la partie puis cliquer 'exporter vers le bac à sable'", Class='note')
-    display_very_left <= html.BR()
-
-    display_very_left <= html.BR()
     display_very_left <= html.DIV("Le but du bac à sable est uniquement de lever les ambigüités sur la résolution des mouvements, il n'y a donc pas de continuité sur les phases suivantes...", Class='note')
     display_very_left <= html.BR()
 
     display_very_left <= html.BR()
-    display_very_left <= html.DIV("Vous pouvez exporter (bouton 'télécharger la carte') cette position au format PNG pour vous en servir à titre d'illustration (dans un quizz par exemple)", Class='important')
+    display_very_left <= html.DIV("Vous pouvez exporter (bouton 'télécharger la carte') cette position au format PNG pour vous en servir à titre d'illustration (dans un quizz par exemple)", Class='note')
     display_very_left <= html.BR()
 
     map_size = VARIANT_DATA.map_size
@@ -1108,10 +1103,6 @@ def sandbox():
     # click and double click
     canvas.bind("click", callback_canvas_click)
     canvas.bind("dblclick", callback_canvas_dblclick)
-
-    # dragging related events
-    canvas.bind('dragover', dragover)
-    canvas.bind("drop", drop)
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)

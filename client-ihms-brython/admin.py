@@ -6,7 +6,7 @@ from json import loads, dumps
 from time import time
 from base64 import standard_b64encode
 
-from browser import document, html, ajax, alert, window  # pylint: disable=import-error
+from browser import html, ajax, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -706,6 +706,7 @@ def rectify_position():
     """rectify_position """
 
     selected_hovered_object = None
+    moved_item_id = None
 
     def submit_callback(_):
         """ submit_callback """
@@ -750,6 +751,9 @@ def rectify_position():
         if event.detail != 1:
             # Otherwise confusion click/double-click
             return
+
+        if moved_item_id:
+            callback_drop_item(event)
 
     def callback_canvas_dblclick(event):
         """
@@ -869,53 +873,23 @@ def rectify_position():
 
         # do not put the orders here
 
-    def put_submit(buttons_right):
-        """ put_submit """
+    def callback_take_item(event):
+        """  take an item (unit or center)  """
 
-        input_submit = html.INPUT(type="submit", value="Rectifier la position", Class='btn-inside')
-        input_submit.bind("click", submit_callback)
-        buttons_right <= html.BR()
-        buttons_right <= input_submit
+        nonlocal moved_item_id
 
-    # callbacks pour le glisser / deposer
+        # take unit or center
+        moved_item_id = event.target.id
 
-    def mouseover(event):
-        """Quand la souris passe sur l'objet déplaçable, changer le curseur."""
-        event.target.style.cursor = "pointer"
+    def callback_drop_item(event):
+        """  drop an item (unit or center)  """
 
-    def dragstart(event):
-        """Fonction appelée quand l'utilisateur commence à déplacer l'objet."""
+        nonlocal moved_item_id
 
-        # associer une donnée au processus de glissement
-        event.dataTransfer.setData("text", event.target.id)
-        # permet à l'object d'être déplacé dans l'objet destination
-        event.dataTransfer.effectAllowed = "move"
+        if moved_item_id in unit_info_table:
 
-    def dragover(event):
-        event.data.dropEffect = 'move'
-        event.preventDefault()
-
-    def drop(event):
-        """Fonction attachée à la zone de destination.
-        Elle définit ce qui se passe quand l'objet est déposé, c'est-à-dire
-        quand l'utilisateur relâche la souris alors que l'objet est au-dessus de
-        la zone.
-        """
-
-        # récupère les données stockées dans drag_start (l'id de l'objet déplacé)
-        src_id = event.dataTransfer.getData("text")
-        elt = document[src_id]
-
-        # enlever la fonction associée à mouseover
-        elt.unbind("mouseover")
-        elt.style.cursor = "auto"
-        event.preventDefault()
-
-        if src_id in unit_info_table:
-
-            # put unit there
-            # get unit dragged
-            (type_unit, role) = unit_info_table[src_id]
+            assert moved_item_id is not None
+            (type_unit, role) = unit_info_table[moved_item_id]
 
             # get zone
             pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
@@ -957,11 +931,13 @@ def rectify_position():
             # add to position
             position_data.add_unit(new_unit)
 
-        if src_id in ownership_info_table:
+            # Forget about this moved unit
+            moved_item_id = None
 
-            # put ownership there
-            # get ownership dragged
-            (role, ) = ownership_info_table[src_id]
+        if moved_item_id in ownership_info_table:
+
+            assert moved_item_id is not None
+            (role, ) = ownership_info_table[moved_item_id]
 
             # get center
             pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
@@ -978,8 +954,19 @@ def rectify_position():
             # add to position
             position_data.add_ownership(new_ownership)
 
+            # Forget about this moved center
+            moved_item_id = None
+
         # refresh
         callback_render(True)
+
+    def put_submit(buttons_right):
+        """ put_submit """
+
+        input_submit = html.INPUT(type="submit", value="Rectifier la position", Class='btn-inside')
+        input_submit.bind("click", submit_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_submit
 
     # starts here
 
@@ -1068,40 +1055,36 @@ def rectify_position():
             col = html.TD()
 
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
-                draggable_unit = mapping.Army(position_data, role, None, None, False)
+                pickable_unit = mapping.Army(position_data, role, None, None, False)
             if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-                draggable_unit = mapping.Fleet(position_data, role, None, None, False)
+                pickable_unit = mapping.Fleet(position_data, role, None, None, False)
 
             identifier = f"unit_{num}"
-            unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Draguez moi!")
+            unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Cliquez-moi dessus !")
             unit_info_table[identifier] = (type_unit, role)
             num += 1
 
-            unit_canvas.draggable = True
-            unit_canvas.bind("mouseover", mouseover)
-            unit_canvas.bind("dragstart", dragstart)
+            unit_canvas.bind("click", callback_take_item)
 
             ctx2 = unit_canvas.getContext("2d")
-            draggable_unit.render(ctx2)
+            pickable_unit.render(ctx2)
 
             col <= unit_canvas
             row <= col
 
         col = html.TD()
 
-        draggable_ownership = mapping.Ownership(position_data, role, None)
+        pickable_ownership = mapping.Ownership(position_data, role, None)
 
         identifier = f"center_{num}"
-        ownership_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Draguez moi!")
+        ownership_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Cliquez-moi dessus !")
         ownership_info_table[identifier] = (role, )
         num += 1
 
-        ownership_canvas.draggable = True
-        ownership_canvas.bind("mouseover", mouseover)
-        ownership_canvas.bind("dragstart", dragstart)
+        ownership_canvas.bind("click", callback_take_item)
 
         ctx3 = ownership_canvas.getContext("2d")
-        draggable_ownership.render(ctx3)
+        pickable_ownership.render(ctx3)
 
         col <= ownership_canvas
         row <= col
@@ -1115,7 +1098,7 @@ def rectify_position():
 
     display_very_left <= html.BR()
 
-    display_very_left <= html.DIV("Glissez/déposez ces unités ou ces centres sur la carte", Class='instruction')
+    display_very_left <= html.DIV("Cliquez sur une de ces unités ou sur un de ces centres, *puis* sur la carte", Class='instruction')
 
     map_size = variant_data.map_size
 
@@ -1129,10 +1112,6 @@ def rectify_position():
     # click only
     canvas.bind("click", callback_canvas_click)
     canvas.bind("dblclick", callback_canvas_dblclick)
-
-    # dragging related events
-    canvas.bind('dragover', dragover)
-    canvas.bind("drop", drop)
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -1158,7 +1137,7 @@ def rectify_position():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-    legend_select_unit = html.DIV("Clic sur une unité ou une possession pour l'effacer", Class='instruction')
+    legend_select_unit = html.DIV("Double-Clic sur une unité ou une possession pour l'effacer", Class='instruction')
     buttons_right <= legend_select_unit
 
     put_submit(buttons_right)

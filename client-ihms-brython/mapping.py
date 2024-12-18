@@ -1383,11 +1383,17 @@ class Unit(Highliteable, Renderable):
         if isinstance(self, Fleet):
             type_name = variant.unit_name_table[UnitTypeEnum.FLEET_UNIT].lower()
 
+        imagined_info = ' imaginée' if self._imagined else ''
+
         # role
         adjective = variant.role_adjective(self._role)
 
         # zone
         zone = self._zone
+
+        if not zone:
+            return f"Une {type_name}{imagined_info} appartenant au joueur {adjective}."
+
         zone_full_name = variant.full_zone_name_table[zone]
 
         # dislodger - actually not used since called on standard units
@@ -1396,8 +1402,6 @@ class Unit(Highliteable, Renderable):
             zone_dislodger = self._dislodged_origin.zone
             dislodger_legend = self._position.variant.zone_name_table[zone_dislodger]
             dislodged_info = f" - delogée par une unité venue de la région {dislodger_legend}"
-
-        imagined_info = ' imaginée' if self._imagined else ''
 
         return f"Une {type_name}{imagined_info} appartenant au joueur {adjective} positionnée dans la région {zone_full_name}{dislodged_info}."
 
@@ -1531,6 +1535,9 @@ class Ownership(Highliteable, Renderable):
         adjective = variant.role_adjective(self._role)
 
         # zone
+        if not self._center:
+            return f"Un centre appartenant au joueur {adjective}."
+
         zone = self._center.region.zone
         zone_full_name = variant.full_zone_name_table[zone]
 
