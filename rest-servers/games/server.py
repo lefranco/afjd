@@ -230,7 +230,7 @@ ADDRESS_ADMIN = 1
 WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
 
 # creates some locks for some critical sections (where there can only be one at same time)
-# there is one lock per ongoing game
+# there is one lock per game
 # waitress uses threads, not processes
 MOVE_GAME_LOCK_TABLE: typing.Dict[str, threading.Lock] = {}
 
@@ -710,10 +710,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
             if current_state_before == 0 and game.current_state == 1:
 
-                # create and insert lock for that game
-                lock = threading.Lock()
-                MOVE_GAME_LOCK_TABLE[game.name] = lock
-
                 # ----
                 # we are starting the game
                 # ----
@@ -790,9 +786,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                         flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
             elif current_state_before == 1 and game.current_state == 2:
-
-                # delete lock for that game
-                del MOVE_GAME_LOCK_TABLE[game.name]
 
                 # ----
                 # we are finishing the game
@@ -1121,14 +1114,13 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
 
         if current_state_before == 1 and game.current_state == 0:
             # ongoing to waiting
-            # suppress lock file
-            del MOVE_GAME_LOCK_TABLE[game.name]
+            # nothing to do
+            pass
 
         elif current_state_before == 2 and game.current_state == 1:
             # finished to ongoing
-            # create lock file
-            lock = threading.Lock()
-            MOVE_GAME_LOCK_TABLE[game.name] = lock
+            # nothing to do
+            pass
 
         elif current_state_before == 2 and game.current_state == 0:
             # finished to waiting
@@ -8542,10 +8534,8 @@ def create_game_locks() -> None:
     games_list = games.Game.inventory(sql_executor)
     del sql_executor
 
-    # create lock for active games
+    # create lock for all games
     for game in games_list:
-        if game.current_state != 1:
-            continue
         lock = threading.Lock()
         MOVE_GAME_LOCK_TABLE[game.name] = lock
 
