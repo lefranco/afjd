@@ -1023,6 +1023,9 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         sql_executor.commit()
         del sql_executor
 
+        # delete entry to the lock on the game
+        del MOVE_GAME_LOCK_TABLE[game.name]
+
         data = {'name': name, 'msg': 'Ok removed'}
         return data, 200
 
@@ -1362,6 +1365,11 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
             sql_executor.commit()
             del sql_executor
+
+            # create lock for the game
+            lock = threading.Lock()
+            MOVE_GAME_LOCK_TABLE[game.name] = lock
+
             # end of pretected section
 
         data = {'name': name, 'msg': 'Ok game created'}
