@@ -39,7 +39,9 @@ L'accès est possible, pour une flotte ou une armée entre :
 La côte Byzantium (Byz) fonctionne de la même manière que Constantinople sur la carte standard.
 
 (Baléares)
-Dans la version officielle, les Baléares dévient de la règle en étant à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Ici, les Baléares sont une mer et sont donc inaccessibles aux armées. *C'est la seule différence avec la version officielle*
+Dans la version officielle, les Baléares dévient de la règle en étant à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Ici, les Baléares sont une mer et sont donc inaccessibles aux armées. 
+.
+*C'est la seule différence avec la version officielle*
 
 (Intersection dans les hautes mers)
 L'accès est possible, pour une flotte, de n'importe quelle des mers suivantes vers une autre :
@@ -50,7 +52,7 @@ L'accès est possible, pour une flotte, de n'importe quelle des mers suivantes v
 
 
 (Les Diokos)
-Une flotte peut passer de  Aegean Sea (Aeg) à Athens (Ath) et ensuite en Ionian Sea (Ion).
+Une flotte peut passer de  Aegean Sea (Aeg) à Athens (Ath) et ensuite en Ionian Sea (Ion), et réciproquement.
 
 (Le Delta du Nil)
 L'accès est possible, pour une unité, de n'importe quelle des régions suivantes vers une autre :
@@ -61,8 +63,7 @@ L'accès est possible, pour une unité, de n'importe quelle des régions suivant
 
 
 (Le cas particulier de Memphis)
-Memphis (Mem) est une côte . Pour Memphis, le Nil joue le rôle d'une mer.
-Une unité à Memphis donc peut aller ou venir de :
+Memphis (Mem) est une côte. Pour Memphis, le Nil joue le rôle d'une mer. Une unité à Memphis donc peut aller ou venir de :
 - Alexandria (Ale)
 - Thebes (The)
 - Cyrene (Cyr) - armée seulement
