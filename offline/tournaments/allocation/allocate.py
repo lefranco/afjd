@@ -433,7 +433,7 @@ def main() -> None:
 
     PLAYERS_VARIANT = args.players_variant
 
-    # must be enough : that is at least 7
+    # must be enough players for at least one game
     assert len(PLAYERS_DATA) >= PLAYERS_VARIANT, "With so few players you wont make a single game!"
 
     # make it harder to guess
@@ -466,7 +466,7 @@ def main() -> None:
 
     player_table = {p.name: p for p in PLAYERS}
     for master_name in MASTERS_DATA:
-        # a game master may not be playing
+        # a game master be playing or not
         if master_name not in player_table:
             print(f"Game master {master_name} is not playing!")
             player = Player(master_name, -1, playing=False)
@@ -492,6 +492,7 @@ def main() -> None:
     try:
         status = try_and_error(0)
     except KeyboardInterrupt:
+        print("Ok I give up!")
         return
 
     # end line after displaying depth
