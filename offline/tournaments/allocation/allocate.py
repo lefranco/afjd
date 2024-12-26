@@ -47,7 +47,8 @@ def user_interrupt(_: int, __: typing.Optional[types.FrameType]) -> None:
 
 
 PLAYERS_VARIANT = 0
-
+GAMES_PLAYED = 0
+NUMBER_GAMES = 0
 
 class Game:
     """a game."""
@@ -167,11 +168,10 @@ class Player:
         assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
         return role in self._allocation
 
-    def game_where_has_role(self, role: int) -> Game:
-        """Get qame where the players has this role."""
+    def game_where_has_role(self, role: int) -> typing.Optional[Game]:
+        """Get qame where the players has this role (if there is such a game)."""
         assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
-        assert role in self._allocation, "Internal error: player should have the role"
-        return self._allocation[role]
+        return self._allocation.get(role, None)
 
     @property
     def name(self) -> str:
@@ -345,7 +345,12 @@ def hill_climb() -> bool:
             for role in roles:
 
                 game1 = player1.game_where_has_role(role)
+                if not game1:
+                    continue
+
                 game2 = player2.game_where_has_role(role)
+                if not game2:
+                    continue
 
                 assert game1 != game2, "Internal error hill climb 1"
 
@@ -403,12 +408,15 @@ def main() -> None:
     global REF_WORST_DUMP
 
     global PLAYERS_VARIANT
+    global GAMES_PLAYED
+    global NUMBER_GAMES
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--players_variant', required=True, type=int, help='number of players per game in the variant')
+    parser.add_argument('-g', '--games_played', required=True, type=int, help='number of games a player goes in')
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
     parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
-    parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
+    parser.add_argument('-P', '--game_names_prefix', required=True, help='prefix for name of games')
     parser.add_argument('-o', '--output_file', required=True, help='resulting file')
     parser.add_argument('-s', '--show', required=False, action='store_true', help='show worst interactions')
     parser.add_argument('-d', '--deterministic', required=False, action='store_true', help='make it deterministic')
@@ -436,6 +444,13 @@ def main() -> None:
     # must be enough players for at least one game
     assert len(PLAYERS_DATA) >= PLAYERS_VARIANT, "With so few players you wont make a single game!"
 
+    GAMES_PLAYED = args.games_played
+
+    # must correct number of players
+    assert (len(PLAYERS_DATA) * GAMES_PLAYED) % PLAYERS_VARIANT == 0, f"{PLAYERS_VARIANT} must divide {len(PLAYERS_DATA)} x {GAMES_PLAYED}!"
+
+    NUMBER_GAMES = (len(PLAYERS_DATA) * GAMES_PLAYED) // PLAYERS_VARIANT
+
     # make it harder to guess
     random.shuffle(PLAYERS_DATA)
 
@@ -449,8 +464,8 @@ def main() -> None:
     assert args.game_names_prefix.isidentifier(), "Game prefix is incorrect, should look like an identifier"
 
     # make games (as many as players)
-    size = math.floor(math.log10(len(PLAYERS))) + 1
-    for game_id, _ in enumerate(PLAYERS):
+    size = math.floor(math.log10(NUMBER_GAMES)) + 1
+    for game_id in range(NUMBER_GAMES):
         name = f"{args.game_names_prefix}_{game_id+1:0{size}}"
         game = Game(name)
         GAMES.append(game)
