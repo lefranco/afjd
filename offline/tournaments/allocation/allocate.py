@@ -2,7 +2,7 @@
 
 
 """
-File : allocate.py
+File : allocate.py.
 
 Solves the problem of allocating players in a Diplomacy tournament
 For 1000 players takes 54 seconds on a good laptop (linux)
@@ -10,16 +10,18 @@ Limited to 275 players on windows
 """
 
 import argparse
-import cProfile
 import collections
+import cProfile
 import faulthandler
 import itertools
 import math
+import pathlib
 import pstats
 import random
 import signal
 import sys
 import time
+import types
 import typing
 
 PROFILE = False
@@ -31,9 +33,8 @@ MASTERS_DATA: typing.List[str] = []
 INTERRUPT = False
 
 
-def user_interrupt(_, __) -> None:  # type: ignore
-    """ user_interrupt """
-
+def user_interrupt(_: int, __: typing.Optional[types.FrameType]) -> None:
+    """user_interrupt."""
     global INTERRUPT
 
     print("CTRL+C was pressed.")
@@ -49,15 +50,15 @@ PLAYERS_VARIANT = 0
 
 
 class Game:
-    """ a game """
+    """a game."""
 
     def __init__(self, name: str) -> None:
+        """Construct."""
         self._name = name
         self._allocation: typing.Dict[int, Player] = {}
 
     def put_player_in(self, role: int, player: 'Player') -> None:
-        """ puts the player in this game """
-
+        """Put the player in this game."""
         assert isinstance(role, int), "Internal error: role should be an int"
         assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
 
@@ -73,8 +74,7 @@ class Game:
         self._allocation[role] = player
 
     def take_player_out(self, role: int, player: 'Player') -> None:
-        """ takes the player ou of this game """
-
+        """Take the player out of this game."""
         assert isinstance(role, int), "Internal error: role should be an int"
         assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
 
@@ -89,33 +89,34 @@ class Game:
             INTERACTION[frozenset([player, other_player])] -= 1
 
     def is_player_in_game(self, player: 'Player') -> bool:
-        """ tells if player plays in this game """
+        """Tell if player plays in this game."""
         assert isinstance(player, Player), "Internal error: player should be a Player"
         return player in self._allocation.values()
 
     def players_in_game(self) -> typing.List['Player']:
-        """ extracts players allocated in this game """
+        """Extract players allocated in this game."""
         return list(self._allocation.values())
 
     def has_role_in_game(self, role: int) -> bool:
-        """ hios the someone with this role in the game ? """
+        """Say if there is someone with this role in the game."""
         assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
         return role in self._allocation
 
     def is_complete(self) -> bool:
-        """ is the game complete ? """
+        """Say if the game is complete."""
         return len(self._allocation) == PLAYERS_VARIANT
 
     def list_players(self) -> str:
-        """ display list of players of the game """
-        return ";".join([str(self._allocation[r] if r in self._allocation else "_") for r in range(PLAYERS_VARIANT)])
+        """Display list of players of the game."""
+        return ";".join([str(self._allocation.get(r, "_")) for r in range(PLAYERS_VARIANT)])
 
     @property
     def name(self) -> str:
-        """ name """
+        """Name."""
         return self._name
 
     def __str__(self) -> str:
+        """Str."""
         return self._name
 
 
@@ -124,10 +125,10 @@ GAMES: typing.List[Game] = []
 
 
 class Player:
-    """ a player """
+    """a player."""
 
-    def __init__(self, name: str, number: int, playing: bool) -> None:
-
+    def __init__(self, name: str, number: int, *, playing: bool) -> None:
+        """Construct."""
         assert isinstance(name, str), "Internal error: name should be str"
         self._name = name
         assert isinstance(number, int), "Internal error: number should be int"
@@ -138,8 +139,7 @@ class Player:
         self._playing = playing
 
     def put_in_game(self, role: int, game: Game) -> None:
-        """ put the player in a game """
-
+        """Put the player in a game."""
         assert isinstance(role, int), "Internal error: number should be int"
         assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
 
@@ -149,8 +149,7 @@ class Player:
         self._allocation[role] = game
 
     def remove_from_game(self, role: int, game: Game) -> None:
-        """ remove the player from a game """
-
+        """Remove the player from a game."""
         assert isinstance(role, int), "Internal error: role for player should be int"
         assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
 
@@ -160,41 +159,42 @@ class Player:
         del self._allocation[role]
 
     def games_in(self) -> typing.List[Game]:
-        """ games the player plays in  """
+        """Games the player plays in."""
         return list(self._allocation.values())
 
     def has_role(self, role: int) -> bool:
-        """ does the players has this role ? """
+        """Say if the players has this role."""
         assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
         return role in self._allocation
 
     def game_where_has_role(self, role: int) -> Game:
-        """ game where the players has this role ? """
+        """Get qame where the players has this role."""
         assert 0 <= role < PLAYERS_VARIANT, "Internal error: role should be in range"
         assert role in self._allocation, "Internal error: player should have the role"
         return self._allocation[role]
 
     @property
     def name(self) -> str:
-        """ name """
+        """Name."""
         return self._name
 
     @property
     def number(self) -> int:
-        """ number """
+        """Number."""
         return self._number
 
     @property
     def is_master(self) -> bool:
-        """ is_master """
+        """is_master."""
         return self._is_master
 
     @is_master.setter
     def is_master(self, is_master: bool) -> None:
-        """ setter """
+        """Setter."""
         self._is_master = is_master
 
     def __str__(self) -> str:
+        """Str."""
         return self._name
 
 
@@ -213,8 +213,7 @@ BEST_SWAPS: typing.List[typing.Tuple[int, Player, Player, Game, Game]] = []
 
 
 def try_and_error(depth: int) -> bool:
-    """ try_and_error """
-
+    """try_and_error."""
     print(f"{depth // PLAYERS_VARIANT:5} ", end='\r', flush=True)
 
     # find a game where to fill up
@@ -223,8 +222,7 @@ def try_and_error(depth: int) -> bool:
         if not game_poss.is_complete():
             game = game_poss
             break
-
-    if game is None:
+    else:
         # we are done
         return True
 
@@ -239,8 +237,7 @@ def try_and_error(depth: int) -> bool:
             role = role_poss
             break
 
-    if role is None:
-        assert False, "Internal error : game has role or not!?"
+    assert role is not None, "Internal error : game has role or not!?"
 
     # objective acceptable players : those not already in the game and do not already have the role
     acceptable_players = [p for p in PLAYERS if not p.has_role(role) and not game.is_player_in_game(p)]
@@ -255,7 +252,7 @@ def try_and_error(depth: int) -> bool:
     # 3) identifier of player (for readability)
 
     players_sorted = sorted(acceptable_players,
-                            key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]),  # type:ignore
+                            key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]),  # type: ignore[union-attr]
                                            len(p.games_in()),
                                            p.number))
 
@@ -276,17 +273,15 @@ def try_and_error(depth: int) -> bool:
 
 
 def evaluate() -> typing.Tuple[int, int, typing.List[int]]:
-    """ evaluate how good we have reached """
-
+    """Evaluate how good we have reached."""
     worst = max(INTERACTION.values())
     worst_number = len([cp for cp in INTERACTION if INTERACTION[cp] == worst])
     worst_dump = [p.number for g in GAMES for p in g.players_in_game()]
     return worst, worst_number, worst_dump
 
 
-def perform_swap(role: int, player1: Player, player2: Player, game1: Game, game2: Game, reverse: bool) -> None:
-    """ perform_swap """
-
+def perform_swap(role: int, player1: Player, player2: Player, game1: Game, game2: Game, *, reverse: bool) -> None:
+    """perform_swap."""
     if reverse:
         player1, player2 = player2, player1
 
@@ -309,8 +304,7 @@ REF_WORST_DUMP: typing.List[int] = []
 
 
 def hill_climb() -> bool:
-    """ hill_climb """
-
+    """hill_climb."""
     global REF_WORST
     global REF_WORST_NUMBER
     global REF_WORST_DUMP
@@ -358,10 +352,11 @@ def hill_climb() -> bool:
                 if game1.is_player_in_game(player2) or game2.is_player_in_game(player1):
                     continue
 
-                assert not (game2 in player1.games_in() or game1 in player2.games_in()), "Internal error hill climb 2"
+                assert game1 not in player2.games_in(), "Internal error hill climb 21"
+                assert game2 not in player1.games_in(), "Internal error hill climb 22"
 
                 # try the swap
-                perform_swap(role, player1, player2, game1, game2, False)
+                perform_swap(role, player1, player2, game1, game2, reverse=False)
 
                 # do we accept ?
                 rejected = False
@@ -385,7 +380,7 @@ def hill_climb() -> bool:
                         break
 
                 # not accepted : put it back
-                perform_swap(role, player1, player2, game1, game2, True)
+                perform_swap(role, player1, player2, game1, game2, reverse=True)
 
             if changed:
                 break
@@ -395,8 +390,7 @@ def hill_climb() -> bool:
 
 
 def main() -> None:
-    """ main """
-
+    """Do main."""
     start_time = time.time()
 
     global PLAYERS_DATA
@@ -426,8 +420,8 @@ def main() -> None:
         random.seed(0)
 
     # load players file
-    with open(args.players_file, "r", encoding='utf-8') as read_file:
-        PLAYERS_DATA = [p.rstrip() for p in read_file.readlines() if p.rstrip()]
+    with pathlib.Path(args.players_file).open(encoding='utf-8') as read_file:
+        PLAYERS_DATA = [p.rstrip() for p in read_file if p.rstrip()]
 
     # for testing purpose we may limit to fewer players
     if args.limit:
@@ -448,7 +442,7 @@ def main() -> None:
     # make players
     for player_id, _ in enumerate(PLAYERS_DATA):
         name = PLAYERS_DATA[player_id]
-        player = Player(name, player_id, True)
+        player = Player(name, player_id, playing=True)
         PLAYERS.append(player)
 
     # check game identifiers prefix
@@ -462,8 +456,8 @@ def main() -> None:
         GAMES.append(game)
 
     # load masters file
-    with open(args.masters_file, "r", encoding='utf-8') as read_file:
-        MASTERS_DATA = [m.rstrip() for m in read_file.readlines() if m.rstrip()]
+    with pathlib.Path(args.masters_file).open(encoding='utf-8') as read_file:
+        MASTERS_DATA = [m.rstrip() for m in read_file if m.rstrip()]
 
     assert len(set(MASTERS_DATA)) == len(MASTERS_DATA), "Duplicate in masters"
 
@@ -475,7 +469,7 @@ def main() -> None:
         # a game master may not be playing
         if master_name not in player_table:
             print(f"Game master {master_name} is not playing!")
-            player = Player(master_name, -1, False)
+            player = Player(master_name, -1, playing=False)
         else:
             print(f"Game master {master_name} is playing!")
             player = player_table[master_name]
@@ -501,7 +495,7 @@ def main() -> None:
         return
 
     # end line after displaying depth
-    print("")
+    print()
 
     assert status, "Sorry : failed to make initial tournament! Contact support!"
 
@@ -533,7 +527,7 @@ def main() -> None:
 
         # undo everything for a new start
         for (role, player1, player2, game1, game2) in reversed(SWAPS):
-            perform_swap(role, player1, player2, game1, game2, True)
+            perform_swap(role, player1, player2, game1, game2, reverse=True)
 
         # we were interrupted
         if INTERRUPT:
@@ -546,7 +540,7 @@ def main() -> None:
         print("Sorry : failed to make a perfect tournament! Contact support!")
         # still apply BEST SWAPS
         for (role, player1, player2, game1, game2) in BEST_SWAPS:
-            perform_swap(role, player1, player2, game1, game2, False)
+            perform_swap(role, player1, player2, game1, game2, reverse=False)
 
     # now we assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
@@ -577,7 +571,7 @@ def main() -> None:
 
     # output stuff
     if args.output_file:
-        with open(args.output_file, "w", encoding='utf-8') as write_file:
+        with pathlib.Path(args.output_file).open("w", encoding='utf-8') as write_file:
             for game in GAMES:
                 write_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
         print(f"File {args.output_file} was written.")

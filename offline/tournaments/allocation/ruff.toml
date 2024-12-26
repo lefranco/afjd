@@ -1,0 +1,58 @@
+# run with command ""ruff -check""
+# derogation : # noqa F401
+
+[lint]
+
+select = ["ALL"]
+
+ignore = [
+    # mccabe
+# when code is too complicated
+    "C90",
+
+    # flake8-copyright 
+# not stable
+    "CPY",
+
+    # flake8-future-annotations 
+# keep it the 3.9 way 
+    "FA",
+
+# E501 = line-too-long
+    "E501",
+
+   # want to use assert
+# S101 = pytest-assert-always-false
+     "S101",
+
+# D212 = multi-line-summary-first-line
+     "D212",
+
+# D203 = one-blank-line-before-class 
+     "D203", 
+
+# ANN101 = Missing type annotation for {name} in method
+    "ANN101", 
+
+# ANN102 = Missing type annotation for {name} in classmethod
+    "ANN102",
+
+# PLW0603 = Using the global statement to update {name} is discouraged
+    "PLW0603",
+
+# T201 = print
+    "T201",
+
+#  Q00 = Single quotes found but double quotes preferred
+    "Q000",
+
+# PLR0915 = Too many statements
+    "PLR0915",
+
+# PLR0912 = Too many branches
+    "PLR0912",
+
+# PLR0913 = Too many arguments in function definition 
+    "PLR0913"
+]
+
