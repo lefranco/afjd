@@ -287,7 +287,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # logically : manual allocation (otherwise at start random allocation will spoil csv file allocation)
         json_dict['manual'] = int(True)
 
-        # remove these two so that they get copied from their xxx_game clone
+        # remove these two so that they get copied from the game they clone
         del json_dict['nopress_current']
         del json_dict['nomessage_current']
         del json_dict['soloed']
