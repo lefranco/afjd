@@ -1129,10 +1129,10 @@ def my_games(state_name):
 
                     # Display if forced to wait or now
                     if data['force_wait'] == 1:
-                        value = html.B(value)
+                        value = html.B(f"= {value}")
                         one_deadline_forced_wait = True
                     elif data['force_wait'] == -1:
-                        value = html.S(value)
+                        value = html.B(f"< {value}")
                         one_deadline_forced_now = True
 
                     if data['fast']:
@@ -1386,11 +1386,11 @@ def my_games(state_name):
         MY_SUB_PANEL <= html.BR()
 
     if one_deadline_forced_now:
-        MY_SUB_PANEL <= html.DIV("Un date limite barrée signifie que l'arbitre force la résolution immédiate (pour accélérer)", Class='note')
+        MY_SUB_PANEL <= html.DIV("Un date limite en gras avec '<' signifie que l'arbitre force la résolution immédiate (pour accélérer)", Class='note')
         MY_SUB_PANEL <= html.BR()
 
     if one_deadline_forced_wait:
-        MY_SUB_PANEL <= html.DIV("Un date limite en gras signifie que l'arbitre force l'attente de la date limite (pour ralentir)", Class='note')
+        MY_SUB_PANEL <= html.DIV("Un date limite en gras avec '=' signifie que l'arbitre force l'attente de la date limite (pour ralentir)", Class='note')
         MY_SUB_PANEL <= html.BR()
 
     if state_name == 'en attente':

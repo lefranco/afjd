@@ -1156,9 +1156,9 @@ def all_missing_orders():
 
                 # Display if forced to wait or now
                 if data['force_wait'] == 1:
-                    value = html.B(value)
+                    value = html.B(f"= {value}")
                 elif data['force_wait'] == -1:
-                    value = html.S(value)
+                    value = html.B(f"< {value}")
 
                 # game over
                 if gameover_table[game_id]:
@@ -1185,9 +1185,9 @@ def all_missing_orders():
 
                     # Display if forced to wait or now
                     if data['force_wait'] == 1:
-                        value = html.B(value)
+                        value = html.B(f"= {value}")
                     elif data['force_wait'] == -1:
-                        value = html.EM(value)
+                        value = html.B(f"< {value}")
 
                     if data['fast']:
                         factor = 60
@@ -1557,9 +1557,9 @@ def show_player_games(pseudo_player, game_list):
 
                         # Display if forced to wait or now
                         if data['force_wait'] == 1:
-                            value = html.B(value)
+                            value = html.B(f"= {value}")
                         elif data['force_wait'] == -1:
-                            value = html.EM(value)
+                            value = html.B(f"< {value}")
 
                         if data['fast']:
                             factor = 60
