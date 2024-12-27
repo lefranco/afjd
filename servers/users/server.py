@@ -126,6 +126,15 @@ def add_user() -> typing.Tuple[typing.Any, int]:
 
     user.update_database(sql_executor)
 
+    # consider it as a login to know when players created account
+
+    # not mandatory
+    ip_address = flask.request.json.get('ip_address', 'none')
+
+    # we keep a trace of the login
+    login = logins.Login(user_name, ip_address)
+    login.update_database(sql_executor)
+
     sql_executor.commit()
     del sql_executor
 
