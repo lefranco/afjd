@@ -1533,7 +1533,7 @@ def negotiate(default_dest_set, def_focus_role_id):
     play_low.MY_SUB_PANEL <= html.BR()
     play_low.MY_SUB_PANEL <= html.BR()
 
-    button = html.BUTTON("Un message avec un contenu inaproprié ?", title="xxx", Class='btn-inside')
+    button = html.BUTTON("Un message avec un contenu inaproprié ?", Class='btn-inside')
     button.bind("click", display_special_information_callback)
     play_low.MY_SUB_PANEL <= button
     play_low.MY_SUB_PANEL <= html.BR()
@@ -1804,7 +1804,7 @@ def declare():
     play_low.MY_SUB_PANEL <= html.BR()
     play_low.MY_SUB_PANEL <= html.BR()
 
-    button = html.BUTTON("Une déclaration avec un contenu inaproprié ?", title="xxx", Class='btn-inside')
+    button = html.BUTTON("Une déclaration avec un contenu inaproprié ?", Class='btn-inside')
     button.bind("click", display_special_information_callback)
     play_low.MY_SUB_PANEL <= button
     play_low.MY_SUB_PANEL <= html.BR()
