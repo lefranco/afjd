@@ -2,9 +2,8 @@
 
 
 """
-File : allocate.py.
-
 Solves the problem of allocating players in a Diplomacy tournament
+
 For 1000 players takes 54 seconds on a good laptop (linux)
 Limited to 275 players on windows
 """
@@ -49,6 +48,7 @@ def user_interrupt(_: int, __: typing.Optional[types.FrameType]) -> None:
 PLAYERS_VARIANT = 0
 GAMES_PLAYED = 0
 NUMBER_GAMES = 0
+
 
 class Game:
     """a game."""
