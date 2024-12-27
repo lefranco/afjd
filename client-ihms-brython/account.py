@@ -609,7 +609,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("courriel (privé) - impérativement un courriel valide ", title="Le site vous notifiera de quelques très rares événements (sauf si vous demandez les notifications)")
+    legend_email = html.LEGEND("courriel (privé) - impérativement un courriel valide !", title="Le site vous notifiera de quelques très rares événements (sauf si vous demandez les notifications)")
     fieldset <= legend_email
     input_email = html.INPUT(type="email", value=email_loaded, size=MAX_LEN_EMAIL, Class='btn-inside')
     fieldset <= input_email
