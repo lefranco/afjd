@@ -946,9 +946,9 @@ def pairing():
             mydialog.InfoDialog("Information", f"Vous avez rejoint la partie : {messages})", True)
             alert("Rejoindre une partie est un engagement à ne pas prendre à la légère !\nUn courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
 
-            # back to where we started
-            play_low.MY_SUB_PANEL.clear()
-            pairing()
+            # go to game
+            play_low.PANEL_MIDDLE.clear()
+            play.render(play_low.PANEL_MIDDLE)
 
         ev.preventDefault()
 
@@ -986,9 +986,9 @@ def pairing():
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.InfoDialog("Information", f"Vous avez quitté la partie : {messages}")
 
-            # back to where we started
-            play_low.MY_SUB_PANEL.clear()
-            pairing()
+            # go to game
+            play_low.PANEL_MIDDLE.clear()
+            play.render(play_low.PANEL_MIDDLE)
 
         ev.preventDefault()
 
@@ -1028,9 +1028,9 @@ def pairing():
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.InfoDialog("Information", f"Vous avez pris l'arbitrage de la partie : {messages}")
 
-            # action of going to game page
-            play_low.MY_SUB_PANEL.clear()
-            pairing()
+            # go to game
+            play_low.PANEL_MIDDLE.clear()
+            play.render(play_low.PANEL_MIDDLE)
 
         ev.preventDefault()
 
@@ -1069,9 +1069,9 @@ def pairing():
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.InfoDialog("Information", f"Vous avez quitté l'arbitrage de la partie : {messages}")
 
-            # action of going to game page
-            play_low.MY_SUB_PANEL.clear()
-            pairing()
+            # go to game
+            play_low.PANEL_MIDDLE.clear()
+            play.render(play_low.PANEL_MIDDLE)
 
         ev.preventDefault()
 
