@@ -377,7 +377,7 @@ def create_game(json_dict):
         # special : check same game does not exist
         if not bypass:
             if any(g for g in games_dict.values() if all(g[vn] == json_dict[vn] for vn in ['variant', 'fog', 'fast', 'game_type'])):
-                alert("Une telle partie existe déjà dans celles en attente (mêmes valeurs pour variante/brouillard/en direct/type)")
+                alert("Une telle partie existe déjà dans celles en attente (mêmes valeurs pour variante/brouillard/en direct/type)\nSi vous voulez malgré tout la créer, cocher la case 'Partie doublon'...")
                 MY_SUB_PANEL.clear()
                 create_game(json_dict)
                 return
