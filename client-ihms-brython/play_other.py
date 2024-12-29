@@ -71,9 +71,10 @@ def join_game():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
+        alert("ATTENTION ! Rejoindre une partie est un engagement à ne pas prendre à la légère !\n\nUn courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
+
         messages = "<br>".join(req_result['msg'].split('\n'))
         mydialog.InfoDialog("Information", f"Vous avez rejoint la partie (en utilisant un lien externe) : {messages}", True)
-        alert("Rejoindre une partie est un engagement à ne pas prendre à la légère !\nUn courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
 
     if play_low.PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -942,9 +943,10 @@ def pairing():
 
                 return
 
+            alert("ATTENTION ! Rejoindre une partie est un engagement à ne pas prendre à la légère !\n\nUn courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
+
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.InfoDialog("Information", f"Vous avez rejoint la partie : {messages})", True)
-            alert("Rejoindre une partie est un engagement à ne pas prendre à la légère !\nUn courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
 
             # go to game
             play_low.PANEL_MIDDLE.clear()
