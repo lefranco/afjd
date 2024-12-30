@@ -300,7 +300,11 @@ def cancel_last_adjudication_callback(_):
             return
 
         messages = "<br>".join(req_result['msg'].split('\n'))
-        alert(f"Dernière résolution effacée : {messages}! Attention ! Il faut recharger la partie maintenant...")
+        alert(f"Dernière résolution effacée : {messages}!")
+        load_dynamic_stuff()
+
+        MY_SUB_PANEL.clear()
+        play.load_option(None, 'Consulter')
 
     json_dict = {}
 
