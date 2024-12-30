@@ -1947,12 +1947,11 @@ def game_master():
         form <= input_stop_game
 
     if state_loaded == 2:
-        if play_low.GAME_PARAMETERS_LOADED['archive']:
-            form <= information_about_distinguish_game2()
-            form <= html.BR()
-            input_distinguish_game = html.INPUT(type="submit", value="Distinguer la partie", Class='btn-inside')
-            input_distinguish_game.bind("click", lambda e, s=3: change_state_game_callback(e, None, s))
-            form <= input_distinguish_game
+        form <= information_about_distinguish_game2()
+        form <= html.BR()
+        input_distinguish_game = html.INPUT(type="submit", value="Distinguer la partie", Class='btn-inside')
+        input_distinguish_game.bind("click", lambda e, s=3: change_state_game_callback(e, None, s))
+        form <= input_distinguish_game
 
     if state_loaded == 3:
         input_undistinguish_game = html.INPUT(type="submit", value="Ne plus distinguer la partie", Class='btn-inside')
