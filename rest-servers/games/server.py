@@ -1106,8 +1106,8 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
         # check we have a 'legal' transition and take action
 
         # only if we rename game
-        if 'name' in args:
-            new_name = args['name']
+        new_name = args['name']
+        if new_name is not None:
             if new_name != name_before:
                 if games.Game.find_by_name(sql_executor, new_name):
                     del sql_executor
