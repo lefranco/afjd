@@ -985,6 +985,7 @@ def my_games(state_name):
     one_deadline_forced_now = False
 
     games_list = []
+    late_games = []
 
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
@@ -1054,6 +1055,9 @@ def my_games(state_name):
         data['new_messages'] = None
         data['edit'] = None
         data['startstop'] = None
+
+        missing_orders = False
+        after_deadline = False
 
         row = html.TR()
         for field in fields:
@@ -1157,6 +1161,9 @@ def my_games(state_name):
                         colour = config.APPROACHING_DEADLINE_COLOUR
                         explanation = "La date limite est bientôt"
 
+                    if time_stamp_now > deadline_loaded:
+                        after_deadline = True
+
                     stats = value
                     value = html.DIV(stats, title=explanation)
 
@@ -1212,6 +1219,8 @@ def my_games(state_name):
                             elif role_id in needed_roles_list:
                                 flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
                                 value = flag
+                                if after_deadline:
+                                    missing_orders = True
 
             if field == 'agreed':
                 value = "-"
@@ -1230,6 +1239,8 @@ def my_games(state_name):
                             elif role_id in needed_roles_list:
                                 flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
                                 value = flag
+                                if after_deadline:
+                                    missing_orders = True
 
             if field == 'votes':
                 value = ""
@@ -1333,7 +1344,13 @@ def my_games(state_name):
                 }
             row <= col
 
+        if missing_orders:
+            late_games.append(game_name)
+
         games_table <= row
+
+    if late_games:
+        mydialog.InfoDialog("Information", f"Vous êtes en retard dans la(les) partie(s) : {' '.join(late_games)}")
 
     # store the list of games
     storage['GAME_LIST'] = ' '.join(games_list)
