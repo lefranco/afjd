@@ -2622,7 +2622,7 @@ def imagine_units():
 
     # check game finished (if not soloed nor end voted)
     if play_low.GAME_PARAMETERS_LOADED['finished']:
-        alert("La partie est arrivée à échéance")
+        alert("La partie est terminée parce qu'arrivée à échéance")
         play.load_option(None, 'Consulter')
         return False
 
