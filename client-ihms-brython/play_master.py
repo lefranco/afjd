@@ -1218,16 +1218,16 @@ def game_master():
         alert("La partie est terminée parce qu'un solo a été réalisé !")
 
     # check game end voted
-    if play_low.GAME_PARAMETERS_LOADED['end_voted']:
+    elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
         alert("La partie est terminée sur un vote de fin unanime !")
 
     # check game finished (if not soloed nor end voted)
     elif play_low.GAME_PARAMETERS_LOADED['finished']:
-        alert("La partie est arrivée à échéance")
+        alert("La partie est terminée parce qu'arrivée à échéance")
 
     # warning if game not waiting or ongoing
     if play_low.GAME_PARAMETERS_LOADED['current_state'] not in [0, 1]:
-        alert("Attention : la partie est terminée !")
+        mydialog.InfoDialog("Information", "Cette partie est terminée !")
 
     advancement_loaded = play_low.GAME_PARAMETERS_LOADED['current_advancement']
 
@@ -2053,7 +2053,7 @@ def supervise():
 
             adjudicated = req_result['adjudicated']
             if adjudicated:
-                mydialog.InfoDialog("Information", "La résolution a été forcée..")
+                mydialog.InfoDialog("Information", "La résolution a été forcée.")
                 message = "Résolution forcée par la console suite forçage accord"
                 log_stack.insert(message)
 

@@ -149,7 +149,7 @@ def recruiting_games():
                 alert("ATTENTION ! Rejoindre une partie est un engagement à ne pas prendre à la légère !\n\nUn courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...", True)
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                mydialog.InfoDialog("Information", f"Vous avez rejoint la partie (en utilisant la page 'rejoindre') : {messages}", True)
+                mydialog.InfoDialog("Information", f"Vous avez rejoint la partie (en utilisant la page 'rejoindre') : {messages}")
 
             game_id = game_data_sel[game_name][0]
 
