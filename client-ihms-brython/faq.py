@@ -10,7 +10,7 @@ FAQ_CONTENT_TABLE = {
     "Non, cela n'est pas possible. Il doit y avoir des intervenants distincts sur une partie (arbitre y compris). Le système se base sur l'identité pour trouver le rôle, et ainsi présenter l'interface idoine.",
 
     "Peut-on faire des erreurs d'ordres ?":
-    "Non. Les ordres sont 100% vérifiés avant d'être enregistrés. L'option de bienveillance vis à vis des débutants a été privilégiée. Par contre le menu “Taguer“ dans une partie permet une communcation par ordres “ésotériques“. Cela ne presente un intérêt que dans les parties sans communication.",
+    "Non. Les ordres sont 100% vérifiés avant d'être enregistrés. L'option de bienveillance vis à vis des débutants a été privilégiée. Par contre le menu “Ordonner_2“ dans une partie permet une communcation par ordres “ésotériques“. Cela ne presente un intérêt que dans les parties sans communication.",
 
     "Que signifient toutes les couleurs de remplissage des regions sur la carte ?":
     "Une région prend la couleur du pays qui possède le centre qui s'y trouve. Sinon, elle prend la couleur du pays qui possède l'unité qui l'occupe. Sinon, elle prend la couleur 'géographique' (ce critère restant subjectif - par exemple la Gascogne est géographiquement en France) du pays.",
