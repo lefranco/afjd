@@ -1253,7 +1253,7 @@ def submit_orders():
         buttons_right <= html.DIV("La soumission des ordres prend également en compte l'accord pour la résolution", Class='instruction')
         buttons_right <= html.BR()
         if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
-            buttons_right <= html.DIV("Pour communiquer avec des ordres invalides, utiliser le sous-menu 'taguer'", Class='Note')
+            buttons_right <= html.DIV("Pour communiquer avec des ordres invalides, utiliser le sous-menu 'Ordonner_2'", Class='Note')
             buttons_right <= html.BR()
         buttons_right <= html.DIV("Pour exporter la position vers le bac à sable, passer par le sous-menu 'consulter'", Class='Note')
         buttons_right <= html.BR()
@@ -1364,7 +1364,7 @@ def submit_orders():
 
     # Uncomment this code to recover if situation was altered after orders where submitted
     # And enter hold orders for every one and validate
-    #### orders_loaded = {'fake_units': [], 'orders': {}}
+    # orders_loaded = {'fake_units': [], 'orders': {}}
 
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, play_low.POSITION_DATA, False)
