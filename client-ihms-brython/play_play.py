@@ -253,9 +253,6 @@ def submit_orders():
         if play_low.GAME_PARAMETERS_LOADED['archive']:
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
-        # button last moves
-        play_low.stack_last_moves_button(buttons_right)
-
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
 
@@ -301,9 +298,6 @@ def submit_orders():
         # button erase for archive games
         if play_low.GAME_PARAMETERS_LOADED['archive']:
             play_low.stack_cancel_last_adjudication_button(buttons_right)
-
-        # button last moves
-        play_low.stack_last_moves_button(buttons_right)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -362,9 +356,6 @@ def submit_orders():
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
-
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
 
@@ -422,9 +413,6 @@ def submit_orders():
             # button erase for archive games
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
-
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -609,9 +597,6 @@ def submit_orders():
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
-
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
 
@@ -716,9 +701,6 @@ def submit_orders():
             # button erase for archive games
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
-
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -839,9 +821,6 @@ def submit_orders():
             # button erase for archive games
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
-
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -965,9 +944,6 @@ def submit_orders():
         # button erase for archive games
         if play_low.GAME_PARAMETERS_LOADED['archive']:
             play_low.stack_cancel_last_adjudication_button(buttons_right)
-
-        # button last moves
-        play_low.stack_last_moves_button(buttons_right)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1254,9 +1230,6 @@ def submit_orders():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
-            play_low.stack_communications_orders_button(buttons_right)
-
     # need to be connected
     if play_low.PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -1448,6 +1421,10 @@ def submit_orders():
     # button last moves
     play_low.stack_last_moves_button(buttons_right)
 
+    # button for communication orders
+    if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
+        play_low.stack_communications_orders_button(buttons_right)
+
     # information retreats/builds
     play_low.stack_possibilities(buttons_right, advancement_season)
 
@@ -1567,9 +1544,6 @@ def submit_communication_orders():
         # role flag
         play_low.stack_role_flag(buttons_right)
 
-        # button last moves
-        play_low.stack_last_moves_button(buttons_right)
-
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -1601,9 +1575,6 @@ def submit_communication_orders():
 
             # role flag
             play_low.stack_role_flag(buttons_right)
-
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
@@ -1709,9 +1680,6 @@ def submit_communication_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
-
             # gm can pass orders on archive games
             if selected_active_unit is None or (play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]):
 
@@ -1778,9 +1746,6 @@ def submit_communication_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
-
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
                 # little shortcut if dest = origin
@@ -1822,9 +1787,6 @@ def submit_communication_orders():
 
             # role flag
             play_low.stack_role_flag(buttons_right)
-
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -1918,9 +1880,6 @@ def submit_communication_orders():
 
         # role flag
         play_low.stack_role_flag(buttons_right)
-
-        # button last moves
-        play_low.stack_last_moves_button(buttons_right)
 
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
@@ -2216,8 +2175,9 @@ def submit_communication_orders():
     # role flag
     play_low.stack_role_flag(buttons_right)
 
-    # button last moves
-    play_low.stack_last_moves_button(buttons_right)
+    # button for communication orders
+    if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
+        play_low.stack_communications_orders_button(buttons_right)
 
     legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
     buttons_right <= legend_select_unit
@@ -2302,9 +2262,6 @@ def imagine_units():
         # role flag
         play_low.stack_role_flag(buttons_right)
 
-        # button last moves
-        play_low.stack_last_moves_button(buttons_right)
-
         for unit_type in mapping.UnitTypeEnum.inventory():
             input_select = html.INPUT(type="submit", value=f"Imaginer une {play_low.VARIANT_DATA.unit_name_table[unit_type]}", Class='btn-inside')
             buttons_right <= html.BR()
@@ -2347,9 +2304,6 @@ def imagine_units():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
-
             legend_select_active = html.DIV("Sélectionner la zone où mettre cette unité", Class='instruction')
             buttons_right <= legend_select_active
 
@@ -2374,9 +2328,6 @@ def imagine_units():
 
             # role flag
             play_low.stack_role_flag(buttons_right)
-
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
 
             legend_select_active = html.DIV("Sélectionner l'unité à ne plus imaginer", Class='instruction')
             buttons_right <= legend_select_active
@@ -2424,9 +2375,6 @@ def imagine_units():
                     # role flag
                     play_low.stack_role_flag(buttons_right)
 
-                    # button last moves
-                    play_low.stack_last_moves_button(buttons_right)
-
                     buttons_right <= html.BR()
                     put_submit(buttons_right, True)
                     put_reset(buttons_right)
@@ -2448,9 +2396,6 @@ def imagine_units():
 
             # role flag
             play_low.stack_role_flag(buttons_right)
-
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
 
             selected_active_unit = None
             if selected_dest_zone.region in play_low.POSITION_DATA.occupant_table:
@@ -2679,9 +2624,6 @@ def imagine_units():
 
     # role flag
     play_low.stack_role_flag(buttons_right)
-
-    # button last moves
-    play_low.stack_last_moves_button(buttons_right)
 
     for unit_type in mapping.UnitTypeEnum.inventory():
         input_select = html.INPUT(type="submit", value=f"Imaginer une {play_low.VARIANT_DATA.unit_name_table[unit_type]}", Class='btn-inside')
