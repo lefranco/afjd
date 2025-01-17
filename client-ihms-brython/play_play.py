@@ -1362,6 +1362,10 @@ def submit_orders():
         play.load_option(None, 'Consulter')
         return False
 
+    # Uncomment this code to recover if situation was altered after orders where submitted
+    # And enter hold orders for every one and validate
+    #### orders_loaded = {'fake_units': [], 'orders': {}}
+
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, play_low.POSITION_DATA, False)
     orders_in = not orders_data.empty()
