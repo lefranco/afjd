@@ -540,6 +540,16 @@ def stack_possibilities(frame, advancement_season):
         frame <= html.BR()
 
 
+def stack_communications_orders_button(frame):
+    """ stack_communications_orders_button """
+
+    input_last_moves = html.INPUT(type="submit", value="Ordres de communication ou faux ordres", Class='btn-inside')
+    input_last_moves.bind("click", lambda e: play.load_option(e, 'Ordonner_2', True))
+    frame <= input_last_moves
+    frame <= html.BR()
+    frame <= html.BR()
+
+
 def civil_disorder_allowed(advancement_loaded):
     """ civil_disorder_allowed """
 

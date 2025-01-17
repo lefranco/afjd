@@ -1250,14 +1250,12 @@ def submit_orders():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        buttons_right <= html.DIV("La soumission des ordres prend également en compte l'accord pour la résolution", Class='instruction')
+        buttons_right <= html.DIV("Pour exporter la position vers le bac à sable, passer par le sous-menu 'consulter'", Class='instruction')
         buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
         if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
-            buttons_right <= html.DIV("Pour communiquer avec des ordres invalides, utiliser le sous-menu 'Ordonner_2'", Class='Note')
-            buttons_right <= html.BR()
-        buttons_right <= html.DIV("Pour exporter la position vers le bac à sable, passer par le sous-menu 'consulter'", Class='Note')
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+            play_low.stack_communications_orders_button(buttons_right)
 
     # need to be connected
     if play_low.PSEUDO is None:
@@ -1533,6 +1531,7 @@ def submit_communication_orders():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.InfoDialog("Information", f"Vous avez déposé les ordres de communication : {messages}")
+            alert("Vos ordres de communication seront visibles par tous les joueurs de la partie dans le prochain compte-rendu de résolution.")
 
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = dumps(orders_list_dict)
