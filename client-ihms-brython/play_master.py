@@ -1640,7 +1640,7 @@ def game_master():
         play_low.MY_SUB_PANEL <= table
 
         play_low.MY_SUB_PANEL <= html.BR()
-        play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
+        play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}", Class='note')
 
     ############################################
     if play_low.GAME_PARAMETERS_LOADED['current_state'] == 1 and (play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']):
