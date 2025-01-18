@@ -23,6 +23,7 @@ import time
 import types
 import typing
 
+# Set to have profile stats
 PROFILE = False
 
 # as extracted from input file
@@ -618,6 +619,6 @@ if __name__ == '__main__':
         PS = pstats.Stats(PR)
         PS.strip_dirs()
         PS.sort_stats('time')
-        PS.print_stats()  # uncomment to have profile stats
+        PS.print_stats() 
 
     sys.exit(0)
