@@ -1338,7 +1338,7 @@ def submit_orders():
     # orders_loaded = {'fake_units': [], 'orders': {}}
 
     # digest the orders
-    orders_data = mapping.Orders(orders_loaded, play_low.POSITION_DATA, False)
+    orders_data = mapping.Orders(orders_loaded, play_low.POSITION_DATA)
     orders_in = not orders_data.empty()
 
     # hovering effect
@@ -2138,7 +2138,7 @@ def submit_communication_orders():
         return False
 
     # digest the orders
-    orders_data = mapping.Orders(communication_orders_loaded, play_low.POSITION_DATA, False)
+    orders_data = mapping.Orders(communication_orders_loaded, play_low.POSITION_DATA)
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
