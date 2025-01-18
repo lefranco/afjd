@@ -71,6 +71,15 @@ def next_previous_game(previous: bool):
 
     allgames.show_game_selected()
 
+    arrival = None
+    if ITEM_NAME_SELECTED == 'Négocier':
+        arrival = 'messages'
+    elif ITEM_NAME_SELECTED == 'Déclarer':
+        arrival = 'declarations'
+
+    # so that will go to proper page
+    set_arrival(arrival)
+
     # action of going to game page
     render(index.PANEL_MIDDLE)
 
