@@ -2360,7 +2360,7 @@ COMMUNICATION_ORDER_COLOR = ColourRecord(red=255, green=0, blue=255)
 class Orders(Renderable):
     """ A set of orders that can be displayed / requires position """
 
-    def __init__(self, server_dict, position: Position, communication_orders_present: bool) -> None:
+    def __init__(self, server_dict, position: Position) -> None:
 
         self._position = position
 
@@ -2380,36 +2380,39 @@ class Orders(Renderable):
                 fake_unit = Fleet(self._position, role, zone, None, False)  # type: ignore
             self._fake_units[zone_num] = fake_unit
 
+        # TODO : after implementation in game server, this code will be removed since there will always be a 'communication_orders' field
+        # for historical reasons (before this was not filled)
+        if 'communication_orders' not in server_dict:
+            server_dict['communication_orders'] = []
+
         # orders
-        orders = server_dict['orders']
         self._orders = []
-        for _, _, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders:
+        self._communication_orders = []
+        for source, dest in ((server_dict['orders'], self._orders), (server_dict['communication_orders'], self._communication_orders)):
+            for _, _, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in source:
 
-            order_type = OrderTypeEnum.from_code(order_type_num)
-            assert order_type is not None
+                order_type = OrderTypeEnum.from_code(order_type_num)
+                assert order_type is not None
 
-            if order_type is OrderTypeEnum.BUILD_ORDER:
-                active_unit = self._fake_units[active_unit_zone_num]
-            else:
-                zone_active_unit = self._position.variant.zones[active_unit_zone_num]
-                region_active_unit = zone_active_unit.region
-                active_unit = self._position.occupant_table[region_active_unit]
+                if order_type is OrderTypeEnum.BUILD_ORDER:
+                    active_unit = self._fake_units[active_unit_zone_num]
+                else:
+                    zone_active_unit = self._position.variant.zones[active_unit_zone_num]
+                    region_active_unit = zone_active_unit.region
+                    active_unit = self._position.occupant_table[region_active_unit]
 
-            passive_unit = None
-            if passive_unit_zone_num != 0:
-                zone_passive_unit = self._position.variant.zones[passive_unit_zone_num]
-                region_passive_unit = zone_passive_unit.region
-                passive_unit = self._position.occupant_table[region_passive_unit]
+                passive_unit = None
+                if passive_unit_zone_num != 0:
+                    zone_passive_unit = self._position.variant.zones[passive_unit_zone_num]
+                    region_passive_unit = zone_passive_unit.region
+                    passive_unit = self._position.occupant_table[region_passive_unit]
 
-            destination_zone = None
-            if destination_zone_num != 0:
-                destination_zone = self._position.variant.zones[destination_zone_num]
+                destination_zone = None
+                if destination_zone_num != 0:
+                    destination_zone = self._position.variant.zones[destination_zone_num]
 
-            order = Order(self._position, order_type, active_unit, passive_unit, destination_zone)
-            self._orders.append(order)
-
-        # comm orders
-        self._communication_orders_present = communication_orders_present
+                order = Order(self._position, order_type, active_unit, passive_unit, destination_zone)
+                dest.append(order)
 
     def insert_order(self, order: Order) -> None:
         """ insert_order """
@@ -2523,9 +2526,14 @@ class Orders(Renderable):
         for order in self._orders:
             order.render(ctx)
 
-        # The little rectangle
-        if self._communication_orders_present:
+        if self._communication_orders:
+            # The little rectangle
             fill_zone(ctx, COMMUNICATION_ORDER_PATH, COMMUNICATION_ORDER_COLOR, 1)
+
+        # communication orders
+        # TODO : distinguish them
+        for order in self._communication_orders:
+            order.render(ctx)
 
     def save_json(self):
         """ export as list of dict """

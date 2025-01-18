@@ -938,7 +938,7 @@ def show_board(panel):
         orders_loaded = game_orders_reload(GAME_ID)
 
         # digest the orders
-        orders_data = mapping.Orders(orders_loaded, POSITION_DATA, False)
+        orders_data = mapping.Orders(orders_loaded, POSITION_DATA)
 
     # create canvas
     map_size = VARIANT_DATA.map_size
