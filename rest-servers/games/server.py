@@ -2623,6 +2623,19 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to rectify a position!")
 
+        assert game is not None
+
+        # Reject if not spring or autumn
+        if game.current_advancement % 5 not in [0, 2]:
+            del sql_executor
+            flask_restful.abort(400, msg="Unsafe to rectify a position in this season to play!")
+
+        # Reject if some orders are in
+        orders_list = orders.Order.list_by_game_id(sql_executor, game_id)
+        if orders_list:
+            del sql_executor
+            flask_restful.abort(400, msg="Unsafe to rectify a position when some orders are alreay submitted!")
+
         # store position
 
         # purge previous ownerships
