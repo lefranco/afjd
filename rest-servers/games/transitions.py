@@ -100,6 +100,11 @@ class Transition:
         return self._orders_json
 
     @property
+    def communication_orders_json(self) -> str:
+        """ property """
+        return self._communication_orders_json
+
+    @property
     def report_txt(self) -> str:
         """ property """
         return self._report_txt

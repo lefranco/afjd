@@ -187,7 +187,7 @@ def create_initial_position():
     orders_loaded = {'fake_units': {}, 'orders': {}}
 
     # digest the orders
-    ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA)
+    ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA, [])
 
 
 def show_variant():

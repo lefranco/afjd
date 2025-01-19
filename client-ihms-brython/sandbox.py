@@ -115,7 +115,7 @@ def create_empty_position():
     orders_loaded = {'fake_units': {}, 'orders': {}}
 
     # digest the orders
-    ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA)
+    ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA, [])
 
 
 def import_position(incoming_position):
@@ -159,7 +159,7 @@ def import_position(incoming_position):
     orders_loaded = {'fake_units': {}, 'orders': {}}
 
     # digest the orders
-    ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA)
+    ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA, [])
 
 
 def sandbox():

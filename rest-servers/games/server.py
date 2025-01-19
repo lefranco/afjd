@@ -3028,11 +3028,12 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
         assert transition is not None
         the_situation = json.loads(transition.situation_json)
         the_orders = json.loads(transition.orders_json)
+        the_communication_orders = json.loads(transition.communication_orders_json)
         report_txt = transition.report_txt
 
         del sql_executor
 
-        data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
+        data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders,  'communication_orders': the_communication_orders, 'report_txt': report_txt}
         return data, 200
 
 

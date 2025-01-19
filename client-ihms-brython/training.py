@@ -683,7 +683,7 @@ def slide_just_display():
         return
 
     # digest the orders
-    orders_data = mapping.Orders(ORDERS_LOADED, POSITION_DATA)
+    orders_data = mapping.Orders(ORDERS_LOADED, POSITION_DATA, [])
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -775,7 +775,7 @@ def slide_submit_orders():
                     mydialog.InfoDialog("Information", "Ordres validés !")
 
             # compare with expected orders
-            expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA)
+            expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, [])
             if same_orders(orders_data, expected):
                 mydialog.InfoDialog("Information", "Félicitations, ce sont bien les ordres attendus !<br><br>(On passe automatiquement à la planche suivante)", False)
                 next_previous_training(False)
@@ -1725,7 +1725,7 @@ def slide_submit_orders():
     canvas.bind("dblclick", callback_canvas_dblclick)
 
     # digest the orders
-    orders_data = mapping.Orders(ORDERS_LOADED, POSITION_DATA)
+    orders_data = mapping.Orders(ORDERS_LOADED, POSITION_DATA, [])
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -2034,7 +2034,7 @@ def slide_show_adjudication():
         return
 
     # digest the orders
-    orders_data = mapping.Orders(SHOWN_ORDERS, POSITION_DATA)
+    orders_data = mapping.Orders(SHOWN_ORDERS, POSITION_DATA, [])
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
