@@ -2073,9 +2073,15 @@ def submit_communication_orders():
         play.load_option(None, 'Consulter')
         return False
 
-    # game needs to dissallow messages
+    # game needs to disallow messages
     if not play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
         alert("La partie permet les messages")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # phase needs to be moves or retreat
+    if play_low.GAME_PARAMETERS_LOADED['current_advancement'] not in [0, 1, 2, 3]:
+        alert("Ce n'est pas une phase de mouvements ou de retraites")
         play.load_option(None, 'Consulter')
         return False
 
