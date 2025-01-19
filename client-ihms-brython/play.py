@@ -72,7 +72,9 @@ def next_previous_game(previous: bool):
     allgames.show_game_selected()
 
     arrival = None
-    if ITEM_NAME_SELECTED == 'Négocier':
+    if ITEM_NAME_SELECTED == 'Consulter':
+        arrival = 'position'
+    elif ITEM_NAME_SELECTED == 'Négocier':
         arrival = 'messages'
     elif ITEM_NAME_SELECTED == 'Déclarer':
         arrival = 'declarations'
@@ -166,7 +168,7 @@ def load_option(_, item_name, direct_last_moves=False):
                 continue
 
         if possible_item_name == 'Négocier':
-            # do not display menu Négovier if not player or master
+            # do not display menu Négocier if not player or master
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
                 continue
 
@@ -371,7 +373,10 @@ def render(panel_middle):
 
         # we have a player here
 
-        if ARRIVAL == 'declarations':
+        if ARRIVAL == 'position':
+            # set page for position
+            ITEM_NAME_SELECTED = 'Consulter'
+        elif ARRIVAL == 'declarations':
             # set page for press
             ITEM_NAME_SELECTED = 'Déclarer'
         elif ARRIVAL == 'messages':
