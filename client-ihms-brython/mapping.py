@@ -2066,7 +2066,7 @@ class Order(Renderable):
         self._passive_unit = passive_unit
         self._destination_zone = destination_zone
 
-    def render(self, ctx) -> None:
+    def render(self, ctx, communication=False) -> None:
         """ put me on screen """
 
         # -- moves --
@@ -2076,7 +2076,7 @@ class Order(Renderable):
             assert self._destination_zone is not None
 
             # red color : attack
-            stroke_color = ATTACK_COLOUR
+            stroke_color = ATTACK_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
@@ -2094,7 +2094,7 @@ class Order(Renderable):
             assert self._destination_zone is not None
 
             # red for support to attack
-            stroke_color = ATTACK_COLOUR
+            stroke_color = ATTACK_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
@@ -2130,7 +2130,7 @@ class Order(Renderable):
             assert self._passive_unit is not None
 
             # green for peaceful defensive support
-            stroke_color = SUPPORT_COLOUR
+            stroke_color = SUPPORT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             # ctx.fillStyle is not used
 
@@ -2165,7 +2165,7 @@ class Order(Renderable):
         if self._order_type is OrderTypeEnum.HOLD_ORDER:
 
             # green for peaceful hold
-            stroke_color = SUPPORT_COLOUR
+            stroke_color = SUPPORT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             # ctx.fillStyle is not used
 
@@ -2188,7 +2188,7 @@ class Order(Renderable):
             assert self._destination_zone is not None
 
             # blue for convoy
-            stroke_color = CONVOY_COLOUR
+            stroke_color = CONVOY_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
@@ -2224,7 +2224,7 @@ class Order(Renderable):
             assert self._destination_zone is not None
 
             # orange for retreat
-            stroke_color = RETREAT_COLOUR
+            stroke_color = RETREAT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.lineWidth = 1.5  # Retreats : not that many so can be thicker
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
@@ -2240,7 +2240,7 @@ class Order(Renderable):
         if self._order_type is OrderTypeEnum.DISBAND_ORDER:
 
             # orange for retreat
-            stroke_color = RETREAT_COLOUR
+            stroke_color = RETREAT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.lineWidth = 1.5
             # ctx.fillStyle is not used
@@ -2263,7 +2263,7 @@ class Order(Renderable):
             self._active_unit.render(ctx)
 
             # grey for builds
-            stroke_color = ADJUSTMENT_COLOUR
+            stroke_color = ADJUSTMENT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.lineWidth = 1.5
             # ctx.fillStyle is not used
@@ -2277,7 +2277,7 @@ class Order(Renderable):
         if self._order_type is OrderTypeEnum.REMOVE_ORDER:
 
             # grey for builds
-            stroke_color = ADJUSTMENT_COLOUR
+            stroke_color = ADJUSTMENT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.lineWidth = 1.5
             # ctx.fillStyle is not used
@@ -2528,9 +2528,8 @@ class Orders(Renderable):
             fill_zone(ctx, COMMUNICATION_ORDER_PATH, COMMUNICATION_ORDER_COLOR, 1)
 
         # communication orders
-        # TODO : distinguish them
         for order in self._communication_orders:
-            order.render(ctx)
+            order.render(ctx, communication=True)
 
     def save_json(self):
         """ export as list of dict """
