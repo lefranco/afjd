@@ -553,11 +553,27 @@ def stack_possibilities(frame, advancement_season):
 def stack_communication_possibilities(frame, orders_data):
     """ stack_possibilities """
 
-    # : we alert about comm orders  possibilities
-    frame <= html.DIV("A priori des ordres de communication sont possibles pour les unités suivantes qui ont des ordres *rééls* compatibles (tenir ou se disperser):", Class='note')
-    for order in orders_data.orders:
-        if order.order_type in [mapping.OrderTypeEnum.HOLD_ORDER, mapping.OrderTypeEnum.DISBAND_ORDER]:
-            frame <= html.DIV(str(order.active_unit), Class='note')
+    # No orders : do not know
+    if not orders_data.orders:
+        frame <= html.DIV("Attention : Vos ordres n'étant pas soumis, impossible de vous rappeler les ordres compatibles (tenir ou se disperser)", Class='note')
+        frame <= html.BR()
+        frame <= html.BR()
+        return
+
+    # Get possible units
+    possible_units = [o.active_unit for o in orders_data.orders if o.order_type in [mapping.OrderTypeEnum.HOLD_ORDER, mapping.OrderTypeEnum.DISBAND_ORDER]]
+
+    # none avaiklable
+    if not possible_units:
+        frame <= html.DIV("Attention : Aucune de vos unité n'a reçu d'ordre *réel* compatible (tenir ou se disperser)", Class='note')
+        frame <= html.BR()
+        frame <= html.BR()
+        return
+
+    #  we alert about comm orders  possibilities
+    frame <= html.DIV("Des ordres de communication sont possibles pour les unités suivantes qui ont des ordres *rééls* compatibles (tenir ou se disperser):", Class='note')
+    for unit in possible_units:
+        frame <= html.DIV(str(unit), Class='note')
     frame <= html.BR()
     frame <= html.BR()
 
