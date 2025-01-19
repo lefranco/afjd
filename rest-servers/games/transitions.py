@@ -115,8 +115,7 @@ class Transition:
         compressed_communication_orders_json = database.compress_text(self._communication_orders_json)
         compressed_report_txt = database.compress_text(self._report_txt)
 
-        return (f"{self._game_id}{database.STR_SEPARATOR}{self._advancement}{database.STR_SEPARATOR}{self._time_stamp}{database.STR_SEPARATOR}{compressed_situation_json}{database.STR_SEPARATOR}{compressed_orders_json}{database.STR_SEPARATOR}{compressed_report_txt}").encode('ascii')
-        #### return (f"{self._game_id}{database.STR_SEPARATOR}{self._advancement}{database.STR_SEPARATOR}{self._time_stamp}{database.STR_SEPARATOR}{compressed_situation_json}{database.STR_SEPARATOR}{compressed_orders_json}{database.STR_SEPARATOR}{compressed_communication_orders_json}{database.STR_SEPARATOR}{compressed_report_txt}").encode('ascii')
+        return (f"{self._game_id}{database.STR_SEPARATOR}{self._advancement}{database.STR_SEPARATOR}{self._time_stamp}{database.STR_SEPARATOR}{compressed_situation_json}{database.STR_SEPARATOR}{compressed_orders_json}{database.STR_SEPARATOR}{compressed_communication_orders_json}{database.STR_SEPARATOR}{compressed_report_txt}").encode('ascii')
 
 
 def convert_transition(buffer: bytes) -> Transition:
@@ -133,12 +132,10 @@ def convert_transition(buffer: bytes) -> Transition:
     compressed_orders_json = tab[4].decode()
     orders_json = database.uncompress_text(compressed_orders_json)
 
-    # TODO
-    ### compressed_communication_orders_json = tab[xxx].decode()
-    ### communication_orders_json = database.uncompress_text(compressed_communication_orders_json)
-    communication_orders_json = ""
+    compressed_communication_orders_json = tab[5].decode()
+    communication_orders_json = database.uncompress_text(compressed_communication_orders_json)
 
-    compressed_report_txt = tab[5].decode()
+    compressed_report_txt = tab[6].decode()
     report_txt = database.uncompress_text(compressed_report_txt)
 
     transition = Transition(identifier, advancement, time_stamp, situation_json, orders_json, communication_orders_json, report_txt)

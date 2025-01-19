@@ -8534,16 +8534,13 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
 
-        sql_executor = database.SqlExecutor()
+        # sql_executor = database.SqlExecutor()
         #
         # # insert specific code here
-        for transition in transitions.Transition.inventory(sql_executor):
-            print(str(transition), file=sys.stderr)
-            ###  game.update_database(sql_executor)
 
-        ### sql_executor.commit()
+        # sql_executor.commit()
 
-        del sql_executor
+        # del sql_executor
 
         print("MAINTENANCE - done !!!", file=sys.stderr)
 
