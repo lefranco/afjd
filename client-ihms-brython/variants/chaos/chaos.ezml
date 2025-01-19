@@ -1,0 +1,150 @@
+Chaos
+
+_
+$ Contexte
+Le jeu Diplomatie standard avec chacun un centre au départ.
+
+_
+$ Côtes spéciales
+
+(Espagne)
+   Elle a 2 côtes, Nord et Sud.
+(Bulgarie)
+   Elle a 2 côtes, Sud et Est.
+(Saint Pétersboug)
+   Elle a 2 côtes, Nord et Sud.
+
+_
+$ Particularités de la carte
+
+
+La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question
+
+(Canal à Danemark)
+De Mer de Héligoland (Hel) à Mer de Baltique (Bal) en passant par Danemark (Dan)  (et réciproquement)
+
+(Canal à Constantinople)
+De Mer Egée (Ege) à Mer Noire (Noi) en passant par Constantinople (Con)  (et réciproquement)
+
+_
+$ Datation
+
+La partie commence en *1901*. 
+Chaque tour représente *1* années 
+"en temps réel".
+
+_
+$ Centres de ravitaillement
+
+Il y a *34* centres de ravitaillement sur le plateau. 
+.
+Le gagnant est donc la puissance qui détient *18* centres de ravitaillement ou plus pendant une phase d'ajustement.
+
+_
+$ Puissances en présence
+
+Il y a sept puissances dont les unités de départ sont les suivantes :
+.
+.
+= Position de départ
+|Puissance | Centres |  Armées | Flottes | Centres inoccupés|
+|chaque joueur incarne un centre | 1 | -| - | |
+=
+
+_
+$ Pièges de la variante
+
+Sans objet.
+
+_
+$ Nomenclature
+
+= Régions et abréviations de la variante
+| Abréviation | Nom complet |
+| Adr | Mer Adriatique |
+| AfN | Afrique du Nord |
+| Alb | Albanie |
+| Ank | Ankara |
+| Apu | Apulie |
+| Arm | Arménie |
+| AtN | Atlantique Nord |
+| Atl | Atlantique |
+| Bal | Mer Baltique |
+| Bar | Mer de Barents |
+| Bel | Belgique |
+| Ber | Berlin |
+| Boh | Bohème |
+| Bot | Golfe de Botnie |
+| Bou | Bourgogne |
+| Bre | Brest |
+| Bud | Budapest |
+| Bul | Bulgarie |
+| Cly | Clyde |
+| Con | Constantinople |
+| Dan | Danemark |
+| Edi | Édimbourg |
+| Ege | Mer d'Egée |
+| Esp | Espagne |
+| Fin | Finlande |
+| GLi | Golfe du Lion |
+| Gal | Galicie |
+| Gas | Gascogne |
+| Gre | Grèce |
+| Hel | Baie de Helgoland |
+| Hol | Hollande |
+| Ion | Mer Ionienne |
+| Irl | Mer d'Irlande |
+| Kie | Kiel |
+| Lon | Londres |
+| Lvn | Livonie |
+| Lvp | Liverpool |
+| MNg | Mer de Norvège |
+| MOc | Méditerranée occidentale |
+| MOr | Méditerranée orientale |
+| MTy | Mer Tyrrhénienne |
+| Man | Manche |
+| Mar | Marseille |
+| Mos | Moscou |
+| Mun | Munich |
+| Nap | Naples |
+| Nge | Norvège |
+| Noi | Mer Noire |
+| Nrd | Mer du Nord |
+| PGa | Pays de Galles |
+| Par | Paris |
+| Pic | Picardie |
+| Pie | Piémont |
+| Por | Portugal |
+| Pru | Prusse |
+| Rom | Rome |
+| Rou | Roumanie |
+| Ruh | Ruhr |
+| Seb | Sébastopol |
+| Ser | Serbie |
+| Sil | Silésie |
+| Ska | Skagerrak |
+| Smy | Smyrne |
+| StP | Saint-Pétersbourg |
+| Sue | Suède |
+| Syr | Syrie |
+| Tos | Toscane |
+| Tri | Trieste |
+| Tun | Tunis |
+| Tyr | Tyrol |
+| Ukr | Ukraine |
+| Var | Varsovie |
+| Ven | Venise |
+| Vie | Vienne |
+| Yor | Yorkshire |
+=
+
+_
+$ Expansionnisme (oui)
+
+Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. Par exemple, la France peut construire à Londres si ce centre est vacant et qu'elle en est propriétaire
+
+
+_
+$ Sur le wiki
+
+Sans objet
