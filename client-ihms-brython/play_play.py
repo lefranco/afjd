@@ -2035,7 +2035,7 @@ def submit_communication_orders():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        buttons_right <= html.DIV("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution pourvu que l'unité en question ait reçu l'ordre *réel* de rester en place ou de se disperser.", Class='important')
+        buttons_right <= html.DIV("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution pourvu que l'unité en question ait reçu l'ordre *réel* de tenir ou de se disperser.", Class='important')
 
     # need to be connected
     if play_low.PSEUDO is None:
@@ -2137,6 +2137,16 @@ def submit_communication_orders():
     canvas.bind("dblclick", callback_canvas_dblclick)
 
     # get the orders from server
+    orders_loaded = play_low.game_orders_reload(play_low.GAME_ID)
+    if not orders_loaded:
+        alert("Erreur chargement ordres")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # digest the orders
+    orders_data2 = mapping.Orders(orders_loaded, play_low.POSITION_DATA)
+
+    # get the communication orders from server
     communication_orders_loaded = play_low.game_communication_orders_reload(play_low.GAME_ID)
     if not communication_orders_loaded:
         alert("Erreur chargement ordres communication")
@@ -2181,9 +2191,8 @@ def submit_communication_orders():
     # role flag
     play_low.stack_role_flag(buttons_right)
 
-    # button for communication orders
-    if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
-        play_low.stack_communications_orders_button(buttons_right)
+    # button for communication orders possibilities
+    play_low.stack_communication_possibilities(buttons_right, orders_data2)
 
     legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
     buttons_right <= legend_select_unit

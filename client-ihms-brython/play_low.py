@@ -550,6 +550,18 @@ def stack_possibilities(frame, advancement_season):
         frame <= html.BR()
 
 
+def stack_communication_possibilities(frame, orders_data):
+    """ stack_possibilities """
+
+    # : we alert about comm orders  possibilities
+    frame <= html.DIV("A priori des ordres de communication sont possibles pour les unités suivantes qui ont des ordres *rééls* compatibles (tenir ou se disperser):", Class='note')
+    for order in orders_data.orders:
+        if order.order_type in [mapping.OrderTypeEnum.HOLD_ORDER, mapping.OrderTypeEnum.DISBAND_ORDER]:
+            frame <= html.DIV(str(order.active_unit), Class='note')
+    frame <= html.BR()
+    frame <= html.BR()
+
+
 def civil_disorder_allowed(advancement_loaded):
     """ civil_disorder_allowed """
 
