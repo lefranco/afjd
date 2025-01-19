@@ -31,10 +31,16 @@ def makeflags(json_parameters_data: typing.Dict[str, typing.Any]) -> None:
         if int(role) == 0:
             continue
 
-        new_img = Image.new('RGB', (37, 25), color=(role_data['red'][0], role_data['green'][0], role_data['blue'][0]))
+        color_tuple = (role_data['red'][0], role_data['green'][0], role_data['blue'][0])
+        new_img = Image.new('RGB', (37, 25), color=color_tuple)
+
+        if sum(color_tuple) > 127 * 3:
+            color_fill = (0,0,0)
+        else:
+            color_fill = (255,255,255)
 
         draw = ImageDraw.Draw(new_img)
-        draw.text((0, 0), role_data['name'][:6], font=None)
+        draw.text((0, 0), role_data['name'][:6], font=None, fill=color_fill)
 
         new_img.save(f"{role}.jpg", "JPEG")
 
