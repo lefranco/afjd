@@ -55,6 +55,7 @@ VARIANT_NAMES_DICT = {
     'successionautriche': 9,
     'moderne': 10,
     'crowded': 11,
+    'chaos': 34,
 }
 
 
