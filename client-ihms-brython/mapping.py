@@ -2360,7 +2360,7 @@ COMMUNICATION_ORDER_COLOR = ColourRecord(red=255, green=0, blue=255)
 class Orders(Renderable):
     """ A set of orders that can be displayed / requires position """
 
-    def __init__(self, server_dict, position: Position) -> None:
+    def __init__(self, server_dict, position: Position, communication_orders_list) -> None:
 
         self._position = position
 
@@ -2380,15 +2380,12 @@ class Orders(Renderable):
                 fake_unit = Fleet(self._position, role, zone, None, False)  # type: ignore
             self._fake_units[zone_num] = fake_unit
 
-        # TODO : after implementation in game server, this code will be removed since there will always be a 'communication_orders' field
-        # for historical reasons (before this was not filled)
-        if 'communication_orders' not in server_dict:
-            server_dict['communication_orders'] = []
-
         # orders
         self._orders = []
         self._communication_orders = []
-        for source, dest in ((server_dict['orders'], self._orders), (server_dict['communication_orders'], self._communication_orders)):
+        # communication order do not have the game id as first item
+        communication_orders_list = [[0] + o for o in communication_orders_list]
+        for source, dest in ((server_dict['orders'], self._orders), (communication_orders_list, self._communication_orders)):
             for _, _, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in source:
 
                 order_type = OrderTypeEnum.from_code(order_type_num)

@@ -371,7 +371,8 @@ def show_position(direct_last_moves):
 
                 # digest the orders
                 orders_loaded = transition_loaded['orders']
-                orders_data = mapping.Orders(orders_loaded, position_data)
+                communication_orders_loaded = transition_loaded['communication_orders']
+                orders_data = mapping.Orders(orders_loaded, position_data, communication_orders_loaded)
 
                 # make a text version (for fog mainly)
                 orders_data_txt = orders_data.text_version()
