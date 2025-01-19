@@ -2080,7 +2080,7 @@ def submit_communication_orders():
         return False
 
     # phase needs to be moves or retreat
-    if play_low.GAME_PARAMETERS_LOADED['current_advancement'] not in [0, 1, 2, 3]:
+    if play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 not in [0, 1, 2, 3]:
         alert("Ce n'est pas une phase de mouvements ou de retraites")
         play.load_option(None, 'Consulter')
         return False
