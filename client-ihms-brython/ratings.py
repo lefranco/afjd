@@ -1005,6 +1005,30 @@ def show_scoring():
 
     # left side
 
+    title = html.H3("Changement de scorage")
+    MY_SUB_PANEL <= title
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_scoring = html.LEGEND("scorage", title="Le scorage à étudier")
+    fieldset <= legend_scoring
+    input_scoring = html.SELECT(type="select-one", value="", Class='btn-inside')
+
+    for scoring_name in config.SCORING_CODE_TABLE:
+        option = html.OPTION(scoring_name)
+        if config.SCORING_CODE_TABLE[scoring_name] == SCORING_REQUESTED:
+            option.selected = True
+        input_scoring <= option
+    fieldset <= input_scoring
+    form <= fieldset
+
+    input_select_scoring = html.INPUT(type="submit", value="Sélectionner ce scorage", Class='btn-inside')
+    input_select_scoring.bind("click", change_scoring_callback)
+    form <= input_select_scoring
+
+    MY_SUB_PANEL <= form
+
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
@@ -1061,30 +1085,6 @@ def show_scoring():
     input_test_scoring = html.INPUT(type="submit", value="Calculer la marque avec ce scorage", Class='btn-inside')
     input_test_scoring.bind("click", lambda e, ri=ratings_input: test_scoring_callback(e, ri))
     form <= input_test_scoring
-
-    MY_SUB_PANEL <= form
-
-    title = html.H3("Changement de scorage")
-    MY_SUB_PANEL <= title
-
-    form = html.FORM()
-
-    fieldset = html.FIELDSET()
-    legend_scoring = html.LEGEND("scorage", title="Le scorage à étudier")
-    fieldset <= legend_scoring
-    input_scoring = html.SELECT(type="select-one", value="", Class='btn-inside')
-
-    for scoring_name in config.SCORING_CODE_TABLE:
-        option = html.OPTION(scoring_name)
-        if config.SCORING_CODE_TABLE[scoring_name] == SCORING_REQUESTED:
-            option.selected = True
-        input_scoring <= option
-    fieldset <= input_scoring
-    form <= fieldset
-
-    input_select_scoring = html.INPUT(type="submit", value="Sélectionner ce scorage", Class='btn-inside')
-    input_select_scoring.bind("click", change_scoring_callback)
-    form <= input_select_scoring
 
     MY_SUB_PANEL <= form
 
