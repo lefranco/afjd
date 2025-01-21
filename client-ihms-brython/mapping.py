@@ -2067,14 +2067,15 @@ DASH_PATTERN = [5, 5]
 class Order(Renderable):
     """ Order """
 
-    def __init__(self, position: 'Position', order_type: OrderTypeEnum, active_unit: Unit, passive_unit, destination_zone) -> None:
+    def __init__(self, position: 'Position', order_type: OrderTypeEnum, active_unit: Unit, passive_unit, destination_zone, communication) -> None:
         self._position = position
         self._order_type = order_type
         self._active_unit = active_unit
         self._passive_unit = passive_unit
         self._destination_zone = destination_zone
+        self._communication = communication
 
-    def render(self, ctx, communication=False) -> None:
+    def render(self, ctx) -> None:
         """ put me on screen """
 
         # -- moves --
@@ -2084,7 +2085,7 @@ class Order(Renderable):
             assert self._destination_zone is not None
 
             # red color : attack
-            stroke_color = ATTACK_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
+            stroke_color = ATTACK_COLOUR if not self._communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
@@ -2102,7 +2103,7 @@ class Order(Renderable):
             assert self._destination_zone is not None
 
             # red for support to attack
-            stroke_color = ATTACK_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
+            stroke_color = ATTACK_COLOUR if not self._communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
@@ -2138,7 +2139,7 @@ class Order(Renderable):
             assert self._passive_unit is not None
 
             # green for peaceful defensive support
-            stroke_color = SUPPORT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
+            stroke_color = SUPPORT_COLOUR if not self._communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             # ctx.fillStyle is not used
 
@@ -2173,7 +2174,7 @@ class Order(Renderable):
         if self._order_type is OrderTypeEnum.HOLD_ORDER:
 
             # green for peaceful hold
-            stroke_color = SUPPORT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
+            stroke_color = SUPPORT_COLOUR if not self._communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             # ctx.fillStyle is not used
 
@@ -2196,7 +2197,7 @@ class Order(Renderable):
             assert self._destination_zone is not None
 
             # blue for convoy
-            stroke_color = CONVOY_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
+            stroke_color = CONVOY_COLOUR if not self._communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
@@ -2232,7 +2233,7 @@ class Order(Renderable):
             assert self._destination_zone is not None
 
             # orange for retreat
-            stroke_color = RETREAT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
+            stroke_color = RETREAT_COLOUR if not self._communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.lineWidth = 1.5  # Retreats : not that many so can be thicker
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
@@ -2248,7 +2249,7 @@ class Order(Renderable):
         if self._order_type is OrderTypeEnum.DISBAND_ORDER:
 
             # orange for retreat
-            stroke_color = RETREAT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
+            stroke_color = RETREAT_COLOUR if not self._communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.lineWidth = 1.5
             # ctx.fillStyle is not used
@@ -2271,7 +2272,7 @@ class Order(Renderable):
             self._active_unit.render(ctx)
 
             # grey for builds
-            stroke_color = ADJUSTMENT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
+            stroke_color = ADJUSTMENT_COLOUR if not self._communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.lineWidth = 1.5
             # ctx.fillStyle is not used
@@ -2285,7 +2286,7 @@ class Order(Renderable):
         if self._order_type is OrderTypeEnum.REMOVE_ORDER:
 
             # grey for builds
-            stroke_color = ADJUSTMENT_COLOUR if not communication else COMMUNICATION_ORDER_COLOR
+            stroke_color = ADJUSTMENT_COLOUR if not self._communication else COMMUNICATION_ORDER_COLOR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.lineWidth = 1.5
             # ctx.fillStyle is not used
@@ -2416,7 +2417,7 @@ class Orders(Renderable):
                 if destination_zone_num != 0:
                     destination_zone = self._position.variant.zones[destination_zone_num]
 
-                order = Order(self._position, order_type, active_unit, passive_unit, destination_zone)
+                order = Order(self._position, order_type, active_unit, passive_unit, destination_zone, source == communication_orders_list)
                 dest.append(order)
 
     def insert_order(self, order: Order) -> None:
@@ -2521,7 +2522,7 @@ class Orders(Renderable):
                 continue
 
             # receive order
-            order = Order(self._position, OrderTypeEnum.HOLD_ORDER, unit, None, None)
+            order = Order(self._position, OrderTypeEnum.HOLD_ORDER, unit, None, None, False)
             self.insert_order(order)
 
     def render(self, ctx) -> None:
