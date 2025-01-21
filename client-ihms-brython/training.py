@@ -389,74 +389,6 @@ def stack_possibilities(frame, advancement_season):
         frame <= html.BR()
 
 
-def make_rating_colours_window(variant_data, position_data, interface_):
-    """ make_rating_window """
-
-    ratings1 = position_data.role_ratings()
-    units = position_data.role_units()
-    colours = position_data.role_colours()
-
-    rating_table = html.TABLE()
-
-    # flags
-    rolename2role_id = {variant_data.role_name_table[v]: k for k, v in variant_data.roles.items()}
-    variant_name = variant_data.name
-    flags_row = html.TR()
-    rating_table <= flags_row
-    col = html.TD(html.B("Drapeaux :"))
-    flags_row <= col
-    for role_name in ratings1:
-        col = html.TD()
-        role_id = rolename2role_id[role_name]
-        role_icon_img = common.display_flag(variant_name, interface_, role_id, role_name)
-        col <= role_icon_img
-        flags_row <= col
-
-    # roles
-    rating_names_row = html.TR()
-    rating_table <= rating_names_row
-    col = html.TD(html.B("Rôles :"))
-    rating_names_row <= col
-    for role_name in ratings1:
-        col = html.TD()
-
-        canvas2 = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
-        ctx2 = canvas2.getContext("2d")
-
-        colour = colours[role_name]
-
-        outline_colour = colour.outline_colour()
-        ctx2.strokeStyle = outline_colour.str_value()
-        ctx2.lineWidth = 2
-        ctx2.beginPath()
-        ctx2.rect(0, 0, 14, 14)
-        ctx2.stroke()
-        ctx2.closePath()  # no fill
-
-        ctx2.fillStyle = colour.str_value()
-        ctx2.fillRect(1, 1, 13, 13)
-
-        col <= canvas2
-        col <= f" {role_name}"
-        rating_names_row <= col
-
-    # centers
-    rating_centers_row = html.TR()
-    rating_table <= rating_centers_row
-    col = html.TD(html.B("Centres (unités) :"))
-    rating_centers_row <= col
-    for role, ncenters in ratings1.items():
-        nunits = units[role]
-        col = html.TD()
-        if nunits != ncenters:
-            col <= f"{ncenters} ({nunits})"
-        else:
-            col <= f"{ncenters}"
-        rating_centers_row <= col
-
-    return rating_table
-
-
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
@@ -694,7 +626,7 @@ def slide_just_display():
     img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN)
+    rating_colours_window = common.make_rating_colours_window(False, False, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, None, None, None, None)
 
     # left side
 
@@ -1736,7 +1668,7 @@ def slide_submit_orders():
     img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN)
+    rating_colours_window = common.make_rating_colours_window(False, False, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, None, None, None, None)
 
     # left side
     display_left = html.DIV(id='display_left')
@@ -2045,7 +1977,7 @@ def slide_show_adjudication():
     img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN)
+    rating_colours_window = common.make_rating_colours_window(False, False, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, None, None, None, None)
 
     # left side
 
