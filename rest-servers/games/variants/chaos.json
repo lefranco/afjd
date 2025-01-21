@@ -249,12 +249,15 @@
             3
         ]
     ],
+
     "start_units": [],
     "year_zero": 1899,
     "increment": 1,
     "extra_requirement_solo": 0,
     "build_everywhere": true,
+    "start_build": true,
     "disorder": {},
+
     "neighbouring": [
         {
             "3": [

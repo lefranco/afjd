@@ -320,11 +320,14 @@
             ]
         }
     ],
+
     "year_zero": 1740,
     "increment": 1,
     "extra_requirement_solo": 0,
     "build_everywhere": false,
+    "start_build": false,
     "disorder": {},
+
     "neighbouring": [
         {
             "1": [
