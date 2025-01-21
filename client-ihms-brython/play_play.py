@@ -1374,13 +1374,18 @@ def submit_orders():
     # all reports until last moves
     advancement_selected = play_low.GAME_PARAMETERS_LOADED['current_advancement']
 
+    # exception for start build games
+    min_possible_advancement = 0
+    if play_low.VARIANT_DATA.start_build:
+        min_possible_advancement = 4
+
     while True:
 
         # one backwards
         advancement_selected -= 1
 
         # out of scope : done
-        if advancement_selected < 0:
+        if advancement_selected < min_possible_advancement:
             break
 
         fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']

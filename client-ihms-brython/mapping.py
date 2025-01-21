@@ -743,6 +743,9 @@ class Variant(Renderable):
         # build everywhere
         self._build_everywhere = raw_variant_content['build_everywhere']
 
+        # start build
+        self._start_build = raw_variant_content['start_build']
+
         # extra_requirement_solo
         self._extra_requirement_solo = raw_variant_content['extra_requirement_solo']
 
@@ -1235,6 +1238,11 @@ class Variant(Renderable):
     def build_everywhere(self) -> bool:
         """ property """
         return self._build_everywhere
+
+    @property
+    def start_build(self) -> bool:
+        """ property """
+        return self._start_build
 
     @property
     def extra_requirement_solo(self) -> bool:
