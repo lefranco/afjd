@@ -68,74 +68,6 @@ def restore_context(ctx):
     ctx.drawImage(BACKUP_CANVAS, 0, 0)
 
 
-def make_rating_colours_window(variant_data, position_data, interface_):
-    """ make_rating_window """
-
-    ratings = position_data.role_ratings()
-    units = position_data.role_units()
-    colours = position_data.role_colours()
-
-    rating_table = html.TABLE()
-
-    # flags
-    rolename2role_id = {variant_data.role_name_table[v]: k for k, v in variant_data.roles.items()}
-    variant_name = variant_data.name
-    flags_row = html.TR()
-    rating_table <= flags_row
-    col = html.TD(html.B("Drapeaux :"))
-    flags_row <= col
-    for role_name in ratings:
-        col = html.TD()
-        role_id = rolename2role_id[role_name]
-        role_icon_img = common.display_flag(variant_name, interface_, role_id, role_name)
-        col <= role_icon_img
-        flags_row <= col
-
-    # roles
-    rating_names_row = html.TR()
-    rating_table <= rating_names_row
-    col = html.TD(html.B("Rôles :"))
-    rating_names_row <= col
-    for role_name in ratings:
-        col = html.TD()
-
-        canvas2 = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
-        ctx2 = canvas2.getContext("2d")
-
-        colour = colours[role_name]
-
-        outline_colour = colour.outline_colour()
-        ctx2.strokeStyle = outline_colour.str_value()
-        ctx2.lineWidth = 2
-        ctx2.beginPath()
-        ctx2.rect(0, 0, 14, 14)
-        ctx2.stroke()
-        ctx2.closePath()  # no fill
-
-        ctx2.fillStyle = colour.str_value()
-        ctx2.fillRect(1, 1, 13, 13)
-
-        col <= canvas2
-        col <= f" {role_name}"
-        rating_names_row <= col
-
-    # centers
-    rating_centers_row = html.TR()
-    rating_table <= rating_centers_row
-    col = html.TD(html.B("Centres (unités) :"))
-    rating_centers_row <= col
-    for role, ncenters in ratings.items():
-        nunits = units[role]
-        col = html.TD()
-        if nunits != ncenters:
-            col <= f"{ncenters} ({nunits})"
-        else:
-            col <= f"{ncenters}"
-        rating_centers_row <= col
-
-    return rating_table
-
-
 def create_initial_position():
     """ create_initial_position """
 
@@ -299,7 +231,7 @@ def show_variant():
     MY_SUB_PANEL <= my_sub_panel2
     MY_SUB_PANEL <= html.BR()
 
-    MY_SUB_PANEL <= make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN)
+    MY_SUB_PANEL <= common.make_rating_colours_window(False, False, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, None, None, None, None)
     MY_SUB_PANEL <= html.BR()
 
     ezml_file = f"./variants/{VARIANT_NAME}/{VARIANT_NAME}.ezml"

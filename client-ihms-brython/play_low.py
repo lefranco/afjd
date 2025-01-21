@@ -10,7 +10,6 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import mydatetime
 import config
 import common
-import scoring
 import interface
 import mapping
 import memoize
@@ -52,114 +51,6 @@ REPORT_LOADED = {}
 # loaded in load_special_stuff
 GAME_MASTER = None
 GAME_PLAYERS_DICT = {}
-
-
-def make_rating_colours_window(fog_of_war, game_over, variant_data, position_data, interface_, game_scoring):
-    """ make_rating_window """
-
-    ratings1 = position_data.role_ratings()
-    units = position_data.role_units()
-    colours = position_data.role_colours()
-
-    rating_table = html.TABLE()
-
-    # flags
-    rolename2role_id = {variant_data.role_name_table[v]: k for k, v in variant_data.roles.items()}
-    variant_name = variant_data.name
-    flags_row = html.TR()
-    rating_table <= flags_row
-    col = html.TD(html.B("Drapeaux :"))
-    flags_row <= col
-    for role_name in ratings1:
-        col = html.TD()
-        role_id = rolename2role_id[role_name]
-        role_icon_img = common.display_flag(variant_name, interface_, role_id, role_name)
-        col <= role_icon_img
-        flags_row <= col
-
-    # roles
-    rating_names_row = html.TR()
-    rating_table <= rating_names_row
-    col = html.TD(html.B("Rôles :"))
-    rating_names_row <= col
-    for role_name in ratings1:
-        col = html.TD()
-
-        canvas2 = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
-        ctx2 = canvas2.getContext("2d")
-
-        colour = colours[role_name]
-
-        outline_colour = colour.outline_colour()
-        ctx2.strokeStyle = outline_colour.str_value()
-        ctx2.lineWidth = 2
-        ctx2.beginPath()
-        ctx2.rect(0, 0, 14, 14)
-        ctx2.stroke()
-        ctx2.closePath()  # no fill
-
-        ctx2.fillStyle = colour.str_value()
-        ctx2.fillRect(1, 1, 13, 13)
-
-        col <= canvas2
-        col <= f" {role_name}"
-        rating_names_row <= col
-
-    # centers
-    rating_centers_row = html.TR()
-    rating_table <= rating_centers_row
-    col = html.TD(html.B("Centres (unités) :"))
-    rating_centers_row <= col
-    for role, ncenters in ratings1.items():
-        nunits = units[role]
-        col = html.TD()
-        if nunits != ncenters:
-            col <= f"{ncenters} ({nunits})"
-        else:
-            col <= f"{ncenters}"
-        rating_centers_row <= col
-
-    # scoring
-    centers_variant = variant_data.number_centers()
-    extra_requirement_solo = variant_data.extra_requirement_solo
-    solo_threshold = centers_variant // 2 + extra_requirement_solo
-    score_table = scoring.scoring(game_scoring, centers_variant, solo_threshold, ratings1)
-
-    # get scoring name
-    name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}
-    scoring_name = name2code[game_scoring]
-
-    # scoring
-    rating_scoring_row = html.TR()
-    rating_table <= rating_scoring_row
-    col = html.TD(html.B(f"{scoring_name} :"))
-    rating_scoring_row <= col
-    for role_name in ratings1:
-        score_dis = score_table[role_name]
-        role_score = ""
-        if not fog_of_war or game_over or ROLE_ID == 0:
-            role_score = f"{float(score_dis):.2f}"
-        col = html.TD(role_score)
-        rating_scoring_row <= col
-
-    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
-
-    # player
-    players_row = html.TR()
-    rating_table <= players_row
-    col = html.TD(html.B("Joueurs :"))
-    players_row <= col
-    for role_name in ratings1:
-        role_id = rolename2role_id[role_name]
-        pseudo_there = ""
-        if role_id in role2pseudo:
-            player_id_str = role2pseudo[role_id]
-            player_id = int(player_id_str)
-            pseudo_there = ID2PSEUDO[player_id]
-        col = html.TD(pseudo_there)
-        players_row <= col
-
-    return rating_table
 
 
 def game_votes_reload(game_id):
@@ -987,7 +878,7 @@ def show_board(panel):
     fog_of_war = GAME_PARAMETERS_LOADED['fog']
     game_over = GAME_PARAMETERS_LOADED['soloed'] or GAME_PARAMETERS_LOADED['end_voted'] or GAME_PARAMETERS_LOADED['finished']
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(fog_of_war, game_over, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, game_scoring)
+    rating_colours_window = common.make_rating_colours_window(fog_of_war, game_over, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, game_scoring, ROLE_ID, GAME_PLAYERS_DICT, ID2PSEUDO)
     panel <= rating_colours_window
     panel <= html.BR()
 

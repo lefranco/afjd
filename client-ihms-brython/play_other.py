@@ -440,7 +440,7 @@ def show_position(direct_last_moves):
         fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
         game_over = play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']
         game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
-        rating_colours_window = play_low.make_rating_colours_window(fog_of_war, game_over, play_low.VARIANT_DATA, position_data, play_low.INTERFACE_CHOSEN, game_scoring)
+        rating_colours_window = common.make_rating_colours_window(fog_of_war, game_over, play_low.VARIANT_DATA, position_data, play_low.INTERFACE_CHOSEN, game_scoring, play_low.ROLE_ID, play_low.GAME_PLAYERS_DICT, play_low.ID2PSEUDO)
 
         display_left <= rating_colours_window
         display_left <= html.BR()
