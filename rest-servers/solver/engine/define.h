@@ -31,7 +31,7 @@
 #define NCOTESPOSSS     10
 
 #define NDISPARITIONS 	NPAYSS
-#define NELOIGNEMENTS   5000
+#define NELOIGNEMENTS   6000
 
 #define INF(a,b) ((a) < (b) ? (a) : (b))
 
