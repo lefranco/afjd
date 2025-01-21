@@ -502,6 +502,10 @@ class Game:
                     unit.update_database(sql_executor)
             role_num += 1
 
+        # variants that start with build phase
+        if variant_data['start_build']:
+            self._current_advancement = 4
+
     def delete_position(self, sql_executor: database.SqlExecutor) -> None:
         """ delete position for game in database """
 
