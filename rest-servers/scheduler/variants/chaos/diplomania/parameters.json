@@ -144,8 +144,8 @@
             ]
         },
         "7": {
-            "name": "constantinople",
-            "adjective_name": "constantinople",
+            "name": "constant",
+            "adjective_name": "constant",
             "letter_name": "h",
             "red": [
                 164,
@@ -501,8 +501,8 @@
             ]
         },
         "28": {
-            "name": "saintpetersbourg",
-            "adjective_name": "saintpetersbourg",
+            "name": "saintpet",
+            "adjective_name": "saintpet",
             "letter_name": "F",
             "red": [
                 139,
