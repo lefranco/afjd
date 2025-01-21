@@ -415,7 +415,7 @@ def sandbox():
             if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
 
                 # insert hold order
-                order = mapping.Order(POSITION_DATA, order_type, selected_active_unit, None, None)
+                order = mapping.Order(POSITION_DATA, order_type, selected_active_unit, None, None, False)
                 ORDERS_DATA.insert_order(order)
 
                 # update map
@@ -559,10 +559,10 @@ def sandbox():
                 if selected_dest_zone.region == selected_active_unit.zone.region:
                     selected_order_type = mapping.OrderTypeEnum.HOLD_ORDER
                     selected_dest_zone = None
-                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone, False)
                 ORDERS_DATA.insert_order(order)
             if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
-                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone, False)
                 ORDERS_DATA.insert_order(order)
 
             # update map
@@ -602,7 +602,7 @@ def sandbox():
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
                 # insert def support order
-                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, None)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, None, False)
                 ORDERS_DATA.insert_order(order)
 
                 # update map

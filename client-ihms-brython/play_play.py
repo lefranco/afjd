@@ -456,7 +456,7 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
 
                 # insert hold order
-                order = mapping.Order(play_low.POSITION_DATA, order_type, selected_active_unit, None, None)
+                order = mapping.Order(play_low.POSITION_DATA, order_type, selected_active_unit, None, None, False)
                 orders_data.insert_order(order)
 
                 # update map
@@ -497,7 +497,7 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.DISBAND_ORDER:
 
                 # insert disband order
-                order = mapping.Order(play_low.POSITION_DATA, order_type, selected_active_unit, None, None)
+                order = mapping.Order(play_low.POSITION_DATA, order_type, selected_active_unit, None, None, False)
                 orders_data.insert_order(order)
 
                 # update map
@@ -659,7 +659,7 @@ def submit_orders():
                         buttons_right <= input_select
 
                 if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                    order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, None, None)
+                    order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, None, None, False)
                     orders_data.insert_order(order)
 
                     # update map
@@ -711,17 +711,17 @@ def submit_orders():
                 if selected_dest_zone.region == selected_active_unit.zone.region:
                     selected_order_type = mapping.OrderTypeEnum.HOLD_ORDER
                     selected_dest_zone = None
-                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone)
+                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone, False)
                 orders_data.insert_order(order)
             if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
-                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
+                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone, False)
                 orders_data.insert_order(order)
             if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
                 # little shortcut if dest = origin
                 if selected_dest_zone.region == selected_active_unit.zone.region:
                     selected_order_type = mapping.OrderTypeEnum.DISBAND_ORDER
                     selected_dest_zone = None
-                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone)
+                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone, False)
                 orders_data.insert_order(order)
             if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER:
                 # create fake unit
@@ -764,7 +764,7 @@ def submit_orders():
                         if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
                             fake_unit = mapping.Fleet(play_low.POSITION_DATA, deducted_role, selected_build_zone, None, False)
                         # create order
-                        order = mapping.Order(play_low.POSITION_DATA, selected_order_type, fake_unit, None, None)
+                        order = mapping.Order(play_low.POSITION_DATA, selected_order_type, fake_unit, None, None, False)
                         orders_data.insert_order(order)
 
             # update map
@@ -828,7 +828,7 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
                 # insert def support order
-                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, None)
+                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, None, False)
                 orders_data.insert_order(order)
 
                 # update map
@@ -1620,7 +1620,7 @@ def submit_communication_orders():
             if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
 
                 # insert hold order
-                order = mapping.Order(play_low.POSITION_DATA, order_type, selected_active_unit, None, None)
+                order = mapping.Order(play_low.POSITION_DATA, order_type, selected_active_unit, None, None, False)
                 orders_data.insert_order(order)
 
                 # update map
@@ -1757,10 +1757,10 @@ def submit_communication_orders():
                 if selected_dest_zone.region == selected_active_unit.zone.region:
                     selected_order_type = mapping.OrderTypeEnum.HOLD_ORDER
                     selected_dest_zone = None
-                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone)
+                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone, False)
                 orders_data.insert_order(order)
             if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
-                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
+                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone, False)
                 orders_data.insert_order(order)
 
             # update map
@@ -1796,7 +1796,7 @@ def submit_communication_orders():
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
                 # insert def support order
-                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, None)
+                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, None, False)
                 orders_data.insert_order(order)
 
                 # update map
