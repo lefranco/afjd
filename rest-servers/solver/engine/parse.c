@@ -560,7 +560,10 @@ static void parsepays(FILE *fd) {
 		cherchechaine(__FILE__, 226, buf, 0); /*"Taille de l'initiale d'un pays"*/
 		erreurparse(NULL, SYNTAXIQUE, FALSE, buf);
 	}
-	PAYS.t[PAYS.n].initiale = tok.val[1];
+	if (tok.val[0] == 'X')
+	    PAYS.t[PAYS.n].initiale = tok.val[1];
+	else
+	    PAYS.t[PAYS.n].initiale = tolower(tok.val[1]);
 
 	gettoken(fd, &tok);
 	switch (tok.id) {

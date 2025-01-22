@@ -40,7 +40,8 @@ def build_variant_file(variant: typing.Dict[str, typing.Any], names: typing.Dict
     assert len(names['roles']) == number_roles + 1
     for role_num in range(1, number_roles + 1):
         name, adjective, letter = names['roles'][str(role_num)]
-        result.append(f"PAYS {name} x{letter} {adjective}")
+        # to pass a uppercase letter put something different than x before (variant with many countries)
+        result.append(f"PAYS {name} {'x' if letter.isupper() else 'y'}{letter} {adjective}")
 
     result.append("; -------")
     result.append("; REGIONS")
