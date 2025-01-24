@@ -2938,12 +2938,18 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         # extract transition data
         the_situation = json.loads(transition.situation_json)
         the_orders = json.loads(transition.orders_json)
+        the_communication_orders = json.loads(transition.communication_orders_json)
         report_txt = transition.report_txt
 
         # game not ongoing or game master or game actually soloed or end-voted or finished: you get get a clear picture
         if game.current_state != 1 or (role_id != 'None' and int(role_id) == 0) or game.soloed or game.end_voted or game.finished:
             del sql_executor
-            data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
+            data = {
+                'time_stamp': transition.time_stamp,
+                'situation': the_situation,
+                'orders': the_orders,
+                'communication_orders': the_communication_orders,
+                'report_txt': report_txt}
             return data, 200
 
         # get a partial picture of things
@@ -2951,7 +2957,12 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
 
         # get an empty picture if things if no role provided since protected
         if role_id == 'None':
-            data = {'time_stamp': transition.time_stamp, 'situation': {'ownerships': {}, 'dislodged_ones': {}, 'units': {}, 'forbiddens': []}, 'orders': {'orders': [], 'fake_units': []}, 'report_txt': "---"}
+            data = {
+                'time_stamp': transition.time_stamp,
+                'situation': {'ownerships': {}, 'dislodged_ones': {}, 'units': {}, 'forbiddens': []},
+                'orders': {'orders': [], 'fake_units': []},
+                'communication_orders': the_communication_orders,
+                'report_txt': "---"}
             return data, 200
 
         ownership_dict = the_situation['ownerships']
@@ -2987,6 +2998,7 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
                 'orders': orders_list,
                 'fake_units': fake_units_list
             },
+            'communication_orders': the_communication_orders,
             'report_txt': "---"
         }
         return data, 200
@@ -3033,7 +3045,7 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders,  'communication_orders': the_communication_orders, 'report_txt': report_txt}
+        data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'communication_orders': the_communication_orders, 'report_txt': report_txt}
         return data, 200
 
 
