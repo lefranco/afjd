@@ -23,37 +23,29 @@ import flask_mail  # type: ignore
 INTERVAL = 5
 
 # mailing suject
-SUBJECT = "Oisiveté de ton compte sur le serveur web de jeu de l'Association Francophone des Joueurs de Diplomacy"
+SUBJECT = "Inactivité de ton compte sur le serveur web de jeu de l'Association Francophone des Joueurs de Diplomacy"
 
 # mailing body
 BODY = """
 Cher joueur de Diplomacy,
 
 Tu t'es crée un compte sur le site https://diplomania-gen.fr <date> avec le pseudo '<pseudo>'.
-Tu n'es en ce moment dans aucune partie.
-Pourquoi ?
+Mais il semble aujourd'hui que tu n'as pas rejoint de partie.
 
- - Tu n'as pas réussi à t'inscrire dans une partie parce que c'est trop compliqué ?
- - Tu as trouvé depuis un autre site qui répond mieux à tes attentes ?
- - Tu voulais juste mettre ton nom dans le site en espérant recevoir une newsletter un jour ?
- - Un défaut du site t'a semblé redhibitoire ?
- - Une autre raison ?
+Nous cherchons en permanence à améliorer le site, tes commentaires sont donc les bienvenus et tes remarques nous intéressent vivement.
+N'as tu pas réussi à t'inscrire dans une partie pour une rtaison à définir ?
+As tu trouvé depuis un autre site qui répond mieux à tes attentes ?
+As tu rencontré un un problème sur le site qui te semble redhibitoire ?
 
-C'est dommage, car plus de joueurs permet d'avoir plus de masse critique pour plus de parties, plus de variété dans les parties et les adversaires !
+Quelques conseils de notre côté :
 
-Après t'être connecté(e), tu peux tout de suite t'inscrire dans des parties en attente (boutons "Les parties" puis "Rejoindre une partie").
-
-Si tu hésites entre différentes variantes, le bouton "Variantes" les décrit.
-
-En attendant que les parties démarrent, si tu ne connais pas bien les règles du jeu Diplomacy ou si tu veux te familiariser avec l'interface de Diplomania, nous te recommandons de cliquer sur "Tutoriels et défis" et d'utiliser l' "Aide" ou le "Wiki".
-
-Tu peux aussi faire un tour sur le "Forum"...
-
-Et l'AFJD te propose également son serveur Discord pour échanger (lien vers ce Discord depuis la page d'accueil du site).
-
+- Après t'être connecté(e), tu peux tout de suite t'inscrire dans des parties en attente (boutons "Les parties" puis "Rejoindre une partie").
+- Si tu hésites entre différentes variantes, le bouton "Variantes" les décrit.
+- En attendant que les parties démarrent, si tu ne connais pas bien les règles du jeu Diplomacy ou si tu veux te familiariser avec l'interface de Diplomania, nous te recommandons de cliquer sur "Tutoriels et défis" et d'utiliser l' "Aide" ou le "Wiki".
+- Tu peux aussi faire un tour sur le "Forum"...
+- Et l'AFJD te propose également son serveur Discord pour échanger (lien vers ce Discord depuis la page d'accueil du site).
 
 N'hésite pas à échanger avec moi en répondant directement à ce courriel (jeremie.lefrancois@gmail.com).
-
 
 Jérémie
 Administrateur du site
