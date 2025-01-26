@@ -115,15 +115,14 @@ def add_user() -> typing.Tuple[typing.Any, int]:
 
     sql_executor = database.SqlExecutor()
 
-    user = users.User.find_by_name(sql_executor, user_name)
+    user_check = users.User.find_by_name(sql_executor, user_name)
 
-    if user is not None:
+    if user_check is not None:
         del sql_executor
         return flask.jsonify({"msg": "User already exists"}), 400
 
     pwd_hash = werkzeug.security.generate_password_hash(password)
     user = users.User(user_name, pwd_hash)
-
     user.update_database(sql_executor)
 
     # consider it as a login to know when players created account
@@ -131,7 +130,7 @@ def add_user() -> typing.Tuple[typing.Any, int]:
     # not mandatory
     ip_address = flask.request.json.get('ip_address', 'none')
 
-    # we keep a trace of the login
+    # we pretend there was a login and keep a trace in order to know when account was created
     login = logins.Login(user_name, ip_address)
     login.update_database(sql_executor)
 
@@ -289,7 +288,7 @@ def login_user() -> typing.Tuple[typing.Any, int]:
             del sql_executor
             return flask.jsonify({"msg": "Invalid password"}), 403
 
-        # we keep a trace of the login
+        # we keep a trace of the successful login
         login = logins.Login(user_name, ip_address)
         login.update_database(sql_executor)
 
