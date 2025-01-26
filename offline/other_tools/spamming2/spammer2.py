@@ -39,7 +39,7 @@ As tu rencontré un un problème sur le site qui te semble redhibitoire ?
 
 Quelques conseils de notre côté :
 
-- Après t'être connecté(e), tu peux tout de suite t'inscrire dans des parties en attente (boutons "Les parties" puis "Rejoindre une partie").
+- Après t'être connecté(e), tu peux tout de suite t'inscrire dans des parties en attente (boutons "Rejoindre une partie").
 - Si tu hésites entre différentes variantes, le bouton "Variantes" les décrit.
 - En attendant que les parties démarrent, si tu ne connais pas bien les règles du jeu Diplomacy ou si tu veux te familiariser avec l'interface de Diplomania, nous te recommandons de cliquer sur "Tutoriels et défis" et d'utiliser l' "Aide" ou le "Wiki".
 - Tu peux aussi faire un tour sur le "Forum"...
