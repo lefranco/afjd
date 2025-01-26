@@ -737,10 +737,10 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/players - POST - creating new player")
-
         args = PLAYER_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("/players - POST - creating new player pseudo=%s", pseudo)
 
         if not pseudo.isidentifier():
             flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is not a valid pseudo")
@@ -805,6 +805,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(400, msg=f"User creation failed!:{message}")
 
+            mylogger.LOGGER.info("/players - POST - player with pseudo=%s created on user server side...", pseudo)
             # we do not create an entry for checking email since we do not have a token yet
 
         # send email
