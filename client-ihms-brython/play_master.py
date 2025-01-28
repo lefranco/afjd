@@ -1307,7 +1307,7 @@ def game_master():
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
         time_stamp_now = time()
 
-        for role_id in play_low.VARIANT_DATA.roles:
+        for role_id in sorted(play_low.VARIANT_DATA.roles, key=lambda r: play_low.VARIANT_DATA.role_name_table[play_low.VARIANT_DATA.roles[r]]):
 
             # discard game master
             if role_id == 0:
