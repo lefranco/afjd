@@ -1161,6 +1161,7 @@ CONTENT_BACKUP = None
 
 SLICE_SIZE = 10
 
+
 def negotiate(default_dest_set, def_focus_role_id):
     """ negotiate """
 
