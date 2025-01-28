@@ -1991,7 +1991,7 @@ class Position(Renderable):
     def role_ratings(self):
         """ a rating of roles """
         raw_dict = {self._variant.role_name_table[self._variant.roles[i]]: len([o for o in self._ownerships if o.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0}
-        return {r: raw_dict[r] for r in sorted(raw_dict.keys(), key=lambda r: raw_dict[r], reverse=True)}
+        return {r: raw_dict[r] for r in sorted(raw_dict.keys(), key=lambda r: (-raw_dict[r], r))}
 
     def role_units(self):
         """ a units number of roles """
