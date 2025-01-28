@@ -331,8 +331,8 @@ def bangkok(centers_variant, solo_threshold, ratings):
         score[role_name] += participation_points
 
     # survival points (if you survive you get survival + second half participation)
-    survivers = [r for r in ratings if ratings[r]]
-    for role_name in survivers:
+    survivors = [r for r in ratings if ratings[r]]
+    for role_name in survivors:
         score[role_name] += survival_points
 
     return score
@@ -364,8 +364,8 @@ def manorcon(centers_variant, solo_threshold, ratings):
         total += share
 
     # only survivors score
-    survivers = [r for r in ratings if ratings[r]]
-    for role_name in survivers:
+    survivors = [r for r in ratings if ratings[r]]
+    for role_name in survivors:
         center_num = ratings[role_name]
         share = center_num ** 2 + 4 * center_num + add_param
         score[role_name] = 100 * nb_players * (share / total)
@@ -388,9 +388,9 @@ def calhammer(_, solo_threshold, ratings):
         return score
 
     # only survivors score
-    survivers = [r for r in ratings if ratings[r]]
-    for role_name in survivers:
-        score[role_name] = solo_reward // len(survivers)
+    survivors = [r for r in ratings if ratings[r]]
+    for role_name in survivors:
+        score[role_name] = solo_reward // len(survivors)
 
     return score
 
