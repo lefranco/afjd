@@ -1331,6 +1331,18 @@ def make_rating_colours_window(fog_of_war, game_over, variant_data, position_dat
     """ make_rating_window """
 
     ratings1_left = position_data.role_ratings()
+
+    if game_scoring:
+        # scoring
+        centers_variant = variant_data.number_centers()
+        extra_requirement_solo = variant_data.extra_requirement_solo
+        solo_threshold = centers_variant // 2 + extra_requirement_solo
+        score_table = scoring.scoring(game_scoring, centers_variant, solo_threshold, ratings1_left)
+
+        # get scoring name
+        name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}
+        scoring_name = name2code[game_scoring]
+
     units = position_data.role_units()
     colours = position_data.role_colours()
 
@@ -1399,16 +1411,6 @@ def make_rating_colours_window(fog_of_war, game_over, variant_data, position_dat
             rating_centers_row <= col
 
         if game_scoring:
-
-            # scoring
-            centers_variant = variant_data.number_centers()
-            extra_requirement_solo = variant_data.extra_requirement_solo
-            solo_threshold = centers_variant // 2 + extra_requirement_solo
-            score_table = scoring.scoring(game_scoring, centers_variant, solo_threshold, ratings1)
-
-            # get scoring name
-            name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}
-            scoring_name = name2code[game_scoring]
 
             # scoring
             rating_scoring_row = html.TR()
