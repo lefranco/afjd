@@ -1735,7 +1735,7 @@ def game_master():
     possible_outcomers = players_allocated_list
 
     input_outcomer = html.SELECT(type="select-one", value="", Class='btn-inside')
-    for play_pseudo in sorted(possible_outcomers):
+    for play_pseudo in sorted(possible_outcomers, key=lambda pi: pi.upper()):
         option = html.OPTION(play_pseudo)
         input_outcomer <= option
 
