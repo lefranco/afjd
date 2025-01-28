@@ -1025,7 +1025,7 @@ def sandbox():
     reserve_table = html.TABLE()
 
     num = 1
-    for role in VARIANT_DATA.roles.values():
+    for role in sorted(VARIANT_DATA.roles.values(), key=lambda v: VARIANT_DATA.role_name_table[v]):
 
         # ignore GM
         if role.identifier == 0:
