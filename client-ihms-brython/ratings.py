@@ -1066,9 +1066,10 @@ def show_scoring():
     form = html.FORM()
 
     ratings_input = {}
-    for num, role in variant_data.roles.items():
+    for role in sorted(variant_data.roles.values(), key=lambda v: variant_data.role_name_table[v]):
 
-        if num == 0:
+        # ignore GM
+        if role.identifier == 0:
             continue
 
         role_name = variant_data.role_name_table[role]

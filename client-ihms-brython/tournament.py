@@ -869,7 +869,7 @@ def show_powers_results():
     nb_possible_centers = len(variant_data.centers)
     nb_games = len(positions_dict_loaded)
 
-    for role_id in variant_data.roles:
+    for role_id in sorted(variant_data.roles, key=lambda r: variant_data.role_name_table[variant_data.roles[r]]):
 
         # discard game master
         if role_id == 0:
