@@ -101,6 +101,8 @@ def submit_orders():
 
     def cancel_submit_orders_callback(_, dialog):
         dialog.close(None)
+        play_low.MY_SUB_PANEL.clear()
+        submit_orders()
 
     def submit_orders_callback(_, warned=False, dialog2=None):
         """ submit_orders_callback """
