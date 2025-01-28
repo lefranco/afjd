@@ -1326,6 +1326,7 @@ def game_note_reload(game_id):
 
 SLICE_SIZE = 10
 
+
 def make_rating_colours_window(fog_of_war, game_over, variant_data, position_data, interface_, game_scoring, role_id_used, game_players_dict, id2pseudo):
     """ make_rating_window """
 
