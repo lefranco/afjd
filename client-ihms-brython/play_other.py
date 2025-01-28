@@ -1159,6 +1159,7 @@ def pairing():
 # the idea is not to loose the content of a message if not destinee were specified
 CONTENT_BACKUP = None
 
+SLICE_SIZE = 10
 
 def negotiate(default_dest_set, def_focus_role_id):
     """ negotiate """
@@ -1305,60 +1306,70 @@ def negotiate(default_dest_set, def_focus_role_id):
     fieldset <= legend_destinees
 
     table = html.TABLE()
-    row = html.TR()
     selected = {}
-    for role_id_dest in range(play_low.VARIANT_CONTENT_LOADED['roles']['number'] + 1):
 
-        # dest only if allowed
-        if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
-            if not (play_low.ROLE_ID == 0 or role_id_dest == 0):
-                continue
+    roles_left = list(range(play_low.VARIANT_CONTENT_LOADED['roles']['number'] + 1))
 
-        role_dest = play_low.VARIANT_DATA.roles[role_id_dest]
-        role_name = play_low.VARIANT_DATA.role_name_table[role_dest]
-        role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id_dest, role_name)
+    while roles_left:
 
-        # to restrict
-        action = "Filtrer" if role_id_dest != focus_role_id else "Pas Filtrer"
-        button_focus = html.BUTTON(action, Class='btn-inside')
-        button_focus.bind("click", lambda e, r=role_id_dest: focus_callback(e, r))
+        roles_todo = roles_left[:SLICE_SIZE]
+        roles_left = roles_left[SLICE_SIZE:]
 
-        # necessary to link flag with button
-        label_dest = html.LABEL(role_icon_img, for_=str(role_id_dest))
+        row = html.TR()
 
-        # player
-        pseudo_there = ""
-        if role_id_dest == 0:
-            if play_low.GAME_MASTER:
-                pseudo_there = play_low.GAME_MASTER
-        elif role_id_dest in role2pseudo:
-            player_id_str = role2pseudo[role_id_dest]
-            player_id = int(player_id_str)
-            pseudo_there = play_low.ID2PSEUDO[player_id]
+        for role_id_dest in roles_todo:
 
-        # the alternative
-        input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set, Class='btn-inside')
+            # dest only if allowed
+            if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
+                if not (play_low.ROLE_ID == 0 or role_id_dest == 0):
+                    continue
 
-        # create col
-        col = html.TD()
-        col.style = {
-            'width': '70px'
-        }
+            role_dest = play_low.VARIANT_DATA.roles[role_id_dest]
+            role_name = play_low.VARIANT_DATA.role_name_table[role_dest]
+            role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id_dest, role_name)
 
-        # now put stuff
-        col <= html.CENTER(button_focus)
-        col <= html.BR()
-        col <= html.CENTER(label_dest)
-        col <= html.CENTER(html.B(role_name))
-        if pseudo_there:
-            col <= html.CENTER(pseudo_there)
-        col <= html.CENTER(input_dest)
+            # to restrict
+            action = "Filtrer" if role_id_dest != focus_role_id else "Pas Filtrer"
+            button_focus = html.BUTTON(action, Class='btn-inside')
+            button_focus.bind("click", lambda e, r=role_id_dest: focus_callback(e, r))
 
-        row <= col
+            # necessary to link flag with button
+            label_dest = html.LABEL(role_icon_img, for_=str(role_id_dest))
 
-        selected[role_id_dest] = input_dest
+            # player
+            pseudo_there = ""
+            if role_id_dest == 0:
+                if play_low.GAME_MASTER:
+                    pseudo_there = play_low.GAME_MASTER
+            elif role_id_dest in role2pseudo:
+                player_id_str = role2pseudo[role_id_dest]
+                player_id = int(player_id_str)
+                pseudo_there = play_low.ID2PSEUDO[player_id]
 
-    table <= row
+            # the alternative
+            input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set, Class='btn-inside')
+
+            # create col
+            col = html.TD()
+            col.style = {
+                'width': '70px'
+            }
+
+            # now put stuff
+            col <= html.CENTER(button_focus)
+            col <= html.BR()
+            col <= html.CENTER(label_dest)
+            col <= html.CENTER(html.B(role_name))
+            if pseudo_there:
+                col <= html.CENTER(pseudo_there)
+            col <= html.CENTER(input_dest)
+
+            row <= col
+
+            selected[role_id_dest] = input_dest
+
+        table <= row
+
     fieldset <= table
     form <= fieldset
 
