@@ -689,9 +689,14 @@ def submit_orders():
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                selected_dest_zone = play_low.VARIANT_DATA.closest_zone(pos)
+                if selected_order_type in [mapping.OrderTypeEnum.ATTACK_ORDER, mapping.OrderTypeEnum.RETREAT_ORDER]:
+                    unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_active_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
+                elif selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
+                    unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_passive_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
+                selected_dest_zone = play_low.VARIANT_DATA.closest_zone(pos, unit_reference_type)
+
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                selected_build_zone = play_low.VARIANT_DATA.closest_zone(pos)
+                selected_build_zone = play_low.VARIANT_DATA.closest_zone(pos, selected_build_unit_type)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -1744,7 +1749,11 @@ def submit_communication_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
 
-            selected_dest_zone = play_low.VARIANT_DATA.closest_zone(pos)
+            if selected_order_type in [mapping.OrderTypeEnum.ATTACK_ORDER, mapping.OrderTypeEnum.RETREAT_ORDER]:
+                unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_active_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
+            elif selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
+                unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_passive_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
+            selected_dest_zone = play_low.VARIANT_DATA.closest_zone(pos, unit_reference_type)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -2410,7 +2419,7 @@ def imagine_units():
 
             pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
-            selected_dest_zone = play_low.VARIANT_DATA.closest_zone(pos)
+            selected_dest_zone = play_low.VARIANT_DATA.closest_zone(pos, selected_build_unit_type)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')

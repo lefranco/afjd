@@ -1024,7 +1024,7 @@ class Variant(Renderable):
 
         return closest_center
 
-    def closest_zone(self, designated_pos: geometry.PositionRecord):
+    def closest_zone(self, designated_pos: geometry.PositionRecord, unit_type: OrderTypeEnum):
         """ closest_zone """
 
         closest_zone = None
@@ -1036,6 +1036,9 @@ class Variant(Renderable):
         # yields the closest one which point is in (because can be in two zones : specific coasts)
         inside_ones = 0
         for zone in zones_sorted:
+            # army cannot go on special coasts
+            if zone.parent_zone and unit_type is UnitTypeEnum.ARMY_UNIT:
+                continue
             zone_path = self.path_table[zone]
             if zone_path.is_inside_me(designated_pos):
                 inside_ones += 1
