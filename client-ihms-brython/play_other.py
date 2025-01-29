@@ -580,12 +580,16 @@ def show_position(direct_last_moves):
     return True
 
 
-def show_game_parameters():
-    """ show_game_parameters """
+def show_informations():
+    """ show_informations """
 
     # game status
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
     play_low.MY_SUB_PANEL <= html.BR()
+
+    play_low.MY_SUB_PANEL <= html.H3("Informations")
+
+    play_low.MY_SUB_PANEL <= html.H4("Paramètres")
 
     # conversion
     game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
@@ -663,18 +667,11 @@ def show_game_parameters():
 
     play_low.MY_SUB_PANEL <= game_params_table
 
-    return True
-
-
-def show_events_in_game():
-    """ show_events_in_game """
-
-    # game status
-    play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
-    play_low.MY_SUB_PANEL <= html.BR()
+    # incidents2
+    play_low.MY_SUB_PANEL <= html.H3("Incidents")
 
     # incidents2
-    play_low.MY_SUB_PANEL <= html.H3("Désordres civils")
+    play_low.MY_SUB_PANEL <= html.H4("Désordres civils")
 
     # get the actual incidents of the game
     game_incidents2 = play_low.game_incidents2_reload(play_low.GAME_ID)
@@ -734,7 +731,7 @@ def show_events_in_game():
         play_low.MY_SUB_PANEL <= html.DIV("Un désordre civil signifie que l'arbitre (ou l'automate de résolution) a forcé des ordres pour le joueur", Class='note')
 
     # quitters
-    play_low.MY_SUB_PANEL <= html.H3("Abandons")
+    play_low.MY_SUB_PANEL <= html.H4("Abandons")
 
     # get the actual dropouts of the game
     game_dropouts = common.game_dropouts_reload(play_low.GAME_ID)
@@ -791,7 +788,7 @@ def show_events_in_game():
     play_low.MY_SUB_PANEL <= html.BR()
 
     # incidents
-    play_low.MY_SUB_PANEL <= html.H3("Retards")
+    play_low.MY_SUB_PANEL <= html.H4("Retards")
 
     # get the actual incidents of the game
     game_incidents = play_low.game_incidents_reload(play_low.GAME_ID)

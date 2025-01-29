@@ -30,8 +30,7 @@ OPTIONS = {
     'Noter': "Prendre des notes sur la partie",
     'Arbitrer': "Réaliser toutes les opérations d'arbitrage",
     'Appariement': "Se mettre dans la partie ou la quitter",
-    'Paramètres': "Consulter tous les paramètres de la partie",
-    'Retards': "Consulter les incidents sur la partiue (retards, abandons, désordres civils)",
+    'Informations': "Consulter les paramètres et les incidents (retards, abandons, désordres civils) de la partie",
     'Superviser': "Superviser (arbitrage automatique) une partie en direct"
 }
 
@@ -122,10 +121,8 @@ def load_option(_, item_name, direct_last_moves=False):
         status = play_master.game_master()
     if item_name == 'Appariement':
         status = play_other.pairing()
-    if item_name == 'Paramètres':
-        status = play_other.show_game_parameters()
-    if item_name == 'Retards':
-        status = play_other.show_events_in_game()
+    if item_name == 'Informations':
+        status = play_other.show_informations()
     if item_name == 'Superviser':
         status = play_master.supervise()
 
