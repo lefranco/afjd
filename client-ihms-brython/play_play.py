@@ -80,6 +80,59 @@ def submit_orders():
     orders_in = None
     definitive_value = None
 
+    vote_value = None
+
+    def submit_vote_callback(ev):  # pylint: disable=invalid-name
+        """ submit_vote_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'ajout de vote d'arrêt dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'ajout de vote d'arrêt dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Le vote a été enregistré ! {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            submit_orders()
+
+        ev.preventDefault()
+
+        json_dict = {
+            'role_id': play_low.ROLE_ID,
+            'value': vote_value
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-votes/{play_low.GAME_ID}"
+
+        # adding a vote in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        play_low.MY_SUB_PANEL.clear()
+        submit_orders()
+
+    def update_select(event):
+        """ update_select """
+
+        nonlocal vote_value
+
+        if event.target is input_stop:
+            vote_value = False
+        if event.target is input_continue:
+            vote_value = True
+        if event.target is input_abstention:
+            vote_value = None
+
     def stack_orders_status(frame):
         """ stack_orders_status """
 
@@ -264,6 +317,7 @@ def submit_orders():
 
         my_sub_panel2 <= buttons_right
         play_low.MY_SUB_PANEL <= my_sub_panel2
+        play_low.MY_SUB_PANEL <= my_sub_panel3
 
         stack_orders(buttons_right)
 
@@ -335,6 +389,7 @@ def submit_orders():
 
         my_sub_panel2 <= buttons_right
         play_low.MY_SUB_PANEL <= my_sub_panel2
+        play_low.MY_SUB_PANEL <= my_sub_panel3
 
     def select_built_unit_type_callback(_, build_unit_type):
         """ select_built_unit_type_callback """
@@ -378,6 +433,7 @@ def submit_orders():
 
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
+            play_low.MY_SUB_PANEL <= my_sub_panel3
 
             # it is a zone we need now
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -469,6 +525,7 @@ def submit_orders():
 
                 my_sub_panel2 <= buttons_right
                 play_low.MY_SUB_PANEL <= my_sub_panel2
+                play_low.MY_SUB_PANEL <= my_sub_panel3
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -510,6 +567,7 @@ def submit_orders():
 
                 my_sub_panel2 <= buttons_right
                 play_low.MY_SUB_PANEL <= my_sub_panel2
+                play_low.MY_SUB_PANEL <= my_sub_panel3
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -553,6 +611,7 @@ def submit_orders():
 
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
+        play_low.MY_SUB_PANEL <= my_sub_panel3
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -683,6 +742,7 @@ def submit_orders():
 
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
+            play_low.MY_SUB_PANEL <= my_sub_panel3
 
             return
 
@@ -806,6 +866,7 @@ def submit_orders():
 
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
+            play_low.MY_SUB_PANEL <= my_sub_panel3
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -846,6 +907,7 @@ def submit_orders():
 
                 my_sub_panel2 <= buttons_right
                 play_low.MY_SUB_PANEL <= my_sub_panel2
+                play_low.MY_SUB_PANEL <= my_sub_panel3
 
                 stack_orders(buttons_right)
                 if not orders_data.empty():
@@ -889,6 +951,7 @@ def submit_orders():
 
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
+            play_low.MY_SUB_PANEL <= my_sub_panel3
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
@@ -986,6 +1049,7 @@ def submit_orders():
 
         my_sub_panel2 <= buttons_right
         play_low.MY_SUB_PANEL <= my_sub_panel2
+        play_low.MY_SUB_PANEL <= my_sub_panel3
 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
@@ -1273,8 +1337,6 @@ def submit_orders():
         play.load_option(None, 'Consulter')
         return False
 
-    # need to have orders to submit
-
     submitted_data = play_low.get_roles_submitted_orders(play_low.GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
@@ -1288,9 +1350,8 @@ def submit_orders():
             return False
     else:
         if play_low.ROLE_ID not in submitted_data['needed']:
-            alert("Vous n'avez pas d'ordre à passer")
-            play.load_option(None, 'Consulter')
-            return False
+            alert("Vous n'avez pas d'ordre à passer, mais vous pouvez toujours voter pour l'arrêt de la partie.")
+            # may still vote
 
     # check game soloed
     if play_low.GAME_PARAMETERS_LOADED['soloed']:
@@ -1309,6 +1370,19 @@ def submit_orders():
         alert("La partie est terminée parce qu'arrivée à échéance")
         play.load_option(None, 'Consulter')
         return False
+
+    votes = play_low.game_votes_reload(play_low.GAME_ID)
+    if votes is None:
+        alert("Erreur chargement votes")
+        play.load_option(None, 'Consulter')
+        return False
+    votes = list(votes)
+
+    vote_value = None
+    for _, role, vote_val in votes:
+        if role == play_low.ROLE_ID:
+            vote_value = bool(vote_val)
+            break
 
     # now we can display
 
@@ -1339,10 +1413,6 @@ def submit_orders():
         alert("Erreur chargement ordres")
         play.load_option(None, 'Consulter')
         return False
-
-    # Uncomment this code to recover if situation was altered after orders where submitted
-    # And enter hold orders for every one and validate
-    # orders_loaded = {'fake_units': [], 'orders': {}}
 
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, play_low.POSITION_DATA, [])
@@ -1433,54 +1503,56 @@ def submit_orders():
     # button last moves
     play_low.stack_last_moves_button(buttons_right)
 
-    # button for communication orders
-    if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
-        play_low.stack_communications_orders_button(buttons_right)
+    if play_low.ROLE_ID in submitted_data['needed']:
 
-    # information retreats/builds
-    play_low.stack_possibilities(buttons_right, advancement_season)
+        # button for communication orders
+        if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
+            play_low.stack_communications_orders_button(buttons_right)
 
-    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
-        buttons_right <= legend_select_unit
-        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+        # information retreats/builds
+        play_low.stack_possibilities(buttons_right, advancement_season)
 
-    nb_builds = 0
-    if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
+            buttons_right <= legend_select_unit
+            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
-        # take a note of build / remove
-        role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
-        nb_builds, _, _, _ = play_low.POSITION_DATA.role_builds(role)
+        nb_builds = 0
+        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
 
-        legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (double-clic pour effacer)", Class='instruction')
-        buttons_right <= legend_select_order
-        for order_type in mapping.OrderTypeEnum.inventory():
-            if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
-                input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type], Class='btn-inside')
-                buttons_right <= html.BR()
-                input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
-                buttons_right <= html.BR()
-                buttons_right <= input_select
-        automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+            # take a note of build / remove
+            role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
+            nb_builds, _, _, _ = play_low.POSITION_DATA.role_builds(role)
 
-    if play_low.ROLE_ID in submitted_data['agreed_now']:
-        definitive_value = 1
-    elif play_low.ROLE_ID in submitted_data['agreed_after']:
-        definitive_value = 2
-    else:
-        definitive_value = 0
+            legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (double-clic pour effacer)", Class='instruction')
+            buttons_right <= legend_select_order
+            for order_type in mapping.OrderTypeEnum.inventory():
+                if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
+                    input_select = html.INPUT(type="submit", value=play_low.VARIANT_DATA.order_name_table[order_type], Class='btn-inside')
+                    buttons_right <= html.BR()
+                    input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                    buttons_right <= html.BR()
+                    buttons_right <= input_select
+            automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
-    stack_orders(buttons_right)
-    if not orders_data.empty():
-        put_erase_all(buttons_right)
-    if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
-        put_rest_hold(buttons_right)
-    if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-        buttons_right <= html.BR()
-        put_submit(buttons_right)
+        if play_low.ROLE_ID in submitted_data['agreed_now']:
+            definitive_value = 1
+        elif play_low.ROLE_ID in submitted_data['agreed_after']:
+            definitive_value = 2
+        else:
+            definitive_value = 0
 
-    # orders status
-    stack_orders_status(buttons_right)
+        stack_orders(buttons_right)
+        if not orders_data.empty():
+            put_erase_all(buttons_right)
+        if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+            put_rest_hold(buttons_right)
+        if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+            buttons_right <= html.BR()
+            put_submit(buttons_right)
+
+        # orders status
+        stack_orders_status(buttons_right)
 
     # overall
     my_sub_panel2 = html.DIV()
@@ -1490,6 +1562,70 @@ def submit_orders():
 
     play_low.MY_SUB_PANEL <= my_sub_panel2
 
+    # end vote now
+
+    my_sub_panel3 = html.DIV()
+
+    my_sub_panel3 <= html.H3("Vote de fin de partie")
+
+    # reminder
+    reminder = html.DIV("ATTENTION : Pensez à prévenir l'arbitre qu'un vote est en cours (par un message de négociation par exemple)", Class='important')
+    special_legend = html.LEGEND(reminder)
+    my_sub_panel3 <= special_legend
+    my_sub_panel3 <= html.BR()
+
+    label_vote = html.LABEL(html.B("Je vote :"))
+    my_sub_panel3 <= label_vote
+    my_sub_panel3 <= html.BR()
+
+    # Continuation ===
+    option_continue = "pour que la partie s'arrête !"
+    label_continue = html.LABEL(html.EM(option_continue))
+    my_sub_panel3 <= label_continue
+    input_continue = html.INPUT(type="radio", id="stop", name="vote", checked=(vote_value is True), Class='btn-inside')
+    input_continue.bind("click", update_select)
+    my_sub_panel3 <= input_continue
+    my_sub_panel3 <= html.BR()
+
+    # Arret ===
+    option_stop = "pour que la partie continue !"
+    label_stop = html.LABEL(html.EM(option_stop))
+    my_sub_panel3 <= label_stop
+    input_stop = html.INPUT(type="radio", id="continue", name="vote", checked=(vote_value is False), Class='btn-inside')
+    input_stop.bind("click", update_select)
+    my_sub_panel3 <= input_stop
+    my_sub_panel3 <= html.BR()
+
+    # Abstention ===
+    option_abstention = "non, je m'abstiens ! (équivaut à voter pour continuer)"
+    label_abstention = html.LABEL(html.EM(option_abstention))
+    my_sub_panel3 <= label_abstention
+    input_abstention = html.INPUT(type="radio", id="abstention", name="vote", checked=(vote_value is None), Class='btn-inside')
+    input_abstention.bind("click", update_select)
+    my_sub_panel3 <= input_abstention
+    my_sub_panel3 <= html.BR()
+
+    input_submit = html.INPUT(type="submit", value="Soumettre", Class='btn-inside')
+    input_submit.bind("click", submit_vote_callback)
+    my_sub_panel3 <= html.BR()
+    my_sub_panel3 <= input_submit
+    my_sub_panel3 <= html.BR()
+    my_sub_panel3 <= html.BR()
+
+    my_sub_panel3 <= html.DIV("Règles du vote d'arrêt de la partie", Class='note')
+    rules = html.UL()
+    rules <= html.LI("Le vote individuel est confidentiel mais le nombre de votes exprimés est public.")
+    rules <= html.LI("Seules les voix des joueurs encore en jeu comptent (ceux qui ont encore un centre et/ou une unité).")
+    rules <= html.LI("Les non votants sont considérés en faveur de la continuation de la partie.")
+    rules <= html.LI("L'unanimité (pour l'arrêt de la partie) est requise pour que l'arrêt soit voté.")
+    rules <= html.LI("La décision est prise en attendant les ordres d'ajustement.")
+    rules <= html.LI("Quand un vote est en cours, la partie continue normalement.")
+    rules <= html.LI("Les modalités d'un tournoi peuvent interdire l'arrêt de la partie avant une année de jeu spécifique.")
+
+    my_sub_panel3 <= rules
+
+    play_low.MY_SUB_PANEL <= my_sub_panel3
+    
     return True
 
 
@@ -2684,172 +2820,5 @@ def imagine_units():
     my_sub_panel2 <= buttons_right
 
     play_low.MY_SUB_PANEL <= my_sub_panel2
-
-    return True
-
-
-def vote():
-    """ vote """
-
-    vote_value = None
-
-    def submit_vote_callback(ev):  # pylint: disable=invalid-name
-        """ submit_vote_callback """
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 201:
-                if 'message' in req_result:
-                    alert(f"Erreur à l'ajout de vote d'arrêt dans la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à l'ajout de vote d'arrêt dans la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le vote a été enregistré ! {messages}")
-
-            # back to where we started
-            play_low.MY_SUB_PANEL.clear()
-            vote()
-
-        ev.preventDefault()
-
-        json_dict = {
-            'role_id': play_low.ROLE_ID,
-            'value': vote_value
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-votes/{play_low.GAME_ID}"
-
-        # adding a vote in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        play_low.MY_SUB_PANEL.clear()
-        vote()
-
-    def update_select(event):
-        """ update_select """
-
-        nonlocal vote_value
-
-        if event.target is input_stop:
-            vote_value = False
-        if event.target is input_continue:
-            vote_value = True
-        if event.target is input_abstention:
-            vote_value = None
-
-    # from game id and token get role_id of player
-
-    if play_low.ROLE_ID is None:
-        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        play.load_option(None, 'Consulter')
-        return False
-
-    if play_low.ROLE_ID == 0:
-        alert("Ce n'est pas possible pour l'arbitre de cette partie")
-        play.load_option(None, 'Consulter')
-        return False
-
-    # game needs to be ongoing - not waiting
-    if play_low.GAME_PARAMETERS_LOADED['current_state'] == 0:
-        alert("La partie n'est pas encore démarrée")
-        play.load_option(None, 'Consulter')
-        return False
-
-    # game needs to be ongoing - not finished
-    if play_low.GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
-        alert("La partie est déjà terminée")
-        play.load_option(None, 'Consulter')
-        return False
-
-    votes = play_low.game_votes_reload(play_low.GAME_ID)
-    if votes is None:
-        alert("Erreur chargement votes")
-        play.load_option(None, 'Consulter')
-        return False
-    votes = list(votes)
-
-    vote_value = None
-    for _, role, vote_val in votes:
-        if role == play_low.ROLE_ID:
-            vote_value = bool(vote_val)
-            break
-
-    # now we can display
-
-    # game status
-    play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
-    play_low.MY_SUB_PANEL <= html.BR()
-
-    # map and ratings
-    play_low.show_board(play_low.MY_SUB_PANEL)
-
-    # role flag
-    play_low.stack_role_flag(play_low.MY_SUB_PANEL)
-
-    # button last moves
-    play_low.stack_last_moves_button(play_low.MY_SUB_PANEL)
-
-    # reminder
-    reminder = html.DIV("ATTENTION : Pensez à prévenir l'arbitre qu'un vote est en cours (par un message de négociation par exemple)", Class='important')
-    special_legend = html.LEGEND(reminder)
-    play_low.MY_SUB_PANEL <= special_legend
-    play_low.MY_SUB_PANEL <= html.BR()
-
-    label_vote = html.LABEL(html.B("Je vote :"))
-    play_low.MY_SUB_PANEL <= label_vote
-    play_low.MY_SUB_PANEL <= html.BR()
-
-    # Continuation ===
-    option_continue = "pour que la partie s'arrête !"
-    label_continue = html.LABEL(html.EM(option_continue))
-    play_low.MY_SUB_PANEL <= label_continue
-    input_continue = html.INPUT(type="radio", id="stop", name="vote", checked=(vote_value is True), Class='btn-inside')
-    input_continue.bind("click", update_select)
-    play_low.MY_SUB_PANEL <= input_continue
-    play_low.MY_SUB_PANEL <= html.BR()
-
-    # Arret ===
-    option_stop = "pour que la partie continue !"
-    label_stop = html.LABEL(html.EM(option_stop))
-    play_low.MY_SUB_PANEL <= label_stop
-    input_stop = html.INPUT(type="radio", id="continue", name="vote", checked=(vote_value is False), Class='btn-inside')
-    input_stop.bind("click", update_select)
-    play_low.MY_SUB_PANEL <= input_stop
-    play_low.MY_SUB_PANEL <= html.BR()
-
-    # Abstention ===
-    option_abstention = "non, je m'abstiens ! (équivaut à voter pour continuer)"
-    label_abstention = html.LABEL(html.EM(option_abstention))
-    play_low.MY_SUB_PANEL <= label_abstention
-    input_abstention = html.INPUT(type="radio", id="abstention", name="vote", checked=(vote_value is None), Class='btn-inside')
-    input_abstention.bind("click", update_select)
-    play_low.MY_SUB_PANEL <= input_abstention
-    play_low.MY_SUB_PANEL <= html.BR()
-
-    input_submit = html.INPUT(type="submit", value="Soumettre", Class='btn-inside')
-    input_submit.bind("click", submit_vote_callback)
-    play_low.MY_SUB_PANEL <= html.BR()
-    play_low.MY_SUB_PANEL <= input_submit
-    play_low.MY_SUB_PANEL <= html.BR()
-    play_low.MY_SUB_PANEL <= html.BR()
-
-    play_low.MY_SUB_PANEL <= html.DIV("Règles du vote d'arrêt de la partie", Class='note')
-    rules = html.UL()
-    rules <= html.LI("Le vote individuel est confidentiel mais le nombre de votes exprimés est public.")
-    rules <= html.LI("Seules les voix des joueurs encore en jeu comptent (ceux qui ont encore un centre et/ou une unité).")
-    rules <= html.LI("Les non votants sont considérés en faveur de la continuation de la partie.")
-    rules <= html.LI("L'unanimité (pour l'arrêt de la partie) est requise pour que l'arrêt soit voté.")
-    rules <= html.LI("La décision est prise en attendant les ordres d'ajustement.")
-    rules <= html.LI("Quand un vote est en cours, la partie continue normalement.")
-    rules <= html.LI("Les modalités d'un tournoi peuvent interdire l'arrêt de la partie avant une année de jeu spécifique.")
-
-    play_low.MY_SUB_PANEL <= rules
 
     return True
