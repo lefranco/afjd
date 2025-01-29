@@ -547,7 +547,12 @@ def sandbox():
 
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
 
-            selected_dest_zone = VARIANT_DATA.closest_zone(pos)
+            if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
+                unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_active_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
+            elif selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
+                unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_passive_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
+
+            selected_dest_zone = VARIANT_DATA.closest_zone(pos, unit_reference_type)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -912,7 +917,7 @@ def sandbox():
 
         # get zone
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        selected_drop_zone = VARIANT_DATA.closest_zone(pos)
+        selected_drop_zone = VARIANT_DATA.closest_zone(pos, type_unit)
 
         # get region
         selected_drop_region = selected_drop_zone.region
@@ -930,7 +935,7 @@ def sandbox():
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
                 type_unit = mapping.UnitTypeEnum.FLEET_UNIT
         else:
-            # we are not on a specific cosat
+            # we are not on a specific coast
             if len([z for z in VARIANT_DATA.zones.values() if z.region == selected_drop_region]) > 1:
                 # prevent putting fleet on non specific coasts if exists
                 if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:

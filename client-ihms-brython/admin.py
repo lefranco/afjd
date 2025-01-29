@@ -893,7 +893,7 @@ def rectify_position():
 
             # get zone
             pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-            selected_drop_zone = variant_data.closest_zone(pos)
+            selected_drop_zone = variant_data.closest_zone(pos, type_unit)
 
             # get region
             selected_drop_region = selected_drop_zone.region
