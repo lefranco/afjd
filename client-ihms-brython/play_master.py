@@ -135,6 +135,47 @@ def game_master():
     players_dict = {}
     allocated = []
 
+    def quit_mastering_game_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la démission de l'arbitrage de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la démission de l'arbitrage de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                play_low.MY_SUB_PANEL.clear()
+                game_master()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Vous avez quitté l'arbitrage de la partie : {messages}")
+
+            # go to game
+            play_low.PANEL_MIDDLE.clear()
+            play.render(play_low.PANEL_MIDDLE)
+
+        ev.preventDefault()
+
+        json_dict = {
+            'game_id': play_low.GAME_ID,
+            'role_id': 0,
+            'player_pseudo': pseudo,
+            'delete': 1
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/role-allocations"
+
+        # giving up game mastering : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     def edit_game_callback(ev):  # pylint: disable=invalid-name
         """ edit_game_callback """
 
@@ -1242,6 +1283,8 @@ def game_master():
         alert("Erreur chargement allocations joueurs")
         return False
 
+    pseudo = storage['PSEUDO']
+
     # now we can display
 
     # header
@@ -1958,6 +2001,15 @@ def game_master():
         input_undistinguish_game.bind("click", lambda e, s=2: change_state_game_callback_confirm(e, s))
         form <= input_undistinguish_game
 
+    play_low.MY_SUB_PANEL <= form
+
+    ############################################
+    play_low.MY_SUB_PANEL <= html.H3("Démission de l'arbitrage")
+
+    form = html.FORM()
+    input_join_game = html.INPUT(type="submit", value="Je démissionne de l'arbitrage !", Class='btn-inside')
+    input_join_game.bind("click", quit_mastering_game_callback)
+    form <= input_join_game
     play_low.MY_SUB_PANEL <= form
 
     ############################################

@@ -28,7 +28,6 @@ OPTIONS = {
     'Déclarer': "Utiliser la messagerie publique",
     'Noter': "Prendre des notes sur la partie",
     'Arbitrer': "Réaliser toutes les opérations d'arbitrage",
-    'Appariement': "Se mettre dans la partie ou la quitter",
     'Informations': "Consulter les paramètres et les incidents (retards, abandons, désordres civils) de la partie",
     'Superviser': "Superviser (arbitrage automatique) une partie en direct"
 }
@@ -116,8 +115,6 @@ def load_option(_, item_name, direct_last_moves=False):
         status = play_other.note()
     if item_name == 'Arbitrer':
         status = play_master.game_master()
-    if item_name == 'Appariement':
-        status = play_other.pairing()
     if item_name == 'Informations':
         status = play_other.show_informations()
     if item_name == 'Superviser':
