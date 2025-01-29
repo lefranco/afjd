@@ -1625,7 +1625,7 @@ def submit_orders():
     my_sub_panel3 <= rules
 
     play_low.MY_SUB_PANEL <= my_sub_panel3
-    
+
     return True
 
 
