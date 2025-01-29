@@ -22,7 +22,7 @@ import index
 OPTIONS = {
     'Consulter': "Consulter la position et l'historique des résolutions de la partie",
     'Ordonner': "Passer ses ordres sur la partie",
-    'Ordonner_2': "Passer des ordres de communication pour une partie sans négocitation",
+    'Ordres de com\'': "Passer des ordres de communication pour une partie sans négocitation",
     'Imaginer': "Imaginer des unités des autre joueurs pour interagir avec pour une partie à visibilité réstreinte",
     'Négocier': "Utiliser la messagerie privée",
     'Déclarer': "Utiliser la messagerie publique",
@@ -106,7 +106,7 @@ def load_option(_, item_name, direct_last_moves=False):
         status = play_other.show_position(direct_last_moves)
     if item_name == 'Ordonner':
         status = play_play.submit_orders()
-    if item_name == 'Ordonner_2':
+    if item_name == 'Ordres de com\'':
         status = play_play.submit_communication_orders()
     if item_name == 'Imaginer':
         status = play_play.imagine_units()
@@ -151,7 +151,7 @@ def load_option(_, item_name, direct_last_moves=False):
                 if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 1):
                     continue
 
-        if possible_item_name == 'Ordonner_2':
+        if possible_item_name == 'Ordres de com\'':
             # do not display menu tag if message game
             if not play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
                 continue
@@ -212,7 +212,7 @@ def load_option(_, item_name, direct_last_moves=False):
         play_low.MENU_LEFT <= menu_item
 
     # these cause some problems
-    if prev_item_selected in ['Ordonner', 'Ordonner_2']:
+    if prev_item_selected in ['Ordonner', 'Ordres de com\'']:
         document.unbind("keypress")
 
     # quitting superviser : clear timer

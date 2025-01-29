@@ -10,7 +10,7 @@ FAQ_CONTENT_TABLE = {
     "Non, cela n'est pas possible. Il doit y avoir des intervenants distincts sur une partie (arbitre y compris). Le système se base sur l'identité pour trouver le rôle, et ainsi présenter l'interface idoine.",
 
     "Peut-on faire des erreurs d'ordres ?":
-    "Non. Les ordres sont 100% vérifiés avant d'être enregistrés. L'option de bienveillance vis à vis des débutants a été privilégiée. Par contre le menu “Ordonner_2“ dans une partie permet une communcation par ordres “ésotériques“. Cela ne presente un intérêt que dans les parties sans communication.",
+    "Non. Les ordres sont 100% vérifiés avant d'être enregistrés. L'option de bienveillance vis à vis des débutants a été privilégiée. Par contre le menu “Ordres de com'“ dans une partie permet une communcation par ordres “ésotériques“. Cela ne presente un intérêt que dans les parties sans communication.",
 
     "Que signifient toutes les couleurs de remplissage des regions sur la carte ?":
     "Une région prend la couleur du pays qui possède le centre qui s'y trouve. Sinon, elle prend la couleur du pays qui possède l'unité qui l'occupe. Sinon, elle prend la couleur 'géographique' (ce critère restant subjectif - par exemple la Gascogne est géographiquement en France) du pays.",
@@ -68,7 +68,7 @@ FAQ_CONTENT_TABLE = {
     "Non ! Les messages sont certes privés entre émetteur et destinataire(s). Les presses sont certes privées dans la partie et avec le modérateur du site (qui peut les lire et en écrire). Dans les deux cas le contenu doit respecter la charte. L'administrateur peut sur demande lire un message de déclaration ou de négociation pour vérifier. Contenu inaproprié ? Déclarez un incident ! (repérez le message par son id)",
 
     "C'est quoi cette petite pastille rose en haut à gauche dans la carte ?":
-    "Celà attire l'attention sur la présence d'ordres de communications.",
+    "Celà attire l'attention sur la présence d'ordres de com'.",
 
     "C'est quoi le “focus“ dans l'interface messagerie de la partie ?":
     "Cela permet de se limiter aux échanges avec un seul des protagonistes présents (qui s'affiche alors en gras).",

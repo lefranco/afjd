@@ -16,7 +16,7 @@ TIPS_CONTENT_TABLE = {
     "Utiliser le double-clic",
 
     "Pour entrer des 'faux' ordres (parties sans communication possible)":
-    "Utiliser le sous menu “Ordonner_2” depuis la page de la partie.",
+    "Utiliser le sous menu “Ordres de com\'” depuis la page de la partie.",
 
     "Pour se désinscrire d'une partie (inscrit par erreur)":
     "Aller dans la partie, puis option “Appariement” et enfin bouton ”quitter la partie”.",
