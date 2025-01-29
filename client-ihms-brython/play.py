@@ -26,7 +26,6 @@ OPTIONS = {
     'Imaginer': "Imaginer des unités des autre joueurs pour interagir avec pour une partie à visibilité réstreinte",
     'Négocier': "Utiliser la messagerie privée",
     'Déclarer': "Utiliser la messagerie publique",
-    'Voter': "Voter pour ou contre l'arrêt de la partie",
     'Noter': "Prendre des notes sur la partie",
     'Arbitrer': "Réaliser toutes les opérations d'arbitrage",
     'Appariement': "Se mettre dans la partie ou la quitter",
@@ -113,8 +112,6 @@ def load_option(_, item_name, direct_last_moves=False):
         status = play_other.negotiate({}, None)
     if item_name == 'Déclarer':
         status = play_other.declare()
-    if item_name == 'Voter':
-        status = play_play.vote()
     if item_name == 'Noter':
         status = play_other.note()
     if item_name == 'Arbitrer':
