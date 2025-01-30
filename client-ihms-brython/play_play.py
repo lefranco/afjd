@@ -1350,7 +1350,7 @@ def submit_orders():
             return False
     else:
         if play_low.ROLE_ID not in submitted_data['needed']:
-            alert("Vous n'avez pas d'ordre à passer, mais vous pouvez toujours voter pour l'arrêt de la partie.")
+            alert("Vous n'avez pas d'ordre à passer.")
             # may still vote
 
     # check game soloed
