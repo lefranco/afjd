@@ -1334,9 +1334,6 @@ def game_master():
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
     play_low.MY_SUB_PANEL <= html.BR()
 
-    # role flag
-    play_low.stack_role_flag(play_low.MY_SUB_PANEL)
-
     # get the incidents of the game
     game_incidents = play_low.game_master_incidents_reload(play_low.GAME_ID)
     game_incidents2 = play_low.game_incidents2_reload(play_low.GAME_ID)
@@ -1860,7 +1857,7 @@ def game_master():
     legend_note = html.LEGEND("Prendre des notes", title="Notez ce dont vous avez besoin de vous souvenir au sujet de cette partie")
     fieldset <= legend_note
     form <= fieldset
-    input_note = html.TEXTAREA(type="text", rows=15, cols=80)
+    input_note = html.TEXTAREA(type="text", rows=8, cols=80)
     input_note <= content_loaded
     fieldset <= input_note
     form <= fieldset
