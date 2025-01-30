@@ -26,7 +26,6 @@ OPTIONS = {
     'Imaginer': "Imaginer des unités des autre joueurs pour interagir avec pour une partie à visibilité réstreinte",
     'Négocier': "Utiliser la messagerie privée",
     'Déclarer': "Utiliser la messagerie publique",
-    'Noter': "Prendre des notes sur la partie",
     'Arbitrer': "Réaliser toutes les opérations d'arbitrage",
     'Informations': "Consulter les paramètres et les incidents (retards, abandons, désordres civils) de la partie",
     'Superviser': "Superviser (arbitrage automatique) une partie en direct"
@@ -111,8 +110,6 @@ def load_option(_, item_name, direct_last_moves=False):
         status = play_other.negotiate({}, None)
     if item_name == 'Déclarer':
         status = play_other.declare()
-    if item_name == 'Noter':
-        status = play_other.note()
     if item_name == 'Arbitrer':
         status = play_master.game_master()
     if item_name == 'Informations':

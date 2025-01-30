@@ -82,6 +82,47 @@ def submit_orders():
 
     vote_value = None
 
+    def add_note_callback(ev):  # pylint: disable=invalid-name
+        """ add_note_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'ajout de la note dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'ajout de la note dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"La note a été enregistrée ! {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            submit_orders()
+
+        ev.preventDefault()
+
+        content = input_note.value
+
+        json_dict = {
+            'role_id': play_low.ROLE_ID,
+            'content': content
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-notes/{play_low.GAME_ID}"
+
+        # adding a vote in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        play_low.MY_SUB_PANEL.clear()
+        submit_orders()
+
     def submit_vote_callback(ev):  # pylint: disable=invalid-name
         """ submit_vote_callback """
 
@@ -1371,6 +1412,14 @@ def submit_orders():
         play.load_option(None, 'Consulter')
         return False
 
+    # load notes
+    content_loaded = common.game_note_reload(play_low.GAME_ID)
+    if content_loaded is None:
+        alert("Erreur chargement note")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # load vote
     votes = play_low.game_votes_reload(play_low.GAME_ID)
     if votes is None:
         alert("Erreur chargement votes")
@@ -1562,9 +1611,10 @@ def submit_orders():
 
     play_low.MY_SUB_PANEL <= my_sub_panel2
 
-    # end vote now
-
+    # other stuff
     my_sub_panel3 = html.DIV()
+
+    # end vote now
 
     my_sub_panel3 <= html.H3("Vote de fin de partie")
 
@@ -1623,6 +1673,28 @@ def submit_orders():
     rules <= html.LI("Les modalités d'un tournoi peuvent interdire l'arrêt de la partie avant une année de jeu spécifique.")
 
     my_sub_panel3 <= rules
+
+    # notes now
+
+    my_sub_panel3 <= html.H3("Prise de notes")
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_note = html.LEGEND("Prendre des notes", title="Notez ce dont vous avez besoin de vous souvenir au sujet de cette partie")
+    fieldset <= legend_note
+    form <= fieldset
+    input_note = html.TEXTAREA(type="text", rows=15, cols=80)
+    input_note <= content_loaded
+    fieldset <= input_note
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_note_in_game = html.INPUT(type="submit", value="Enregistrer", Class='btn-inside')
+    input_note_in_game.bind("click", add_note_callback)
+    form <= input_note_in_game
+    my_sub_panel3 <= form
 
     play_low.MY_SUB_PANEL <= my_sub_panel3
 
