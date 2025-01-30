@@ -1188,7 +1188,7 @@ def slide_submit_orders():
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 if selected_order_type in [mapping.OrderTypeEnum.ATTACK_ORDER, mapping.OrderTypeEnum.RETREAT_ORDER]:
                     unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_active_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
-                elif selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
+                elif selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
                     unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_passive_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
                 selected_dest_zone = VARIANT_DATA.closest_zone(pos, unit_reference_type)
 
