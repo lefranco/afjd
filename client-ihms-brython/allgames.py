@@ -1577,12 +1577,12 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'id', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'game_type']
+    fields = ['name', 'id', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'game_type']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie'}[field]
+        field_fr = {'name': 'nom', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -1699,7 +1699,6 @@ def all_games(state_name):
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
-        data['go_game'] = None
         data['id'] = None
         data['master'] = None
 
@@ -1711,24 +1710,16 @@ def all_games(state_name):
             game_name = data['name']
 
             if field == 'name':
-
                 value = game_name
-
                 # highlite free available position
                 if game_name in suffering_games:
                     colour = config.NEED_START
-
-            if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
-                    form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
-                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                    form <= input_jump_game
-                    value = form
+                    button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds))
+                    value = button
                 else:
-                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
-                    link = html.A(href=f"?game={game_name}", target="_blank")
-                    link <= img
+                    link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
                     value = link
 
             if field == 'id':

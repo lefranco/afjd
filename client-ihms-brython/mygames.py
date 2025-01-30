@@ -317,12 +317,12 @@ def my_delays(ev):  # pylint: disable=invalid-name
     delays_table = html.TABLE()
 
     # the display order
-    fields = ['date', 'name', 'go_game', 'current_advancement', 'role_played', 'duration']
+    fields = ['date', 'name', 'current_advancement', 'role_played', 'duration']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'date': 'date', 'name': 'nom', 'go_game': 'aller dans la partie', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'duration': 'durée'}[field]
+        field_fr = {'date': 'date', 'name': 'nom', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'duration': 'durée'}[field]
         col = html.TD(field_fr)
         thead <= col
     delays_table <= thead
@@ -380,21 +380,12 @@ def my_delays(ev):  # pylint: disable=invalid-name
 
             if field == 'name':
                 game_name = data['name']
-                value = game_name
-
-            if field == 'go_game':
-
                 if storage['GAME_ACCESS_MODE'] == 'button':
-
-                    form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Cliquer pour aller dans la partie", Class='btn-inside')
-                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
-                    form <= input_jump_game
-                    value = form
+                    button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
+                    value = button
                 else:
-                    img = html.IMG(src="./images/play.png", title="Cliquer pour aller dans la partie")
-                    link = html.A(href=f"?game={game_name}", target="_blank")
-                    link <= img
+                    link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
                     value = link
 
             if field == 'current_advancement':
@@ -499,12 +490,12 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
     dropouts_table = html.TABLE()
 
     # the display order
-    fields = ['date', 'name', 'go_game', 'role_played']
+    fields = ['date', 'name', 'role_played']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'date': 'date', 'name': 'nom', 'go_game': 'aller dans la partie', 'role_played': 'rôle joué'}[field]
+        field_fr = {'date': 'date', 'name': 'nom', 'role_played': 'rôle joué'}[field]
         col = html.TD(field_fr)
         thead <= col
     dropouts_table <= thead
@@ -562,21 +553,12 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
 
             if field == 'name':
                 game_name = data['name']
-                value = game_name
-
-            if field == 'go_game':
-
                 if storage['GAME_ACCESS_MODE'] == 'button':
-
-                    form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Cliquer pour aller dans la partie", Class='btn-inside')
-                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
-                    form <= input_jump_game
-                    value = form
+                    button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
+                    value = button
                 else:
-                    img = html.IMG(src="./images/play.png", title="Cliquer pour aller dans la partie")
-                    link = html.A(href=f"?game={game_name}", target="_blank")
-                    link <= img
+                    link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
                     value = link
 
             if field == 'role_played':
@@ -886,7 +868,7 @@ def my_games(state_name):
     games_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'votes', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type']
+    fields = ['name', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'votes', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type']
 
     if storage['GAME_SHOW_MODE'] == 'reduced':
         fields.remove('all_orders_submitted')
@@ -903,9 +885,9 @@ def my_games(state_name):
     thead = html.THEAD()
     for field in fields:
 
-        content = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes expr.', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
+        content = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes expr.', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
 
-        legend = {'name': "Le nom de la partie", 'go_game': "Un bouton aller se promener dans la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombre de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse (déclaration) non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message de négociation non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_current': "Est-ce que les messages publics (déclarations) sont autorisés entre les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (négociations) sont autorisés pour les joueurs actuellement", 'game_type': "Type de partie pour la communication en jeu", 'edit': "Pour éditer les paramètres de la partie", 'startstop': "Pour arrêter ou démarrer la partie"}[field]
+        legend = {'name': "Le nom de la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombre de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse (déclaration) non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message de négociation non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_current': "Est-ce que les messages publics (déclarations) sont autorisés entre les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (négociations) sont autorisés pour les joueurs actuellement", 'game_type': "Type de partie pour la communication en jeu", 'edit': "Pour éditer les paramètres de la partie", 'startstop': "Pour arrêter ou démarrer la partie"}[field]
 
         field = html.DIV(content, title=legend)
         col = html.TD(field)
@@ -1045,7 +1027,6 @@ def my_games(state_name):
         submitted_data['agreed_now'] = dict_submitted_data['dict_agreed_now'][str(game_id)]
         submitted_data['agreed_after'] = dict_submitted_data['dict_agreed_after'][str(game_id)]
 
-        data['go_game'] = None
         data['orders_submitted'] = None
         data['agreed'] = None
         data['all_orders_submitted'] = None
@@ -1068,24 +1049,15 @@ def my_games(state_name):
             if field == 'name':
 
                 value = game_name
-
                 # highlite free available position
                 if game_name in suffering_games:
                     colour = config.NEED_START
-
-            if field == 'go_game':
-
                 if storage['GAME_ACCESS_MODE'] == 'button':
-
-                    form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Cliquer pour aller dans la partie", Class='btn-inside')
-                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
-                    form <= input_jump_game
-                    value = form
+                    button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
+                    value = button
                 else:
-                    img = html.IMG(src="./images/play.png", title="Cliquer pour aller dans la partie")
-                    link = html.A(href=f"?game={game_name}", target="_blank")
-                    link <= img
+                    link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
                     value = link
 
             if field == 'deadline':
