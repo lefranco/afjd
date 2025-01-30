@@ -299,15 +299,15 @@ def recruiting_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'join', 'go_game', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_current', 'nomessage_current', 'game_type']
+    fields = ['name', 'join', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_current', 'nomessage_current', 'game_type']
 
     # header
     thead = html.THEAD()
     for field in fields:
 
-        content = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie'}[field]
+        content = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie'}[field]
 
-        legend = {'name': "Le nom de la partie", 'join': "Un bouton pour rejoindre la partie (pour jouer dedans)", 'go_game': "Un bouton pour aller dans la partie (permet d'en savoir plus)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_current': "Est-ce que les messages publics (déclarations) sont autorisés pour les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (négociations) sont autorisés pour les joueurs actuellement", 'game_type': "Type de partie pour la communication en jeu"}[field]
+        legend = {'name': "Le nom de la partie", 'join': "Un bouton pour rejoindre la partie (pour jouer dedans)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_current': "Est-ce que les messages publics (déclarations) sont autorisés pour les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (négociations) sont autorisés pour les joueurs actuellement", 'game_type': "Type de partie pour la communication en jeu"}[field]
 
         field = html.DIV(content, title=legend)
         col = html.TD(field)
@@ -436,7 +436,6 @@ def recruiting_games():
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
-        data['go_game'] = None
         data['master'] = None
         data['join'] = None
         data['allocated'] = None
@@ -450,7 +449,13 @@ def recruiting_games():
             game_name = data['name']
 
             if field == 'name':
-                value = game_name
+                if storage['GAME_ACCESS_MODE'] == 'button':
+                    button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds))
+                    value = button
+                else:
+                    link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
+                    value = link
 
             if field == 'join':
                 if player_id is None:
@@ -471,19 +476,6 @@ def recruiting_games():
                     value = form
                     # highlite free available position
                     colour = config.NEED_PLAYERS
-
-            if field == 'go_game':
-                if storage['GAME_ACCESS_MODE'] == 'button':
-                    form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
-                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                    form <= input_jump_game
-                    value = form
-                else:
-                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
-                    link = html.A(href=f"?game={game_name}", target="_blank")
-                    link <= img
-                    value = link
 
             if field == 'deadline':
 

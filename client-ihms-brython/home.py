@@ -683,10 +683,8 @@ def play_test():
         password = pseudo
         MY_SUB_PANEL <= html.DIV(f"Vous n'êtes pas connecté. Connectez-vous (page 'Connexion') par exemple avec le compte '{pseudo}' mot de passe '{password}'", Class='important')
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Vous arriverez automatiquement sur la  page 'Mes parties', cliquez alors sur l'icone comme ci-dessous :", Class='important')
+        MY_SUB_PANEL <= html.DIV("Vous arriverez automatiquement sur la  page 'Mes parties', cliquez alors sur le bouton avec le nom de la partie", Class='important')
         MY_SUB_PANEL <= html.BR()
-        input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
-        MY_SUB_PANEL <= input_jump_game
         return
 
     pseudo = storage['PSEUDO']
@@ -695,10 +693,8 @@ def play_test():
         return
 
     MY_SUB_PANEL <= html.DIV(f"Vous êtes connecté '{pseudo}', ce qui est très bien !", Class='important')
-    MY_SUB_PANEL <= html.DIV("Allez sur la page 'Mes parties', cliquez alors sur l'icone comme ci-dessous :", Class='important')
+    MY_SUB_PANEL <= html.DIV("Allez sur la page 'Mes parties', cliquez alors sur le bouton avec le nom de la partie", Class='important')
     MY_SUB_PANEL <= html.BR()
-    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
-    MY_SUB_PANEL <= input_jump_game
 
 
 MIN_CHAT_NUMBER = 100

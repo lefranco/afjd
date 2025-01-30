@@ -1041,12 +1041,12 @@ def all_missing_orders():
     delays_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'go_game', 'late', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master']
+    fields = ['name', 'late', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'late': 'en retard', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre'}[field]
+        field_fr = {'name': 'nom', 'late': 'en retard', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre'}[field]
         col = html.TD(field_fr)
         thead <= col
     delays_table <= thead
@@ -1061,7 +1061,6 @@ def all_missing_orders():
     # force sort according to deadline (latest games first of course)
     for game_id_str, data in sorted(games_dict.items(), key=lambda t: t[1]['deadline']):
 
-        data['go_game'] = None
         data['late'] = None
         data['master'] = None
 
@@ -1121,18 +1120,12 @@ def all_missing_orders():
 
             if field == 'name':
                 value = game_name
-
-            if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
-                    form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
-                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                    form <= input_jump_game
-                    value = form
+                    button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds))
+                    value = button
                 else:
-                    img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
-                    link = html.A(href=f"?game={game_name}", target="_blank")
-                    link <= img
+                    link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
                     value = link
 
             if field == 'late':
@@ -1471,12 +1464,12 @@ def show_player_games(pseudo_player, game_list):
         games_table = html.TABLE()
 
         # the display order
-        fields = ['current_state', 'name', 'go_game', 'deadline', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type', 'master']
+        fields = ['current_state', 'name', 'deadline', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type', 'master']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'current_state': 'état', 'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'master': 'arbitre'}[field]
+            field_fr = {'current_state': 'état', 'name': 'nom', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'master': 'arbitre'}[field]
             col = html.TD(field_fr)
             thead <= col
         games_table <= thead
@@ -1486,7 +1479,6 @@ def show_player_games(pseudo_player, game_list):
 
         for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0]), reverse=True):
 
-            data['go_game'] = None
             data['master'] = None
 
             game_id = int(game_id_str)
@@ -1511,19 +1503,12 @@ def show_player_games(pseudo_player, game_list):
                     value = state_loaded
 
                 if field == 'name':
-                    value = game_name
-
-                if field == 'go_game':
                     if storage['GAME_ACCESS_MODE'] == 'button':
-                        form = html.FORM()
-                        input_jump_game = html.INPUT(type="image", src="./images/play.png", title="Pour aller dans la partie", Class='btn-inside')
-                        input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                        form <= input_jump_game
-                        value = form
+                        button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+                        button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds))
+                        value = button
                     else:
-                        img = html.IMG(src="./images/play.png", title="Pour aller dans la partie")
-                        link = html.A(href=f"?game={game_name}", target="_blank")
-                        link <= img
+                        link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
                         value = link
 
                 if field == 'deadline':
