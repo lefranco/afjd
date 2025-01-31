@@ -461,19 +461,13 @@ def recruiting_games():
                 if player_id is None:
                     value = "Pas identifié"
                 elif game_id_str in player_games:
-                    game_name = data['name']
-                    form = html.FORM()
-                    input_quit_game = html.INPUT(type="image", src="./images/leave.png", title="Pour s'enlever de la partie (ne plus y jouer)", Class='btn-inside')
-                    input_quit_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: quit_and_select_game_callback(e, gn, gds))
-                    form <= input_quit_game
-                    value = form
+                    button = html.BUTTON("quitter", title="Cliquer pour quitter dans la partie (ne plus y jouer)", Class='btn-inside')
+                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel: quit_and_select_game_callback(e, gn, gds))
+                    value = button
                 else:
-                    game_name = data['name']
-                    form = html.FORM()
-                    input_join_game = html.INPUT(type="image", src="./images/join.png", title="Pour se mettre dans la partie (y jouer)", Class='btn-inside')
-                    input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
-                    form <= input_join_game
-                    value = form
+                    button = html.BUTTON("rejoindre", title="Cliquer pour quitter dans la partie (ne plus y jouer)", Class='btn-inside')
+                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel: quit_and_select_game_callback(e, gn, gds))
+                    value = button
                     # highlite free available position
                     colour = config.NEED_PLAYERS
 

@@ -1944,11 +1944,9 @@ def show_no_game_masters_data():
         value = ""
         if pseudo:
             game_name = data['name']
-            form = html.FORM()
-            input_take_game = html.INPUT(type="image", src="./images/take.png", title="Pour prendre l'arbitrage de la partie (sans sélectionner la partie)", Class='btn-inside')
-            input_take_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: take_mastering_this_game_callback(e, gn, gds))
-            form <= input_take_game
-            value = form
+            button = html.BUTTON("prendre", title="Cliquer pour quitter dans la partie (ne plus y jouer)",Class='btn-inside')
+            button.bind("click", lambda e, gn=game_name, gds=game_data_sel: take_mastering_this_game_callback(e, gn, gds))
+            value = button
         col = html.TD(value)
         row <= col
 
