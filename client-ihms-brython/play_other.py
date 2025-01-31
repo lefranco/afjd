@@ -71,10 +71,10 @@ def join_game():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        alert("Un courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
+        alert("Vous avez bien rejoint la partie. Un courriel vous préviendra de son démarrage mais revenez régulièrement sur le site surveiller pour ne pas le manquer...")
 
         messages = "<br>".join(req_result['msg'].split('\n'))
-        mydialog.InfoDialog("Information", f"Vous avez rejoint la partie (en utilisant un lien externe) : {messages}")
+        mydialog.InfoDialog("Information", f"Vous avez rejoint la partie  : {messages}")
 
     if play_low.PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -146,45 +146,9 @@ def show_position(direct_last_moves):
 
     def join_game_callback(ev):  # pylint: disable=invalid-name
 
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 201:
-                if 'message' in req_result:
-                    alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Erreur à l'inscription à la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-
-                # failed but refresh
-                play_low.MY_SUB_PANEL.clear()
-                show_position(False)
-
-                return
-
-            alert("Un courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Vous avez rejoint la partie : {messages})")
-
-            # go to game
-            play_low.PANEL_MIDDLE.clear()
-            play.render(play_low.PANEL_MIDDLE)
-
         ev.preventDefault()
-
-        json_dict = {
-            'game_id': game_id,
-            'player_pseudo': pseudo,
-            'delete': 0
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/allocations"
-
-        # adding allocation : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        play.set_arrival('rejoindre')
+        play.render(play_low.PANEL_MIDDLE)
 
     def quit_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -674,7 +638,7 @@ def show_position(direct_last_moves):
                 buttons_right <= html.BR()
 
             # take mastering
-            if not play_low.GAME_MASTER and not role_id is None:
+            if not play_low.GAME_MASTER and role_id is not None:
                 form = html.FORM()
                 input_join_game = html.INPUT(type="submit", value="Je prends l'arbitrage !", Class='btn-inside')
                 input_join_game.bind("click", take_mastering_game_callback)
