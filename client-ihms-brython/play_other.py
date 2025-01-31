@@ -71,7 +71,7 @@ def join_game():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        alert("Vous avez bien rejoint la partie. Un courriel vous préviendra de son démarrage mais revenez régulièrement sur le site surveiller pour ne pas le manquer...")
+        alert("Vous avez bien rejoint la partie. Si elle n'est pas en cours, un courriel vous préviendra de son démarrage mais revenez régulièrement sur le site surveiller pour ne pas le manquer...")
 
         messages = "<br>".join(req_result['msg'].split('\n'))
         mydialog.InfoDialog("Information", f"Vous avez rejoint la partie  : {messages}")
