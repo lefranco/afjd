@@ -1944,7 +1944,7 @@ def show_no_game_masters_data():
         value = ""
         if pseudo:
             game_name = data['name']
-            button = html.BUTTON("prendre", title="Cliquer pour quitter dans la partie (ne plus y jouer)",Class='btn-inside')
+            button = html.BUTTON("prendre", title="Cliquer pour quitter dans la partie (ne plus y jouer)", Class='btn-inside')
             button.bind("click", lambda e, gn=game_name, gds=game_data_sel: take_mastering_this_game_callback(e, gn, gds))
             value = button
         col = html.TD(value)
