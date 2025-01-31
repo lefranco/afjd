@@ -465,8 +465,8 @@ def recruiting_games():
                     button.bind("click", lambda e, gn=game_name, gds=game_data_sel: quit_and_select_game_callback(e, gn, gds))
                     value = button
                 else:
-                    button = html.BUTTON("rejoindre", title="Cliquer pour quitter dans la partie (ne plus y jouer)", Class='btn-inside')
-                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel: quit_and_select_game_callback(e, gn, gds))
+                    button = html.BUTTON("rejoindre", title="Cliquer pour rejoindre dans la partie (y jouer)", Class='btn-inside')
+                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
                     value = button
                     # highlite free available position
                     colour = config.NEED_PLAYERS
