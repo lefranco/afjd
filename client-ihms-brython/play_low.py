@@ -30,6 +30,7 @@ GAME = None
 GAME_ID = None
 PSEUDO = None
 ROLE_ID = None
+IN_GAME = False
 
 # loaded in load_static_stuff
 PLAYERS_DICT = None
