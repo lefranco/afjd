@@ -495,7 +495,7 @@ def get_role_allocated_to_player_in_game(game_id):
                 alert("Réponse du serveur imprévue et non documentée")
             return
         # a player has never more than one role
-        role_id, in_game = req_result
+        role_id, in_game = req_result   # pylint: disable=unused-variable
 
     json_dict = {
         'game_id': game_id,

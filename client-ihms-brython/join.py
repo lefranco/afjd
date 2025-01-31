@@ -132,47 +132,13 @@ def recruiting_games():
     def join_and_select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
         """ join_and_select_game_callback : the second way of joining a game : by a button """
 
-        def join_game(game_name, game_data_sel):
-
-            def reply_callback(req):
-
-                req_result = loads(req.text)
-                if req.status != 201:
-                    if 'message' in req_result:
-                        alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
-                    elif 'msg' in req_result:
-                        alert(f"Problème à l'inscription à la partie : {req_result['msg']}")
-                    else:
-                        alert("Réponse du serveur imprévue et non documentée")
-                    return
-
-                alert("Un courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
-
-                messages = "<br>".join(req_result['msg'].split('\n'))
-                mydialog.InfoDialog("Information", f"Vous avez rejoint la partie (en utilisant la page 'rejoindre') : {messages}")
-
-            game_id = game_data_sel[game_name][0]
-
-            json_dict = {
-                'game_id': game_id,
-                'player_pseudo': pseudo,
-                'delete': 0
-            }
-
-            host = config.SERVER_CONFIG['GAME']['HOST']
-            port = config.SERVER_CONFIG['GAME']['PORT']
-            url = f"{host}:{port}/allocations"
-
-            # adding allocation : need a token
-            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
         ev.preventDefault()
-
-        # action of putting myself in game
-        join_game(game_name, game_data_sel)
 
         # action of going to the game
         select_game_callback(ev, game_name, game_data_sel)
+
+        play.set_arrival('rejoindre')
+        play.render(PANEL_MIDDLE)
 
     def change_button_mode_callback(_):
         if storage['GAME_ACCESS_MODE'] == 'button':
