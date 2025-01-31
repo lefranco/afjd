@@ -59,22 +59,49 @@ def date_last_visit_update(game_id, role_id, visit_type):
 def join_game():
     """ join_game_action : the third way of joining a game (by a link) """
 
-    def reply_callback(req):
+    def cancel_join_callback(_, dialog):
+        alert("Sage décision !")
+        dialog.close(None)
 
-        req_result = loads(req.text)
-        if req.status != 201:
-            if 'message' in req_result:
-                alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à l'inscription à la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
+    def confirm_join_callback(_, dialog):
+        def reply_callback(req):
 
-        alert("Vous avez bien rejoint la partie. Si elle n'est pas en cours, un courriel vous préviendra de son démarrage mais revenez régulièrement sur le site surveiller pour ne pas le manquer...")
+            req_result = loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'inscription à la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
 
-        messages = "<br>".join(req_result['msg'].split('\n'))
-        mydialog.InfoDialog("Information", f"Vous avez rejoint la partie  : {messages}")
+            alert("Félicitations, vous avez bien rejoint la partie !")
+            alert("Si elle n'est pas en cours, un courriel vous préviendra de son démarrage mais revenez régulièrement sur le site surveiller pour ne pas le manquer...")
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Vous avez rejoint la partie  : {messages}")
+
+            # This needs to be updated
+            play_low.ROLE_ID, play_low.IN_GAME = common.get_role_allocated_to_player_in_game(play_low.GAME_ID)
+
+            # and we need te refresh
+            play_low.MY_SUB_PANEL.clear()
+            show_position(False)
+
+        dialog.close(None)
+        json_dict = {
+            'game_id': game_id,
+            'player_pseudo': pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/allocations"
+
+        # adding allocation : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if play_low.PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -88,18 +115,9 @@ def join_game():
 
     game_id = play_low.GAME_ID
 
-    json_dict = {
-        'game_id': game_id,
-        'player_pseudo': pseudo,
-        'delete': 0
-    }
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/allocations"
-
-    # adding allocation : need a token
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    dialog = mydialog.Dialog("Vous vous apprêtez à rejoindre une partie. Il faudra la jouer ! Entrer des ordres au début et de préférence jusqu'à la fin. Vous êtes sûr ?", ok_cancel=True)
+    dialog.ok_button.bind("click", lambda e, d=dialog: confirm_join_callback(e, d))
+    dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_join_callback(e, d))
 
 
 def non_playing_information():

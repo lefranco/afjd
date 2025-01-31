@@ -325,10 +325,6 @@ def render(panel_middle):
     if 'PSEUDO' in storage:
         play_low.PSEUDO = storage['PSEUDO']
 
-    # this means user wants to join game
-    if ARRIVAL == 'rejoindre':
-        play_other.join_game()
-
     # from game_id and token get role
 
     play_low.ROLE_ID = None
@@ -339,6 +335,10 @@ def render(panel_middle):
     play_low.load_static_stuff()
     play_low.load_dynamic_stuff()
     play_low.load_special_stuff()
+
+    # this means user wants to join game
+    if ARRIVAL == 'rejoindre':
+        play_other.join_game()
 
     # initiates new countdown
     countdown()
