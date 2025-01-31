@@ -165,16 +165,6 @@ def load_option(_, item_name, direct_last_moves=False):
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
                 continue
 
-        if possible_item_name == 'Voter':
-            # do not display menu Voter if not player
-            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 1):
-                continue
-
-        if possible_item_name == 'Noter':
-            # do not display menu Noter if not player or master
-            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
-                continue
-
         if possible_item_name == 'Arbitrer':
             # do not display menu Arbitrer if not master
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID == 0):
@@ -338,8 +328,9 @@ def render(panel_middle):
     # from game_id and token get role
 
     play_low.ROLE_ID = None
+    play_low.IN_GAME = False
     if play_low.PSEUDO is not None:
-        play_low.ROLE_ID = common.get_role_allocated_to_player_in_game(play_low.GAME_ID)
+        play_low.ROLE_ID, play_low.IN_GAME = common.get_role_allocated_to_player_in_game(play_low.GAME_ID)
 
     play_low.load_static_stuff()
     play_low.load_dynamic_stuff()

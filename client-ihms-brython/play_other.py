@@ -71,7 +71,7 @@ def join_game():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        alert("ATTENTION ! Rejoindre une partie est un engagement à ne pas prendre à la légère !\n\nUn courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
+        alert("Un courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
 
         messages = "<br>".join(req_result['msg'].split('\n'))
         mydialog.InfoDialog("Information", f"Vous avez rejoint la partie (en utilisant un lien externe) : {messages}")
@@ -140,8 +140,9 @@ def show_position(direct_last_moves):
     ctx = None
 
     pseudo = None
-    in_game_with_role = False
-    in_game_without_role = False
+    game_id = None
+    role_id = None
+    in_game = False
 
     def join_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -161,7 +162,7 @@ def show_position(direct_last_moves):
 
                 return
 
-            alert("ATTENTION ! Rejoindre une partie est un engagement à ne pas prendre à la légère !\n\nUn courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
+            alert("Un courriel vous préviendra de son démarrage mais revenez sur le site surveiller pour ne pas le manquer...")
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.InfoDialog("Information", f"Vous avez rejoint la partie : {messages})")
@@ -655,7 +656,7 @@ def show_position(direct_last_moves):
         else:
 
             # join game
-            if not in_game_with_role and not in_game_without_role:
+            if role_id is None and not in_game:
                 form = html.FORM()
                 input_join_game = html.INPUT(type="submit", value="Je rejoins la partie", Class='btn-inside')
                 input_join_game.bind("click", join_game_callback)
@@ -664,7 +665,7 @@ def show_position(direct_last_moves):
                 buttons_right <= html.BR()
 
             # quit game
-            if in_game_without_role:
+            if role_id is None and in_game:
                 form = html.FORM()
                 input_quit_game = html.INPUT(type="submit", value="Je quitte la partie !", Class='btn-inside')
                 input_quit_game.bind("click", quit_game_callback)
@@ -673,7 +674,7 @@ def show_position(direct_last_moves):
                 buttons_right <= html.BR()
 
             # take mastering
-            if not play_low.GAME_MASTER and not in_game_with_role:
+            if not play_low.GAME_MASTER and not role_id is None:
                 form = html.FORM()
                 input_join_game = html.INPUT(type="submit", value="Je prends l'arbitrage !", Class='btn-inside')
                 input_join_game.bind("click", take_mastering_game_callback)
@@ -730,15 +731,10 @@ def show_position(direct_last_moves):
             buttons_right <= html.BR()
 
     game_id = play_low.GAME_ID
-
+    role_id = play_low.ROLE_ID
+    in_game = play_low.IN_GAME
     if 'PSEUDO' in storage:
         pseudo = storage['PSEUDO']
-        assigned_players = [p for p, d in play_low.GAME_PLAYERS_DICT.items() if d != - 1]
-        if pseudo in map(lambda i: play_low.ID2PSEUDO[int(i)], assigned_players):
-            in_game_with_role = True
-        dangling_players = [p for p, d in play_low.GAME_PLAYERS_DICT.items() if d == - 1]
-        if pseudo in map(lambda i: play_low.ID2PSEUDO[int(i)], dangling_players):
-            in_game_without_role = True
 
     last_advancement = play_low.GAME_PARAMETERS_LOADED['current_advancement']
     adv_last_moves = last_advancement

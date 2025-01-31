@@ -1997,12 +1997,14 @@ class GameRoleRessource(flask_restful.Resource):  # type: ignore
         role_table = {str(a[1]): a[2] for a in allocations_list}
 
         role_id = None
+        in_game = False
         if str(player_id) in role_table:
+            in_game = True
             role_found = role_table[str(player_id)]
             if role_found != -1:
                 role_id = role_found
 
-        return role_id, 200
+        return (role_id, in_game),  200
 
 
 @API.resource('/all-games-roles')

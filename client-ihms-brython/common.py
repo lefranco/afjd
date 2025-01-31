@@ -480,9 +480,11 @@ def get_role_allocated_to_player_in_game(game_id):
     """ get_role the player has in this game """
 
     role_id = None
+    in_game = False
 
     def reply_callback(req):
         nonlocal role_id
+        nonlocal in_game
         req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -493,7 +495,7 @@ def get_role_allocated_to_player_in_game(game_id):
                 alert("Réponse du serveur imprévue et non documentée")
             return
         # a player has never more than one role
-        role_id = req_result
+        role_id, in_game = req_result
 
     json_dict = {
         'game_id': game_id,
@@ -506,7 +508,7 @@ def get_role_allocated_to_player_in_game(game_id):
     # get players allocated to game : need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return role_id
+    return role_id, in_game
 
 
 def date_last_visit_load(game_id, visit_type):
