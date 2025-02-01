@@ -189,12 +189,12 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'game_type', 'adjust']
+    fields = ['name', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'game_type', 'synchronize']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'adjust': 'ajustement'}[field]
+        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'synchronize': 'synchroniser'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -354,7 +354,7 @@ def show_games():
         data['master'] = None
         data['all_orders_submitted'] = None
         data['all_agreed'] = None
-        data['adjust'] = None
+        data['synchronize'] = None
 
         row = html.TR()
         for field in fields:
@@ -461,7 +461,7 @@ def show_games():
                 stats = game_type_conv[value]
                 value = html.DIV(stats, title=explanation)
 
-            if field == 'adjust':
+            if field == 'synchronize':
                 value = '-'
                 if data['current_state'] == 1 and not data['soloed'] and not data['end_voted'] and not data['finished']:
                     value = add_game_table[game_id]
