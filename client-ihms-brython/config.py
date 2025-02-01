@@ -70,8 +70,8 @@ READY_TO_START_COLOUR = 'Chartreuse'
 
 # three possibles ends of the game
 SOLOED_COLOUR = 'Cyan'
-END_VOTED_COLOUR = 'White'
-FINISHED_COLOUR = 'Silver'
+END_VOTED_COLOUR = 'LightGrey'
+FINISHED_COLOUR = 'DarkGrey'
 
 # colors according to position commpared to deadline
 CRITICAL_COLOUR = 'Brown'
