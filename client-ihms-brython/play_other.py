@@ -1222,7 +1222,8 @@ def negotiate(default_dest_set, def_focus_role_id):
     table = html.TABLE()
     selected = {}
 
-    roles_left = sorted(range(play_low.VARIANT_CONTENT_LOADED['roles']['number'] + 1), key=lambda r: play_low.VARIANT_DATA.role_name_table[play_low.VARIANT_DATA.roles[r]])
+    # we make sure game master goes first in sorting
+    roles_left = sorted(range(play_low.VARIANT_CONTENT_LOADED['roles']['number'] + 1), key=lambda r: (int(r!=0), play_low.VARIANT_DATA.role_name_table[play_low.VARIANT_DATA.roles[r]]))
 
     while roles_left:
 
