@@ -1343,7 +1343,7 @@ def current_worst_annoyers():
     MY_SUB_PANEL <= annoyers_table
 
 
-def show_player_games(pseudo_player, game_list):
+def show_player_games(pseudo_player, player_games_dict):
     """ show_player_games """
 
     def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
@@ -1373,16 +1373,14 @@ def show_player_games(pseudo_player, game_list):
 
         player_id = players_dict2[selected_pseudo_player]
 
-        player_games = get_this_player_games_playing_in(player_id)
-        if player_games is None:
+        player_games_dict = get_this_player_games_playing_in(player_id)
+        if player_games_dict is None:
             alert("Erreur chargement liste parties jouées par le joueur")
             return
 
-        game_list = [int(k) for k, v in player_games.items() if v >= 1]
-
         # back to where we started
         MY_SUB_PANEL.clear()
-        show_player_games(selected_pseudo_player, game_list)
+        show_player_games(selected_pseudo_player, player_games_dict)
 
     MY_SUB_PANEL <= html.H3("Toutes les parties d'un joueur")
 
@@ -1448,11 +1446,11 @@ def show_player_games(pseudo_player, game_list):
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
 
-        MY_SUB_PANEL <= f"Parties de {pseudo_player} (avec un role joueur et non arbitre)"
+        MY_SUB_PANEL <= f"Parties de {pseudo_player}"
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
 
-    if game_list:
+    if player_games_dict:
 
         gameover_table = {int(game_id_str): data['soloed'] or data['end_voted'] or data['finished'] for game_id_str, data in games_dict.items()}
 
@@ -1464,12 +1462,12 @@ def show_player_games(pseudo_player, game_list):
         games_table = html.TABLE()
 
         # the display order
-        fields = ['current_state', 'name', 'deadline', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type', 'master']
+        fields = ['current_state', 'name', 'role', 'deadline', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'game_type', 'master']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'current_state': 'état', 'name': 'nom', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'master': 'arbitre'}[field]
+            field_fr = {'current_state': 'état', 'name': 'nom', 'role': 'role', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'master': 'arbitre'}[field]
             col = html.TD(field_fr)
             thead <= col
         games_table <= thead
@@ -1480,10 +1478,11 @@ def show_player_games(pseudo_player, game_list):
         for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0]), reverse=True):
 
             data['master'] = None
+            data['role'] = None
 
-            game_id = int(game_id_str)
-            if game_id not in game_list:
+            if game_id_str not in player_games_dict:
                 continue
+            game_id = int(game_id_str)
 
             row = html.TR()
             for field in fields:
@@ -1510,6 +1509,15 @@ def show_player_games(pseudo_player, game_list):
                     else:
                         link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
                         value = link
+
+                if field == 'role':
+                    role = player_games_dict[game_id_str]
+                    if role == -1:
+                        value = "Alloué"
+                    elif role == 0:
+                        value = "Arbitre"
+                    else:
+                        value = "Joueur"
 
                 if field == 'deadline':
 
