@@ -115,7 +115,8 @@ def join_game():
 
     game_id = play_low.GAME_ID
 
-    dialog = mydialog.Dialog("Vous vous apprêtez à rejoindre une partie. Il faudra la jouer ! Entrer des ordres au début et de préférence jusqu'à la fin. Vous êtes sûr ?", ok_cancel=True)
+    alert("Vous vous apprêtez à rejoindre une partie. Pouvons-nous compter sur votre engagement jusqu'à la fin ? Une popup va s'afficher vous demandant confirmation...")
+    dialog = mydialog.Dialog("Vous êtes sûr de jouer ?", ok_cancel=True)
     dialog.ok_button.bind("click", lambda e, d=dialog: confirm_join_callback(e, d))
     dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_join_callback(e, d))
 
