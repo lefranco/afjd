@@ -1704,7 +1704,7 @@ def show_players_game():
         info += f"{dangling_player} "
 
     MY_SUB_PANEL <= html.EM(info)
-    
+
 
 def show_last_submissions():
     """ show_last_submissions """
