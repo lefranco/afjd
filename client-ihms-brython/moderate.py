@@ -1694,7 +1694,17 @@ def show_players_game():
         game_admin_table <= row
 
     MY_SUB_PANEL <= game_admin_table
+    MY_SUB_PANEL <= html.BR()
 
+    info = "Les pseudos suivants sont alloués à la partie sans rôle : "
+    dangling_players = [p for p, d in game_players_dict.items() if d == - 1]
+    for dangling_player_id_str in dangling_players:
+        dangling_player_id = int(dangling_player_id_str)
+        dangling_player = id2pseudo[dangling_player_id]
+        info += f"{dangling_player} "
+
+    MY_SUB_PANEL <= html.EM(info)
+    
 
 def show_last_submissions():
     """ show_last_submissions """
