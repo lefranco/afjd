@@ -1468,12 +1468,12 @@ def show_tournaments_data():
 
     tournaments_table = html.TABLE()
 
-    fields = ['tournament', 'go_tournament', 'creator', 'games']
+    fields = ['tournament', 'creator', 'games']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'tournament': 'tournoi', 'go_tournament': 'aller dans le tournoi', 'creator': 'créateur', 'games': 'parties'}[field]
+        field_fr = {'tournament': 'tournoi', 'creator': 'créateur', 'games': 'parties'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournaments_table <= thead
@@ -1486,16 +1486,14 @@ def show_tournaments_data():
         row = html.TR()
         for field in fields:
             if field == 'tournament':
-                value = data['name']
-            if field == 'go_tournament':
+                # get a game from tournament
                 games_ids = groupings_dict[str(tournament_id)]
                 games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
                 game_name = games_names[0]
-                form = html.FORM()
-                input_jump_game = html.INPUT(type="image", src="./images/look.png", title="Pour aller dans le tournoi (en sélectionnant une partie du tournoi)", Class='btn-inside')
-                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                form <= input_jump_game
-                value = form
+                # make button
+                button = html.BUTTON(game_name, title="Cliquer pour aller dans le tournoi  (en sélectionnant une partie du tournoi)", Class='btn-inside')
+                button.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                value = button
             if field == 'creator':
                 director_id = assignments_dict[str(tournament_id)]
                 director_pseudo = players_dict[str(director_id)]['pseudo']
