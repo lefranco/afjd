@@ -1684,7 +1684,7 @@ def submit_orders():
     legend_note = html.LEGEND("Prendre des notes", title="Notez ce dont vous avez besoin de vous souvenir au sujet de cette partie")
     fieldset <= legend_note
     form <= fieldset
-    input_note = html.TEXTAREA(type="text", rows=10, cols=80)
+    input_note = html.TEXTAREA(type="text", rows=6, cols=80)
     input_note <= content_loaded
     fieldset <= input_note
     form <= fieldset
