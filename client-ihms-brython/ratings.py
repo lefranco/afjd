@@ -853,7 +853,7 @@ def show_players_masters_data():
 
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'activity': 'activité', 'ongoing_played_games': 'parties en cours', 'other_played_games': 'parties terminées, en attente ou distinguées', 'mastered_games': 'parties arbitrées', 'replaces': 'remplaçant', 'site_roles': 'rôles sur le site'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'activity': 'parties en cours', 'ongoing_played_games': 'parties en cours non anonymes', 'other_played_games': 'parties terminées, en attente ou distinguées', 'mastered_games': 'parties arbitrées', 'replaces': 'remplaçant', 'site_roles': 'rôles sur le site'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_masters_table <= thead
@@ -947,8 +947,6 @@ def show_players_masters_data():
         count1 += 1
 
     MY_SUB_PANEL <= html.H3("Les joueurs, arbitres et remplaçants et les rôles")
-    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte (sauf pour 'activité' qui compte les parties jouées en cours)", Class='note')
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= players_masters_table
     MY_SUB_PANEL <= html.P(f"Il y a {count1} inscrits dont {count2} joueurs actifs et {count3} arbitres pour {count4} remplaçants potentiels.")
 
