@@ -74,6 +74,8 @@ def next_previous_game(previous: bool):
         arrival = 'messages'
     elif ITEM_NAME_SELECTED == 'Déclarer':
         arrival = 'declarations'
+    elif ITEM_NAME_SELECTED == 'Informations':
+        arrival = 'informations'
 
     # so that will go to proper page
     set_arrival(arrival)
@@ -361,6 +363,9 @@ def render(panel_middle):
         elif ARRIVAL == 'messages':
             # set page for messages
             ITEM_NAME_SELECTED = 'Négocier'
+        elif ARRIVAL == 'informations':
+            # set page for messages
+            ITEM_NAME_SELECTED = 'Informations'
         else:
             if play_low.ROLE_ID == 0:
                 # game master
