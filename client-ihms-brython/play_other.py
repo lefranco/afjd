@@ -638,32 +638,34 @@ def show_position(direct_last_moves):
 
         else:
 
-            # join game
-            if role_id is None and not in_game:
-                form = html.FORM()
-                input_join_game = html.INPUT(type="submit", value="Je rejoins la partie", Class='btn-inside')
-                input_join_game.bind("click", join_game_callback)
-                form <= input_join_game
-                buttons_right <= form
-                buttons_right <= html.BR()
+            if role_id is None:
 
-            # quit game
-            if role_id is None and in_game:
-                form = html.FORM()
-                input_quit_game = html.INPUT(type="submit", value="Je quitte la partie !", Class='btn-inside')
-                input_quit_game.bind("click", quit_game_callback)
-                form <= input_quit_game
-                buttons_right <= form
-                buttons_right <= html.BR()
+                # join game
+                if not in_game:
+                    form = html.FORM()
+                    input_join_game = html.INPUT(type="submit", value="Je rejoins la partie", Class='btn-inside')
+                    input_join_game.bind("click", join_game_callback)
+                    form <= input_join_game
+                    buttons_right <= form
+                    buttons_right <= html.BR()
 
-            # take mastering
-            if not play_low.GAME_MASTER and role_id is not None:
-                form = html.FORM()
-                input_join_game = html.INPUT(type="submit", value="Je prends l'arbitrage !", Class='btn-inside')
-                input_join_game.bind("click", take_mastering_game_callback)
-                form <= input_join_game
-                buttons_right <= form
-                buttons_right <= html.BR()
+                # quit game
+                if in_game:
+                    form = html.FORM()
+                    input_quit_game = html.INPUT(type="submit", value="Je quitte la partie !", Class='btn-inside')
+                    input_quit_game.bind("click", quit_game_callback)
+                    form <= input_quit_game
+                    buttons_right <= form
+                    buttons_right <= html.BR()
+
+                # take mastering
+                if not play_low.GAME_MASTER:
+                    form = html.FORM()
+                    input_join_game = html.INPUT(type="submit", value="Je prends l'arbitrage !", Class='btn-inside')
+                    input_join_game.bind("click", take_mastering_game_callback)
+                    form <= input_join_game
+                    buttons_right <= form
+                    buttons_right <= html.BR()
 
         buttons_right <= html.H3("Divers")
 
