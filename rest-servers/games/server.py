@@ -766,7 +766,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     body += "\n"
                     body += "Conseil : allez très rapidement dans la partie pour valider des premiers ordres.\n"
                     body += "Ce, pour éviter d'oublier et que vos ordres soient manquant à la première date limite.\n"
-                    body += "En effet, cela est suscptible d'entraîner votre éviction de la partie ;-(...\n"
+                    body += "En effet, cela est susceptible d'entraîner votre éviction de la partie ;-(...\n"
                     body += "\n"
                     body += "Pour se rendre directement sur la partie :\n"
                     body += f"https://diplomania-gen.fr?game={game.name}"
