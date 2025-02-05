@@ -1079,6 +1079,9 @@ def edit_tournament():
         ev.preventDefault()
 
         game_name = input_incomer.value
+        if not game_name:
+            alert("Pas de partie!")
+            return
         game_id = common.get_game_id(game_name)
         if not game_id:
             alert("Erreur chargement identifiant partie")
