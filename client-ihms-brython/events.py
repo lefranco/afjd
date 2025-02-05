@@ -869,7 +869,7 @@ def edit_event():
     # check allowed
     manager_id = event_dict['manager_id']
     if player_id != manager_id:
-        alert("Vous n'êtes pas responsablme de cet événement")
+        alert("Vous n'êtes pas responsable de cet événement")
         return
 
     start_date = event_dict['start_date']
