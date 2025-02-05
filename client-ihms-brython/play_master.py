@@ -487,6 +487,9 @@ def game_master():
         ev.preventDefault()
 
         player_pseudo = input_outcomer.value
+        if not player_pseudo:
+            alert("Pas de joueur!")
+            return
 
         json_dict = {
             'game_id': play_low.GAME_ID,
