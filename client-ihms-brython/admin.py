@@ -1645,7 +1645,6 @@ def unallocated():
     unallocated_dict = common.get_unallocations_data()
     if not unallocated_dict:
         return
-    print(f"{unallocated_dict=}")
 
     players_dict2 = common.get_players()
     if not players_dict2:
@@ -1666,7 +1665,7 @@ def unallocated():
         thead <= col
     unallocated_table <= thead
 
-    for player_id, games in unallocated_dict['players_dict'].items():
+    for player_id, games in sorted(unallocated_dict['players_dict'].items(), key=lambda t: num2pseudo[int(t[0])].upper()):
 
         row = html.TR()
         for field in fields:
