@@ -640,6 +640,37 @@ def get_allocations_data(current_state=None):
     return allocation_data
 
 
+def get_unallocations_data():
+    """ get_unallocations_data : returns empty dict on error """
+
+    unallocation_data = {}
+
+    def reply_callback(req):
+        nonlocal unallocation_data
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des non allocations : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des non allocations : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        unallocation_data = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/unallocations"
+
+    # getting allocations : do need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return unallocation_data
+
+
 def get_game_data(game):
     """ get_game_data : returns empty dict if problem """
 

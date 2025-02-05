@@ -1517,6 +1517,65 @@ class AllocationStateListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/unallocations')
+class UnAllocationListRessource(flask_restful.Resource):  # type: ignore
+    """ UnAllocationListRessource """
+
+    # an allocation is a game-role-pseudo relation where role is -1
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Get list of all unallocations in all games (allocated without a role)  (dictionary identifier -> (gm name, list of players names))
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/unallocations - GET - get getting all unallocated (alloacted but not playing) in all games")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get admin pseudo
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/pseudo-admin"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
+        admin_pseudo = req_result.json()
+
+        # check user is admin
+        if pseudo != admin_pseudo:
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to get all unallocated players")
+
+        sql_executor = database.SqlExecutor()
+        allocations_list = allocations.Allocation.inventory(sql_executor)
+        del sql_executor
+
+        # players_dict
+        players_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
+        for (game_id, player_id, role_id) in allocations_list:
+            if role_id != -1:
+                continue
+            players_dict[player_id].append(game_id)
+
+        data = {'players_dict': players_dict}
+        return data, 200
+
+
 # These people may not join games
 OUTCASTS: typing.List[str] = []
 
@@ -1948,7 +2007,7 @@ class GameMasterRessource(flask_restful.Resource):  # type: ignore
 class GameRoleRessource(flask_restful.Resource):  # type: ignore
     """ GameRoleRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Optional[int], int]:  # pylint: disable=R0201
+    def get(self, game_id: int) -> typing.Tuple[typing.Tuple[typing.Optional[int], bool], int]:  # pylint: disable=R0201
         """
         Get my role in a game
         EXPOSED
@@ -2004,7 +2063,7 @@ class GameRoleRessource(flask_restful.Resource):  # type: ignore
             if role_found != -1:
                 role_id = role_found
 
-        return (role_id, in_game),  200
+        return (role_id, in_game), 200
 
 
 @API.resource('/all-games-roles')
@@ -7820,7 +7879,7 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
 
             if not start_transition:
                 # this game was not played or start_build
-                start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id,                                                                                   first_advancement_start_build)
+                start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement_start_build)
                 if not start_transition:
                     # this game was not played
                     continue
