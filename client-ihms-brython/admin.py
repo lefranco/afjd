@@ -33,6 +33,7 @@ OPTIONS = {
     'Dernières connexions': "Les connexions réussies sur le site",
     'Connexions manquées': "Les connexions manquées sur le site",
     'Récupérations demandées': "Les récupérations demandées sur le site",
+    'Les non alloués': "Les joueurs dans les parties mais sans rôle",
     'Editer les créateurs': "Editer les comptes créateurs du site",
     'Editer les modérateurs': "Editer les comptes modérateurs du site",
     'Comptes oisifs': "Lister les comptes oisifs pour les avertir ou les supprimer",
@@ -1622,6 +1623,69 @@ def last_rescues():
     MY_SUB_PANEL <= rescues_summary
 
 
+def unallocated():
+    """ unalloacted """
+
+    MY_SUB_PANEL <= html.H3("Joueurs alloués à des parties mais sans rôle")
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    games_dict = common.get_games_data(1)
+    if games_dict is None:
+        alert("Erreur chargement dictionnaire parties")
+        return
+    games_dict = dict(games_dict)
+
+    players_dict = common.get_players_data()
+    if not players_dict:
+        return
+
+    unallocated_dict = common.get_unallocations_data()
+    if not unallocated_dict:
+        return
+    print(f"{unallocated_dict=}")
+
+    players_dict2 = common.get_players()
+    if not players_dict2:
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict2.items()}
+
+    unallocated_table = html.TABLE()
+
+    fields = ['pseudo', 'games']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'games': 'parties'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    unallocated_table <= thead
+
+    for player_id, games in unallocated_dict['players_dict'].items():
+
+        row = html.TR()
+        for field in fields:
+
+            if field == 'pseudo':
+                value = num2pseudo[int(player_id)]
+
+            if field == 'games':
+                value = ' '.join(map(str, games))
+
+            col = html.TD(value)
+
+            row <= col
+
+        unallocated_table <= row
+
+    MY_SUB_PANEL <= unallocated_table
+
+
 def edit_creators():
     """ edit_creators """
 
@@ -2283,10 +2347,12 @@ def load_option(_, item_name):
         last_failures()
     if item_name == 'Récupérations demandées':
         last_rescues()
-    if item_name == 'Editer les modérateurs':
-        edit_moderators()
+    if item_name == 'Les non alloués':
+        unallocated()
     if item_name == 'Editer les créateurs':
         edit_creators()
+    if item_name == 'Editer les modérateurs':
+        edit_moderators()
     if item_name == 'Comptes oisifs':
         show_idle_data()
     if item_name == 'Logs du scheduler':
