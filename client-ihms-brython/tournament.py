@@ -1199,6 +1199,12 @@ def edit_tournament():
         alert("Il faut se connecter au préalable")
         return
 
+    pseudo = storage['PSEUDO']
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        alert("Erreur chargement identifiant joueur")
+        return
+
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -1222,12 +1228,17 @@ def edit_tournament():
 
     TOURNAMENT_DICT = dict(TOURNAMENT_DICT)
 
-    # title 1
-    tournament_name = TOURNAMENT_DICT['name']
-    MY_SUB_PANEL <= html.H3(f"Mettre dans ou enlever des parties du tournoi {tournament_name}")
-
+    director_id = TOURNAMENT_DICT['director_id']
     tournament_id = TOURNAMENT_DICT['identifier']
     games_in = TOURNAMENT_DICT['games']
+    tournament_name = TOURNAMENT_DICT['name']
+
+    # title 1
+    MY_SUB_PANEL <= html.H3(f"Mettre dans ou enlever des parties du tournoi {tournament_name}")
+
+    if player_id != director_id:
+        alert("Vous n'êtes pas le directeur du tournoi")
+        return
 
     # get the games
     games_dict = common.get_games_data()
@@ -1386,6 +1397,12 @@ def delete_tournament():
         alert("Il faut se connecter au préalable")
         return
 
+    pseudo = storage['PSEUDO']
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        alert("Erreur chargement identifiant joueur")
+        return
+
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -1400,10 +1417,16 @@ def delete_tournament():
 
     TOURNAMENT_DICT = dict(TOURNAMENT_DICT)
 
-    # title
+    director_id = TOURNAMENT_DICT['director_id']
     tournament_name = TOURNAMENT_DICT['name']
+
+    # title
     title = html.H3(f"Suppression du tournoi {tournament_name}")
     MY_SUB_PANEL <= title
+
+    if player_id != director_id:
+        alert("Vous n'êtes pas le directeur du tournoi")
+        return
 
     form = html.FORM()
 
