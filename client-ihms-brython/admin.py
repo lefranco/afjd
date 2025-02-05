@@ -1670,7 +1670,15 @@ def unallocated():
                 value = num2pseudo[int(player_id)]
 
             if field == 'games':
-                value = ' '.join(map(lambda n : games_dict[str(n)]['name'], sorted(games)))
+                value = ""
+                for game_id in sorted(games):
+                    game_id_str = str(game_id)
+                    game_name = games_dict[game_id_str]['name']
+                    if games_dict[game_id_str]['current_state'] != 0:
+                        value += html.B(game_name)
+                    else:
+                        value += game_name
+                    value += ' '
 
             col = html.TD(value)
 
