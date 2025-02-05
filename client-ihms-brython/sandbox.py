@@ -5,7 +5,7 @@
 from json import loads, dumps
 from time import time
 
-from browser import html, alert, document, ajax  # pylint: disable=import-error
+from browser import html, alert, document, ajax, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
@@ -356,6 +356,25 @@ def sandbox():
         download_link = document['download_link']
         download_link.download = f"diplomania_map_{label}.png"
         download_link.href = canvas.toDataURL('image/png')
+        document['download_link'].click()
+
+    def download_situation_callback(_):
+        """ download_situation_callback """
+
+        # make a random like label
+        time_stamp_now = time()
+        label = int(time_stamp_now) % 1000
+
+        # needed too for some reason
+        MY_SUB_PANEL <= html.A(id='download_link')
+
+        # perform actual exportation
+
+        # perform actual exportation
+        text_file_as_blob = window.Blob.new(["coucou"], {'type': 'text/plain'})
+        download_link = document['download_link']
+        download_link.download = f"diplomania_position_{label}.json"
+        download_link.href = window.URL.createObjectURL(text_file_as_blob)
         document['download_link'].click()
 
     def select_order_type_callback(_, order_type):
@@ -881,10 +900,15 @@ def sandbox():
     def put_download(buttons_right):
         """ put_download """
 
-        input_export = html.INPUT(type="submit", value="Télécharger la carte", Class='btn-inside')
-        input_export.bind("click", download_map_callback)
+        input_export_png = html.INPUT(type="submit", value="Télécharger la carte au format PNG", Class='btn-inside')
+        input_export_png.bind("click", download_map_callback)
         buttons_right <= html.BR()
-        buttons_right <= input_export
+        buttons_right <= input_export_png
+        buttons_right <= html.BR()
+        input_export_json = html.INPUT(type="submit", value="Télécharger la position format JSON", Class='btn-inside')
+        input_export_json.bind("click", download_situation_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_export_json
         buttons_right <= html.BR()
 
     def callback_take_item(event):
@@ -1093,7 +1117,7 @@ def sandbox():
     display_very_left <= html.BR()
 
     display_very_left <= html.BR()
-    display_very_left <= html.DIV("Vous pouvez exporter (bouton 'télécharger la carte') cette position au format PNG pour vous en servir à titre d'illustration (dans un quizz par exemple)", Class='note')
+    display_very_left <= html.DIV("Vous pouvez exporter cette position pour vous en servir à titre d'illustration", Class='note')
     display_very_left <= html.BR()
 
     map_size = VARIANT_DATA.map_size
