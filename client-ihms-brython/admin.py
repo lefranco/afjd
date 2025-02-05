@@ -1632,15 +1632,11 @@ def unallocated():
         alert("Pas le bon compte (pas admin)")
         return
 
-    games_dict = common.get_games_data(1)
+    games_dict = common.get_games_data()
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
     games_dict = dict(games_dict)
-
-    players_dict = common.get_players_data()
-    if not players_dict:
-        return
 
     unallocated_dict = common.get_unallocations_data()
     if not unallocated_dict:
@@ -1674,7 +1670,7 @@ def unallocated():
                 value = num2pseudo[int(player_id)]
 
             if field == 'games':
-                value = ' '.join(map(str, games))
+                value = ' '.join(map(lambda n : games_dict[str(n)]['name'], sorted(games)))
 
             col = html.TD(value)
 
