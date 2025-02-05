@@ -370,8 +370,19 @@ def sandbox():
 
         # perform actual exportation
 
+        # extract JSON description of position
+
+        situation_dict = {
+            'ownerships': POSITION_DATA.save_json2(),
+            'dislodged_ones': POSITION_DATA.save_json3(),
+            'units': POSITION_DATA.save_json(),
+            'forbiddens': POSITION_DATA.save_json4(),
+        }
+
+        situation_dict_json = dumps(situation_dict)
+
         # perform actual exportation
-        text_file_as_blob = window.Blob.new(["coucou"], {'type': 'text/plain'})
+        text_file_as_blob = window.Blob.new([situation_dict_json], {'type': 'text/plain'})
         download_link = document['download_link']
         download_link.download = f"diplomania_position_{label}.json"
         download_link.href = window.URL.createObjectURL(text_file_as_blob)
