@@ -1500,9 +1500,7 @@ def submit_orders():
     advancement_selected = play_low.GAME_PARAMETERS_LOADED['current_advancement']
 
     # exception for start build games
-    min_possible_advancement = 0
-    if play_low.VARIANT_DATA.start_build:
-        min_possible_advancement = 4
+    min_possible_advancement = 4 if play_low.VARIANT_DATA.start_build else 0
 
     while True:
 
