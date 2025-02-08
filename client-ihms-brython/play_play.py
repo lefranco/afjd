@@ -1392,25 +1392,24 @@ def submit_orders():
     else:
         if play_low.ROLE_ID not in submitted_data['needed']:
             alert("Vous n'avez pas d'ordre à passer.")
-            # may still vote
+            # may still vote or edit notes
+
+    game_over = False
 
     # check game soloed
     if play_low.GAME_PARAMETERS_LOADED['soloed']:
         alert("La partie est terminée parce qu'un solo a été réalisé !")
-        play.load_option(None, 'Consulter')
-        return False
+        # may still edit notes
 
     # check game end voted
     if play_low.GAME_PARAMETERS_LOADED['end_voted']:
         alert("La partie est terminée sur un vote de fin unanime !")
-        play.load_option(None, 'Consulter')
-        return False
+        # may still edit notes
 
     # check game finished (if not soloed nor end voted)
     if play_low.GAME_PARAMETERS_LOADED['finished']:
         alert("La partie est terminée parce qu'arrivée à échéance")
-        play.load_option(None, 'Consulter')
-        return False
+        # may still edit notes
 
     # load notes
     content_loaded = common.game_note_reload(play_low.GAME_ID)
@@ -1552,7 +1551,7 @@ def submit_orders():
     # button last moves
     play_low.stack_last_moves_button(buttons_right)
 
-    if play_low.ROLE_ID in submitted_data['needed']:
+    if play_low.ROLE_ID in submitted_data['needed'] and not game_over:
 
         # button for communication orders
         if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
@@ -1614,65 +1613,66 @@ def submit_orders():
     # other stuff
     my_sub_panel3 = html.DIV()
 
-    # end vote now
+    if not game_over:
 
-    my_sub_panel3 <= html.H3("Vote de fin de partie")
+        # end vote now
+        my_sub_panel3 <= html.H3("Vote de fin de partie")
 
-    # reminder
-    reminder = html.DIV("ATTENTION : Pensez à prévenir l'arbitre qu'un vote est en cours (par un message de négociation par exemple)", Class='important')
-    special_legend = html.LEGEND(reminder)
-    my_sub_panel3 <= special_legend
-    my_sub_panel3 <= html.BR()
+        # reminder
+        reminder = html.DIV("ATTENTION : Pensez à prévenir l'arbitre qu'un vote est en cours (par un message de négociation par exemple)", Class='important')
+        special_legend = html.LEGEND(reminder)
+        my_sub_panel3 <= special_legend
+        my_sub_panel3 <= html.BR()
 
-    label_vote = html.LABEL(html.B("Je vote :"))
-    my_sub_panel3 <= label_vote
-    my_sub_panel3 <= html.BR()
+        label_vote = html.LABEL(html.B("Je vote :"))
+        my_sub_panel3 <= label_vote
+        my_sub_panel3 <= html.BR()
 
-    # Continuation ===
-    option_continue = "pour que la partie s'arrête !"
-    label_continue = html.LABEL(html.EM(option_continue))
-    my_sub_panel3 <= label_continue
-    input_continue = html.INPUT(type="radio", id="stop", name="vote", checked=(vote_value is True), Class='btn-inside')
-    input_continue.bind("click", update_select)
-    my_sub_panel3 <= input_continue
-    my_sub_panel3 <= html.BR()
+        # Continuation ===
+        option_continue = "pour que la partie s'arrête !"
+        label_continue = html.LABEL(html.EM(option_continue))
+        my_sub_panel3 <= label_continue
+        input_continue = html.INPUT(type="radio", id="stop", name="vote", checked=(vote_value is True), Class='btn-inside')
+        input_continue.bind("click", update_select)
+        my_sub_panel3 <= input_continue
+        my_sub_panel3 <= html.BR()
 
-    # Arret ===
-    option_stop = "pour que la partie continue !"
-    label_stop = html.LABEL(html.EM(option_stop))
-    my_sub_panel3 <= label_stop
-    input_stop = html.INPUT(type="radio", id="continue", name="vote", checked=(vote_value is False), Class='btn-inside')
-    input_stop.bind("click", update_select)
-    my_sub_panel3 <= input_stop
-    my_sub_panel3 <= html.BR()
+        # Arret ===
+        option_stop = "pour que la partie continue !"
+        label_stop = html.LABEL(html.EM(option_stop))
+        my_sub_panel3 <= label_stop
+        input_stop = html.INPUT(type="radio", id="continue", name="vote", checked=(vote_value is False), Class='btn-inside')
+        input_stop.bind("click", update_select)
+        my_sub_panel3 <= input_stop
+        my_sub_panel3 <= html.BR()
 
-    # Abstention ===
-    option_abstention = "non, je m'abstiens ! (équivaut à voter pour continuer)"
-    label_abstention = html.LABEL(html.EM(option_abstention))
-    my_sub_panel3 <= label_abstention
-    input_abstention = html.INPUT(type="radio", id="abstention", name="vote", checked=(vote_value is None), Class='btn-inside')
-    input_abstention.bind("click", update_select)
-    my_sub_panel3 <= input_abstention
-    my_sub_panel3 <= html.BR()
+        # Abstention ===
+        option_abstention = "non, je m'abstiens ! (équivaut à voter pour continuer)"
+        label_abstention = html.LABEL(html.EM(option_abstention))
+        my_sub_panel3 <= label_abstention
+        input_abstention = html.INPUT(type="radio", id="abstention", name="vote", checked=(vote_value is None), Class='btn-inside')
+        input_abstention.bind("click", update_select)
+        my_sub_panel3 <= input_abstention
+        my_sub_panel3 <= html.BR()
 
-    input_submit = html.INPUT(type="submit", value="Soumettre", Class='btn-inside')
-    input_submit.bind("click", submit_vote_callback)
-    my_sub_panel3 <= html.BR()
-    my_sub_panel3 <= input_submit
-    my_sub_panel3 <= html.BR()
-    my_sub_panel3 <= html.BR()
+        input_submit = html.INPUT(type="submit", value="Soumettre", Class='btn-inside')
+        input_submit.bind("click", submit_vote_callback)
+        my_sub_panel3 <= html.BR()
+        my_sub_panel3 <= input_submit
+        my_sub_panel3 <= html.BR()
+        my_sub_panel3 <= html.BR()
 
-    my_sub_panel3 <= html.DIV("Règles du vote d'arrêt de la partie", Class='note')
-    rules = html.UL()
-    rules <= html.LI("Le vote individuel est confidentiel mais le nombre de votes exprimés est public.")
-    rules <= html.LI("Seules les voix des joueurs encore en jeu comptent (ceux qui ont encore un centre et/ou une unité).")
-    rules <= html.LI("Les non votants sont considérés en faveur de la continuation de la partie.")
-    rules <= html.LI("L'unanimité (pour l'arrêt de la partie) est requise pour que l'arrêt soit voté.")
-    rules <= html.LI("La décision est prise en attendant les ordres d'ajustement.")
-    rules <= html.LI("Quand un vote est en cours, la partie continue normalement.")
-    rules <= html.LI("Les modalités d'un tournoi peuvent interdire l'arrêt de la partie avant une année de jeu spécifique.")
+        my_sub_panel3 <= html.DIV("Règles du vote d'arrêt de la partie", Class='note')
+        rules = html.UL()
+        rules <= html.LI("Le vote individuel est confidentiel mais le nombre de votes exprimés est public.")
+        rules <= html.LI("Seules les voix des joueurs encore en jeu comptent (ceux qui ont encore un centre et/ou une unité).")
+        rules <= html.LI("Les non votants sont considérés en faveur de la continuation de la partie.")
+        rules <= html.LI("L'unanimité (pour l'arrêt de la partie) est requise pour que l'arrêt soit voté.")
+        rules <= html.LI("La décision est prise en attendant les ordres d'ajustement.")
+        rules <= html.LI("Quand un vote est en cours, la partie continue normalement.")
+        rules <= html.LI("Les modalités d'un tournoi peuvent interdire l'arrêt de la partie avant une année de jeu spécifique.")
 
-    my_sub_panel3 <= rules
+        my_sub_panel3 <= rules
 
     # notes now
 
