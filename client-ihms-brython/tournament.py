@@ -25,8 +25,7 @@ OPTIONS = {
     'Incidents du tournoi': "La liste des incidents sur le tournoi de la partie sélectionnée",
     'Résultats par puissance': "Les résultats par puissance sur le tournoi de la partie sélectionnée",
     'Créer un tournoi': "Créer un tournoi contenant la partie sélectionnée",
-    'Editer le tournoi': "Editer le tournoi de la partie sélectionnée",
-    'Supprimer le tournoi': "Supprimer le tournoi de la partie sélectionnée",
+    'Gérer le tournoi': "Gérer le tournoi de la partie sélectionnée",
     'Les tournois du site': "Liste complète des tournois sur le site",
     'Fréquentation des tournois': "Statistiques de fréquentation des tournois sur le site"
 }
@@ -1047,8 +1046,58 @@ def create_tournament():
     MY_SUB_PANEL <= form
 
 
-def edit_tournament():
-    """ edit_tournament """
+def handle_tournament():
+    """ handle_tournament """
+
+    def cancel_delete_tournament_callback(_, dialog):
+        """ cancel_delete_tournament_callback """
+        dialog.close(None)
+
+    def delete_tournament_callback(ev, dialog):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la suppression du tournoi : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la suppression du tournoi : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Le tournoi a été supprimé : {messages}")
+
+            # back somewhere else
+            MY_SUB_PANEL.clear()
+            create_tournament()
+
+        ev.preventDefault()
+
+        dialog.close(None)
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/tournaments/{game}"
+
+        # deleting tournament : need token
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def delete_tournament_callback_confirm(ev):  # pylint: disable=invalid-name
+        """ delete_tournament_callback_confirm """
+
+        ev.preventDefault()
+
+        dialog = mydialog.Dialog("On supprime vraiment le tournoi ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog: delete_tournament_callback(e, d))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_tournament_callback(e, d))
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        handle_tournament()
 
     def put_in_tournament_callback(ev):  # pylint: disable=invalid-name
         """ put_in_tournament_callback """
@@ -1065,7 +1114,7 @@ def edit_tournament():
 
                 # failed but refresh
                 MY_SUB_PANEL.clear()
-                edit_tournament()
+                handle_tournament()
 
                 return
 
@@ -1074,7 +1123,7 @@ def edit_tournament():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            edit_tournament()
+            handle_tournament()
 
         ev.preventDefault()
 
@@ -1114,7 +1163,7 @@ def edit_tournament():
 
                 # failed but refresh
                 MY_SUB_PANEL.clear()
-                edit_tournament()
+                handle_tournament()
 
                 return
 
@@ -1123,7 +1172,7 @@ def edit_tournament():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            edit_tournament()
+            handle_tournament()
 
         ev.preventDefault()
 
@@ -1160,7 +1209,7 @@ def edit_tournament():
 
                 # failed but refresh
                 MY_SUB_PANEL.clear()
-                edit_tournament()
+                handle_tournament()
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -1173,13 +1222,13 @@ def edit_tournament():
         if not name_selected:
             alert("Nom de tournoi manquant")
             MY_SUB_PANEL.clear()
-            edit_tournament()
+            handle_tournament()
             return
 
         if len(name_selected) > MAX_LEN_TOURNAMENT_NAME:
             alert("Nom de tournoi trop long")
             MY_SUB_PANEL.clear()
-            edit_tournament()
+            handle_tournament()
             return
 
         json_dict = {
@@ -1196,7 +1245,7 @@ def edit_tournament():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        edit_tournament()
+        handle_tournament()
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1237,7 +1286,10 @@ def edit_tournament():
     tournament_name = TOURNAMENT_DICT['name']
 
     # title 1
-    MY_SUB_PANEL <= html.H3(f"Mettre dans ou enlever des parties du tournoi {tournament_name}")
+    MY_SUB_PANEL <= html.H3(f"Gérer le tournoi {tournament_name}")
+
+    # title 1
+    MY_SUB_PANEL <= html.H4("Mettre dans ou enlever des parties du tournoi")
 
     if player_id != director_id:
         alert("Vous n'êtes pas le directeur du tournoi")
@@ -1325,7 +1377,7 @@ def edit_tournament():
     MY_SUB_PANEL <= form
 
     # title 2
-    MY_SUB_PANEL <= html.H3(f"Renommer le tournoi {tournament_name}")
+    MY_SUB_PANEL <= html.H4("Renommer le tournoi")
 
     form = html.FORM()
 
@@ -1342,94 +1394,7 @@ def edit_tournament():
 
     MY_SUB_PANEL <= form
 
-
-def delete_tournament():
-    """ delete_tournament """
-
-    def cancel_delete_tournament_callback(_, dialog):
-        """ cancel_delete_tournament_callback """
-        dialog.close(None)
-
-    def delete_tournament_callback(ev, dialog):  # pylint: disable=invalid-name
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la suppression du tournoi : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la suppression du tournoi : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le tournoi a été supprimé : {messages}")
-
-            # back somewhere else
-            MY_SUB_PANEL.clear()
-            create_tournament()
-
-        ev.preventDefault()
-
-        dialog.close(None)
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/tournaments/{game}"
-
-        # deleting tournament : need token
-        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    def delete_tournament_callback_confirm(ev):  # pylint: disable=invalid-name
-        """ delete_tournament_callback_confirm """
-
-        ev.preventDefault()
-
-        dialog = mydialog.Dialog("On supprime vraiment le tournoi ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog: delete_tournament_callback(e, d))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_tournament_callback(e, d))
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        delete_tournament()
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        alert("Erreur chargement identifiant joueur")
-        return
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    global TOURNAMENT_DICT
-    TOURNAMENT_DICT = common.get_tournament_data(game)
-    if not TOURNAMENT_DICT:
-        alert("Pas de tournoi pour cette partie")
-        return
-
-    TOURNAMENT_DICT = dict(TOURNAMENT_DICT)
-
-    director_id = TOURNAMENT_DICT['director_id']
-    tournament_name = TOURNAMENT_DICT['name']
-
-    # title
-    title = html.H3(f"Suppression du tournoi {tournament_name}")
-    MY_SUB_PANEL <= title
-
-    if player_id != director_id:
-        alert("Vous n'êtes pas le directeur du tournoi")
-        return
+    MY_SUB_PANEL <= html.H4("Supprimer le tournoi")
 
     form = html.FORM()
 
@@ -1662,10 +1627,8 @@ def load_option(_, item_name):
         show_powers_results()
     if item_name == 'Créer un tournoi':
         create_tournament()
-    if item_name == 'Editer le tournoi':
-        edit_tournament()
-    if item_name == 'Supprimer le tournoi':
-        delete_tournament()
+    if item_name == 'Gérer le tournoi':
+        handle_tournament()
     if item_name == 'Les tournois du site':
         show_tournaments_data()
     if item_name == 'Fréquentation des tournois':
