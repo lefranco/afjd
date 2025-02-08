@@ -455,13 +455,8 @@ def show_position(direct_last_moves):
         position_data = play_low.POSITION_DATA
         orders_data = None
 
-        if advancement_selected < 0:
-            alert("Il n'y a rien avant, désolé !")
-            return
-
-        if advancement_selected > last_advancement:
-            alert("Il n'y a rien après, désolé !")
-            return
+        # exception for start build games
+        min_possible_advancement = 4 if play_low.VARIANT_DATA.start_build else 0
 
         if advancement_selected != last_advancement:
 
@@ -594,18 +589,24 @@ def show_position(direct_last_moves):
         buttons_right <= html.H3("Historique")
 
         input_first = html.INPUT(type="submit", value="||<<", Class='btn-inside')
-        input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
+        input_first.bind("click", lambda e, a=min_possible_advancement: transition_display_callback(e, a))
         buttons_right <= input_first
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        input_previous = html.INPUT(type="submit", value="<", Class='btn-inside')
+        if advancement_selected > min_possible_advancement:
+            input_previous = html.INPUT(type="submit", value="<", Class='btn-inside')
+        else:
+            input_previous = html.INPUT(type="submit", value="<", disabled=True, Class='btn-inside')
         input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
         buttons_right <= input_previous
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        input_next = html.INPUT(type="submit", value=">", Class='btn-inside')
+        if advancement_selected < last_advancement:
+            input_next = html.INPUT(type="submit", value=">", Class='btn-inside')
+        else:
+            input_next = html.INPUT(type="submit", value=">", disabled=True, Class='btn-inside')
         input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
         buttons_right <= input_next
         buttons_right <= html.BR()
