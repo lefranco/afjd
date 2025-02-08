@@ -21,9 +21,7 @@ import play
 
 OPTIONS = {
     'Parties du tournoi': "Les parties du tournoi de la partie sélectionnée",
-    'Joueurs du tournoi': "Les joueurs du tournoi de la partie sélectionnée",
-    'Incidents du tournoi': "La liste des incidents sur le tournoi de la partie sélectionnée",
-    'Résultats par puissance': "Les résultats par puissance sur le tournoi de la partie sélectionnée",
+    'Informations tournoi': "Les joueurs, incidents, résultats par puissance du tournoi de la partie sélectionnée",
     'Créer un tournoi': "Créer un tournoi contenant la partie sélectionnée",
     'Gérer le tournoi': "Gérer le tournoi de la partie sélectionnée",
     'Les tournois du site': "Liste complète des tournois sur le site",
@@ -496,8 +494,8 @@ def show_games():
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
 
 
-def show_players():
-    """ show_players """
+def show_informations():
+    """ show_informations """
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -509,8 +507,10 @@ def show_players():
 
     # title
     tournament_name = TOURNAMENT_DICT['name']
-    title = html.H3(f"Les participants du tournoi {tournament_name}")
-    MY_SUB_PANEL <= title
+
+    MY_SUB_PANEL <= html.H3(f"Informations tournoi {tournament_name}")
+
+    MY_SUB_PANEL <= html.H4("Les participants du tournoi")
 
     tournament_id = TOURNAMENT_DICT['identifier']
 
@@ -551,26 +551,7 @@ def show_players():
 
     MY_SUB_PANEL <= players_table
 
-
-def show_incidents():
-    """ show_incidents """
-
-    overall_time_before = time()
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    if not TOURNAMENT_DICT:
-        alert("Pas de tournoi pour cette partie")
-        return
-
-    # title
-    tournament_name = TOURNAMENT_DICT['name']
-    title = html.H3(f"Les incidents du tournoi {tournament_name}")
-    MY_SUB_PANEL <= title
-
-    tournament_id = TOURNAMENT_DICT['identifier']
+    MY_SUB_PANEL <= html.H4(f"Les incidents du tournoi")
 
     games_dict = common.get_games_data()
     if games_dict is None:
@@ -736,8 +717,7 @@ def show_incidents():
 
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
 
-    title2 = html.H4("Désordres civils du tournoi")
-    MY_SUB_PANEL <= title2
+    MY_SUB_PANEL <= html.H4("Les désordres civils du tournoi")
     MY_SUB_PANEL <= tournament_incidents2_table
 
     title2 = html.H4("Retards du tournoi")
@@ -751,35 +731,7 @@ def show_incidents():
     MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
     MY_SUB_PANEL <= html.BR()
 
-    overall_time_after = time()
-    elapsed = overall_time_after - overall_time_before
-
-    stats = f"Temps de chargement de la page {elapsed:.2f} secs"
-
-    MY_SUB_PANEL <= html.DIV(stats, Class='load')
-
-
-def show_powers_results():
-    """ show_powers_results """
-
-    overall_time_before = time()
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    if not TOURNAMENT_DICT:
-        alert("Pas de tournoi pour cette partie")
-        return
-
-    tournament_id = TOURNAMENT_DICT['identifier']
     games_in = TOURNAMENT_DICT['games']
-
-    games_dict = common.get_games_data()
-    if games_dict is None:
-        alert("Erreur chargement dictionnaire parties")
-        return
-    games_dict = dict(games_dict)
 
     # build dict of positions
     positions_dict_loaded = common.tournament_position_reload(tournament_id)
@@ -922,9 +874,7 @@ def show_powers_results():
         tournament_powers_results_table <= row
 
     # title
-    tournament_name = TOURNAMENT_DICT['name']
-    title = html.H3(f"Les résultats par puissance de {tournament_name} ({nb_games} parties(s))")
-    MY_SUB_PANEL <= title
+    MY_SUB_PANEL <= html.H4(f"Les résultats par puissance ({nb_games} parties(s))")
 
     MY_SUB_PANEL <= tournament_powers_results_table
     MY_SUB_PANEL <= html.BR()
@@ -933,13 +883,6 @@ def show_powers_results():
     information <= "Attention les parties sont considérées toutes comme terminées en l'état - à prendre en compte pour un tournoi en cours..."
     MY_SUB_PANEL <= information
     MY_SUB_PANEL <= html.BR()
-
-    overall_time_after = time()
-    elapsed = overall_time_after - overall_time_before
-
-    stats = f"Temps de chargement de la page {elapsed:.2f} secs"
-
-    MY_SUB_PANEL <= html.DIV(stats, Class='load')
 
 
 def create_tournament():
@@ -1619,12 +1562,8 @@ def load_option(_, item_name):
 
     if item_name == 'Parties du tournoi':
         show_games()
-    if item_name == 'Joueurs du tournoi':
-        show_players()
-    if item_name == 'Incidents du tournoi':
-        show_incidents()
-    if item_name == 'Résultats par puissance':
-        show_powers_results()
+    if item_name == 'Informations tournoi':
+        show_informations()
     if item_name == 'Créer un tournoi':
         create_tournament()
     if item_name == 'Gérer le tournoi':
