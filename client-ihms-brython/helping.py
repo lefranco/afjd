@@ -2,7 +2,7 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import html, document, window  # pylint: disable=import-error
+from browser import html, window  # pylint: disable=import-error
 
 import faq
 import tips
@@ -130,21 +130,18 @@ def tutorials_youtube():
     button1 = html.BUTTON("Lancer la vidéo", id='tutorial_game', Class='btn-inside')
     button1.bind("click", lambda e: window.open("https://youtu.be/d-ddAqTNDzA?si=Raf-hKFpgjMgdmf0"))
     MY_SUB_PANEL <= button1
-#    document['tutorial_game'].click()
 
     # use button
     MY_SUB_PANEL <= html.H4("Une vidéo faite maison qui présente comment jouer sur ce site")
     button2 = html.BUTTON("Lancer la vidéo", id='tutorial_link_play', Class='btn-inside')
     button2.bind("click", lambda e: window.open("https://www.youtube.com/watch?v=luOiAz9i7Ls"))
     MY_SUB_PANEL <= button2
-#    document['tutorial_link_play'].click()
 
     # use button
     MY_SUB_PANEL <= html.H4("Une vidéo faite maison qui présente comment arbitrer sur ce site")
     button3 = html.BUTTON("Lancer la vidéo", id='tutorial_link_master', Class='btn-inside')
     button3.bind("click", lambda e: window.open("https://www.youtube.com/watch?v=T4jJzCxLslc"))
     MY_SUB_PANEL <= button3
-#    document['tutorial_link_master'].click()
 
 
 MY_PANEL = html.DIV()
