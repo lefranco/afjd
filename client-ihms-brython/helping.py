@@ -12,10 +12,8 @@ OPTIONS = {
     'Foire aux questions': "Foire Aux Questions du site",
     'Les petits tuyaux': "Différentes petites choses à savoir pour mieux jouer sur le site",
     'Charte du bon diplomate': "Document indiquant les règles de bonne conduite en jouant les parties",
-    'Règles simplifiées': "Un règle simplifiée du jeu Diplomatie par Edi Birsan",
-    'Youtube Diplomacy': "Lien une vidéo Youtube qui présente simplement les règles du jeu avec humour",
-    'Youtube Diplomania Jeu': "Lien une vidéo Youtube qui présente simplement comment jouer sur ce site",
-    'Youtube Diplomania Arbitrage': "Lien une vidéo Youtube qui présente simplement comment arbitrer sur ce site",
+    'Règles simplifiées': "Une règle simplifiée du jeu Diplomatie par Edi Birsan",
+    'Tutoriels YouTube': "Une page avec des tutoriels YouTube sur le jeu et le site"
 }
 
 ARRIVAL = None
@@ -122,40 +120,31 @@ def show_diplomat_chart():
     my_ezml.render(MY_SUB_PANEL)
 
 
-def tutorial_game():
-    """ tutorial_game """
+def tutorials_youtube():
+    """ tutorials_youtube """
 
-    # load tutorial_game directly
-
-    # use button
-    button = html.BUTTON("Lancement du tutoriel youtube pour le jeu", id='tutorial_game', Class='btn-inside')
-    MY_SUB_PANEL <= button
-    button.bind("click", lambda e: window.open("https://youtu.be/d-ddAqTNDzA?si=Raf-hKFpgjMgdmf0"))
-    document['tutorial_game'].click()
-
-
-def tutorial_site_play():
-    """ tutorial_site_play """
-
-    # load tutorial_site directly
+    MY_SUB_PANEL <= html.H3("Les tutoriels YouTube")
 
     # use button
-    button = html.BUTTON("Lancement du tutoriel youtube pour le site", id='tutorial_link_play', Class='btn-inside')
-    MY_SUB_PANEL <= button
-    button.bind("click", lambda e: window.open("https://www.youtube.com/watch?v=luOiAz9i7Ls"))
-    document['tutorial_link_play'].click()
-
-
-def tutorial_site_master():
-    """ tutorial_site_master """
-
-    # load tutorial_site directly
+    MY_SUB_PANEL <= html.H4("Une vidéo pleine d'humour qui présente simplement les règles du jeu")
+    button1 = html.BUTTON("Lancer la vidéo", id='tutorial_game', Class='btn-inside')
+    button1.bind("click", lambda e: window.open("https://youtu.be/d-ddAqTNDzA?si=Raf-hKFpgjMgdmf0"))
+    MY_SUB_PANEL <= button1
+#    document['tutorial_game'].click()
 
     # use button
-    button = html.BUTTON("Lancement du tutoriel youtube pour le site", id='tutorial_link_master', Class='btn-inside')
-    MY_SUB_PANEL <= button
-    button.bind("click", lambda e: window.open("https://www.youtube.com/watch?v=T4jJzCxLslc"))
-    document['tutorial_link_master'].click()
+    MY_SUB_PANEL <= html.H4("Une vidéo faite maison qui présente comment jouer sur ce site")
+    button2 = html.BUTTON("Lancer la vidéo", id='tutorial_link_play', Class='btn-inside')
+    button2.bind("click", lambda e: window.open("https://www.youtube.com/watch?v=luOiAz9i7Ls"))
+    MY_SUB_PANEL <= button2
+#    document['tutorial_link_play'].click()
+
+    # use button
+    MY_SUB_PANEL <= html.H4("Une vidéo faite maison qui présente comment arbitrer sur ce site")
+    button3 = html.BUTTON("Lancer la vidéo", id='tutorial_link_master', Class='btn-inside')
+    button3.bind("click", lambda e: window.open("https://www.youtube.com/watch?v=T4jJzCxLslc"))
+    MY_SUB_PANEL <= button3
+#    document['tutorial_link_master'].click()
 
 
 MY_PANEL = html.DIV()
@@ -190,12 +179,8 @@ def load_option(_, item_name):
         show_diplomat_chart()
     if item_name == 'Règles simplifiées':
         show_simplified_rules()
-    if item_name == 'Youtube Diplomacy':
-        tutorial_game()
-    if item_name == 'Youtube Diplomania Jeu':
-        tutorial_site_play()
-    if item_name == 'Youtube Diplomania Arbitrage':
-        tutorial_site_master()
+    if item_name == 'Tutoriels YouTube':
+        tutorials_youtube()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
