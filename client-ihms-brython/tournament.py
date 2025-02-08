@@ -551,8 +551,6 @@ def show_informations():
 
     MY_SUB_PANEL <= players_table
 
-    MY_SUB_PANEL <= html.H4(f"Les incidents du tournoi")
-
     games_dict = common.get_games_data()
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
@@ -715,19 +713,17 @@ def show_informations():
 
         tournament_incidents_table <= row
 
-    MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
-
     MY_SUB_PANEL <= html.H4("Les désordres civils du tournoi")
     MY_SUB_PANEL <= tournament_incidents2_table
 
-    title2 = html.H4("Retards du tournoi")
-    MY_SUB_PANEL <= title2
+    MY_SUB_PANEL <= html.H4("Les retards du tournoi")
     MY_SUB_PANEL <= tournament_incidents_table
     MY_SUB_PANEL <= html.BR()
 
+    MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
+    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les retards des joueurs qui depuis ont été remplacés n'apparaissent pas", Class='note')
     MY_SUB_PANEL <= html.BR()
-
     MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
     MY_SUB_PANEL <= html.BR()
 
