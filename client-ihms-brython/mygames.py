@@ -822,6 +822,7 @@ def my_games(state_name):
         suffering_games = get_suffering_games(games_dict, games_id_player, dict_role_id)
         if suffering_games:
             alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
+            alert("Pour ce faire, depuis la page 'mes parties', bouton 'en attente' et aller dans la(les) partie(s) et finalement bouton 'démarrer la partie' !")
             storage['DATE_SUFFERING_NOTIFIED'] = str(day_now)
 
     time_stamp_now = time()
