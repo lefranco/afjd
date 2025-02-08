@@ -778,10 +778,6 @@ SENDER_TIMER = None
 def handle_event():
     """ handle_event """
 
-
-
-
-
     def registration_action_callback(ev, player_id, value):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -888,10 +884,6 @@ def handle_event():
         # back to where we started
         MY_SUB_PANEL.clear()
         handle_event()
-
-
-
-
 
     def cancel_delete_event_callback(_, dialog):
         """ cancel_delete_event_callback """
@@ -1041,7 +1033,6 @@ def handle_event():
     title = html.H4("Gérer les participations de l'événement")
     MY_SUB_PANEL <= title
 
-
     joiners_table = html.TABLE()
 
     fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status', 'action']
@@ -1163,10 +1154,8 @@ def handle_event():
 
     MY_SUB_PANEL <= broadcast_form
 
-
     title = html.H4("Edition de l'événement")
     MY_SUB_PANEL <= title
-
 
     start_date = event_dict['start_date']
     start_hour = event_dict['start_hour']
@@ -1258,10 +1247,6 @@ def handle_event():
         alert("Erreur chargement dictionnaire joueurs")
 
     MY_SUB_PANEL <= form
-
-
-
-
 
 
 MY_PANEL = html.DIV()
