@@ -17,9 +17,7 @@ OPTIONS = {
     'Sélectionner un événement': "Sélectionner un événement sur le site",
     'Inscription à l\'événement': "S'inscrire et/ou consulter la liste des inscrits à l'événement sélectionné",
     'Créer un événement': "Créer un événement sur le site",
-    'Editer l\'événement': "Editer l'événement sélectionné",
-    'Gérer les participations': "Gérer les participations de l'événement sélectionné",
-    'Supprimer l\'événement': "Supprimer l'événement sélectionné"
+    'Gérer l\'événement': "Gérer l'événement sélectionné"
 }
 
 
@@ -628,6 +626,9 @@ def create_event(json_dict):
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.InfoDialog("Information", f"L'événement a été créé : {messages}")
 
+            # selected
+            storage['EVENT'] = name
+
         ev.preventDefault()
 
         # get values from user input
@@ -771,189 +772,15 @@ def create_event(json_dict):
     MY_SUB_PANEL <= form
 
 
-def edit_event():
-    """ edit_event """
-
-    def edit_event_callback(ev):  # pylint: disable=invalid-name
-        """ edit_event_callback """
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la modification de l'événement : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la modification de l'événement : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'événement a été mis à jour : {messages}")
-
-        ev.preventDefault()
-
-        name = input_name.value
-        start_date = input_start_date.value
-        start_hour = input_start_hour.value
-        end_date = input_end_date.value
-        location = input_location.value
-        description = input_description.value
-        summary = input_summary.value
-
-        # make data structure
-        json_dict = {
-            'name': name,
-            'start_date': start_date,
-            'start_hour': start_hour,
-            'end_date': end_date,
-            'location': location,
-            'description': description,
-            'summary': summary,
-        }
-
-        # start checking data
-
-        if not name:
-            alert("Nom d'événement manquant")
-            MY_SUB_PANEL.clear()
-            edit_event()
-            return
-
-        if len(name) > MAX_LEN_EVENT_NAME:
-            alert("Nom d'événement trop long")
-            MY_SUB_PANEL.clear()
-            edit_event()
-            return
-
-        if len(location) > MAX_LEN_EVENT_LOCATION:
-            alert("Lieu de l'événement trop long")
-            MY_SUB_PANEL.clear()
-            edit_event()
-            return
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/events/{event_id}"
-
-        # updating an event : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        edit_event()
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-    pseudo = storage['PSEUDO']
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        alert("Erreur chargement identifiant joueur")
-        return
-
-    if 'EVENT' not in storage:
-        alert("Il faut sélectionner un événement au préalable")
-        return
-
-    # title
-    event_name = storage['EVENT']
-    title = html.H3(f"Edition de l'événement {event_name}")
-    MY_SUB_PANEL <= title
-
-    events_dict = common.get_events_data()
-    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
-    event_id = eventname2id[event_name]
-    event_dict = get_event_data(event_id)
-
-    # check allowed
-    manager_id = event_dict['manager_id']
-    if player_id != manager_id:
-        alert("Vous n'êtes pas responsable de cet événement")
-        return
-
-    start_date = event_dict['start_date']
-    start_hour = event_dict['start_hour']
-    end_date = event_dict['end_date']
-    location = event_dict['location']
-    description = event_dict['description']
-    summary = event_dict['summary']
-
-    form = html.FORM()
-
-    form <= html.DIV("Pas de tirets dans le nom de l'événement", Class='note')
-    form <= html.DIV("Pour les liens, les mettre en début de ligne (http...)", Class='note')
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_name = html.LEGEND("nom", title="Nom de l'événement (faites court et simple)")
-    fieldset <= legend_name
-    input_name = html.INPUT(type="text", value=event_name, size=MAX_LEN_EVENT_NAME, Class='btn-inside')
-    fieldset <= input_name
-    form <= fieldset
-
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_start_date = html.LEGEND("date de début", title="Date de début de l'événement")
-    fieldset <= legend_start_date
-    input_start_date = html.INPUT(type="date", value=start_date, Class='btn-inside')
-    fieldset <= input_start_date
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
-    fieldset <= legend_start_hour
-    input_start_hour = html.INPUT(type="time", value=start_hour, step=1, Class='btn-inside')
-    fieldset <= input_start_hour
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_end_date = html.LEGEND("date de fin", title="Date de fin de l'événement")
-    fieldset <= legend_end_date
-    input_end_date = html.INPUT(type="date", value=end_date, Class='btn-inside')
-    fieldset <= input_end_date
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_location = html.LEGEND("lieu", title="Lieu de l'événement")
-    fieldset <= legend_location
-    input_location = html.INPUT(type="text", value=location, size=MAX_LEN_EVENT_LOCATION, Class='btn-inside')
-    fieldset <= input_location
-    form <= fieldset
-
-    form <= html.BR()
-    fieldset = html.FIELDSET()
-    legend_description = html.LEGEND("description complète", title="Description complète de l'événement pour les inscrits")
-    fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", rows=16, cols=80)
-    input_description <= description
-    fieldset <= input_description
-    form <= fieldset
-
-    form <= html.BR()
-    fieldset = html.FIELDSET()
-    legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil (pas plus de trois lignes)")
-    fieldset <= legend_summary
-    input_summary = html.TEXTAREA(type="text", rows=5, cols=80)
-    input_summary <= summary
-    fieldset <= input_summary
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_edit_event = html.INPUT(type="submit", value="Modifier l'événement", Class='btn-inside')
-    input_edit_event.bind("click", edit_event_callback)
-    form <= input_edit_event
-
-    MY_SUB_PANEL <= form
-
-
 SENDER_TIMER = None
 
 
-def handle_joiners():
-    """ handle_joiners """
+def handle_event():
+    """ handle_event """
+
+
+
+
 
     def registration_action_callback(ev, player_id, value):  # pylint: disable=invalid-name
 
@@ -987,7 +814,7 @@ def handle_joiners():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        handle_joiners()
+        handle_event()
 
     def sendmess_callback(ev):  # pylint: disable=invalid-name
         """ sendmess_callback """
@@ -1038,14 +865,14 @@ def handle_joiners():
             alert("Il faut être identifié")
             # back to where we started
             MY_SUB_PANEL.clear()
-            handle_joiners()
+            handle_event()
             return
 
         if not input_message.value:
             alert("Contenu du message vide")
             # back to where we started
             MY_SUB_PANEL.clear()
-            handle_joiners()
+            handle_event()
             return
 
         content = '\n\n'.join([f"[Evénement {event_name}]", input_message.value])
@@ -1060,7 +887,126 @@ def handle_joiners():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        handle_joiners()
+        handle_event()
+
+
+
+
+
+    def cancel_delete_event_callback(_, dialog):
+        """ cancel_delete_event_callback """
+        dialog.close(None)
+
+    def delete_event_callback(_, dialog):
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la suppression de l'événement : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la suppression de l'événement : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"L'événement a été supprimé : {messages}")
+
+            # not selected
+            del storage['EVENT']
+
+            # back to where we started (actually to select)
+            load_option(None, 'Sélectionner un événement')
+
+        dialog.close(None)
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/events/{event_id}"
+
+        # deleting event : need token
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def delete_event_callback_confirm(ev):  # pylint: disable=invalid-name
+        """ delete_event_callback_confirm """
+
+        ev.preventDefault()
+
+        dialog = mydialog.Dialog("On supprime vraiment l'événement ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog: delete_event_callback(e, d))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_event_callback(e, d))
+
+    def edit_event_callback(ev):  # pylint: disable=invalid-name
+        """ edit_event_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification de l'événement : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification de l'événement : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"L'événement a été mis à jour : {messages}")
+
+        ev.preventDefault()
+
+        name = input_name.value
+        start_date = input_start_date.value
+        start_hour = input_start_hour.value
+        end_date = input_end_date.value
+        location = input_location.value
+        description = input_description.value
+        summary = input_summary.value
+
+        # make data structure
+        json_dict = {
+            'name': name,
+            'start_date': start_date,
+            'start_hour': start_hour,
+            'end_date': end_date,
+            'location': location,
+            'description': description,
+            'summary': summary,
+        }
+
+        # start checking data
+
+        if not name:
+            alert("Nom d'événement manquant")
+            MY_SUB_PANEL.clear()
+            handle_event()
+            return
+
+        if len(name) > MAX_LEN_EVENT_NAME:
+            alert("Nom d'événement trop long")
+            MY_SUB_PANEL.clear()
+            handle_event()
+            return
+
+        if len(location) > MAX_LEN_EVENT_LOCATION:
+            alert("Lieu de l'événement trop long")
+            MY_SUB_PANEL.clear()
+            handle_event()
+            return
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/events/{event_id}"
+
+        # updating an event : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        handle_event()
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1074,6 +1020,27 @@ def handle_joiners():
     if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
         return
+
+    # title
+    event_name = storage['EVENT']
+
+    title = html.H3(f"Gestion de l'événement {event_name}")
+    MY_SUB_PANEL <= title
+
+    events_dict = common.get_events_data()
+    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
+    event_id = eventname2id[event_name]
+    event_dict = get_event_data(event_id)
+
+    # check allowed
+    manager_id = event_dict['manager_id']
+    if player_id != manager_id:
+        alert("Vous n'êtes pas responsable de cet événement")
+        return
+
+    title = html.H4("Gérer les participations de l'événement")
+    MY_SUB_PANEL <= title
+
 
     joiners_table = html.TABLE()
 
@@ -1093,21 +1060,9 @@ def handle_joiners():
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
 
-    # title
-    event_name = storage['EVENT']
-    title = html.H3(f"Gérer les participations de l'événement {event_name}")
-    MY_SUB_PANEL <= title
-
     events_dict = common.get_events_data()
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
-
-    # check allowed
-    event_dict = get_event_data(event_id)
-    manager_id = event_dict['manager_id']
-    if player_id != manager_id:
-        alert("Vous n'êtes pas responsable de cet événement")
-        return
 
     joiners = get_registrations(event_id)
     joiners_dict = {}
@@ -1209,85 +1164,88 @@ def handle_joiners():
     MY_SUB_PANEL <= broadcast_form
 
 
-def delete_event():
-    """ delete_event """
-
-    def cancel_delete_event_callback(_, dialog):
-        """ cancel_delete_event_callback """
-        dialog.close(None)
-
-    def delete_event_callback(_, dialog):
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la suppression de l'événement : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la suppression de l'événement : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'événement a été supprimé : {messages}")
-
-            del storage['EVENT']
-
-        # back to where we started (actually to select)
-        load_option(None, 'Sélectionner un événement')
-
-        dialog.close(None)
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/events/{event_id}"
-
-        # deleting event : need token
-        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    def delete_event_callback_confirm(ev):  # pylint: disable=invalid-name
-        """ delete_event_callback_confirm """
-
-        ev.preventDefault()
-
-        dialog = mydialog.Dialog("On supprime vraiment l'événement ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog: delete_event_callback(e, d))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_event_callback(e, d))
-
-        # back to where we started (actually to select)
-        load_option(None, 'Sélectionner un événement')
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-    pseudo = storage['PSEUDO']
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        alert("Erreur chargement identifiant joueur")
-        return
-
-    if 'EVENT' not in storage:
-        alert("Il faut sélectionner un événement au préalable")
-        return
-
-    # title
-    event_name = storage['EVENT']
-    title = html.H3(f"Suppression de l'événement {event_name}")
+    title = html.H4("Edition de l'événement")
     MY_SUB_PANEL <= title
 
-    events_dict = common.get_events_data()
-    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
-    event_id = eventname2id[event_name]
 
-    # check alllowed
-    event_dict = get_event_data(event_id)
-    manager_id = event_dict['manager_id']
-    if player_id != manager_id:
-        alert("Vous n'êtes pas responsable de cet événement")
-        return
+    start_date = event_dict['start_date']
+    start_hour = event_dict['start_hour']
+    end_date = event_dict['end_date']
+    location = event_dict['location']
+    description = event_dict['description']
+    summary = event_dict['summary']
+
+    form = html.FORM()
+
+    form <= html.DIV("Pas de tirets dans le nom de l'événement", Class='note')
+    form <= html.DIV("Pour les liens, les mettre en début de ligne (http...)", Class='note')
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_name = html.LEGEND("nom", title="Nom de l'événement (faites court et simple)")
+    fieldset <= legend_name
+    input_name = html.INPUT(type="text", value=event_name, size=MAX_LEN_EVENT_NAME, Class='btn-inside')
+    fieldset <= input_name
+    form <= fieldset
+
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_start_date = html.LEGEND("date de début", title="Date de début de l'événement")
+    fieldset <= legend_start_date
+    input_start_date = html.INPUT(type="date", value=start_date, Class='btn-inside')
+    fieldset <= input_start_date
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
+    fieldset <= legend_start_hour
+    input_start_hour = html.INPUT(type="time", value=start_hour, step=1, Class='btn-inside')
+    fieldset <= input_start_hour
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_end_date = html.LEGEND("date de fin", title="Date de fin de l'événement")
+    fieldset <= legend_end_date
+    input_end_date = html.INPUT(type="date", value=end_date, Class='btn-inside')
+    fieldset <= input_end_date
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_location = html.LEGEND("lieu", title="Lieu de l'événement")
+    fieldset <= legend_location
+    input_location = html.INPUT(type="text", value=location, size=MAX_LEN_EVENT_LOCATION, Class='btn-inside')
+    fieldset <= input_location
+    form <= fieldset
+
+    form <= html.BR()
+    fieldset = html.FIELDSET()
+    legend_description = html.LEGEND("description complète", title="Description complète de l'événement pour les inscrits")
+    fieldset <= legend_description
+    input_description = html.TEXTAREA(type="text", rows=16, cols=80)
+    input_description <= description
+    fieldset <= input_description
+    form <= fieldset
+
+    form <= html.BR()
+    fieldset = html.FIELDSET()
+    legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil (pas plus de trois lignes)")
+    fieldset <= legend_summary
+    input_summary = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_summary <= summary
+    fieldset <= input_summary
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_edit_event = html.INPUT(type="submit", value="Modifier l'événement", Class='btn-inside')
+    input_edit_event.bind("click", edit_event_callback)
+    form <= input_edit_event
+
+    MY_SUB_PANEL <= form
+
+    title = html.H4("Suppression de l'événement")
+    MY_SUB_PANEL <= title
 
     form = html.FORM()
 
@@ -1300,6 +1258,10 @@ def delete_event():
         alert("Erreur chargement dictionnaire joueurs")
 
     MY_SUB_PANEL <= form
+
+
+
+
 
 
 MY_PANEL = html.DIV()
@@ -1332,12 +1294,8 @@ def load_option(_, item_name):
         registrations()
     if item_name == 'Créer un événement':
         create_event(None)
-    if item_name == 'Editer l\'événement':
-        edit_event()
-    if item_name == 'Gérer les participations':
-        handle_joiners()
-    if item_name == 'Supprimer l\'événement':
-        delete_event()
+    if item_name == 'Gérer l\'événement':
+        handle_event()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
