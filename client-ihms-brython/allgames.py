@@ -661,6 +661,8 @@ def create_game(json_dict):
     form <= fieldset
 
     form <= html.BR()
+    form <= html.DIV("Partie privée ? Restez arbitre, créez la partie, mettez les joueurs désirés, enlevez les non désirés si besoin et quittez l'arbitrage quand la partie est presque complète (il ne manque que vous en joueur) !", Class='note')
+    form <= html.BR()
 
     input_create_game = html.INPUT(type="submit", value="Créer la partie", Class='btn-inside')
     input_create_game.bind("click", create_game_callback)
