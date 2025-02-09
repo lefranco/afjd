@@ -736,7 +736,7 @@ def slide_submit_orders():
         situation_dict = {
             'ownerships': POSITION_DATA.save_json2(),
             'dislodged_ones': POSITION_DATA.save_json3(),
-            'units': POSITION_DATA.save_json(),
+            'units': POSITION_DATA.save_json1(),
             'forbiddens': POSITION_DATA.save_json4(),
         }
 
@@ -1796,7 +1796,7 @@ def slide_show_adjudication():
         situation_dict = {
             'ownerships': POSITION_DATA.save_json2(),
             'dislodged_ones': POSITION_DATA.save_json3(),
-            'units': POSITION_DATA.save_json(),
+            'units': POSITION_DATA.save_json1(),
             'forbiddens': POSITION_DATA.save_json4(),
         }
 
