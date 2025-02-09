@@ -108,7 +108,7 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
     if not game.variant.startswith('standard'):
         return False, f"Variant of this game is '{game.variant}' - this is not standard Diplomacy!", None
 
-    # game not finished : abort
+    # game not archived : abort
     if game.current_state == 0:
         return False, "This game is waiting to start - start it first!", None
 

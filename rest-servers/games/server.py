@@ -792,7 +792,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             elif current_state_before == 1 and game.current_state == 2:
 
                 # ----
-                # we are finishing the game
+                # we are archiving the game
                 # ----
 
                 # no check ?
@@ -807,7 +807,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     variant_data = variants.Variant.get_by_name(variant_name)
                     assert variant_data is not None
 
-                    subject = f"La partie {game.name} s'est terminée !"
+                    subject = f"La partie {game.name} a été archivée !"
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
                     addressees = []
@@ -852,7 +852,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             elif current_state_before == 2 and game.current_state == 3:
 
                 # ----
-                # we are distinguishing a finished  game
+                # we are distinguishing a archived  game
                 # ----
 
                 # nothing to do actually
@@ -931,7 +931,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # check game state
         if game.current_state == 1:
             del sql_executor
-            flask_restful.abort(400, msg=f"Game {name} is ongoing. Terminate it first.")
+            flask_restful.abort(400, msg=f"Game {name} is ongoing. Archive it first.")
 
         # check game state
         if game.current_state == 3:
@@ -1125,12 +1125,12 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
             pass
 
         elif current_state_before == 2 and game.current_state == 1:
-            # finished to ongoing
+            # archived to ongoing
             # nothing to do
             pass
 
         elif current_state_before == 2 and game.current_state == 0:
-            # finished to waiting
+            # archived to waiting
             # nothing to do
             pass
 
@@ -7901,7 +7901,7 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
             if game.current_state == 1:
                 end_time_stamp = None
 
-            # game is finished
+            # game is archived
             if game.current_state == 2:
 
                 # get current_advancement
@@ -8023,7 +8023,7 @@ class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ign
             if game.current_state == 1:
                 end_time_stamp = None
 
-            # game is finished
+            # game is archived
             if game.current_state == 2:
 
                 # get current_advancement

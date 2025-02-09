@@ -289,7 +289,7 @@ def show_variants_frequentation_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'variant': "nom de la variante", 'nb_players': "nombre de joueurs de la variante", 'games': "nombre de parties en cours ou terminées", 'affluence': "nombre de joueurs la jouant ou l'ayant jouée"}[field]
+        field_fr = {'variant': "nom de la variante", 'nb_players': "nombre de joueurs de la variante", 'games': "nombre de parties en cours ou archivées", 'affluence': "nombre de joueurs la jouant ou l'ayant jouée"}[field]
         col = html.TD(field_fr)
         thead <= col
     variants_table <= thead

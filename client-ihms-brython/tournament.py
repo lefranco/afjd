@@ -876,7 +876,7 @@ def show_informations():
     MY_SUB_PANEL <= html.BR()
 
     information = html.DIV(Class='note')
-    information <= "Attention les parties sont considérées toutes comme terminées en l'état - à prendre en compte pour un tournoi en cours..."
+    information <= "Attention : les parties sont considérées toutes comme terminées en l'état - à prendre en compte pour un tournoi en cours..."
     MY_SUB_PANEL <= information
     MY_SUB_PANEL <= html.BR()
 

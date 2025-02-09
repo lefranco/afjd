@@ -144,13 +144,10 @@ FAQ_CONTENT_TABLE = {
 
     "Comment créer une partie modèle ?":
         """
-         1- sélectionner la partie modèle<br>
-         2- mettre des joueurs quelconques dans cette partie pour pouvoir la démarrer (one, two, three, four, five, six, seven par exemple) <br>
-         3- démarrer cette partie <br>
-         4- terminer cette partie <br>
-         5- distinguer cette partie (pas obligatoire mais pratique) <br>
-         6- retirer les joueurs de la partie (pas obligatoire mais plus propre) <br>
-         7- ATTENTION : modifier l'anonymat sur cette partie si besoin (il a pu changer lorsque la partie a été terminée)
+         1- créer la partie<br>
+         2- aller dans la console d'arbitrage<br>
+         3- mettre les paramètres voulus à la partie <br>
+         4- distinguer cette partie (pas obligatoire mais pratique) <br>
         """,
 
     "Qu'est ce qui change pour une partie “en direct“ ?":

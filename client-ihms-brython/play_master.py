@@ -87,7 +87,7 @@ def information_about_distinguish_game2():
     """ information_about_distinguish_game2 """
 
     information = html.DIV(Class='important')
-    information <= "Une partie terminée ne doit être distinguée que si elle est copie d'une partie jouée ailleurs."
+    information <= "Une partie archivée ne doit être distinguée que si elle est copie d'une partie jouée ailleurs."
     return information
 
 
@@ -1312,7 +1312,7 @@ def game_master():
 
     # warning if game not waiting or ongoing
     if play_low.GAME_PARAMETERS_LOADED['current_state'] not in [0, 1]:
-        mydialog.InfoDialog("Information", "Cette partie est terminée !")
+        mydialog.InfoDialog("Information", "Cette partie est archivée ou distinguée !")
 
     advancement_loaded = play_low.GAME_PARAMETERS_LOADED['current_advancement']
 
@@ -2042,7 +2042,7 @@ def game_master():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours, terminée ou distinguée.")
+    legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours, archivée ou distinguée.")
     fieldset <= legend_state
 
     if state_loaded == 0:
@@ -2429,7 +2429,7 @@ def supervise():
 
     # game needs to be ongoing - not finished
     if play_low.GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
-        alert("La partie est déjà terminée")
+        alert("La partie est déjà archivée ou distinguée")
         play.load_option(None, 'Consulter')
         return False
 
