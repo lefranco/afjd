@@ -1455,7 +1455,7 @@ def show_tournaments_data():
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     count = 0
-    for tournament_id, data in sorted(tournaments_dict.items(), key=lambda m: int(m[0]), reverse=True):
+    for tournament_id, data in sorted(tournaments_dict.items(), key=lambda t: (t[1].get('first_start_time', 0), int(t[0])), reverse=True):
         row = html.TR()
         for field in fields:
             if field == 'tournament':
