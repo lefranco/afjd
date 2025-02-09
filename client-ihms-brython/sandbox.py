@@ -368,20 +368,10 @@ def sandbox():
         # perform actual exportation
 
         # extract JSON description of position
+        # TODO
+        # add exporters to mapping.Position() and mapping.Orders() classes
 
-        situation_dict = {
-            'ownerships': POSITION_DATA.save_json2(),
-            'dislodged_ones': POSITION_DATA.save_json3(),
-            'units': POSITION_DATA.save_json1(),
-            'forbiddens': POSITION_DATA.save_json4(),
-        }
-
-        data_dict = {
-            'situation' : situation_dict,
-            'orders': ORDERS_DATA.save_json()
-        }
-
-        data_dict_json = dumps(data_dict)
+        data_dict_json = "TODO"
 
         # perform actual exportation
         text_file_as_blob = window.Blob.new([data_dict_json], {'type': 'text/plain'})
