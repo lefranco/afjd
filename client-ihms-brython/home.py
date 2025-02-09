@@ -658,7 +658,7 @@ def show_news():
         if day_now > day_notified:
             is_confirmed = email_address_is_confirmed()
             if not is_confirmed:
-                alert("Votre adresse courriel n'est pas confirmée. Soit elle est en rebond, soit vous ne l'avez pas encore confirmée ! Pour le faire : Menu 'Mon compte' / Sous menu 'Valider mon courriel' / Bouton 'Me renvoyer un nouveau code'. ")
+                alert("Votre adresse courriel n'est pas confirmée. Soit elle est en rebond, soit vous ne l'avez pas encore confirmée ! Pour le faire : Menu 'Mon compte' / Sous menu 'Valider mon courriel' / Bouton 'Me renvoyer un nouveau code'.\nCela ne vous empêche pas de rejoindre et jouer des parties sur le site !")
                 storage['DATE_CONFIRMATION_MISSING_NOTIFIED'] = str(day_now)
 
     # RGPD
