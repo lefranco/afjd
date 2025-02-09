@@ -7781,7 +7781,10 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
         concerned_games_list = [g.identifier for g in games_list if g.current_state == 2 and g.used_for_elo == 1]
 
         # time of spring 01
-        first_advancement = 1
+        first_advancement = 0
+
+        # time of build 01
+        first_advancement_start_build = 4
 
         games_dict = {}
         for game_id in concerned_games_list:
@@ -7792,8 +7795,11 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement)
 
             if not start_transition:
-                # this game was not played
-                continue
+                # this game was not played or start_build
+                start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement_start_build)
+                if not start_transition:
+                    # this game was not played
+                    continue
 
             assert start_transition is not None
             game_data['start_time_stamp'] = start_transition.time_stamp
@@ -7995,7 +8001,10 @@ class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ign
         concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.archive]
 
         # time of spring 01
-        first_advancement = 1
+        first_advancement = 0
+
+        # time of build 01
+        first_advancement_start_build = 4
 
         # extract start_time, end_time and players from games
         tournaments_dict: typing.Dict[int, typing.Dict[str, typing.Any]] = {}
@@ -8009,8 +8018,11 @@ class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ign
             start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement)
 
             if not start_transition:
-                # this game was not played
-                continue
+                # this game was not played or start_build
+                start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement_start_build)
+                if not start_transition:
+                    # this game was not played
+                    continue
 
             assert start_transition is not None
             start_time_stamp = start_transition.time_stamp
