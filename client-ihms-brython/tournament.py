@@ -24,8 +24,7 @@ OPTIONS = {
     'Informations tournoi': "Les joueurs, incidents, résultats par puissance du tournoi de la partie sélectionnée",
     'Créer un tournoi': "Créer un tournoi contenant la partie sélectionnée",
     'Gérer le tournoi': "Gérer le tournoi de la partie sélectionnée",
-    'Les tournois du site': "Liste complète des tournois sur le site",
-    'Fréquentation des tournois': "Statistiques de fréquentation des tournois sur le site"
+    'Les tournois du site': "Liste complète des tournois sur le site et statistiques sur leur fréquentation",
 }
 
 MAX_LEN_TOURNAMENT_NAME = 50
@@ -1347,6 +1346,40 @@ def handle_tournament():
 def show_tournaments_data():
     """ show_tournaments_data """
 
+    def extract_tournament_frequentation_data():
+        """ extract_tournament_frequentation_data """
+
+        data = None
+
+        def reply_callback(req):
+
+            nonlocal data
+
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au calcul de l'évolution de la fréquentation des tournois : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au calcul de l'évolution de la fréquentation des tournois : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                return
+
+            data = req_result
+
+        json_dict = {
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/extract_histo_tournaments_data"
+
+        # extract_histo_tournament_data : do not need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return data
+
     def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
         """ select_game_callback """
 
@@ -1396,14 +1429,24 @@ def show_tournaments_data():
         alert("Pas de groupements ou erreur chargement dictionnaire groupements")
         return
 
+    # get the tournaments frequentations
+    tournaments_freq_dict = extract_tournament_frequentation_data()
+    if not tournaments_freq_dict:
+        alert("Pas de tournoi ou erreur chargement dictionnaire frequentation tournois")
+        return
+
+    # put info from 'tournaments_freq_dict' into 'tournaments_dict'
+    for k, v in tournaments_freq_dict.items():
+        tournaments_dict[k].update(v)
+
     tournaments_table = html.TABLE()
 
-    fields = ['tournament', 'creator', 'games']
+    fields = ['tournament', 'creator', 'first_start_time', 'last_start_time', 'first_end_time', 'last_end_time', 'affluence', 'games']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'tournament': 'tournoi', 'creator': 'créateur', 'games': 'parties'}[field]
+        field_fr = {'tournament': 'tournoi', 'creator': 'créateur',  'first_start_time': 'premier debut', 'last_start_time': 'dernier debut', 'first_end_time': 'première fin', 'last_end_time': 'dernière fin', 'affluence': 'affluence', 'games': 'parties'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournaments_table <= thead
@@ -1429,6 +1472,19 @@ def show_tournaments_data():
                 director_id = assignments_dict[str(tournament_id)]
                 director_pseudo = players_dict[str(director_id)]['pseudo']
                 value = director_pseudo
+            if field in ['first_start_time', 'last_start_time', 'first_end_time', 'last_end_time']:
+                if field in data and data[field] is not None:
+                    time_stamp = data[field]
+                    date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+                    date_now_gmt_str = mydatetime.strftime(*date_now_gmt, year_first=True, day_only=True)
+                    value = date_now_gmt_str
+                else:
+                    value = "..."
+            if field == 'affluence':
+                if field in data and data[field] is not None:
+                    value = data['affluence']
+                else:
+                    value = "..."
             if field == 'games':
                 games_ids = groupings_dict[str(tournament_id)]
                 games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
@@ -1442,94 +1498,6 @@ def show_tournaments_data():
     MY_SUB_PANEL <= html.H3("Les tournois du site")
     MY_SUB_PANEL <= tournaments_table
     MY_SUB_PANEL <= html.P(f"Il y a {count} tournois")
-
-
-def show_tournaments_frequentation_data():
-    """ show_tournaments_frequentation_data """
-
-    def extract_tournament_frequentation_data():
-        """ extract_tournament_frequentation_data """
-
-        data = None
-
-        def reply_callback(req):
-
-            nonlocal data
-
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur au calcul de l'évolution de la fréquentation des tournois : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème au calcul de l'évolution de la fréquentation des tournois : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-
-                return
-
-            data = req_result
-
-        json_dict = {
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/extract_histo_tournaments_data"
-
-        # extract_histo_tournament_data : do not need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        return data
-
-    # get the tournaments
-    tournaments_dict = common.get_tournaments_data()
-    if not tournaments_dict:
-        alert("Pas de tournoi ou erreur chargement dictionnaire tournois")
-        return
-
-    # get the tournaments frequentations
-    tournaments_freq_dict = extract_tournament_frequentation_data()
-    if not tournaments_freq_dict:
-        alert("Pas de tournoi ou erreur chargement dictionnaire frequentation tournois")
-        return
-
-    tournaments_table = html.TABLE()
-
-    fields = ['tournament', 'first_start_time', 'last_start_time', 'first_end_time', 'last_end_time', 'affluence']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'tournament': 'tournoi', 'first_start_time': 'premier debut', 'last_start_time': 'dernier debut', 'first_end_time': 'première fin', 'last_end_time': 'dernière fin', 'affluence': 'affluence'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    tournaments_table <= thead
-
-    for tournament_id, data in sorted(tournaments_freq_dict.items(), key=lambda m: int(m[1]['first_start_time']), reverse=True):
-        row = html.TR()
-        for field in fields:
-
-            if field == 'tournament':
-                value = tournaments_dict[tournament_id]['name']
-            if field in ['first_start_time', 'last_start_time', 'first_end_time', 'last_end_time']:
-                if data[field] is not None:
-                    time_stamp = data[field]
-                    date_now_gmt = mydatetime.fromtimestamp(time_stamp)
-                    date_now_gmt_str = mydatetime.strftime(*date_now_gmt, year_first=True, day_only=True)
-                    value = date_now_gmt_str
-                else:
-                    value = "..."
-            if field == 'affluence':
-                value = data['affluence']
-
-            col = html.TD(value)
-
-            row <= col
-
-        tournaments_table <= row
-
-    MY_SUB_PANEL <= html.H3("La fréquentation des tournois du site")
-    MY_SUB_PANEL <= tournaments_table
 
 
 MY_PANEL = html.DIV()
@@ -1566,8 +1534,6 @@ def load_option(_, item_name):
         handle_tournament()
     if item_name == 'Les tournois du site':
         show_tournaments_data()
-    if item_name == 'Fréquentation des tournois':
-        show_tournaments_frequentation_data()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
