@@ -1374,7 +1374,7 @@ def submit_orders():
 
     # game needs to be ongoing - not finished
     if play_low.GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
-        alert("La partie est déjà terminée")
+        alert("La partie est déjà archivée ou distinguée")
         play.load_option(None, 'Consulter')
         return False
 
@@ -2291,7 +2291,7 @@ def submit_communication_orders():
 
     # game needs to be ongoing - not finished
     if play_low.GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
-        alert("La partie est déjà terminée")
+        alert("La partie est déjà archivée ou distinguée")
         play.load_option(None, 'Consulter')
         return False
 
@@ -2770,7 +2770,7 @@ def imagine_units():
 
     # game needs to be ongoing - not finished
     if play_low.GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
-        alert("La partie est déjà terminée")
+        alert("La partie est déjà archivée ou distinguée")
         play.load_option(None, 'Consulter')
         return False
 

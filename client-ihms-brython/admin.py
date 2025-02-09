@@ -681,14 +681,14 @@ def rectify_parameters():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_finished = html.LEGEND("terminée", title="Partie finie dernière saison jouée")
+    legend_finished = html.LEGEND("(terminée)", title="Partie finie dernière saison jouée")
     fieldset <= legend_finished
     input_finished = html.INPUT(type="checkbox", checked=finished_loaded, Class='btn-inside')
     fieldset <= input_finished
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_end_voted = html.LEGEND("fin votée", title="La fin de la partie a été votée")
+    legend_end_voted = html.LEGEND("(fin votée)", title="La fin de la partie a été votée")
     fieldset <= legend_end_voted
     input_end_voted = html.INPUT(type="checkbox", checked=end_voted_loaded, Class='btn-inside')
     fieldset <= input_end_voted
