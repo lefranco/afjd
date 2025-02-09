@@ -355,8 +355,8 @@ def sandbox():
         download_link.href = canvas.toDataURL('image/png')
         document['download_link'].click()
 
-    def download_situation_callback(_):
-        """ download_situation_callback """
+    def download_situation_orders_callback(_):
+        """ download_situation_orders_callback """
 
         # make a random like label
         time_stamp_now = time()
@@ -918,8 +918,8 @@ def sandbox():
         buttons_right <= html.BR()
         buttons_right <= input_export_png
         buttons_right <= html.BR()
-        input_export_json = html.INPUT(type="submit", value="Télécharger la position format JSON", Class='btn-inside')
-        input_export_json.bind("click", download_situation_callback)
+        input_export_json = html.INPUT(type="submit", value="Télécharger la position et les ordres au format JSON", Class='btn-inside')
+        input_export_json.bind("click", download_situation_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_export_json
         buttons_right <= html.BR()
