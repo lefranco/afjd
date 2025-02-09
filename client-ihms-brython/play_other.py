@@ -745,7 +745,8 @@ def show_informations():
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
     play_low.MY_SUB_PANEL <= html.BR()
 
-    play_low.MY_SUB_PANEL <= html.H3("Paramètres")
+    play_low.MY_SUB_PANEL <= html.H3("Informations")
+    play_low.MY_SUB_PANEL <= html.H4("Paramètres")
 
     # conversion
     game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
@@ -822,9 +823,6 @@ def show_informations():
         game_params_table <= row
 
     play_low.MY_SUB_PANEL <= game_params_table
-
-    # incidents2
-    play_low.MY_SUB_PANEL <= html.H3("Incidents")
 
     # incidents2
     play_low.MY_SUB_PANEL <= html.H4("Désordres civils")
