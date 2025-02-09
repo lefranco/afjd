@@ -54,7 +54,6 @@ Venez nombreux!
 
 Ludiquement
 Olivier
-
 Président de l'Association
 """
 
