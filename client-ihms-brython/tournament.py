@@ -1436,8 +1436,8 @@ def show_tournaments_data():
         return
 
     # put info from 'tournaments_freq_dict' into 'tournaments_dict'
-    for k, v in tournaments_freq_dict.items():
-        tournaments_dict[k].update(v)
+    for key, value in tournaments_freq_dict.items():
+        tournaments_dict[key].update(value)
 
     tournaments_table = html.TABLE()
 
