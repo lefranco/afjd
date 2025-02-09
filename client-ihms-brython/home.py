@@ -463,7 +463,7 @@ def show_news():
     note_bene_content_table <= row
 
     col = html.TD()
-    link4 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy", target="_blank")
+    link4 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/formulaires/3", target="_blank")
     link4 <= "Je souhaite contribuer au financement de l'association qui gère le site !"
     col <= link4
     row <= col
