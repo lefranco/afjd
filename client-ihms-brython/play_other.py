@@ -588,7 +588,10 @@ def show_position(direct_last_moves):
 
         buttons_right <= html.H3("Historique")
 
-        input_first = html.INPUT(type="submit", value="||<<", Class='btn-inside')
+        if advancement_selected != min_possible_advancement:
+            input_first = html.INPUT(type="submit", value="||<<", Class='btn-inside')
+        else:
+            input_first = html.INPUT(type="submit", value="||<<", disabled=True, Class='btn-inside')
         input_first.bind("click", lambda e, a=min_possible_advancement: transition_display_callback(e, a))
         buttons_right <= input_first
         buttons_right <= html.BR()
@@ -612,7 +615,10 @@ def show_position(direct_last_moves):
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        input_last = html.INPUT(type="submit", value=">>||", Class='btn-inside')
+        if advancement_selected != last_advancement:
+            input_last = html.INPUT(type="submit", value=">>||", Class='btn-inside')
+        else:
+            input_last = html.INPUT(type="submit", value=">>||", disabled=True, Class='btn-inside')
         input_last.bind("click", lambda e, a=last_advancement: transition_display_callback(e, a))
         buttons_right <= input_last
         buttons_right <= html.BR()
