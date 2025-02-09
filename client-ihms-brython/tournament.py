@@ -1446,7 +1446,7 @@ def show_tournaments_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'tournament': 'tournoi', 'creator': 'créateur',  'first_start_time': 'premier debut', 'last_start_time': 'dernier debut', 'first_end_time': 'première fin', 'last_end_time': 'dernière fin', 'affluence': 'affluence', 'games': 'parties'}[field]
+        field_fr = {'tournament': 'tournoi', 'creator': 'créateur', 'first_start_time': 'premier debut', 'last_start_time': 'dernier debut', 'first_end_time': 'première fin', 'last_end_time': 'dernière fin', 'affluence': 'affluence', 'games': 'parties'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournaments_table <= thead
