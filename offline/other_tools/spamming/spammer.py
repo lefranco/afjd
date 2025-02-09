@@ -20,20 +20,42 @@ import flask_mail  # type: ignore
 INTERVAL = 5
 
 # mailing suject
-SUBJECT = "Le courrier du Diplomate de l'Association Francophone des Joueurs de Diplomatie"
+SUBJECT = "Convocation Assemblée Général Association Francophone des Joueurs de Diplomacy Dimanche 2 Mars 15h"
 
 # mailing body
 BODY = """
 Cher joueur de Diplomacy,
 
-Tu trouveras en pièce jointe les informations sur le prochain Championnat de France en face à face à venir.
+Bonjour, nous vous proposons de vous retrouver le dimanche 2 Mars pour notre assemblée générale annuelle à 15h sur Discord. 
 
-En souhaitant t'y rencontrer d'une part, et une bonne lecture d'autre part,
+L'ordre du jour est le suivant : 
+
+    1) Présentation des actions menées et soutenues par l'AFJD en 2024, 
+
+    2) Présentation des comptes, 
+
+    3) Autres questions posées par les participants 
+
+    4) Election du nouveau conseil d'administration. 
+
+La réunion se tiendra dans le salon vocal de Discord.
+
+Lien pour assister à cette Assemblée Générale :
+
+    https://discord.com/channels/726478579847790594/726478579847790597/1337505538329546812
+
+C'est aussi le moment de l'adhésion annuelle pour 2025 qui nous permet notamment de financer les serveurs et soutenir des tournois. 
+
+Lien pour cotiser pour 2025 : 
+
+    https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/formulaires/3
+
+Venez nombreux! 
 
 Ludiquement
-Lei
+Olivier
 
-Secretaire de l'Association
+Président de l'Association
 """
 
 # mailing official sender
@@ -43,7 +65,7 @@ SENDER = "afjd_serveur_jeu@diplomania-gen.fr"
 REPLY_TO = "afjdiplo@gmail.com"
 
 # list of attached files (must be PDF)
-PDF_ATT_FILES = ['xleme_championnat_de_france_2024.pdf']
+PDF_ATT_FILES = []
 
 
 MAILER = None
