@@ -727,7 +727,7 @@ def rectify_position():
             mydialog.InfoDialog("Information", f"Vous avez rectifié la position : {messages}")
 
         # units
-        units_list_dict = position_data.save_json()
+        units_list_dict = position_data.save_json1()
         units_list_dict_json = dumps(units_list_dict)
 
         # ownerships

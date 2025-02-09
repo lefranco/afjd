@@ -139,7 +139,7 @@ def import_position(incoming_position):
         dict_loaded_ownerships[center_num] = role_num
 
     # get loaded units
-    loaded_units = incoming_position.save_json()
+    loaded_units = incoming_position.save_json1()
     dict_loaded_units = {}
     for loaded_unit in loaded_units:
         type_num = loaded_unit['type_unit']
@@ -317,11 +317,8 @@ def sandbox():
         names_dict = VARIANT_DATA.extract_names()
         names_dict_json = dumps(names_dict)
 
-        orders_list_dict = ORDERS_DATA.save_json()
-        orders_list_dict_json = dumps(orders_list_dict)
-
         # units
-        units_list_dict = POSITION_DATA.save_json()
+        units_list_dict = POSITION_DATA.save_json1()
         units_list_dict_json = dumps(units_list_dict)
 
         # orders
@@ -375,14 +372,19 @@ def sandbox():
         situation_dict = {
             'ownerships': POSITION_DATA.save_json2(),
             'dislodged_ones': POSITION_DATA.save_json3(),
-            'units': POSITION_DATA.save_json(),
+            'units': POSITION_DATA.save_json1(),
             'forbiddens': POSITION_DATA.save_json4(),
         }
 
-        situation_dict_json = dumps(situation_dict)
+        data_dict = {
+            'situation' : situation_dict,
+            'orders': ORDERS_DATA.save_json()
+        }
+
+        data_dict_json = dumps(data_dict)
 
         # perform actual exportation
-        text_file_as_blob = window.Blob.new([situation_dict_json], {'type': 'text/plain'})
+        text_file_as_blob = window.Blob.new([data_dict_json], {'type': 'text/plain'})
         download_link = document['download_link']
         download_link.download = f"diplomania_position_{label}.json"
         download_link.href = window.URL.createObjectURL(text_file_as_blob)

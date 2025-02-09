@@ -1806,33 +1806,21 @@ class Position(Renderable):
                 if zone.region.identifier not in self._seen_regions:
                     zone.render_foggy(ctx)
 
-    def save_json(self) -> str:
-        """ export as list of dict """
-        json_data = []
-        for unit in self._units:
-            json_data.append(unit.save_json())
-        return json_data
+    def save_json1(self):
+        """ export units as list of dict """
+        return [u.save_json() for u in self._units]
 
-    def save_json2(self) -> str:
-        """ export as list of dict """
-        json_data = []
-        for ownership in self._ownerships:
-            json_data.append(ownership.save_json())
-        return json_data
+    def save_json2(self):
+        """ export ownerships as list of dict """
+        return [o.save_json() for o in self._ownerships]
 
-    def save_json3(self) -> str:
-        """ export as list of dict """
-        json_data = []
-        for unit in self._dislodged_units:
-            json_data.append(unit.save_json())
-        return json_data
+    def save_json3(self):
+        """ export dislodged_units as list of dict """
+        return [du.save_json() for du in self._dislodged_units]
 
-    def save_json4(self) -> str:
-        """ export as list of dict """
-        json_data = []
-        for forbidden in self._forbiddens:
-            json_data.append(forbidden.region.identifier)
-        return json_data
+    def save_json4(self):
+        """ export forbidden as list of int """
+        return [f.region.identifier for f in self._forbiddens]
 
     def closest_ownership(self, designated_pos: geometry.PositionRecord):
         """ closest_ownership  """
