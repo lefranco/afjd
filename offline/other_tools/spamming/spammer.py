@@ -42,9 +42,10 @@ La réunion se tiendra dans le salon vocal de Discord.
 
 Lien pour assister à cette Assemblée Générale :
 
-    https://discord.com/channels/726478579847790594/726478579847790597/1337505538329546812
+    https://discord.gg/Tx2ECbJS
 
 C'est aussi le moment de l'adhésion annuelle pour 2025 qui nous permet notamment de financer les serveurs et soutenir des tournois. 
+Le montant minimum est de 10€ mais si vous pouvez mettre plus cela nous aiderait !
 
 Lien pour cotiser pour 2025 : 
 
