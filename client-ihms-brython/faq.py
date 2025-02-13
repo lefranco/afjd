@@ -85,7 +85,7 @@ FAQ_CONTENT_TABLE = {
     "Où trouver des explications sur les paramètres des parties ?":
     "Soit en survolant les titres à la création de la partie, soit en consultant le menu “Paramètres“ d'une partie existante.",
 
-    "Comment démarrer/arrêter une partie dont je suis l'arbitre ?":
+    "Comment démarrer/archiver une partie dont je suis l'arbitre ?":
     "Se connecter, sélectionner la partie comme d'habitude et se placer dans la console arbitrage (il faut être arbitre). Utiliser le bouton “Démarrer la partie“ (ou “Archiver la partie“) puis confirmer. Il est également possible de passer par le menu “Mes parties“ en se mettant en mode “avec colonnes d'action“",
 
     "Comment remplacer un joueur ?":
