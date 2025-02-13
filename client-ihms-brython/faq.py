@@ -86,7 +86,7 @@ FAQ_CONTENT_TABLE = {
     "Soit en survolant les titres à la création de la partie, soit en consultant le menu “Paramètres“ d'une partie existante.",
 
     "Comment démarrer/arrêter une partie dont je suis l'arbitre ?":
-    "Se connecter, sélectionner la partie comme d'habitude et se placer dans la console arbitrage (il faut être arbitre). Utiliser le bouton “Démarrer la partie“ (ou “Arrêter la partie“) puis confirmer. Il est également possible de passer par le menu “Mes parties“ en se mettant en mode “avec colonnes d'action“",
+    "Se connecter, sélectionner la partie comme d'habitude et se placer dans la console arbitrage (il faut être arbitre). Utiliser le bouton “Démarrer la partie“ (ou “Archiver la partie“) puis confirmer. Il est également possible de passer par le menu “Mes parties“ en se mettant en mode “avec colonnes d'action“",
 
     "Comment remplacer un joueur ?":
     "Accéder à la console arbitrage (cf. question précédente). Chapitre “Gestion“. Utiliser les boutons des colonnes “retirer le rôle“ et “attribuer le rôle“. Pour attribuer le rôle à un autre joueur il faut le faire venir au préalable cf. question suivante.",
