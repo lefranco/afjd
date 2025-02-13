@@ -1305,7 +1305,7 @@ def my_games(state_name):
                             startable_game_present = True
                         if state == 1:
                             form = html.FORM()
-                            input_stop_game = html.INPUT(type="image", src="./images/stop_game.png", title="Cliquer pour arrêter la partie", Class='btn-inside')
+                            input_stop_game = html.INPUT(type="image", src="./images/archive_game.png", title="Cliquer pour archiver la partie", Class='btn-inside')
                             input_stop_game.bind("click", lambda e, g=game_name: stop_game_callback(e, g))
                             form <= input_stop_game
                             value = form
