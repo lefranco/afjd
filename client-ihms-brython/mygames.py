@@ -857,9 +857,9 @@ def my_games(state_name):
     if 'ACTION_COLUMN_MODE' not in storage:
         storage['ACTION_COLUMN_MODE'] = 'not_displayed'
     if storage['ACTION_COLUMN_MODE'] == 'not_displayed':
-        button = html.BUTTON("Mode avec les colonnes d'action (éditer+arrêter/démarrer)", Class='btn-inside')
+        button = html.BUTTON("Mode avec les colonnes d'action (éditer+archiver/démarrer)", Class='btn-inside')
     else:
-        button = html.BUTTON("Mode sans les colonnes d'action (éditer+arrêter/démarrer)", Class='btn-inside')
+        button = html.BUTTON("Mode sans les colonnes d'action (éditer+archiver/démarrer)", Class='btn-inside')
     button.bind("click", change_action_mode_callback)
     MY_SUB_PANEL <= button
 
@@ -886,7 +886,7 @@ def my_games(state_name):
     thead = html.THEAD()
     for field in fields:
 
-        content = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes expr.', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
+        content = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes expr.', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'edit': 'éditer', 'startstop': 'archiver/démarrer'}[field]
 
         legend = {'name': "Le nom de la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombre de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse (déclaration) non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message de négociation non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_current': "Est-ce que les messages publics (déclarations) sont autorisés entre les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (négociations) sont autorisés pour les joueurs actuellement", 'game_type': "Type de partie pour la communication en jeu", 'edit': "Pour éditer les paramètres de la partie", 'startstop': "Pour arrêter ou démarrer la partie"}[field]
 
