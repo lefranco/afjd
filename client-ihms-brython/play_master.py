@@ -2060,7 +2060,7 @@ def game_master():
         form <= input_distinguish_game
 
     if state_loaded == 1:
-        input_stop_game = html.INPUT(type="submit", value="Arrêter la partie", Class='btn-inside')
+        input_stop_game = html.INPUT(type="submit", value="Archiver la partie", Class='btn-inside')
         input_stop_game.bind("click", lambda e, s=2: change_state_game_callback_confirm(e, s))
         form <= input_stop_game
 
