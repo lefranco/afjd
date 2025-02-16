@@ -2529,7 +2529,7 @@ class Orders(Renderable):
 
         # communication orders
         for order in self._communication_orders:
-            order.render(ctx, communication=True)
+            order.render(ctx)
 
     def save_json(self):
         """ export as list of dict """
