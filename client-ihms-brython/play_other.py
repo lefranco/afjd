@@ -783,8 +783,8 @@ def show_informations():
             'archive':                        ("archive",                                        "oui ou non", "Si oui, la partie n'est pas jouée, elle est juste consultable, L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de courriel de notification aux joueurs"),  # noqa: E241
             'used_for_elo':                   ("utilisée pour le calcul du élo",                 "oui ou non", "Si oui, Le résultat de la partie est pris en compte dans le calcul du élo des joueurs du site"),  # noqa: E241
             'anonymous':                      ("anonyme",                                        "oui ou non", "Si oui, Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres - effacé à la fin de la partie"),  # noqa: E241
-            'nomessage_current':              ("blocage des négociations",                       "oui ou non", "Si oui le système empêche l'utilisation des négociations - cette valeur est modifiable pendant la partie et effacée en fin de partie"),  # noqa: E241
-            'nopress_current':                ("blocage des déclarations",                       "oui ou non", "Si oui le système empêche l'utilisation des déclarations - cette valeur est modifiable pendant la partie et effacée en fin de partie"),  # noqa: E241
+            'nomessage_current':              ("blocage de la messagerie",                       "oui ou non", "Si oui le système empêche l'utilisation de la messagerie - cette valeur est modifiable pendant la partie et effacée en fin de partie"),  # noqa: E241
+            'nopress_current':                ("blocage de la presse",                       "oui ou non", "Si oui le système empêche l'utilisation de la presse - cette valeur est modifiable pendant la partie et effacée en fin de partie"),  # noqa: E241
             'fast':                           ("en direct",                                      "oui ou non", "Si oui, La partie est jouée en temps réel comme sur un plateau, Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs"),  # noqa: E241
             'manual':                         ("attribution manuelle des rôles",                 "oui ou non", "L'arbitre doit attribuer lui-même les roles, Le système ne réalise pas l'attribution des roles au démarrage de la partie"),  # noqa: E241
             'scoring':                        ("scorage",                                        "choix sur liste", "Le système de scorage appliqué - Se reporter à Accueil/Technique/Documents pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface"),  # noqa: E241
@@ -802,7 +802,7 @@ def show_informations():
             'access_restriction_regularity':  ("restriction d'accès sur la régularité",          "entier", "Un minimum de régularité est exigé pour rejoindre la partie"),  # noqa: E241
             'access_restriction_performance': ("restriction d'accès sur la performance",         "entier", "Un minimum de performance est exigé pour rejoindre la partie"),  # noqa: E241
             'nb_max_cycles_to_play':          ("nombre maximum de cycles (années) à jouer",      "entier", "Durée de la partie : Le système déclare la partie terminée si autant de cycles ont été joués"),  # noqa: E241
-            'game_type':                      ("type de la partie",                              "choix sur liste", "Type de la partie : Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : communication publique uniquement... BlitzOuverte : comme Blitz avec ouverture du canal public (déclarations) pour parler d'autre chose que la partie"),  # noqa: E241
+            'game_type':                      ("type de la partie",                              "choix sur liste", "Type de la partie : Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : presse (déclarations publiques) uniquement... BlitzOuverte : comme Blitz avec ouverture de la presse pour parler d'autre chose que la partie"),  # noqa: E241
             'force_wait':                     ("forçage d'attente ou maintenant",                "maintenant, pas de forçage, à la date limite", "L'arbitre peut forcer la résolution à maintenant ou à la date limite (ou ne rien forcer)"),  # noqa: E241
 
         }[key]
@@ -1302,7 +1302,7 @@ def negotiate(default_dest_set, def_focus_role_id):
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Envoyer le message", Class='btn-inside')
+    input_declare_in_game = html.INPUT(type="submit", value="Envoyer ce message", Class='btn-inside')
     input_declare_in_game.bind("click", add_message_callback)
     form <= input_declare_in_game
 
@@ -1494,15 +1494,15 @@ def declare():
             req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Erreur à l'ajout de déclaration dans la partie : {req_result['message']}")
+                    alert(f"Erreur à l'ajout de presse dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à l'ajout de déclaration dans la partie : {req_result['msg']}")
+                    alert(f"Problème à l'ajout de presse dans la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La déclaration a été faite ! {messages}")
+            mydialog.InfoDialog("Information", f"La presse a été publiée ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1516,7 +1516,7 @@ def declare():
         content = input_declaration.value
 
         if not content:
-            alert("Pas de contenu pour cette déclaration !")
+            alert("Pas de contenu pour cette presse !")
             play_low.MY_SUB_PANEL.clear()
             declare()
             return
@@ -1553,9 +1553,9 @@ def declare():
             req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la récupération de déclarations dans la partie : {req_result['message']}")
+                    alert(f"Erreur à la récupération des presses dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la récupération de déclarations dans la partie : {req_result['msg']}")
+                    alert(f"Problème à la récupération des presses dans la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
@@ -1587,7 +1587,7 @@ def declare():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer à tout le monde ?")
+    legend_declaration = html.LEGEND("Votre presse", title="Qu'avez vous à déclarer à tout le monde ?")
     fieldset <= legend_declaration
     input_declaration = html.TEXTAREA(type="text", rows=8, cols=80)
     fieldset <= input_declaration
@@ -1602,7 +1602,7 @@ def declare():
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Déclarer dans la partie", Class='btn-inside')
+    input_declare_in_game = html.INPUT(type="submit", value="Publier cette presse", Class='btn-inside')
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
 
@@ -1742,7 +1742,7 @@ def declare():
     play_low.MY_SUB_PANEL <= html.BR()
     play_low.MY_SUB_PANEL <= html.BR()
 
-    button = html.BUTTON("Une déclaration avec un contenu inaproprié ?", Class='btn-inside')
+    button = html.BUTTON("Une presse avec un contenu inaproprié ?", Class='btn-inside')
     button.bind("click", display_special_information_callback)
     play_low.MY_SUB_PANEL <= button
     play_low.MY_SUB_PANEL <= html.BR()

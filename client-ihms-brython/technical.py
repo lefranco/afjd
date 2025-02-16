@@ -35,7 +35,6 @@ def set_arrival(arrival):
     """ set_arrival """
 
     global ARRIVAL
-    global OPTION_REQUESTED
 
     ARRIVAL = arrival
 

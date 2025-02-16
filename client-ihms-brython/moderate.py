@@ -568,7 +568,7 @@ def general_announce():
         content = input_declaration.value
 
         if not content:
-            alert("Pas de contenu pour cette déclaration !")
+            alert("Pas de contenu pour cette presse !")
             MY_SUB_PANEL.clear()
             game_announce()
             return
@@ -595,7 +595,7 @@ def general_announce():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer dans toutes les parties en cours ?")
+    legend_declaration = html.LEGEND("Votre presse", title="Qu'avez vous à déclarer dans toutes les parties en cours ?")
     fieldset <= legend_declaration
     input_declaration = html.TEXTAREA(type="text", rows=8, cols=80)
     input_declaration <= announce
@@ -604,7 +604,7 @@ def general_announce():
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Déclarer dans toutes les parties en cours", Class='btn-inside')
+    input_declare_in_game = html.INPUT(type="submit", value="Publier cette presse dans toutes les parties en cours", Class='btn-inside')
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
 
@@ -621,9 +621,9 @@ def game_announce():
             req_result = loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Erreur à l'ajout de déclaration (annonce) dans la partie : {req_result['message']}")
+                    alert(f"Erreur à l'ajout de presse (annonce) dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à l'ajout de déclaration (annonce) dans la partie : {req_result['msg']}")
+                    alert(f"Problème à l'ajout de presse (annonce) dans la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
@@ -643,7 +643,7 @@ def game_announce():
         content = input_declaration.value
 
         if not content:
-            alert("Pas de contenu pour cette déclaration !")
+            alert("Pas de contenu pour cette presse !")
             MY_SUB_PANEL.clear()
             game_announce()
             return
@@ -679,9 +679,9 @@ def game_announce():
             req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la récupération de déclarations dans la partie : {req_result['message']}")
+                    alert(f"Erreur à la récupération de presses dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la récupération de déclarations dans la partie : {req_result['msg']}")
+                    alert(f"Problème à la récupération de presses dans la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
@@ -760,7 +760,7 @@ def game_announce():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer dans la partie ?")
+    legend_declaration = html.LEGEND("Votre presse", title="Qu'avez vous à déclarer dans la partie ?")
     fieldset <= legend_declaration
     input_declaration = html.TEXTAREA(type="text", rows=8, cols=80)
     input_declaration <= announce
@@ -769,7 +769,7 @@ def game_announce():
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Annoncer dans la partie", Class='btn-inside')
+    input_declare_in_game = html.INPUT(type="submit", value="Publier cette presse dans la partie", Class='btn-inside')
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
 
@@ -1467,7 +1467,7 @@ def show_player_games(pseudo_player, player_games_dict):
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'current_state': 'état', 'name': 'nom', 'role': 'role', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'master': 'arbitre'}[field]
+            field_fr = {'current_state': 'état', 'name': 'nom', 'role': 'role', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'presse', 'nomessage_current': 'messagerie', 'game_type': 'type de partie', 'master': 'arbitre'}[field]
             col = html.TD(field_fr)
             thead <= col
         games_table <= thead

@@ -1621,7 +1621,7 @@ def submit_orders():
         my_sub_panel3 <= html.H3("Vote de fin de partie")
 
         # reminder
-        reminder = html.DIV("ATTENTION : Pensez à prévenir l'arbitre qu'un vote est en cours (par un message de négociation par exemple)", Class='important')
+        reminder = html.DIV("ATTENTION : Pensez à prévenir l'arbitre qu'un vote est en cours (avec la messagerie par exemple)", Class='important')
         special_legend = html.LEGEND(reminder)
         my_sub_panel3 <= special_legend
         my_sub_panel3 <= html.BR()
@@ -2024,7 +2024,7 @@ def submit_communication_orders():
             play_low.stack_role_flag(buttons_right)
 
             # explanations
-            play_low.play_low.stack_explanations_button(buttons_right)
+            play_low.stack_explanations_button(buttons_right)
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
