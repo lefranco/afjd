@@ -1,10 +1,9 @@
 Les ordres de communication
 
 $ Introduction
-La fonctionnalité des "faux" ordres est issue d'une multitude de pratiques du jeu qui se sont imposées ici ou là depuis plus de 60 ans (en savoir plus).
+La fonctionnalité des "faux" ordres est issue d'une multitude de pratiques du jeu qui se sont imposées ici ou là depuis plus de 60 ans.
 .
-
-Les "faux" ordres permettent d'envoyer une sorte de message aux autres joueurs même si la partie ne prévoient pas de négociation.
+Les "faux" ordres permettent d'envoyer une sorte de message aux autres joueurs même si la partie ne prévoit pas de négociation.
 .
 Contrairement aux "vrais" ordres, les "faux" ordres peuvent être totalement incorrects. Ils ne seront jamais exécutés.
 .
@@ -15,7 +14,7 @@ En revanche une fois que tous les "vrais" ordres d'une phase de jeu auront été
 .
 De plus un rectangle rose sera affiché en haut à gauche de la carte pour attirer l'attention de tous les joueurs sur le fait qu'au moins un "faux" ordre a été passé lors de cette phase et qu'il est consultable sous la carte, avec les "vrais".
 .
-Cet ordre est également visible sur la carte sous forme de flèche rose
+Cet ordre est également visible sur la carte sous forme de flèche rose.
 .
 $ Justification
 Au départ, Diplomacy ne se jouait qu'en face à face, crayon et papier en mains.
