@@ -18,7 +18,7 @@ Une fois que tous les "vrais" ordres d'une phase de jeu auront été soumis et e
 .
 De plus un rectangle rose sera affiché en haut à gauche de la carte pour attirer l'attention de tous les joueurs sur le fait qu'au moins un "faux" ordre a été passé lors de cette phase et qu'il est consultable sous la carte, avec les "vrais".
 .
-Cet ordre est également visible sur la carte sous forme de flèche rose.
+Cet ordre est également visible sur la carte sous forme de flèche rose (uniquement si la résolution a eu lieu à partir de la date où cela a été implémenté (vers Janvier 2025).
 .
 $ Historique
 Au départ, Diplomacy ne se jouait qu'en face à face, crayon et papier en mains.
@@ -32,8 +32,8 @@ Les petits malins, qui se moquaient bien de passer pour des ignorants des règle
 Pour cela ils étaient prêts à sacrifier un ordre d'une unité. C'est pourquoi aujourd'hui encore pour pouvoir donner un "faux" ordre à l'une de ses unités, il faut d'abord lui avoir donné le "vrai" ordre de TENIR ou de SE DISPERSER.
 .
 $ Quelques précisions
-Cette construction bizarre de passer les ordres de communication séparément des vrais ordres est due à l'impossibilité de passer des ordres incorrects dans les vrais ordres dans le système diplomania. Les autres systèmes ne réalisent pas cette séparation.
+Cette construction bizarre de passer les ordres de communication séparément des vrais ordres est due à l'impossibilité de passer des ordres incorrects dans les vrais ordres dans le système diplomania. Les autres systèmes qui permettent de tels ordres ne réalisent pas cette séparation.
 .
-Les ordres de communication n'ont de sens que dans les parties où la communication est impossible.
+Les ordres de communication n'ont de sens que dans les parties où la communication est impossible. Sur Diplomania, ils ne sont autoririsés que pour les parties Blitz
 .
-Les ordres de communication corrects n'ont pas de sens, autant donner un ordre véritable.
+Les ordres de communication corrects n'ont pas vraiment de sens, autant donner un ordre véritable. Cela revient à donner un ordre et le barrer sur sa feuille (il sera lu mais pas appliqué)
