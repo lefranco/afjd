@@ -15,7 +15,7 @@ TIPS_CONTENT_TABLE = {
     "Pour effacer un ordre déjà saisi (surtout une construction)":
     "Utiliser le double-clic",
 
-    "Pour entrer des 'faux' ordres (parties sans communication possible)":
+    "Pour entrer des ordres de communication (ou des 'faux' ordres) sur les parties blitz":
     "Utiliser le sous menu “Ordres de com\'” depuis la page de la partie.",
 
     "Pour se désinscrire d'une partie (inscrit par erreur)":
