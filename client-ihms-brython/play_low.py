@@ -714,23 +714,33 @@ def get_game_status():
 
     row = html.TR()
 
-    form = html.FORM()
-    input_previous_game = html.INPUT(type="submit", value="partie précédente", Class='btn-inside')
-    input_previous_game.attrs['style'] = 'font-size: 10px'
-    input_previous_game.bind("click", lambda e: play.next_previous_game(True))
-    form <= input_previous_game
-    col = html.TD(form)
+    next_previous_available = False
+    if 'GAME_LIST' in storage:
+        games_list = storage['GAME_LIST'].split(' ')
+        if game_name in games_list:
+            next_previous_available = True
+
+    if next_previous_available:
+        button_previous_game = html.BUTTON("partie précédente", Class='btn-inside')
+        button_previous_game.style = {'font-size': '10px'}
+        button_previous_game.bind("click", lambda e: play.next_previous_game(True))
+    else:
+        button_previous_game = html.BUTTON("partie précédente", disabled=True, Class='btn-inside')
+        button_previous_game.style = {'pointer-events': 'none', 'font-size': '10px'}
+    col = html.TD(button_previous_game)
     row <= col
 
     col = html.TD("<br>".join(game_description.split('\n')), colspan="10")
     row <= col
 
-    form = html.FORM()
-    input_next_game = html.INPUT(type="submit", value="partie suivante", Class='btn-inside')
-    input_next_game.attrs['style'] = 'font-size: 10px'
-    input_next_game.bind("click", lambda e: play.next_previous_game(False))
-    form <= input_next_game
-    col = html.TD(form)
+    if next_previous_available:
+        button_next_game = html.BUTTON("partie suivante", Class='btn-inside')
+        button_next_game.style = {'font-size': '10px'}
+        button_next_game.bind("click", lambda e: play.next_previous_game(False))
+    else:
+        button_next_game = html.BUTTON("partie suivante", disabled=True, Class='btn-inside')
+        button_next_game.style = {'pointer-events': 'none', 'font-size': '10px'}
+    col = html.TD(button_next_game)
     row <= col
 
     game_status_table <= row
