@@ -590,20 +590,20 @@ def show_position(direct_last_moves):
 
         if advancement_selected != min_possible_advancement:
             input_first = html.BUTTON("||<<", Class='btn-inside')
+            input_first.bind("click", lambda e, a=min_possible_advancement: transition_display_callback(e, a))
         else:
             input_first = html.BUTTON("||<<", disabled=True, Class='btn-inside')
             input_first.style = {'pointer-events': 'none'}
-        input_first.bind("click", lambda e, a=min_possible_advancement: transition_display_callback(e, a))
         buttons_right <= input_first
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
         if advancement_selected > min_possible_advancement:
             input_previous = html.BUTTON("<", Class='btn-inside')
+            input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
         else:
             input_previous = html.BUTTON("<", disabled=True, Class='btn-inside')
             input_previous.style = {'pointer-events': 'none'}
-        input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
         buttons_right <= input_previous
         buttons_right <= html.BR()
         buttons_right <= html.BR()
