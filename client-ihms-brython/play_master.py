@@ -318,7 +318,7 @@ def game_master():
 
         ev.preventDefault()
 
-        dialog = mydialog.Dialog(f"On arrête vraiment la partie {play_low.GAME} ?", ok_cancel=True)
+        dialog = mydialog.Dialog(f"On archive vraiment la partie {play_low.GAME} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, es=expected_state: change_state_game_callback(e, d, es))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_change_state_game_callback(e, d))
 
