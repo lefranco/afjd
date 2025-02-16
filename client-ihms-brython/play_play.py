@@ -1552,7 +1552,7 @@ def submit_orders():
     if play_low.ROLE_ID in submitted_data['needed'] and not game_over:
 
         # button for communication orders
-        if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
+        if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
             play_low.stack_communications_orders_button(buttons_right)
 
         # information retreats/builds
@@ -2296,8 +2296,8 @@ def submit_communication_orders():
         return False
 
     # game needs to disallow messages
-    if not play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
-        alert("La partie permet les messages")
+    if play_low.GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
+        alert("La partie n'est pas Blitz")
         play.load_option(None, 'Consulter')
         return False
 
