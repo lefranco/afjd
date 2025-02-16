@@ -475,7 +475,7 @@ def registrations():
     contact_form <= html.DIV("Votre message lui parviendra par messagerie privée.")
     contact_form <= html.BR()
 
-    input_send_message = html.INPUT(type="submit", value="Envoyer le message privé", Class='btn-inside')
+    input_send_message = html.INPUT(type="submit", value="Envoyer ce message", Class='btn-inside')
     input_send_message.bind("click", sendmess_callback)
     contact_form <= input_send_message
 

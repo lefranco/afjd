@@ -1079,7 +1079,7 @@ def rectify_parameters_game():
     MY_SUB_PANEL <= form
 
     MY_SUB_PANEL <= html.HR()
-    MY_SUB_PANEL <= html.H4("Accès aux messagerie")
+    MY_SUB_PANEL <= html.H4("Accès à la presse et à la messagerie")
 
     form = html.FORM()
 
@@ -1087,7 +1087,7 @@ def rectify_parameters_game():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_nopress = html.LEGEND("pas de déclaration", title="Les joueurs ne peuvent pas communiquer (déclarer) par message *public* avant la fin de la partie")
+    legend_nopress = html.LEGEND("pas de presse", title="Les joueurs ne peuvent pas communiquer par presse / message *public* avant la fin de la partie")
     fieldset <= legend_nopress
     input_nopress = html.INPUT(type="checkbox", checked=access_nopress_loaded, Class='btn-inside')
     fieldset <= input_nopress
@@ -1096,7 +1096,7 @@ def rectify_parameters_game():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_nomessage = html.LEGEND("pas de négociation", title="Les joueurs ne peuvent pas communiquer (négocier) par message *privé* avant la fin de la partie")
+    legend_nomessage = html.LEGEND("pas de messagerie", title="Les joueurs ne peuvent pas communiquer par messagerie / messages  *privé* avant la fin de la partie")
     fieldset <= legend_nomessage
     input_nomessage = html.INPUT(type="checkbox", checked=access_nomessage_loaded, Class='btn-inside')
     fieldset <= input_nomessage
@@ -1104,7 +1104,7 @@ def rectify_parameters_game():
 
     form <= html.BR()
 
-    input_change_message_game = html.INPUT(type="submit", value="Changer l'accès aux déclarations et négociations de la partie", Class='btn-inside')
+    input_change_message_game = html.INPUT(type="submit", value="Changer l'accès à la presse et à la messagerie de la partie", Class='btn-inside')
     input_change_message_game.bind("click", change_access_messages_games_callback)
     form <= input_change_message_game
 
@@ -1584,7 +1584,7 @@ def all_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie'}[field]
+        field_fr = {'name': 'nom', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'presse', 'nomessage_current': 'messagerie', 'game_type': 'type de partie'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead

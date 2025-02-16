@@ -185,7 +185,7 @@ def private_messages(dest_user_id, initial_content):
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Envoyer le message", Class='btn-inside')
+    input_declare_in_game = html.INPUT(type="submit", value="Envoyer ce message", Class='btn-inside')
     input_declare_in_game.bind("click", add_message_callback)
     form <= input_declare_in_game
 

@@ -190,7 +190,7 @@ def show_games():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'déclarations', 'nomessage_current': 'négociations', 'game_type': 'type de partie', 'synchronize': 'synchroniser'}[field]
+        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'presse', 'nomessage_current': 'messagerie', 'game_type': 'type de partie', 'synchronize': 'synchroniser'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead

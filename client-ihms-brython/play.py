@@ -22,10 +22,10 @@ import index
 OPTIONS = {
     'Consulter': "Consulter la position et l'historique des résolutions de la partie",
     'Ordonner': "Passer ses ordres sur la partie",
-    'Ordres de com\'': "Passer des ordres de communication pour une partie sans négocitation",
+    'Ordres de com\'': "Passer des ordres de communication pour une partie Blitz",
     'Imaginer': "Imaginer des unités des autre joueurs pour interagir avec pour une partie à visibilité réstreinte",
-    'Négocier': "Utiliser la messagerie privée",
-    'Déclarer': "Utiliser la messagerie publique",
+    'Messagerie': "Utiliser la messagerie privée d'un joueur/arbitre à un ou plusieurs autres",
+    'Presse': "Utiliser la presse, c'est à dire la messagerie publique en diffusion à toute la partie",
     'Arbitrer': "Réaliser toutes les opérations d'arbitrage",
     'Informations': "Consulter les paramètres et les incidents (retards, abandons, désordres civils) de la partie",
     'Superviser': "Superviser (arbitrage automatique) une partie en direct"
@@ -70,9 +70,9 @@ def next_previous_game(previous: bool):
     arrival = None
     if ITEM_NAME_SELECTED == 'Consulter':
         arrival = 'position'
-    elif ITEM_NAME_SELECTED == 'Négocier':
+    elif ITEM_NAME_SELECTED == 'Messagerie':
         arrival = 'messages'
-    elif ITEM_NAME_SELECTED == 'Déclarer':
+    elif ITEM_NAME_SELECTED == 'Presse':
         arrival = 'declarations'
     elif ITEM_NAME_SELECTED == 'Informations':
         arrival = 'informations'
@@ -108,9 +108,9 @@ def load_option(_, item_name, direct_last_moves=False):
         status = play_play.submit_communication_orders()
     if item_name == 'Imaginer':
         status = play_play.imagine_units()
-    if item_name == 'Négocier':
+    if item_name == 'Messagerie':
         status = play_other.negotiate({}, None)
-    if item_name == 'Déclarer':
+    if item_name == 'Presse':
         status = play_other.declare()
     if item_name == 'Arbitrer':
         status = play_master.game_master()
@@ -157,13 +157,13 @@ def load_option(_, item_name, direct_last_moves=False):
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 1):
                 continue
 
-        if possible_item_name == 'Négocier':
-            # do not display menu Négocier if not player or master
+        if possible_item_name == 'Messagerie':
+            # do not display menu Messagerie if not player or master
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
                 continue
 
-        if possible_item_name == 'Déclarer':
-            # do not display menu Déclarer if not player or master
+        if possible_item_name == 'Presse':
+            # do not display menu Presse if not player or master
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
                 continue
 
@@ -357,12 +357,12 @@ def render(panel_middle):
         if ARRIVAL == 'position':
             # set page for position
             ITEM_NAME_SELECTED = 'Consulter'
-        elif ARRIVAL == 'declarations':
-            # set page for press
-            ITEM_NAME_SELECTED = 'Déclarer'
         elif ARRIVAL == 'messages':
             # set page for messages
-            ITEM_NAME_SELECTED = 'Négocier'
+            ITEM_NAME_SELECTED = 'Messagerie'
+        elif ARRIVAL == 'declarations':
+            # set page for press
+            ITEM_NAME_SELECTED = 'Presse'
         elif ARRIVAL == 'informations':
             # set page for messages
             ITEM_NAME_SELECTED = 'Informations'

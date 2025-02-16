@@ -741,10 +741,10 @@ def get_game_status():
     explanations = []
 
     if GAME_PARAMETERS_LOADED['nopress_current']:
-        explanations.append("Les déclarations publiques des joueurs sont actuellement interdites sur la partie")
+        explanations.append("La presse (déclaration publique) est actuellement interdite")
 
     if GAME_PARAMETERS_LOADED['nomessage_current']:
-        explanations.append("Les négociations privées entre joueurs sont actuellement interdites sur la partie")
+        explanations.append("La messagerie (négociations privées entre joueurs) est actuellement interdite")
 
     # display it
     if explanations:
