@@ -356,6 +356,8 @@ def recruiting_games():
 
     time_stamp_now = time()
 
+    games_list = []
+
     for game_id_str, data in sorted(games_dict_recruiting.items(), key=key_function, reverse=reverse_needed):
 
         # ignore finished (or distinguished) games
@@ -401,6 +403,10 @@ def recruiting_games():
         else:
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
+
+        # add to game list
+        game_name = data['name']
+        games_list.append(game_name)
 
         data['master'] = None
         data['join'] = None
@@ -529,6 +535,9 @@ def recruiting_games():
 
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
+
+    # store the list of games
+    storage['GAME_LIST'] = ' '.join(games_list)
 
     MY_SUB_PANEL <= html.DIV("Pour les parties en attente, la date limite est pour le démarrage de la partie (pas le rendu des ordres)", Class='note')
     MY_SUB_PANEL <= html.BR()

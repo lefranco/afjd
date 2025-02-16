@@ -1322,11 +1322,11 @@ def my_games(state_name):
 
         games_table <= row
 
-    if late_games:
-        mydialog.InfoDialog("Information", f"Vous êtes en retard dans la(les) partie(s) : {' '.join(late_games)}")
-
     # store the list of games
     storage['GAME_LIST'] = ' '.join(games_list)
+
+    if late_games:
+        mydialog.InfoDialog("Information", f"Vous êtes en retard dans la(les) partie(s) : {' '.join(late_games)}")
 
     # get GMT date and time
     time_stamp_now = time()

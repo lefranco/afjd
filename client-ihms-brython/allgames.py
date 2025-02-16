@@ -1659,6 +1659,8 @@ def all_games(state_name):
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
+    games_list = []
+
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
         if data['current_state'] != state:
@@ -1700,6 +1702,10 @@ def all_games(state_name):
         else:
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
+
+        # add to game list
+        game_name = data['name']
+        games_list.append(game_name)
 
         data['id'] = None
         data['master'] = None
@@ -1818,6 +1824,9 @@ def all_games(state_name):
 
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
+
+    # store the list of games
+    storage['GAME_LIST'] = ' '.join(games_list)
 
     overall_time_after = time()
     elapsed = overall_time_after - overall_time_before

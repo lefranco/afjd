@@ -304,6 +304,8 @@ def show_games():
         deadline_day = data['deadline'] // (24 * 3600)
         add_game_table[game_id] = add_group_table[advancement] + (per_advancement_table[advancement] - deadline_day)
 
+    games_list = []
+
     # exception : games are sorted by name, not identifier
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
@@ -346,6 +348,10 @@ def show_games():
         else:
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
+
+        # add to game list
+        game_name = data['name']
+        games_list.append(game_name)
 
         data['master'] = None
         data['all_orders_submitted'] = None
@@ -474,6 +480,9 @@ def show_games():
 
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
+
+    # store the list of games
+    storage['GAME_LIST'] = ' '.join(games_list)
 
     url = f"{config.SITE_ADDRESS}?tournament={tournament_name}"
     input_copy_url_consult = html.INPUT(type="text", value=url)
