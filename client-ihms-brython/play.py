@@ -143,7 +143,7 @@ def load_option(_, item_name, direct_last_moves=False):
 
         if possible_item_name == 'Ordres de com\'':
             # do not display menu tag if message game
-            if not play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
+            if play_low.GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
                 continue
             # do not display menu order if not player
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 1):
