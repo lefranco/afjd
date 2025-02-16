@@ -1,0 +1,36 @@
+Les ordres de communication
+
+$ Introduction
+La fonctionnalité des "faux" ordres est issue d'une multitude de pratiques du jeu qui se sont imposées ici ou là depuis plus de 60 ans (en savoir plus).
+.
+
+Les "faux" ordres permettent d'envoyer une sorte de message aux autres joueurs même si la partie ne prévoient pas de négociation.
+.
+Contrairement aux "vrais" ordres, les "faux" ordres peuvent être totalement incorrects. Ils ne seront jamais exécutés.
+.
+Seules les unités qui ont reçu comme "vrai" ordre de TENIR et de SE DISPERSER, peuvent recevoir des "faux" ordres.
+.
+$ Intérêt
+En revanche une fois que tous les "vrais" ordres d'une phase de jeu auront été soumis et exécutés, les "faux" ordres seront affichés en rose sous la carte, à la suite de tous les "vrais" ordres et de leurs résultats (échec, invalide, délogée, détruite...).
+.
+De plus un rectangle rose sera affiché en haut à gauche de la carte pour attirer l'attention de tous les joueurs sur le fait qu'au moins un "faux" ordre a été passé lors de cette phase et qu'il est consultable sous la carte, avec les "vrais".
+.
+Cet ordre est également visible sur la carte sous forme de flèche rose
+.
+$ Justification
+Au départ, Diplomacy ne se jouait qu'en face à face, crayon et papier en mains.
+.
+Des joueurs futés, ou tordus selon l'appréciation de chacun, donnaient des ordres étranges comme A PAR S A MOS par exemple.
+.
+Peu importe que Paris et Moscou ne sont pas contigus. Peu importe si aucune armée ne se trouve à Moscou.
+.
+Les petits malins, qui se moquaient de passer pour des ignorants des règles et des syntaxes, poursuivaient un but bien précis. Celui de faire comprendre à qui savait lire entre les lignes, qu'ils soutiendraient ou attaqueraient tel ou tel pays.
+.
+Pour cela ils étaient prêts à sacrifier un ordre d'une unité. C'est pourquoi aujourd'hui encore pour pouvoir donner un "faux" ordre à l'une de ses unités, il faut d'abord lui avoir donné le "vrai" ordre de TENIR ou de SE DISPERSER.
+.
+$ Précisions technniques
+Cette construction bizarre de passer les ordres de communication séparément des vrais ordres est due a l'impossibilité de passer des ordres incorrects dans les vrais ordres dans le système diplomania.
+.
+Les ordres de communication n'ont de sens que dans les parties où la communication est impossible.
+.
+Les ordres de communication corrects n'ont pas de sens, autant donner un ordre véritable.

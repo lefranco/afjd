@@ -385,6 +385,30 @@ def stack_communications_orders_button(frame):
     frame <= html.BR()
 
 
+def stack_explanations_button(frame):
+    """ stack_explanations_button """
+
+    def show_option_callback(ev):  # pylint: disable=invalid-name
+        """ show_option_callback """
+
+        ev.preventDefault()
+
+        # so that will go to proper page
+        technical.set_arrival('communication')
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        technical.render(PANEL_MIDDLE)
+
+    input_explanations = html.INPUT(type="submit", value="Explications sur les ordres de com'", Class='btn-inside')
+    input_explanations.bind("click", show_option_callback)
+
+    # so that will go to proper page
+    frame <= input_explanations
+    frame <= html.BR()
+    frame <= html.BR()
+
+
 def stack_cancel_last_adjudication_button(frame):
     """ stack_cancel_last_adjudication_button """
 
@@ -537,15 +561,13 @@ def get_game_status():
         PANEL_MIDDLE.clear()
         ratings.render(PANEL_MIDDLE)
 
-    def show_option_callback(ev, option_name):  # pylint: disable=invalid-name
+    def show_option_callback(ev):  # pylint: disable=invalid-name
         """ show_option_callback """
 
         ev.preventDefault()
 
-        arrival = 'option'
-
         # so that will go to proper page
-        technical.set_arrival(arrival, option_name)
+        technical.set_arrival('brouillard')
 
         # action of going to game page
         PANEL_MIDDLE.clear()
@@ -665,7 +687,7 @@ def get_game_status():
         form = html.FORM()
         input_show_option = html.INPUT(type="submit", value=game_option_name, Class='btn-inside')
         input_show_option.attrs['style'] = 'font-size: 10px'
-        input_show_option.bind("click", lambda e, o=game_option_name: show_option_callback(e, o))
+        input_show_option.bind("click", show_option_callback)
         form <= input_show_option
         col = html.TD(form)
     row <= col

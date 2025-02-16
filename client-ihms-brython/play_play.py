@@ -1794,6 +1794,9 @@ def submit_communication_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
+            # explanations
+            play_low.stack_explanations_button(buttons_right)
+
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
                 order_name = play_low.VARIANT_DATA.order_name_table[order_type]
@@ -1898,6 +1901,9 @@ def submit_communication_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
+            # explanations
+            play_low.stack_explanations_button(buttons_right)
+
             # gm can pass orders on archive games
             if selected_active_unit is None or (play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]):
 
@@ -1968,6 +1974,9 @@ def submit_communication_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
+            # explanations
+            play_low.stack_explanations_button(buttons_right)
+
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
                 # little shortcut if dest = origin
@@ -2009,6 +2018,9 @@ def submit_communication_orders():
 
             # role flag
             play_low.stack_role_flag(buttons_right)
+
+            # explanations
+            play_low.play_low.stack_explanations_button(buttons_right)
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -2102,6 +2114,9 @@ def submit_communication_orders():
 
         # role flag
         play_low.stack_role_flag(buttons_right)
+
+        # explanations
+        play_low.stack_explanations_button(buttons_right)
 
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
@@ -2412,6 +2427,9 @@ def submit_communication_orders():
 
     # role flag
     play_low.stack_role_flag(buttons_right)
+
+    # explanations
+    play_low.stack_explanations_button(buttons_right)
 
     # button for communication orders possibilities
     play_low.stack_communication_possibilities(buttons_right, orders_data2)

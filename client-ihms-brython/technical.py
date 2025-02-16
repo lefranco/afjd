@@ -18,7 +18,8 @@ OPTIONS = {
     'Pourquoi yapa': "Complément à la Foire Aux Questions du site",
     'Choix d\'interface': "Choisir une interface différente de celle par défaut pour voir les parties",
     'Calcul du ELO': "Détail de la méthode de calcul du E.L.O. utilisé sur le site",
-    'Le brouillard': "Des informations sur l'option 'Brouillard de Guerre' pour une partie",
+    'Le brouillard de guerre': "Spécifications du  brouillard de guerre pour une partie",
+    'Ordres de com\'': "Explications sur les ordres de communication",
     'Langage Markup Facile': "Des informations sur un langage de construction facile de pages HTML pour les descriptions techniques",
     'Evolution de la fréquentation': "Evolution sous forme graphique du nombre de joueurs actifs sur le site"
 }
@@ -30,16 +31,13 @@ ARRIVAL = None
 OPTION_REQUESTED = None
 
 
-def set_arrival(arrival, option_requested=None):
+def set_arrival(arrival):
     """ set_arrival """
 
     global ARRIVAL
     global OPTION_REQUESTED
 
     ARRIVAL = arrival
-
-    if option_requested:
-        OPTION_REQUESTED = option_requested
 
 
 def show_technical():
@@ -249,6 +247,19 @@ def show_fog_of_war():
     my_ezml.render(MY_SUB_PANEL)
 
 
+def show_com_orders():
+    """ show_com_orders """
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    ezml_file = "./docs/communication_orders.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
+
+
 def show_ezml_spec():
     """ show_ezml_spec """
 
@@ -306,8 +317,10 @@ def load_option(_, item_name):
         select_interface()
     if item_name == 'Calcul du ELO':
         show_elo_calculation()
-    if item_name == 'Le brouillard':
+    if item_name == 'Le brouillard de guerre':
         show_fog_of_war()
+    if item_name == 'Ordres de com\'':
+        show_com_orders()
     if item_name == 'Langage Markup Facile':
         show_ezml_spec()
     if item_name == 'Evolution de la fréquentation':
@@ -343,8 +356,11 @@ def render(panel_middle):
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
     # this means user wants to see option
-    if ARRIVAL in ['option']:
-        ITEM_NAME_SELECTED = OPTION_REQUESTED
+    if ARRIVAL == 'brouillard':
+        ITEM_NAME_SELECTED = 'Le brouillard de guerre'
+
+    if ARRIVAL == 'communication':
+        ITEM_NAME_SELECTED = 'Ordres de com\''
 
     ARRIVAL = None
     load_option(None, ITEM_NAME_SELECTED)
