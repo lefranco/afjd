@@ -12,6 +12,7 @@ import os
 import sys
 import time
 import smtplib
+import locale
 
 import flask
 import flask_mail  # type: ignore
@@ -62,7 +63,7 @@ Président de l'Association
 SENDER = "afjd_serveur_jeu@diplomania-gen.fr"
 
 # mailing real sender
-REPLY_TO = "afjdiplo@gmail.com"
+REPLY_TO = "jeremie.lefrancois@gmail.com"
 
 # list of attached files (must be PDF)
 PDF_ATT_FILES = []
@@ -71,6 +72,10 @@ PDF_ATT_FILES = []
 MAILER = None
 
 APP = flask.Flask(__name__)
+
+
+# In French please
+locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
 
 
 class ConfigFile:
@@ -154,6 +159,7 @@ def main() -> None:
     with APP.app_context():
 
         already_spammed = set()
+        failed_to_spam = set()
 
         with open(victim_list_file, encoding='utf-8') as filepointer:
 
@@ -176,6 +182,7 @@ def main() -> None:
                     send_mail(victim)
                 except smtplib.SMTPRecipientsRefused:
                     print("=================== FAILED!")
+                    failed_to_spam.add(victim)
                 else:
                     print(f"DONE! {percent}%")
 
@@ -183,6 +190,9 @@ def main() -> None:
 
                 time.sleep(INTERVAL)
 
+        print("Failed to spam:")
+        print(' '.join(failed_to_spam))
+        
 
 if __name__ == '__main__':
     main()
