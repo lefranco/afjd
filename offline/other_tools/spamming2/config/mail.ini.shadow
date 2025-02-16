@@ -1,8 +1,0 @@
-[mail]
-
-MAIL_SERVER = mail.gandi.net
-MAIL_PORT = 465
-MAIL_USE_TLS = 0
-MAIL_USE_SSL = 1
-MAIL_USERNAME = afjd_serveur_jeu@diplomania-gen.fr
-MAIL_PASSWORD = ???
