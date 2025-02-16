@@ -51,7 +51,7 @@ def next_previous_game(previous: bool):
     games_list = storage['GAME_LIST'].split(' ')
 
     if play_low.GAME not in games_list:
-        alert(f"La partie en cours {play_low.GAME} n'est pas dans la liste de vos parties, choisissez parmi celles de la page 'mes parties', désolé")
+        alert(f"La partie en cours {play_low.GAME} n'est pas dans la liste des parties de votre dernière sélection, désolé")
         render(index.PANEL_MIDDLE)
         return False
 
