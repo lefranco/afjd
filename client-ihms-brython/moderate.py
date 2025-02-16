@@ -16,6 +16,7 @@ import memoize
 import mydatetime
 import play
 import mydialog
+import allgames
 
 
 MAX_LEN_EMAIL = 100
@@ -42,26 +43,6 @@ OPTIONS = {
     'Changer responsable tournoi': "Changer le responsable tournoi de la partie sélectionnée",
     'Changer responsable événement': "Changer le responsable de l'événement séléctionné"
 }
-
-
-def show_game_selected():
-    """  show_game_selected """
-
-    log_message = html.DIV()
-    if 'GAME' in storage:
-        log_message <= "La partie sélectionnée est "
-        log_message <= html.B(storage['GAME'])
-    else:
-        log_message <= "Pas de partie sélectionnée..."
-
-    show_game_selected_panel = html.DIV(id="show_game_selected")
-    show_game_selected_panel.attrs['style'] = 'text-align: left'
-    show_game_selected_panel <= log_message
-
-    if 'show_game_selected' in document:
-        del document['show_game_selected']
-
-    document <= show_game_selected_panel
 
 
 def get_all_games_roles_missing_orders():
@@ -985,7 +966,7 @@ def all_missing_orders():
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        show_game_selected()
+        allgames.show_game_selected()
 
         # action of going to game page
         PANEL_MIDDLE.clear()
@@ -1358,7 +1339,7 @@ def show_player_games(pseudo_player, player_games_dict):
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        show_game_selected()
+        allgames.show_game_selected()
 
         # action of going to game page
         PANEL_MIDDLE.clear()

@@ -7838,18 +7838,6 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             centers_number = {o: len([oo for oo in game_ownerships if oo[2] == o]) for o in owners}
             game_data['centers_number'] = centers_number
 
-            # get delays
-            game_incidents = incidents.Incident.list_by_game_id(sql_executor, game_id)
-            delayers = {d[3] for d in game_incidents}
-            delays_number = {d: len([dd for dd in game_incidents if dd[3] == d]) for d in delayers}
-            game_data['delays_number'] = delays_number
-
-            # get dropouts
-            game_dropouts = dropouts.Dropout.list_by_game_id(sql_executor, game_id)
-            quitters = {d[2] for d in game_dropouts}
-            dropouts_number = {q: len([qq for qq in game_dropouts if qq[2] == q]) for q in quitters}
-            game_data['dropouts_number'] = dropouts_number
-
             games_dict[game_name] = game_data
 
         del sql_executor
@@ -8587,6 +8575,55 @@ class TrainingRessource(flask_restful.Resource):  # type: ignore
             'orders_result': f"{orders_result}"
         }
         return data, 201
+
+
+@API.resource('/extract_com_orders_data')
+class ExtractComOrdersDataRessource(flask_restful.Resource):  # type: ignore
+    """ ExtractComOrdersDataRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Get information for communication orders of games...
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/extract_com_orders_data - GET - getting com orders data ")
+
+        sql_executor = database.SqlExecutor()
+
+        # concerned_games
+        games_list = games.Game.inventory(sql_executor)
+        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2]]
+
+        games_dict = {}
+        for game_id in concerned_games_list:
+
+            game_transitions = transitions.Transition.list_by_game_id(sql_executor, game_id)
+
+            if not game_transitions:
+                continue
+
+            game_data: typing.List[int] = []
+
+            for transition in game_transitions:
+
+                advancement = transition.advancement
+                the_communication_orders = json.loads(transition.communication_orders_json)
+                if the_communication_orders:
+                    game_data.append(advancement)
+                else:
+                    # old way / second chance
+                    report_txt = transition.report_txt
+                    if any(line.startswith('*') and len(line) > 2 for line in report_txt.split('\n')):
+                        game_data.append(advancement)
+
+            if game_data:
+                games_dict[game_id] = game_data
+
+        del sql_executor
+
+        data = {'games_dict': games_dict}
+        return data, 200
 
 
 @API.resource('/maintain')

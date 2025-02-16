@@ -345,8 +345,15 @@ def load_option(_, item_name):
         MENU_LEFT <= menu_item
 
 
+# starts here
+PANEL_MIDDLE = None
+
+
 def render(panel_middle):
     """ render """
+
+    global PANEL_MIDDLE
+    PANEL_MIDDLE = panel_middle
 
     # always back to top
     global ITEM_NAME_SELECTED

@@ -2411,6 +2411,8 @@ class Orders(Renderable):
                 order = Order(self._position, order_type, active_unit, passive_unit, destination_zone, source == communication_orders_list)
                 dest.append(order)
 
+        self._forced_communication_orders_present = False
+
     def insert_order(self, order: Order) -> None:
         """ insert_order """
 
@@ -2523,7 +2525,7 @@ class Orders(Renderable):
         for order in self._orders:
             order.render(ctx)
 
-        if self._communication_orders:
+        if self._communication_orders or self._forced_communication_orders_present:
             # The little rectangle
             fill_zone(ctx, COMMUNICATION_ORDER_PATH, COMMUNICATION_ORDER_COLOR, 1)
 
@@ -2557,6 +2559,10 @@ class Orders(Renderable):
             text += "\n"
             text += "\n"
         return text
+
+    def force_communication_orders_presence(self):
+        """ for historical reasons"""
+        self._forced_communication_orders_present = True
 
     @property
     def orders(self):
