@@ -16,6 +16,8 @@ import training
 import ezml_render
 import mydatetime
 import mydialog
+import play
+import allgames
 
 
 THRESHOLD_DRIFT_ALERT_SEC = 59
@@ -101,22 +103,37 @@ def get_teaser_content():
     return teaser_content
 
 
-def formatted_games(suffering_games):
+def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
+    """ select_game_callback """
+
+    ev.preventDefault()
+
+    # action of selecting game
+    storage['GAME'] = game_name
+    game_id = game_data_sel[game_name][0]
+    storage['GAME_ID'] = game_id
+    game_variant = game_data_sel[game_name][1]
+    storage['GAME_VARIANT'] = game_variant
+
+    allgames.show_game_selected()
+
+    # action of going to game page
+    PANEL_MIDDLE.clear()
+    play.render(PANEL_MIDDLE)
+
+
+def formatted_games(game_data_sel, suffering_games):
     """ formatted_games """
 
     # init
     games_content = html.DIV()
 
-    game_content_table = html.TABLE()
-    for game in suffering_games:
-        row = html.TR()
-        link = html.A(href=f"?game={game}", target="_blank")
-        link <= game
-        col = html.TD(link)
-        row <= col
-        game_content_table <= row
+    for game_name in suffering_games:
+        button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+        button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds))
+        games_content <= button
+        games_content <= " "
 
-    games_content <= game_content_table
     return games_content
 
 
@@ -262,6 +279,9 @@ def show_news():
         PANEL_MIDDLE.clear()
         training.render(PANEL_MIDDLE)
 
+    games_dict = common.get_games_data()
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
     div_homepage = html.DIV(id='grid')
@@ -283,9 +303,9 @@ def show_news():
     if dying_games_loaded:
         div_a5 <= "Les parties ci-dessous sont en grand retard."
         div_a5 <= html.BR()
-        div_a5 <= html.B("Cliquez sur le lien pour aller voir la partie !")
+        div_a5 <= html.B("Cliquez sur le bouton pour aller voir la partie !")
         div_a5 <= html.BR()
-        div_a5 <= formatted_games(dying_games_loaded)
+        div_a5 <= formatted_games(game_data_sel, dying_games_loaded)
     else:
         div_a5 <= "Aucune partie en cours n'est en grand retard."
 
@@ -294,9 +314,9 @@ def show_news():
     if suffering_games_loaded:
         div_a5 <= "Les parties ci-dessous sont en cours et ont besoin de remplaçant(s) - arbitre ou joueur."
         div_a5 <= html.BR()
-        div_a5 <= html.B("Cliquez sur le lien pour aller voir la partie !")
+        div_a5 <= html.B("Cliquez sur le bouton pour aller voir la partie !")
         div_a5 <= html.BR()
-        div_a5 <= formatted_games(suffering_games_loaded)
+        div_a5 <= formatted_games(game_data_sel, suffering_games_loaded)
     else:
         div_a5 <= "Aucune partie en cours n'a de besoin urgent de remplaçant(s)."
 
@@ -305,9 +325,9 @@ def show_news():
     if stalled_games_loaded:
         div_a5 <= "Les parties ci-dessous sont en en attente d'être complète pour démarrer depuis trop longtemps."
         div_a5 <= html.BR()
-        div_a5 <= html.B("Cliquez sur le lien pour aller voir la partie !")
+        div_a5 <= html.B("Cliquez sur le bouton pour aller voir la partie !")
         div_a5 <= html.BR()
-        div_a5 <= formatted_games(stalled_games_loaded)
+        div_a5 <= formatted_games(game_data_sel, stalled_games_loaded)
     else:
         div_a5 <= "Aucune partie en attente n'est en démarrage difficile."
 
