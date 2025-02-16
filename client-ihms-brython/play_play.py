@@ -212,7 +212,11 @@ def submit_orders():
                 if 'message' in req_result:
                     alert(f"Erreur à la soumission d'ordres : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la soumission d'ordres : {req_result['msg']}")
+                    # special : we add a little hint
+                    report = req_result['msg']
+                    if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:
+                        report += "\nSi cette erreur est intentionnelle, pensez à utiliser les ordres de com' !"
+                    alert(f"Problème à la soumission d'ordres : {report}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
