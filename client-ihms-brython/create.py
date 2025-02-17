@@ -1089,7 +1089,7 @@ def show_com_orders_usages():
     # force sort according to deadline (latest games first of course)
     for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0])):
 
-        if game_id_str not in dict_missing_orders_data['games_dict']:
+        if game_id_str not in dict_missing_orders_data:
             continue
 
         data['advancements'] = None
@@ -1145,7 +1145,7 @@ def show_com_orders_usages():
             if field == 'advancements':
                 nb_max_cycles_to_play = data['nb_max_cycles_to_play']
                 seasons = []
-                for advancement_loaded in dict_missing_orders_data['games_dict'][game_id_str]:
+                for advancement_loaded in dict_missing_orders_data[game_id_str]:
                     season = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
                     seasons.append(season)
                 value = ' '.join(seasons)
