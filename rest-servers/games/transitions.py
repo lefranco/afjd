@@ -80,6 +80,11 @@ class Transition:
         sql_executor.execute("DELETE FROM transitions WHERE game_id = ? and advancement = ?", (self._game_id, self._advancement))
 
     @property
+    def game_id(self) -> int:
+        """ property """
+        return self._game_id
+
+    @property
     def time_stamp(self) -> int:
         """ property """
         return self._time_stamp

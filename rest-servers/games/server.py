@@ -8581,7 +8581,7 @@ class TrainingRessource(flask_restful.Resource):  # type: ignore
 class ExtractComOrdersDataRessource(flask_restful.Resource):  # type: ignore
     """ ExtractComOrdersDataRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def get(self) -> typing.Tuple[typing.Dict[int, typing.List[int]], int]:  # pylint: disable=R0201
         """
         Get information for communication orders of games...
         EXPOSED
@@ -8591,38 +8591,24 @@ class ExtractComOrdersDataRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # concerned_games
-        games_list = games.Game.inventory(sql_executor)
-        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2]]
+        games_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
 
-        games_dict = {}
-        for game_id in concerned_games_list:
+        for transition in transitions.Transition.inventory(sql_executor):
 
-            game_transitions = transitions.Transition.list_by_game_id(sql_executor, game_id)
-
-            if not game_transitions:
-                continue
-
-            game_data: typing.List[int] = []
-
-            for transition in game_transitions:
-
-                advancement = transition.advancement
-                the_communication_orders = json.loads(transition.communication_orders_json)
-                if the_communication_orders:
-                    game_data.append(advancement)
-                else:
-                    # old way / second chance
-                    report_txt = transition.report_txt
-                    if any(line.startswith('*') and len(line) > 2 for line in report_txt.split('\n')):
-                        game_data.append(advancement)
-
-            if game_data:
-                games_dict[game_id] = game_data
+            game_id = transition.game_id
+            advancement = transition.advancement
+            the_communication_orders = json.loads(transition.communication_orders_json)
+            if the_communication_orders:
+                games_dict[game_id].append(advancement)
+            else:
+                # old way / second chance
+                report_txt = transition.report_txt
+                if any(line.startswith('*') and len(line) > 2 for line in report_txt.split('\n')):
+                    games_dict[game_id].append(advancement)
 
         del sql_executor
 
-        data = {'games_dict': games_dict}
+        data = games_dict
         return data, 200
 
 
