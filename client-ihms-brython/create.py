@@ -1087,7 +1087,7 @@ def show_com_orders_usages():
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     # force sort according to deadline (latest games first of course)
-    for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0])):
+    for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0]), reverse=True):
 
         if game_id_str not in dict_missing_orders_data:
             continue
