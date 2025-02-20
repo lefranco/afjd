@@ -122,18 +122,55 @@ def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=inval
     play.render(PANEL_MIDDLE)
 
 
-def formatted_games(game_data_sel, suffering_games):
+def formatted_games(games_dict, game_data_sel, conversion_table, suffering_games):
     """ formatted_games """
+
+    max_col = 4
 
     # init
     games_content = html.DIV()
 
+    games_table = html.TABLE()
+    row = html.TR()
+    num_col = 0
     for game_name in suffering_games:
-        button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
-        button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds))
-        games_content <= button
-        games_content <= " "
 
+        if num_col == max_col:
+            # new line
+            games_table <= row
+            row = html.TR()
+            num_col = 0
+
+        col = html.TD()
+        content = html.DIV()
+
+        # name of game in a link
+        button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+        button.style = {'font-size': '10px'}
+        button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds))
+        content <= button
+
+        content <= " "
+
+        # some information to raise intertest
+        col = html.TD()
+        game_id_str = game_data_sel[game_name][0]
+        data = games_dict[game_id_str]
+        infos = f"{data['variant']} {conversion_table[data['game_type']]}"
+        if data['used_for_elo']:
+            infos += " elo"
+        if data['fog']:
+            infos += " brouillard"
+        content <= infos
+
+        col.style = {'font-size': '10px'}
+        col <= content
+        row <= col
+
+        num_col += 1
+
+    games_table <= row
+    games_content <= games_table
     return games_content
 
 
@@ -298,14 +335,15 @@ def show_news():
 
     # ----
 
+    # game_type identifier -> description
+    conversion_table = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
+
     div_a5 <= html.H5("Grands retards :")
     dying_games_loaded = stats_content['dying_games']
     if dying_games_loaded:
         div_a5 <= "Les parties ci-dessous sont en grand retard."
         div_a5 <= html.BR()
-        div_a5 <= html.B("Cliquez sur le bouton pour aller voir la partie !")
-        div_a5 <= html.BR()
-        div_a5 <= formatted_games(game_data_sel, dying_games_loaded)
+        div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, dying_games_loaded)
     else:
         div_a5 <= "Aucune partie en cours n'est en grand retard."
 
@@ -314,9 +352,7 @@ def show_news():
     if suffering_games_loaded:
         div_a5 <= "Les parties ci-dessous sont en cours et ont besoin de remplaçant(s) - arbitre ou joueur."
         div_a5 <= html.BR()
-        div_a5 <= html.B("Cliquez sur le bouton pour aller voir la partie !")
-        div_a5 <= html.BR()
-        div_a5 <= formatted_games(game_data_sel, suffering_games_loaded)
+        div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, suffering_games_loaded)
     else:
         div_a5 <= "Aucune partie en cours n'a de besoin urgent de remplaçant(s)."
 
@@ -325,9 +361,7 @@ def show_news():
     if stalled_games_loaded:
         div_a5 <= "Les parties ci-dessous sont en en attente d'être complète pour démarrer depuis trop longtemps."
         div_a5 <= html.BR()
-        div_a5 <= html.B("Cliquez sur le bouton pour aller voir la partie !")
-        div_a5 <= html.BR()
-        div_a5 <= formatted_games(game_data_sel, stalled_games_loaded)
+        div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, stalled_games_loaded)
     else:
         div_a5 <= "Aucune partie en attente n'est en démarrage difficile."
 
