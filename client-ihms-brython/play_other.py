@@ -1278,7 +1278,8 @@ def negotiate(default_dest_set, def_focus_role_id):
                 pseudo_there = play_low.ID2PSEUDO[player_id]
 
             # the alternative
-            input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set or (role_id_dest == 0 and play_low.GAME_PARAMETERS_LOADED['nomessage_current']), Class='btn-inside')
+            # if there is ony game master as dest we select it automatically
+            input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=(role_id_dest in default_dest_set) or (role_id_dest == 0 and play_low.GAME_PARAMETERS_LOADED['nomessage_current']), Class='btn-inside')
 
             # create col
             col = html.TD()
