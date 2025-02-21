@@ -260,7 +260,7 @@ class Ezml:
                     if abs(new_chapter_level - cur_chapter_level) > 1:
                         fail("Issue with chapter: level not same/incremented/decremented")
                     cur_chapter_level = new_chapter_level
-                    name = f"<h{new_chapter_level + 2}>"
+                    name = f"<h{new_chapter_level + 3}>"
                     stack_push(name, line, None, False, False)
                     continue
 
