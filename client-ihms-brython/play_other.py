@@ -806,7 +806,7 @@ def show_informations():
             'access_restriction_regularity':  ("restriction d'accès sur la régularité",          "entier", "Un minimum de régularité est exigé pour rejoindre la partie"),  # noqa: E241
             'access_restriction_performance': ("restriction d'accès sur la performance",         "entier", "Un minimum de performance est exigé pour rejoindre la partie"),  # noqa: E241
             'nb_max_cycles_to_play':          ("nombre maximum de cycles (années) à jouer",      "entier", "Durée de la partie : Le système déclare la partie terminée si autant de cycles ont été joués"),  # noqa: E241
-            'game_type':                      ("type de la partie",                              "choix sur liste", "Type de la partie : Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : presse (déclarations publiques) uniquement... BlitzOuverte : comme Blitz avec ouverture de la presse pour parler d'autre chose que la partie"),  # noqa: E241
+            'game_type':                      ("type de la partie",                              "choix sur liste", "Type de la partie : Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : presse (déclarations publiques) uniquement... BlitzOuverte : comme Blitz avec ouverture de la presse pour organiser la partie sans faire action de jeu."),  # noqa: E241
             'force_wait':                     ("forçage d'attente ou maintenant",                "maintenant, pas de forçage, à la date limite", "L'arbitre peut forcer la résolution à maintenant ou à la date limite (ou ne rien forcer)"),  # noqa: E241
 
         }[key]

@@ -517,6 +517,12 @@ COUNTDOWN_COL = None
 def get_game_status():
     """ get_game__status """
 
+    def input_explain_game_type_callback(ev):  # pylint: disable=invalid-name
+        ev.preventDefault()
+        game_type = GAME_PARAMETERS_LOADED['game_type']
+        explanation = common.TYPE_GAME_EXPLAIN_CONV[game_type]
+        alert(explanation)
+
     def input_explain_dl_callback(ev):  # pylint: disable=invalid-name
         """ input_explain_dl_callback """
 
@@ -605,10 +611,15 @@ def get_game_status():
     row <= col
 
     # type of game
+    form = html.FORM()
     game_type = GAME_PARAMETERS_LOADED['game_type']
     game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
     game_type_name = game_type_conv[game_type]
-    col = html.TD(f"Type {game_type_name}")
+    input_show_game_type = html.INPUT(type="submit", value=game_type_name, Class='btn-inside')
+    input_show_game_type.attrs['style'] = 'font-size: 10px'
+    input_show_game_type.bind("click", input_explain_game_type_callback)
+    form <= input_show_game_type
+    col = html.TD(form)
     row <= col
 
     # state
