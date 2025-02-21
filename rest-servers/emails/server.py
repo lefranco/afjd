@@ -189,8 +189,9 @@ class SendMailSupportRessource(flask_restful.Resource):  # type: ignore
         reply_to = args['reply_to']
 
         MESSAGE_QUEUE.put((None, subject, body, EMAIL_SUPPORT, reply_to))
+        MESSAGE_QUEUE.put((None, subject, body, reply_to, None))
 
-        data = {'msg': 'Email was successfully queued to be sent to support'}
+        data = {'msg': 'Email was successfully queued to be sent to support (and sender)'}
         return data, 200
 
 
