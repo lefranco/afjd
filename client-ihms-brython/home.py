@@ -1038,9 +1038,9 @@ def declare_incident(json_dict_params):
 
         alert("Votre incident va être examiné dans les plus brefs délais")
 
-        # back to where we started
+        # back to home
         MY_SUB_PANEL.clear()
-        declare_incident(json_dict_params)
+        show_news()
 
     # get game if possible
     if not game:
