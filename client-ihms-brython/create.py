@@ -1045,6 +1045,8 @@ def show_com_orders_usages():
         PANEL_MIDDLE.clear()
         play.render(PANEL_MIDDLE)
 
+    overall_time_before = time()
+
     MY_SUB_PANEL <= html.H3("Toutes les utilisations des ordres de com'")
 
     games_dict = common.get_games_data()
@@ -1073,18 +1075,21 @@ def show_com_orders_usages():
     delays_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'advancements', 'variant']
+    fields = ['name', 'advancements', 'variant', 'game_type']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'advancements': 'saisons à jouer', 'variant': 'variante'}[field]
+        field_fr = {'name': 'nom', 'advancements': 'saisons à jouer', 'variant': 'variante', 'game_type': 'type de partie'}[field]
         col = html.TD(field_fr)
         thead <= col
     delays_table <= thead
 
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
+    # conversion
+    game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
 
     # force sort according to deadline (latest games first of course)
     for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0]), reverse=True):
@@ -1150,6 +1155,11 @@ def show_com_orders_usages():
                     seasons.append(season)
                 value = ' '.join(seasons)
 
+            if field == 'game_type':
+                explanation = common.TYPE_GAME_EXPLAIN_CONV[value]
+                stats = game_type_conv[value]
+                value = html.DIV(stats, title=explanation)
+
             col = html.TD(value)
             if colour is not None:
                 col.style = {
@@ -1161,6 +1171,14 @@ def show_com_orders_usages():
         delays_table <= row
 
     MY_SUB_PANEL <= delays_table
+    MY_SUB_PANEL <= html.BR()
+
+    overall_time_after = time()
+    elapsed = overall_time_after - overall_time_before
+
+    nb_occurences = len(dict_missing_orders_data)
+    stats = f"Temps de chargement de la page {elapsed:.2f} secs pour {nb_occurences} occurences"
+    MY_SUB_PANEL <= html.DIV(stats, Class='load')
 
 
 MY_PANEL = html.DIV()

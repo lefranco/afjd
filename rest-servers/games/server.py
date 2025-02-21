@@ -8597,16 +8597,22 @@ class ExtractComOrdersDataRessource(flask_restful.Resource):  # type: ignore
 
         for transition in transitions.Transition.inventory(sql_executor):
 
-            game_id = transition.game_id
             advancement = transition.advancement
+            if advancement % 5 == 4:
+                continue
+
+            game_id = transition.game_id
+
             the_communication_orders = json.loads(transition.communication_orders_json)
             if the_communication_orders:
                 games_dict[game_id].append(advancement)
-            else:
-                # old way / second chance
-                report_txt = transition.report_txt
-                if any(line.startswith('*') and len(line) > 2 for line in report_txt.split('\n')):
-                    games_dict[game_id].append(advancement)
+                continue
+
+            # old way second
+            report_txt = transition.report_txt
+            if any(line.startswith('*') and len(line) > 2 for line in report_txt.split('\n')):
+                games_dict[game_id].append(advancement)
+
 
         del sql_executor
 
