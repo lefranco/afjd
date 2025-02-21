@@ -767,6 +767,9 @@ def get_game_status():
     if GAME_PARAMETERS_LOADED['nomessage_current']:
         explanations.append("La messagerie (négociations privées entre joueurs) est actuellement interdite")
 
+    if GAME_PARAMETERS_LOADED['game_type'] == 3:
+        explanations.append("Attention Partie Blitz ouverte : la presse est autorisée mais HORS-JEU")
+
     # display it
     if explanations:
         row = html.TR()
