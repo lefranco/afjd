@@ -4334,7 +4334,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         # purge previous
 
         # get list
-        previous_communication_orders = communication_orders.CommunicationOrder.list_by_game_id_role_num(sql_executor, int(game_id), role_num)  # noqa: F821
+        previous_communication_orders = communication_orders.CommunicationOrder.list_by_game_id_role_num(sql_executor, int(game_id), role_id)  # noqa: F821
 
         # purge
         for (_, role_num, _, zone_num, _, _) in previous_communication_orders:
@@ -4411,7 +4411,9 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
         # get orders
         assert role_id is not None
-        communication_orders_list = communication_orders.CommunicationOrder.list_by_game_id_role_num(sql_executor, game_id, role_id)
+        communication_orders_list = communication_orders.CommunicationOrder.list_by_game_id_role_num(sql_executor, int(game_id), role_id)
+
+        print(f"extracted {communication_orders_list=}", file=sys.stderr)
 
         fake_units_list: typing.List[int] = []
 
