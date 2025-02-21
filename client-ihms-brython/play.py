@@ -132,6 +132,9 @@ def load_option(_, item_name, direct_last_moves=False):
     for possible_item_name, legend in OPTIONS.items():
 
         if possible_item_name == 'Ordonner':
+            # game must be ongoing
+            if play_low.GAME_PARAMETERS_LOADED['current_state'] != 1:
+                continue
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 # do not display menu order if archive and not master
                 if not (play_low.ROLE_ID is not None and play_low.ROLE_ID == 0):
@@ -142,6 +145,9 @@ def load_option(_, item_name, direct_last_moves=False):
                     continue
 
         if possible_item_name == 'Ordres de com\'':
+            # game must be ongoing
+            if play_low.GAME_PARAMETERS_LOADED['current_state'] != 1:
+                continue
             # do not display menu tag if message game
             if play_low.GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
                 continue
@@ -150,6 +156,9 @@ def load_option(_, item_name, direct_last_moves=False):
                 continue
 
         if possible_item_name == 'Imaginer':
+            # game must be ongoing
+            if play_low.GAME_PARAMETERS_LOADED['current_state'] != 1:
+                continue
             # do not display menu show if not fog
             if not play_low.GAME_PARAMETERS_LOADED['fog']:
                 continue
@@ -173,6 +182,9 @@ def load_option(_, item_name, direct_last_moves=False):
                 continue
 
         if possible_item_name == 'Superviser':
+            # game must be ongoing
+            if play_low.GAME_PARAMETERS_LOADED['current_state'] != 1:
+                continue
             # do not display menu supervise if not fast game
             if not play_low.GAME_PARAMETERS_LOADED['fast']:
                 continue
