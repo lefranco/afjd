@@ -42,7 +42,7 @@ def set_arrival(arrival):
 def show_technical():
     """ show_technical """
 
-    MY_SUB_PANEL <= html.H2("Recueil de documents techniques")
+    MY_SUB_PANEL <= html.H3("Recueil de documents techniques")
 
     title1 = html.H3("Règles du jeu officielles")
     MY_SUB_PANEL <= title1

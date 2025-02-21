@@ -408,7 +408,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
         delays_table <= row
 
     MY_SUB_PANEL.clear()
-    MY_SUB_PANEL <= html.H2("Tous mes retards sur toutes mes parties")
+    MY_SUB_PANEL <= html.H3("Tous mes retards sur toutes mes parties")
     MY_SUB_PANEL <= delays_table
     MY_SUB_PANEL <= html.BR()
 
@@ -574,7 +574,7 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
         dropouts_table <= row
 
     MY_SUB_PANEL.clear()
-    MY_SUB_PANEL <= html.H2("Tous mes abandons sur toutes mes parties")
+    MY_SUB_PANEL <= html.H3("Tous mes abandons sur toutes mes parties")
     MY_SUB_PANEL <= dropouts_table
     MY_SUB_PANEL <= html.BR()
 
@@ -734,7 +734,7 @@ def my_games(state_name):
     overall_time_before = time()
 
     # title
-    MY_SUB_PANEL <= html.H2(f"Parties que je joue dans l'état : {state_name}")
+    MY_SUB_PANEL <= html.H3(f"Parties que je joue dans l'état : {state_name}")
 
     state = config.STATE_CODE_TABLE[state_name]
 

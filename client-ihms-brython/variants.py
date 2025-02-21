@@ -226,7 +226,7 @@ def show_variant():
 
     my_sub_panel2 <= buttons_right
 
-    MY_SUB_PANEL <= html.H2(f"La variante {VARIANT_NAME}")
+    MY_SUB_PANEL <= html.H3(f"La variante {VARIANT_NAME}")
 
     MY_SUB_PANEL <= my_sub_panel2
     MY_SUB_PANEL <= html.BR()

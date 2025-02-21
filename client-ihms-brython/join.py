@@ -241,7 +241,7 @@ def recruiting_games():
                 game_master_dict[game] = master
 
     # Title
-    MY_SUB_PANEL <= html.H2("Parties qui recrutent des joueurs")
+    MY_SUB_PANEL <= html.H3("Parties qui recrutent des joueurs")
 
     # button for creating account
     if 'PSEUDO' not in storage:

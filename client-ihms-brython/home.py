@@ -125,7 +125,8 @@ def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=inval
 def formatted_games(games_dict, game_data_sel, conversion_table, suffering_games):
     """ formatted_games """
 
-    max_col = 4
+    # 4 on PC 3 on smartphone it should be
+    max_col = 3
 
     # init
     games_content = html.DIV()
@@ -152,7 +153,7 @@ def formatted_games(games_dict, game_data_sel, conversion_table, suffering_games
 
         content <= " "
 
-        # some information to raise intertest
+        # some information to raise interest
         col = html.TD()
         game_id_str = game_data_sel[game_name][0]
         data = games_dict[game_id_str]
@@ -161,6 +162,7 @@ def formatted_games(games_dict, game_data_sel, conversion_table, suffering_games
             infos += " elo"
         if data['fog']:
             infos += " brouillard"
+        infos += f" {data['current_advancement'] // 5}/{data['nb_max_cycles_to_play']}"
         content <= infos
 
         col.style = {'font-size': '10px'}
@@ -319,8 +321,7 @@ def show_news():
     games_dict = common.get_games_data()
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
-    title = html.H3("Accueil")
-    MY_SUB_PANEL <= title
+    # No need for a title
     div_homepage = html.DIV(id='grid')
 
     stats_content = get_stats_content()
