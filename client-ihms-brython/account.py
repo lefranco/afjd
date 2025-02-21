@@ -12,6 +12,7 @@ import config
 import common
 import login
 import welcome
+import home
 
 OPTIONS = {
     'Editer': "Modifier une information personnelle",
@@ -62,6 +63,30 @@ def set_rescue():
     """ set_rescue """
     global RESCUE
     RESCUE = True
+
+
+def information_about_private_data():
+    """ information_about_private_data """
+
+    def show_private_data_callback(ev):  # pylint: disable=invalid-name
+        """ show_private_data_callback """
+
+        ev.preventDefault()
+
+        arrival = 'RGPD'
+
+        # so that will go to proper page
+        home.set_arrival(arrival)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        home.render(PANEL_MIDDLE)
+
+    form = html.FORM()
+    input_show_private_data = html.INPUT(type="submit", value="Les données personnelles (R.G.P.D.)", Class='btn-inside')
+    input_show_private_data.bind("click", show_private_data_callback)
+    form <= input_show_private_data
+    return form
 
 
 def information_about_input():
@@ -282,6 +307,9 @@ def create_account(json_dict):
         create_account(json_dict)
 
     MY_SUB_PANEL <= html.H3("Création du compte")
+
+    MY_SUB_PANEL <= information_about_private_data()
+    MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= information_about_account()
     MY_SUB_PANEL <= html.BR()
@@ -592,6 +620,9 @@ def edit_account():
     status = edit_account_reload()
     if not status:
         return
+
+    MY_SUB_PANEL <= information_about_private_data()
+    MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= information_about_account()
     MY_SUB_PANEL <= html.BR()
@@ -1096,8 +1127,14 @@ def load_option(_, item_name):
         MENU_LEFT <= menu_item
 
 
+PANEL_MIDDLE = None
+
+
 def render(panel_middle):
     """ render """
+
+    global PANEL_MIDDLE
+    PANEL_MIDDLE = panel_middle
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]

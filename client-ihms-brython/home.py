@@ -43,6 +43,15 @@ if 'ANNOUNCEMENT_DISPLAYED_MODO' not in storage:
     storage['ANNOUNCEMENT_DISPLAYED_MODO'] = 'no'
 
 
+ARRIVAL = None
+
+
+def set_arrival(arrival):
+    """ set_arrival """
+    global ARRIVAL
+    ARRIVAL = arrival
+
+
 def get_stats_content():
     """ get_stats_content """
 
@@ -1218,6 +1227,10 @@ def render(panel_middle):
     # always back to top
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
+
+    # this means user wants to join game
+    if ARRIVAL == 'RGPD':
+        ITEM_NAME_SELECTED = 'Données personnelles'
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
