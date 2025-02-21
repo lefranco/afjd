@@ -1,39 +1,36 @@
 Les ordres de communication
 
-$ Terminologie
+$ Qu'est-ce que c'est ?
 
-On appelle "faux" ordres dans ce document ce qui est dénommé "ordres de communication" sur le site.
+Les ordres de communication *sont des ordres qui ne seront jamais exécutés*.
+.
+C'est pourquoi ils ne sont pas contraints par la géographie.
 
-$ Introduction
-La fonctionnalité des "faux" ordres est issue d'une multitude de pratiques du jeu qui se sont imposées ici ou là depuis plus de 60 ans.
+$ À quoi ça sert ?
+
+Le but des ordres de communication est de *passer des messages simples dans les parties sans négociation* (Blitz et Blitz ouvert).
+
+$ Mais pourquoi ?
+Pour comprendre comment on en est arrivé là, il faut revenir à l'époque où Diplomacy ne se jouait qu'en face à face, crayon et papier en mains.
 .
-Les "faux" ordres permettent d'envoyer une sorte de message aux autres joueurs même si la partie ne prévoit pas de négociation.
+Des joueurs futés, ou tordus selon l'appréciation de chacun, donnaient des ordres étranges comme *_A PAR S A MOS_* par exemple. Peu importe que Paris et Moscou ne sont pas contigus.
 .
-Contrairement aux "vrais" ordres, les "faux" ordres peuvent être totalement incorrects. Ils ne seront jamais exécutés.
+Bien sûr, l'ordre étant inexécutable, l'unité ne faisait que rester sur place.
 .
-Seules les unités qui ont reçu comme "vrai" ordre de TENIR et de SE DISPERSER, peuvent recevoir des "faux" ordres.
+Mais ces petits malins se moquaient bien de passer pour des ignorants des règles et des syntaxes car ils poursuivaient un but bien précis. Celui de faire comprendre leurs intentions à qui savait lire entre les lignes. Quitte pour cela à "sacrifier" une unité le temps d'une saison.
 .
-$ Intérêt
-Une fois que tous les "vrais" ordres d'une phase de jeu auront été soumis et exécutés, les "faux" ordres seront affichés en rose sous la carte, à la suite de tous les "vrais" ordres et de leurs résultats (échec, invalide, délogée, détruite...).
+C'est pourquoi aujourd'hui encore un ordre de communication ne sera traité comme tel que si l'unité a par ailleurs reçu le "vrai" ordre de TENIR ou de SE DISPERSER.
 .
-De plus un rectangle rose sera affiché en haut à gauche de la carte pour attirer l'attention de tous les joueurs sur le fait qu'au moins un "faux" ordre a été passé lors de cette phase et qu'il est consultable sous la carte, avec les "vrais".
 .
-Cet ordre est également visible sur la carte sous forme de flèche rose (uniquement si la résolution a eu lieu à partir de la date où cela a été implémenté (vers Janvier 2025).
+Le site Diplomania considère que maintenir cet usage original des règles était conforme à l'esprit du jeu Diplomacy.
+
+
+$ Comment ça marche ?
+*Seule une unité qui a reçu comme "vrai" ordre de TENIR et de SE DISPERSER, peut recevoir un ordre de communication*.
 .
-$ Historique
-Au départ, Diplomacy ne se jouait qu'en face à face, crayon et papier en mains.
+Une fois que tous les "vrais" ordres d'une phase de jeu ont été soumis et exécutés, les ordres de communication sont affichés en rose sous la carte, à la suite de tous les "vrais" ordres et de leurs résultats (échec, invalide, délogée, détruite...).
 .
-Des joueurs futés, ou tordus selon l'appréciation de chacun, donnaient des ordres étranges comme A PAR S A MOS par exemple.
+*Tous les joueurs voient les ordres de communication* d'autant plus qu'un rectangle rose en haut à gauche de la carte signale la présence d'au moins un ordre de communication.
 .
-Peu importe que Paris et Moscou ne sont pas contigus. Peu importe si aucune armée ne se trouve à Moscou.
 .
-Les petits malins, qui se moquaient bien de passer pour des ignorants des règles et des syntaxes, poursuivaient un but bien précis. Celui de faire comprendre à qui savait lire entre les lignes, qu'ils soutiendraient ou attaqueraient tel ou tel pays.
-.
-Pour cela ils étaient prêts à sacrifier un ordre d'une unité. C'est pourquoi aujourd'hui encore pour pouvoir donner un "faux" ordre à l'une de ses unités, il faut d'abord lui avoir donné le "vrai" ordre de TENIR ou de SE DISPERSER.
-.
-$ Quelques précisions
-Cette construction bizarre de passer les ordres de communication séparément des vrais ordres est due à l'impossibilité de passer des ordres incorrects dans les vrais ordres dans le système diplomania. Les autres systèmes qui permettent de tels ordres ne réalisent pas cette séparation.
-.
-Les ordres de communication n'ont de sens que dans les parties où la communication est impossible. Sur Diplomania, ils ne sont autoririsés que pour les parties Blitz
-.
-Les ordres de communication corrects n'ont pas vraiment de sens, autant donner un ordre véritable. Cela revient à donner un ordre et le barrer sur sa feuille (il sera lu mais pas appliqué)
+Et enfin depuis janvier 2025, une flèche de couleur rose représente sur la carte l'ordre de communication tel qu'il a été passé.
