@@ -23,7 +23,7 @@ OPTIONS = {
     'Rectifier paramètres': "Rectifier un des paramètres de la partie séléctionnée",
     'Sélectionner une partie': "Séléction d'une partie sur des critères éléborés",
     'Toutes les parties': "Liste de toutes les parties",
-    'Parties sans arbitres': "Liste des parties qui n'ont pas d'arbitre alloué",
+    'Parties sans arbitre': "Liste des parties qui n'ont pas d'arbitre alloué",
     'Parties sans tournoi': "Liste des parties qui ne sont pas dans un tournoi",
     'Retourner dans la partie': "Revient dans la partie sélectionnée pour y jouer"
 }
@@ -2051,7 +2051,7 @@ def load_option(_, item_name):
         select_game(config.FORCED_VARIANT_NAME, 1)
     if item_name == 'Toutes les parties':
         all_games('en cours')
-    if item_name == 'Parties sans arbitres':
+    if item_name == 'Parties sans arbitre':
         show_no_game_masters_data()
     if item_name == 'Parties sans tournoi':
         show_no_tournaments_data()
