@@ -232,15 +232,15 @@ class Ezml:
                 if header:
                     if not title:
                         title = line
-                        stack_push('<h2>', f"{title}", None, False, False)
+                        stack_push('<h3>', f"{title}", None, False, False)
                         continue
                     if not author:
                         author = line
-                        stack_push('<h3>', f"Auteur : {author}", None, False, False)
+                        stack_push('<h4>', f"Auteur : {author}", None, False, False)
                         continue
                     if not date_:
                         date_ = line
-                        stack_push('<h3>', f"Date : {date_}", None, False, False)
+                        stack_push('<h4>', f"Date : {date_}", None, False, False)
                         continue
 
                 # special

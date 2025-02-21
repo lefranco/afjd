@@ -1188,7 +1188,7 @@ def sandbox():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    MY_SUB_PANEL <= html.H2(f"Le bac à sable (variante {VARIANT_NAME})")
+    MY_SUB_PANEL <= html.H3(f"Le bac à sable (variante {VARIANT_NAME})")
     MY_SUB_PANEL <= my_sub_panel2
 
 

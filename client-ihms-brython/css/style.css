@@ -261,8 +261,8 @@ figure {
 /* color of england in diplomania map 83B9CC */
 table{
     border: 1px solid black;
-    border-collapse: collapse;
-    background-color: #FFFFFF;
+    /*border-collapse: collapse;*/
+    background-color: #D1DEFF;
 }
 
 tr{
@@ -284,7 +284,6 @@ thead{
 fieldset{
     border: 0;
 }
-
 
 #home {
     background-color: #EDEDED;

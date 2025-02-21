@@ -362,7 +362,7 @@ def render(panel_middle):
     login_panel = login()
 
     if login_panel:
-        MY_SUB_PANEL <= html.H2("Identifiez-vous pour accéder aux ressources protégées")
+        MY_SUB_PANEL <= html.H3("Identifiez-vous pour accéder aux ressources protégées")
         MY_SUB_PANEL <= login_panel
 
     PANEL_MIDDLE <= MY_SUB_PANEL
