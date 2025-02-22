@@ -1808,6 +1808,21 @@ def all_games(state_name):
                 value = "Non" if data['nomessage_current'] else "Oui"
 
             if field == 'game_type':
+                if data['current_state'] in [0, 1]:
+                    if not (data['soloed'] or data['end_voted'] or data['finished']):
+                        # put red if incoherent
+                        if value == 0:  # Nego
+                            if data['nopress_current'] or data['nomessage_current']:
+                                colour = 'red'
+                        elif value == 1:  # Blitz
+                            if not (data['nopress_current'] and data['nomessage_current']):
+                                colour = 'red'
+                        elif value == 2:  # Nego publique
+                            if data['nopress_current'] or not data['nomessage_current']:
+                                colour = 'red'
+                        elif value == 3:  # Blitz ouverte
+                            if data['nopress_current'] or not data['nomessage_current']:
+                                colour = 'red'
                 explanation = common.TYPE_GAME_EXPLAIN_CONV[value]
                 stats = game_type_conv[value]
                 value = html.DIV(stats, title=explanation)
