@@ -1027,7 +1027,7 @@ def show_com_orders_usages():
         MY_SUB_PANEL.clear()
         show_com_orders_usages()
 
-    def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
+    def show_season_callback(ev, game_name, game_data_sel, advancement):  # pylint: disable=invalid-name
         """ select_game_callback """
 
         ev.preventDefault()
@@ -1040,6 +1040,9 @@ def show_com_orders_usages():
         storage['GAME_VARIANT'] = game_variant
 
         allgames.show_game_selected()
+
+        play.set_arrival('position')
+        play.set_arrival2(advancement)
 
         # action of going to game page
         PANEL_MIDDLE.clear()
@@ -1138,22 +1141,21 @@ def show_com_orders_usages():
             colour = None
             game_name = data['name']
 
-            if field == 'name':
-                if storage['GAME_ACCESS_MODE'] == 'button':
-                    button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
-                    button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds))
-                    value = button
-                else:
-                    link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
-                    value = link
-
             if field == 'advancements':
                 nb_max_cycles_to_play = data['nb_max_cycles_to_play']
-                seasons = []
-                for advancement_loaded in dict_missing_orders_data[game_id_str]:
-                    season = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
-                    seasons.append(season)
-                value = ' '.join(seasons)
+                value = html.DIV()
+                if storage['GAME_ACCESS_MODE'] == 'button':
+                    for advancement_loaded in dict_missing_orders_data[game_id_str]:
+                        season = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
+                        button = html.BUTTON(season, Class='btn-inside')
+                        button.bind("click", lambda e, gn=game_name, gds=game_data_sel, ad=advancement_loaded: show_season_callback(e, gn, gds, ad))
+                        value <= " "
+                        value <= button
+                else:
+                    for advancement_loaded in dict_missing_orders_data[game_id_str]:
+                        link = html.A(game_name, href=f"?game={game_name}&arrival=position&advancement={advancement_loaded}", title="Cliquer pour aller dans la partie", target="_blank")
+                        value <= " "
+                        value <= link
 
             if field == 'game_type':
                 explanation = common.TYPE_GAME_EXPLAIN_CONV[value]

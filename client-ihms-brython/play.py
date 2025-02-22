@@ -32,12 +32,18 @@ OPTIONS = {
 }
 
 ARRIVAL = None
+ARRIVAL2 = None
 
 
 def set_arrival(arrival):
     """ set_arrival """
     global ARRIVAL
     ARRIVAL = arrival
+
+def set_arrival2(arrival2):
+    """ set_arrival2 """
+    global ARRIVAL2
+    ARRIVAL2 = arrival2
 
 
 def next_previous_game(previous: bool):
@@ -92,6 +98,8 @@ ITEM_NAME_SELECTED = None
 def load_option(_, item_name):
     """ load_option """
 
+    global ARRIVAL2
+
     # should have a proper token if playing
     login.check_token()
 
@@ -101,7 +109,7 @@ def load_option(_, item_name):
     status = False
 
     if item_name == 'Consulter':
-        status = play_other.show_position()
+        status = play_other.show_position(ARRIVAL2)
     if item_name == 'Ordonner':
         status = play_play.submit_orders()
     if item_name == 'Ordres de com\'':
@@ -213,6 +221,7 @@ def load_option(_, item_name):
             timer.clear_interval(play_master.SUPERVISE_REFRESH_TIMER)
             play_master.SUPERVISE_REFRESH_TIMER = None
 
+    ARRIVAL2 = None
 
 COUNTDOWN_TIMER = None
 

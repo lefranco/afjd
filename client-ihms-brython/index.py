@@ -370,6 +370,10 @@ if 'game' in document.query:
             arrival = document.query['arrival']
             # so that will go to proper page and/or do proper action
             play.set_arrival(arrival)
+        if 'advancement' in document.query:
+            advancement = int(document.query['advancement'])
+            # so that will go to proper page and/or do proper action
+            play.set_arrival2(advancement)
         # stick to game name
         window.history.pushState({}, document.title, "/")
         load_option(None, 'Accueil')
