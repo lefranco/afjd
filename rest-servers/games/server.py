@@ -8591,12 +8591,9 @@ class ExtractComOrdersDataRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # concerned_games
-        games_list = games.Game.inventory(sql_executor)
-        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2 ]]
-
         games_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
 
+        games_list = games.Game.inventory(sql_executor)
         for game in games_list:
 
             # Only Blitz
