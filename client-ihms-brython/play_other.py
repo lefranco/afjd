@@ -738,7 +738,7 @@ def show_position(advancement=None):
     last_advancement = play_low.GAME_PARAMETERS_LOADED['current_advancement']
 
     # initiates callback
-    if advancement:
+    if advancement is not None:
         transition_display_callback(None, advancement)
     else:
         transition_display_callback(None, last_advancement)
