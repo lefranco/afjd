@@ -1729,8 +1729,9 @@ def submit_communication_orders():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Vous avez déposé les ordres de communication : {messages}")
-            alert("Vos ordres de communication seront visibles par tous les joueurs de la partie dans le prochain compte-rendu de résolution.")
+            mydialog.InfoDialog("Information", f"Vous avez déposé des ordres de communication (ou aucun): {messages}")
+            if not orders_data.empty():
+                alert("Vos ordres de communication seront publiés dans le prochain compte-rendu de résolution, pourvu que les unités en question aient reçu l'ordre *réel* de tenir ou de se disperser..")
 
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = dumps(orders_list_dict)
@@ -2269,7 +2270,7 @@ def submit_communication_orders():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="Enregistrer ces ordres", Class='btn-inside')
+        input_submit = html.INPUT(type="submit", value="Enregistrer", Class='btn-inside')
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
