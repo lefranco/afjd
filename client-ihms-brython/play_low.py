@@ -17,7 +17,7 @@ import variants
 import ratings
 import technical
 import mydialog
-
+import play_other  # circular import
 import play  # circular import
 
 
@@ -368,8 +368,14 @@ def load_special_stuff():
 def stack_last_moves_button(frame):
     """ stack_last_moves_button """
 
+    last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
+    adv_last_moves = last_advancement
+    while True:
+        adv_last_moves -= 1
+        if adv_last_moves % 5 in [0, 2]:
+            break
     input_last_moves = html.INPUT(type="submit", value="Derniers mouvements", Class='btn-inside')
-    input_last_moves.bind("click", lambda e: play.load_option(e, 'Consulter', True))
+    input_last_moves.bind("click", lambda e: play_other.show_position(adv_last_moves))
     frame <= input_last_moves
     frame <= html.BR()
     frame <= html.BR()
@@ -379,7 +385,7 @@ def stack_communications_orders_button(frame):
     """ stack_communications_orders_button """
 
     input_last_moves = html.INPUT(type="submit", value="Ordres de com' (pour montrer une intention)", Class='btn-inside')
-    input_last_moves.bind("click", lambda e: play.load_option(e, 'Ordres de com\'', True))
+    input_last_moves.bind("click", lambda e: play.load_option(e, 'Ordres de com\''))
     frame <= input_last_moves
     frame <= html.BR()
     frame <= html.BR()

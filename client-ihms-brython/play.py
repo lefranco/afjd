@@ -89,7 +89,7 @@ def next_previous_game(previous: bool):
 ITEM_NAME_SELECTED = None
 
 
-def load_option(_, item_name, direct_last_moves=False):
+def load_option(_, item_name):
     """ load_option """
 
     # should have a proper token if playing
@@ -101,7 +101,7 @@ def load_option(_, item_name, direct_last_moves=False):
     status = False
 
     if item_name == 'Consulter':
-        status = play_other.show_position(direct_last_moves)
+        status = play_other.show_position()
     if item_name == 'Ordonner':
         status = play_play.submit_orders()
     if item_name == 'Ordres de com\'':
