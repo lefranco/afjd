@@ -145,11 +145,10 @@ def non_playing_information():
     return html.EM(info)
 
 
-def show_position(direct_last_moves):
+def show_position(advancement=None):
     """ show_position """
 
     position_data = None
-    adv_last_moves = None
     fake_report_loaded = None
     orders_data_txt = ""
     selected_hovered_object = None
@@ -183,7 +182,7 @@ def show_position(direct_last_moves):
 
                 # failed but refresh
                 play_low.MY_SUB_PANEL.clear()
-                show_position(False)
+                show_position()
 
                 return
 
@@ -225,7 +224,7 @@ def show_position(direct_last_moves):
 
                 # failed but refresh
                 play_low.MY_SUB_PANEL.clear()
-                show_position(False)
+                show_position()
 
                 return
 
@@ -737,15 +736,10 @@ def show_position(direct_last_moves):
         pseudo = storage['PSEUDO']
 
     last_advancement = play_low.GAME_PARAMETERS_LOADED['current_advancement']
-    adv_last_moves = last_advancement
-    while True:
-        adv_last_moves -= 1
-        if adv_last_moves % 5 in [0, 2]:
-            break
 
     # initiates callback
-    if direct_last_moves:
-        transition_display_callback(None, adv_last_moves)
+    if advancement:
+        transition_display_callback(None, advancement)
     else:
         transition_display_callback(None, last_advancement)
 
@@ -1278,7 +1272,7 @@ def negotiate(default_dest_set, def_focus_role_id):
                 pseudo_there = play_low.ID2PSEUDO[player_id]
 
             # the alternative
-            input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set , Class='btn-inside')
+            input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set, Class='btn-inside')
 
             # if there is ony game master as dest we select it automatically
             if role_id_dest == 0 and play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
