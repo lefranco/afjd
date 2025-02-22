@@ -1078,18 +1078,20 @@ def show_com_orders_usages():
     delays_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'advancements', 'variant', 'game_type']
+    fields = ['name', 'advancements', 'variant', 'game_type', 'current_state']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'advancements': 'saisons à jouer', 'variant': 'variante', 'game_type': 'type de partie'}[field]
+        field_fr = {'name': 'nom', 'advancements': 'saisons à jouer', 'variant': 'variante', 'game_type': 'type de partie', 'current_state': 'état', }[field]
         col = html.TD(field_fr)
         thead <= col
     delays_table <= thead
 
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
+    rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
 
     # conversion
     game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
@@ -1162,6 +1164,10 @@ def show_com_orders_usages():
                 explanation = common.TYPE_GAME_EXPLAIN_CONV[value]
                 stats = game_type_conv[value]
                 value = html.DIV(stats, title=explanation)
+
+            if field == 'current_state':
+                state_name = data[field]
+                value = rev_state_code_table[state_name]
 
             col = html.TD(value)
             if colour is not None:
