@@ -4413,8 +4413,6 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         assert role_id is not None
         communication_orders_list = communication_orders.CommunicationOrder.list_by_game_id_role_num(sql_executor, int(game_id), role_id)
 
-        print(f"extracted {communication_orders_list=}", file=sys.stderr)
-
         fake_units_list: typing.List[int] = []
 
         del sql_executor
@@ -8593,26 +8591,37 @@ class ExtractComOrdersDataRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
+        # concerned_games
+        games_list = games.Game.inventory(sql_executor)
+        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2 ]]
+
         games_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
 
-        for transition in transitions.Transition.inventory(sql_executor):
+        for game in games_list:
 
-            advancement = transition.advancement
-            if advancement % 5 == 4:
+            # Only Blitz
+            if game.game_type not in [1, 3]:
                 continue
 
-            game_id = transition.game_id
+            game_id = game.identifier
 
-            the_communication_orders = json.loads(transition.communication_orders_json)
-            if the_communication_orders:
-                games_dict[game_id].append(advancement)
-                continue
+            game_transitions = transitions.Transition.list_by_game_id(sql_executor, game_id)
 
-            # old way second
-            report_txt = transition.report_txt
-            if any(line.startswith('*') and len(line) > 2 for line in report_txt.split('\n')):
-                games_dict[game_id].append(advancement)
+            for transition in game_transitions:
 
+                advancement = transition.advancement
+                if advancement % 5 == 4:
+                    continue
+
+                the_communication_orders = json.loads(transition.communication_orders_json)
+                if the_communication_orders:
+                    games_dict[game_id].append(advancement)
+                    continue
+
+                # old way second
+                report_txt = transition.report_txt
+                if any(line.startswith('*') and len(line) > 2 for line in report_txt.split('\n')):
+                    games_dict[game_id].append(advancement)
 
         del sql_executor
 

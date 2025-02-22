@@ -1153,7 +1153,8 @@ def show_com_orders_usages():
                         value <= button
                 else:
                     for advancement_loaded in dict_missing_orders_data[game_id_str]:
-                        link = html.A(game_name, href=f"?game={game_name}&arrival=position&advancement={advancement_loaded}", title="Cliquer pour aller dans la partie", target="_blank")
+                        season = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
+                        link = html.A(season, href=f"?game={game_name}&arrival=position&advancement={advancement_loaded}", title="Cliquer pour aller dans la partie", target="_blank")
                         value <= " "
                         value <= link
 
