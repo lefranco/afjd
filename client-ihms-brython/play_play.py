@@ -353,6 +353,13 @@ def submit_orders():
         if play_low.GAME_PARAMETERS_LOADED['archive']:
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
+        # button for communication orders
+        if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
+            play_low.stack_communications_orders_button(buttons_right)
+
+        # button last moves
+        play_low.stack_last_moves_button(buttons_right)
+
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
 
@@ -399,6 +406,13 @@ def submit_orders():
         # button erase for archive games
         if play_low.GAME_PARAMETERS_LOADED['archive']:
             play_low.stack_cancel_last_adjudication_button(buttons_right)
+
+        # button for communication orders
+        if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
+            play_low.stack_communications_orders_button(buttons_right)
+
+        # button last moves
+        play_low.stack_last_moves_button(buttons_right)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -458,6 +472,13 @@ def submit_orders():
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
+            # button for communication orders
+            if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
+                play_low.stack_communications_orders_button(buttons_right)
+
+            # button last moves
+            play_low.stack_last_moves_button(buttons_right)
+
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
 
@@ -516,6 +537,13 @@ def submit_orders():
             # button erase for archive games
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
+
+            # button for communication orders
+            if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
+                play_low.stack_communications_orders_button(buttons_right)
+
+            # button last moves
+            play_low.stack_last_moves_button(buttons_right)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -703,6 +731,13 @@ def submit_orders():
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
+            # button for communication orders
+            if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
+                play_low.stack_communications_orders_button(buttons_right)
+
+            # button last moves
+            play_low.stack_last_moves_button(buttons_right)
+
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
 
@@ -813,6 +848,13 @@ def submit_orders():
             # button erase for archive games
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
+
+            # button for communication orders
+            if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
+                play_low.stack_communications_orders_button(buttons_right)
+
+            # button last moves
+            play_low.stack_last_moves_button(buttons_right)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -934,6 +976,13 @@ def submit_orders():
             # button erase for archive games
             if play_low.GAME_PARAMETERS_LOADED['archive']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
+
+            # button for communication orders
+            if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
+                play_low.stack_communications_orders_button(buttons_right)
+
+            # button last moves
+            play_low.stack_last_moves_button(buttons_right)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1059,6 +1108,13 @@ def submit_orders():
         # button erase for archive games
         if play_low.GAME_PARAMETERS_LOADED['archive']:
             play_low.stack_cancel_last_adjudication_button(buttons_right)
+
+        # button for communication orders
+        if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
+            play_low.stack_communications_orders_button(buttons_right)
+
+        # button last moves
+        play_low.stack_last_moves_button(buttons_right)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1549,6 +1605,10 @@ def submit_orders():
     # button erase for archive games
     if play_low.GAME_PARAMETERS_LOADED['archive']:
         play_low.stack_cancel_last_adjudication_button(buttons_right)
+
+    # button for communication orders
+    if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
+        play_low.stack_communications_orders_button(buttons_right)
 
     # button last moves
     play_low.stack_last_moves_button(buttons_right)
