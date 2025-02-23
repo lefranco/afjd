@@ -481,10 +481,6 @@ def show_position(advancement=None):
                 communication_orders_loaded = transition_loaded['communication_orders']
                 orders_data = mapping.Orders(orders_loaded, position_data, communication_orders_loaded)
 
-                # for historical reasons
-                if any(line.startswith('*') and len(line) > 2 for line in report_loaded.split('\n')):
-                    orders_data.force_communication_orders_presence()
-
                 # make a text version (for fog mainly)
                 orders_data_txt = orders_data.text_version()
 

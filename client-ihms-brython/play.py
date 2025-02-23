@@ -40,6 +40,7 @@ def set_arrival(arrival):
     global ARRIVAL
     ARRIVAL = arrival
 
+
 def set_arrival2(arrival2):
     """ set_arrival2 """
     global ARRIVAL2
@@ -222,6 +223,7 @@ def load_option(_, item_name):
             play_master.SUPERVISE_REFRESH_TIMER = None
 
     ARRIVAL2 = None
+
 
 COUNTDOWN_TIMER = None
 
