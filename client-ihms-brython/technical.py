@@ -2,7 +2,10 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import document, html, alert, window  # pylint: disable=import-error
+from json import loads, dumps
+from time import time
+
+from browser import document, html, alert, ajax, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
@@ -10,7 +13,12 @@ import config
 import interface
 import whynot
 import mydialog
+import memoize
 import ezml_render
+import common
+import mapping
+import allgames
+import play
 
 
 OPTIONS = {
@@ -20,6 +28,7 @@ OPTIONS = {
     'Calcul du ELO': "Détail de la méthode de calcul du E.L.O. utilisé sur le site",
     'Le brouillard de guerre': "Spécifications du  brouillard de guerre pour une partie",
     'Ordres de com\'': "Explications sur les ordres de communication",
+    'Utilisations ordres de com\'': "Toutes les utilisations des ordres de communication",
     'Langage Markup Facile': "Des informations sur un langage de construction facile de pages HTML pour les descriptions techniques",
     'Evolution de la fréquentation': "Evolution sous forme graphique du nombre de joueurs actifs sur le site"
 }
@@ -37,6 +46,36 @@ def set_arrival(arrival):
     global ARRIVAL
 
     ARRIVAL = arrival
+
+
+def get_all_games_communications_orders():
+    """ get_all_games_communications_orders : returns empty dict if problem """
+
+    dict_communication_orders_data = {}
+
+    def reply_callback(req):
+        nonlocal dict_communication_orders_data
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des ordres de communication pour toutes les parties : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des ordres de communication pour toutes les parties : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        dict_communication_orders_data = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/extract_com_orders_data"
+
+    # get roles that submitted orders : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return dict_communication_orders_data
 
 
 def show_technical():
@@ -259,6 +298,179 @@ def show_com_orders():
     my_ezml.render(MY_SUB_PANEL)
 
 
+def show_com_orders_usages():
+    """ show_com_orders_usages """
+
+    def change_button_mode_callback(_):
+        if storage['GAME_ACCESS_MODE'] == 'button':
+            storage['GAME_ACCESS_MODE'] = 'link'
+        else:
+            storage['GAME_ACCESS_MODE'] = 'button'
+        MY_SUB_PANEL.clear()
+        show_com_orders_usages()
+
+    def show_season_callback(ev, game_name, game_data_sel, advancement):  # pylint: disable=invalid-name
+        """ select_game_callback """
+
+        ev.preventDefault()
+
+        # action of selecting game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        allgames.show_game_selected()
+
+        play.set_arrival('position')
+        play.set_arrival2(advancement)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
+
+    overall_time_before = time()
+
+    MY_SUB_PANEL <= html.H3("Toutes les utilisations des ordres de com'")
+
+    games_dict = common.get_games_data()
+    if games_dict is None:
+        alert("Erreur chargement dictionnaire parties")
+        return
+    games_dict = dict(games_dict)
+
+    dict_missing_orders_data = get_all_games_communications_orders()
+    if not dict_missing_orders_data:
+        alert("Erreur chargement des ordres de com' dans les parties")
+        return
+
+    # button for switching mode
+    if 'GAME_ACCESS_MODE' not in storage:
+        storage['GAME_ACCESS_MODE'] = 'button'
+    if storage['GAME_ACCESS_MODE'] == 'button':
+        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-inside')
+    else:
+        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-inside')
+    button.bind("click", change_button_mode_callback)
+    MY_SUB_PANEL <= button
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    delays_table = html.TABLE()
+
+    # the display order
+    fields = ['name', 'advancements', 'variant', 'game_type', 'current_state']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'name': 'nom', 'advancements': 'saisons à jouer', 'variant': 'variante', 'game_type': 'type de partie', 'current_state': 'état', }[field]
+        col = html.TD(field_fr)
+        thead <= col
+    delays_table <= thead
+
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
+    rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
+
+    # conversion
+    game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
+
+    # force sort according to deadline (latest games first of course)
+    for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0]), reverse=True):
+
+        if game_id_str not in dict_missing_orders_data:
+            continue
+
+        data['advancements'] = None
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        row = html.TR()
+        for field in fields:
+
+            value = data[field]
+            colour = None
+            game_name = data['name']
+
+            if field == 'advancements':
+                nb_max_cycles_to_play = data['nb_max_cycles_to_play']
+                value = html.DIV()
+                if storage['GAME_ACCESS_MODE'] == 'button':
+                    for advancement_loaded in dict_missing_orders_data[game_id_str]:
+                        season = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
+                        button = html.BUTTON(season, Class='btn-inside')
+                        button.bind("click", lambda e, gn=game_name, gds=game_data_sel, ad=advancement_loaded: show_season_callback(e, gn, gds, ad))
+                        value <= " "
+                        value <= button
+                else:
+                    for advancement_loaded in dict_missing_orders_data[game_id_str]:
+                        season = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
+                        link = html.A(season, href=f"?game={game_name}&arrival=position&advancement={advancement_loaded}", title="Cliquer pour aller dans la partie", target="_blank")
+                        value <= " "
+                        value <= link
+
+            if field == 'game_type':
+                explanation = common.TYPE_GAME_EXPLAIN_CONV[value]
+                stats = game_type_conv[value]
+                value = html.DIV(stats, title=explanation)
+
+            if field == 'current_state':
+                state_name = data[field]
+                value = rev_state_code_table[state_name]
+
+            col = html.TD(value)
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+
+            row <= col
+
+        delays_table <= row
+
+    MY_SUB_PANEL <= delays_table
+    MY_SUB_PANEL <= html.BR()
+
+    overall_time_after = time()
+    elapsed = overall_time_after - overall_time_before
+
+    stats = f"Temps de chargement de la page {elapsed:.2f} secs pour {sum(len(a) for a in dict_missing_orders_data.values())} occurences sur {len(dict_missing_orders_data)} parties."
+    MY_SUB_PANEL <= html.DIV(stats, Class='load')
+
+
 def show_ezml_spec():
     """ show_ezml_spec """
 
@@ -320,6 +532,8 @@ def load_option(_, item_name):
         show_fog_of_war()
     if item_name == 'Ordres de com\'':
         show_com_orders()
+    if item_name == 'Utilisations ordres de com\'':
+        show_com_orders_usages()
     if item_name == 'Langage Markup Facile':
         show_ezml_spec()
     if item_name == 'Evolution de la fréquentation':
