@@ -8615,11 +8615,6 @@ class ExtractComOrdersDataRessource(flask_restful.Resource):  # type: ignore
                     games_dict[game_id].append(advancement)
                     continue
 
-                # old way second
-                report_txt = transition.report_txt
-                if any(line.startswith('*') and len(line) > 2 for line in report_txt.split('\n')):
-                    games_dict[game_id].append(advancement)
-
         del sql_executor
 
         data = games_dict
