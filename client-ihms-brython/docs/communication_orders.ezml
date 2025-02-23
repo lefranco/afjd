@@ -30,7 +30,4 @@ $ Comment ça marche ?
 .
 Une fois que tous les "vrais" ordres d'une phase de jeu ont été soumis et exécutés, les ordres de communication sont affichés en rose sous la carte, à la suite de tous les "vrais" ordres et de leurs résultats (échec, invalide, délogée, détruite...).
 .
-*Tous les joueurs voient les ordres de communication* d'autant plus qu'un rectangle rose en haut à gauche de la carte signale la présence d'au moins un ordre de communication.
-.
-.
-Et enfin depuis janvier 2025, une flèche de couleur rose représente sur la carte l'ordre de communication tel qu'il a été passé.
+*Tous les joueurs voient les ordres de communication* d'autant plus qu'un rectangle rose en haut à gauche de la carte signale la présence d'au moins un ordre de communication. De plus une flèche de couleur rose représente sur la carte l'ordre de communication tel qu'il a été passé.
