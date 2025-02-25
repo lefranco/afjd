@@ -7782,9 +7782,9 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
         games_list = games.Game.inventory(sql_executor)
         if elo_only:
             concerned_games_list = [g.identifier for g in games_list if g.current_state == 2 and g.used_for_elo == 1]
-         else:
+        else:
             concerned_games_list = [g.identifier for g in games_list if g.current_state == 2]
-            
+
         # time of spring 01
         first_advancement = 0
 
