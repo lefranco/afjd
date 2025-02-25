@@ -263,12 +263,10 @@ def get_game_status():
     row = html.TR()
 
     # reset
-    form = html.FORM()
-    input_reset_training = html.INPUT(type="submit", value="quitter", Class='btn-inside')
-    input_reset_training.attrs['style'] = 'font-size: 10px'
-    input_reset_training.bind("click", reset_training_callback)
-    form <= input_reset_training
-    col = html.TD(form)
+    button_reset_training = html.BUTTON("quitter", Class='btn-inside')
+    button_reset_training.attrs['style'] = 'font-size: 10px'
+    button_reset_training.bind("click", reset_training_callback)
+    col = html.TD(button_reset_training)
     row <= col
 
     # title
@@ -284,59 +282,53 @@ def get_game_status():
     row <= col
 
     # variant + link
-    form = html.FORM()
-    input_show_variant = html.INPUT(type="submit", value=game_variant, Class='btn-inside')
-    input_show_variant.attrs['style'] = 'font-size: 10px'
-    input_show_variant.bind("click", lambda e, v=game_variant: show_variant_callback(e, v))
-    form <= input_show_variant
-    col = html.TD(form)
+    button_show_variant = html.BUTTON(game_variant, Class='btn-inside')
+    button_show_variant.attrs['style'] = 'font-size: 10px'
+    button_show_variant.bind("click", lambda e, v=game_variant: show_variant_callback(e, v))
+    col = html.TD(button_show_variant)
     row <= col
 
     game_status_table <= row
 
     row = html.TR()
 
-    form = ""
     if TRAINING_INDEX > 0:
-        form = html.FORM()
-        input_previous_training = html.INPUT(type="submit", value="planche précédente", Class='btn-inside')
-        input_previous_training.attrs['style'] = 'font-size: 10px'
-        input_previous_training.bind("click", lambda e: next_previous_training(True))
-        form <= input_previous_training
-    col = html.TD(form)
+        button_previous_training = html.BUTTON("planche précédente", Class='btn-inside')
+        button_previous_training.style = {'font-size': '10px'}
+        button_previous_training.bind("click", lambda e: next_previous_training(True))
+    else:
+        button_previous_training = html.BUTTON("planche précédente", disabled=True, Class='btn-inside')
+        button_previous_training.style = {'pointer-events': 'none', 'font-size': '10px'}
+    col = html.TD(button_previous_training)
     row <= col
 
     # reload
-    form = html.FORM()
-    input_help = html.INPUT(type="submit", value="ré-afficher l'explication", Class='btn-inside')
-    input_help.attrs['style'] = 'font-size: 10px'
-    input_help.bind("click", reload_text_callback)
-    form <= input_help
-    col = html.TD(form)
+    button_reload = html.BUTTON("ré-afficher l'explication", Class='btn-inside')
+    button_reload.attrs['style'] = 'font-size: 10px'
+    button_reload.bind("click", reload_text_callback)
+    col = html.TD(button_reload)
     row <= col
 
     # help
-    form = ""
+    button_help = ""
     if HELP:
-        form = html.FORM()
-        input_help = html.INPUT(type="submit", value="un peu d'aide", Class='btn-inside')
-        input_help.attrs['style'] = 'font-size: 10px'
-        input_help.bind("click", ask_help_callback)
-        form <= input_help
-    col = html.TD(form)
+        button_help = html.BUTTON("un peu d'aide", Class='btn-inside')
+        button_help.attrs['style'] = 'font-size: 10px'
+        button_help.bind("click", ask_help_callback)
+    col = html.TD(button_help)
     row <= col
 
     col = html.TD(html.B(description))
     row <= col
 
-    form = ""
     if TRAINING_INDEX < len(TRAINING_LIST) - 1:
-        form = html.FORM()
-        input_next_training = html.INPUT(type="submit", value="planche suivante", Class='btn-inside')
-        input_next_training.attrs['style'] = 'font-size: 10px'
-        input_next_training.bind("click", lambda e: next_previous_training(False))
-        form <= input_next_training
-    col = html.TD(form)
+        button_next_training = html.BUTTON("planche suivante", Class='btn-inside')
+        button_next_training.attrs['style'] = 'font-size: 10px'
+        button_next_training.bind("click", lambda e: next_previous_training(False))
+    else:
+        button_next_training = html.BUTTON("planche suivante", disabled=True, Class='btn-inside')
+        button_next_training.style = {'pointer-events': 'none', 'font-size': '10px'}
+    col = html.TD(button_next_training)
     row <= col
 
     game_status_table <= row
