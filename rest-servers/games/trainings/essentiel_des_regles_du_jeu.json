@@ -137,7 +137,7 @@
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
     "position" : {
-        "ownerships": {},
+        "ownerships": {"15": 4},
         "dislodged_ones": {},
         "units": {"1": [[2, 38]], "4": [[2, 74]],"2": [[1, 60]]}, 
         "forbiddens": []
