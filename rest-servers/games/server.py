@@ -7594,7 +7594,7 @@ class TournamentPlayersRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/tournament-players/<game_id> - GET - get getting allocations for game of tournament id=%s", tournament_id)
+        mylogger.LOGGER.info("/tournament-players/<tournament_id> - GET - get getting allocations for game of tournament id=%s", tournament_id)
 
         sql_executor = database.SqlExecutor()
 
@@ -7762,24 +7762,29 @@ class CurrentWorstAnnoyersRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/extract_elo_data')
-class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
-    """ ExtractEloDataRessource """
+@API.resource('/extract_games_data/<elo>')
+class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
+    """ ExtractGamesDataRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def get(self, elo: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
-        Get information for ELO of players etc...
+        Get information for ELO/reliability/regularity of players etc...
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/extract_elo_data - GET - getting ELO data ")
+        mylogger.LOGGER.info("/extract_games_data - GET - getting ELO/reliability/regularity data ")
+
+        elo_only = bool(int(elo))
 
         sql_executor = database.SqlExecutor()
 
         # concerned_games
         games_list = games.Game.inventory(sql_executor)
-        concerned_games_list = [g.identifier for g in games_list if g.current_state == 2 and g.used_for_elo == 1]
-
+        if elo_only:
+            concerned_games_list = [g.identifier for g in games_list if g.current_state == 2 and g.used_for_elo == 1]
+         else:
+            concerned_games_list = [g.identifier for g in games_list if g.current_state == 2]
+            
         # time of spring 01
         first_advancement = 0
 
@@ -7837,6 +7842,18 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             owners = {o[2] for o in game_ownerships}
             centers_number = {o: len([oo for oo in game_ownerships if oo[2] == o]) for o in owners}
             game_data['centers_number'] = centers_number
+
+            # get delays
+            game_incidents = incidents.Incident.list_by_game_id(sql_executor, game_id)
+            delayers = {d[3] for d in game_incidents}
+            delays_number = {d: len([dd for dd in game_incidents if dd[3] == d]) for d in delayers}
+            game_data['delays_number'] = delays_number
+
+            # get dropouts
+            game_dropouts = dropouts.Dropout.list_by_game_id(sql_executor, game_id)
+            quitters = {d[2] for d in game_dropouts}
+            dropouts_number = {q: len([qq for qq in game_dropouts if qq[2] == q]) for q in quitters}
+            game_data['dropouts_number'] = dropouts_number
 
             games_dict[game_name] = game_data
 
