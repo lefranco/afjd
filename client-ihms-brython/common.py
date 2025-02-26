@@ -116,18 +116,30 @@ def formatted_news(news_content_loaded, origin, class_):
 
     # format
     if news_content_loaded is not None:
-        found_announce = False
+        found_announce = {}
+        for num in range(1, 4):
+            found_announce[num] = False
         for line in news_content_loaded.split("\n"):
             if line.startswith(".ANNONCE"):
                 if not origin:
+                    # only admin or modo
                     continue
-                if found_announce:
+                number = None
+                for num in range(1, 4):
+                    if line.startswith(f".ANNONCE_{num}"):
+                        number = num
+                        break
+                if number is None:
+                    # not valid
                     continue
-                _, _, announcement = line.partition(".ANNONCE ")
-                if announcement != storage[f'ANNOUNCEMENT_{origin}']:
-                    storage[f'ANNOUNCEMENT_{origin}'] = announcement
-                    storage[f'ANNOUNCEMENT_DISPLAYED_{origin}'] = 'no'
-                found_announce = True
+                if found_announce[number]:
+                    # already present
+                    continue
+                _, _, announcement = line.partition(f".ANNONCE_{number} ")
+                if announcement != storage[f'ANNOUNCEMENT_{number}_{origin}']:
+                    storage[f'ANNOUNCEMENT_{number}_{origin}'] = announcement
+                    storage[f'ANNOUNCEMENT_{number}_DISPLAYED_{origin}'] = 'no'
+                found_announce[number] = True
             elif line.startswith(".HR"):
                 separator = html.HR()
                 news_content <= separator

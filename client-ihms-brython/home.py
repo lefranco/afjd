@@ -33,14 +33,15 @@ OPTIONS = {
 
 
 # for safety
-if 'ANNOUNCEMENT_ADMIN' not in storage:
-    storage['ANNOUNCEMENT_ADMIN'] = ""
-if 'ANNOUNCEMENT_DISPLAYED_ADMIN' not in storage:
-    storage['ANNOUNCEMENT_DISPLAYED_ADMIN'] = 'no'
-if 'ANNOUNCEMENT_MODO' not in storage:
-    storage['ANNOUNCEMENT_MODO'] = ""
-if 'ANNOUNCEMENT_DISPLAYED_MODO' not in storage:
-    storage['ANNOUNCEMENT_DISPLAYED_MODO'] = 'no'
+for number in range(1, 4):
+    if f'ANNOUNCEMENT_{number}_ADMIN' not in storage:
+        storage[f'ANNOUNCEMENT_{number}_ADMIN'] = ""
+    if f'ANNOUNCEMENT_{number}_DISPLAYED_ADMIN' not in storage:
+        storage[f'ANNOUNCEMENT_{number}_DISPLAYED_ADMIN'] = 'no'
+    if f'ANNOUNCEMENT_{number}_MODO' not in storage:
+        storage[f'ANNOUNCEMENT_{number}_MODO'] = ""
+    if f'ANNOUNCEMENT_{number}_DISPLAYED_MODO' not in storage:
+        storage[f'ANNOUNCEMENT_{number}_DISPLAYED_MODO'] = 'no'
 
 
 ARRIVAL = None
@@ -695,10 +696,11 @@ def show_news():
 
     # announce
     for origin in ('ADMIN', 'MODO'):
-        if storage[f'ANNOUNCEMENT_DISPLAYED_{origin}'] == 'no':
-            if storage[f'ANNOUNCEMENT_{origin}']:
-                alert(storage[f'ANNOUNCEMENT_{origin}'])
-                storage[f'ANNOUNCEMENT_DISPLAYED_{origin}'] = 'yes'
+        for number in range(1, 4):
+            if storage[f'ANNOUNCEMENT_{number}_DISPLAYED_{origin}'] == 'no':
+                if storage[f'ANNOUNCEMENT_{number}_{origin}']:
+                    alert(storage[f'ANNOUNCEMENT_{number}_{origin}'])
+                    storage[f'ANNOUNCEMENT_{number}_DISPLAYED_{origin}'] = 'yes'
 
     if 'PSEUDO' in storage:
 
