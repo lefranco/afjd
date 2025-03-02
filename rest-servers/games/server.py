@@ -72,7 +72,7 @@ GAME_PARSER.add_argument('name', type=str, required=True)
 GAME_PARSER.add_argument('description', type=str, required=False)
 GAME_PARSER.add_argument('variant', type=str, required=False)
 GAME_PARSER.add_argument('fog', type=int, required=False)
-GAME_PARSER.add_argument('archive', type=int, required=False)
+GAME_PARSER.add_argument('exposition', type=int, required=False)
 GAME_PARSER.add_argument('anonymous', type=int, required=False)
 GAME_PARSER.add_argument('nomessage_current', type=int, required=False)
 GAME_PARSER.add_argument('nopress_current', type=int, required=False)
@@ -108,7 +108,7 @@ GAME_PARSER2 = flask_restful.reqparse.RequestParser()
 GAME_PARSER2.add_argument('name', type=str, required=False)
 GAME_PARSER2.add_argument('used_for_elo', type=int, required=False)
 GAME_PARSER2.add_argument('fast', type=int, required=False)
-GAME_PARSER2.add_argument('archive', type=int, required=False)
+GAME_PARSER2.add_argument('exposition', type=int, required=False)
 GAME_PARSER2.add_argument('game_type', type=int, required=False)
 GAME_PARSER2.add_argument('current_state', type=int, required=False)
 GAME_PARSER2.add_argument('finished', type=int, required=False)
@@ -714,9 +714,9 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 # we are starting the game
                 # ----
 
-                # check enough players if game is not archive
+                # check enough players if game is not exposition
 
-                if not game.archive:
+                if not game.exposition:
 
                     nb_players_allocated = game.number_allocated(sql_executor)
                     variant_name = game.variant
@@ -743,7 +743,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 game.push_deadline(now)
                 # commited later
 
-                if not (game.fast or game.archive):
+                if not (game.fast or game.exposition):
 
                     # notify players
 
@@ -799,7 +799,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 game.terminate()
                 # commited later
 
-                if not (game.fast or game.archive):
+                if not (game.fast or game.exposition):
 
                     # notify players
 
@@ -1170,7 +1170,7 @@ class GameStateListRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed, 'end_voted': g.end_voted} for g in games_list if int(min_current_state) <= g.current_state <= int(max_current_state)}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'exposition': g.exposition, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed, 'end_voted': g.end_voted} for g in games_list if int(min_current_state) <= g.current_state <= int(max_current_state)}
 
         return data, 200
 
@@ -1194,7 +1194,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed, 'end_voted': g.end_voted} for g in games_list}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'exposition': g.exposition, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed, 'end_voted': g.end_voted} for g in games_list}
 
         return data, 200
 
@@ -3284,7 +3284,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 game = games.Game.find_by_identifier(sql_executor, game_id)
                 assert game is not None
 
-                if not (game.fast or game.archive):
+                if not (game.fast or game.exposition):
 
                     # notify players
 
@@ -3372,10 +3372,10 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
         assert game is not None
 
-        # game must not be archive or fast
-        if game.fast or game.archive:
+        # game must not be fast or exposition
+        if game.fast or game.exposition:
             del sql_executor
-            flask_restful.abort(404, msg="This game is archive or fast")
+            flask_restful.abort(404, msg="This game is fast or exposition")
 
         # game must be ongoing
         if game.current_state != 1:
@@ -3572,17 +3572,17 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
 
         # not allowed for game master
-        if role_id == 0 and not game.archive:
+        if role_id == 0 and not game.exposition:
             orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-6-NOT-POSSIBLE-MASTER")
             del sql_executor
-            flask_restful.abort(403, msg="Submitting orders is not possible for game master for non archive games")
+            flask_restful.abort(403, msg="Submitting orders is not possible for game master for non exposition games")
 
-        # archive games and fast games stick to agree now
-        if game.fast or game.archive:
+        # fast and exposition games stick to agree now
+        if game.fast or game.exposition:
             if definitive_value == 2:
-                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR_7-AFTER-FAST-ARCHIVE")
+                orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR_7-AFTER-FAST-EXPOSITION")
                 del sql_executor
-                flask_restful.abort(403, msg="Submitting agreement after deadine is not possible for fast or archive games")
+                flask_restful.abort(403, msg="Submitting agreement after deadine is not possible for fast or exposition games")
 
         # begin of protected section
         with MOVE_GAME_LOCK_TABLE[game.name]:
@@ -3850,7 +3850,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 game = games.Game.find_by_identifier(sql_executor, game_id)  # noqa: F821
                 assert game is not None
 
-                if not (game.fast or game.archive):
+                if not (game.fast or game.exposition):
 
                     # notify players
 
@@ -3976,9 +3976,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id}")
 
         # not allowed for game master
-        if role_id == 0 and not game.archive:
+        if role_id == 0 and not game.exposition:
             del sql_executor
-            flask_restful.abort(403, msg="Getting submitted orders is not possible for game master for non archive game")
+            flask_restful.abort(403, msg="Getting submitted orders is not possible for game master for non exposition game")
 
         # get orders
         assert role_id is not None
@@ -6629,10 +6629,10 @@ class GameCancelLastAdjudicationRessource(flask_restful.Resource):  # type: igno
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
-        # check game is archive
-        if not game.archive:
+        # check game is exposition
+        if not game.exposition:
             del sql_executor
-            flask_restful.abort(400, msg="Game is not archive")
+            flask_restful.abort(400, msg="Game is not exposition")
 
         # check game is ongoing
         if game.current_state != 1:
@@ -7686,7 +7686,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         # games we can speak about the players
-        ongoing_games = {g.identifier for g in games_list if g.current_state == 1 and not g.archive}
+        ongoing_games = {g.identifier for g in games_list if g.current_state == 1 and not g.exposition}
 
         # players_dict
         game_masters_set = set()
@@ -7880,7 +7880,7 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
 
         # concerned_games
         games_list = games.Game.inventory(sql_executor)
-        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.archive]
+        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.exposition]
 
         # time of spring 01
         first_advancement = 0
@@ -8004,7 +8004,7 @@ class ExtractTournamentsHistoDataRessource(flask_restful.Resource):  # type: ign
 
         # concerned_games
         games_list = games.Game.inventory(sql_executor)
-        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.archive]
+        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.exposition]
 
         # time of spring 01
         first_advancement = 0
@@ -8121,7 +8121,7 @@ class ExtractVariantsDataRessource(flask_restful.Resource):  # type: ignore
 
         # concerned_games
         games_list = games.Game.inventory(sql_executor)
-        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.archive]
+        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.exposition]
 
         # extract start_time, end_time and players from games
         variants_dict: typing.Dict[str, typing.Dict[str, typing.Any]] = {}

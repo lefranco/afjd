@@ -349,8 +349,8 @@ def submit_orders():
         # role flag
         play_low.stack_role_flag(buttons_right)
 
-        # button erase for archive games
-        if play_low.GAME_PARAMETERS_LOADED['archive']:
+        # button erase for exposition games
+        if play_low.GAME_PARAMETERS_LOADED['exposition']:
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
@@ -403,8 +403,8 @@ def submit_orders():
         # role flag
         play_low.stack_role_flag(buttons_right)
 
-        # button erase for archive games
-        if play_low.GAME_PARAMETERS_LOADED['archive']:
+        # button erase for exposition games
+        if play_low.GAME_PARAMETERS_LOADED['exposition']:
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
@@ -468,8 +468,8 @@ def submit_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
-            # button erase for archive games
-            if play_low.GAME_PARAMETERS_LOADED['archive']:
+            # button erase for exposition games
+            if play_low.GAME_PARAMETERS_LOADED['exposition']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
@@ -534,8 +534,8 @@ def submit_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
-            # button erase for archive games
-            if play_low.GAME_PARAMETERS_LOADED['archive']:
+            # button erase for exposition games
+            if play_low.GAME_PARAMETERS_LOADED['exposition']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
@@ -727,8 +727,8 @@ def submit_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
-            # button erase for archive games
-            if play_low.GAME_PARAMETERS_LOADED['archive']:
+            # button erase for exposition games
+            if play_low.GAME_PARAMETERS_LOADED['exposition']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
@@ -741,7 +741,7 @@ def submit_orders():
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
 
-            # gm can pass orders on archive games
+            # gm can pass orders on exposition games
             if selected_active_unit is None or (play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]):
 
                 alert("Bien essayé, mais pas d'unité ici ou cette unité ne vous appartient pas ou vous n'avez pas d'ordre à valider.")
@@ -845,8 +845,8 @@ def submit_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
-            # button erase for archive games
-            if play_low.GAME_PARAMETERS_LOADED['archive']:
+            # button erase for exposition games
+            if play_low.GAME_PARAMETERS_LOADED['exposition']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
@@ -973,8 +973,8 @@ def submit_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
-            # button erase for archive games
-            if play_low.GAME_PARAMETERS_LOADED['archive']:
+            # button erase for exposition games
+            if play_low.GAME_PARAMETERS_LOADED['exposition']:
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
@@ -1105,8 +1105,8 @@ def submit_orders():
         # role flag
         play_low.stack_role_flag(buttons_right)
 
-        # button erase for archive games
-        if play_low.GAME_PARAMETERS_LOADED['archive']:
+        # button erase for exposition games
+        if play_low.GAME_PARAMETERS_LOADED['exposition']:
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
@@ -1355,13 +1355,13 @@ def submit_orders():
         # ---
         option_after_text = "à la date limite (*)"
         option_after_em = html.EM(option_after_text)
-        if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['archive'] or play_low.GAME_PARAMETERS_LOADED['force_wait'] == -1:
+        if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['exposition'] or play_low.GAME_PARAMETERS_LOADED['force_wait'] == -1:
             label_after = html.LABEL(option_after_em, disabled="disabled")
         else:
             label_after = html.LABEL(option_after_em)
         buttons_right <= label_after
 
-        if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['archive'] or play_low.GAME_PARAMETERS_LOADED['force_wait'] == -1:
+        if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['exposition'] or play_low.GAME_PARAMETERS_LOADED['force_wait'] == -1:
             input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), disabled=True, Class='btn-inside')
         else:
             input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), Class='btn-inside')
@@ -1414,15 +1414,15 @@ def submit_orders():
         play.load_option(None, 'Consulter')
         return False
 
-    # cannot be archive game unless  game master
-    if play_low.GAME_PARAMETERS_LOADED['archive'] and play_low.ROLE_ID != 0:
-        alert("Ordonner pour une parties archive est réservé à l'arbitre")
+    # cannot be exposition game unless game master
+    if play_low.GAME_PARAMETERS_LOADED['exposition'] and play_low.ROLE_ID != 0:
+        alert("Ordonner pour une partie exposition est réservé à l'arbitre")
         play.load_option(None, 'Consulter')
         return False
 
-    # cannot be game master unless archive game
-    if play_low.ROLE_ID == 0 and not play_low.GAME_PARAMETERS_LOADED['archive']:
-        alert("Ordonner pour un arbitre n'est possible que pour les parties archive")
+    # cannot be game master unless exposition game
+    if play_low.ROLE_ID == 0 and not play_low.GAME_PARAMETERS_LOADED['exposition']:
+        alert("Ordonner pour un arbitre n'est possible que pour les parties exposition")
         play.load_option(None, 'Consulter')
         return False
 
@@ -1602,8 +1602,8 @@ def submit_orders():
     # role flag
     play_low.stack_role_flag(buttons_right)
 
-    # button erase for archive games
-    if play_low.GAME_PARAMETERS_LOADED['archive']:
+    # button erase for exposition games
+    if play_low.GAME_PARAMETERS_LOADED['exposition']:
         play_low.stack_cancel_last_adjudication_button(buttons_right)
 
     # button last moves
@@ -1965,7 +1965,7 @@ def submit_communication_orders():
             # explanations
             play_low.stack_explanations_button(buttons_right)
 
-            # gm can pass orders on archive games
+            # gm can pass orders on exposition games
             if selected_active_unit is None or (play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]):
 
                 alert("Bien essayé, mais pas d'unité ici ou cette unité ne vous appartient pas ou vous n'avez pas d'ordre à valider.")
@@ -2353,9 +2353,9 @@ def submit_communication_orders():
         play.load_option(None, 'Consulter')
         return False
 
-    # cannot be archive game
-    if play_low.GAME_PARAMETERS_LOADED['archive']:
-        alert("Ce n'est pas possible pour une partie archive")
+    # cannot be exposition game
+    if play_low.GAME_PARAMETERS_LOADED['exposition']:
+        alert("Ce n'est pas possible pour une partie exposition")
         play.load_option(None, 'Consulter')
         return False
 
@@ -2835,9 +2835,9 @@ def imagine_units():
         play.load_option(None, 'Consulter')
         return False
 
-    # cannot be archive game
-    if play_low.GAME_PARAMETERS_LOADED['archive']:
-        alert("Ce n'est pas possible pour une partie archive")
+    # cannot be exposition game
+    if play_low.GAME_PARAMETERS_LOADED['exposition']:
+        alert("Ce n'est pas possible pour une partie exposition")
         play.load_option(None, 'Consulter')
         return False
 

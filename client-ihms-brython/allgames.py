@@ -90,7 +90,7 @@ def create_game(json_dict):
     name = json_dict['name'] if json_dict and 'name' in json_dict else None
     variant = json_dict['variant'] if json_dict and 'variant' in json_dict else list(config.VARIANT_NAMES_DICT.keys())[0]
     fog = json_dict['fog'] if json_dict and 'fog' in json_dict else None
-    archive = json_dict['archive'] if json_dict and 'archive' in json_dict else None
+    exposition = json_dict['exposition'] if json_dict and 'exposition' in json_dict else None
     used_for_elo = json_dict['used_for_elo'] if json_dict and 'used_for_elo' in json_dict else None
     manual = json_dict['manual'] if json_dict and 'manual' in json_dict else None
     anonymous = json_dict['anonymous'] if json_dict and 'anonymous' in json_dict else None
@@ -118,7 +118,7 @@ def create_game(json_dict):
 
     # alert will be shown once
     information_displayed_disorder = False
-    information_displayed_archive = False
+    information_displayed_exposition = False
     information_displayed_fast = False
     information_displayed_game_type = False
     information_displayed_just_play = False
@@ -132,15 +132,15 @@ def create_game(json_dict):
             if not information_displayed_disorder:
                 information_displayed_disorder = True
 
-    def display_archive_callback(_):
-        """ display_archive_callback """
+    def display_exposition_callback(_):
+        """ display_exposition_callback """
 
-        nonlocal information_displayed_archive
+        nonlocal information_displayed_exposition
 
-        if input_archive.checked:
-            if not information_displayed_archive:
+        if input_exposition.checked:
+            if not information_displayed_exposition:
                 alert("Ne cochez ce paramètre que si vous savez vraiment ce qu'il signifie. La partie est saisie par l'arbitre et destinée à être consultée par le public - ce n'est pas une partie jouée sur le site")
-                information_displayed_archive = True
+                information_displayed_exposition = True
 
     def display_fast_callback(_):
         """ display_fast_callback """
@@ -178,7 +178,7 @@ def create_game(json_dict):
         nonlocal name
         nonlocal variant
         nonlocal fog
-        nonlocal archive
+        nonlocal exposition
         nonlocal used_for_elo
         nonlocal manual
         nonlocal anonymous
@@ -235,7 +235,7 @@ def create_game(json_dict):
         variant, _, __ = input_variant.value.partition(' ')
 
         fog = int(input_fog.checked)
-        archive = int(input_archive.checked)
+        exposition = int(input_exposition.checked)
         used_for_elo = int(input_used_for_elo.checked)
         manual = int(input_manual.checked)
         anonymous = int(input_anonymous.checked)
@@ -318,7 +318,7 @@ def create_game(json_dict):
             'name': name,
             'variant': variant,
             'fog': fog,
-            'archive': archive,
+            'exposition': exposition,
             'used_for_elo': used_for_elo,
             'manual': manual,
             'anonymous': anonymous,
@@ -448,11 +448,11 @@ def create_game(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_archive = html.LEGEND("archive", title="ATTENTION ! Ne cocher que pour une partie pour les archives du site - la partie n'est pas jouée - l'arbitre passe tous les ordres et tout le monde pourra en regarder le déroulement")
-    fieldset <= legend_archive
-    input_archive = html.INPUT(type="checkbox", checked=bool(archive) if archive is not None else False, Class='btn-inside')
-    input_archive.bind("click", display_archive_callback)
-    fieldset <= input_archive
+    legend_exposition = html.LEGEND("exposition", title="ATTENTION ! Ne cocher que pour une partie pour les exposition du site - la partie n'est pas jouée - l'arbitre passe tous les ordres et tout le monde pourra en regarder le déroulement")
+    fieldset <= legend_exposition
+    input_exposition = html.INPUT(type="checkbox", checked=bool(exposition) if exposition is not None else False, Class='btn-inside')
+    input_exposition.bind("click", display_exposition_callback)
+    fieldset <= input_exposition
     form <= fieldset
 
     fieldset = html.FIELDSET()

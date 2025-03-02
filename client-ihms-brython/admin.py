@@ -516,7 +516,7 @@ def rectify_parameters():
     # declare the values
     used_for_elo_loaded = None
     fast_loaded = None
-    archive_loaded = None
+    exposition_loaded = None
     game_type_loaded = None
     finished_loaded = None
     end_voted_loaded = None
@@ -537,7 +537,7 @@ def rectify_parameters():
             nonlocal status
             nonlocal used_for_elo_loaded
             nonlocal fast_loaded
-            nonlocal archive_loaded
+            nonlocal exposition_loaded
             nonlocal game_type_loaded
             nonlocal finished_loaded
             nonlocal end_voted_loaded
@@ -555,7 +555,7 @@ def rectify_parameters():
 
             used_for_elo_loaded = req_result['used_for_elo']
             fast_loaded = req_result['fast']
-            archive_loaded = req_result['archive']
+            exposition_loaded = req_result['exposition']
             game_type_loaded = req_result['game_type']
             finished_loaded = req_result['finished']
             end_voted_loaded = req_result['end_voted']
@@ -592,7 +592,7 @@ def rectify_parameters():
 
         used_for_elo = int(input_used_for_elo.checked)
         fast = int(input_fast.checked)
-        archive = int(input_archive.checked)
+        exposition = int(input_exposition.checked)
         game_type = input_game_type.value
         game_type_code = config.GAME_TYPES_CODE_TABLE[game_type]
         finished = int(input_finished.checked)
@@ -602,7 +602,7 @@ def rectify_parameters():
         json_dict = {
             'used_for_elo': used_for_elo,
             'fast': fast,
-            'archive': archive,
+            'exposition': exposition,
             'game_type': game_type_code,
             'finished': finished,
             'end_voted': end_voted,
@@ -653,10 +653,10 @@ def rectify_parameters():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_archive = html.LEGEND("archive", title="Partie archive - la partie n'est pas jouée - l'arbitre passe tous les ordres et tout le monde pourra en regarder le déroulement")
-    fieldset <= legend_archive
-    input_archive = html.INPUT(type="checkbox", checked=archive_loaded, Class='btn-inside')
-    fieldset <= input_archive
+    legend_exposition = html.LEGEND("exposition", title="Partie exposition - la partie n'est pas jouée - l'arbitre passe tous les ordres et tout le monde pourra en regarder le déroulement")
+    fieldset <= legend_exposition
+    input_exposition = html.INPUT(type="checkbox", checked=exposition_loaded, Class='btn-inside')
+    fieldset <= input_exposition
     form <= fieldset
 
     fieldset = html.FIELDSET()
