@@ -15,9 +15,9 @@ SEASON_NAME = ["Printemps", "Automne", "Ete", "Hiver", "Ajustements"]
 class Game:
     """ Class for handling a game """
 
-    def __init__(self, archive: bool, fast: bool, play_weekend: bool, deadline_sync: bool, deadline_hour: int, moves_time: int, retreats_time: int, adjustments_time: int, current_advancement: int):
+    def __init__(self, exposition: bool, fast: bool, play_weekend: bool, deadline_sync: bool, deadline_hour: int, moves_time: int, retreats_time: int, adjustments_time: int, current_advancement: int):
 
-        self._archive = archive
+        self._exposition = exposition
         self._fast = fast
         self._play_weekend = play_weekend
         self._deadline_sync = deadline_sync
@@ -34,8 +34,8 @@ class Game:
     def push_deadline(self, forced_timestamp: typing.Optional[float] = None) -> None:
         """ push_deadline """
 
-        # do not touch deadline if game is archive
-        if self._archive:
+        # do not touch deadline if game is exposition
+        if self._exposition:
             return
 
         # set start deadline from where we start
@@ -134,13 +134,13 @@ class Game:
         return self._deadline
 
     def __str__(self) -> str:
-        return f"archive={self._archive} fast={self._fast} play_weekend={self._play_weekend} deadline_sync={self._deadline_sync} deadline_hour={self._deadline_hour} Next to play is {SEASON_NAME[self._current_advancement%5]}"
+        return f"exposition={self._exposition} fast={self._fast} play_weekend={self._play_weekend} deadline_sync={self._deadline_sync} deadline_hour={self._deadline_hour} Next to play is {SEASON_NAME[self._current_advancement%5]}"
 
 
-def perform_one_test(archive: bool, fast: bool, play_weekend: bool, deadline_sync: bool, deadline_hour: int, moves_time: int, retreats_time: int, adjustments_time: int, current_advancement: int, forced_timestamp: int) -> datetime.datetime:
+def perform_one_test(exposition: bool, fast: bool, play_weekend: bool, deadline_sync: bool, deadline_hour: int, moves_time: int, retreats_time: int, adjustments_time: int, current_advancement: int, forced_timestamp: int) -> datetime.datetime:
     """ perform_test """
 
-    game = Game(archive, fast, play_weekend, deadline_sync, deadline_hour, moves_time, retreats_time, adjustments_time, current_advancement)
+    game = Game(exposition, fast, play_weekend, deadline_sync, deadline_hour, moves_time, retreats_time, adjustments_time, current_advancement)
     print(game)
 
     game.push_deadline(forced_timestamp)
@@ -167,7 +167,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('-b', '--batch', required=False, action="store_true", default=False, help='Use a batch')
     parser.add_argument("-n", "--now", required=False, type=lambda d: datetime.datetime.strptime(d, '%Y%m%d%H%M%z'), help="Local date in the format yyyymmddHHMM+0100 (+0200 in summer)")
-    parser.add_argument('-a', '--archive', required=False, action="store_true", default=False, help='Game is archive')
+    parser.add_argument('-a', '--exposition', required=False, action="store_true", default=False, help='Game is exposition')
     parser.add_argument('-f', '--fast', required=False, action="store_true", default=False, help='Game is fast')
     parser.add_argument('-w', '--play_weekend', required=False, action="store_true", default=False, help='Game plays weekends')
     parser.add_argument('-S', '--deadline_sync', required=False, action="store_true", default=True, help='Game wants deadline sync.')
@@ -197,7 +197,7 @@ def main() -> None:
         print("Please revise current advancement")
         sys.exit(1)
 
-    datetime_deadline_extracted = perform_one_test(args.archive, args.fast, args.play_weekend, args.deadline_sync, args.deadline_hour, args.moves_time, args.retreats_time, args.adjustments_time, args.current_advancement, forced_timestamp)
+    datetime_deadline_extracted = perform_one_test(args.exposition, args.fast, args.play_weekend, args.deadline_sync, args.deadline_hour, args.moves_time, args.retreats_time, args.adjustments_time, args.current_advancement, forced_timestamp)
 
     print(f"Resulting deadline is {datetime_deadline_extracted}")
 

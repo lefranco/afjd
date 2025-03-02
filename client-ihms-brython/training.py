@@ -29,7 +29,7 @@ GAME_PARAMETERS_LOADED = {
     'description': "",  # to be precised
     'variant': "standard",  # to be precised
     'fog': False,
-    'archive': False,
+    'exposition': False,
     'used_for_elo': False,
     'manual': False,
     'fast': False,

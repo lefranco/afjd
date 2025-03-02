@@ -245,8 +245,8 @@ def check_all_games(jwt_token: str, now: float) -> None:
         if game_dict['fast']:
             continue
 
-        # archive game
-        if game_dict['archive']:
+        # exposition game
+        if game_dict['exposition']:
             continue
 
         # get full game data

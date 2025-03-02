@@ -153,11 +153,11 @@ FAQ_CONTENT_TABLE = {
     "Qu'est ce qui change pour une partie “en direct“ ?":
     "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en heures. Les retards sont comptés en minutes et non en heures entamées. Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres de désordre civil pour les joueurs automatiquement après la grâce. Pas de message de notification pour une telle partie. Pas d'accord pour résoudre après la date limite",
 
-    "Qu'est ce qui change pour une partie “archive“ ?":
+    "Qu'est ce qui change pour une partie “exposition“ ?":
     "Une telle partie n'est pas jouée sur le site. Elle est saisie par son arbitre à partir de feuilles d'ordres mais cette partie à eu lieu ailleurs (par exemple une table finale de championnat du monde). Avec juste un intérêt de consultation",
 
     "Pourquoi des parties sont “distinguées“ ?":
-    "Ce sont soit des parties modèles de tournoi que l'on veut retrouver plus rapidement, soit des parties archives sur lesquelles on veut attirer l'attention du badaud.",
+    "Ce sont soit des parties modèles de tournoi que l'on veut retrouver plus rapidement, soit des parties exposition sur lesquelles on veut attirer l'attention du badaud.",
 
     "Ce site est-il le site de jeu officiel de l'Association Francophone des Joueurs de Diplomacy ?":
     "Oui.",

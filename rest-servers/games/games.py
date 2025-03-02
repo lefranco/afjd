@@ -133,7 +133,7 @@ class Game:
         sql_executor.execute("CREATE TABLE games (identifier INTEGER UNIQUE PRIMARY KEY, name STR, game_data game)")
         sql_executor.execute("CREATE UNIQUE INDEX name_game ON games (name)")
 
-    def __init__(self, identifier: int, name: str, description: str, variant: str, fog: bool, archive: bool, anonymous: bool, finished: bool, soloed: bool, nomessage_current: bool, nopress_current: bool, fast: bool, scoring: str, deadline: int, deadline_hour: int, deadline_sync: bool, grace_duration: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, used_for_elo: bool, play_weekend: bool, manual: bool, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, current_state: int, game_type: int, force_wait: int, end_voted: bool) -> None:
+    def __init__(self, identifier: int, name: str, description: str, variant: str, fog: bool, exposition: bool, anonymous: bool, finished: bool, soloed: bool, nomessage_current: bool, nopress_current: bool, fast: bool, scoring: str, deadline: int, deadline_hour: int, deadline_sync: bool, grace_duration: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, used_for_elo: bool, play_weekend: bool, manual: bool, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, current_state: int, game_type: int, force_wait: int, end_voted: bool) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -144,7 +144,7 @@ class Game:
         self._description = description
         self._variant = variant
         self._fog = fog
-        self._archive = archive
+        self._exposition = exposition
         self._anonymous = anonymous
         self._finished = finished
         self._soloed = soloed
@@ -208,8 +208,8 @@ class Game:
             self._fog = json_dict['fog']
             changed = True
 
-        if 'archive' in json_dict and json_dict['archive'] is not None and json_dict['archive'] != self._archive:
-            self._archive = json_dict['archive']
+        if 'exposition' in json_dict and json_dict['exposition'] is not None and json_dict['exposition'] != self._exposition:
+            self._exposition = json_dict['exposition']
             changed = True
 
         if 'anonymous' in json_dict and json_dict['anonymous'] is not None and json_dict['anonymous'] != self._anonymous:
@@ -374,7 +374,7 @@ class Game:
             'description': self._description,
             'variant': self._variant,
             'fog': self._fog,
-            'archive': self._archive,
+            'exposition': self._exposition,
             'used_for_elo': self._used_for_elo,
             'manual': self._manual,
             'fast': self._fast,
@@ -535,8 +535,8 @@ class Game:
 
         # at this point we should have enough players
 
-        # manual game : do not allocate players
-        if self._manual or self._archive:
+        # manual or expostion game : do not allocate players
+        if self._manual or self._exposition:
             return
 
         # let's make a random order
@@ -625,8 +625,8 @@ class Game:
     def push_deadline(self, now: float) -> None:
         """ push_deadline """
 
-        # do not touch deadline if game is archive
-        if self._archive:
+        # do not touch deadline if game is exposition
+        if self._exposition:
             return
 
         # set start deadline from where we start
@@ -796,9 +796,9 @@ class Game:
         return self._deadline
 
     @property
-    def archive(self) -> bool:
+    def exposition(self) -> bool:
         """ property """
-        return self._archive
+        return self._exposition
 
     @property
     def anonymous(self) -> bool:
@@ -881,13 +881,13 @@ class Game:
         return self._play_weekend
 
     def __str__(self) -> str:
-        return f"name={self._name} variant={self._variant} fog={self._fog} description={self._description} archive={self._archive} anonymous={self._anonymous} finished={self._finished} soloed={self._soloed} nomessage_current={self._nomessage_current} nopress_current={self._nopress_current} fast={self._fast} scoring={self._scoring} deadline={self._deadline} deadline_hour={self._deadline_hour} deadline_sync={self._deadline_sync} grace_duration={self._grace_duration} speed_moves={self._speed_moves} cd_possible_moves={self._cd_possible_moves} speed_retreats={self._speed_retreats} cd_possible_retreats={self._cd_possible_retreats} speed_adjustments={self._speed_adjustments} cd_possible_builds={self._cd_possible_builds} used_for_elo={self._used_for_elo} play_weekend={self._play_weekend} manual={self._manual} access_restriction_reliability={self._access_restriction_reliability} access_restriction_regularity={self._access_restriction_regularity} access_restriction_performance={self._access_restriction_performance} current_advancement={self._current_advancement} nb_max_cycles_to_play={self._nb_max_cycles_to_play} current_state={self._current_state} force_wait={self._force_wait} end_voted={self._end_voted}"
+        return f"name={self._name} variant={self._variant} fog={self._fog} description={self._description} exposition={self._exposition} anonymous={self._anonymous} finished={self._finished} soloed={self._soloed} nomessage_current={self._nomessage_current} nopress_current={self._nopress_current} fast={self._fast} scoring={self._scoring} deadline={self._deadline} deadline_hour={self._deadline_hour} deadline_sync={self._deadline_sync} grace_duration={self._grace_duration} speed_moves={self._speed_moves} cd_possible_moves={self._cd_possible_moves} speed_retreats={self._speed_retreats} cd_possible_retreats={self._cd_possible_retreats} speed_adjustments={self._speed_adjustments} cd_possible_builds={self._cd_possible_builds} used_for_elo={self._used_for_elo} play_weekend={self._play_weekend} manual={self._manual} access_restriction_reliability={self._access_restriction_reliability} access_restriction_regularity={self._access_restriction_regularity} access_restriction_performance={self._access_restriction_performance} current_advancement={self._current_advancement} nb_max_cycles_to_play={self._nb_max_cycles_to_play} current_state={self._current_state} force_wait={self._force_wait} end_voted={self._end_voted}"
 
     def adapt_game(self) -> bytes:
         """ To put an object in database """
 
         compressed_description = database.compress_text(self._description)
-        return (f"{self._identifier}{database.STR_SEPARATOR}{self._name}{database.STR_SEPARATOR}{compressed_description}{database.STR_SEPARATOR}{self._variant}{database.STR_SEPARATOR}{int(bool(self._archive))}{database.STR_SEPARATOR}{int(bool(self._anonymous))}{database.STR_SEPARATOR}{int(bool(self._finished))}{database.STR_SEPARATOR}{int(bool(self._soloed))}{database.STR_SEPARATOR}{int(bool(self._nomessage_current))}{database.STR_SEPARATOR}{int(bool(self._nopress_current))}{database.STR_SEPARATOR}{int(bool(self._fast))}{database.STR_SEPARATOR}{self._scoring}{database.STR_SEPARATOR}{self._deadline}{database.STR_SEPARATOR}{self._deadline_hour}{database.STR_SEPARATOR}{int(bool(self._deadline_sync))}{database.STR_SEPARATOR}{self._grace_duration}{database.STR_SEPARATOR}{self._speed_moves}{database.STR_SEPARATOR}{int(bool(self._cd_possible_moves))}{database.STR_SEPARATOR}{self._speed_retreats}{database.STR_SEPARATOR}{int(bool(self._cd_possible_retreats))}{database.STR_SEPARATOR}{self._speed_adjustments}{database.STR_SEPARATOR}{int(bool(self._cd_possible_builds))}{database.STR_SEPARATOR}{int(bool(self._used_for_elo))}{database.STR_SEPARATOR}{int(bool(self._play_weekend))}{database.STR_SEPARATOR}{int(bool(self._manual))}{database.STR_SEPARATOR}{self._access_restriction_reliability}{database.STR_SEPARATOR}{self._access_restriction_regularity}{database.STR_SEPARATOR}{self._access_restriction_performance}{database.STR_SEPARATOR}{self._current_advancement}{database.STR_SEPARATOR}{self._nb_max_cycles_to_play}{database.STR_SEPARATOR}{int(bool(self._fog))}{database.STR_SEPARATOR}{self._current_state}{database.STR_SEPARATOR}{self._game_type}{database.STR_SEPARATOR}{self._force_wait}{database.STR_SEPARATOR}{int(bool(self._end_voted))}").encode('ascii')
+        return (f"{self._identifier}{database.STR_SEPARATOR}{self._name}{database.STR_SEPARATOR}{compressed_description}{database.STR_SEPARATOR}{self._variant}{database.STR_SEPARATOR}{int(bool(self._exposition))}{database.STR_SEPARATOR}{int(bool(self._anonymous))}{database.STR_SEPARATOR}{int(bool(self._finished))}{database.STR_SEPARATOR}{int(bool(self._soloed))}{database.STR_SEPARATOR}{int(bool(self._nomessage_current))}{database.STR_SEPARATOR}{int(bool(self._nopress_current))}{database.STR_SEPARATOR}{int(bool(self._fast))}{database.STR_SEPARATOR}{self._scoring}{database.STR_SEPARATOR}{self._deadline}{database.STR_SEPARATOR}{self._deadline_hour}{database.STR_SEPARATOR}{int(bool(self._deadline_sync))}{database.STR_SEPARATOR}{self._grace_duration}{database.STR_SEPARATOR}{self._speed_moves}{database.STR_SEPARATOR}{int(bool(self._cd_possible_moves))}{database.STR_SEPARATOR}{self._speed_retreats}{database.STR_SEPARATOR}{int(bool(self._cd_possible_retreats))}{database.STR_SEPARATOR}{self._speed_adjustments}{database.STR_SEPARATOR}{int(bool(self._cd_possible_builds))}{database.STR_SEPARATOR}{int(bool(self._used_for_elo))}{database.STR_SEPARATOR}{int(bool(self._play_weekend))}{database.STR_SEPARATOR}{int(bool(self._manual))}{database.STR_SEPARATOR}{self._access_restriction_reliability}{database.STR_SEPARATOR}{self._access_restriction_regularity}{database.STR_SEPARATOR}{self._access_restriction_performance}{database.STR_SEPARATOR}{self._current_advancement}{database.STR_SEPARATOR}{self._nb_max_cycles_to_play}{database.STR_SEPARATOR}{int(bool(self._fog))}{database.STR_SEPARATOR}{self._current_state}{database.STR_SEPARATOR}{self._game_type}{database.STR_SEPARATOR}{self._force_wait}{database.STR_SEPARATOR}{int(bool(self._end_voted))}").encode('ascii')
 
 
 def convert_game(buffer: bytes) -> Game:
@@ -901,7 +901,7 @@ def convert_game(buffer: bytes) -> Game:
     description = database.uncompress_text(compressed_description)
 
     variant = tab[3].decode()
-    archive = bool(int(tab[4].decode()))
+    exposition = bool(int(tab[4].decode()))
     anonymous = bool(int(tab[5].decode()))
     finished = bool(int(tab[6].decode()))
     soloed = bool(int(tab[7].decode()))
@@ -933,7 +933,7 @@ def convert_game(buffer: bytes) -> Game:
     force_wait = int(tab[33].decode())
     end_voted = bool(int(tab[34].decode()))
 
-    game = Game(identifier, name, description, variant, fog, archive, anonymous, finished, soloed, nomessage_current, nopress_current, fast, scoring, deadline, deadline_hour, deadline_sync, grace_duration, speed_moves, cd_possible_moves, speed_retreats, cd_possible_retreats, speed_adjustments, cd_possible_builds, used_for_elo, play_weekend, manual, access_restriction_reliability, access_restriction_regularity, access_restriction_performance, current_advancement, nb_max_cycles_to_play, current_state, game_type, force_wait, end_voted)
+    game = Game(identifier, name, description, variant, fog, exposition, anonymous, finished, soloed, nomessage_current, nopress_current, fast, scoring, deadline, deadline_hour, deadline_sync, grace_duration, speed_moves, cd_possible_moves, speed_retreats, cd_possible_retreats, speed_adjustments, cd_possible_builds, used_for_elo, play_weekend, manual, access_restriction_reliability, access_restriction_regularity, access_restriction_performance, current_advancement, nb_max_cycles_to_play, current_state, game_type, force_wait, end_voted)
     return game
 
 

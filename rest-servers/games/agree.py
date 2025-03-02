@@ -359,7 +359,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
         return False, False, f"ERROR : Failed to adjudicate {message} : {adjudication_report}"
 
-    # adjudication successful : backup for transition archive
+    # adjudication successful : backup for transition log
 
     # position for transition
 
@@ -631,8 +631,8 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
     # if incident created
     late = False
 
-    # there cannot be delays for archive games
-    if not game.archive:
+    # there cannot be delays for exposition games
+    if not game.exposition:
 
         # there cannot be delays before deadline of course
         if after_deadline:
@@ -675,7 +675,7 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
     definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
     agreed_now_list = [o[1] for o in definitives_list if o[2] == 1]
 
-    if not game.archive:
+    if not game.exposition:
 
         # check all submitted
         for role in needed_list:
@@ -780,7 +780,7 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
             return status, late, unsafe, missing, adjudicated, debug_message
 
     # update deadline
-    if not game.archive:
+    if not game.exposition:
         game.push_deadline(now)
         game.update_database(sql_executor)
         debug_messages.append("Deadline adjusted!")

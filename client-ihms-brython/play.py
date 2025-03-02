@@ -144,12 +144,12 @@ def load_option(_, item_name):
             # game must be ongoing
             if play_low.GAME_PARAMETERS_LOADED['current_state'] != 1:
                 continue
-            if play_low.GAME_PARAMETERS_LOADED['archive']:
-                # do not display menu order if archive and not master
+            if play_low.GAME_PARAMETERS_LOADED['exposition']:
+                # do not display menu order if exposition and not master
                 if not (play_low.ROLE_ID is not None and play_low.ROLE_ID == 0):
                     continue
             else:
-                # do not display menu order if not archive and not player
+                # do not display menu order if not exposition and not player
                 if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 1):
                     continue
 

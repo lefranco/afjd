@@ -624,7 +624,7 @@ def create_many_games():
     fieldset <= legend_game
 
     # list the games we have
-    game_list = sorted([g['name'] for g in games_dict.values() if not g['archive']], key=lambda n: n.upper())
+    game_list = sorted([g['name'] for g in games_dict.values() if not g['exposition']], key=lambda n: n.upper())
 
     input_game = html.SELECT(type="select-one", value="", Class='btn-inside')
     for game in game_list:
