@@ -607,30 +607,6 @@ def create_game(json_dict):
     fieldset <= input_play_weekend
     form <= fieldset
 
-    title_access = html.H4("Accès à la partie - ne peuvent plus être changés une fois la partie démarrée")
-    form <= title_access
-
-    fieldset = html.FIELDSET()
-    legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
-    fieldset <= legend_access_restriction_reliability
-    input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability if access_restriction_reliability is not None else "", Class='btn-inside')
-    fieldset <= input_access_restriction_reliability
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_access_restriction_regularity = html.LEGEND("restriction régularité", title="Sélectionne les joueurs sur leur régularité")
-    fieldset <= legend_access_restriction_regularity
-    input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity if access_restriction_regularity is not None else "", Class='btn-inside')
-    fieldset <= input_access_restriction_regularity
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_access_restriction_performance = html.LEGEND("restriction performance", title="Sélectionne les joueurs sur leur niveau de performance")
-    fieldset <= legend_access_restriction_performance
-    input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance if access_restriction_performance is not None else "", Class='btn-inside')
-    fieldset <= input_access_restriction_performance
-    form <= fieldset
-
     title_access = html.H4("Fin de la partie - ne peut plus être changé une fois la partie créée")
     form <= title_access
 
