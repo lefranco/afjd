@@ -524,7 +524,7 @@ def create_many_games():
                     alert("Un nom de partie est vide dans le fichier")
                     return
 
-                if not game_name.isidentifier():
+                if not (game_name.isidentifier() and game_name.isascii()):
                     alert(f"Le nom de partie '{game_name}' est incorrect pour le site")
                     return
 

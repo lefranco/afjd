@@ -742,7 +742,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/players - POST - creating new player pseudo=%s", pseudo)
 
-        if not pseudo.isidentifier():
+        if not (pseudo.isidentifier() and pseudo.isascii()):
             flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is not a valid pseudo")
 
         if len(pseudo) < LEN_PSEUDO_MIN:
@@ -2249,7 +2249,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         # additional filtering on name
         name = name.replace(' ', '_')
 
-        if not name.isidentifier():
+        if not (name.isidentifier() and name.isascii()):
             flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
 
         # check authentication from user server

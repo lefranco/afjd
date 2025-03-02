@@ -463,6 +463,7 @@ def main() -> None:
 
     # check game identifiers prefix
     assert args.game_names_prefix.isidentifier(), "Game prefix is incorrect, should look like an identifier"
+    assert args.game_names_prefix.isascii(), "Game prefix is incorrect, should be ascii"
 
     # make games (as many as players)
     size = math.floor(math.log10(NUMBER_GAMES)) + 1
@@ -619,6 +620,6 @@ if __name__ == '__main__':
         PS = pstats.Stats(PR)
         PS.strip_dirs()
         PS.sort_stats('time')
-        PS.print_stats() 
+        PS.print_stats()
 
     sys.exit(0)
