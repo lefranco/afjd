@@ -447,7 +447,7 @@ class TrainingIdentifierRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/trainings/<name> - GET - retrieving trainings json file %s", name)
 
-        if not name.isidentifier():
+        if not (name.isidentifier() and name.isascii()):
             flask_restful.abort(400, msg=f"Training {name} is incorrect as a name")
 
         # find data
@@ -471,7 +471,7 @@ class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/variants/<name> - GET - retrieving variant json file %s", name)
 
-        if not name.isidentifier():
+        if not (name.isidentifier() and name.isascii()):
             flask_restful.abort(400, msg=f"Variant {name} is incorrect as a name")
 
         # find data
@@ -1237,7 +1237,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        if not name.isidentifier():
+        if not (name.isidentifier() and name.isascii()):
             flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
 
         # cannot have a void scoring
@@ -7052,7 +7052,7 @@ class TournamentListRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        if not name.isidentifier():
+        if not (name.isidentifier() and name.isascii()):
             flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
 
         sql_executor = database.SqlExecutor()
