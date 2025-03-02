@@ -518,7 +518,7 @@ class DebriefGameRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/games/<name> - POST - debrief game name=%s", name)
+        mylogger.LOGGER.info("/debrief-games/<name> - POST - debrief game name=%s", name)
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1152,17 +1152,17 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
 CREATE_GAME_LOCK = threading.Lock()
 
 
-@API.resource('/games-in-state/<current_state>')
+@API.resource('/games-in-state/<min_current_state>/<max_current_state>')
 class GameStateListRessource(flask_restful.Resource):  # type: ignore
     """ GameStateListRessource """
 
-    def get(self, current_state: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def get(self, min_current_state: int, max_current_state: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get list of all games (dictionary identifier -> name)
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/games/<state> - GET - get getting all games names current_state=%s", current_state)
+        mylogger.LOGGER.info("/games/<min_current_state>/<max_current_state> - GET - get getting all games names min_current_state=%s max_current_state=%s", min_current_state, max_current_state)
 
         sql_executor = database.SqlExecutor()
 
@@ -1170,7 +1170,7 @@ class GameStateListRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed, 'end_voted': g.end_voted} for g in games_list if g.current_state == int(current_state)}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed, 'end_voted': g.end_voted} for g in games_list if int(min_current_state) <= g.current_state <= int(max_current_state)}
 
         return data, 200
 
@@ -1179,6 +1179,7 @@ class GameStateListRessource(flask_restful.Resource):  # type: ignore
 class GameListRessource(flask_restful.Resource):  # type: ignore
     """ GameListRessource """
 
+    # TODO REMOVE THIS CALL AT SOME POINT
     def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get list of all games (dictionary identifier -> name)
@@ -1464,19 +1465,19 @@ class ActivePlayersRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/allocations-games-in-state/<current_state>')
+@API.resource('/allocations-games-in-state/<min_state>/<max_state>')
 class AllocationStateListRessource(flask_restful.Resource):  # type: ignore
     """ AllocationStateListRessource """
 
     # an allocation is a game-role-pseudo relation where role is -1
 
-    def get(self, current_state: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def get(self, min_state: int, max_state: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get list of all allocations only games that are not anonymous (dictionary identifier -> (gm name, list of players names) only if game in some state)
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/allocations - GET - get getting all allocations in non anonymous games current_state=%s", current_state)
+        mylogger.LOGGER.info("/allocations - GET - get getting all allocations in non anonymous games min_state=%s max_state=%s", min_state, max_state)
 
         sql_executor = database.SqlExecutor()
         allocations_list = allocations.Allocation.inventory(sql_executor)
@@ -1484,7 +1485,7 @@ class AllocationStateListRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         # games that are in proper state
-        relevant_games = {g.identifier for g in games_list if g.current_state == int(current_state)}
+        relevant_games = {g.identifier for g in games_list if int(min_state) <= g.current_state <= int(max_state)}
 
         # games we can speak about the players
         allowed_games = {g.identifier for g in games_list if not g.anonymous}

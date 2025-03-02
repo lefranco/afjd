@@ -980,7 +980,7 @@ def all_missing_orders():
 
     state = 1
 
-    games_dict = common.get_games_data(state)
+    games_dict = common.get_games_data(1, 1)  # ongoing
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -991,7 +991,7 @@ def all_missing_orders():
         return
 
     # get the link (allocations) of players
-    allocations_data = common.get_allocations_data(state)
+    allocations_data = common.get_allocations_data(state, state)  # expected state
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
@@ -1218,7 +1218,7 @@ def current_worst_annoyers():
         alert("Pas le bon compte (pas modo)")
         return
 
-    games_dict = common.get_games_data(1)
+    games_dict = common.get_games_data(1, 1)  # ongoing
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1229,7 +1229,7 @@ def current_worst_annoyers():
         return
 
     # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
+    allocations_data = common.get_allocations_data(1, 1)  # ongoing
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
@@ -1369,7 +1369,7 @@ def show_player_games(pseudo_player, player_games_dict):
         alert("Pas le bon compte (pas modo)")
         return
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1380,7 +1380,7 @@ def show_player_games(pseudo_player, player_games_dict):
         return
 
     # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
+    allocations_data = common.get_allocations_data(0, 3)  # all games
     if not allocations_data:
         alert("Erreur chargement allocations")
         return

@@ -255,7 +255,7 @@ def get_players_data():
     return dict(players_dict)
 
 
-def get_games_data(current_state=None):
+def get_games_data(min_current_state: int, max_current_state: int):
     """ get_games_data : returns None if problem """
 
     games_dict = None
@@ -278,10 +278,7 @@ def get_games_data(current_state=None):
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
 
-    if current_state is not None:
-        url = f"{host}:{port}/games-in-state/{current_state}"
-    else:
-        url = f"{host}:{port}/games"
+    url = f"{host}:{port}/games-in-state/{min_current_state}/{max_current_state}"
 
     # getting games list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
@@ -622,7 +619,7 @@ def read_image(variant_name_loaded, interface_chosen):
     return image
 
 
-def get_allocations_data(current_state=None):
+def get_allocations_data(min_state: int, max_state: int):
     """ get_allocations_data : returns empty dict on error """
 
     allocation_data = {}
@@ -646,10 +643,7 @@ def get_allocations_data(current_state=None):
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
 
-    if current_state is not None:
-        url = f"{host}:{port}/allocations-games-in-state/{current_state}"
-    else:
-        url = f"{host}:{port}/allocations"
+    url = f"{host}:{port}/allocations-games-in-state/{min_state}/{max_state}"
 
     # getting allocations : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)

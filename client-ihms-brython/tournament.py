@@ -140,7 +140,7 @@ def show_games():
 
     games_in = TOURNAMENT_DICT['games']
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -154,7 +154,7 @@ def show_games():
         return
 
     # get the link (allocations) of game masters
-    allocations_data = common.get_allocations_data()
+    allocations_data = common.get_allocations_data(0, 3)  # all games
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
@@ -559,7 +559,7 @@ def show_informations():
 
     MY_SUB_PANEL <= players_table
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1243,7 +1243,7 @@ def handle_tournament():
         return
 
     # get the games
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1408,7 +1408,7 @@ def show_tournaments_data():
         render(PANEL_MIDDLE)
 
     # get the games
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1606,7 +1606,7 @@ def render(panel_middle):
         tournament_id = tournament_name2id[tournament_name]
 
         # games
-        games_dict = common.get_games_data()
+        games_dict = common.get_games_data(0, 3)  # all games
         if games_dict is None:
             alert("Erreur chargement dictionnaire parties")
             return

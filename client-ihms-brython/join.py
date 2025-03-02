@@ -187,37 +187,21 @@ def recruiting_games():
 
     recruiting_games_dict = {tr[0]: {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
 
-    state = 0
-
-    games_dict = common.get_games_data(state)
+    games_dict = common.get_games_data(0, 1)  # awaiting or ongoing
     if games_dict is None:
-        alert(f"Erreur chargement dictionnaire parties etat {state}")
+        alert("Erreur chargement dictionnaire parties")
         return
     games_dict = dict(games_dict)
 
     # get the link (allocations) of game masters
-    allocations_data = common.get_allocations_data(state)
+    allocations_data = common.get_allocations_data(0, 1)  # awaiting or ongoing
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
+
     masters_alloc = allocations_data['game_masters_dict']
-
-    state = 1
-
-    games_dict2 = common.get_games_data(state)
-    if games_dict2 is None:
-        alert(f"Erreur chargement dictionnaire parties etat {state}")
-        return
-    games_dict2 = dict(games_dict2)
-    games_dict.update(games_dict2)
-
-    allocations_data2 = common.get_allocations_data(state)
-    if not allocations_data2:
-        alert("Erreur chargement allocations")
-        return
-    masters_alloc2 = allocations_data2['game_masters_dict']
     # merge 'masters_alloc2' into 'masters_alloc'
-    for master, his_games in masters_alloc2.items():
+    for master, his_games in masters_alloc.items():
         if master in masters_alloc:
             masters_alloc[master] += his_games
         else:
