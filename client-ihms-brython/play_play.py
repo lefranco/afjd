@@ -1556,44 +1556,6 @@ def submit_orders():
     display_left <= rating_colours_window
     display_left <= html.BR()
 
-    # all reports until last moves
-    advancement_selected = play_low.GAME_PARAMETERS_LOADED['current_advancement']
-
-    # exception for start build games
-    min_possible_advancement = 4 if play_low.VARIANT_DATA.start_build else 0
-
-    while True:
-
-        # one backwards
-        advancement_selected -= 1
-
-        # out of scope : done
-        if advancement_selected < min_possible_advancement:
-            break
-
-        fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
-        if fog_of_war:
-            transition_loaded = play_low.game_transition_fog_of_war_reload(play_low.GAME_ID, advancement_selected, play_low.ROLE_ID)
-        else:
-            transition_loaded = play_low.game_transition_reload(play_low.GAME_ID, advancement_selected)
-        if not transition_loaded:
-            break
-
-        time_stamp = transition_loaded['time_stamp']
-        report_loaded = transition_loaded['report_txt']
-
-        fake_report_loaded = {'time_stamp': time_stamp, 'content': report_loaded}
-        report_window = common.make_report_window(fake_report_loaded)
-
-        game_status = play_low.get_game_status_histo(play_low.VARIANT_DATA, advancement_selected)
-        display_left <= game_status
-        display_left <= report_window
-        display_left <= html.BR()
-
-        # just displayed last moves : done
-        if advancement_selected % 5 in [0, 2]:
-            break
-
     # right side
 
     buttons_right = html.DIV(id='buttons_right')
