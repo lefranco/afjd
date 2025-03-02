@@ -409,7 +409,7 @@ def show_rating_performance(classic, role_id):
     # pseudo from number
     num2pseudo = {v: k for k, v in players_dict.items()}
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(3, 3)  # archived
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -778,7 +778,7 @@ def show_players_masters_data():
     admin_pseudo = priviledged['admin']
 
     # get the games
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -791,14 +791,14 @@ def show_players_masters_data():
         return
 
     # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
+    allocations_data = common.get_allocations_data(0, 3)  # all games
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
 
     # get the link (allocations) of players for ongoing games
     state = 1
-    allocations_data_ongoing = common.get_allocations_data(state)
+    allocations_data_ongoing = common.get_allocations_data(state, state)  # expected state
     if not allocations_data_ongoing:
         alert("Erreur chargement allocations en cours")
         return

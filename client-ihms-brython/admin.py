@@ -1632,7 +1632,7 @@ def unallocated():
         alert("Pas le bon compte (pas admin)")
         return
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return

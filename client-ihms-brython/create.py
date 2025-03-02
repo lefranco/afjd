@@ -593,7 +593,7 @@ def create_many_games():
 
     model_game_name = storage['GAME']
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(3, 3)  # distinguished
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -624,7 +624,7 @@ def create_many_games():
     fieldset <= legend_game
 
     # list the games we have
-    game_list = sorted([g['name'] for g in games_dict.values() if g['current_state'] == 3 and not g['archive']], key=lambda n: n.upper())
+    game_list = sorted([g['name'] for g in games_dict.values() if not g['archive']], key=lambda n: n.upper())
 
     input_game = html.SELECT(type="select-one", value="", Class='btn-inside')
     for game in game_list:
@@ -717,7 +717,7 @@ def tournament_result():
     MY_SUB_PANEL <= f"Tournoi concerné : {tournament_name}"
     MY_SUB_PANEL <= html.BR()
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -934,7 +934,7 @@ def show_game_quitters():
     MY_SUB_PANEL <= html.H3("Les joueurs qui ont abandonné une partie")
 
     # get the games
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return

@@ -334,7 +334,7 @@ def show_com_orders_usages():
 
     MY_SUB_PANEL <= html.H3("Toutes les utilisations des ordres de com'")
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(1, 3)  # ongoing, archived or distinguished
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return

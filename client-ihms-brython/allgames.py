@@ -401,8 +401,7 @@ def create_game(json_dict):
         alert("Il faut se connecter au préalable")
         return
 
-    state = 0
-    games_dict = common.get_games_data(state)
+    games_dict = common.get_games_data(0, 0)  # awaiting
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1352,7 +1351,7 @@ def select_game(selected_variant, selected_state):
         MY_SUB_PANEL.clear()
         select_game(selected_variant, selected_state)
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1530,7 +1529,7 @@ def all_games(state_name):
 
     state = config.STATE_CODE_TABLE[state_name]
 
-    games_dict = common.get_games_data(state)
+    games_dict = common.get_games_data(state, state)  # in the required state
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1543,7 +1542,7 @@ def all_games(state_name):
         return
 
     # get the link (allocations) of game masters
-    allocations_data = common.get_allocations_data(state)
+    allocations_data = common.get_allocations_data(state, state)  # expected state
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
@@ -1919,7 +1918,7 @@ def show_no_game_masters_data():
         pseudo = storage['PSEUDO']
 
     # get the games
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1931,7 +1930,7 @@ def show_no_game_masters_data():
         return
 
     # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
+    allocations_data = common.get_allocations_data(0, 3)  # all games
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
@@ -1987,7 +1986,7 @@ def show_no_tournaments_data():
     """ show_no_tournaments_data """
 
     # get the games
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return

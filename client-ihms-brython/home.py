@@ -33,15 +33,15 @@ OPTIONS = {
 
 
 # for safety
-for number in range(1, 4):
-    if f'ANNOUNCEMENT_{number}_ADMIN' not in storage:
-        storage[f'ANNOUNCEMENT_{number}_ADMIN'] = ""
-    if f'ANNOUNCEMENT_{number}_DISPLAYED_ADMIN' not in storage:
-        storage[f'ANNOUNCEMENT_{number}_DISPLAYED_ADMIN'] = 'no'
-    if f'ANNOUNCEMENT_{number}_MODO' not in storage:
-        storage[f'ANNOUNCEMENT_{number}_MODO'] = ""
-    if f'ANNOUNCEMENT_{number}_DISPLAYED_MODO' not in storage:
-        storage[f'ANNOUNCEMENT_{number}_DISPLAYED_MODO'] = 'no'
+for num in range(1, 4):
+    if f'ANNOUNCEMENT_{num}_ADMIN' not in storage:
+        storage[f'ANNOUNCEMENT_{num}_ADMIN'] = ""
+    if f'ANNOUNCEMENT_{num}_DISPLAYED_ADMIN' not in storage:
+        storage[f'ANNOUNCEMENT_{num}_DISPLAYED_ADMIN'] = 'no'
+    if f'ANNOUNCEMENT_{num}_MODO' not in storage:
+        storage[f'ANNOUNCEMENT_{num}_MODO'] = ""
+    if f'ANNOUNCEMENT_{num}_DISPLAYED_MODO' not in storage:
+        storage[f'ANNOUNCEMENT_{num}_DISPLAYED_MODO'] = 'no'
 
 
 ARRIVAL = None
@@ -328,7 +328,7 @@ def show_news():
         PANEL_MIDDLE.clear()
         training.render(PANEL_MIDDLE)
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(0, 1)  # awaiting or ongoing
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     # No need for a title

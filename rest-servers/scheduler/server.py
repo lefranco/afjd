@@ -220,12 +220,10 @@ def check_all_games(jwt_token: str, now: float) -> None:
 
     mylogger.LOGGER.info("Trying adjudication of all games with reference time=%d...", now)
 
-    state_expected = 1
-
     # get all games
     host = lowdata.SERVER_CONFIG['GAME']['HOST']
     port = lowdata.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games-in-state/{state_expected}"
+    url = f"{host}:{port}/games-in-state/1/1"  # ongoing
     req_result = SESSION.get(url)
     if req_result.status_code != 200:
         if 'msg' in req_result.json():
