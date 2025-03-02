@@ -1456,6 +1456,8 @@ def show_player_games(pseudo_player, player_games_dict):
         # create a table to pass information about selected game
         game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
+        games_list = []
+
         for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0]), reverse=True):
 
             data['master'] = None
@@ -1465,12 +1467,15 @@ def show_player_games(pseudo_player, player_games_dict):
                 continue
             game_id = int(game_id_str)
 
+            # add to game list
+            game_name = data['name']
+            games_list.append(game_name)
+
             row = html.TR()
             for field in fields:
 
                 value = data[field]
                 colour = None
-                game_name = data['name']
 
                 if field == 'current_state':
                     if value == 1:
@@ -1583,6 +1588,8 @@ def show_player_games(pseudo_player, player_games_dict):
         MY_SUB_PANEL <= games_table
         MY_SUB_PANEL <= html.BR()
 
+        # store the list of games
+        storage['GAME_LIST'] = ' '.join(games_list)
 
 def show_players_game():
     """ show_player_games """

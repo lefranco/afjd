@@ -1015,8 +1015,6 @@ def show_informations():
     count = {}
 
     for role_id, advancement, player_id, duration, _ in game_incidents:
-        if player_id is None:
-            continue
         if role_id not in count:
             count[role_id] = []
         count[role_id].append(duration)
@@ -1025,7 +1023,7 @@ def show_informations():
 
     # header
     thead = html.THEAD()
-    for field in ['rang', 'role', 'retards', 'nombre']:
+    for field in ['rang', 'role', 'retards', 'nombre', 'ratio']:
         col = html.TD(field)
         thead <= col
     recap_table <= thead
@@ -1055,6 +1053,11 @@ def show_informations():
         col = html.TD(f"{incidents_number}")
         row <= col
 
+        # ratio
+        ratio = int((incidents_number / play_low.GAME_PARAMETERS_LOADED['current_advancement']) * 100)
+        col = html.TD(f"{ratio} %")
+        row <= col
+
         recap_table <= row
         rank += 1
 
@@ -1066,7 +1069,7 @@ def show_informations():
         play_low.MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) a réalisé la transition 'pas d'accord pour le résolution' -> 'd'accord pour résoudre' après la date limite", Class='note')
         play_low.MY_SUB_PANEL <= html.BR()
 
-        play_low.MY_SUB_PANEL <= html.DIV("Les retards des joueurs qui depuis ont été remplacés apparaissent (ces retards ne sont pas comptés dans le récapitulatif)", Class='note')
+        play_low.MY_SUB_PANEL <= html.DIV("Les retards des joueurs qui depuis ont été remplacés apparaissent (ces retards étant comptés dans le récapitulatif, ils peuvent laisser penser à plus de retards que réellement)", Class='note')
         play_low.MY_SUB_PANEL <= html.BR()
 
         play_low.MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
