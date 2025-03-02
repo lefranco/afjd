@@ -373,22 +373,24 @@ def render(panel_middle):
     if COUNTDOWN_TIMER is None:
         COUNTDOWN_TIMER = timer.set_interval(countdown, 1000)
 
-    if play_low.ROLE_ID is not None:
+    if ARRIVAL == 'position':
+        # set page for position
+        ITEM_NAME_SELECTED = 'Consulter'
+
+    elif ARRIVAL == 'informations':
+        # set page for messages
+        ITEM_NAME_SELECTED = 'Informations'
+
+    elif play_low.ROLE_ID is not None:
 
         # we have a player here
 
-        if ARRIVAL == 'position':
-            # set page for position
-            ITEM_NAME_SELECTED = 'Consulter'
-        elif ARRIVAL == 'messages':
+        if ARRIVAL == 'messages':
             # set page for messages
             ITEM_NAME_SELECTED = 'Messagerie'
         elif ARRIVAL == 'declarations':
             # set page for press
             ITEM_NAME_SELECTED = 'Presse'
-        elif ARRIVAL == 'informations':
-            # set page for messages
-            ITEM_NAME_SELECTED = 'Informations'
         else:
             if play_low.ROLE_ID == 0:
                 # game master
