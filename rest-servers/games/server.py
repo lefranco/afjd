@@ -2534,9 +2534,9 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
             player_id = game.get_role(sql_executor, int(role_id))
 
             # must be player or master
-            if user_id != player_id:
+            if user_id != player_id and user_id != ADDRESS_ADMIN:
                 del sql_executor
-                flask_restful.abort(403, msg="You do not seem to be the player or game master who corresponds to this role")
+                flask_restful.abort(403, msg="You do not seem to be the player or game master who corresponds to this role (or admin)")
 
         # get ownerships
         ownership_dict: typing.Dict[str, int] = {}
