@@ -7763,11 +7763,11 @@ class CurrentWorstAnnoyersRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/extract_games_data/<elo>')
+@API.resource('/extract_games_data/<type_>')
 class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
     """ ExtractGamesDataRessource """
 
-    def get(self, elo: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def get(self, type_: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Get information for ELO/reliability/regularity of players etc...
         EXPOSED
@@ -7775,13 +7775,14 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/extract_games_data - GET - getting ELO/reliability/regularity data ")
 
-        elo_only = bool(int(elo))
+        now = time.time()
+        one_year_ago = now - 365.2 * 24. * 3600.
 
         sql_executor = database.SqlExecutor()
 
         # concerned_games
         games_list = games.Game.inventory(sql_executor)
-        if elo_only:
+        if type_ == 'elo':
             concerned_games_list = [g.identifier for g in games_list if g.current_state == 2 and g.used_for_elo == 1]
         else:
             concerned_games_list = [g.identifier for g in games_list if g.current_state == 2]
@@ -7820,7 +7821,6 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
 
             # get current_advancement
             last_advancement_played = game.current_advancement - 1
-            game_data['number_advancement_played'] = game.current_advancement
 
             # get end date
             end_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
@@ -7830,13 +7830,25 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
                 # this game was not played
                 continue
 
+            if type_ == 'reliability':
+                # take only those played less than a year ago because delays older than a year ago were automatically removed
+                if end_transition.time_stamp < one_year_ago:
+                    game_data['number_advancement_played'] = 0
+                elif start_transition.time_stamp > one_year_ago:
+                    game_data['number_advancement_played'] = game.current_advancement
+                else:
+                    nb_played = len([t for t in transitions.Transition.list_by_game_id(sql_executor, game_id) if t.time_stamp > one_year_ago])
+                    game_data['number_advancement_played'] = nb_played
+            else:
+                game_data['number_advancement_played'] = game.current_advancement
+
             assert end_transition is not None
             game_data['end_time_stamp'] = end_transition.time_stamp
 
             # get scoring, classic and name
             game_name = game.name
             game_data['scoring'] = game.scoring
-            game_data['classic'] = not bool(game.game_type)
+            game_data['classic'] = not bool(game.game_type)  # only game_type == 0 ("nego") is "classic"
 
             # get ownerships
             game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)

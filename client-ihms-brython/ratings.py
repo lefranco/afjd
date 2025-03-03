@@ -437,16 +437,19 @@ def show_rating_reliability():
         for player_id, number_delays, number_dropouts, number_advancements in complete_rating_list:
 
             # verdict - mostly a ratio
+
             # avoid division by zero
             if number_advancements == 0:
                 number_advancements = 1
-            # ratio
-            reliability = round(100 * (number_advancements - number_delays) / number_advancements, 3)
+            # usually retreats ans builds are not played
+            number_advancements_used = (number_advancements / 5) * 3
+            # ratio delays/ advancements
+            reliability = round(100 * (number_advancements_used - number_delays) / number_advancements_used, 3)
             # bonus for no delays
             if number_delays == 0:
                 reliability += number_advancements / 1000
             # dropouts
-            reliability /= 2 ** number_dropouts
+            reliability /= (2 ** number_dropouts)
 
             rating = (player_id, reliability, number_delays, number_dropouts, number_advancements)
             rating_list.append(rating)
@@ -544,7 +547,16 @@ def show_rating_reliability():
 
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par fiabilité")
-        MY_SUB_PANEL <= html.DIV("Ce classement est un ratio du nombre de tours joués moins le nombre de retards par rapport au nombre de tours joués. Les joueurs sans retard sont bonifiés du millième du nombre de tours joués. Chaque abandon divise par deux la fiabilité. Seuls les joueurs présents à la fin de la partie ont joué la partie. Un joueur qui n'a joué aucune partie (présent parce qu'il a tout de même un retard ou un abandon) reçoit un tour joué.", Class='important')
+        explanations = """
+            Ce classement est un ratio du nombre de tours joués moins le nombre de retards par rapport au nombre de tours joués.<br> 
+            Les joueurs sans retard sont bonifiés du millième du nombre de tours joués.<br> 
+            Chaque abandon divise par deux la fiabilité.<br> 
+            Seuls les joueurs présents à la fin de la partie ont joué la partie.<br> 
+            Un joueur qui n'a joué aucune partie (présent parce qu'il a tout de même un retard ou un abandon) reçoit un tour joué.<br> 
+            Seuls les tours joués lors de la dernière année en temps réel depuis l'instant présent sont pris en compte.<br> 
+            Pour le calcul, on considère qu'il y a 3 tours joués par année dans une partie (et non 5 puisque souvent les retraites ne sont pas jouées)
+        """
+        MY_SUB_PANEL <= html.DIV(explanations, Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
