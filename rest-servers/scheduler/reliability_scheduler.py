@@ -161,7 +161,7 @@ def run(jwt_token: str) -> None:
 
     host = lowdata.SERVER_CONFIG['GAME']['HOST']
     port = lowdata.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/extract_games_data/0"
+    url = f"{host}:{port}/extract_games_data/reliability"
     req_result = SESSION.get(url)
     if req_result.status_code != 200:
         if 'msg' in req_result.json():
