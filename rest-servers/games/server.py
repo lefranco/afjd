@@ -7833,7 +7833,7 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
             if type_ == 'reliability':
                 # take only those played less than a year ago because delays older than a year ago were automatically removed
                 if end_transition.time_stamp < one_year_ago:
-                    game_data['number_advancement_played'] = 0
+                    continue
                 elif start_transition.time_stamp > one_year_ago:
                     game_data['number_advancement_played'] = game.current_advancement
                 else:
