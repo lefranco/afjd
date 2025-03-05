@@ -438,11 +438,11 @@ def show_rating_reliability():
 
             # verdict - mostly a ratio
 
-            # avoid division by zero
-            if number_advancements == 0:
-                number_advancements = 1
             # usually retreats ans builds are not played
             number_advancements_used = (number_advancements / 5) * 3
+            # avoid division by zero
+            if number_advancements_used == 0:
+                number_advancements_used = 1
             # ratio delays/ advancements
             reliability = round(100 * (number_advancements_used - number_delays) / number_advancements_used, 3)
             # bonus for no delays
