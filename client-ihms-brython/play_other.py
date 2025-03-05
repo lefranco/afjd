@@ -1059,6 +1059,9 @@ def show_informations():
 
         # ratio
         nb_played = (play_low.GAME_PARAMETERS_LOADED['current_advancement'] / 5) * 3
+        # avoid division by zero
+        if nb_played == 0:
+            nb_played = 1
         ratio = int((incidents_number / nb_played) * 100)
         col = html.TD(f"{ratio} %")
         row <= col
