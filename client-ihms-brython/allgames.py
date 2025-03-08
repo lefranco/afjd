@@ -879,46 +879,6 @@ def rectify_parameters_game():
         MY_SUB_PANEL.clear()
         rectify_parameters_game()
 
-    def change_access_parameters_game_callback(ev):  # pylint: disable=invalid-name
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la modification du paramètre d'accès à la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la modification du paramètre d'accès à la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Les paramètres d'accès ont été modifiés : {messages}")
-
-        ev.preventDefault()
-
-        access_restriction_reliability = input_access_restriction_reliability.value
-        access_restriction_regularity = input_access_restriction_regularity.value
-        access_restriction_performance = input_access_restriction_performance.value
-
-        json_dict = {
-            'name': game,
-            'access_restriction_reliability': access_restriction_reliability,
-            'access_restriction_regularity': access_restriction_regularity,
-            'access_restriction_performance': access_restriction_performance,
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # changing game access parameters : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        rectify_parameters_game()
-
     def change_pace_parameters_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -1118,43 +1078,6 @@ def rectify_parameters_game():
     input_change_scoring_game = html.INPUT(type="submit", value="Changer le scorage de la partie", Class='btn-inside')
     input_change_scoring_game.bind("click", change_scoring_game_callback)
     form <= input_change_scoring_game
-
-    MY_SUB_PANEL <= form
-
-    MY_SUB_PANEL <= html.HR()
-    MY_SUB_PANEL <= html.H4("Paramètres d'accès")
-
-    form = html.FORM()
-
-    form <= information_about_input()
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
-    fieldset <= legend_access_restriction_reliability
-    input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability_loaded, Class='btn-inside')
-    fieldset <= input_access_restriction_reliability
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_access_restriction_regularity = html.LEGEND("restriction régularité", title="Sélectionne les joueurs sur leur régularité")
-    fieldset <= legend_access_restriction_regularity
-    input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity_loaded, Class='btn-inside')
-    fieldset <= input_access_restriction_regularity
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_access_restriction_performance = html.LEGEND("restriction performance", title="Sélectionne les joueurs sur leur niveau de performance")
-    fieldset <= legend_access_restriction_performance
-    input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance_loaded, Class='btn-inside')
-    fieldset <= input_access_restriction_performance
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_change_access_game = html.INPUT(type="submit", value="Changer les paramètres d'accès à la partie", Class='btn-inside')
-    input_change_access_game.bind("click", change_access_parameters_game_callback)
-    form <= input_change_access_game
 
     MY_SUB_PANEL <= form
 
