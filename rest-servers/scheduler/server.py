@@ -29,6 +29,7 @@ import mapping
 import elo_scheduler
 import regularity_scheduler
 import reliability_scheduler
+import archiver_scheduler
 import forgiver_scheduler
 
 SESSION = requests.Session()
@@ -350,6 +351,14 @@ def acting_threaded_procedure() -> None:
             hour_now = (int(timestamp_now) // 3600) % 24
 
             if hour_now == 0:
+                mylogger.LOGGER.info("Scolder scheduler...")
+                try:
+                    pass # TODO
+                except:  # noqa: E722 pylint: disable=bare-except
+                    mylogger.LOGGER.error("Exception occured with Scolder, stack is below")
+                    mylogger.LOGGER.error("%s", traceback.format_exc())
+
+            if hour_now == 1:
                 mylogger.LOGGER.info("ELO Scheduler...")
                 try:
                     elo_scheduler.run(jwt_token)
@@ -357,7 +366,7 @@ def acting_threaded_procedure() -> None:
                     mylogger.LOGGER.error("Exception occured with ELO, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
-            if hour_now == 1:
+            if hour_now == 2:
                 mylogger.LOGGER.info("Reliability Scheduler...")
                 try:
                     reliability_scheduler.run(jwt_token)
@@ -365,7 +374,7 @@ def acting_threaded_procedure() -> None:
                     mylogger.LOGGER.error("Exception occured with Reliability, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
-            if hour_now == 2:
+            if hour_now == 3:
                 mylogger.LOGGER.info("Regularity Scheduler...")
                 try:
                     regularity_scheduler.run(jwt_token)
@@ -373,12 +382,28 @@ def acting_threaded_procedure() -> None:
                     mylogger.LOGGER.error("Exception occured with Regularity, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
-            if hour_now == 3:
+            if hour_now == 4:
+                mylogger.LOGGER.info("Game archiver Scheduler...")
+                try:
+                    archiver_scheduler.run(jwt_token)
+                except:  # noqa: E722 pylint: disable=bare-except
+                    mylogger.LOGGER.error("Exception occured with Archiver, stack is below")
+                    mylogger.LOGGER.error("%s", traceback.format_exc())
+
+            if hour_now == 5:
                 mylogger.LOGGER.info("Forgiver Scheduler...")
                 try:
                     forgiver_scheduler.run(jwt_token)
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Forgiver, stack is below")
+                    mylogger.LOGGER.error("%s", traceback.format_exc())
+
+            if hour_now == 12:
+                mylogger.LOGGER.info("ELO Warner scheduler...")
+                try:
+                    pass # TODO
+                except:  # noqa: E722 pylint: disable=bare-except
+                    mylogger.LOGGER.error("Exception occured with Warner, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             # renew token at faster every hour at slower every day

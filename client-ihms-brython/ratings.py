@@ -548,12 +548,12 @@ def show_rating_reliability():
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par fiabilité")
         explanations = """
-            Ce classement est un ratio du nombre de tours joués moins le nombre de retards par rapport au nombre de tours joués.<br> 
-            Les joueurs sans retard sont bonifiés du millième du nombre de tours joués.<br> 
-            Chaque abandon divise par deux la fiabilité.<br> 
-            Seuls les joueurs présents à la fin de la partie ont joué la partie.<br> 
-            Un joueur qui n'a joué aucune partie (présent parce qu'il a tout de même un retard ou un abandon) reçoit un tour joué.<br> 
-            Seuls les tours joués lors de la dernière année en temps réel depuis l'instant présent sont pris en compte.<br> 
+            Ce classement est un ratio du nombre de tours joués moins le nombre de retards par rapport au nombre de tours joués.<br>
+            Les joueurs sans retard sont bonifiés du millième du nombre de tours joués.<br>
+            Chaque abandon divise par deux la fiabilité.<br>
+            Seuls les joueurs présents à la fin de la partie ont joué la partie.<br>
+            Un joueur qui n'a joué aucune partie (présent parce qu'il a tout de même un retard ou un abandon) reçoit un tour joué.<br>
+            Seuls les tours joués lors de la dernière année en temps réel depuis l'instant présent sont pris en compte.<br>
             Pour le calcul, on considère qu'il y a 3 tours joués par année dans une partie (et non 5 puisque souvent les retraites ne sont pas jouées)
         """
         MY_SUB_PANEL <= html.DIV(explanations, Class='important')

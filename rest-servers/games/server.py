@@ -807,7 +807,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     variant_data = variants.Variant.get_by_name(variant_name)
                     assert variant_data is not None
 
-                    subject = f"La partie {game.name} a été archivée !"
+                    subject = f"La partie {game.name} a été archivée par l'arbitre !"
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
                     addressees = []
@@ -2534,7 +2534,7 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
             player_id = game.get_role(sql_executor, int(role_id))
 
             # must be player or master
-            if user_id != player_id and user_id != ADDRESS_ADMIN:
+            if user_id not in [player_id, ADDRESS_ADMIN]:
                 del sql_executor
                 flask_restful.abort(403, msg="You do not seem to be the player or game master who corresponds to this role (or admin)")
 
@@ -3452,7 +3452,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 variant_data = variants.Variant.get_by_name(variant_name)
                 assert variant_data is not None
 
-                subject = f"La partie {game.name} a avancé (avec l'aide de l'automate)!"
+                subject = f"La partie {game.name} a avancé avec l'aide de l'automate!"
                 game_id = game.identifier
                 allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
                 addressees = []
@@ -3858,7 +3858,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     variant_data = variants.Variant.get_by_name(variant_name)
                     assert variant_data is not None
 
-                    subject = f"La partie {game.name} a avancé !"
+                    subject = f"La partie {game.name} a avancé sur soumission d'ordres d'un joueur !"
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)  # noqa: F821
                     addressees = []
@@ -7503,6 +7503,140 @@ class ClearOldDelaysRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/archive-finished-games')
+class ArchiveFinishedGamesRessource(flask_restful.Resource):  # type: ignore
+    """ ArchiveFinishedGamesRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        archive finished games
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/archive-finished-games - POST - archive finished games")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        if pseudo != COMMUTER_ACCOUNT:
+            flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to archiove old games")
+
+        sql_executor = database.SqlExecutor()
+        games_list = games.Game.inventory(sql_executor)
+
+        now = time.time()
+        one_week_ago = now - 7 * 24. * 3600.
+
+        for game in games_list:
+
+            # Only ongoing
+            if game.current_state != 1:  # ongoing
+                continue
+
+            # Only finished
+            if not (game.soloed or game.finished or game.end_voted):
+                continue
+
+            # Only normal games
+            if game.exposition or game.fast:
+                continue
+
+            # deadline must be passed
+            if not game.past_deadline():
+                continue
+
+            # declarations must be possible
+            if game.nopress_current:
+                continue
+
+            # ok so now let's really consider the game
+
+            game_id = game.identifier
+
+            last_advancement_played = game.current_advancement - 1
+
+            # get end date
+            end_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
+
+            # last transition must be passed of 7 days?
+            if end_transition:
+                if end_transition.time_stamp > one_week_ago:
+                    continue
+
+            # get last declaration date
+            last_declaration_date = declarations.Declaration.last_date_by_game_id(sql_executor, game_id)
+
+            # last declaration must be passed of 7 days
+            if last_declaration_date:
+                if last_declaration_date > one_week_ago:
+                    continue
+
+            # Now we archive the game
+
+            # Do it
+            game.load_json({'current_state': 2})
+            game.terminate()
+            game.update_database(sql_executor)
+
+            # Notify
+            variant_name = game.variant
+            variant_data = variants.Variant.get_by_name(variant_name)
+            assert variant_data is not None
+
+            subject = f"La partie {game.name} a été archivée par l'automate !"
+            game_id = game.identifier
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            addressees = []
+            for _, player_id, role_id in allocations_list:
+                # no mailing for fake player in disorder from variant
+                if role_id in map(int, variant_data['disorder'].keys()):
+                    continue
+                addressees.append(player_id)
+            body = "Bonjour !\n"
+            body += "\n"
+            body += "Vous ne pouvez plus jouer dans cette partie !\n"
+            body += "\n"
+            body += "Pour se rendre directement sur la partie :\n"
+            body += f"https://diplomania-gen.fr?game={game.name}"
+
+            json_dict = {
+                'addressees': " ".join([str(a) for a in addressees]),
+                'subject': subject,
+                'body': body,
+                'type': 'start_stop',
+            }
+
+            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/mail-players"
+            # for a rest API headers are presented differently
+            req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+            if req_result.status_code != 200:
+                print(f"ERROR from server  : {req_result.text}")
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                del sql_executor
+                flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+        sql_executor.commit()
+
+        del sql_executor
+
+        data = {'msg': "archive finished games done"}
+        return data, 200
+
+
 @API.resource('/tournament-allocations/<tournament_id>')
 class TournamentGameRessource(flask_restful.Resource):  # type: ignore
     """ TournamentGameRessource """
@@ -7825,6 +7959,8 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
             # get end date
             end_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
 
+            assert end_transition is not None
+
             # would lead to division by zero
             if end_transition == start_transition:
                 # this game was not played
@@ -7834,7 +7970,7 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
                 # take only those played less than a year ago because delays older than a year ago were automatically removed
                 if end_transition.time_stamp < one_year_ago:
                     continue
-                elif start_transition.time_stamp > one_year_ago:
+                if start_transition.time_stamp > one_year_ago:
                     game_data['number_advancement_played'] = game.current_advancement
                 else:
                     nb_played = len([t for t in transitions.Transition.list_by_game_id(sql_executor, game_id) if t.time_stamp > one_year_ago])

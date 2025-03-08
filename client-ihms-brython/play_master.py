@@ -1005,7 +1005,7 @@ def game_master():
         body += "\n"
         body += "Conseil : ne tardez pas trop à entrer vos ordres. En effet, certains arbitres remplacent immédiatement un joueur en retard au premier tour."
         body += "\n"
-        body += "Ce serait dommage de, par une petite négligence, perdre cette magnifique oppotunité de jouer une partie de Diplomacy !"
+        body += "Ce serait dommage de, par une petite négligence, perdre cette magnifique opportunité de jouer une partie de Diplomacy !"
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
         body += f"{config.SITE_ADDRESS}?game={play_low.GAME}"
@@ -1085,7 +1085,7 @@ def game_master():
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
-            'type': 'replacement',
+            'type': 'replace',
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
