@@ -2439,7 +2439,7 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
 
             # IMPORTANT : check deleted unit not as passive in order
 
-            # gvet the orders
+            # get the orders
             orders_list = orders.Order.list_by_game_id_role_num(sql_executor, int(game_id), int(role_id))
 
             # get the passives that need to be referenced
@@ -8784,6 +8784,116 @@ class ExtractComOrdersDataRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = games_dict
+        return data, 200
+
+
+@API.resource('/scold-late-players-game/<game_id>')
+class ScoldLatePlayersGameRessource(flask_restful.Resource):  # type: ignore
+    """ ScoldLatePlayersGameRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Scold late players of the game...
+        EXPOSED
+        """
+        mylogger.LOGGER.info("/scold-late-players-game/<game_id> - POST - scold late players of game %s", game_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        if pseudo != COMMUTER_ACCOUNT:
+            flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to scold late player")
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        assert game is not None
+
+        # find who is late
+
+        # check orders are required
+        actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+        needed_list = [o[1] for o in actives_list]
+        if not needed_list:
+            # This should not happen !
+            del sql_executor
+            flask_restful.abort(400, msg="There is no role that require orders")
+
+        # check orders are submitted
+        submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+        submitted_list = [o[1] for o in submissions_list]
+
+        missing_list = list(set(needed_list) - set(submitted_list))
+        if not missing_list:
+            # This should not happen !
+            del sql_executor
+            flask_restful.abort(400, msg="There is no missing order")
+
+        variant_name = game.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+
+        # build message
+        subject = f"Vous êtes en retard dans la partie {game.name} !"
+        game_id = game.identifier
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+        addressees = []
+        for _, player_id, role_id in allocations_list:
+            # no mailing for fake player in disorder from variant
+            if role_id in map(int, variant_data['disorder'].keys()):
+                continue
+            # only target thos whose orders are missing
+            if role_id not in missing_list:
+                continue
+            addressees.append(player_id)
+
+        body = "Bonjour !\n"
+        body += "\n"
+        body += "Vos ordres sont attendus dans cette partie !\n"
+        body += "\n"
+        body += "Conseil : allez très rapidement dans la partie pour valider vos ordres.\n"
+        body += "\n"
+        body += "Pour se rendre directement sur la partie :\n"
+        body += f"https://diplomania-gen.fr?game={game.name}"
+
+        json_dict = {
+            'addressees': " ".join([str(a) for a in addressees]),
+            'subject': subject,
+            'body': body,
+            'type': 'late',
+        }
+
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+        # for a rest API headers are presented differently
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+        del sql_executor
+
+        data = {'msg': "scolding done"}
         return data, 200
 
 
