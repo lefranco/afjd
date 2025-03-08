@@ -894,8 +894,7 @@ def display_personal_info():
                 return
 
             email = req_result['email']
-            telephone = req_result['telephone']
-            alert(f"Son courriel est '{email}' et son téléphone est '{telephone}'")
+            alert(f"Son courriel est '{email}'")
 
         ev.preventDefault()
 
@@ -1590,6 +1589,7 @@ def show_player_games(pseudo_player, player_games_dict):
 
         # store the list of games
         storage['GAME_LIST'] = ' '.join(games_list)
+
 
 def show_players_game():
     """ show_player_games """

@@ -16,8 +16,8 @@ Ce sont les données conservées dans la base de données liées à la création
 | pseudo | non | non | - | identification de l'utilisateur |
 | mot de passe | non | oui | version cryptée du mot de passe |  authentification de l'utilisateur |
 | courriel | non |oui | - | pour tous les courriels qui partent du site vers l'utilisateur rapport d'incident, notification de message privé, notification de création/suppression de compte,  notification de message/presse dans une partie, notiifcation de démarrtage/arrêt/complétude de partie, notification d'avancement de partie, notification pour les inscrits à un événement, récupération de mot de passe oublié, publipostage de l'association|
-| téléphone | non |oui | - | en théorie si besoin de contact pour des parties en direct par exemple - non utilisé en pratique|
-| notification message | oui |oui | - | permet d'éviter les courriels de notification de message/presse/avancement  dans les parties |
+| notification date limite | oui |oui | - | permet d'éviter les courriels de notification d'approche de la date limite dans les parties |
+| notification message | oui |oui | - | permet d'éviter les courriels de notification de message/presse/avancement dans les parties |
 | notification remplacement | oui |oui | - | permet de recevoir les courriels de possibilité de remplacement |
 | abonnement newsletter | oui |oui | - |  permet d'éviter de recevoir la newletter de l'association |
 | nom | non |oui | nom de famille | affiché sur le site et dans les sorties JSON de partie |

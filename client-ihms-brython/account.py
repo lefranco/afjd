@@ -153,7 +153,7 @@ def create_account(json_dict):
     password = json_dict['password'] if json_dict and 'password' in json_dict else None
     password_again = json_dict['password_again'] if json_dict and 'password_again' in json_dict else None
     email = json_dict['email'] if json_dict and 'email' in json_dict else None
-    telephone = json_dict['telephone'] if json_dict and 'telephone' in json_dict else None
+    notify_deadline = json_dict['notify_deadline'] if json_dict and 'notify_deadline' in json_dict else None
     notify_adjudication = json_dict['notify_adjudication'] if json_dict and 'notify_adjudication' in json_dict else None
     notify_message = json_dict['notify_message'] if json_dict and 'notify_message' in json_dict else None
     notify_replace = json_dict['notify_replace'] if json_dict and 'notify_replace' in json_dict else None
@@ -176,7 +176,7 @@ def create_account(json_dict):
         nonlocal password
         nonlocal password_again
         nonlocal email
-        nonlocal telephone
+        nonlocal notify_deadline
         nonlocal notify_adjudication
         nonlocal notify_message
         nonlocal notify_replace
@@ -210,7 +210,7 @@ def create_account(json_dict):
         password = input_password.value
         password_again = input_password_again.value
         email = input_email.value
-        telephone = input_telephone.value
+        notify_deadline = int(input_notify_deadline.checked)
         notify_adjudication = int(input_notify_adjudication.checked)
         notify_message = int(input_notify_message.checked)
         notify_replace = int(input_notify_replace.checked)
@@ -232,7 +232,7 @@ def create_account(json_dict):
             'password': password,
             'password_again': password_again,
             'email': email,
-            'telephone': telephone,
+            'notify_deadline': notify_deadline,
             'notify_adjudication': notify_adjudication,
             'notify_message': notify_message,
             'notify_replace': notify_replace,
@@ -351,10 +351,10 @@ def create_account(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_telephone = html.LEGEND("téléphone (privé et facultatif)", title="En cas d'urgence")
-    fieldset <= legend_telephone
-    input_telephone = html.INPUT(type="tel", value=telephone if telephone is not None else "", Class='btn-inside')
-    fieldset <= input_telephone
+    legend_notify_deadline = html.LEGEND("notification approche date limite parties", title="Envoyez moi un courriel à l'approche de la date limite de mes parties")
+    fieldset <= legend_notify_deadline
+    input_notify_deadline = html.INPUT(type="checkbox", checked=bool(notify_deadline) if notify_deadline is not None else True, Class='btn-inside')
+    fieldset <= input_notify_deadline
     form <= fieldset
 
     fieldset = html.FIELDSET()
@@ -463,7 +463,7 @@ def edit_account():
     # declare the values
     email_loaded = None
     email_confirmed_loaded = None
-    telephone_loaded = None
+    notify_deadline_loaded = None
     notify_adjudication_loaded = None
     notify_message_loaded = None
     notify_replace_loaded = None
@@ -489,7 +489,7 @@ def edit_account():
             nonlocal status
             nonlocal email_loaded
             nonlocal email_confirmed_loaded
-            nonlocal telephone_loaded
+            nonlocal notify_deadline_loaded
             nonlocal notify_adjudication_loaded
             nonlocal notify_message_loaded
             nonlocal notify_replace_loaded
@@ -518,7 +518,7 @@ def edit_account():
 
             email_loaded = req_result['email']
             email_confirmed_loaded = req_result['email_confirmed']
-            telephone_loaded = req_result['telephone']
+            notify_deadline_loaded = req_result['notify_deadline']
             notify_adjudication_loaded = req_result['notify_adjudication']
             notify_message_loaded = req_result['notify_message']
             notify_replace_loaded = req_result['notify_replace']
@@ -572,7 +572,7 @@ def edit_account():
             edit_account()
             return
 
-        telephone = input_telephone.value
+        notify_deadline = int(input_notify_deadline.checked)
         notify_adjudication = int(input_notify_adjudication.checked)
         notify_message = int(input_notify_message.checked)
         notify_replace = int(input_notify_replace.checked)
@@ -586,7 +586,7 @@ def edit_account():
         json_dict = {
             'pseudo': pseudo,
             'email': email,
-            'telephone': telephone,
+            'notify_deadline': notify_deadline,
             'notify_adjudication': notify_adjudication,
             'notify_message': notify_message,
             'notify_replace': notify_replace,
@@ -654,10 +654,10 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_telephone = html.LEGEND("téléphone (privé et facultatif)", title="En cas d'urgence")
-    fieldset <= legend_telephone
-    input_telephone = html.INPUT(type="tel", value=telephone_loaded, Class='btn-inside')
-    fieldset <= input_telephone
+    legend_notify_deadline = html.LEGEND("notification approche date limite parties", title="Envoyez moi un courriel à l'approche de la dete limite de mes parties")
+    fieldset <= legend_notify_deadline
+    input_notify_deadline = html.INPUT(type="checkbox", checked=notify_deadline_loaded, Class='btn-inside')
+    fieldset <= input_notify_deadline
     form <= fieldset
 
     fieldset = html.FIELDSET()

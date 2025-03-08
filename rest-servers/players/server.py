@@ -55,7 +55,7 @@ PLAYER_PARSER.add_argument('pseudo', type=str, required=True)
 PLAYER_PARSER.add_argument('password', type=str, required=False)
 PLAYER_PARSER.add_argument('email', type=str, required=False)
 PLAYER_PARSER.add_argument('email_confirmed', type=int, required=False)
-PLAYER_PARSER.add_argument('telephone', type=str, required=False)
+PLAYER_PARSER.add_argument('notify_deadline', type=int, required=False)
 PLAYER_PARSER.add_argument('notify_adjudication', type=int, required=False)
 PLAYER_PARSER.add_argument('notify_message', type=int, required=False)
 PLAYER_PARSER.add_argument('notify_replace', type=int, required=False)
@@ -721,7 +721,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/players - GET - get getting all players only public information (email and telephone are confidential)")
+        mylogger.LOGGER.info("/players - GET - get getting all players only public information (email is confidential)")
 
         sql_executor = database.SqlExecutor()
         players_list = players.Player.inventory(sql_executor)
@@ -877,7 +877,7 @@ class PlayerSelectListRessource(flask_restful.Resource):  # type: ignore
         except:  # noqa: E722 pylint: disable=bare-except
             flask_restful.abort(400, msg="Bad selection. Use a space separated list of numbers")
 
-        mylogger.LOGGER.info("/players-select - POST - get getting some players only pseudo (email and telephone are confidential)")
+        mylogger.LOGGER.info("/players-select - POST - get getting some players only pseudo (email is confidential)")
 
         sql_executor = database.SqlExecutor()
         players_list = players.Player.inventory(sql_executor)
@@ -924,18 +924,20 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         type_ = args['type']
 
         # I can get for type :
-        # not forced :
+        #  forced
+        #      'late' : deadline passed and player is late
+        #             : master forced agreement and player is late
         #      'start_stop' : game started, stopped, complete and ready
-        #      'message' : press or message in game
-        #      'adjudication' : game has moved (from master/automatoin/player)
         #      'reminder' : please enter order/agreement or just welcome and come in to play
-        # forced :
-        #      'question_event' : message from player to event organizer
-        #      'late' : master forced agreement and player is late
-        # replacement :
-        #      'replacement' : need a replacement
-        # profile :
-        #      'profile' : profile
+        #      'profile' : profile (sending profiling information)
+        #  not forced
+        #      'message' : press or message in game
+        #      'adjudication' : game has moved (from master/automaton/player)
+        #      'deadline' : deadline is approaching
+        #      'replace' : need a replacement
+
+        if type_ not in ['late', 'start_stop', 'reminder', 'profile', 'message', 'adjudication', 'deadline', 'replace']:
+            flask_restful.abort(400, msg="Unknown type.")
 
         try:
             addressees_list = list(map(int, addressees_submitted.split()))
@@ -956,6 +958,11 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
             # decide if send
 
+            if type_ == 'deadline':
+                # does not want to receive deadline approaching notifications
+                if not pseudo_dest.notify_deadline:
+                    continue
+
             if type_ == 'message':
                 # does not want to receive private_message/message/press notifications
                 if not pseudo_dest.notify_message:
@@ -967,7 +974,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
                     continue
 
             # security
-            if type_ == 'replacement':
+            if type_ == 'replace':
                 # does not want to receive replacement notifications
                 if not pseudo_dest.notify_replace:
                     continue
@@ -985,22 +992,6 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
                 'body': body,
                 'addressees': addressees_str,
             }
-
-            if type_ in ['question_event']:
-
-                sender = players.Player.find_by_pseudo(sql_executor, pseudo)
-                if sender is None:
-                    del sql_executor
-                    flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
-
-                assert sender is not None
-                reply_to = sender.email
-
-                json_dict.update(
-                    {
-                        'reply_to': reply_to,
-                    }
-                )
 
             # send email
             host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
@@ -1244,7 +1235,7 @@ class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
 
     def get(self, pseudo_player: str) -> typing.Tuple[typing.Dict[str, str], int]:  # pylint: disable=R0201
         """
-        Provides the information (email address and telephone) of a player
+        Provides the information (email address) of a player
         EXPOSED
         """
 
@@ -1289,9 +1280,8 @@ class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
 
         assert contact is not None
         email = contact.email
-        telephone = contact.telephone
 
-        data = {'email': email, 'telephone': telephone}
+        data = {'email': email}
         return data, 200
 
 

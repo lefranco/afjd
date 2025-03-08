@@ -279,21 +279,6 @@ def create_game(json_dict):
         play_weekend = int(input_play_weekend.checked)
 
         try:
-            access_restriction_reliability = int(input_access_restriction_reliability.value)
-        except:  # noqa: E722 pylint: disable=bare-except
-            access_restriction_reliability = None
-
-        try:
-            access_restriction_regularity = int(input_access_restriction_regularity.value)
-        except:  # noqa: E722 pylint: disable=bare-except
-            access_restriction_regularity = None
-
-        try:
-            access_restriction_performance = int(input_access_restriction_performance.value)
-        except:  # noqa: E722 pylint: disable=bare-except
-            access_restriction_performance = None
-
-        try:
             nb_max_cycles_to_play = int(input_nb_max_cycles_to_play.value)
         except:  # noqa: E722 pylint: disable=bare-except
             nb_max_cycles_to_play = None
@@ -334,9 +319,6 @@ def create_game(json_dict):
             'speed_adjustments': speed_adjustments,
             'cd_possible_builds': cd_possible_builds,
             'play_weekend': play_weekend,
-            'access_restriction_reliability': access_restriction_reliability,
-            'access_restriction_regularity': access_restriction_regularity,
-            'access_restriction_performance': access_restriction_performance,
             'nb_max_cycles_to_play': nb_max_cycles_to_play,
             'description': description,
             'current_state': state,
