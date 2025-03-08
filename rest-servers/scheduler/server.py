@@ -273,6 +273,11 @@ def check_all_games(jwt_token: str, now: float) -> None:
             mylogger.LOGGER.info("Ignoring game '%s' that is soloed !", game_name)
             continue
 
+        # game end voted
+        if game_full_dict['end_voted']:
+            mylogger.LOGGER.info("Ignoring game '%s' that has voted to end !", game_name)
+            continue
+
         # when calculating deadline will round it to next hour
         result = commute_game(jwt_token, now, game_id, game_full_dict)
         if result:
