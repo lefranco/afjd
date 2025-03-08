@@ -26,6 +26,7 @@ import requests
 import mylogger
 import lowdata
 import mapping
+import scolder_scheduler
 import elo_scheduler
 import regularity_scheduler
 import reliability_scheduler
@@ -358,7 +359,7 @@ def acting_threaded_procedure() -> None:
             if hour_now == 0:
                 mylogger.LOGGER.info("Scolder scheduler...")
                 try:
-                    pass # TODO
+                    scolder_scheduler.run(jwt_token)
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Scolder, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
@@ -406,7 +407,7 @@ def acting_threaded_procedure() -> None:
             if hour_now == 12:
                 mylogger.LOGGER.info("ELO Warner scheduler...")
                 try:
-                    pass # TODO
+                    pass  # TODO
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Warner, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
