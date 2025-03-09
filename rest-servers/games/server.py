@@ -6032,10 +6032,14 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
         # incidents_list : those who submitted orders after deadline
         incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
 
+        # find the current players
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+        current_players = [(a[2], a[1]) for a in allocations_list]
+
         assert game is not None
 
-        # player_id only provided if not anonymous
-        late_list = [(o[1], o[2], o[3] if not game.anonymous else None, o[4], o[5]) for o in incidents_list]
+        # player_id only provided if not anonymous and delay only provided if player still in the game
+        late_list = [(o[1], o[2], o[3] if not game.anonymous else None, o[4], o[5]) for o in incidents_list if (o[1], o[3]) in current_players]
 
         del sql_executor
 

@@ -1077,7 +1077,7 @@ def show_informations():
         play_low.MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) a réalisé la transition 'pas d'accord pour le résolution' -> 'd'accord pour résoudre' après la date limite", Class='note')
         play_low.MY_SUB_PANEL <= html.BR()
 
-        play_low.MY_SUB_PANEL <= html.DIV("Les retards des joueurs qui depuis ont été remplacés apparaissent (ces retards étant comptés dans le récapitulatif, ils peuvent laisser penser à plus de retards que réellement)", Class='note')
+        play_low.MY_SUB_PANEL <= html.DIV("Les retards des joueurs qui depuis ont été remplacés n'apparaissent pas", Class='note')
         play_low.MY_SUB_PANEL <= html.BR()
 
         play_low.MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
