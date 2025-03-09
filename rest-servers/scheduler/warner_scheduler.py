@@ -2,9 +2,9 @@
 
 
 """
-File : scolder_scheduler.py
+File : warner_scheduler.py
 
-Tell people they are late
+Warn people deadline is soon
 """
 
 import typing
@@ -20,19 +20,19 @@ import lowdata
 EPSILON_SEC = 5
 
 # to take it easy on server
-INTER_SCOLDING_TIME_SEC = 2
+INTER_WARNING_TIME_SEC = 2
 
 SESSION = requests.Session()
 
 
 def run(jwt_token: str) -> None:
-    """ scolder_scheduler """
+    """ warner_scheduler """
 
     # ========================
-    # tell people they are late
+    # warn people they did not enter orders and deadline is soon
     # ========================
 
-    # time of scolding
+    # time of warning
     now = time.time()
 
     # get all games
@@ -52,8 +52,8 @@ def run(jwt_token: str) -> None:
 
         game_name = game_dict['name']
 
-        # not between deadline and deadline + 24h  - to do just one scolding
-        if not game_dict['deadline'] <= now + EPSILON_SEC <= game_dict['deadline'] + 24 * 60 * 60:
+        # not between deadline -24h and deadline  - to do just one warning
+        if not game_dict['deadline'] - 24 * 60 * 60 <= now + EPSILON_SEC <= game_dict['deadline']:
             continue
 
         # fast game
@@ -96,19 +96,19 @@ def run(jwt_token: str) -> None:
 
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
         port = lowdata.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/scold-late-players-game/{game_id}"
+        url = f"{host}:{port}/warn-deadline-players-game/{game_id}"
         req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
         if req_result.status_code != 200:
             if 'msg' in req_result.json():
                 mylogger.LOGGER.error(req_result.json()['msg'])
-            mylogger.LOGGER.error("ERROR: Failed to perform Scolding")
+            mylogger.LOGGER.error("ERROR: Failed to perform Warning")
             return
 
         # easy on the server !
-        time.sleep(INTER_SCOLDING_TIME_SEC)
+        time.sleep(INTER_WARNING_TIME_SEC)
 
     # all done !
-    mylogger.LOGGER.info("=== Hurray, Scolding was performed !")
+    mylogger.LOGGER.info("=== Hurray, Warning was performed !")
 
 
 if __name__ == '__main__':

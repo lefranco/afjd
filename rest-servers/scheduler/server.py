@@ -32,6 +32,7 @@ import regularity_scheduler
 import reliability_scheduler
 import archiver_scheduler
 import forgiver_scheduler
+import warner_scheduler
 
 SESSION = requests.Session()
 
@@ -407,7 +408,7 @@ def acting_threaded_procedure() -> None:
             if hour_now == 12:
                 mylogger.LOGGER.info("ELO Warner scheduler...")
                 try:
-                    pass  # TODO
+                    warner_scheduler.run(jwt_token)
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Warner, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
