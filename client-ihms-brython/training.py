@@ -215,6 +215,19 @@ def next_previous_training(previous: bool):
     install_training()
 
 
+def goto_specific_training(index: int):
+    """ next_previous_training """
+    global TRAINING_INDEX
+
+    if not 0 <= index <= len(TRAINING_LIST) - 1:
+        return
+
+    TRAINING_INDEX = index
+
+    # go for specific training
+    install_training()
+
+
 def reset_training_callback(ev):  # pylint: disable=invalid-name
     """ reset_training_callback """
     ev.preventDefault()
@@ -450,7 +463,7 @@ def load_dynamic_stuff():
     POSITION_DATA = mapping.Position(POSITION_LOADED, VARIANT_DATA)
 
 
-def slide_just_display():
+def slide_just_display(table_of_contents):
     """ slide_just_display """
 
     selected_hovered_object = None
@@ -620,6 +633,10 @@ def slide_just_display():
 
     rating_colours_window = common.make_rating_colours_window(False, False, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, None, None, None, None)
 
+    # very left side
+    display_left_left = html.DIV(id='display_left')
+    display_left_left <= table_of_contents
+
     # left side
 
     display_left = html.DIV(id='display_left')
@@ -640,6 +657,7 @@ def slide_just_display():
     # overall
     my_sub_panel2 = html.DIV()
     my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left_left
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
@@ -658,7 +676,7 @@ def slide_just_display():
     MY_SUB_PANEL <= my_sub_panel2
 
 
-def slide_submit_orders():
+def slide_submit_orders(table_of_contents):
     """ slide_submit_orders : ask user to submit orders and check they are correct """
 
     selected_active_unit = None
@@ -1667,6 +1685,10 @@ def slide_submit_orders():
 
     rating_colours_window = common.make_rating_colours_window(False, False, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, None, None, None, None)
 
+    # very left side
+    display_left_left = html.DIV(id='display_left')
+    display_left_left <= table_of_contents
+
     # left side
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
@@ -1724,6 +1746,7 @@ def slide_submit_orders():
     # overall
     my_sub_panel2 = html.DIV()
     my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left_left
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
@@ -1739,7 +1762,7 @@ def slide_submit_orders():
     MY_SUB_PANEL <= my_sub_panel2
 
 
-def slide_show_adjudication():
+def slide_show_adjudication(table_of_contents):
     """ slide_show_adjudication """
 
     selected_hovered_object = None
@@ -1976,6 +1999,10 @@ def slide_show_adjudication():
 
     rating_colours_window = common.make_rating_colours_window(False, False, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, None, None, None, None)
 
+    # very left side
+    display_left_left = html.DIV(id='display_left')
+    display_left_left <= table_of_contents
+
     # left side
 
     display_left = html.DIV(id='display_left')
@@ -1998,6 +2025,7 @@ def slide_show_adjudication():
     # overall
     my_sub_panel2 = html.DIV()
     my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left_left
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
@@ -2051,21 +2079,35 @@ def install_training():
     # display map and order console
     MY_SUB_PANEL.clear()
 
+    # calculate toc
+    toc = html.TABLE()
+    for index, content in enumerate(TRAINING_LIST):
+        row = html.TR()
+        col = html.TD()
+
+        button_specific_training = html.BUTTON(content['title'], Class='btn-inside')
+        button_specific_training.style = {'font-size': '10px'}
+        button_specific_training.bind("click", lambda e, i=index: goto_specific_training(i))
+        col <= button_specific_training
+
+        row <= col
+        toc <= row
+
     # consider passive and active mode
     if content_dict['type'] == 'display':
         # pointers to show on map
         POINTERS = content_dict.get('pointers', [])
-        slide_just_display()
+        slide_just_display(toc)
     elif content_dict['type'] == 'submit':
         ROLE_ID = content_dict['role_id']
         # orders expected from trainee
         EXPECTED_ORDERS = content_dict['expected_orders']
-        slide_submit_orders()
+        slide_submit_orders(toc)
     elif content_dict['type'] == 'adjudicate':
         ROLE_ID = 0
         # orders to show
         SHOWN_ORDERS = content_dict['shown_orders']
-        slide_show_adjudication()
+        slide_show_adjudication(toc)
     else:
         alert("Type de tranche inconnu")
 
