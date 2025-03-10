@@ -368,6 +368,13 @@ def load_special_stuff():
 def stack_last_moves_button(frame):
     """ stack_last_moves_button """
 
+    first_advancement = 0
+    if VARIANT_CONTENT_LOADED['start_build']:
+        first_advancement = 4
+
+    if GAME_PARAMETERS_LOADED['current_advancement'] == first_advancement:
+        return
+
     last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
     adv_last_moves = last_advancement
     while True:
@@ -376,6 +383,7 @@ def stack_last_moves_button(frame):
             break
     input_last_moves = html.INPUT(type="submit", value="Derniers mouvements", Class='btn-inside')
     input_last_moves.bind("click", lambda e: play_other.show_position(adv_last_moves))
+
     frame <= input_last_moves
     frame <= html.BR()
     frame <= html.BR()
