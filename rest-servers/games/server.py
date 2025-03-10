@@ -8853,9 +8853,10 @@ class WarnDeadlinePlayersGameRessource(flask_restful.Resource):  # type: ignore
 
         missing_agreement_list = list(set(needed_list) - set(agreed_list))
         if not missing_agreement_list:
-            # This should not happen !
+            # This may happen sometimes !
             del sql_executor
-            flask_restful.abort(400, msg="There is no role that does not agree to solve but only after the deadline")
+            data = {'msg': "There is no role that does not agree to solve but only after the deadline or now"}
+            return data, 200
 
         missing_list = list(set(missing_orders_list) | set(missing_agreement_list))
 
