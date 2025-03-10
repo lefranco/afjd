@@ -384,9 +384,9 @@ def stack_last_moves_button(frame):
 def stack_communications_orders_button(frame):
     """ stack_communications_orders_button """
 
-    input_last_moves = html.INPUT(type="submit", value="Ordres de com' (pour montrer une intention)", Class='btn-inside')
-    input_last_moves.bind("click", lambda e: play.load_option(e, 'Ordres de com\''))
-    frame <= input_last_moves
+    input_communications_orders = html.INPUT(type="submit", value="Ordres de com' (pour montrer une intention)", Class='btn-inside')
+    input_communications_orders.bind("click", lambda e: play.load_option(e, 'Ordres de com\''))
+    frame <= input_communications_orders
     frame <= html.BR()
     frame <= html.BR()
 
