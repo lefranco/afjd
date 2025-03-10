@@ -26,6 +26,7 @@ OPTIONS = {
     'Changer image': "Changer l'image du site",
     'Usurper': "Usurper le compte d'un untilisateur",
     'Rectifier les paramètres': "Rectifier les paramètres de la partie sélectionnée",
+    'Effacer les ordres': "Effacer les ordres de la partie sélectionnée (pour pouvoir rectifier la position)",
     'Rectifier la position': "Rectifier la position de la partie sélectionnée",
     'Rectifier l\'état': "Rectifier l\'état de la partie sélectionnée",
     'Rectifier le nom': "Rectifier le nom de la partie sélectionnée",
@@ -611,7 +612,7 @@ def rectify_parameters():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/alter_games/{game}"
+        url = f"{host}:{port}/alter-games/{game}"
 
         # altering game used for elo : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -699,6 +700,65 @@ def rectify_parameters():
     input_change_parameters_game = html.INPUT(type="submit", value="Changer les paramètres de la partie", Class='btn-inside')
     input_change_parameters_game.bind("click", change_parameters_game_callback)
     form <= input_change_parameters_game
+
+    MY_SUB_PANEL <= form
+
+
+def remove_orders():
+    """ remove_orders """
+
+    def remove_orders_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'effacemeent des ordres partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'effacemeent des ordres de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Les ordres dans la partie ont été effacés : {messages}")
+
+        ev.preventDefault()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-remove-orders/{game_id}"
+
+        # remove orders from game  : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        remove_orders()
+
+    MY_SUB_PANEL <= html.H3("Effacer les ordres de la partie")
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
+
+    form = html.FORM()
+
+    input_rename_game = html.INPUT(type="submit", value="Effacer les ordres de la partie", Class='btn-inside')
+    input_rename_game.bind("click", remove_orders_callback)
+    form <= input_rename_game
 
     MY_SUB_PANEL <= form
 
@@ -1221,7 +1281,7 @@ def rectify_current_state():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/alter_games/{game}"
+        url = f"{host}:{port}/alter-games/{game}"
 
         # altering game  : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -1338,7 +1398,7 @@ def rectify_name():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/alter_games/{game}"
+        url = f"{host}:{port}/alter-games/{game}"
 
         # altering game  : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -2336,6 +2396,8 @@ def load_option(_, item_name):
         usurp()
     if item_name == 'Rectifier les paramètres':
         rectify_parameters()
+    if item_name == 'Effacer les ordres':
+        remove_orders()
     if item_name == 'Rectifier la position':
         rectify_position()
     if item_name == 'Rectifier l\'état':

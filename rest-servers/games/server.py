@@ -140,6 +140,17 @@ SUBMISSION_PARSER.add_argument('definitive', type=int, required=False)
 SUBMISSION_PARSER.add_argument('names', type=str, required=True)
 SUBMISSION_PARSER.add_argument('adjudication_names', type=str, required=True)
 
+SUBMISSION_PARSER2 = flask_restful.reqparse.RequestParser()
+SUBMISSION_PARSER2.add_argument('role_id', type=int, required=True)
+SUBMISSION_PARSER2.add_argument('names', type=str, required=True)
+
+SUBMISSION_PARSER3 = flask_restful.reqparse.RequestParser()
+SUBMISSION_PARSER3.add_argument('role_id', type=int, required=True)
+SUBMISSION_PARSER3.add_argument('orders', type=str, required=True)
+
+SUBMISSION_PARSER4 = flask_restful.reqparse.RequestParser()
+SUBMISSION_PARSER4.add_argument('role_id', type=int, required=True)
+
 AGREE_PARSER = flask_restful.reqparse.RequestParser()
 AGREE_PARSER.add_argument('role_id', type=int, required=True)
 AGREE_PARSER.add_argument('definitive', type=int, required=False)
@@ -152,14 +163,6 @@ FORCE_AGREE_PARSER.add_argument('adjudication_names', type=str, required=True)
 COMMUTE_AGREE_PARSER = flask_restful.reqparse.RequestParser()
 COMMUTE_AGREE_PARSER.add_argument('now', type=float, required=True)
 COMMUTE_AGREE_PARSER.add_argument('adjudication_names', type=str, required=True)
-
-SUBMISSION_PARSER2 = flask_restful.reqparse.RequestParser()
-SUBMISSION_PARSER2.add_argument('role_id', type=int, required=True)
-SUBMISSION_PARSER2.add_argument('names', type=str, required=True)
-
-SUBMISSION_PARSER3 = flask_restful.reqparse.RequestParser()
-SUBMISSION_PARSER3.add_argument('role_id', type=int, required=True)
-SUBMISSION_PARSER3.add_argument('orders', type=str, required=True)
 
 ADJUDICATION_PARSER = flask_restful.reqparse.RequestParser()
 ADJUDICATION_PARSER.add_argument('names', type=str, required=True)
@@ -1034,7 +1037,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/alter_games/<name>')
+@API.resource('/alter-games/<name>')
 class AlterGameRessource(flask_restful.Resource):  # type: ignore
     """ AlterGameRessource """
 
@@ -1044,7 +1047,7 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/alter_games/<name> - PUT - alterating game name=%s", name)
+        mylogger.LOGGER.info("/alter-games/<name> - PUT - alterating game name=%s", name)
 
         args = GAME_PARSER2.parse_args(strict=True)
 
@@ -1146,6 +1149,120 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'name': name, 'msg': 'Ok altered'}
+        return data, 200
+
+
+@API.resource('/game-remove-orders/<game_id>')
+class GameRemoveOrderRessource(flask_restful.Resource):  # type: ignore
+    """ GameRemoveOrderRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Remove orders (only from game administator willing to alterate the position)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-remove-orders/<game_id> - POST - removing orders game id=%s", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get admin pseudo
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/pseudo-admin"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
+        admin_pseudo = req_result.json()
+
+        # check user is admin
+        if pseudo != admin_pseudo:
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to remove orders")
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+        assert game is not None
+
+        # begin of protected section
+        with MOVE_GAME_LOCK_TABLE[game.name]:
+
+            # must not be soloed
+            if game.soloed:
+                del sql_executor
+                flask_restful.abort(403, msg="Game is soloed!")
+
+            # must not be end voted
+            if game.end_voted:
+                del sql_executor
+                flask_restful.abort(403, msg="Game is end-voted!")
+
+            # must not be finished
+            if game.finished:
+                del sql_executor
+                flask_restful.abort(403, msg="Game is finished!")
+
+            # check orders are required
+            # needed list : those who need to submit orders
+            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+            needed_list = [o[1] for o in actives_list]
+            if not needed_list:
+                # Should not happen
+                del sql_executor
+                flask_restful.abort(403, msg="There is no role that require orders")
+
+            # remove the fake units
+            game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
+            for _, type_num, zone_num, role_num, _, fake in game_units:
+                if not fake:
+                    continue
+                fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
+                fake_unit.delete_database(sql_executor)  # noqa: F821
+
+            orders_present = orders.Order.list_by_game_id(sql_executor, int(game_id))  # noqa: F821
+
+            # remove the orders
+            for (_, role_num, _, zone_num, _, _) in orders_present:
+                order = orders.Order(int(game_id), role_num, 0, zone_num, 0, 0)
+                order.delete_database(sql_executor)  # noqa: F821
+
+            # remove the submissions
+            submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+            for game_id, role_id  in submissions_list:
+                submission = submissions.Submission(int(game_id), int(role_id))
+                submission.delete_database(sql_executor)  # noqa: F821
+
+            # remove the definitives
+            definitive_value = 0
+            for role_id in needed_list:
+                definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
+                definitive.delete_database(sql_executor)  # noqa: F821
+
+            sql_executor.commit()  # noqa: F821
+            del sql_executor  # noqa: F821
+            # end of protected section
+
+        orders_logger.LOGGER.info("pseudo=%s game=%s role=ALL info=%s", pseudo, game.name, " == ORDERS REMOVED BY ADMINISTRATOR == ")
+
+        data = {'msg': 'Ok orders removed'}
         return data, 200
 
 
