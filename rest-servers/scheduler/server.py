@@ -406,7 +406,7 @@ def acting_threaded_procedure() -> None:
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 12:
-                mylogger.LOGGER.info("ELO Warner scheduler...")
+                mylogger.LOGGER.info("Warner scheduler...")
                 try:
                     warner_scheduler.run(jwt_token)
                 except:  # noqa: E722 pylint: disable=bare-except
