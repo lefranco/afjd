@@ -392,6 +392,9 @@ def stack_last_moves_button(frame):
 def stack_communications_orders_button(frame):
     """ stack_communications_orders_button """
 
+    if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
+        return
+
     input_communications_orders = html.INPUT(type="submit", value="Ordres de com' (pour montrer une intention)", Class='btn-inside')
     input_communications_orders.bind("click", lambda e: play.load_option(e, 'Ordres de com\''))
     frame <= input_communications_orders
