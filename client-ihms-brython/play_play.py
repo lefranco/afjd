@@ -354,8 +354,7 @@ def submit_orders():
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
-        if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
-            play_low.stack_communications_orders_button(buttons_right)
+        play_low.stack_communications_orders_button(buttons_right)
 
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
@@ -408,8 +407,7 @@ def submit_orders():
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
-        if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
-            play_low.stack_communications_orders_button(buttons_right)
+        play_low.stack_communications_orders_button(buttons_right)
 
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
@@ -473,8 +471,7 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
-                play_low.stack_communications_orders_button(buttons_right)
+            play_low.stack_communications_orders_button(buttons_right)
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
@@ -539,8 +536,7 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
-                play_low.stack_communications_orders_button(buttons_right)
+            play_low.stack_communications_orders_button(buttons_right)
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
@@ -732,8 +728,7 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
-                play_low.stack_communications_orders_button(buttons_right)
+            play_low.stack_communications_orders_button(buttons_right)
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
@@ -850,8 +845,7 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
-                play_low.stack_communications_orders_button(buttons_right)
+            play_low.stack_communications_orders_button(buttons_right)
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
@@ -978,8 +972,7 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
-                play_low.stack_communications_orders_button(buttons_right)
+            play_low.stack_communications_orders_button(buttons_right)
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
@@ -1110,8 +1103,7 @@ def submit_orders():
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
-        if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
-            play_low.stack_communications_orders_button(buttons_right)
+        play_low.stack_communications_orders_button(buttons_right)
 
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
@@ -1572,8 +1564,7 @@ def submit_orders():
     if play_low.ROLE_ID in submitted_data['needed'] and not game_over:
 
         # button for communication orders
-        if play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:  # Blitz
-            play_low.stack_communications_orders_button(buttons_right)
+        play_low.stack_communications_orders_button(buttons_right)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
