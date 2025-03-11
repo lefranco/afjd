@@ -359,6 +359,9 @@ def submit_orders():
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
 
+        # button negotiations
+        play_low.stack_negotiations_button(buttons_right)
+
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
 
@@ -411,6 +414,9 @@ def submit_orders():
 
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
+
+        # button negotiations
+        play_low.stack_negotiations_button(buttons_right)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -476,6 +482,9 @@ def submit_orders():
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
 
+            # button negotiations
+            play_low.stack_negotiations_button(buttons_right)
+
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
 
@@ -540,6 +549,9 @@ def submit_orders():
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
+
+            # button negotiations
+            play_low.stack_negotiations_button(buttons_right)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -733,6 +745,9 @@ def submit_orders():
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
 
+            # button negotiations
+            play_low.stack_negotiations_button(buttons_right)
+
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
 
@@ -849,6 +864,9 @@ def submit_orders():
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
+
+            # button negotiations
+            play_low.stack_negotiations_button(buttons_right)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -976,6 +994,9 @@ def submit_orders():
 
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
+
+            # button negotiations
+            play_low.stack_negotiations_button(buttons_right)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1107,6 +1128,9 @@ def submit_orders():
 
         # button last moves
         play_low.stack_last_moves_button(buttons_right)
+
+        # button negotiations
+        play_low.stack_negotiations_button(buttons_right)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1560,6 +1584,12 @@ def submit_orders():
 
     # button last moves
     play_low.stack_last_moves_button(buttons_right)
+
+    # button negotiations
+    play_low.stack_negotiations_button(buttons_right)
+
+    # information retreats/builds
+    play_low.stack_possibilities(buttons_right, advancement_season)
 
     if play_low.ROLE_ID in submitted_data['needed'] and not game_over:
 
