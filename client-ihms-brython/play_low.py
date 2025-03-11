@@ -389,6 +389,33 @@ def stack_last_moves_button(frame):
     frame <= html.BR()
 
 
+def stack_negotiations_button(frame):
+    """ stack_negotiations_button """
+
+
+    def negotiations_callback(ev):  # pylint: disable=invalid-name
+        """ negotiations_callback """
+
+        ev.preventDefault()
+
+        # so that will go to proper page
+        arrival = "messages"
+        play.set_arrival(arrival)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
+
+    if GAME_PARAMETERS_LOADED['nomessage_current']:
+        return
+
+    input_negotiations = html.INPUT(type="submit", value="Négociations", Class='btn-inside')
+    input_negotiations.bind("click", negotiations_callback)
+    frame <= input_negotiations
+    frame <= html.BR()
+    frame <= html.BR()
+
+
 def stack_communications_orders_button(frame):
     """ stack_communications_orders_button """
 
