@@ -341,7 +341,7 @@ def show_news():
     # ==A5==============================
 
     div_a5 = html.DIV(Class='tooltip')
-    title1 = html.H4("Actions urgentes et dernier message des discussions en ligne")
+    title1 = html.H4("Actions urgentes, dernière discussion en ligne et jauge de financement")
     div_a5 <= title1
 
     # ----
@@ -349,32 +349,26 @@ def show_news():
     # game_type identifier -> description
     conversion_table = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
 
-    div_a5 <= html.H5("Grands retards :")
     dying_games_loaded = stats_content['dying_games']
     if dying_games_loaded:
+        div_a5 <= html.H5("Grands retards :")
         div_a5 <= "Les parties ci-dessous sont en grand retard."
         div_a5 <= html.BR()
         div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, dying_games_loaded)
-    else:
-        div_a5 <= "Aucune partie en cours n'est en grand retard."
 
-    div_a5 <= html.H5("Remplacements urgents :")
     suffering_games_loaded = stats_content['suffering_games']
     if suffering_games_loaded:
+        div_a5 <= html.H5("Remplacements urgents :")
         div_a5 <= "Les parties ci-dessous sont en cours et ont besoin de remplaçant(s) - arbitre ou joueur."
         div_a5 <= html.BR()
         div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, suffering_games_loaded)
-    else:
-        div_a5 <= "Aucune partie en cours n'a de besoin urgent de remplaçant(s)."
 
-    div_a5 <= html.H5("Démarrages difficiles :")
     stalled_games_loaded = stats_content['stalled_games']
     if stalled_games_loaded:
+        div_a5 <= html.H5("Démarrages difficiles :")
         div_a5 <= "Les parties ci-dessous sont en en attente d'être complète pour démarrer depuis trop longtemps."
         div_a5 <= html.BR()
         div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, stalled_games_loaded)
-    else:
-        div_a5 <= "Aucune partie en attente n'est en démarrage difficile."
 
     chat_content_loaded = news_content_table_loaded['chats']
     if chat_content_loaded:
@@ -384,6 +378,10 @@ def show_news():
         div_a5 <= html.BR()
         div_a5 <= html.H5("Dernier message :")
         div_a5 <= html.DIV(f"{last_chat_author} : {last_chat_message}", Class='chat_sample')
+
+    div_a5 <= html.H5("Jauge de financement :")
+    div_a5 <= html.DIV("TODO ;-)")
+
 
     # ----
 
