@@ -4375,6 +4375,11 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
 
+        # not allowed for fog games
+        if game.fog:
+            del sql_executor
+            flask_restful.abort(404, msg="No communication orders for fog games")
+
         # situation: get units
         game_units = units.Unit.list_by_game_id(sql_executor, game_id)
         unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)

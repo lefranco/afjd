@@ -2358,6 +2358,12 @@ def submit_communication_orders():
         play.load_option(None, 'Consulter')
         return False
 
+    # game needs to be not fog
+    if play_low.GAME_PARAMETERS_LOADED['fog']:  # Fog
+        alert("La partie est en mode brouillard")
+        play.load_option(None, 'Consulter')
+        return False
+
     # phase needs to be moves or retreat
     if play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 not in [0, 1, 2, 3]:
         alert("Ce n'est pas une phase de mouvements ou de retraites")

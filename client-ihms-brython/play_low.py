@@ -392,7 +392,6 @@ def stack_last_moves_button(frame):
 def stack_negotiations_button(frame):
     """ stack_negotiations_button """
 
-
     def negotiations_callback(ev):  # pylint: disable=invalid-name
         """ negotiations_callback """
 
@@ -420,6 +419,9 @@ def stack_communications_orders_button(frame):
     """ stack_communications_orders_button """
 
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
+        return
+
+    if GAME_PARAMETERS_LOADED['fog']:  # Fog
         return
 
     input_communications_orders = html.INPUT(type="submit", value="Ordres de com' (pour montrer une intention)", Class='btn-inside')
