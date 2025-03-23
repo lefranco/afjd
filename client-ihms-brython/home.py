@@ -382,7 +382,6 @@ def show_news():
     div_a5 <= html.H5("Jauge de financement :")
     div_a5 <= html.DIV("TODO ;-)")
 
-
     # ----
 
     div_a5_tip = html.SPAN("Plus de détail dans le menu “Les parties“ sous menu 'Rejoindre une partie' et dans le menu 'Discuter en ligne'", Class='tooltiptext')
