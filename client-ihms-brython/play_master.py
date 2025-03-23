@@ -1873,9 +1873,7 @@ def game_master():
     ############################################
     if play_low.GAME_PARAMETERS_LOADED['current_state'] in [1, 2]:
 
-        play_low.MY_SUB_PANEL <= html.H3("Suppression des incidents")
-
-        play_low.MY_SUB_PANEL <= html.H4("Suppression d'abandons")
+        play_low.MY_SUB_PANEL <= html.H3("Suppression des abandons")
 
         game_dropouts_table = html.TABLE()
 
@@ -1912,8 +1910,14 @@ def game_master():
 
             # pseudo
             col = html.TD()
+
+            player_id_str = role2pseudo[role_id]
+            player_id_current = int(player_id_str)
             pseudo_quitter = play_low.ID2PSEUDO[player_id]
-            col <= pseudo_quitter
+            if player_id == player_id_current:
+                col <= pseudo_quitter
+            else:
+                col <= html.B(pseudo_quitter)
             row <= col
 
             # date
@@ -1936,7 +1940,7 @@ def game_master():
         play_low.MY_SUB_PANEL <= game_dropouts_table
 
         # incidents
-        play_low.MY_SUB_PANEL <= html.H4("Suppression de retards")
+        play_low.MY_SUB_PANEL <= html.H3("Suppression de retards")
 
         game_incidents_table = html.TABLE()
 
@@ -1974,7 +1978,12 @@ def game_master():
             # pseudo
             col = html.TD()
             if player_id is not None:
-                col <= play_low.ID2PSEUDO[player_id]
+                player_id_str = role2pseudo[role_id]
+                player_id_current = int(player_id_str)
+                if player_id == player_id_current:
+                    col <= play_low.ID2PSEUDO[player_id]
+                else:
+                    col <= html.B(play_low.ID2PSEUDO[player_id])
             row <= col
 
             # season
