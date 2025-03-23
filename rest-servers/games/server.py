@@ -1296,25 +1296,6 @@ class GameStateListRessource(flask_restful.Resource):  # type: ignore
 class GameListRessource(flask_restful.Resource):  # type: ignore
     """ GameListRessource """
 
-    # TODO REMOVE THIS CALL AT SOME POINT
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
-        """
-        Get list of all games (dictionary identifier -> name)
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/games - GET - get getting all games names")
-
-        sql_executor = database.SqlExecutor()
-
-        games_list = games.Game.inventory(sql_executor)
-
-        del sql_executor
-
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'exposition': g.exposition, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo, 'game_type': g.game_type, 'force_wait': g.force_wait, 'finished': g.finished, 'soloed': g.soloed, 'end_voted': g.end_voted} for g in games_list}
-
-        return data, 200
-
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
         Creates a new game
