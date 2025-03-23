@@ -160,6 +160,9 @@ def load_option(_, item_name):
             # do not display menu tag if message game
             if play_low.GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
                 continue
+            # do not display menu tag if fog
+            if play_low.GAME_PARAMETERS_LOADED['fog']:  # Fog
+                continue
             # do not display menu order if not player
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 1):
                 continue
