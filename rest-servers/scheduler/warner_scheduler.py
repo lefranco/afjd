@@ -92,7 +92,22 @@ def run(jwt_token: str) -> None:
             mylogger.LOGGER.info("Ignoring game '%s' that has voted to end !", game_name)
             continue
 
-        mylogger.LOGGER.info(f"Considering game {game_name}")
+        # phase must last at least 24 hours
+        # what is the season next to play ?
+        if game_full_dict['current_advancement'] % 5 in [0, 2]:
+            if game_full_dict['speed_moves'] <= 24:
+                mylogger.LOGGER.info("Ignoring game '%s' playing moves with duration '%d' !", game_name, game_full_dict['speed_moves'])
+                continue
+        elif game_full_dict['current_advancement'] % 5 in [1, 3]:
+            if game_full_dict['speed_retreats'] <= 24:
+                mylogger.LOGGER.info("Ignoring game '%s' playing retreats with duration '%d' !", game_name, game_full_dict['speed_retreats'])
+                continue
+        else:
+            if game_full_dict['speed_adjustments'] <= 24:
+                mylogger.LOGGER.info("Ignoring game '%s' playing adjustments with duration '%d' !", game_name, game_full_dict['speed_adjustments'])
+                continue
+
+        mylogger.LOGGER.info("Considering game %s", game_name)
 
         json_dict: typing.Dict[str, typing.Any] = {}
 
