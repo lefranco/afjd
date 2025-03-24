@@ -1911,13 +1911,17 @@ def game_master():
             # pseudo
             col = html.TD()
 
-            player_id_str = role2pseudo[role_id]
-            player_id_current = int(player_id_str)
-            pseudo_quitter = play_low.ID2PSEUDO[player_id]
-            if player_id == player_id_current:
-                col <= pseudo_quitter
-            else:
-                col <= html.B(pseudo_quitter)
+            if player_id in play_low.ID2PSEUDO:
+                pseudo_quitter = play_low.ID2PSEUDO[player_id]
+                player_id_current = None
+                if role_id in role2pseudo:
+                    player_id_str = role2pseudo[role_id]
+                    player_id_current = int(player_id_str)
+                if player_id == player_id_current:
+                    col <= pseudo_quitter
+                else:
+                    col <= html.B(pseudo_quitter)
+
             row <= col
 
             # date
