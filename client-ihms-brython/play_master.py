@@ -1354,12 +1354,12 @@ def game_master():
         play.load_option(None, 'Consulter')
         return False
 
+    role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
+
     ############################################
     if play_low.GAME_PARAMETERS_LOADED['current_state'] == 1:
 
         play_low.MY_SUB_PANEL <= html.H3("Gestion")
-
-        role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
         submitted_data = play_low.get_roles_submitted_orders(play_low.GAME_ID)
         if not submitted_data:
