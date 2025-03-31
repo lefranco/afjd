@@ -102,6 +102,7 @@ GAME_PARSER.add_argument('just_play', type=int, required=False)
 GAME_PARSER.add_argument('game_type', type=int, required=False)
 GAME_PARSER.add_argument('force_wait', type=int, required=False)
 GAME_PARSER.add_argument('end_voted', type=int, required=False)
+GAME_PARSER.add_argument('end_vote_allowed', type=int, required=False)
 
 # for game parameter alteration
 GAME_PARSER2 = flask_restful.reqparse.RequestParser()
@@ -1246,8 +1247,8 @@ class GameRemoveOrderRessource(flask_restful.Resource):  # type: ignore
 
             # remove the submissions
             submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
-            for game_id, role_id  in submissions_list:
-                submission = submissions.Submission(int(game_id), int(role_id))
+            for game_id1, role_id in submissions_list:
+                submission = submissions.Submission(int(game_id1), int(role_id))
                 submission.delete_database(sql_executor)  # noqa: F821
 
             # remove the definitives
@@ -1386,7 +1387,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
             # create game here
             identifier = games.Game.free_identifier(sql_executor)
-            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0, 0, False)
+            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0, 0, False, False)
             _ = game.load_json(args)
             game.update_database(sql_executor)
 
