@@ -111,6 +111,7 @@ def create_game(json_dict):
     access_restriction_regularity = json_dict['access_restriction_regularity'] if json_dict and 'access_restriction_regularity' in json_dict else None
     access_restriction_performance = json_dict['access_restriction_performance'] if json_dict and 'access_restriction_performance' in json_dict else None
     nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play'] if json_dict and 'nb_max_cycles_to_play' in json_dict else None
+    endgame_vote_allowed = json_dict['end_game_vote'] if json_dict and 'end_game_vote' in json_dict else None
 
     # conversion
     scoring = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[scoring_code]
@@ -199,6 +200,7 @@ def create_game(json_dict):
         nonlocal access_restriction_regularity
         nonlocal access_restriction_performance
         nonlocal nb_max_cycles_to_play
+        nonlocal endgame_vote_allowed
 
         def reply_callback(req):
             req_result = loads(req.text)
@@ -243,6 +245,7 @@ def create_game(json_dict):
 
         game_type = input_game_type.value
         scoring = input_scoring.value
+        endgame_vote_allowed = int(input_endgame_vote_allowed.checked)
 
         try:
             deadline_hour = int(input_deadline_hour.value)
@@ -322,7 +325,8 @@ def create_game(json_dict):
             'nb_max_cycles_to_play': nb_max_cycles_to_play,
             'description': description,
             'current_state': state,
-            'game_type': game_type_code
+            'game_type': game_type_code,
+            'end_vote_allowed': endgame_vote_allowed
         }
 
         just_play = int(input_just_play_game.checked)
@@ -484,11 +488,21 @@ def create_game(json_dict):
     fieldset <= input_anonymous
     form <= fieldset
 
+    title_endgame_vote_allowed = html.H4("Votes de fin de partie")
+    form <= title_endgame_vote_allowed
+
+    fieldset = html.FIELDSET()
+    legend_endgame_vote_allowed = html.LEGEND("votes de fin", title="Les joueurs peuvent-ils voter la fin de la partie ?")
+    fieldset <= legend_endgame_vote_allowed
+    input_endgame_vote_allowed = html.INPUT(type="checkbox", checked=bool(endgame_vote_allowed) if endgame_vote_allowed is not None else False, Class='btn-inside')
+    fieldset <= input_endgame_vote_allowed
+    form <= fieldset
+
     title_scoring = html.H4("Système de marque")
     form <= title_scoring
 
     fieldset = html.FIELDSET()
-    legend_scoring = html.LEGEND("scorage", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
+    legend_scoring = html.LEGEND("scorage", title="La méthode pour compter les points (réellement pertinent pour les parties en tournoi uniquement)")
     fieldset <= legend_scoring
     input_scoring = html.SELECT(type="select-one", value="", Class='btn-inside')
 
@@ -636,6 +650,7 @@ def rectify_parameters_game():
     access_nopress_loaded = None
     access_nomessage_loaded = None
     description_loaded = None
+    endgame_vote_allowed_loaded = None
     scoring_code_loaded = None
     access_restriction_reliability_loaded = None
     access_restriction_regularity_loaded = None
@@ -681,6 +696,7 @@ def rectify_parameters_game():
             nonlocal access_nopress_loaded
             nonlocal access_nomessage_loaded
             nonlocal description_loaded
+            nonlocal endgame_vote_allowed_loaded
             nonlocal scoring_code_loaded
             nonlocal access_restriction_reliability_loaded
             nonlocal access_restriction_regularity_loaded
@@ -712,6 +728,7 @@ def rectify_parameters_game():
             access_nopress_loaded = req_result['nopress_current']
             access_nomessage_loaded = req_result['nomessage_current']
             description_loaded = req_result['description']
+            endgame_vote_allowed_loaded = req_result['end_vote_allowed']
             scoring_code_loaded = req_result['scoring']
             access_restriction_reliability_loaded = req_result['access_restriction_reliability']
             access_restriction_regularity_loaded = req_result['access_restriction_regularity']
@@ -837,6 +854,40 @@ def rectify_parameters_game():
         url = f"{host}:{port}/games/{game}"
 
         # changing game description : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        rectify_parameters_game()
+
+    def change_endgame_vote_allowed_game_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification du droit a voter la fin de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification du droit a voter la fin de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.InfoDialog("Information", f"Le droit a voter la fin de la partie a été modifié : {messages}")
+
+        ev.preventDefault()
+
+        json_dict = {
+            'name': game,
+            'end_vote_allowed': input_endgame_vote_allowed.checked,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # changing game endvote_allowed : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
@@ -1052,6 +1103,29 @@ def rectify_parameters_game():
     MY_SUB_PANEL <= form
 
     MY_SUB_PANEL <= html.HR()
+    MY_SUB_PANEL <= html.H4("Votes de fin de partie")
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_endgame_vote_allowed = html.LEGEND("votes de fin", title="Les joueurs peuvent-ils voter la fin de la partie ?")
+    fieldset <= legend_endgame_vote_allowed
+    input_endgame_vote_allowed = html.INPUT(type="checkbox", checked=endgame_vote_allowed_loaded, Class='btn-inside')
+    fieldset <= input_endgame_vote_allowed
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_endgame_vote_allowed_game = html.INPUT(type="submit", value="Changer le droit au vote d'anonymat", Class='btn-inside')
+    input_change_endgame_vote_allowed_game.bind("click", change_endgame_vote_allowed_game_callback)
+    form <= input_change_endgame_vote_allowed_game
+
+    MY_SUB_PANEL <= form
+
+    MY_SUB_PANEL <= html.HR()
     MY_SUB_PANEL <= html.H4("Scorage")
 
     form = html.FORM()
@@ -1060,7 +1134,7 @@ def rectify_parameters_game():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_scoring = html.LEGEND("scorage", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
+    legend_scoring = html.LEGEND("scorage", title="La méthode pour compter les points (réellement pertinent pour les parties en tournoi uniquement)")
     fieldset <= legend_scoring
     input_scoring = html.SELECT(type="select-one", value="", Class='btn-inside')
 
