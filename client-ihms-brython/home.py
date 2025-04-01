@@ -610,7 +610,7 @@ def show_news():
 
     col = html.TD()
     link53 = html.A(href="https://www.world-diplomacy-reference.com", target="_blank")
-    link53 <= "La base de données de tous les résultats de tournois !"
+    link53 <= "La fameuse \"World Diplomacy Reference\", base de données des résultats de tournois en face à face et en ligne !"
     col <= link53
     row <= col
 
