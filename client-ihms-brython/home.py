@@ -580,6 +580,9 @@ def show_news():
     row <= col
 
     col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/database.png")
+    col <= img
     row <= col
 
     # ............
@@ -594,15 +597,21 @@ def show_news():
     row <= col
 
     col = html.TD()
-    link5 = html.A(href="https://sites.google.com/view/abydosfr/accueil", target="_blank")
-    link5 <= "Le site dédié à Diplomacy de notre ami Abydos !"
-    col <= link5
+    link51 = html.A(href="https://sites.google.com/view/abydosfr/accueil", target="_blank")
+    link51 <= "Le site dédié à Diplomacy de notre ami Abydos !"
+    col <= link51
     row <= col
 
     col = html.TD()
-    link51 = html.A(href="https://discord.gg/mUWes7yEqR", target="_blank")
-    link51 <= "Causer sur le Discord de l'Association avec d'autres joueurs !"
-    col <= link51
+    link52 = html.A(href="https://discord.gg/mUWes7yEqR", target="_blank")
+    link52 <= "Causer sur le Discord de l'Association avec d'autres joueurs !"
+    col <= link52
+    row <= col
+
+    col = html.TD()
+    link53 = html.A(href="https://www.world-diplomacy-reference.com", target="_blank")
+    link53 <= "La base de données de tous les résultats de tournois !"
+    col <= link53
     row <= col
 
     note_bene_content <= note_bene_content_table
