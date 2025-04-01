@@ -452,38 +452,8 @@ def show_news():
     # ==A3==============================
 
     div_a3 = html.DIV(Class='tooltip')
-    title5 = html.H4("Dernières nouvelles !")
-    div_a3 <= title5
-
-    # ----
-
-    title51 = html.H5("Administrateur")
-    div_a3 <= title51
-    news_content_loaded = news_content_table_loaded['admin']
-    news_content = common.formatted_news(news_content_loaded, 'ADMIN', 'admin_news')
-    div_a3 <= news_content
-
-    title52 = html.H5("Moderateur")
-    div_a3 <= title52
-    news_content_loaded = news_content_table_loaded['modo']
-    news_content = common.formatted_news(news_content_loaded, 'MODO', 'modo_news')
-    div_a3 <= news_content
-
-    # ----
-
-    div_a3_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu “Accueil“ sous menu “Déclarer un incident“ et le modérateur par un MP sur le forum", Class='tooltiptext')
-    div_a3 <= div_a3_tip
-    div_homepage <= div_a3
-
-    # ==B3==============================
-
-    # Merged with B4
-
-    # ==A2==============================
-
-    div_a2 = html.DIV(Class='tooltip')
     title9 = html.H4("Liens très importants")
-    div_a2 <= title9
+    div_a3 <= title9
 
     # ----
 
@@ -615,15 +585,45 @@ def show_news():
     row <= col
 
     note_bene_content <= note_bene_content_table
-    div_a2 <= note_bene_content
-    div_homepage <= div_a2
+    div_a3 <= note_bene_content
+    div_homepage <= div_a3
 
     col = html.TD()
     row <= col
 
     # ----
 
-    div_a2_tip = html.SPAN("Plus de détail sur le site http://www.diplomania.fr", Class='tooltiptext')
+    div_a3_tip = html.SPAN("Plus de détail sur le site http://www.diplomania.fr", Class='tooltiptext')
+    div_a3 <= div_a3_tip
+    div_homepage <= div_a3
+
+    # ==B3==============================
+
+    # Merged with B4
+
+    # ==A2==============================
+
+    div_a2 = html.DIV(Class='tooltip')
+    title5 = html.H4("Dernières nouvelles !")
+    div_a2 <= title5
+
+    # ----
+
+    title51 = html.H5("Administrateur")
+    div_a2 <= title51
+    news_content_loaded = news_content_table_loaded['admin']
+    news_content = common.formatted_news(news_content_loaded, 'ADMIN', 'admin_news')
+    div_a2 <= news_content
+
+    title52 = html.H5("Moderateur")
+    div_a2 <= title52
+    news_content_loaded = news_content_table_loaded['modo']
+    news_content = common.formatted_news(news_content_loaded, 'MODO', 'modo_news')
+    div_a2 <= news_content
+
+    # ----
+
+    div_a2_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu “Accueil“ sous menu “Déclarer un incident“ et le modérateur par un MP sur le forum", Class='tooltiptext')
     div_a2 <= div_a2_tip
     div_homepage <= div_a2
 
