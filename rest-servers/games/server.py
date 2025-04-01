@@ -5847,8 +5847,14 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # who is player for role ?
         assert game is not None
+
+        # are votes allowed ?
+        if not game.end_vote_allowed:
+            del sql_executor
+            flask_restful.abort(400, msg=f"End game votes not allowed for game  {game_id}")
+
+        # who is player for role ?
         expected_player_id = game.get_role(sql_executor, role_id)
         expected_master_id = game.get_role(sql_executor, 0)
 

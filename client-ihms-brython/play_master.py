@@ -2028,16 +2028,18 @@ def game_master():
     ############################################
     if play_low.GAME_PARAMETERS_LOADED['current_state'] == 1:
 
-        play_low.MY_SUB_PANEL <= html.H3("Vote de fin de partie")
+        if play_low.GAME_PARAMETERS_LOADED['end_vote_allowed']:
 
-        if play_low.GAME_PARAMETERS_LOADED['end_voted']:
-            play_low.MY_SUB_PANEL <= html.DIV("La fin de partie est déjà votée dans cette partie", Class='note')
-        else:
-            form = html.FORM()
-            input_end_vote_game = html.INPUT(type="submit", value="Déclarer la partie finie par vote unanime", Class='btn-inside')
-            input_end_vote_game.bind("click", end_game_vote_callback)
-            form <= input_end_vote_game
-            play_low.MY_SUB_PANEL <= form
+            play_low.MY_SUB_PANEL <= html.H3("Vote de fin de partie")
+
+            if play_low.GAME_PARAMETERS_LOADED['end_voted']:
+                play_low.MY_SUB_PANEL <= html.DIV("La fin de partie est déjà votée dans cette partie", Class='note')
+            else:
+                form = html.FORM()
+                input_end_vote_game = html.INPUT(type="submit", value="Déclarer la partie finie par vote unanime", Class='btn-inside')
+                input_end_vote_game.bind("click", end_game_vote_callback)
+                form <= input_end_vote_game
+                play_low.MY_SUB_PANEL <= form
 
     ############################################
     play_low.MY_SUB_PANEL <= html.H3("Paramètres de la partie")
