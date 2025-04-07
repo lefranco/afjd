@@ -5849,11 +5849,6 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
 
         assert game is not None
 
-        # are votes allowed ?
-        if not game.end_vote_allowed:
-            del sql_executor
-            flask_restful.abort(400, msg=f"End game votes not allowed for game  {game_id}")
-
         # who is player for role ?
         expected_player_id = game.get_role(sql_executor, role_id)
         expected_master_id = game.get_role(sql_executor, 0)
@@ -5862,6 +5857,11 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
         if user_id not in [expected_player_id, expected_master_id]:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the player who is in charge or the game master of the game")
+
+        # are votes allowed ?
+        if user_id == expected_player_id and not game.end_vote_allowed:
+            del sql_executor
+            flask_restful.abort(400, msg=f"End game votes not allowed for game  {game_id}")
 
         # game must be ongoing
         if game.current_state != 1:
