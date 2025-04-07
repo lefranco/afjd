@@ -1439,7 +1439,7 @@ def game_master():
             # delays
             col = html.TD()
             num_delays = ""
-            num_delays = len([_ for role_id2, _, _, _, _ in game_incidents if role_id2 == role_id])
+            num_delays = len([_ for role_id2, _, player_id2, _, _ in game_incidents if role_id2 == role_id and role_id in role2pseudo and int(role2pseudo[role_id]) == player_id2])
             col <= num_delays
             row <= col
 
