@@ -1920,7 +1920,7 @@ def game_master():
                 if player_id == player_id_current:
                     col <= pseudo_quitter
                 else:
-                    col <= html.B(pseudo_quitter)
+                    col <= html.I(html.SMALL(pseudo_quitter))
 
             row <= col
 
@@ -1983,7 +1983,7 @@ def game_master():
             col = html.TD()
             if role_id not in role2pseudo:
                 # no current player
-                col <= html.B(play_low.ID2PSEUDO[player_id])
+                col <= html.I(html.SMALL(play_low.ID2PSEUDO[player_id]))
             else:
                 # there is a current player
                 player_id_str = role2pseudo[role_id]
@@ -1993,7 +1993,7 @@ def game_master():
                     col <= play_low.ID2PSEUDO[player_id]
                 else:
                     # late player is not current player
-                    col <= html.B(play_low.ID2PSEUDO[player_id])
+                    col <= html.I(html.SMALL(play_low.ID2PSEUDO[player_id]))
             row <= col
 
             # season
