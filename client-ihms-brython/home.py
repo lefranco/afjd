@@ -382,7 +382,7 @@ def show_news():
     div_a5 <= html.H5("Financement du site :")
 
     # TODO : fill this automatically
-    current_collected_value = 400
+    current_collected_value = 410
     needed_value = 1000
 
     label = html.LABEL(f"Collecté à ce jour {current_collected_value}€ / {needed_value} : ", for_='raised')
