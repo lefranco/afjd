@@ -379,10 +379,19 @@ def show_news():
         div_a5 <= html.H5("Dernier message :")
         div_a5 <= html.DIV(f"{last_chat_author} : {last_chat_message}", Class='chat_sample')
 
-    div_a5 <= html.H5("Jauge de financement :")
-    div_a5 <= html.DIV("TODO ;-)")
+    div_a5 <= html.H5("Financement du site :")
 
-    # ----
+    # TODO : fill this automatically
+    current_collected_value = 400
+    needed_value = 1000
+
+    label = html.LABEL(f"Collecté à ce jour {current_collected_value}€ / {needed_value} : ", for_='raised')
+    gauge = html.METER(id='raised', value=current_collected_value, min=0, max=needed_value)
+
+    div_a5 <= label
+    div_a5 <= gauge
+
+# ----
 
     div_a5_tip = html.SPAN("Plus de détail dans le menu “Les parties“ sous menu 'Rejoindre une partie' et dans le menu 'Discuter en ligne'", Class='tooltiptext')
     div_a5 <= div_a5_tip
