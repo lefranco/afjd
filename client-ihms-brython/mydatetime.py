@@ -1,7 +1,7 @@
 """ replaces datetime """
 
 #  import datetime
-
+from browser import window
 
 # ref is 1/3/2000 0h0m:0s
 MY_EPOCH_YEAR = 2000
@@ -108,16 +108,29 @@ def fromtimestamp(time_stamp):
         dt_year += 1
     dt_day += 1
 
-    return dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec
+    # local time
+
+    # Javascript Date constructor
+    date = window.Date.new
+    delta = date(time_stamp*1000).getTimezoneOffset() * 60
+
+    rel_time_stamp_loc = rel_time_stamp - delta
+    secs_in_day_local = rel_time_stamp_loc % 86400
+
+    # format
+    loc_min = (secs_in_day_local // 60) % 60
+    loc_hour = (secs_in_day_local // 60) // 60
+
+    return dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec, loc_hour, loc_min
 
 
-def strftime(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec, year_first=False, day_only=False):
+def strftime(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec, loc_hour, loc_min, year_first=False, day_only=False):
     """ strftime """
 
     if year_first:
         if day_only:
-            return f"{dt_year:04}-{dt_month:02}-{dt_day:02} GMT"
-        return f"{dt_year:04}-{dt_month:02}-{dt_day:02} {dt_hour:02}:{dt_min:02}:{dt_sec:02} GMT"
+            return f"{dt_year:04}-{dt_month:02}-{dt_day:02} GMT ({loc_hour:02}:{loc_min:02})"
+        return f"{dt_year:04}-{dt_month:02}-{dt_day:02} {dt_hour:02}:{dt_min:02}:{dt_sec:02} GMT ({loc_hour:02}:{loc_min:02})"
     if day_only:
-        return f"{dt_day:02}-{dt_month:02}-{dt_year:04} GMT"
-    return f"{dt_day:02}-{dt_month:02}-{dt_year:04} {dt_hour:02}:{dt_min:02}:{dt_sec:02} GMT"
+        return f"{dt_day:02}-{dt_month:02}-{dt_year:04} GMT ({loc_hour:02}:{loc_min:02})"
+    return f"{dt_day:02}-{dt_month:02}-{dt_year:04} {dt_hour:02}:{dt_min:02}:{dt_sec:02} GMT ({loc_hour:02}:{loc_min:02})"

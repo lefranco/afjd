@@ -1654,7 +1654,8 @@ def game_master():
 
         datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
         datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
-        deadline_loaded_day, deadline_loaded_hour, _ = datetime_deadline_loaded_str.split(' ')
+        x = datetime_deadline_loaded_str.split(' ')
+        deadline_loaded_day, deadline_loaded_hour, _, _= datetime_deadline_loaded_str.split(' ')
 
         fieldset = html.FIELDSET()
         legend_deadline_day = html.LEGEND("Jour de la prochaine D.L. (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
