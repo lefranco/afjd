@@ -1028,10 +1028,12 @@ def show_informations():
 
     # header
     thead = html.THEAD()
-    for field in ['rang', 'role', 'retards', 'nombre', 'ratio']:
+    for field in ['rang', 'role', 'pseudo', 'retards', 'nombre', 'ratio']:
         col = html.TD(field)
         thead <= col
     recap_table <= thead
+
+    role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
     rank = 1
     for role_id in sorted(count.keys(), key=lambda r: (len(count[r]), max(count[r])), reverse=True):
@@ -1046,6 +1048,14 @@ def show_informations():
         role_name = play_low.VARIANT_DATA.role_name_table[role]
         role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
         col = html.TD(role_icon_img)
+        row <= col
+
+        # pseudo
+        col = html.TD()
+        player_id_str = role2pseudo[role_id]
+        player_id = int(player_id_str)
+        pseudo_quitter = play_low.ID2PSEUDO[player_id]
+        col <= pseudo_quitter
         row <= col
 
         # incidents
