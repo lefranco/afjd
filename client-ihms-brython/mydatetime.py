@@ -112,7 +112,7 @@ def fromtimestamp(time_stamp):
 
     # Javascript Date constructor
     date = window.Date.new
-    delta = date(time_stamp*1000).getTimezoneOffset() * 60
+    delta = date(time_stamp * 1000).getTimezoneOffset() * 60
 
     rel_time_stamp_loc = rel_time_stamp - delta
     secs_in_day_local = rel_time_stamp_loc % 86400
