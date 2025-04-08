@@ -123,6 +123,8 @@ def create_game(json_dict):
     information_displayed_fast = False
     information_displayed_game_type = False
     information_displayed_just_play = False
+    information_displayed_deadline_time = False
+    information_displayed_vote_allowed = False
 
     def display_disorder_callback(_):
         """ display_disorder_callback """
@@ -131,6 +133,7 @@ def create_game(json_dict):
 
         if input_cd_possible_moves.checked or input_cd_possible_retreats.checked or input_cd_possible_builds.checked:
             if not information_displayed_disorder:
+                alert("Attention, le désordre civil n'est pas la norme sur le site. Le remplacement des joueurs en gros retard est préconisé pour jouer des meilleures parties.\n\nDe plus, de telles parties ne devraient pas compter pour le ELO.")
                 information_displayed_disorder = True
 
     def display_exposition_callback(_):
@@ -140,7 +143,7 @@ def create_game(json_dict):
 
         if input_exposition.checked:
             if not information_displayed_exposition:
-                alert("Ne cochez ce paramètre que si vous savez vraiment ce qu'il signifie. La partie est saisie par l'arbitre et destinée à être consultée par le public - ce n'est pas une partie jouée sur le site")
+                alert("Attention, ne cocher ce paramètre que si vous savez vraiment ce qu'il signifie. La partie est saisie par l'arbitre et destinée à être consultée par le public - ce n'est pas une partie jouée sur le site.")
                 information_displayed_exposition = True
 
     def display_fast_callback(_):
@@ -150,7 +153,7 @@ def create_game(json_dict):
 
         if input_fast.checked:
             if not information_displayed_fast:
-                alert("Ne cochez ce paramètre que si vous savez vraiment ce qu'il signifie. La partie est jouée en temps réel (pendant plusieurs heures) comme sur un plateau en utilisant pour communiquer un logiciel de communication.")
+                alert("Attention, ne cocher ce paramètre que si vous savez vraiment ce qu'il signifie. La partie est jouée en temps réel (pendant plusieurs heures) comme sur un plateau en utilisant pour communiquer un logiciel de communication.")
                 information_displayed_fast = True
 
     def display_game_type_callback(_):
@@ -159,9 +162,31 @@ def create_game(json_dict):
         nonlocal information_displayed_game_type
 
         if not information_displayed_game_type:
-            explain = '\n'.join(common.TYPE_GAME_EXPLAIN_CONV.values())
+            all_game_types = '\n'.join(common.TYPE_GAME_EXPLAIN_CONV.values())
+            avoid_open_blitz = "Attention, il est préférable d'éviter les parties BlitzOuvertes qui sont sources de tergiversations - à réserver aux parties de test !"
+            explain = f"{all_game_types}\n\n{avoid_open_blitz}"
             alert(explain)
             information_displayed_game_type = True
+
+    def display_deadline_time_callback(_):
+        """ display_deadline_time_callback """
+
+        nonlocal information_displayed_deadline_time
+
+        if input_deadline_hour.value != DEFAULT_DEADLINE_TIME:
+            if not information_displayed_deadline_time:
+                alert(f"Attention, il est préférable d'éviter de dévier de l'heure des date limite 'standard' sur le site ({DEFAULT_DEADLINE_TIME}h GMT), car cela perturbe certains joueurs d'avoir des parties avec des DL différentes.")
+                information_displayed_deadline_time = True
+
+    def display_vote_allowed_callback(_):
+        """ display_vote_allowed_callback """
+
+        nonlocal information_displayed_vote_allowed
+
+        if input_endgame_vote_allowed.checked:
+            if not information_displayed_vote_allowed:
+                alert(f"Attention, le vote de fin de partie n'a de sens que pour les parties relativement longues, c'est à dire d'au moins 7 années.")
+                information_displayed_vote_allowed = True
 
     def display_just_play_callback(_):
         """ display_just_play_callback """
@@ -169,8 +194,7 @@ def create_game(json_dict):
         nonlocal information_displayed_just_play
 
         if not information_displayed_just_play:
-            explain = '\n'.join(["Si vous cochez vous serez mis dans les joueurs de la partie et le site trouvera un arbitre", "Si vous ne cochez pas (par défaut) vous serez arbitre de la partie et ne pourrez pas la jouer", "Ceci est modifiable par la suite !"])
-            alert(explain)
+            alert("Si vous cochez vous serez mis dans les joueurs de la partie et le site trouvera un arbitre.\nSi vous ne cochez pas (par défaut) vous serez arbitre de la partie et ne pourrez pas la jouer.\n\nCeci est modifiable par la suite !")
             information_displayed_just_play = True
 
     def create_game_callback(ev):  # pylint: disable=invalid-name
@@ -495,6 +519,7 @@ def create_game(json_dict):
     legend_endgame_vote_allowed = html.LEGEND("votes de fin", title="Les joueurs peuvent-ils voter la fin de la partie ?")
     fieldset <= legend_endgame_vote_allowed
     input_endgame_vote_allowed = html.INPUT(type="checkbox", checked=bool(endgame_vote_allowed) if endgame_vote_allowed is not None else False, Class='btn-inside')
+    input_endgame_vote_allowed.bind("click", display_vote_allowed_callback)
     fieldset <= input_endgame_vote_allowed
     form <= fieldset
 
@@ -524,6 +549,7 @@ def create_game(json_dict):
     legend_deadline_hour = html.LEGEND("heure de date limite (GMT)", title="Heure GMT de la journée à laquelle placer les dates limites")
     fieldset <= legend_deadline_hour
     input_deadline_hour = html.INPUT(type="number", value=deadline_hour if deadline_hour is not None else DEFAULT_DEADLINE_TIME, Class='btn-inside')
+    input_deadline_hour.bind("click", display_deadline_time_callback)
     fieldset <= input_deadline_hour
     form <= fieldset
 
@@ -632,7 +658,7 @@ def create_game(json_dict):
     form <= fieldset
 
     form <= html.BR()
-    form <= html.DIV("Partie privée ? Restez arbitre, créez la partie, mettez les joueurs désirés, enlevez les non désirés si besoin et quittez l'arbitrage quand la partie est presque complète (il ne manque que vous en joueur) !", Class='note')
+    form <= html.DIV("Partie privée ? Restez arbitre, créez la partie, mettez les joueurs désirés, enlevez les non désirés si besoin et quittez l'arbitrage quand la partie est presque complète (il ne manque que vous en joueur). Un arbitre sera affecté parmi les modérateurs du site !", Class='note')
     form <= html.BR()
 
     input_create_game = html.INPUT(type="submit", value="Créer la partie", Class='btn-inside')
@@ -665,18 +691,6 @@ def rectify_parameters_game():
     speed_adjustments_loaded = None
     cd_possible_builds_loaded = None
     play_weekend_loaded = None
-
-    information_displayed_disorder = False
-
-    def display_disorder_callback(_):
-        """ display_disorder_callback """
-
-        nonlocal information_displayed_disorder
-
-        if input_cd_possible_moves.checked or input_cd_possible_retreats.checked or input_cd_possible_builds.checked:
-            if not information_displayed_disorder:
-                alert("Attention : autoriser le Désordre Civil sur une partie enlève théoriquement l'éligibilité pour le calcul du ELO")
-                information_displayed_disorder = True
 
     def rectify_parameters_reload():
         """ rectify_parameters_reload """
@@ -1199,7 +1213,6 @@ def rectify_parameters_game():
     legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
     fieldset <= legend_cd_possible_moves
     input_cd_possible_moves = html.INPUT(type="checkbox", checked=cd_possible_moves_loaded, Class='btn-inside')
-    input_cd_possible_moves.bind("click", display_disorder_callback)
     fieldset <= input_cd_possible_moves
     form <= fieldset
 
@@ -1216,7 +1229,6 @@ def rectify_parameters_game():
     legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
     fieldset <= legend_cd_possible_retreats
     input_cd_possible_retreats = html.INPUT(type="checkbox", checked=cd_possible_retreats_loaded, Class='btn-inside')
-    input_cd_possible_retreats.bind("click", display_disorder_callback)
     fieldset <= input_cd_possible_retreats
     form <= fieldset
 
@@ -1235,7 +1247,6 @@ def rectify_parameters_game():
     legend_cd_possible_builds = html.LEGEND("DC possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
     fieldset <= legend_cd_possible_builds
     input_cd_possible_builds = html.INPUT(type="checkbox", checked=cd_possible_builds_loaded, Class='btn-inside')
-    input_cd_possible_builds.bind("click", display_disorder_callback)
     fieldset <= input_cd_possible_builds
     form <= fieldset
 
