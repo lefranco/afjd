@@ -1,7 +1,7 @@
 """ replaces datetime """
 
 #  import datetime
-from browser import window
+from browser import window  # pylint: disable=import-error
 
 # ref is 1/3/2000 0h0m:0s
 MY_EPOCH_YEAR = 2000
