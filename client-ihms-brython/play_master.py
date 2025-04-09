@@ -1644,11 +1644,6 @@ def game_master():
         deadline_form <= special_legend
         deadline_form <= html.BR()
 
-        # get GMT date and time
-        time_stamp_now = time()
-        date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
-        date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
-
         # convert 'deadline_loaded' to human editable format
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
 
@@ -1725,9 +1720,6 @@ def game_master():
 
         table <= row
         play_low.MY_SUB_PANEL <= table
-
-        play_low.MY_SUB_PANEL <= html.BR()
-        play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}", Class='note')
 
     ############################################
     if play_low.GAME_PARAMETERS_LOADED['current_state'] == 1 and (play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']):
