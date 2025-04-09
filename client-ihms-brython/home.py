@@ -383,9 +383,9 @@ def show_news():
 
     # TODO : fill this automatically
     current_collected_value = 410
-    needed_value = 1000
+    needed_value = 950
 
-    label = html.LABEL(f"Collecté à ce jour {current_collected_value}€ / {needed_value} : ", for_='raised')
+    label = html.LABEL(f"Collecté à ce jour {current_collected_value}€ / {needed_value}€ : ", for_='raised')
     gauge = html.METER(id='raised', value=current_collected_value, min=0, max=needed_value)
 
     div_a5 <= label
