@@ -837,7 +837,7 @@ def my_games(state_name):
     # need these
     suffering_games = get_suffering_games(games_dict, games_id_player, dict_role_id)
 
-    # we alert about  suffering games once a day
+    # we alert about  suffering games once a day (that need to be started)
     day_notified = 0
     if 'DATE_SUFFERING_NOTIFIED' in storage:
         day_notified = int(storage['DATE_SUFFERING_NOTIFIED'])
@@ -847,6 +847,8 @@ def my_games(state_name):
             alert("Pour ce faire, depuis la page 'mes parties', bouton 'en attente' et aller dans la(les) partie(s) et finalement bouton 'démarrer la partie' !")
             storage['DATE_SUFFERING_NOTIFIED'] = str(day_now)
 
+    # we alert about  suffering games once a day (that need to be debriefed=
+    # TODO
     time_stamp_now = time()
 
     # button for switching mode (display)
