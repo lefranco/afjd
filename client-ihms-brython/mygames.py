@@ -27,13 +27,49 @@ MY_PANEL <= MY_SUB_PANEL
 # warn because difference
 DELTA_WARNING_THRESHOLD_SEC = 10
 
+# TODO REPLACE BY A FUNCTION GETTING DIRECTLY
+# Games that need to be started
+# Games that need to ne debriefed
+def get_incomplete_games():
+    """ get_incomplete_games : returns empty list if error or no game"""
 
+    incomplete_games_list = []
+
+    def reply_callback(req):
+        nonlocal incomplete_games_list
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des parties qui sont prêtes : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des parties qui sont prêtes : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        incomplete_games_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/games-incomplete"
+
+    # getting incomplete games list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return incomplete_games_list
+
+
+# TODO REPLACE BY A FUNCTION GETTING DIRECTLY
+# Games that need to be started
+# Games that need to ne debriefed
 def get_suffering_games(games_dict, games_id_player, dict_role_id):
     """ get_suffering_games """
 
     suffering_games = []
 
-    incomplete_games_list = common.get_incomplete_games()
+    incomplete_games_list = get_incomplete_games()
     # there can be no message (if no game of failed to load)
 
     for game_id_str, data in games_dict.items():
@@ -795,22 +831,17 @@ def my_games(state_name):
 
     games_id_player = {int(n) for n in player_games.keys()}
 
-    # need a default value
-    suffering_games = []
-
     # get the day
     day_now = int(time()) // (3600 * 24)
 
-    # we check suffering games once a day
+    # need these
+    suffering_games = get_suffering_games(games_dict, games_id_player, dict_role_id)
+
+    # we alert about  suffering games once a day
     day_notified = 0
     if 'DATE_SUFFERING_NOTIFIED' in storage:
         day_notified = int(storage['DATE_SUFFERING_NOTIFIED'])
-    if state == 0:
-        # no alert : just will display in "go" colour
-        suffering_games = get_suffering_games(games_dict, games_id_player, dict_role_id)
-    elif day_now > day_notified:
-        # alert but not too often
-        suffering_games = get_suffering_games(games_dict, games_id_player, dict_role_id)
+    if day_now > day_notified:
         if suffering_games:
             alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
             alert("Pour ce faire, depuis la page 'mes parties', bouton 'en attente' et aller dans la(les) partie(s) et finalement bouton 'démarrer la partie' !")
@@ -1044,6 +1075,7 @@ def my_games(state_name):
                 # highlite free available position
                 if game_name in suffering_games:
                     colour = config.NEED_START
+
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
                     button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))

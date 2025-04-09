@@ -59,30 +59,6 @@ def information_about_input():
     return information
 
 
-def get_suffering_games(games_dict):
-    """ get_suffering_games """
-
-    suffering_games = []
-
-    incomplete_games_list = common.get_incomplete_games()
-    # there can be no message (if no game of failed to load)
-
-    for game_id_str, data in games_dict.items():
-
-        if data['current_state'] != 0:
-            continue
-
-        # game must not need players
-        game_id = int(game_id_str)
-        if game_id in incomplete_games_list:
-            continue
-
-        game_name = data['name']
-        suffering_games.append(game_name)
-
-    return suffering_games
-
-
 def create_game(json_dict):
     """ create_game """
 
@@ -1523,11 +1499,6 @@ def all_games(state_name):
                 game = games_dict[str(game_id)]['name']
                 game_master_dict[game] = master
 
-    suffering_games = []
-    if state == 0:
-        # no alert : just will display in "go" colour
-        suffering_games = get_suffering_games(games_dict)
-
     time_stamp_now = time()
 
     # button for switching mode
@@ -1684,9 +1655,6 @@ def all_games(state_name):
 
             if field == 'name':
                 value = game_name
-                # highlite free available position
-                if game_name in suffering_games:
-                    colour = config.NEED_START
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
                     button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds))
