@@ -1319,14 +1319,6 @@ def my_games(state_name):
     if late_games:
         mydialog.InfoDialog("Information", f"Vous êtes en retard dans la(les) partie(s) : {' '.join(late_games)}")
 
-    # get GMT date and time
-    time_stamp_now = time()
-    date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
-    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
-
-    MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}", Class='note')
-    MY_SUB_PANEL <= html.BR()
-
     # display shift with server
     delta_time_sec = int(storage['DELTA_TIME_SEC'])
     abs_delta_time_sec = abs(delta_time_sec)
