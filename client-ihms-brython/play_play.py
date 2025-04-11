@@ -1588,9 +1588,6 @@ def submit_orders():
     # button negotiations
     play_low.stack_negotiations_button(buttons_right)
 
-    # information retreats/builds
-    play_low.stack_possibilities(buttons_right, advancement_season)
-
     if play_low.ROLE_ID in submitted_data['needed'] and not game_over:
 
         # button for communication orders
