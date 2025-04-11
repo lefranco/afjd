@@ -161,7 +161,7 @@ def create_game(json_dict):
 
         if input_endgame_vote_allowed.checked:
             if not information_displayed_vote_allowed:
-                alert("Attention, le vote de fin de partie n'a de sens que pour les parties relativement longues, c'est à dire d'au moins 7 années.")
+                alert("Attention, le vote de fin de partie n'a de sens que pour les parties relativement longues, c'est à dire d'au moins une dizaine d'années.")
                 information_displayed_vote_allowed = True
 
     def display_just_play_callback(_):
