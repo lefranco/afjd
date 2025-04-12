@@ -34,7 +34,7 @@ extern TCOTEPOSSS COTEPOSS;
 extern int ANNEEZERO;
 extern int SAISON, SAISONMODIF;
 extern BOOL OPTIONw, OPTIONR, OPTIONS, OPTIONE, OPTIONL;
-extern char OPTIONp[NPAYSS], OPTIONx[NPAYSS];
+extern char OPTIONP[NPAYSS], OPTIONx[NPAYSS];
 extern char OPTIONt; /* pour le joueur */
 
 extern const char *NOMPROGRAMME;

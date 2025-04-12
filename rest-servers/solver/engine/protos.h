@@ -113,7 +113,6 @@ void calculajustements(_PAYS *, int *, int *, int *);
 /* reste */
 void decritsituation(char *);
 void decritordres(char *, BOOL);
-void decritprototypes(char *, _PAYS *);
 void decritordressecurite(char *, _PAYS *);
 void decritordrescomplets(char *, _PAYS *, BOOL);
 void decritactifs(char *);
