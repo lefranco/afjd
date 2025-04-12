@@ -21,7 +21,7 @@ import allgames
 
 
 THRESHOLD_DRIFT_ALERT_SEC = 59
-
+MAX_DISPLAYED_CHAT = 3
 
 OPTIONS = {
     'Vue d\'ensemble': "Vue d'ensemble du site",
@@ -372,12 +372,16 @@ def show_news():
 
     chat_content_loaded = news_content_table_loaded['chats']
     if chat_content_loaded:
-        last_chat = chat_content_loaded[-1]
-        last_chat_author = last_chat[1]
-        last_chat_message = last_chat[2]
         div_a5 <= html.BR()
-        div_a5 <= html.H5("Dernier message :")
-        div_a5 <= html.DIV(f"{last_chat_author} : {last_chat_message}", Class='chat_sample')
+        div_a5 <= html.H5("Dernier(s) message(s) :")
+        num_chats = 0
+        for last_chat in reversed(chat_content_loaded):
+            last_chat_author = last_chat[1]
+            last_chat_message = last_chat[2]
+            div_a5 <= html.DIV(f"{last_chat_author} : {last_chat_message}", Class='chat_sample')
+            num_chats += 1
+            if num_chats >= MAX_DISPLAYED_CHAT:
+                break
 
     div_a5 <= html.H5("Financement du site :")
 
