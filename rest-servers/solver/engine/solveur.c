@@ -41,7 +41,7 @@ char NOMFICVIVANTS[TAILLEMOT]; /* nom du fichier pays vivants */
 char NOMFICBILAN[TAILLEMOT]; /* nom du fichier bilan de la partie */
 char NOMFICRECUP[TAILLEMOT]; /* nom du fichier dans lequel on recupere les ordres d'un pays */
 
-char NOMFICPROTOS[NPAYSS][TAILLEMOT]; /* nom du fichier prototypes d'ordres */
+char NOMFICDEFAUT[NPAYSS][TAILLEMOT]; /* nom du fichier d'ordres par defaut */
 
 TPAYS PAYS;
 TREGION REGION;
@@ -67,7 +67,7 @@ TPAYSCLASSES PAYSCLASSES;
 int ANNEEZERO, SAISON, SAISONMODIF;
 
 BOOL OPTIONE, OPTIONw, OPTIONs, OPTIONv, OPTIONR, OPTIONS, OPTIONL;
-char OPTIONO, OPTIONC, OPTIONp[NPAYSS], OPTIONx[NPAYSS];
+char OPTIONO, OPTIONC, OPTIONP[NPAYSS], OPTIONx[NPAYSS];
 
 /****************************************************/
 
@@ -120,8 +120,6 @@ static void infos(void)
 	cherchechaine(__FILE__, 12, buf, 0); /*"-x<nm...>	: Fait les ordres des pays autres que  <n>"*/
 	(void) printf("%s\n", buf);
 	cherchechaine(__FILE__, 13, buf, 0); /*"-O<n> <fic>	: Recupere les ordres du pays <n> dans <fic>"*/
-	(void) printf("%s\n", buf);
-	cherchechaine(__FILE__, 14, buf, 0); /*"-p<n> <fic>	: Cree des prototypes d'ordres du pays <n> dans <fic>"*/
 	(void) printf("%s\n", buf);
 	cherchechaine(__FILE__, 15, buf, 0); /*"-P<n> <fic>	: Cree des ordres du pays <n> dans <fic> (les plus simples)"*/
 	(void) printf("%s\n", buf);
@@ -247,13 +245,11 @@ static void parametres(int argc, char **argv)
 						etat = PARAMXXX;
 						continue;
 					case 'P':
-					case 'p':
 						if (etat != PARAMINIT) {
-							cherchechaine(__FILE__, 25, buf, 0); /*"Option P/p"*/
+							cherchechaine(__FILE__, 25, buf, 0); /*"Option P"*/
 							impromptu(buf);
 						}
 						etat = PARAMPROTOS;
-						(void) strcat(OPTIONp, ((*argv)[i] == 'P' ? "A" : "a"));
 						continue;
 					case 'O':
 						if (etat != PARAMINIT) {
@@ -269,7 +265,7 @@ static void parametres(int argc, char **argv)
 							etat = PARAMINIT;
 							break;
 						case PARAMPROTOS:
-							OPTIONp[npays] += ((*argv)[i] - 'A');
+							OPTIONP[npays] = (*argv)[i];
 							etat = PARAMPROTOS2;
 							break;
 						case PARAMRECUP:
@@ -330,10 +326,7 @@ static void parametres(int argc, char **argv)
 				break;
 			case PARAMPROTOS2:
 				/* "@" est un synonyme de "" (bug DOS) */
-				if (!strcmp(*argv, "@"))
-					(void) strcpy(NOMFICPROTOS[npays], "");
-				else
-					(void) strcpy(NOMFICPROTOS[npays], *argv);
+			    (void) strcpy(NOMFICDEFAUT[npays], *argv);
 				if (++npays >= NPAYSS) {
 					cherchechaine(__FILE__, 33, buf, 0); /*"Trop de pays pour les prototypes"*/
 					erreur(NULL, ERRPARAMS, buf);
@@ -388,7 +381,7 @@ static void initialisation(void)
 	OPTIONO = EOS;
 
 	(void) strcpy(OPTIONx, "");
-	(void) strcpy(OPTIONp, "");
+	(void) strcpy(OPTIONP, "");
 
 	/* Valeurs par defaut */
 	(void) strcpy(NOMFICCARTE, "DEFAULT");
@@ -403,7 +396,7 @@ static void initialisation(void)
 	(void) strcpy(NOMFICBILAN, "");
 
 	for (npays = 0; npays < NPAYSS; npays++)
-		(void) strcpy(NOMFICPROTOS[npays], "");
+		(void) strcpy(NOMFICDEFAUT[npays], "");
 
 }
 
@@ -491,18 +484,9 @@ int main(int argc, char *argv[]) {
 		informer(buf);
 	}
 
-	if (strcmp(OPTIONp, "")) {
-		for (npays = 0; OPTIONp[npays] != EOS; npays++) {
-			if (islower((int) OPTIONp[npays])) {
-				decritprototypes(NOMFICPROTOS[npays], 
-				    paysdinitiale(toupper((int)OPTIONp[npays])));
-			} else if (isupper((int) OPTIONp[npays])) {
-				decritordressecurite(NOMFICPROTOS[npays], 
-				    paysdinitiale(OPTIONp[npays]));
-			} else {
-				cherchechaine(__FILE__, 45, buf, 0); /*"Option Px ou px inconnue"*/
-				erreur(NULL, ERRPARAMS, buf);
-			}
+	if (strcmp(OPTIONP, "")) {
+		for (npays = 0; OPTIONP[npays] != EOS; npays++) {
+			decritordressecurite(NOMFICDEFAUT[npays], paysdinitiale(OPTIONP[npays]));
 		}
 		exit(0);
 	}

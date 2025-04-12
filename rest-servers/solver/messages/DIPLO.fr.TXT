@@ -410,7 +410,6 @@ solveur.c#10#Pour les commandes suivantes on adopte la convention suivante :
 solveur.c#11#		: <n> sera le code à une lettre du pays
 solveur.c#12#-x<n>		: Fournit des ordres pour les pays autres que <n>
 solveur.c#13#-O<n> <fic>	: Récupère les ordres du pays <n> dans <fic>
-solveur.c#14#-p<n> <fic>	: crée des prototypes d'ordres du pays <n> dans <fic>
 solveur.c#15#-P<n> <fic>	: crée des ordres du pays <n> dans <fic> (les plus simples)
 solveur.c#16#-R		: Evite les destructions cas de défaut d'ordres de retraite
 solveur.c#17#-S		: La stabilite en centres entraine l'arret de la partie
@@ -420,7 +419,7 @@ solveur.c#20#-w		: Branche le mode bavard
 solveur.c#21#-v		: Affiche la version du programme
 solveur.c#22#-L		: On ne parle plus des numeros de lignes
 solveur.c#24#Option x
-solveur.c#25#Option P/p
+solveur.c#25#Option P
 solveur.c#26#Option O
 solveur.c#27#Pas de pays de tel code initiale
 solveur.c#29#Initiale pays
@@ -432,7 +431,6 @@ solveur.c#35#Fin ligne commmande
 solveur.c#39#Version basée sur le DATC
 solveur.c#41#Fin lecture carte
 solveur.c#44#Fin lecture situation initiale
-solveur.c#45#Option Px ou px inconnue
 solveur.c#46#Il s'agit de résolution de mouvements
 solveur.c#48#Fin lecture mouvements
 solveur.c#49#Fin résolution mouvements

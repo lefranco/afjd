@@ -410,7 +410,6 @@ solveur.c#10#For the following commands this convention is adopted :
 solveur.c#11#		: <n> will be the one letter code of the country 
 solveur.c#12#-x<n>		: Provides orders for the countries other than <n>
 solveur.c#13#-O<n> <fic>	: Recovers orders of country <n> in <fic>
-solveur.c#14#-p<n> <fic>	: Creates prototypes orders of country <n> in <fic>
 solveur.c#15#-P<n> <fic>	: Creates orders of country <n> in <fic> (most simple ones)
 solveur.c#16#-R		: Avoids disbands should retreat orders be missing
 solveur.c#17#-S		: Stability in centres involves stop of the game
@@ -420,7 +419,7 @@ solveur.c#20#-w		: Switches to verbose mode
 solveur.c#21#-v		: Displays program version
 solveur.c#22#-L		: Line numbers are not mentionned any more
 solveur.c#24#Option x
-solveur.c#25#Option P/p
+solveur.c#25#Option P
 solveur.c#26#Option O
 solveur.c#27#No country with such initial code 
 solveur.c#29#Initial country
@@ -432,7 +431,6 @@ solveur.c#35#End commmand line
 solveur.c#39#Version based on DATC
 solveur.c#41#End read of map
 solveur.c#44#End read initial situation 
-solveur.c#45#Option Px or px unknown
 solveur.c#46#This is moves adjudication
 solveur.c#48#End read moves
 solveur.c#49#End move adjudication
