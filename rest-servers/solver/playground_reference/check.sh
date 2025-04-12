@@ -11,4 +11,4 @@ solveur -c DEFAULT -o ./ORDRES.ORD -i ./SITUATION.DAT -f RESULTAT.DAT
 
 echo "Resultat:"
 cat RESULTAT.DAT
-
+rm RESULTAT.DAT
