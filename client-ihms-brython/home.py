@@ -386,10 +386,12 @@ def show_news():
     div_a5 <= html.H5("Financement du site :")
 
     # TODO : fill this automatically
-    current_collected_value = 410
-    needed_value = 950
+    current_collected_value = 430
+    needed_value = 838
+    detail_cost = "(579€ Back-end + 259€ Front-End)"
+    update_date = "15 Avril 2025"
 
-    label = html.LABEL(f"Collecté à ce jour {current_collected_value}€ / {needed_value}€ : ", for_='raised')
+    label = html.LABEL(f"Collecté à ce jour (en date du {update_date}) : {current_collected_value}€ / {needed_value}€ {detail_cost}: ", for_='raised')
     gauge = html.METER(id='raised', value=current_collected_value, min=0, max=needed_value)
 
     div_a5 <= label
