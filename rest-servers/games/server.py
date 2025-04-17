@@ -2396,6 +2396,63 @@ class AllocationPlayer2Ressource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/games-complete-or-ready/<player_id>')
+class GamesCompleteOrReadyRessource(flask_restful.Resource):  # type: ignore
+    """ GamesCompleteOrReadyRessource """
+
+    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.List[int]], int]:  # pylint: disable=R0201
+        """
+        Gets all  games that have all players or that are ready for replacement
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/games-complete-or-ready - GET - get getting all games complete or ready for player_id=%s", player_id)
+
+        sql_executor = database.SqlExecutor()
+
+        relevant_games_data = sql_executor.execute(
+            "select games.identifier from games, allocations where allocations.game_id=games.identifier and allocations.role_id = 0",
+            need_result=True)
+        assert relevant_games_data is not None
+
+        relevant_games = {tr[0] for tr in relevant_games_data}
+
+        no_role_data = sql_executor.execute(
+            "select games.identifier,  count(*) as no_role, capacities.value as capacity  from games  join allocations on allocations.game_id=games.identifier  join capacities on capacities.game_id=games.identifier  where allocations.role_id = -1  group by identifier",
+            need_result=True)
+        assert no_role_data is not None
+        # tr[0] id of game
+        # tr[1] number of players allocated to game (with no role)
+        # tr[2] capacity of game (including GM)
+
+        have_role_data = sql_executor.execute(
+            "select games.identifier,  count(*) as with_role, capacities.value as capacity  from games  join allocations on allocations.game_id=games.identifier  join capacities on capacities.game_id=games.identifier  where allocations.role_id <> -1  group by identifier",
+            need_result=True)
+        assert have_role_data is not None
+        # tr[0] id of game
+        # tr[1] number of players allocated to game (with role)
+        # tr[2] capacity of game (including GM)
+
+        del sql_executor
+
+        # dict to say how many not allocated in game
+        norole_dict = {tr[0]: tr[1] for tr in no_role_data}
+
+        # dict to say how many allocated in game
+        role_dict = {tr[0]: tr[1] for tr in have_role_data}
+
+        # game is complete if there are at least as many people allocated to the game (without a role) than the capacity (-1 : remove GM) and nobody has a role (except GM)
+        complete_games = [tr[0] for tr in no_role_data if tr[0] in relevant_games and tr[1]  >= tr[2] - 1 and role_dict[tr[0]] == 1]
+
+        # game is ready if fewer people with role than capacity but with these with no role capacity is reached
+        ready_games = [tr[0] for tr in have_role_data if tr[0] in relevant_games and tr[1] - 1 < tr[2] - 1 and tr[0] in norole_dict and tr[1] - 1 + norole_dict[tr[0]] >= tr[2] - 1]
+
+        data = {'complete': complete_games, 'ready': ready_games}
+
+        return data, 200
+
+
+# TODO REMOVE THIS LATER
 @API.resource('/games-incomplete')
 class GamesIncompleteRessource(flask_restful.Resource):  # type: ignore
     """ GamesIncompleteRessource """

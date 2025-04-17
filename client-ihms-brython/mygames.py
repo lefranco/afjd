@@ -27,16 +27,14 @@ MY_PANEL <= MY_SUB_PANEL
 # warn because difference
 DELTA_WARNING_THRESHOLD_SEC = 10
 
-# TODO REPLACE BY A FUNCTION GETTING DIRECTLY
-# Games that need to be started
-# Games that need to ne debriefed
-def get_incomplete_games():
-    """ get_incomplete_games : returns empty list if error or no game"""
 
-    incomplete_games_list = []
+def get_complete_or_ready_games(player_id):
+    """ get_complete_or_ready_games """
+
+    complete_or_ready_games_dict = {}
 
     def reply_callback(req):
-        nonlocal incomplete_games_list
+        nonlocal complete_or_ready_games_dict
         req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -47,54 +45,54 @@ def get_incomplete_games():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        incomplete_games_list = req_result
+        complete_or_ready_games_dict = req_result
 
     json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games-incomplete"
+    url = f"{host}:{port}/games-complete-or-ready/{player_id}"
 
-    # getting incomplete games list : no need for token
+    # getting complete or ready games list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    return incomplete_games_list
+    return complete_or_ready_games_dict
 
 
-# TODO REPLACE BY A FUNCTION GETTING DIRECTLY
-# Games that need to be started
-# Games that need to ne debriefed
-def get_suffering_games(games_dict, games_id_player, dict_role_id):
-    """ get_suffering_games """
+def get_suffering_games(games_dict, player_id, dict_role_id):
+    """ get_suffering_games : need_start, need_replacement or need_debrief """
 
-    suffering_games = []
+    need_start = []
+    need_replacement = []
+    need_debrief = []
 
-    incomplete_games_list = get_incomplete_games()
-    # there can be no message (if no game of failed to load)
+    complete_or_ready_games_dict = get_complete_or_ready_games(player_id)
 
     for game_id_str, data in games_dict.items():
 
-        if data['current_state'] != 0:
-            continue
-
-        # do not display games players does not participate into
         game_id = int(game_id_str)
-        if game_id not in games_id_player:
-            continue
 
-        # must be game master
-        role_id = dict_role_id[str(game_id)]
-        if role_id != 0:
-            continue
+        # game is awaiting and complete
+        if data['current_state'] == 0:
+            if game_id in complete_or_ready_games_dict['complete']:
+                game_name = data['name']
+                need_start.append(game_name)
 
-        # game must not need players
-        if game_id in incomplete_games_list:
-            continue
+        # game is ongoing
+        if data['current_state'] == 1:
 
-        game_name = data['name']
-        suffering_games.append(game_name)
+            # game is complete but a role is missing : need allocation
+            if game_id in complete_or_ready_games_dict['ready']:
+                game_name = data['name']
+                need_replacement.append(game_name)
 
-    return suffering_games
+            # finished and no press : need debrief
+            if (data['soloed'] or data['end_voted'] or data['finished']) and data['nopress_current']:
+                if game_id_str in dict_role_id and dict_role_id[game_id_str] == 0:
+                    game_name = data['name']
+                    need_debrief.append(game_name)
+
+    return {'need_start': need_start, 'need_replacement': need_replacement, 'need_debrief': need_debrief}
 
 
 def get_all_roles_allocated_to_player():
@@ -831,24 +829,26 @@ def my_games(state_name):
 
     games_id_player = {int(n) for n in player_games.keys()}
 
-    # get the day
-    day_now = int(time()) // (3600 * 24)
-
     # need these
-    suffering_games = get_suffering_games(games_dict, games_id_player, dict_role_id)
+    suffering_games = get_suffering_games(games_dict, player_id, dict_role_id)
+
+    # get the hour (do not notify more frequently than every hour)
+    hour_now = int(time()) // 3600
 
     # we alert about  suffering games once a day (that need to be started)
-    day_notified = 0
+    hour_notified = 0
     if 'DATE_SUFFERING_NOTIFIED' in storage:
-        day_notified = int(storage['DATE_SUFFERING_NOTIFIED'])
-    if day_now > day_notified:
-        if suffering_games:
-            alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
-            alert("Pour ce faire, depuis la page 'mes parties', bouton 'en attente' et aller dans la(les) partie(s) et finalement bouton 'démarrer la partie' !")
-            storage['DATE_SUFFERING_NOTIFIED'] = str(day_now)
+        hour_notified = int(storage['DATE_SUFFERING_NOTIFIED'])
+    if hour_now > hour_notified:
+        if suffering_games['need_start']:
+            alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games['need_start'])} qui est(sont) complète(s) !")
+            alert("Pour ce faire, depuis la page 'mes parties', bouton 'en attente' (en bas) et aller dans la(les) partie(s) !")
+        if suffering_games['need_replacement']:
+            alert(f"Il faut réaliser les remplacements dans la(les) partie(s) en cours {' '.join(suffering_games['need_replacement'])} qui est(sont) prête(s) !")
+        if suffering_games['need_debrief']:
+            alert(f"Il faut ouvrir le debrief dans la(les) partie(s) en cours {' '.join(suffering_games['need_debrief'])} qui est(sont) terminée(s) !")
+        storage['DATE_SUFFERING_NOTIFIED'] = str(hour_now)
 
-    # we alert about  suffering games once a day (that need to be debriefed=
-    # TODO
     time_stamp_now = time()
 
     # button for switching mode (display)
