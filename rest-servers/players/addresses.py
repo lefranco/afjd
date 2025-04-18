@@ -7,6 +7,7 @@ File : addresses.py
 Handles the addresses (ip addresses)
 """
 import typing
+import time
 
 import database
 
@@ -32,9 +33,11 @@ class Address:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS addresses")
-        sql_executor.execute("CREATE TABLE addresses (ip_value STR, player_id INTEGER)")
+        sql_executor.execute("CREATE TABLE addresses (ip_value STR, player_id INTEGER, date real)")
 
     def __init__(self, ip_value: str, player_id: int) -> None:
+
+        self._date = time.time()
 
         assert isinstance(ip_value, str), "ip_value must be an str"
         self._ip_value = ip_value
@@ -45,14 +48,14 @@ class Address:
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
         sql_executor.execute("DELETE FROM addresses WHERE ip_value = ? AND player_id = ?", (self._ip_value, self._player_id))
-        sql_executor.execute("INSERT OR REPLACE INTO addresses (ip_value, player_id) VALUES (?, ?)", (self._ip_value, self._player_id))
+        sql_executor.execute("INSERT OR REPLACE INTO addresses (ip_value, player_id, date) VALUES (?, ?, ?)", (self._ip_value, self._player_id, self._date))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
         sql_executor.execute("DELETE FROM addresses WHERE ip_value = ? AND player_id = ?", (self._ip_value, self._player_id))
 
     def __str__(self) -> str:
-        return f"ip_value={self._ip_value} player_id={self._player_id}"
+        return f"ip_value={self._ip_value} player_id={self._player_id} date={self._date}"
 
 
 if __name__ == '__main__':

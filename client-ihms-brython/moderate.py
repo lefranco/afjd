@@ -1775,12 +1775,12 @@ def show_ip_addresses():
 
     players_table = html.TABLE()
 
-    fields = ['ip_value', 'pseudo']
+    fields = ['ip_value', 'pseudo', 'date']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'ip_value': 'adresse IP', 'pseudo': 'pseudo'}[field]
+        field_fr = {'ip_value': 'adresse IP', 'pseudo': 'pseudo', 'date': 'date'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_table <= thead
@@ -1788,6 +1788,8 @@ def show_ip_addresses():
     # duplicated ones
     sorted_ips = sorted([i[0] for i in ip_table])
     duplicated_ips = {sorted_ips[i] for i in range(len(sorted_ips)) if (i < len(sorted_ips) - 1 and sorted_ips[i] == sorted_ips[i + 1]) or (i > 0 and sorted_ips[i] == sorted_ips[i - 1])}
+
+    print(f"{ip_table=}")
 
     for data in sorted(ip_table, key=lambda c: (c[0], num2pseudo[c[1]].upper())):
 
@@ -1804,6 +1806,13 @@ def show_ip_addresses():
                     colour = 'red'
                 else:
                     colour = None
+
+            if field == 'date':
+                value = ''
+                if data[2] is not None:
+                    date_now_gmt = mydatetime.fromtimestamp(data[2])
+                    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+                    value = date_now_gmt_str
 
             col = html.TD(value)
 
