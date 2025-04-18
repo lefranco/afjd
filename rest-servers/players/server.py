@@ -790,7 +790,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
             # create player here
             identifier = players.Player.free_identifier(sql_executor)
-            player = players.Player(identifier, '', '', False, '', False, False, False, False, '', '', '', '', '')
+            player = players.Player(identifier, '', '', False, False, False, False, False, False, '', '', '', '', '')
             _ = player.load_json(args)
             player.update_database(sql_executor)
 
