@@ -29,6 +29,7 @@ OPTIONS = {
     'Le brouillard de guerre': "Spécifications du  brouillard de guerre pour une partie",
     'Ordres de com\'': "Explications sur les ordres de communication",
     'Utilisations ordres de com\'': "Toutes les utilisations des ordres de communication",
+    'Fuseaux horaires': "Des informations les fuseaux horaires dans le monde",
     'Langage Markup Facile': "Des informations sur un langage de construction facile de pages HTML pour les descriptions techniques",
     'Evolution de la fréquentation': "Evolution sous forme graphique du nombre de joueurs actifs sur le site"
 }
@@ -471,6 +472,19 @@ def show_com_orders_usages():
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
 
 
+def show_time_zones():
+    """ show_time_zones """
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    ezml_file = "./docs/fuseaux_horaires.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
+
+
 def show_ezml_spec():
     """ show_ezml_spec """
 
@@ -534,6 +548,8 @@ def load_option(_, item_name):
         show_com_orders()
     if item_name == 'Utilisations ordres de com\'':
         show_com_orders_usages()
+    if item_name == 'Fuseaux horaires':
+        show_time_zones()
     if item_name == 'Langage Markup Facile':
         show_ezml_spec()
     if item_name == 'Evolution de la fréquentation':
