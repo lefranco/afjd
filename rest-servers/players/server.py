@@ -64,7 +64,6 @@ PLAYER_PARSER.add_argument('first_name', type=str, required=False)
 PLAYER_PARSER.add_argument('family_name', type=str, required=False)
 PLAYER_PARSER.add_argument('residence', type=str, required=False)
 PLAYER_PARSER.add_argument('nationality', type=str, required=False)
-PLAYER_PARSER.add_argument('time_zone', type=str, required=False)
 
 PLAYERS_SELECT_PARSER = flask_restful.reqparse.RequestParser()
 PLAYERS_SELECT_PARSER.add_argument('selection', type=str, required=True)
@@ -473,12 +472,6 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(404, msg=f"Nationality '{nationality_provided}' is not a valid country code")
 
-        if args['time_zone']:
-            timezone_provided = args['time_zone']
-            if not players.check_timezone(timezone_provided):
-                del sql_executor
-                flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
-
         assert player is not None
         email_before = player.email
         changed = player.load_json(args)
@@ -727,7 +720,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         players_list = players.Player.inventory(sql_executor)
         del sql_executor
 
-        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone, 'email_confirmed': p.email_confirmed, 'notify_replace': p.notify_replace} for p in players_list}
+        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'email_confirmed': p.email_confirmed, 'notify_replace': p.notify_replace} for p in players_list}
 
         return data, 200
 
@@ -764,14 +757,6 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         else:
             args['nationality'] = players.default_country()
 
-        # cannot have a void timezone
-        if args['time_zone']:
-            timezone_provided = args['time_zone']
-            if not players.check_timezone(timezone_provided):
-                flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
-        else:
-            args['time_zone'] = players.default_timezone()
-
         sql_executor = database.SqlExecutor()
 
         with CREATE_PLAYER_LOCK:
@@ -790,7 +775,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
             # create player here
             identifier = players.Player.free_identifier(sql_executor)
-            player = players.Player(identifier, '', '', False, False, False, False, False, False, '', '', '', '', '')
+            player = players.Player(identifier, '', '', False, False, False, False, False, False, '', '', '', '')
             _ = player.load_json(args)
             player.update_database(sql_executor)
 
@@ -883,7 +868,7 @@ class PlayerSelectListRessource(flask_restful.Resource):  # type: ignore
         players_list = players.Player.inventory(sql_executor)
         del sql_executor
 
-        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone} for p in players_list if p.identifier in selection_list}
+        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality} for p in players_list if p.identifier in selection_list}
 
         return data, 200
 
@@ -2998,8 +2983,11 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
+        
+        for player in players.Player.inventory(sql_executor):
+            player.update_database(sql_executor)
 
-        #  sql_executor.commit()
+        sql_executor.commit()
 
         del sql_executor
 

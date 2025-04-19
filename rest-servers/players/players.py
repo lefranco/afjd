@@ -19,7 +19,6 @@ LEN_EMAIL_MAX = 100
 LEN_FAMILY_NAME_MAX = 30
 LEN_FIRST_NAME_MAX = 20
 LEN_COUNTRY_MAX = 5
-LEN_TIMEZONE_MAX = 10
 
 LOCATION = './data'
 EXTENSION = '.json'
@@ -46,30 +45,6 @@ def default_country() -> str:
     with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check countries is not a dict"
-    return str(list(json_data.values())[0])
-
-
-def check_timezone(timezone: str) -> bool:
-    """ check timezone is ok """
-
-    name = "timezone_list"
-    full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
-    assert full_name_file.exists(), "Missing file to check timezones"
-    with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
-        json_data = json.load(file_ptr)
-    assert isinstance(json_data, dict), "File to check timezones is not a dict"
-    return timezone in json_data.values()
-
-
-def default_timezone() -> str:
-    """ default_timezone """
-
-    name = "timezone_list"
-    full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
-    assert full_name_file.exists(), "Missing file to check timezones"
-    with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
-        json_data = json.load(file_ptr)
-    assert isinstance(json_data, dict), "File to check timezones is not a dict"
     return str(list(json_data.values())[0])
 
 
@@ -139,7 +114,7 @@ class Player:
         sql_executor.execute("CREATE TABLE players (identifier INT UNIQUE PRIMARY KEY, pseudo STR, player_data player)")
         sql_executor.execute("CREATE UNIQUE INDEX pseudo_player ON  players (pseudo)")
 
-    def __init__(self, identifier: int, pseudo: str, email: str, email_confirmed: bool, notify_deadline: bool, notify_adjudication: bool, notify_message: bool, notify_replace: bool, newsletter: bool, family_name: str, first_name: str, residence: str, nationality: str, time_zone: str) -> None:
+    def __init__(self, identifier: int, pseudo: str, email: str, email_confirmed: bool, notify_deadline: bool, notify_adjudication: bool, notify_message: bool, notify_replace: bool, newsletter: bool, family_name: str, first_name: str, residence: str, nationality: str) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -158,7 +133,6 @@ class Player:
         self._family_name = family_name
         self._residence = residence
         self._nationality = nationality
-        self._time_zone = time_zone
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
@@ -231,12 +205,6 @@ class Player:
             self._nationality = self._nationality[:LEN_COUNTRY_MAX]
             changed = True
 
-        if 'time_zone' in json_dict and json_dict['time_zone'] is not None and json_dict['time_zone'] != self._time_zone:
-            self._time_zone = json_dict['time_zone']
-            self._time_zone = database.sanitize_field(self._time_zone)
-            self._time_zone = self._time_zone[:LEN_TIMEZONE_MAX]
-            changed = True
-
         return changed
 
     def save_json(self) -> typing.Dict[str, typing.Any]:
@@ -255,7 +223,6 @@ class Player:
             'first_name': self._first_name,
             'residence': self._residence,
             'nationality': self._nationality,
-            'time_zone': self._time_zone,
         }
         return json_dict
 
@@ -288,11 +255,6 @@ class Player:
     def nationality(self) -> str:
         """ property """
         return self._nationality
-
-    @property
-    def time_zone(self) -> str:
-        """ property """
-        return self._time_zone
 
     @property
     def email(self) -> str:
@@ -340,11 +302,11 @@ class Player:
         self._newsletter = newsletter
 
     def __str__(self) -> str:
-        return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} notify_deadline={self._notify_deadline} notify_adjudication={self._notify_adjudication} notify_message={self._notify_message} notify_replace={self._notify_replace} newsletter={self._newsletter} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality} time_zone={self._time_zone}"
+        return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} notify_deadline={self._notify_deadline} notify_adjudication={self._notify_adjudication} notify_message={self._notify_message} notify_replace={self._notify_replace} newsletter={self._newsletter} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality}"
 
     def adapt_player(self) -> bytes:
         """ To put an object in database """
-        return (f"{self._identifier}{database.STR_SEPARATOR}{self._pseudo}{database.STR_SEPARATOR}{self._email}{database.STR_SEPARATOR}{int(bool(self._email_confirmed))}{database.STR_SEPARATOR}{int(bool(self._notify_deadline))}{database.STR_SEPARATOR}{int(bool(self._notify_adjudication))}{database.STR_SEPARATOR}{int(bool(self._notify_message))}{database.STR_SEPARATOR}{int(bool(self._notify_replace))}{database.STR_SEPARATOR}{int(bool(self._newsletter))}{database.STR_SEPARATOR}{self._family_name}{database.STR_SEPARATOR}{self._first_name}{database.STR_SEPARATOR}{self._residence}{database.STR_SEPARATOR}{self._nationality}{database.STR_SEPARATOR}{self._time_zone}").encode('ascii')
+        return (f"{self._identifier}{database.STR_SEPARATOR}{self._pseudo}{database.STR_SEPARATOR}{self._email}{database.STR_SEPARATOR}{int(bool(self._email_confirmed))}{database.STR_SEPARATOR}{int(bool(self._notify_deadline))}{database.STR_SEPARATOR}{int(bool(self._notify_adjudication))}{database.STR_SEPARATOR}{int(bool(self._notify_message))}{database.STR_SEPARATOR}{int(bool(self._notify_replace))}{database.STR_SEPARATOR}{int(bool(self._newsletter))}{database.STR_SEPARATOR}{self._family_name}{database.STR_SEPARATOR}{self._first_name}{database.STR_SEPARATOR}{self._residence}{database.STR_SEPARATOR}{self._nationality}").encode('ascii')
 
 
 def convert_player(buffer: bytes) -> Player:
@@ -364,9 +326,8 @@ def convert_player(buffer: bytes) -> Player:
     first_name = tab[10].decode()
     residence = tab[11].decode()
     nationality = tab[12].decode()
-    time_zone = tab[13].decode()
 
-    player = Player(identifier, pseudo, email, email_confirmed, notify_deadline, notify_adjudication, notify_message, notify_replace, newsletter, family_name, first_name, residence, nationality, time_zone)
+    player = Player(identifier, pseudo, email, email_confirmed, notify_deadline, notify_adjudication, notify_message, notify_replace, newsletter, family_name, first_name, residence, nationality)
     return player
 
 

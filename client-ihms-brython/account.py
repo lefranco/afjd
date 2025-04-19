@@ -28,7 +28,6 @@ MAX_LEN_PSEUDO = 20
 MAX_LEN_EMAIL = 100
 
 DEFAULT_COUNTRY_CODE = "FRA"
-DEFAULT_TIMEZONE_CODE = "UTC+01:00"
 
 
 RESCUE = False
@@ -162,12 +161,10 @@ def create_account(json_dict):
     first_name = json_dict['first_name'] if json_dict and 'family_name' in json_dict else None
     residence_code = json_dict['residence'] if json_dict and 'residence' in json_dict else DEFAULT_COUNTRY_CODE
     nationality_code = json_dict['nationality'] if json_dict and 'nationality' in json_dict else DEFAULT_COUNTRY_CODE
-    timezone_code = json_dict['time_zone'] if json_dict and 'time_zone' in json_dict else DEFAULT_TIMEZONE_CODE
 
     # conversion
     residence = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}[residence_code]
     nationality = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}[nationality_code]
-    timezone = {v: k for k, v in config.TIMEZONE_CODE_TABLE.items()}[timezone_code]
 
     def create_account_callback(ev):  # pylint: disable=invalid-name
         """ create_account_callback """
@@ -185,7 +182,6 @@ def create_account(json_dict):
         nonlocal first_name
         nonlocal residence
         nonlocal nationality
-        nonlocal timezone
 
         def reply_callback(req):
             req_result = loads(req.text)
@@ -219,12 +215,10 @@ def create_account(json_dict):
         first_name = input_first_name.value
         residence = input_residence.value
         nationality = input_nationality.value
-        timezone = input_timezone.value
 
         # conversion
         residence_code = config.COUNTRY_CODE_TABLE[residence]
         nationality_code = config.COUNTRY_CODE_TABLE[nationality]
-        timezone_code = config.TIMEZONE_CODE_TABLE[timezone]
 
         # make data structure
         json_dict = {
@@ -241,7 +235,6 @@ def create_account(json_dict):
             'first_name': first_name,
             'residence': residence_code,
             'nationality': nationality_code,
-            'time_zone': timezone_code,
         }
 
         # start checking data
@@ -427,20 +420,6 @@ def create_account(json_dict):
     fieldset <= input_nationality
     form <= fieldset
 
-    fieldset = html.FIELDSET()
-    legend_timezone = html.LEGEND("fuseau horaire (public)", title="Pour mieux comprendre vos heures d'éveil")
-    fieldset <= legend_timezone
-    input_timezone = html.SELECT(type="select-one", value="", Class='btn-inside')
-
-    for timezone_cities in config.TIMEZONE_CODE_TABLE:
-        option = html.OPTION(timezone_cities)
-        if timezone_cities == timezone:
-            option.selected = True
-        input_timezone <= option
-
-    fieldset <= input_timezone
-    form <= fieldset
-
     form <= html.BR()
 
     input_create_account = html.INPUT(type="submit", value="Créer le compte", Class='btn-inside')
@@ -472,7 +451,6 @@ def edit_account():
     first_name_loaded = None
     residence_loaded_code = None
     nationality_loaded_code = None
-    timezone_loaded_code = None
 
     def edit_account_reload():
         """ edit_account_reload """
@@ -498,7 +476,6 @@ def edit_account():
             nonlocal first_name_loaded
             nonlocal residence_loaded_code
             nonlocal nationality_loaded_code
-            nonlocal timezone_loaded_code
             req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -527,7 +504,6 @@ def edit_account():
             first_name_loaded = req_result['first_name']
             residence_loaded_code = req_result['residence']
             nationality_loaded_code = req_result['nationality']
-            timezone_loaded_code = req_result['time_zone']
 
         json_dict = {}
 
@@ -581,7 +557,6 @@ def edit_account():
         first_name = input_first_name.value
         residence_code = config.COUNTRY_CODE_TABLE[input_residence.value]
         nationality_code = config.COUNTRY_CODE_TABLE[input_nationality.value]
-        timezone_code = config.TIMEZONE_CODE_TABLE[input_timezone.value]
 
         json_dict = {
             'pseudo': pseudo,
@@ -595,7 +570,6 @@ def edit_account():
             'first_name': first_name,
             'residence': residence_code,
             'nationality': nationality_code,
-            'time_zone': timezone_code,
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -728,20 +702,6 @@ def edit_account():
         input_nationality <= option
 
     fieldset <= input_nationality
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_timezone = html.LEGEND("fuseau horaire (public)", title="Pour mieux comprendre vos heures d'éveil")
-    fieldset <= legend_timezone
-    input_timezone = html.SELECT(type="select-one", value="", Class='btn-inside')
-
-    for timezone_cities in config.TIMEZONE_CODE_TABLE:
-        option = html.OPTION(timezone_cities)
-        if config.TIMEZONE_CODE_TABLE[timezone_cities] == timezone_loaded_code:
-            option.selected = True
-        input_timezone <= option
-
-    fieldset <= input_timezone
     form <= fieldset
 
     form <= html.BR()
