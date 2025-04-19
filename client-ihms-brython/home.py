@@ -391,11 +391,14 @@ def show_news():
     detail_cost = "(579€ Back-end + 259€ Front-End)"
     update_date = "15 Avril 2025"
 
-    label = html.LABEL(f"Collecté à ce jour (en date du {update_date}) [Le lien pour cotiser est plus bas dans la page]: {current_collected_value}€ / {needed_value}€ {detail_cost}: ", for_='raised')
+    label1 = html.LABEL(f"Collecté à ce jour (en date du {update_date}) : {current_collected_value}€ / {needed_value}€ {detail_cost}: ", for_='raised')
     gauge = html.METER(id='raised', value=current_collected_value, min=0, max=needed_value)
+    label2 = html.LABEL("[Le lien pour cotiser est plus bas dans la page]")
 
-    div_a5 <= label
+    div_a5 <= label1
     div_a5 <= gauge
+    div_a5 <= html.BR()
+    div_a5 <= label2
 
 # ----
 
