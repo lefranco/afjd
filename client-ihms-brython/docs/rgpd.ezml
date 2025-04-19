@@ -52,7 +52,8 @@ $$ Identification
 | _JWT TOKEN_ | le jeton d'authenfication obtenu au login et utilisé pour les accès protégés (très important)|
 | _LOGIN TIME_ | date du login |
 | _LOGIN EXPIRATION TIME_ | date d'expitation  login |
-| _IP ADDRESS_ | adresse IP de l'utilisateur. Elle est transmise sur login, sur oubli de mot de passe et sur envoi des ordres sur une partie | _TIME ZONE_ | fuseau horaire de l'utilisateur. Il est transmis sur envoi des ordres sur une partie |
+| _IP ADDRESS_ | adresse IP de l'utilisateur. Elle est transmise sur login, sur oubli de mot de passe et sur envoi des ordres sur une partie |
+| _TIME ZONE_ | fuseau horaire de l'utilisateur. Il est transmis sur envoi des ordres sur une partie |
 =
 $$ Présentation
 
