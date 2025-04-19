@@ -1064,23 +1064,15 @@ def send_submission_data():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-    # must be identified
-    if 'PSEUDO' not in storage:
-        return
-
     # must have a timezone (should be the case)
+    time_zone = None
     if 'TIMEZONE' not in storage:
-        alert("no timzeone")
-        return
-
-    time_zone = storage['TIMEZONE']
+        time_zone = storage['TIMEZONE']
 
     # must have an IP (should be the case)
+    ip_address = None
     if 'IPADDRESS' not in storage:
-        alert("no ip")
-        return
-
-    ip_address = storage['IPADDRESS']
+        ip_address = storage['IPADDRESS']
 
     json_dict = {
         'time_zone': time_zone,
