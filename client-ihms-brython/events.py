@@ -356,12 +356,12 @@ def registrations():
 
     joiners_table = html.TABLE()
 
-    fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'comment', 'status']
+    fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'comment', 'status']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'rank': 'rang', 'date': 'date', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'comment': 'commentaire', 'status': 'statut'}[field]
+        field_fr = {'rank': 'rang', 'date': 'date', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'comment': 'commentaire', 'status': 'statut'}[field]
         col = html.TD(field_fr)
         thead <= col
     joiners_table <= thead
@@ -1035,12 +1035,12 @@ def handle_event():
 
     joiners_table = html.TABLE()
 
-    fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status', 'action']
+    fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'status', 'action']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'rank': 'rang', 'date': 'date', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut', 'action': 'action'}[field]
+        field_fr = {'rank': 'rang', 'date': 'date', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'status': 'statut', 'action': 'action'}[field]
         col = html.TD(field_fr)
         thead <= col
     joiners_table <= thead

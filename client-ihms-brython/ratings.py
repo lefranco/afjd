@@ -859,13 +859,13 @@ def show_players_masters_data():
 
     players_masters_table = html.TABLE()
 
-    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'activity', 'ongoing_played_games', 'other_played_games', 'mastered_games', 'replaces', 'site_roles']
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'activity', 'ongoing_played_games', 'other_played_games', 'mastered_games', 'replaces', 'site_roles']
 
     # header
 
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'activity': 'parties en cours', 'ongoing_played_games': 'parties en cours non anonymes', 'other_played_games': 'parties en attente, archivées ou distinguées', 'mastered_games': 'parties arbitrées', 'replaces': 'remplaçant', 'site_roles': 'rôles sur le site'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'activity': 'parties en cours', 'ongoing_played_games': 'parties en cours non anonymes', 'other_played_games': 'parties en attente, archivées ou distinguées', 'mastered_games': 'parties arbitrées', 'replaces': 'remplaçant', 'site_roles': 'rôles sur le site'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_masters_table <= thead
