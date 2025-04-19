@@ -99,9 +99,10 @@ def read_timezone():
 
     # Javascript Date constructor
     date = window.Date.new
-    delta = date(time_stamp * 1000).getTimezoneOffset() // 60
+    full_date =  date(time_stamp * 1000).toString()
+    timezone_value = ' '.join(full_date.split(' ')[5:])
 
-    timezone_value = f"-- {delta}H"
+    # store it
     storage['TIMEZONE'] = timezone_value
 
 
