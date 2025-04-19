@@ -1050,16 +1050,16 @@ def get_all_emails():
     return emails_dict
 
 
-def send_ip_address():
-    """ send_ip_address """
+def send_submission_data():
+    """ send_submission_data """
 
     def reply_callback(req):
         req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à l'envoi de l'adresse IP : {req_result['message']}")
+                alert(f"Erreur à l'envoi des données de soumission : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à l'envoi de l'adresse IP : {req_result['msg']}")
+                alert(f"Problème à l'envoi des données de soumission : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
@@ -1068,52 +1068,62 @@ def send_ip_address():
     if 'PSEUDO' not in storage:
         return
 
-    # must have an IP (should be the case)
-    if 'IPADDRESS' not in storage:
+    # must have a timezone (should be the case)
+    if 'TIMEZONE' not in storage:
+        alert("no timzeone")
         return
 
-    ip_value = storage['IPADDRESS']
+    time_zone = storage['TIMEZONE']
+
+    # must have an IP (should be the case)
+    if 'IPADDRESS' not in storage:
+        alert("no ip")
+        return
+
+    ip_address = storage['IPADDRESS']
+
     json_dict = {
-        'ip_value': ip_value
+        'time_zone': time_zone,
+        'ip_address': ip_address
     }
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/ip_address"
+    url = f"{host}:{port}/submission_data"
 
     # store ip : do need token
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
 
-def get_ip_submission_table():
-    """ get_ip_submission_table """
+def get_submission_data_table():
+    """ get_submission_data_table """
 
-    ip_sub_list = {}
+    sub_data_list = {}
 
     def reply_callback(req):
-        nonlocal ip_sub_list
+        nonlocal sub_data_list
         req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des addresses IP et dernières soumissions : {req_result['message']}")
+                alert(f"Erreur à la récupération des données de soumissions : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des addresses IP et dernières soumissions : {req_result['msg']}")
+                alert(f"Problème à la récupération des données de soumissions : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        ip_sub_list = req_result
+        sub_data_list = req_result
 
     json_dict = {}
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/ip_address"
+    url = f"{host}:{port}/submission_data"
 
     # getting ip addresses or last submissions : need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return dict(ip_sub_list)
+    return dict(sub_data_list)
 
 
 def verification_code(pseudo):

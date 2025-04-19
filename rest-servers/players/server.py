@@ -35,6 +35,7 @@ import ratings3
 import teasers
 import events
 import registrations
+import timezones
 import addresses
 import submissions
 import emails
@@ -125,8 +126,13 @@ REGISTRATION_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
 REGISTRATION_UPDATE_PARSER.add_argument('player_id', type=int, required=True)
 REGISTRATION_UPDATE_PARSER.add_argument('value', type=int, required=True)
 
+# TODO OBSOLETE REMOVE
 IP_ADDRESS_PARSER = flask_restful.reqparse.RequestParser()
 IP_ADDRESS_PARSER.add_argument('ip_value', type=str, required=True)
+
+DATA_SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
+DATA_SUBMISSION_PARSER.add_argument('time_zone', type=str, required=True)
+DATA_SUBMISSION_PARSER.add_argument('ip_address', type=str, required=True)
 
 RESCUE_PLAYER_PARSER = flask_restful.reqparse.RequestParser()
 RESCUE_PLAYER_PARSER.add_argument('rescued_user', type=str, required=True)
@@ -669,6 +675,9 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             del sql_executor
             flask_restful.abort(400, msg=f"Failed to send email to {email_player} : {message}")
+
+        # delete player from timezone table
+        timezones.Timezone.delete_by_player_id(sql_executor, player_id)
 
         # delete player from ip addresses table
         addresses.Address.delete_by_player_id(sql_executor, player_id)
@@ -2469,6 +2478,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+# TODO REMOVE THIS IS OPBSOLETE
 @API.resource('/ip_address')
 class IpAddressRessource(flask_restful.Resource):  # type: ignore
     """ IpAddressRessource """
@@ -2561,6 +2571,109 @@ class IpAddressRessource(flask_restful.Resource):  # type: ignore
         sql_executor.commit()
 
         data = {'pseudo': pseudo, 'msg': 'Ok IP address and submission stored'}
+        return data, 200
+
+
+@API.resource('/submission_data')
+class SubmissionDataRessource(flask_restful.Resource):  # type: ignore
+    """ SubmissionDataRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[str, int]]], int]:  # pylint: disable=R0201
+        """
+        Get list of Time zone, IP addresses and last order input
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/submission_data - GET - getting time zones, ip addresses and last order input")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # check user has right to get list of last timezones, ip addresses and submissions (moderator)
+
+        sql_executor = database.SqlExecutor()
+
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        the_moderators = [m[0] for m in moderators_list]
+        if pseudo not in the_moderators:
+            del sql_executor
+            flask_restful.abort(403, msg="You are not allowed to get list of last ip addresses and submissions (need to be moderator)!")
+
+        # gather data
+
+        time_zones_list = timezones.Timezone.inventory(sql_executor)
+        ip_addresses_list = addresses.Address.inventory(sql_executor)
+        submissions_list = submissions.Submission.inventory(sql_executor)
+
+        del sql_executor
+
+        data = {'time_zones_list': time_zones_list, 'ip_addresses_list': ip_addresses_list, 'submissions_list': submissions_list}
+        return data, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Stores an Time zone, IP address and last submission
+        EXPOSED
+        """
+
+        args = DATA_SUBMISSION_PARSER.parse_args(strict=True)
+        time_zone = args['time_zone']
+        ip_address = args['ip_address']
+
+        mylogger.LOGGER.info("/submission_data- POST - stores a timezone,  ipaddress and submission")
+
+        # check from user server user is pseudo
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        sql_executor = database.SqlExecutor()
+
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        if player is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
+
+        assert player is not None
+
+        player_id = player.identifier
+
+        # store a time zone for player
+        timezone = timezones.Timezone(player_id, time_zone)
+        timezone.update_database(sql_executor)
+
+        # store an ip address for player
+        address = addresses.Address(ip_address, player_id)
+        address.update_database(sql_executor)
+
+        # store a last submission date for player
+        submission = submissions.Submission(player_id)
+        submission.update_database(sql_executor)
+
+        sql_executor.commit()
+
+        data = {'pseudo': pseudo, 'msg': 'Ok Time zone, IP address and submission stored'}
         return data, 200
 
 
@@ -2983,7 +3096,7 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
-        
+
         for player in players.Player.inventory(sql_executor):
             player.update_database(sql_executor)
 
