@@ -27,10 +27,6 @@ with open("./config/servers.json", "r", encoding="utf-8") as read_file:
 with open("./data/country_list.json", "r", encoding="utf-8") as read_file:
     COUNTRY_CODE_TABLE = load(read_file)
 
-# load timezone list from json data file
-with open("./data/timezone_list.json", "r", encoding="utf-8") as read_file:
-    TIMEZONE_CODE_TABLE = load(read_file)
-
 # load scoring list from json data file
 with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
     SCORING_CODE_TABLE = load(read_file)
