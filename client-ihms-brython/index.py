@@ -7,7 +7,6 @@ from time import time
 
 START_TIME = time()
 
-
 from browser import document, html, alert, timer, ajax, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -91,6 +90,19 @@ MENU_LEFT <= MENU_SELECTION
 ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 IP_TIMEOUT_SEC = 7
+
+
+def read_timezone():
+    """ read_timezone """
+
+    time_stamp = time()
+
+    # Javascript Date constructor
+    date = window.Date.new
+    delta = date(time_stamp * 1000).getTimezoneOffset() // 60
+
+    timezone_value = f"-- {delta}H"
+    storage['TIMEZONE'] = timezone_value
 
 
 # reading the IP in a non disruptive way
@@ -349,6 +361,11 @@ def load_option(_, item_name):
     MENU_LEFT <= html.BR()
     MENU_LEFT <= html.BR()
     MENU_LEFT <= html.SMALL("Testé avec Firefox.")
+
+
+# we read timezone now if necessary
+if 'TIMEZONE' not in storage:
+    read_timezone()
 
 
 # we read ip now if necessary

@@ -35,6 +35,7 @@ OPTIONS = {
     'Toutes les parties d\'un joueur': "Toutes les parties d\'un joueur du site",
     'Tous les joueurs de la partie': "Toutes les joueurs d'une partie du site",
     'Dernières soumissions d\'ordres': "Dernières soumissions d\'ordres sur les parties du site",
+    'Affichage fuseaux horaires': "Afficher les fuseaux horaires utilisateurs du site",
     'Vérification adresses IP': "Détecter les doubons d'adresses IP des utilisateurs du site",
     'Vérification courriels': "Détecter les doubons de courriels des utilisateurs du site",
     'Codes de vérification': "Codes de vérification pour le forum",
@@ -1710,11 +1711,11 @@ def show_last_submissions():
     # pseudo from number
     num2pseudo = {v: k for k, v in players_dict.items()}
 
-    ip_submission_table = common.get_ip_submission_table()
-    if not ip_submission_table:
+    submission_data_table = common.get_submission_data_table()
+    if not submission_data_table:
         return
 
-    submission_table = ip_submission_table['submissions_list']
+    submission_table = submission_data_table['submissions_list']
 
     players_table = html.TABLE()
 
@@ -1751,6 +1752,60 @@ def show_last_submissions():
     MY_SUB_PANEL <= players_table
 
 
+def show_time_zones():
+    """ show_time_zones """
+
+    MY_SUB_PANEL <= html.H3("Vérification des fuseaux horaires à la soumission d'ordres")
+
+    if not common.check_modo():
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    submission_data_table = common.get_submission_data_table()
+    if not submission_data_table:
+        return
+
+    timezones_table = submission_data_table['time_zones_list']
+
+    players_table = html.TABLE()
+
+    fields = ['pseudo', 'time_zone']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'time_zone': 'Fuseau horaire', }[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for data in sorted(timezones_table, key=lambda c: num2pseudo[c[0]].upper()):
+
+        row = html.TR()
+        for field in fields:
+
+            if field == 'pseudo':
+                value = num2pseudo[data[0]]
+
+            if field == 'time_zone':
+                value = data[1]
+
+            col = html.TD(value)
+
+            row <= col
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
+
+
 def show_ip_addresses():
     """ show_ip_addresses """
 
@@ -1767,11 +1822,11 @@ def show_ip_addresses():
     # pseudo from number
     num2pseudo = {v: k for k, v in players_dict.items()}
 
-    ip_submission_table = common.get_ip_submission_table()
-    if not ip_submission_table:
+    submission_data_table = common.get_submission_data_table()
+    if not submission_data_table:
         return
 
-    ip_table = ip_submission_table['addresses_list']
+    ip_table = submission_data_table['ip_addresses_list']
 
     players_table = html.TABLE()
 
@@ -2238,6 +2293,8 @@ def load_option(_, item_name):
         show_players_game()
     if item_name == 'Dernières soumissions d\'ordres':
         show_last_submissions()
+    if item_name == 'Affichage fuseaux horaires':
+        show_time_zones()
     if item_name == 'Vérification adresses IP':
         show_ip_addresses()
     if item_name == 'Vérification courriels':

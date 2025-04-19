@@ -233,8 +233,8 @@ def submit_orders():
             else:
                 mydialog.InfoDialog("Information", "Ordres validés !")
 
-            # special : send ip address to server
-            common.send_ip_address()
+            # special : send timezone, ip address, sublmission  to server
+            common.send_submission_data()
 
             orders_in = True
             buttons_right.removeChild(orders_status)

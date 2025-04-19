@@ -19,6 +19,7 @@ import teasers
 import events
 import site_image
 import registrations
+import timezones
 import addresses
 import submissions
 import emails
@@ -93,6 +94,12 @@ def populate_registrations(sql_executor: database.SqlExecutor) -> None:
     registrations.Registration.create_table(sql_executor)
 
 
+def populate_timezones(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+
+    timezones.Timezone.create_table(sql_executor)
+
+
 def populate_addresses(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
 
@@ -137,6 +144,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_events(sql_executor)
     populate_site_image(sql_executor)
     populate_registrations(sql_executor)
+    populate_timezones(sql_executor)
     populate_addresses(sql_executor)
     populate_submissions(sql_executor)
     populate_emails(sql_executor)
