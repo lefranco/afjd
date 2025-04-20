@@ -1065,13 +1065,13 @@ def send_submission_data():
             return
 
     # must have a timezone (should be the case)
-    time_zone = None
-    if 'TIMEZONE' not in storage:
+    time_zone = '?'
+    if 'TIMEZONE' in storage:
         time_zone = storage['TIMEZONE']
 
     # must have an IP (should be the case)
-    ip_address = None
-    if 'IPADDRESS' not in storage:
+    ip_address = '?'
+    if 'IPADDRESS' in storage:
         ip_address = storage['IPADDRESS']
 
     json_dict = {
