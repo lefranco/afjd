@@ -20,8 +20,13 @@ import play
 import allgames
 
 
-THRESHOLD_DRIFT_ALERT_SEC = 59
+# how many of the last chats are displayed
 MAX_DISPLAYED_CHAT = 3
+
+# for funding site hosting
+# detail cost : 579€ Back-end + 259€ Front-End
+NEEDED_VALUE = 838
+
 
 OPTIONS = {
     'Vue d\'ensemble': "Vue d'ensemble du site",
@@ -385,20 +390,20 @@ def show_news():
 
     div_a5 <= html.H5("Financement du site :")
 
-    # TODO : fill this automatically
-    current_collected_value = 430
-    needed_value = 838
-    detail_cost = "(579€ Back-end + 259€ Front-End)"
-    update_date = "15 Avril 2025"
+    current_collected_value = news_content_table_loaded['raised']
 
-    label1 = html.LABEL(f"Collecté à ce jour (en date du {update_date}) : {current_collected_value}€ / {needed_value}€ {detail_cost}: ", for_='raised')
-    gauge = html.METER(id='raised', value=current_collected_value, min=0, max=needed_value)
-    label2 = html.LABEL("[Le lien pour cotiser est plus bas dans la page]")
+    label1 = html.LABEL(f"Collecté à ce jour (mis à jour à 6h00 GMT) : {current_collected_value}€ / {NEEDED_VALUE}€: ", for_='raised')
+    gauge = html.METER(id='raised', value=current_collected_value, min=0, max=NEEDED_VALUE)
+    current_payers_list_value = news_content_table_loaded['members']
+    label2 = html.LABEL(f"Membres donateurs : {current_payers_list_value}")
+    label3 = html.LABEL("[Le lien pour cotiser est plus bas dans la page]")
 
     div_a5 <= label1
     div_a5 <= gauge
     div_a5 <= html.BR()
     div_a5 <= label2
+    div_a5 <= html.BR()
+    div_a5 <= label3
 
 # ----
 

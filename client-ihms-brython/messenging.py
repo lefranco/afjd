@@ -13,9 +13,6 @@ import mydatetime
 import mydialog
 
 
-THRESHOLD_DRIFT_ALERT_SEC = 59
-
-
 OPTIONS = {
     'Messages personnels': "Lire mes messages personnels et en envoyer",
 }

@@ -33,6 +33,7 @@ import reliability_scheduler
 import archiver_scheduler
 import forgiver_scheduler
 import warner_scheduler
+import extracter_scheduler
 
 SESSION = requests.Session()
 
@@ -44,6 +45,8 @@ API = flask_restful.Api(APP)
 # read from parameter file
 COMMUTER_ACCOUNT = ""
 COMMUTER_PASSWORD = ""
+CLIENT_ID = ""
+CLIENT_SECRET = ""
 
 # time to add to make sure to be after
 EPSILON_SEC = 5
@@ -57,6 +60,8 @@ def load_credentials_config() -> None:
 
     global COMMUTER_ACCOUNT
     global COMMUTER_PASSWORD
+    global CLIENT_ID
+    global CLIENT_SECRET
 
     credentials_config = lowdata.ConfigFile('./config/credentials.ini')
     for credential in credentials_config.section_list():
@@ -64,8 +69,13 @@ def load_credentials_config() -> None:
         assert credential == 'credentials', "Section name is not 'credentials' in credentials configuration file"
         credentials_data = credentials_config.section(credential)
 
+        # for commuter
         COMMUTER_ACCOUNT = credentials_data['COMMUTER_ACCOUNT']
         COMMUTER_PASSWORD = credentials_data['COMMUTER_PASSWORD']
+
+        # for extracter (helloasso)
+        CLIENT_ID = credentials_data['CLIENT_ID']
+        CLIENT_SECRET = credentials_data['CLIENT_SECRET']
 
 
 def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typing.Dict[str, typing.Any]) -> bool:
@@ -341,6 +351,10 @@ def acting_threaded_procedure() -> None:
         jwt_token = get_token()
         timestamp_token = time.time()
 
+        # for extracter
+        client_id = CLIENT_ID
+        client_secret = CLIENT_SECRET
+
         # time of adjudications
         now = time.time()
 
@@ -403,6 +417,14 @@ def acting_threaded_procedure() -> None:
                     forgiver_scheduler.run(jwt_token)
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Forgiver, stack is below")
+                    mylogger.LOGGER.error("%s", traceback.format_exc())
+
+            if hour_now == 6:
+                mylogger.LOGGER.info("Extracter Scheduler...")
+                try:
+                    extracter_scheduler.run(jwt_token, client_id, client_secret)
+                except:  # noqa: E722 pylint: disable=bare-except
+                    mylogger.LOGGER.error("Exception occured with Extracter, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 12:
