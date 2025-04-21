@@ -1116,6 +1116,9 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
         modo_content = newss.News.content(sql_executor, 'modo')
         glory_content = newss.News.content(sql_executor, 'glory')
 
+        raised_content = newss.News.content(sql_executor, 'raised')
+        members_content = newss.News.content(sql_executor, 'members')
+
         del sql_executor
 
         # get chats contents
@@ -1129,7 +1132,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         server_time = time.time()
 
-        data = {'admin': admin_content, 'modo': modo_content, 'glory': glory_content, 'chats': chats_content, 'server_time': server_time}
+        data = {'admin': admin_content, 'modo': modo_content, 'glory': glory_content, 'raised': raised_content, 'members': members_content, 'chats': chats_content, 'server_time': server_time}
 
         return data, 200
 
@@ -1202,6 +1205,17 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
             if pseudo not in the_creators:
                 del sql_executor
                 flask_restful.abort(403, msg="You are not allowed to change glorious! (need to be creator)")
+
+        elif topic in  ['raised', 'members']:
+
+            requester = players.Player.find_by_pseudo(sql_executor, pseudo)
+
+            if requester is None:
+                del sql_executor
+                flask_restful.abort(404, msg=f"Requesting player {pseudo} does not exist")
+
+            if pseudo != COMMUTER_ACCOUNT:
+                flask_restful.abort(403, msg="You are not allowed to change raised/members! (need to be commuter)")
 
         else:
             del sql_executor

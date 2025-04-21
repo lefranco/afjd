@@ -92,7 +92,7 @@ def run(jwt_token: str) -> None:
             mylogger.LOGGER.info("Ignoring game '%s' that has voted to end !", game_name)
             continue
 
-        mylogger.LOGGER.info(f"Considering game {game_name}")
+        mylogger.LOGGER.info("Considering game '%s'", game_name)
 
         json_dict: typing.Dict[str, typing.Any] = {}
 
