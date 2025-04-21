@@ -95,7 +95,7 @@ def run(jwt_token: str, client_id: str, client_secret: str) -> None:
                 break
 
             # extract payer information
-            payer_name = f"{datum['payer']['firstName']} {datum['payer']['lastName']}"
+            payer_name = f"{datum['payer']['firstName'].title()} {datum['payer']['lastName'].title()}"
 
             # extract amout (given in cents)
             amount = int(datum['amount'] // 100)
