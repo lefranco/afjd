@@ -521,6 +521,7 @@ def rectify_parameters():
     game_type_loaded = None
     finished_loaded = None
     end_voted_loaded = None
+    soloed_loaded = None
     nb_max_cycles_to_play_loaded = None
 
     def change_parameters_reload():
@@ -542,6 +543,7 @@ def rectify_parameters():
             nonlocal game_type_loaded
             nonlocal finished_loaded
             nonlocal end_voted_loaded
+            nonlocal soloed_loaded
             nonlocal nb_max_cycles_to_play_loaded
             req_result = loads(req.text)
             if req.status != 200:
@@ -560,6 +562,7 @@ def rectify_parameters():
             game_type_loaded = req_result['game_type']
             finished_loaded = req_result['finished']
             end_voted_loaded = req_result['end_voted']
+            soloed_loaded = req_result['soloed']
             nb_max_cycles_to_play_loaded = req_result['nb_max_cycles_to_play']
 
         json_dict = {}
@@ -598,6 +601,7 @@ def rectify_parameters():
         game_type_code = config.GAME_TYPES_CODE_TABLE[game_type]
         finished = int(input_finished.checked)
         end_voted = int(input_end_voted.checked)
+        soloed = int(input_soloed.checked)
         nb_max_cycles_to_play = int(input_nb_max_cycles_to_play.value)
 
         json_dict = {
@@ -607,6 +611,7 @@ def rectify_parameters():
             'game_type': game_type_code,
             'finished': finished,
             'end_voted': end_voted,
+            'soloed': soloed,
             'nb_max_cycles_to_play': nb_max_cycles_to_play
         }
 
@@ -693,6 +698,13 @@ def rectify_parameters():
     fieldset <= legend_end_voted
     input_end_voted = html.INPUT(type="checkbox", checked=end_voted_loaded, Class='btn-inside')
     fieldset <= input_end_voted
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_soloed = html.LEGEND("(solo réalisé)", title="Un solo s'est produit sur la partie")
+    fieldset <= legend_soloed
+    input_soloed = html.INPUT(type="checkbox", checked=soloed_loaded, Class='btn-inside')
+    fieldset <= input_soloed
     form <= fieldset
 
     form <= html.BR()

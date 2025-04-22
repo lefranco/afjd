@@ -258,6 +258,7 @@ def game_master():
         json_dict = {
             'name': play_low.GAME,
             'end_voted': 1,
+            'nopress_current': 0,   # also open press
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -638,38 +639,6 @@ def game_master():
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
         game_master()
-
-    def debrief_game_callback(ev):  # pylint: disable=invalid-name
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur au debrief de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème au debrief de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La partie a été modifiée pour le debrief : {messages}")
-
-            # back to where we started
-            play_low.MY_SUB_PANEL.clear()
-            play_low.load_dynamic_stuff()
-            game_master()
-
-        ev.preventDefault()
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/debrief-game/{play_low.GAME}"
-
-        # debrief : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def change_deadline_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -1720,27 +1689,6 @@ def game_master():
 
         table <= row
         play_low.MY_SUB_PANEL <= table
-
-    ############################################
-    if play_low.GAME_PARAMETERS_LOADED['current_state'] == 1 and (play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']):
-
-        play_low.MY_SUB_PANEL <= html.H3("Debrief de la partie")
-
-        # form for debrief
-
-        debrief_form = html.FORM()
-
-        debrief_action = html.DIV("Lève l'anonymat et ouvre les canaux de communication (réversible)", Class='None')
-        special_legend = html.LEGEND(debrief_action)
-        debrief_form <= special_legend
-
-        debrief_form <= html.BR()
-        input_debrief_game = html.INPUT(type="submit", value="Debrief !", Class='btn-inside')
-        input_debrief_game.bind("click", debrief_game_callback)
-        debrief_form <= input_debrief_game
-
-        play_low.MY_SUB_PANEL <= html.BR()
-        play_low.MY_SUB_PANEL <= debrief_form
 
     ############################################
     play_low.MY_SUB_PANEL <= html.H3("Déplacement de joueurs")

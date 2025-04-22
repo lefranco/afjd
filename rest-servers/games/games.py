@@ -217,10 +217,6 @@ class Game:
             self._anonymous = json_dict['anonymous']
             changed = True
 
-        # finished cannot be changed directly
-
-        # soloed cannot be changed directly
-
         if 'nomessage_current' in json_dict and json_dict['nomessage_current'] is not None and json_dict['nomessage_current'] != self._nomessage_current:
             self._nomessage_current = json_dict['nomessage_current']
             changed = True
@@ -337,6 +333,10 @@ class Game:
 
         if 'finished' in json_dict and json_dict['finished'] is not None and json_dict['finished'] != self._finished:
             self._finished = json_dict['finished']
+            changed = True
+
+        if 'soloed' in json_dict and json_dict['soloed'] is not None and json_dict['soloed'] != self._soloed:
+            self._soloed = json_dict['soloed']
             changed = True
 
         if 'nb_max_cycles_to_play' in json_dict and json_dict['nb_max_cycles_to_play'] is not None and json_dict['nb_max_cycles_to_play'] != self._nb_max_cycles_to_play:
@@ -596,6 +596,10 @@ class Game:
     def detect_soloed(self, sql_executor: database.SqlExecutor) -> bool:
         """ detect_soloed """
 
+        # game over when adjustments to play
+        if self._current_advancement % 5 != 4:
+            return False
+
         # get variant
         variant_name = self.variant
         variant_data = variants.Variant.get_by_name(variant_name)
@@ -622,6 +626,7 @@ class Game:
         if not self._soloed:
             if self.detect_soloed(sql_executor):
                 self._soloed = True
+                self._nopress_current = False   # also open press
 
         # end voted is set manuallly by game master
 
@@ -629,6 +634,7 @@ class Game:
         if not self._finished:
             if self.detect_finished():
                 self._finished = True
+                self._nopress_current = False   # also open press
 
     def push_deadline(self, now: float) -> None:
         """ push_deadline """
@@ -747,19 +753,12 @@ class Game:
         """ last_season """
         return self._current_advancement == (self._nb_max_cycles_to_play - 1) * 5 + 2
 
-    def debrief(self) -> None:
-        """ debrief the game """
-
-        # clear restrictions
-        self._anonymous = False
-        self._nomessage_current = False
-        self._nopress_current = False
-
     def terminate(self) -> None:
         """ terminate the game """
 
         # clear restrictions (to make sure)
-        self.debrief()
+        self._anonymous = False
+        self._nopress_current = False
 
         # set a fake deadline far in future
         self._deadline = 10000000000
