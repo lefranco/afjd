@@ -99,7 +99,7 @@ def read_timezone():
 
     # Javascript Date constructor
     date = window.Date.new
-    full_date =  date(time_stamp * 1000).toString()
+    full_date = date(time_stamp * 1000).toString()
     timezone_value = ' '.join(full_date.split(' ')[5:])
 
     # store it
