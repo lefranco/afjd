@@ -64,7 +64,7 @@ def get_suffering_games(games_dict, player_id, dict_role_id):
 
     need_start = []
     need_replacement = []
-    need_debrief = []
+    need_know_who = []
 
     complete_or_ready_games_dict = get_complete_or_ready_games(player_id)
 
@@ -87,12 +87,12 @@ def get_suffering_games(games_dict, player_id, dict_role_id):
                 need_replacement.append(game_name)
 
             # finished and no press : need debrief
-            if (data['soloed'] or data['end_voted'] or data['finished']) and data['nopress_current']:
+            if (data['soloed'] or data['end_voted'] or data['finished']) and data['anonymous']:
                 if game_id_str in dict_role_id and dict_role_id[game_id_str] == 0:
                     game_name = data['name']
-                    need_debrief.append(game_name)
+                    need_know_who.append(game_name)
 
-    return {'need_start': need_start, 'need_replacement': need_replacement, 'need_debrief': need_debrief}
+    return {'need_start': need_start, 'need_replacement': need_replacement, 'need_know_who': need_know_who}
 
 
 def get_all_roles_allocated_to_player():
@@ -845,8 +845,8 @@ def my_games(state_name):
             alert("Pour ce faire, depuis la page 'mes parties', bouton 'en attente' (en bas) et aller dans la(les) partie(s) !")
         if suffering_games['need_replacement']:
             alert(f"Il faut réaliser les remplacements dans la(les) partie(s) en cours {' '.join(suffering_games['need_replacement'])} qui est(sont) prête(s) !")
-        if suffering_games['need_debrief']:
-            alert(f"Il faut ouvrir le debrief dans la(les) partie(s) en cours {' '.join(suffering_games['need_debrief'])} qui est(sont) terminée(s) !")
+        if suffering_games['need_know_who']:
+            alert(f"Il faut lever l'anonymat dans la(les) partie(s) en cours {' '.join(suffering_games['need_know_who'])} qui est(sont) terminée(s) !")
         storage['DATE_SUFFERING_NOTIFIED'] = str(hour_now)
 
     time_stamp_now = time()
