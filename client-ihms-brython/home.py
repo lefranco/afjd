@@ -398,7 +398,6 @@ def show_news():
     label2 = html.LABEL(f"Membres donateurs : {current_payers_list_value}")
     label3 = html.LABEL(html.EM("[Le lien pour cotiser est plus bas dans la page]"))
 
-
     div_a5 <= label1
     div_a5 <= gauge
     div_a5 <= html.BR()
