@@ -19,7 +19,7 @@ class Incident:
     def purge_old(sql_executor: database.SqlExecutor) -> None:
         """ purge old incidents """
         now = time.time()
-        one_year_ago = now - 365.2 * 24. * 3600.
+        one_year_ago = now - 365.24 * 24. * 3600.
         sql_executor.execute("DELETE FROM incidents WHERE date < ?", (one_year_ago,))
 
     @staticmethod
