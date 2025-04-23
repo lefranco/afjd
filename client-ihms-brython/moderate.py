@@ -28,7 +28,7 @@ OPTIONS = {
     'Préparer un publipostage': "Préparer un publipostage vers tous les utilisateurs du site",
     'Annoncer dans toutes les parties': "Annoncer dans toutes les parties en cours du site",
     'Annoncer dans la partie': "Annoncer dans la partie séléctionnée",
-    'Récupérer un courriel et téléphone': "Récupérer un courriel et téléphone d'un utilisateur du site",
+    'Récupérer un courriel': "Récupérer le courriel d'un utilisateur du site",
     # surveillance
     'Tous les ordres manquants': "Tous les ordres manquants sur les parties en cours",
     'Pires récidivistes retard et abandon': "Pires récidivistes retard et abandon sur les parties en cours",
@@ -2280,7 +2280,7 @@ def load_option(_, item_name):
         general_announce()
     if item_name == 'Annoncer dans la partie':
         game_announce()
-    if item_name == 'Récupérer un courriel et téléphone':
+    if item_name == 'Récupérer un courriel':
         display_personal_info()
     # surveillance
     if item_name == 'Tous les ordres manquants':
