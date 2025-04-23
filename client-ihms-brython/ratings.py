@@ -611,7 +611,7 @@ def show_rating_regularity():
             seniority = round(started_playing_days / 7)
 
             # how recent is the activity - that is a ratio
-            non_obsolescence = round(exp(- finished_playing_days / 365.2), 3)
+            non_obsolescence = round(exp(- finished_playing_days / 365.24), 3)
 
             # how continuous (there must a few gaps as possible)
             play_duration = max(started_playing_days - finished_playing_days, 0.5)

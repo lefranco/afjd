@@ -8007,7 +8007,7 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/extract_games_data - GET - getting ELO/reliability/regularity data ")
 
         now = time.time()
-        one_year_ago = now - 365.2 * 24. * 3600.
+        one_year_ago = now - 365.24 * 24. * 3600.
 
         sql_executor = database.SqlExecutor()
 
