@@ -1273,17 +1273,20 @@ def game_master():
 
     else:
 
-        # check game soloed
-        if play_low.GAME_PARAMETERS_LOADED['soloed']:
-            alert("La partie est terminée parce qu'un solo a été réalisé !")
-
-        # check game end voted
-        elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
-            alert("La partie est terminée sur un vote de fin unanime !")
-
-        # check game finished (if not soloed nor end voted)
-        elif play_low.GAME_PARAMETERS_LOADED['finished']:
-            alert("La partie est terminée parce qu'arrivée à échéance")
+        # check game finished
+        if play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']:
+            message = "La partie est terminée..."
+            if play_low.GAME_PARAMETERS_LOADED['soloed']:
+                message += " parce qu'un solo a été réalisé !"
+            elif play_low.GAME_PARAMETERS_LOADED['finished']:
+                message += " parce qu'arrivée à échéance !"
+            elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
+                message += " sur un vote de fin unanime !"
+            if play_low.GAME_PARAMETERS_LOADED['nopress_current']:
+                message += " (la presse n'est toujours pas ouverte !)"
+            if play_low.GAME_PARAMETERS_LOADED['anonymous']:
+                message += " (l'anonymat n'est toujours pas levé !)"
+            alert(message)
 
     advancement_loaded = play_low.GAME_PARAMETERS_LOADED['current_advancement']
 
