@@ -1470,21 +1470,18 @@ def submit_orders():
             alert("Vous n'avez pas d'ordre à passer.")
             # may still vote or edit notes
 
-    game_over = False
-
-    # check game soloed
-    if play_low.GAME_PARAMETERS_LOADED['soloed']:
-        alert("La partie est terminée parce qu'un solo a été réalisé !")
-        # may still edit notes
-
-    # check game end voted
-    if play_low.GAME_PARAMETERS_LOADED['end_voted']:
-        alert("La partie est terminée sur un vote de fin unanime !")
-        # may still edit notes
-
-    # check game finished (if not soloed nor end voted)
-    if play_low.GAME_PARAMETERS_LOADED['finished']:
-        alert("La partie est terminée parce qu'arrivée à échéance")
+    # check game finished
+    if play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']:
+        message = "La partie est terminée..."
+        if play_low.GAME_PARAMETERS_LOADED['soloed']:
+            message += " parce qu'un solo a été réalisé !"
+        elif play_low.GAME_PARAMETERS_LOADED['finished']:
+            message += " parce qu'arrivée à échéance !"
+        elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
+            message += " sur un vote de fin unanime !"
+        if not play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nopress_game']:
+            message += " (la presse est dorénavant ouverte pour les déclarations de fin de partie !)"
+        alert(message)
         # may still edit notes
 
     # load notes
