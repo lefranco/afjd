@@ -30,7 +30,7 @@ Ce sont les données conservées dans la base de données liées à la création
 Un compte ne peut être supprimé que si'il n'est lié à aucune partie. Un compte est lié à une partie s'il y a un rôle, un retard ou un abandon.
 
 (Suppression des incidents)
-Les incidents (retards et abandons) sont automatiquement supprimés après un délai de deux ans.
+Les incidents (retards et abandons) sont automatiquement supprimés après un délai d'un an.
 
 
 $ Données de navigation
