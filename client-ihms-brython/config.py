@@ -16,8 +16,8 @@ DECLARATIONS_TYPE = 0
 MESSAGES_TYPE = 1
 
 # how many days after which account may be suppressed if nothing happens on it
-# two years
-IDLE_DAY_TIMEOUT = 2 * 365
+# eighteen months
+IDLE_DAY_TIMEOUT = 18 * 30.5
 
 # load servers list from json data file
 with open("./config/servers.json", "r", encoding="utf-8") as read_file:

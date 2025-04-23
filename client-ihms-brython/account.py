@@ -196,6 +196,7 @@ def create_account(json_dict):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.InfoDialog("Information", f"Votre compte a été créé : {messages}")
+            alert(f"Félicition, votre compte a été crée. Attention : il sera supprimé après {config.IDLE_DAY_TIMEOUT / 30.5} mois d'inactivité")
             alert(welcome.MESSAGE)
 
         ev.preventDefault()
