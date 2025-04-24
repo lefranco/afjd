@@ -8016,7 +8016,7 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
         if type_ == 'elo':
             concerned_games_list = [g.identifier for g in games_list if g.current_state == 2 and g.used_for_elo == 1]
         else:
-            concerned_games_list = [g.identifier for g in games_list if g.current_state == 2]
+            concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2]]
 
         # time of spring 01
         first_advancement = 0
