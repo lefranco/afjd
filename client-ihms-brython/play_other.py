@@ -416,6 +416,13 @@ def show_position(advancement=None):
             window.navigator.clipboard.writeText(input_copy_url_consult.value)
             alert(f"Lien '{input_copy_url_consult.value}' copié dans le presse papier...")
 
+        def copy_url_consult2_callback(_):
+            """ copy_url_consult2_callback """
+            input_copy_url_consult.select()
+            # ev.setSelectionRange(0, 99999) # For mobile devices
+            window.navigator.clipboard.writeText(input_copy_url_consult2.value)
+            alert(f"Lien '{input_copy_url_consult2.value}' copié dans le presse papier...")
+
         def copy_url_join_callback(_):
             """ copy_url_join_callback """
             input_copy_url_join.select()
@@ -697,6 +704,14 @@ def show_position(advancement=None):
         button_copy_url_consult = html.BUTTON("Copier le lien pour inviter un joueur à consulter la partie.", Class='btn-inside')
         button_copy_url_consult.bind("click", copy_url_consult_callback)
         buttons_right <= button_copy_url_consult
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+        url = f"{config.SITE_ADDRESS}?game={play_low.GAME}&advancement={advancement_selected}"
+        input_copy_url_consult2 = html.INPUT(type="text", value=url)
+        button_copy_url_consult2 = html.BUTTON("Copier le lien pour inviter un joueur à consulter la partie sur la saison affichée.", Class='btn-inside')
+        button_copy_url_consult2.bind("click", copy_url_consult2_callback)
+        buttons_right <= button_copy_url_consult2
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
