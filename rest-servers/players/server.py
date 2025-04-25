@@ -158,6 +158,10 @@ COMMUTER_ACCOUNT = "TheCommuter"
 # to avoid repeat messages/declarations
 NO_REPEAT_DELAY_SEC = 15
 
+# how many days after which account may be suppressed if nothing happens on it
+# eighteen months
+IDLE_DAY_TIMEOUT = 18 * 30.5
+
 
 class RepeatPreventer(typing.Dict[int, float]):
     """ Table """
@@ -246,7 +250,7 @@ def suppress_account_message(pseudo: str) -> typing.Tuple[str, str]:
     body += "\n"
     body += " ================="
     body += "\n"
-    body += "Tu as créé un compte sur Diplomania.fr mais tu ne t'es pas connecté depuis très longtemps."
+    body += f"Tu as créé un compte sur Diplomania.fr mais tu ne t'es pas connecté depuis très longtemps ({IDLE_DAY_TIMEOUT / 30.5} mois)."
     body += "\n"
     body += "Tu t'es inscrit dans des parties mais tu ne les as pas jouées, créant ainsi une forte frustration chez les autres joueurs."
     body += "\n"
@@ -1208,7 +1212,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(403, msg="You are not allowed to change glorious! (need to be creator)")
 
-        elif topic in  ['raised', 'members']:
+        elif topic in ['raised', 'members']:
 
             requester = players.Player.find_by_pseudo(sql_executor, pseudo)
 
