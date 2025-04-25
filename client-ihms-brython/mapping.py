@@ -1416,23 +1416,31 @@ class Unit(Highliteable, Renderable):
 
         return f"Une {type_name}{imagined_info} appartenant au joueur {adjective} positionnée dans la région {zone_full_name}{dislodged_info}."
 
-    def save_json(self):
-        """ Save to  dict """
+    def type_unit(self):
+        """ type_unit """
 
         type_unit = None
         if isinstance(self, Fleet):
             type_unit = UnitTypeEnum.FLEET_UNIT
         if isinstance(self, Army):
             type_unit = UnitTypeEnum.ARMY_UNIT
+        return UnitTypeEnum.to_code(type_unit)
+
+    def save_json(self):
+        """ Save to  dict """
 
         json_dict = {
-            "type_unit": UnitTypeEnum.to_code(type_unit),
+            "type_unit": self.type_unit(),
             "role": self._role.identifier,
             "zone": self._zone.identifier
         }
         if self._dislodged_origin is not None:
             json_dict.update({"dislodged_origin": self._dislodged_origin.identifier})
         return json_dict
+
+    def export_json(self):
+        """ For trainer """
+        return [self.type_unit(), self._zone.identifier]
 
     @property
     def zone(self) -> Zone:
@@ -1562,6 +1570,10 @@ class Ownership(Highliteable, Renderable):
             "center_num": self._center.identifier
         }
         return json_dict
+
+    def export_json(self):
+        """ For trainer """
+        return self._center.identifier
 
     @property
     def role(self) -> Role:
@@ -2026,6 +2038,15 @@ class Position(Renderable):
         """ empty """
         return not self._units
 
+    def export_json(self):
+        """ For trainer """
+        return {
+            'ownerships': [o.export_json() for o in self._ownerships],
+            'dislodged_ones': [],  # not handled
+            'units': {str(r.identifier): [u.export_json() for u in self._units if u.role == r] for r in {u.role for u in self._units}},
+            'forbiddens': []  # not handled
+        }
+
     @property
     def variant(self) -> Variant:
         """ property """
@@ -2305,6 +2326,10 @@ class Order(Renderable):
             json_dict.update({"destination_zone": self._destination_zone.identifier})
         return json_dict
 
+    def export_json(self):
+        """ For trainer """
+        return [0, 0, UnitTypeEnum.to_code(self._order_type), self._active_unit.zone.identifier, self._passive_unit.zone.identifier if self._passive_unit else 0, self._destination_zone.identifier if self._destination_zone else 0]
+
     @property
     def active_unit(self) -> Unit:
         """ property """
@@ -2557,6 +2582,13 @@ class Orders(Renderable):
             text += "\n"
             text += "\n"
         return text
+
+    def export_json(self):
+        """ For trainer """
+        return {
+            'fake_units': [],  # not handled
+            'orders': [o.export_json() for o in self._orders]
+        }
 
     @property
     def orders(self):
