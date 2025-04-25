@@ -126,10 +126,6 @@ REGISTRATION_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
 REGISTRATION_UPDATE_PARSER.add_argument('player_id', type=int, required=True)
 REGISTRATION_UPDATE_PARSER.add_argument('value', type=int, required=True)
 
-# TODO OBSOLETE REMOVE
-IP_ADDRESS_PARSER = flask_restful.reqparse.RequestParser()
-IP_ADDRESS_PARSER.add_argument('ip_value', type=str, required=True)
-
 DATA_SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
 DATA_SUBMISSION_PARSER.add_argument('time_zone', type=str, required=True)
 DATA_SUBMISSION_PARSER.add_argument('ip_address', type=str, required=True)
@@ -250,9 +246,15 @@ def suppress_account_message(pseudo: str) -> typing.Tuple[str, str]:
     body += "\n"
     body += " ================="
     body += "\n"
-    body += "Tu as créé un compte sur Diplomania.fr mais tu ne t'es pas connecté depuis très longtemps, nous avons donc dû supprimer ton compte."
+    body += "Tu as créé un compte sur Diplomania.fr mais tu ne t'es pas connecté depuis très longtemps."
     body += "\n"
-    body += "Bien sûr, si tu souhaites te réinscrire, tu pourras le faire sur le site ou n'hésite pas à nous écrire."
+    body += "Tu t'es inscrit dans des parties mais tu ne les as pas jouées, créant ainsi une forte frustration chez les autres joueurs."
+    body += "\n"
+    body += "Plusieurs comptes se ressemblent et ont le même courriel, dont le tien."
+    body += "\n"
+    body += "Bref, nous avons donc dû supprimer ton compte. Nous ne pouvons conserver pléthore de comptes inutiles."
+    body += "\n"
+    body += "Bien sûr, si tu souhaites te réinscrire, tu pourras le faire sans problème sur le site ou n'hésite pas à nous écrire."
     body += "\n"
     body += "Ludiquement"
     body += "\n"
@@ -2489,102 +2491,6 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'msg': 'Ok registration updated if present and email sent to player'}
-        return data, 200
-
-
-# TODO REMOVE THIS IS OPBSOLETE
-@API.resource('/ip_address')
-class IpAddressRessource(flask_restful.Resource):  # type: ignore
-    """ IpAddressRessource """
-
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[str, int]]], int]:  # pylint: disable=R0201
-        """
-        Get list of IP addresses and last order input
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/ip_address - GET - getting ip addresses and last order input")
-
-        # check authentication from user server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        pseudo = req_result.json()['logged_in_as']
-
-        # check user has right to get list of last submissions (moderator)
-
-        sql_executor = database.SqlExecutor()
-
-        moderators_list = moderators.Moderator.inventory(sql_executor)
-        the_moderators = [m[0] for m in moderators_list]
-        if pseudo not in the_moderators:
-            del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to get list of last ip addresses and submissions (need to be moderator)!")
-
-        addresses_list = addresses.Address.inventory(sql_executor)
-        submissions_list = submissions.Submission.inventory(sql_executor)
-
-        del sql_executor
-
-        data = {'addresses_list': addresses_list, 'submissions_list': submissions_list}
-        return data, 200
-
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
-        """
-        Stores an IP address and last submission
-        EXPOSED
-        """
-
-        args = IP_ADDRESS_PARSER.parse_args(strict=True)
-        ip_value = args['ip_value']
-
-        mylogger.LOGGER.info("/ip_address- POST - stores an IP address ip_value=%s", ip_value)
-
-        # check from user server user is pseudo
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
-
-        pseudo = req_result.json()['logged_in_as']
-
-        sql_executor = database.SqlExecutor()
-
-        player = players.Player.find_by_pseudo(sql_executor, pseudo)
-        if player is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
-
-        assert player is not None
-
-        player_id = player.identifier
-
-        # store and ip address for player
-        address = addresses.Address(ip_value, player_id)
-        address.update_database(sql_executor)
-
-        # store a last submission date for player
-        submission = submissions.Submission(player_id)
-        submission.update_database(sql_executor)
-
-        sql_executor.commit()
-
-        data = {'pseudo': pseudo, 'msg': 'Ok IP address and submission stored'}
         return data, 200
 
 
