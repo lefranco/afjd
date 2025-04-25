@@ -2378,30 +2378,6 @@ class GamesCompleteOrReadyRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-# TODO REMOVE THIS LATER
-@API.resource('/games-incomplete')
-class GamesIncompleteRessource(flask_restful.Resource):  # type: ignore
-    """ GamesIncompleteRessource """
-
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:  # pylint: disable=R0201
-        """
-        Gets all  games that do not have all players
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/games-incomplete - GET - get getting all games not ready")
-
-        sql_executor = database.SqlExecutor()
-        full_games_data = sql_executor.execute("select games.identifier, count(*) as filled_count, capacities.value from games join allocations on allocations.game_id=games.identifier join capacities on capacities.game_id=games.identifier group by identifier", need_result=True)
-        del sql_executor
-
-        # keep only the ones where no role is missing
-        assert full_games_data is not None
-        data = [tr[0] for tr in full_games_data if tr[1] < tr[2]]
-
-        return data, 200
-
-
 @API.resource('/games-recruiting')
 class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
     """ GamesRecruitingRessource """
