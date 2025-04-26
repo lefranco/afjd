@@ -840,7 +840,7 @@ def rectify_position():
         # where is the click
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
-        # select unit
+        # select unit / center
         selected_erase_object = position_data.closest_object(pos)
 
         # something must be selected
@@ -856,8 +856,8 @@ def rectify_position():
         elif isinstance(selected_erase_object, mapping.Ownership):
             # remove ownership
             selected_erase_ownership = selected_erase_object
-            position_data.remove_ownership(selected_erase_ownership)
             selected_erase_unit = None
+            position_data.remove_ownership(selected_erase_ownership)
         else:
             return
 

@@ -198,7 +198,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre/centre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -239,7 +239,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre/centre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -269,7 +269,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre/centre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -444,7 +444,7 @@ def sandbox():
                 # update map
                 callback_render(False)
 
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre/centre pour l'effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -596,7 +596,7 @@ def sandbox():
             # update map
             callback_render(False)
 
-            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre/centre pour l'effacer)", Class='instruction')
             buttons_right <= legend_select_unit
 
             stack_orders(buttons_right)
@@ -636,7 +636,7 @@ def sandbox():
                 # update map
                 callback_render(False)
 
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre/centre pour l'effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -702,40 +702,53 @@ def sandbox():
             # Otherwise confusion click/double-click
             return
 
-        # the aim is to give this variable a value
-        selected_erase_unit = None
+        # where is the click
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
-        # first : take from event
-        if event:
+        # select unit / center
+        selected_erase_object = POSITION_DATA.closest_object(pos)
 
-            # where is the click
-            pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        # something must be selected
+        if selected_erase_object is None:
+            # event is None when coming from x pressed, then take 'selected_active_unit' (that can be None)
+            selected_erase_object = selected_active_unit
 
-            # moves : select unit : easy case
-            selected_erase_unit = POSITION_DATA.closest_unit(pos, False)
-
-        # event is None when coming from x pressed, then take 'selected_active_unit' (that can be None)
-        if selected_erase_unit is None:
-            selected_erase_unit = selected_active_unit
-
-        # really nothing to do
-        if selected_erase_unit is None:
+        # something must be selected (useless code)
+        if selected_erase_object is None:
             return
 
-        # if unit does not have an order... remove unit
-        if ORDERS_DATA.is_ordered(selected_erase_unit):
+        # must be unit or ownership
+        if isinstance(selected_erase_object, mapping.Unit):
 
-            # remove order
-            ORDERS_DATA.remove_order(selected_erase_unit)
+            selected_erase_ownership = None
+            selected_erase_unit = selected_erase_object
+            
+            # if unit does not have an order... remove unit
+            if ORDERS_DATA.is_ordered(selected_erase_unit):
 
+                # remove order
+                ORDERS_DATA.remove_order(selected_erase_unit)
+
+            else:
+
+                # remove unit
+                POSITION_DATA.remove_unit(selected_erase_unit)
+
+        elif isinstance(selected_erase_object, mapping.Ownership):
+
+            # remove ownership
+            selected_erase_ownership = selected_erase_object
+            selected_erase_unit = None
+            POSITION_DATA.remove_ownership(selected_erase_ownership)
         else:
+            return
 
-            # remove unit
-            POSITION_DATA.remove_unit(selected_erase_unit)
-
-            # tricky
-            if selected_hovered_object == selected_erase_unit:
-                selected_hovered_object = None
+        # tricky
+        nonlocal selected_hovered_object
+        if selected_hovered_object == selected_erase_unit:
+            selected_hovered_object = None
+        if selected_hovered_object == selected_erase_ownership:
+            selected_hovered_object = None
 
         # update map
         callback_render(True)
@@ -744,7 +757,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre/centre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -940,55 +953,79 @@ def sandbox():
             return
 
         if moved_item_id in unit_info_table:
+
             assert moved_item_id is not None
             (type_unit, role) = unit_info_table[moved_item_id]
 
-        # get zone
-        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        selected_drop_zone = VARIANT_DATA.closest_zone(pos, type_unit)
+            # get zone
+            pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+            selected_drop_zone = VARIANT_DATA.closest_zone(pos, type_unit)
 
-        # get region
-        selected_drop_region = selected_drop_zone.region
+            # get region
+            selected_drop_region = selected_drop_zone.region
 
-        # prevent putting armies in sea
-        if type_unit is mapping.UnitTypeEnum.ARMY_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.SEA_REGION:
-            type_unit = mapping.UnitTypeEnum.FLEET_UNIT
-
-        # prevent putting fleets inland
-        if type_unit is mapping.UnitTypeEnum.FLEET_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION:
-            type_unit = mapping.UnitTypeEnum.ARMY_UNIT
-
-        if selected_drop_zone.coast_type is not None:
-            # prevent putting army on specific coasts
-            if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+            # prevent putting armies in sea
+            if type_unit is mapping.UnitTypeEnum.ARMY_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.SEA_REGION:
                 type_unit = mapping.UnitTypeEnum.FLEET_UNIT
-        else:
-            # we are not on a specific coast
-            if len([z for z in VARIANT_DATA.zones.values() if z.region == selected_drop_region]) > 1:
-                # prevent putting fleet on non specific coasts if exists
-                if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-                    type_unit = mapping.UnitTypeEnum.ARMY_UNIT
 
-        # create unit
-        if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
-            new_unit = mapping.Army(POSITION_DATA, role, selected_drop_zone, None, False)
-        if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-            new_unit = mapping.Fleet(POSITION_DATA, role, selected_drop_zone, None, False)
+            # prevent putting fleets inland
+            if type_unit is mapping.UnitTypeEnum.FLEET_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION:
+                type_unit = mapping.UnitTypeEnum.ARMY_UNIT
 
-        # remove previous occupant if applicable
-        if selected_drop_region in POSITION_DATA.occupant_table:
-            previous_unit = POSITION_DATA.occupant_table[selected_drop_region]
-            POSITION_DATA.remove_unit(previous_unit)
+            if selected_drop_zone.coast_type is not None:
+                # prevent putting army on specific coasts
+                if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+                    type_unit = mapping.UnitTypeEnum.FLEET_UNIT
+            else:
+                # we are not on a specific coast
+                if len([z for z in VARIANT_DATA.zones.values() if z.region == selected_drop_region]) > 1:
+                    # prevent putting fleet on non specific coasts if exists
+                    if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+                        type_unit = mapping.UnitTypeEnum.ARMY_UNIT
 
-            # and the order too
-            if ORDERS_DATA.is_ordered(previous_unit):
-                ORDERS_DATA.remove_order(previous_unit)
+            # create unit
+            if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+                new_unit = mapping.Army(POSITION_DATA, role, selected_drop_zone, None, False)
+            if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+                new_unit = mapping.Fleet(POSITION_DATA, role, selected_drop_zone, None, False)
 
-        # add to position
-        POSITION_DATA.add_unit(new_unit)
+            # remove previous occupant if applicable
+            if selected_drop_region in POSITION_DATA.occupant_table:
+                previous_unit = POSITION_DATA.occupant_table[selected_drop_region]
+                POSITION_DATA.remove_unit(previous_unit)
 
-        # Forget about this moved unit
-        moved_item_id = None
+                # and the order too
+                if ORDERS_DATA.is_ordered(previous_unit):
+                    ORDERS_DATA.remove_order(previous_unit)
+
+            # add to position
+            POSITION_DATA.add_unit(new_unit)
+
+            # Forget about this moved unit
+            moved_item_id = None
+
+        if moved_item_id in ownership_info_table:
+
+            assert moved_item_id is not None
+            (role, ) = ownership_info_table[moved_item_id]
+
+            # get center
+            pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+            selected_drop_center = VARIANT_DATA.closest_center(pos)
+
+            # create ownership
+            new_ownership = mapping.Ownership(POSITION_DATA, role, selected_drop_center)
+
+            # remove previous ownership if applicable
+            if selected_drop_center in POSITION_DATA.owner_table:
+                previous_ownership = POSITION_DATA.owner_table[selected_drop_center]
+                POSITION_DATA.remove_ownership(previous_ownership)
+
+            # add to position
+            POSITION_DATA.add_ownership(new_ownership)
+
+            # Forget about this moved center
+            moved_item_id = None
 
         # refresh
         # unit added so refresh all
@@ -998,7 +1035,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre/centre pour l'effacer)", Class='instruction')
         buttons_right <= legend_select_unit
 
         stack_orders(buttons_right)
@@ -1055,6 +1092,9 @@ def sandbox():
     # finds data about the dragged unit
     unit_info_table = {}
 
+    # finds data about the dragged ownership
+    ownership_info_table = {}
+
     reserve_table = html.TABLE()
 
     num = 1
@@ -1093,6 +1133,23 @@ def sandbox():
             col <= unit_canvas
             row <= col
 
+        col = html.TD()
+
+        pickable_ownership = mapping.Ownership(POSITION_DATA, role, None)
+
+        identifier = f"center_{num}"
+        ownership_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Cliquez-moi dessus !")
+        ownership_info_table[identifier] = (role, )
+        num += 1
+
+        ownership_canvas.bind("click", callback_take_item)
+
+        ctx3 = ownership_canvas.getContext("2d")
+        pickable_ownership.render(ctx3)
+
+        col <= ownership_canvas
+        row <= col
+
         reserve_table <= row
 
     time_stamp_now = time()
@@ -1105,7 +1162,7 @@ def sandbox():
     display_very_left <= reserve_table
 
     display_very_left <= html.BR()
-    display_very_left <= html.DIV("Cliquez sur une de ces unités, *puis* sur la carte", Class='instruction')
+    display_very_left <= html.DIV("Cliquez sur une de ces unités ou sur un de ces centres (pour les centres l'effet sur la résolution est nul), *puis* sur la carte", Class='instruction')
     display_very_left <= html.BR()
 
     display_very_left <= html.BR()
@@ -1165,7 +1222,7 @@ def sandbox():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-    legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
+    legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (double-clic sur un ordre/unité sans ordre/centre pour l'effacer)", Class='instruction')
     buttons_right <= legend_select_unit
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
