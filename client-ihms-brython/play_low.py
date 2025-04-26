@@ -389,11 +389,11 @@ def stack_last_moves_button(frame):
     frame <= html.BR()
 
 
-def stack_negotiations_button(frame):
-    """ stack_negotiations_button """
+def stack_last_agreements_button(frame):
+    """ stack_last_agreements_button """
 
-    def negotiations_callback(ev):  # pylint: disable=invalid-name
-        """ negotiations_callback """
+    def last_agreements_callback(ev):  # pylint: disable=invalid-name
+        """ last_agreements_callback """
 
         ev.preventDefault()
 
@@ -408,9 +408,9 @@ def stack_negotiations_button(frame):
     if GAME_PARAMETERS_LOADED['nomessage_current']:
         return
 
-    input_negotiations = html.INPUT(type="submit", value="Négociations", Class='btn-inside')
-    input_negotiations.bind("click", negotiations_callback)
-    frame <= input_negotiations
+    input_last_agreements = html.INPUT(type="submit", value="Derniers accords", Class='btn-inside')
+    input_last_agreements.bind("click", last_agreements_callback)
+    frame <= input_last_agreements
     frame <= html.BR()
     frame <= html.BR()
 
