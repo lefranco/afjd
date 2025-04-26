@@ -722,7 +722,7 @@ def sandbox():
 
             selected_erase_ownership = None
             selected_erase_unit = selected_erase_object
-            
+
             # if unit does not have an order... remove unit
             if ORDERS_DATA.is_ordered(selected_erase_unit):
 
