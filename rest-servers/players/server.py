@@ -207,13 +207,15 @@ def email_rescue_message(pseudo: str, access_token: str) -> typing.Tuple[str, st
     return subject, body
 
 
-def email_greeting_message(pseudo: str) -> typing.Tuple[str, str]:
+def email_greeting_message(pseudo: str, code: int) -> typing.Tuple[str, str]:
     """ email_greeting_message """
 
     subject = "Ceci est un courriel de bienvenue sur le site !"
     body = "Bonjour !\n"
     body += "\n"
     body += f"Vous recevez cet courriel parce que vous avez créé le compte avec le pseudo {pseudo}."
+    body += "\n"
+    body += f"Si vous êtes bien à l'origine de sa création, rendez-vous dans le menu mon compte/valider mon mail et entrez le code {code}"
     body += "\n"
     body += "Merci et bienvenue sur le site."
     body += "\n"
@@ -811,15 +813,22 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         # send email
         email_newcommer = args['email']
 
+        # get a code
+        code = random.randint(1000, 9999)
+
+        # put in database
+        email = emails.Email(email_newcommer, code)
+        email.update_database(sql_executor)
+
         # get a message
-        subject, body = email_greeting_message(pseudo)
+        subject, body = email_greeting_message(pseudo, code)
         json_dict = {
             'subject': subject,
             'body': body,
             'email': email_newcommer,
         }
 
-        # send it
+        # send it (no token)
         host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
         port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
         url = f"{host}:{port}/send-email-simple"
