@@ -368,6 +368,19 @@ def load_special_stuff():
 def stack_last_moves_button(frame):
     """ stack_last_moves_button """
 
+    def last_moves_callback(ev):  # pylint: disable=invalid-name
+        """ last_moves_callback """
+
+        ev.preventDefault()
+
+        last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
+        adv_last_moves = last_advancement
+        while True:
+            adv_last_moves -= 1
+            if adv_last_moves % 5 in [0, 2]:
+                break
+        play_other.show_position(adv_last_moves)
+
     first_advancement = 0
     if VARIANT_CONTENT_LOADED['start_build']:
         first_advancement = 4
@@ -375,14 +388,8 @@ def stack_last_moves_button(frame):
     if GAME_PARAMETERS_LOADED['current_advancement'] == first_advancement:
         return
 
-    last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
-    adv_last_moves = last_advancement
-    while True:
-        adv_last_moves -= 1
-        if adv_last_moves % 5 in [0, 2]:
-            break
     input_last_moves = html.INPUT(type="submit", value="Derniers mouvements", Class='btn-inside')
-    input_last_moves.bind("click", lambda e: play_other.show_position(adv_last_moves))
+    input_last_moves.bind("click", last_moves_callback)
 
     frame <= input_last_moves
     frame <= html.BR()
@@ -418,6 +425,12 @@ def stack_last_agreements_button(frame):
 def stack_communications_orders_button(frame):
     """ stack_communications_orders_button """
 
+    def communications_orders_callback(ev):  # pylint: disable=invalid-name
+        """ communications_orders_callback """
+
+        ev.preventDefault()
+        play.load_option(ev, 'Ordres de com\'')
+
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
         return
 
@@ -425,7 +438,7 @@ def stack_communications_orders_button(frame):
         return
 
     input_communications_orders = html.INPUT(type="submit", value="Ordres de com' (pour montrer une intention)", Class='btn-inside')
-    input_communications_orders.bind("click", lambda e: play.load_option(e, 'Ordres de com\''))
+    input_communications_orders.bind("click", communications_orders_callback)
     frame <= input_communications_orders
     frame <= html.BR()
     frame <= html.BR()
