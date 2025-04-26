@@ -1352,6 +1352,8 @@ def my_games(state_name):
 
     if late_games:
         mydialog.InfoDialog("Information", f"Vous êtes en retard dans la(les) partie(s) : {' '.join(late_games)}")
+        audio_item = html.AUDIO(src='./sounds/disappoint.wav')
+        audio_item.play()
 
     # display shift with server
     delta_time_sec = int(storage['DELTA_TIME_SEC'])
