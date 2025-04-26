@@ -1573,7 +1573,7 @@ class Ownership(Highliteable, Renderable):
 
     def export_json(self):
         """ For trainer """
-        return self._center.identifier
+        return str(self._center.identifier), self._role.identifier
 
     @property
     def role(self) -> Role:
@@ -2041,7 +2041,7 @@ class Position(Renderable):
     def export_json(self):
         """ For trainer """
         return {
-            'ownerships': [o.export_json() for o in self._ownerships],
+            'ownerships': dict([o.export_json() for o in self._ownerships]),
             'dislodged_ones': [],  # not handled
             'units': {str(r.identifier): [u.export_json() for u in self._units if u.role == r] for r in {u.role for u in self._units}},
             'forbiddens': []  # not handled
