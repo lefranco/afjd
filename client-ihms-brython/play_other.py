@@ -1495,14 +1495,11 @@ def negotiate(default_dest_set, def_focus_role_id):
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
     play_low.MY_SUB_PANEL <= html.BR()
 
-    # map and ratings
-    play_low.show_board(play_low.MY_SUB_PANEL)
-
     # role flag
     play_low.stack_role_flag(play_low.MY_SUB_PANEL)
 
-    # button last moves
-    play_low.stack_last_moves_button(play_low.MY_SUB_PANEL)
+    # see my orders
+    play_low.stack_my_orders(play_low.MY_SUB_PANEL)
 
     # form
     play_low.MY_SUB_PANEL <= form
@@ -1762,14 +1759,11 @@ def declare():
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
     play_low.MY_SUB_PANEL <= html.BR()
 
-    # map and ratings
-    play_low.show_board(play_low.MY_SUB_PANEL)
-
     # role flag
     play_low.stack_role_flag(play_low.MY_SUB_PANEL)
 
-    # button last moves
-    play_low.stack_last_moves_button(play_low.MY_SUB_PANEL)
+    # see my orders
+    play_low.stack_my_orders(play_low.MY_SUB_PANEL)
 
     # form only if allowed
     if play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.ROLE_ID != 0:

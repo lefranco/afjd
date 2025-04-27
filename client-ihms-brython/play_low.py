@@ -422,6 +422,27 @@ def stack_last_agreements_button(frame):
     frame <= html.BR()
 
 
+def stack_my_orders(frame):
+    """ stack_my_orders """
+
+    def my_orders_callback(ev):  # pylint: disable=invalid-name
+        """ my_orders_callback """
+
+        ev.preventDefault()
+        play.load_option(ev, 'Ordonner')
+
+    # not for game master
+    if ROLE_ID == 0:
+        return
+
+    input_my_orders = html.INPUT(type="submit", value="Mes ordres", Class='btn-inside')
+    input_my_orders.bind("click", my_orders_callback)
+
+    frame <= input_my_orders
+    frame <= html.BR()
+    frame <= html.BR()
+
+
 def stack_communications_orders_button(frame):
     """ stack_communications_orders_button """
 
