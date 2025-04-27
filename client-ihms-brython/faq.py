@@ -71,7 +71,7 @@ FAQ_CONTENT_TABLE = {
     "Celà attire l'attention sur la présence d'ordres de com'.",
 
     "Je vois effectivement des témoins indiquant l'état de mes ordres. Le pouce, la main et le montre. Pourquoi changent-ils de sens ?":
-    "Ils changent de sens à chaque nouvelle soumission, pour voir facilement qu'elle a été prise en compte.",
+    "Ils changent de sens à chaque nouvelle soumission, pour voir facilement qu'elle a bien été prise en compte.",
 
     "C'est quoi le “focus“ dans l'interface messagerie de la partie ?":
     "Cela permet de se limiter aux échanges avec un seul des protagonistes présents (qui s'affiche alors en gras).",
