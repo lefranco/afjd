@@ -48,12 +48,12 @@ FAQ_CONTENT_TABLE = {
       - Blanc que la partie est finie sur vote unanime d'arrêt.<br>
     """,
 
-    "Pourquoi certaines dates limites sont elles en gras ?":
+    "Pourquoi certaines dates limites sont elles précédées du signe = ?":
     """
     Cela signifie que l'arbitre a forcé le bouton d'accord pour la résolution à 'à la date limite' pour la partie. Cela se justifie surtout pour les parties en avance dans les tournois dont on souhaite la synchronisation.
     """,
 
-    "Pourquoi certaines dates limites sont elles barrées ?":
+    "Pourquoi certaines dates limites sont elles précédées du signe < ?":
     """
     Cela signifie que l'arbitre a forcé le bouton d'accord pour la résolution à 'maintenant' pour la partie. Cela se justifie surtout pour les parties en retard dans les tournois dont on souhaite la synchronisation.
     """,
@@ -69,6 +69,9 @@ FAQ_CONTENT_TABLE = {
 
     "C'est quoi cette petite pastille rose en haut à gauche dans la carte ?":
     "Celà attire l'attention sur la présence d'ordres de com'.",
+
+    "Je vois effectivement des témoins indiquant l'état de mes ordres. Le pouce, la main et le montre. Pourquoi changent-ils de sens ?":
+    "Ils changent de sens à chaque nouvelle soumission, pour voir facilement qu'elle a été prise en compte.",
 
     "C'est quoi le “focus“ dans l'interface messagerie de la partie ?":
     "Cela permet de se limiter aux échanges avec un seul des protagonistes présents (qui s'affiche alors en gras).",
