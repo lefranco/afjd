@@ -1479,7 +1479,7 @@ def submit_orders():
             message += " parce qu'arrivée à échéance !"
         elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
             message += " sur un vote de fin unanime !"
-        if not play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nopress_game']:
+        if not play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:
             message += " (la presse est dorénavant ouverte pour les déclarations de fin de partie !)"
         alert(message)
         # may still edit notes
