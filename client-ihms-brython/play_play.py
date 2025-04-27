@@ -81,6 +81,7 @@ def submit_orders():
     definitive_value = None
 
     vote_value = None
+    submission_count = 0
 
     def add_note_callback(ev):  # pylint: disable=invalid-name
         """ add_note_callback """
@@ -190,6 +191,10 @@ def submit_orders():
         elif definitive_value == 0:
             flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
 
+        # once every two we flip
+        if submission_count % 2 == 1:
+            flag.attrs['style'] = 'transform:scaleX(-1)'
+
         orders_status <= flag
         frame <= orders_status
 
@@ -206,6 +211,7 @@ def submit_orders():
         def reply_callback(req):
 
             nonlocal orders_in
+            nonlocal submission_count
 
             req_result = loads(req.text)
             if req.status != 201:
@@ -280,6 +286,8 @@ def submit_orders():
 
                 play_low.MY_SUB_PANEL.clear()
                 play.load_option(None, 'Consulter')
+
+            submission_count += 1
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
