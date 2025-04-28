@@ -18,6 +18,7 @@ import mydatetime
 import mydialog
 import play
 import allgames
+import mypopup
 
 
 # how many of the last chats are displayed
@@ -338,6 +339,8 @@ def show_news():
 
     # No need for a title
     div_homepage = html.DIV(id='grid')
+
+    mypopup.test_popup(div_homepage)
 
     stats_content = get_stats_content()
     news_content_table_loaded = common.get_news_content()
