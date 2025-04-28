@@ -1501,6 +1501,9 @@ def negotiate(default_dest_set, def_focus_role_id):
     # see my orders
     play_low.stack_my_orders(play_low.MY_SUB_PANEL)
 
+    # see last moves
+    play_low.stack_last_moves_button(play_low.MY_SUB_PANEL)
+
     # form
     play_low.MY_SUB_PANEL <= form
     play_low.MY_SUB_PANEL <= html.BR()
@@ -1764,6 +1767,9 @@ def declare():
 
     # see my orders
     play_low.stack_my_orders(play_low.MY_SUB_PANEL)
+
+    # see last moves
+    play_low.stack_last_moves_button(play_low.MY_SUB_PANEL)
 
     # form only if allowed
     if play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.ROLE_ID != 0:
