@@ -459,9 +459,9 @@ def stack_last_agreements_button(frame):
                 req_result = loads(req.text)
                 if req.status != 200:
                     if 'message' in req_result:
-                        alert(f"Erreur à la récupération des messages dans la partie (derniers accords) : {req_result['message']}")
+                        alert(f"Erreur à la récupération des messages dans la partie (derniers messages) : {req_result['message']}")
                     elif 'msg' in req_result:
-                        alert(f"Problème à la récupération des messages dans la partie (derniers accords) : {req_result['msg']}")
+                        alert(f"Problème à la récupération des messages dans la partie (derniers messages) : {req_result['msg']}")
                     else:
                         alert("Réponse du serveur imprévue et non documentée")
                     return
@@ -551,13 +551,13 @@ def stack_last_agreements_button(frame):
         button.bind('click', otherwise_callback)
 
         # This popup is the only one resizeable
-        popup = mypopup.Popup("Derniers accords", canvas, content, button, True)
+        popup = mypopup.Popup("Derniers messages", canvas, content, button, True)
         frame <= popup
 
     if GAME_PARAMETERS_LOADED['nomessage_current']:
         return
 
-    input_last_agreements = html.INPUT(type="submit", value="Derniers accords", Class='btn-inside')
+    input_last_agreements = html.INPUT(type="submit", value="Derniers messages", Class='btn-inside')
     input_last_agreements.bind("click", last_agreements_callback)
     frame <= input_last_agreements
     frame <= html.BR()
