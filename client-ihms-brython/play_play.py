@@ -1840,6 +1840,9 @@ def submit_communication_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
+            # see my orders
+            play_low.stack_my_orders(play_low.MY_SUB_PANEL)
+
             # explanations
             play_low.stack_explanations_button(buttons_right)
 
@@ -1947,6 +1950,9 @@ def submit_communication_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
+            # see my orders
+            play_low.stack_my_orders(play_low.MY_SUB_PANEL)
+
             # explanations
             play_low.stack_explanations_button(buttons_right)
 
@@ -2020,6 +2026,9 @@ def submit_communication_orders():
             # role flag
             play_low.stack_role_flag(buttons_right)
 
+            # see my orders
+            play_low.stack_my_orders(play_low.MY_SUB_PANEL)
+
             # explanations
             play_low.stack_explanations_button(buttons_right)
 
@@ -2064,6 +2073,9 @@ def submit_communication_orders():
 
             # role flag
             play_low.stack_role_flag(buttons_right)
+
+            # see my orders
+            play_low.stack_my_orders(play_low.MY_SUB_PANEL)
 
             # explanations
             play_low.stack_explanations_button(buttons_right)
@@ -2160,6 +2172,9 @@ def submit_communication_orders():
 
         # role flag
         play_low.stack_role_flag(buttons_right)
+
+        # see my orders
+        play_low.stack_my_orders(play_low.MY_SUB_PANEL)
 
         # explanations
         play_low.stack_explanations_button(buttons_right)
@@ -2479,6 +2494,9 @@ def submit_communication_orders():
 
     # role flag
     play_low.stack_role_flag(buttons_right)
+
+    # see my orders
+    play_low.stack_my_orders(play_low.MY_SUB_PANEL)
 
     # explanations
     play_low.stack_explanations_button(buttons_right)
