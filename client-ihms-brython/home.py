@@ -395,14 +395,14 @@ def show_news():
     label1 = html.LABEL(html.B(f"Collecté à ce jour (mis à jour à 6h00 GMT) : {current_collected_value}€ / {NEEDED_VALUE}€: "), for_='raised')
     gauge = html.METER(id='raised', value=current_collected_value, min=0, max=NEEDED_VALUE)
     current_payers_list_value = news_content_table_loaded['members']
-    label2 = html.LABEL(f"Membres donateurs : {current_payers_list_value}")
-    link_pay = html.A("lien pour cotiser", href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/formulaires/3", target="_blank")
+    span_members = html.SPAN(f"Membres donateurs : {current_payers_list_value}")
+    link_pay = html.A("moi aussi !", href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/formulaires/3", target="_blank")
 
     div_a5 <= label1
     div_a5 <= gauge
     div_a5 <= html.BR()
-    div_a5 <= label2
-    div_a5 <= html.BR()
+    div_a5 <= span_members
+    div_a5 <= " "
     div_a5 <= link_pay
 
 # ----
