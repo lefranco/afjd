@@ -17,6 +17,7 @@ import variants
 import ratings
 import technical
 import mydialog
+import mypopup
 import play_other  # circular import
 import play  # circular import
 
@@ -449,8 +450,26 @@ def stack_communications_orders_button(frame):
     def communications_orders_callback(ev):  # pylint: disable=invalid-name
         """ communications_orders_callback """
 
+        def otherwise_callback(ev):  # pylint: disable=invalid-name
+            """ real procedure """
+            ev.preventDefault()
+            play.load_option(ev, 'Ordres de com\'')
+
         ev.preventDefault()
-        play.load_option(ev, 'Ordres de com\'')
+
+        # image
+        img_url = "https://picsum.photos/400/300"  # Remplacer par ton image
+        img = html.IMG(src=img_url)
+
+        # content
+        content = html.DIV("Ci-dessus vos ordres de com'")
+
+        # otherwise button
+        button = html.INPUT(type="submit", value="Sinon", Class='btn-inside')
+        button.bind('click', otherwise_callback)
+
+        popup = mypopup.Popup("Vos ordres de com'", content, img, button)
+        frame <= popup
 
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
         return
@@ -458,7 +477,7 @@ def stack_communications_orders_button(frame):
     if GAME_PARAMETERS_LOADED['fog']:  # Fog
         return
 
-    input_communications_orders = html.INPUT(type="submit", value="Ordres de com' (pour montrer une intention)", Class='btn-inside')
+    input_communications_orders = html.INPUT(type="submit", value="Mes ordres de com' (pour montrer une intention)", Class='btn-inside')
     input_communications_orders.bind("click", communications_orders_callback)
     frame <= input_communications_orders
     frame <= html.BR()
