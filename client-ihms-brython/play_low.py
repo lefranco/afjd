@@ -372,15 +372,56 @@ def stack_last_moves_button(frame):
     def last_moves_callback(ev):  # pylint: disable=invalid-name
         """ last_moves_callback """
 
+        def callback_render(ev):  # pylint: disable=invalid-name
+            """ callback_render """
+            ev.preventDefault()
+            ctx.drawImage(img, 0, 0)
+            position_data.render(ctx)
+            VARIANT_DATA.render(ctx)
+            orders_data.render(ctx)
+
+        def otherwise_callback(ev):  # pylint: disable=invalid-name
+            """ real procedure """
+            ev.preventDefault()
+            play_other.show_position(adv_last_moves)
+
         ev.preventDefault()
 
+        # calculate last advancement
         last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
         adv_last_moves = last_advancement
         while True:
             adv_last_moves -= 1
             if adv_last_moves % 5 in [0, 2]:
                 break
-        play_other.show_position(adv_last_moves)
+
+        # image
+        advancement_selected = adv_last_moves
+        map_size = VARIANT_DATA.map_size
+        canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+        ctx = canvas.getContext("2d")
+        fog_of_war = GAME_PARAMETERS_LOADED['fog']
+        if fog_of_war:
+            transition_loaded = game_transition_fog_of_war_reload(GAME_ID, advancement_selected, ROLE_ID)
+        else:
+            transition_loaded = game_transition_reload(GAME_ID, advancement_selected)
+        position_loaded = transition_loaded['situation']
+        position_data = mapping.Position(position_loaded, VARIANT_DATA)
+        orders_loaded = transition_loaded['orders']
+        communication_orders_loaded = transition_loaded['communication_orders']
+        orders_data = mapping.Orders(orders_loaded, position_data, communication_orders_loaded)
+        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+        img.bind('load', callback_render)
+
+        # content
+        content = None
+
+        # otherwise button
+        button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
+        button.bind('click', otherwise_callback)
+
+        popup = mypopup.Popup("Derniers mouvements", canvas, content, button)
+        frame <= popup
 
     first_advancement = 0
     if VARIANT_CONTENT_LOADED['start_build']:
@@ -456,7 +497,7 @@ def stack_my_orders(frame):
         content = None
 
         # otherwise button
-        button = html.INPUT(type="submit", value="Sinon", Class='btn-inside')
+        button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
 
         popup = mypopup.Popup("Mes ordres", canvas, content, button)
@@ -507,10 +548,10 @@ def stack_communications_orders_button(frame):
         content = None
 
         # otherwise button
-        button = html.INPUT(type="submit", value="Sinon", Class='btn-inside')
+        button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
 
-        popup = mypopup.Popup("Vos ordres de com'", canvas, content, button)
+        popup = mypopup.Popup("Mes ordres de com'", canvas, content, button)
         frame <= popup
 
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
