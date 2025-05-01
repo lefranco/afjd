@@ -388,7 +388,7 @@ def show_news():
             if num_chats >= MAX_DISPLAYED_CHAT:
                 break
 
-    div_a5 <= html.H5("Financement du site :")
+    div_a5 <= html.H5("Financement du site et de l'association :")
 
     current_collected_value = news_content_table_loaded['raised']
 
