@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
 from json import loads, dumps
+from time import time
 
 from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -420,7 +421,7 @@ def stack_last_moves_button(frame):
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
 
-        popup = mypopup.Popup("Derniers mouvements", canvas, content, button)
+        popup = mypopup.Popup("Derniers mouvements", canvas, content, button, False)
         frame <= popup
 
     first_advancement = 0
@@ -438,21 +439,120 @@ def stack_last_moves_button(frame):
     frame <= html.BR()
 
 
+# we show only message not older that that
+SELECT_DAYS = 10
+
+
 def stack_last_agreements_button(frame):
     """ stack_last_agreements_button """
 
     def last_agreements_callback(ev):  # pylint: disable=invalid-name
         """ last_agreements_callback """
 
+        def messages_reload(game_id):
+            """ messages_reload """
+
+            messages = []
+
+            def reply_callback(req):
+                nonlocal messages
+                req_result = loads(req.text)
+                if req.status != 200:
+                    if 'message' in req_result:
+                        alert(f"Erreur à la récupération des messages dans la partie (derniers accords) : {req_result['message']}")
+                    elif 'msg' in req_result:
+                        alert(f"Problème à la récupération des messages dans la partie (derniers accords) : {req_result['msg']}")
+                    else:
+                        alert("Réponse du serveur imprévue et non documentée")
+                    return
+
+                messages = req_result['messages_list']
+
+            json_dict = {}
+
+            host = config.SERVER_CONFIG['GAME']['HOST']
+            port = config.SERVER_CONFIG['GAME']['PORT']
+            url = f"{host}:{port}/game-messages/{game_id}"
+
+            # extracting messages from a game : need token (or not?)
+            ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+            return messages
+
+        def otherwise_callback(ev):  # pylint: disable=invalid-name
+            """ real procedure """
+
+            ev.preventDefault()
+
+            # so that will go to proper page
+            arrival = "messages"
+            play.set_arrival(arrival)
+
+            # action of going to game page
+            PANEL_MIDDLE.clear()
+            play.render(PANEL_MIDDLE)
+
         ev.preventDefault()
 
-        # so that will go to proper page
-        arrival = "messages"
-        play.set_arrival(arrival)
+        canvas = None
 
-        # action of going to game page
-        PANEL_MIDDLE.clear()
-        play.render(PANEL_MIDDLE)
+        content = html.DIV()
+
+        messages = messages_reload(GAME_ID)
+
+        time_stamp_now = time()
+
+        # select horizontally only last week
+        messages = [m for m in messages if m[2] > time_stamp_now - SELECT_DAYS * 24 * 3600]
+
+        # select vertically only most important fields
+        messages = [(m[1], m[3], m[4]) for m in sorted(messages, key=lambda m: m[2], reverse=True)]
+
+        messages_table = html.TABLE()
+
+        thead = html.THEAD()
+        for title in ['Auteur', 'Destinataire(s)', 'Contenu']:
+            col = html.TD(html.B(title))
+            thead <= col
+        messages_table <= thead
+
+        for from_role_id_msg, dest_role_id_msgs, the_content in messages:
+
+            row = html.TR()
+
+            col = html.TD()
+            role = VARIANT_DATA.roles[from_role_id_msg]
+            role_name = VARIANT_DATA.role_name_table[role]
+            col <= role_name
+            row <= col
+
+            col = html.TD()
+            for dest_role_id_msg in dest_role_id_msgs:
+                role = VARIANT_DATA.roles[dest_role_id_msg]
+                role_name = VARIANT_DATA.role_name_table[role]
+                col <= role_name
+                col <= " "
+            row <= col
+
+            col = html.TD()
+            for line in the_content.split('\n'):
+                col <= line
+                col <= html.BR()
+            row <= col
+
+            messages_table <= row
+
+        content <= html.B(f"Depuis moins de {SELECT_DAYS} jours !")
+        content <= html.BR()
+        content <= messages_table
+
+        # otherwise button
+        button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
+        button.bind('click', otherwise_callback)
+
+        # This popup is the only one resizeable
+        popup = mypopup.Popup("Derniers accords", canvas, content, button, True)
+        frame <= popup
 
     if GAME_PARAMETERS_LOADED['nomessage_current']:
         return
@@ -500,7 +600,7 @@ def stack_my_orders(frame):
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
 
-        popup = mypopup.Popup("Mes ordres", canvas, content, button)
+        popup = mypopup.Popup("Mes ordres", canvas, content, button, False)
         frame <= popup
 
     # not for game master
@@ -551,7 +651,7 @@ def stack_communications_orders_button(frame):
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
 
-        popup = mypopup.Popup("Mes ordres de com'", canvas, content, button)
+        popup = mypopup.Popup("Mes ordres de com'", canvas, content, button, False)
         frame <= popup
 
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
