@@ -1,0 +1,31 @@
+""" utility to display popups """
+
+# pylint: disable=pointless-statement, expression-not-assigned
+
+
+from browser import html  # pylint: disable=import-error
+from browser.widgets.dialog import Dialog  # pylint: disable=import-error
+
+
+# TODO : move stuff from mydialog.py here
+
+
+class Popup(Dialog):
+    """ Slightly home made popup """
+
+    def __init__(self, title, content, img, button):
+        Dialog.__init__(self, title)
+        # put content if there is some (text)
+        if content:
+            self.panel <= content
+            self.panel <= html.BR()
+        # put image if there is one
+        if img:
+            self.panel <= img
+            self.panel <= html.BR()
+        # put button if there is one (to access full information)
+        if button:
+            self.panel <= button
+            button.bind('click', self.close)
+
+        self.close_button <= "Fermer"
