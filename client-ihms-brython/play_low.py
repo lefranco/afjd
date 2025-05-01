@@ -429,8 +429,38 @@ def stack_my_orders(frame):
     def my_orders_callback(ev):  # pylint: disable=invalid-name
         """ my_orders_callback """
 
+        def callback_render(ev):  # pylint: disable=invalid-name
+            """ callback_render """
+            ev.preventDefault()
+            ctx.drawImage(img, 0, 0)
+            POSITION_DATA.render(ctx)
+            orders_data.render(ctx)
+
+        def otherwise_callback(ev):  # pylint: disable=invalid-name
+            """ real procedure """
+            ev.preventDefault()
+            play.load_option(ev, 'Ordonner')
+
         ev.preventDefault()
-        play.load_option(ev, 'Ordonner')
+
+        # image
+        map_size = VARIANT_DATA.map_size
+        canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+        ctx = canvas.getContext("2d")
+        orders_loaded = game_orders_reload(GAME_ID)
+        orders_data = mapping.Orders(orders_loaded, POSITION_DATA, [])
+        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+        img.bind('load', callback_render)
+
+        # content
+        content = None
+
+        # otherwise button
+        button = html.INPUT(type="submit", value="Sinon", Class='btn-inside')
+        button.bind('click', otherwise_callback)
+
+        popup = mypopup.Popup("Mes ordres", canvas, content, button)
+        frame <= popup
 
     # not for game master
     if ROLE_ID == 0:
@@ -450,6 +480,13 @@ def stack_communications_orders_button(frame):
     def communications_orders_callback(ev):  # pylint: disable=invalid-name
         """ communications_orders_callback """
 
+        def callback_render(ev):  # pylint: disable=invalid-name
+            """ callback_render """
+            ev.preventDefault()
+            ctx.drawImage(img, 0, 0)
+            POSITION_DATA.render(ctx)
+            orders_data.render(ctx)
+
         def otherwise_callback(ev):  # pylint: disable=invalid-name
             """ real procedure """
             ev.preventDefault()
@@ -458,17 +495,22 @@ def stack_communications_orders_button(frame):
         ev.preventDefault()
 
         # image
-        img_url = "https://picsum.photos/400/300"  # Remplacer par ton image
-        img = html.IMG(src=img_url)
+        map_size = VARIANT_DATA.map_size
+        canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+        ctx = canvas.getContext("2d")
+        communication_orders_loaded = game_communication_orders_reload(GAME_ID)
+        orders_data = mapping.Orders(communication_orders_loaded, POSITION_DATA, [])
+        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+        img.bind('load', callback_render)
 
         # content
-        content = html.DIV("Ci-dessus vos ordres de com'")
+        content = None
 
         # otherwise button
         button = html.INPUT(type="submit", value="Sinon", Class='btn-inside')
         button.bind('click', otherwise_callback)
 
-        popup = mypopup.Popup("Vos ordres de com'", content, img, button)
+        popup = mypopup.Popup("Vos ordres de com'", canvas, content, button)
         frame <= popup
 
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
