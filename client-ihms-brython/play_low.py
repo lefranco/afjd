@@ -575,6 +575,7 @@ def stack_position_and_my_orders(frame):
             ev.preventDefault()
             ctx.drawImage(img, 0, 0)
             POSITION_DATA.render(ctx)
+            VARIANT_DATA.render(ctx)
             orders_data.render(ctx)
 
         def otherwise_callback(ev):  # pylint: disable=invalid-name
@@ -626,6 +627,7 @@ def stack_communications_orders_button(frame):
             ev.preventDefault()
             ctx.drawImage(img, 0, 0)
             POSITION_DATA.render(ctx)
+            VARIANT_DATA.render(ctx)
             orders_data.render(ctx)
 
         def otherwise_callback(ev):  # pylint: disable=invalid-name
