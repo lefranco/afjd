@@ -405,26 +405,29 @@ def stack_last_moves_button(frame):
         img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
-        # content : two navigation buttons
+        # content : season
         content = html.DIV()
+        season_name = common.readable_season(advancement_selected, VARIANT_DATA)
+        content <= season_name
+
+        buttons = []
+
+        # more buttons
         if first_advancement <= advancement_selected - 1 < last_advancement:
             prev_button = html.INPUT(type="submit", value="<", Class='btn-inside')
             prev_button.bind('click', lambda e, a=advancement_selected -1: last_moves_callback(ev, a))
-            content <= prev_button
-            content <= ' '
-        season_name = common.readable_season(advancement_selected, VARIANT_DATA)
-        content <= ' '
-        content <= season_name
+            buttons.append(prev_button)
         if first_advancement <= advancement_selected + 1 < last_advancement:
             next_button = html.INPUT(type="submit", value=">", Class='btn-inside')
             next_button.bind('click', lambda e, a=advancement_selected + 1: last_moves_callback(ev, a))
-            content <= next_button
+            buttons.append(next_button)
 
         # otherwise button
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
+        buttons.append(button)
 
-        popup = mypopup.Popup("Derniers mouvements", canvas, content, button)
+        popup = mypopup.Popup("Derniers mouvements", canvas, content, buttons)
         frame <= popup
 
     first_advancement = 0
@@ -560,9 +563,10 @@ def stack_last_agreements_button(frame):
         # otherwise button
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
+        buttons = [button]
 
         # This popup is the only one resizeable
-        popup = mypopup.Popup("Derniers messages", canvas, content, button)
+        popup = mypopup.Popup("Derniers messages", canvas, content, buttons)
         frame <= popup
 
     if GAME_PARAMETERS_LOADED['nomessage_current']:
@@ -611,8 +615,9 @@ def stack_position_and_my_orders(frame):
         # otherwise button
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
+        buttons = [button]
 
-        popup = mypopup.Popup("Position et mes ordres", canvas, content, button)
+        popup = mypopup.Popup("Position et mes ordres", canvas, content, buttons)
         frame <= popup
 
     # not for game master
@@ -663,8 +668,9 @@ def stack_communications_orders_button(frame):
         # otherwise button
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
+        buttons = [button]
 
-        popup = mypopup.Popup("Mes ordres de com'", canvas, content, button)
+        popup = mypopup.Popup("Mes ordres de com'", canvas, content, buttons)
         frame <= popup
 
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
