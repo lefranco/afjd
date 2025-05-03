@@ -564,8 +564,8 @@ def stack_last_agreements_button(frame):
     frame <= html.BR()
 
 
-def stack_my_orders(frame):
-    """ stack_my_orders """
+def stack_position_and_my_orders(frame):
+    """ stack_position_and_my_orders """
 
     def my_orders_callback(ev):  # pylint: disable=invalid-name
         """ my_orders_callback """

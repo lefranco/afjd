@@ -1499,7 +1499,7 @@ def negotiate(default_dest_set, def_focus_role_id):
     play_low.stack_role_flag(play_low.MY_SUB_PANEL)
 
     # see my orders
-    play_low.stack_my_orders(play_low.MY_SUB_PANEL)
+    play_low.stack_position_and_my_orders(play_low.MY_SUB_PANEL)
 
     # see last moves
     play_low.stack_last_moves_button(play_low.MY_SUB_PANEL)
@@ -1766,7 +1766,7 @@ def declare():
     play_low.stack_role_flag(play_low.MY_SUB_PANEL)
 
     # see my orders
-    play_low.stack_my_orders(play_low.MY_SUB_PANEL)
+    play_low.stack_position_and_my_orders(play_low.MY_SUB_PANEL)
 
     # see last moves
     play_low.stack_last_moves_button(play_low.MY_SUB_PANEL)
