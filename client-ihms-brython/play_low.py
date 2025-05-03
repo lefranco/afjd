@@ -421,7 +421,7 @@ def stack_last_moves_button(frame):
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
 
-        popup = mypopup.Popup("Derniers mouvements", canvas, content, button, False)
+        popup = mypopup.Popup("Derniers mouvements", canvas, content, button)
         frame <= popup
 
     first_advancement = 0
@@ -551,7 +551,7 @@ def stack_last_agreements_button(frame):
         button.bind('click', otherwise_callback)
 
         # This popup is the only one resizeable
-        popup = mypopup.Popup("Derniers messages", canvas, content, button, True)
+        popup = mypopup.Popup("Derniers messages", canvas, content, button)
         frame <= popup
 
     if GAME_PARAMETERS_LOADED['nomessage_current']:
@@ -600,7 +600,7 @@ def stack_position_and_my_orders(frame):
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
 
-        popup = mypopup.Popup("Position et mes ordres", canvas, content, button, False)
+        popup = mypopup.Popup("Position et mes ordres", canvas, content, button)
         frame <= popup
 
     # not for game master
@@ -651,7 +651,7 @@ def stack_communications_orders_button(frame):
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
 
-        popup = mypopup.Popup("Mes ordres de com'", canvas, content, button, False)
+        popup = mypopup.Popup("Mes ordres de com'", canvas, content, button)
         frame <= popup
 
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
