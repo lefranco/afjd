@@ -370,7 +370,7 @@ def load_special_stuff():
 def stack_last_moves_button(frame):
     """ stack_last_moves_button """
 
-    def last_moves_callback(ev):  # pylint: disable=invalid-name
+    def last_moves_callback(ev, advancement_selected):  # pylint: disable=invalid-name
         """ last_moves_callback """
 
         def callback_render(ev):  # pylint: disable=invalid-name
@@ -388,16 +388,7 @@ def stack_last_moves_button(frame):
 
         ev.preventDefault()
 
-        # calculate last advancement
-        last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
-        adv_last_moves = last_advancement
-        while True:
-            adv_last_moves -= 1
-            if adv_last_moves % 5 in [0, 2]:
-                break
-
         # image
-        advancement_selected = adv_last_moves
         map_size = VARIANT_DATA.map_size
         canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
         ctx = canvas.getContext("2d")
@@ -414,8 +405,20 @@ def stack_last_moves_button(frame):
         img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
-        # content
-        content = None
+        # content : two navigation buttons
+        content = html.DIV()
+        if first_advancement <= advancement_selected - 1 < last_advancement:
+            prev_button = html.INPUT(type="submit", value="<", Class='btn-inside')
+            prev_button.bind('click', lambda e, a=advancement_selected -1: last_moves_callback(ev, a))
+            content <= prev_button
+            content <= ' '
+        season_name = common.readable_season(advancement_selected, VARIANT_DATA)
+        content <= ' '
+        content <= season_name
+        if first_advancement <= advancement_selected + 1 < last_advancement:
+            next_button = html.INPUT(type="submit", value=">", Class='btn-inside')
+            next_button.bind('click', lambda e, a=advancement_selected + 1: last_moves_callback(ev, a))
+            content <= next_button
 
         # otherwise button
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
@@ -431,8 +434,16 @@ def stack_last_moves_button(frame):
     if GAME_PARAMETERS_LOADED['current_advancement'] == first_advancement:
         return
 
+    # calculate last advancement
+    last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
+    adv_last_moves = last_advancement
+    while True:
+        adv_last_moves -= 1
+        if adv_last_moves % 5 in [0, 2]:
+            break
+
     input_last_moves = html.INPUT(type="submit", value="Derniers mouvements", Class='btn-inside')
-    input_last_moves.bind("click", last_moves_callback)
+    input_last_moves.bind("click", lambda e, ll=adv_last_moves: last_moves_callback(e, ll))
 
     frame <= input_last_moves
     frame <= html.BR()
