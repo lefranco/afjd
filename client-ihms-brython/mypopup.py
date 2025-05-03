@@ -13,7 +13,7 @@ from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 class Popup(Dialog):
     """ Slightly home made popup """
 
-    def __init__(self, title, canvas, content, button):
+    def __init__(self, title, canvas, content, buttons):
 
         # parent class
         Dialog.__init__(self, title)
@@ -32,8 +32,10 @@ class Popup(Dialog):
             self.panel <= html.BR()
 
         # put button if there is one (to access full information)
-        if button:
-            self.panel <= button
-            button.bind('click', self.close)
+        if buttons:
+            for button in buttons:
+                self.panel <= button
+                button.bind('click', self.close)
+                self.panel <= " "
 
         self.close_button <= "Fermer"
