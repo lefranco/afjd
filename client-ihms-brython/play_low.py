@@ -600,14 +600,14 @@ def stack_my_orders(frame):
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
 
-        popup = mypopup.Popup("Mes ordres", canvas, content, button, False)
+        popup = mypopup.Popup("Position et mes ordres", canvas, content, button, False)
         frame <= popup
 
     # not for game master
     if ROLE_ID == 0:
         return
 
-    input_my_orders = html.INPUT(type="submit", value="Mes ordres", Class='btn-inside')
+    input_my_orders = html.INPUT(type="submit", value="Position et mes ordres", Class='btn-inside')
     input_my_orders.bind("click", my_orders_callback)
 
     frame <= input_my_orders
