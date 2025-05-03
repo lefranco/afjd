@@ -13,14 +13,13 @@ from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 class Popup(Dialog):
     """ Slightly home made popup """
 
-    def __init__(self, title, canvas, content, button, resizeable):
+    def __init__(self, title, canvas, content, button):
 
         # parent class
         Dialog.__init__(self, title)
 
-        # make it resizeable if required
-        if resizeable:
-            self.attrs['style'] += 'resize: both; overflow: auto;'
+        # make it resizeable
+        self.attrs['style'] += 'resize: both; overflow: auto;'
 
         # put image if there is one
         if canvas:
