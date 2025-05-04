@@ -59,8 +59,8 @@ def get_complete_or_ready_games(player_id):
     return complete_or_ready_games_dict
 
 
-def get_suffering_games(games_dict, player_id, dict_role_id):
-    """ get_suffering_games : need_start, need_replacement or need_debrief """
+def get_suffering_games_dict(games_dict, player_id, dict_role_id):
+    """ get_suffering_games_dict : need_start, need_replacement or need_debrief """
 
     need_start = []
     need_replacement = []
@@ -875,7 +875,7 @@ def my_games(state_name):
     games_id_player = {int(n) for n in player_games.keys()}
 
     # need these
-    suffering_games = get_suffering_games(games_dict, player_id, dict_role_id)
+    suffering_games_dict = get_suffering_games_dict(games_dict, player_id, dict_role_id)
 
     # get the hour (do not notify more frequently than every hour)
     hour_now = int(overall_time_before) // 3600
@@ -885,12 +885,12 @@ def my_games(state_name):
     if 'DATE_SUFFERING_NOTIFIED' in storage:
         hour_notified = int(storage['DATE_SUFFERING_NOTIFIED'])
     if hour_now > hour_notified:
-        if suffering_games['need_start']:
-            alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games['need_start'])} qui est(sont) complète(s) !\n\nPour ce faire, depuis la page 'mes parties', bouton 'en attente' (en bas) et aller dans la(les) partie(s) !")
-        if suffering_games['need_replacement']:
-            alert(f"Il faut réaliser les remplacements dans la(les) partie(s) en cours {' '.join(suffering_games['need_replacement'])} qui est(sont) prête(s) !")
-        if suffering_games['need_know_who']:
-            alert(f"Il faut lever l'anonymat dans la(les) partie(s) en cours {' '.join(suffering_games['need_know_who'])} qui est(sont) terminée(s) !")
+        if suffering_games_dict['need_start']:
+            alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games_dict['need_start'])} qui est(sont) complète(s) !\n\nPour ce faire, depuis la page 'mes parties', bouton 'en attente' (en bas) et aller dans la(les) partie(s) !")
+        if suffering_games_dict['need_replacement']:
+            alert(f"Il faut réaliser les remplacements dans la(les) partie(s) en cours {' '.join(suffering_games_dict['need_replacement'])} qui est(sont) prête(s) !")
+        if suffering_games_dict['need_know_who']:
+            alert(f"Il faut lever l'anonymat dans la(les) partie(s) en cours {' '.join(suffering_games_dict['need_know_who'])} qui est(sont) terminée(s) !")
         storage['DATE_SUFFERING_NOTIFIED'] = str(hour_now)
 
     time_stamp_now = overall_time_before
@@ -1118,9 +1118,14 @@ def my_games(state_name):
             if field == 'name':
 
                 value = game_name
-                # highlite free available position
-                if game_name in suffering_games:
+
+                # highlite if action needed
+                if game_name in suffering_games_dict['need_start']:
                     colour = config.NEED_START
+                elif game_name in suffering_games_dict['need_replacement']:
+                    colour = config.NEED_REPLACEMENT
+                elif game_name in suffering_games_dict['need_know_who']:
+                    colour = config.NEED_CANCEL_ANONIMITY
 
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
