@@ -279,6 +279,38 @@ def get_all_player_games_roles_submitted_orders():
     return dict_submitted_data
 
 
+def new_private_messages_received():
+    """ new_private_messages_received """
+
+    new_messages_loaded = 0
+
+    def reply_callback(req):
+        nonlocal new_messages_loaded
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement si des messages personnels : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement si des messages personnels : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        new_messages_loaded = req_result['new_messages']
+        return
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/new-private-messages-received"
+
+    # reading new private messages received : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return new_messages_loaded
+
+
 def get_my_delays():
     """ get_my_delays """
 
@@ -767,6 +799,19 @@ def my_games(state_name):
 
     overall_time_before = time()
 
+    # get the day
+    day_now = int(overall_time_before) // (3600 * 24)
+
+    # we check new private messages once a day
+    day_notified = 0
+    if 'DATE_NEW_MESSAGES_NOTIFIED' in storage:
+        day_notified = int(storage['DATE_NEW_MESSAGES_NOTIFIED'])
+    if day_now > day_notified:
+        new_messages = new_private_messages_received()
+        if new_messages:
+            alert(f"Vous avez {new_messages} nouveau(x) message(s) personnel(s) ! Pour le(s) lire : Menu Messages personnels.")
+            storage['DATE_NEW_MESSAGES_NOTIFIED'] = str(day_now)
+
     # title
     MY_SUB_PANEL <= html.H3(f"Parties que je joue dans l'état : {state_name}")
 
@@ -833,7 +878,7 @@ def my_games(state_name):
     suffering_games = get_suffering_games(games_dict, player_id, dict_role_id)
 
     # get the hour (do not notify more frequently than every hour)
-    hour_now = int(time()) // 3600
+    hour_now = int(overall_time_before) // 3600
 
     # we alert about  suffering games once a day (that need to be started)
     hour_notified = 0
@@ -849,7 +894,7 @@ def my_games(state_name):
             alert(f"Il faut lever l'anonymat dans la(les) partie(s) en cours {' '.join(suffering_games['need_know_who'])} qui est(sont) terminée(s) !")
         storage['DATE_SUFFERING_NOTIFIED'] = str(hour_now)
 
-    time_stamp_now = time()
+    time_stamp_now = overall_time_before
 
     # button for switching mode (display)
     if 'GAME_SHOW_MODE' not in storage:
