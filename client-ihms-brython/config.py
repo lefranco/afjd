@@ -78,10 +78,13 @@ APPROACHING_DEADLINE_COLOUR = 'Yellow'
 # after that waiting game should be cancelled
 EXPIRED_WAIT_START_COLOUR = 'Chocolate'
 
-# colors for games not started
+# colors for games needing attention 
 NEED_START = 'YellowGreen'
-NEED_PLAYERS = 'Pink'
 NEED_REPLACEMENT = 'Fuchsia'
+NEED_CANCEL_ANONIMITY = 'Pink'
+
+# colors for games that can be joined
+CAN_JOIN = 'LightBlue'
 
 # to distinguish own games
 MY_RATING = 'LightGrey'

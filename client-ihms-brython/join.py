@@ -425,7 +425,7 @@ def recruiting_games():
                     button.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
                     value = button
                     # highlite free available position
-                    colour = config.NEED_PLAYERS
+                    colour = config.CAN_JOIN
 
             if field == 'deadline':
 
