@@ -886,8 +886,7 @@ def my_games(state_name):
         hour_notified = int(storage['DATE_SUFFERING_NOTIFIED'])
     if hour_now > hour_notified:
         if suffering_games['need_start']:
-            alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games['need_start'])} qui est(sont) complète(s) !")
-            alert("Pour ce faire, depuis la page 'mes parties', bouton 'en attente' (en bas) et aller dans la(les) partie(s) !")
+            alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games['need_start'])} qui est(sont) complète(s) !\n\nPour ce faire, depuis la page 'mes parties', bouton 'en attente' (en bas) et aller dans la(les) partie(s) !")
         if suffering_games['need_replacement']:
             alert(f"Il faut réaliser les remplacements dans la(les) partie(s) en cours {' '.join(suffering_games['need_replacement'])} qui est(sont) prête(s) !")
         if suffering_games['need_know_who']:
