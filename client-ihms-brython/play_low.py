@@ -415,7 +415,7 @@ def stack_last_moves_button(frame):
         # more buttons
         if first_advancement <= advancement_selected - 1 < last_advancement:
             prev_button = html.INPUT(type="submit", value="<", Class='btn-inside')
-            prev_button.bind('click', lambda e, a=advancement_selected -1: last_moves_callback(ev, a))
+            prev_button.bind('click', lambda e, a=advancement_selected - 1: last_moves_callback(ev, a))
             buttons.append(prev_button)
         if first_advancement <= advancement_selected + 1 < last_advancement:
             next_button = html.INPUT(type="submit", value=">", Class='btn-inside')
