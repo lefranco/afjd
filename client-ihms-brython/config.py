@@ -78,7 +78,7 @@ APPROACHING_DEADLINE_COLOUR = 'Yellow'
 # after that waiting game should be cancelled
 EXPIRED_WAIT_START_COLOUR = 'Chocolate'
 
-# colors for games needing attention 
+# colors for games needing attention
 NEED_START = 'YellowGreen'
 NEED_REPLACEMENT = 'Fuchsia'
 NEED_CANCEL_ANONIMITY = 'Pink'
