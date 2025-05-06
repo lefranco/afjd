@@ -48,7 +48,7 @@ def set_arrival(scoring_requested):
 def show_games(ev, game_list):  # pylint: disable=invalid-name
     """ show_games """
     ev.preventDefault()
-    mydialog.InfoDialog("Information", game_list, True)
+    mydialog.info_stay(game_list)
 
 
 def get_detailed_elo_rating(classic, role_id):

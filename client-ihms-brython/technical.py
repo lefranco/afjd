@@ -196,7 +196,7 @@ def select_interface():
         """ select_interface_callback """
 
         interface.set_interface(variant_name_loaded, user_interface)
-        mydialog.InfoDialog("Information", f"Interface sélectionnée pour la variante {variant_name_loaded} : {user_interface}")
+        mydialog.info_go(f"Interface sélectionnée pour la variante {variant_name_loaded} : {user_interface}")
 
         # we do not go back to where we started
         # this is intended otherwise the new maps are not active

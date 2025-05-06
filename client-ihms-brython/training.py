@@ -238,7 +238,7 @@ def reset_training_callback(ev):  # pylint: disable=invalid-name
 def reload_text_callback(ev):  # pylint: disable=invalid-name
     """ reload_text_callback """
     ev.preventDefault()
-    mydialog.InfoDialog("Information", INTRODUCTION, True)
+    mydialog.info_stay(INTRODUCTION)
 
 
 def ask_help_callback(ev):  # pylint: disable=invalid-name
@@ -712,17 +712,17 @@ def slide_submit_orders(table_of_contents):
                 messages = "<br>".join(req_result['submission_report'].strip().split('\n'))
 
                 if messages:
-                    mydialog.InfoDialog("Information", f"Ordres validés avec le(s) message(s) : {messages}", True)
+                    mydialog.info_stay(f"Ordres validés avec le(s) message(s) : {messages}")
                 else:
-                    mydialog.InfoDialog("Information", "Ordres validés !")
+                    mydialog.info_go("Ordres validés !")
 
             # compare with expected orders
             expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, [])
             if same_orders(orders_data, expected):
-                mydialog.InfoDialog("Information", "Félicitations, ce sont bien les ordres attendus !<br><br>(On passe automatiquement à la planche suivante)", False)
+                mydialog.info_go("Félicitations, ce sont bien les ordres attendus !<br><br>(On passe automatiquement à la planche suivante)")
                 next_previous_training(False)
             else:
-                mydialog.InfoDialog("Information", "Hélas non, ce ne sont pas les ordres attendus :-(", True)
+                mydialog.info_stay("Hélas non, ce ne sont pas les ordres attendus :-(")
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             role = VARIANT_DATA.roles[ROLE_ID]
@@ -731,7 +731,7 @@ def slide_submit_orders(table_of_contents):
                 nb_builds_done = orders_data.number()
                 if nb_builds_done < nb_builds:
                     if not warned:
-                        dialog = mydialog.Dialog(f"Vous construisez {nb_builds_done} unités alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
+                        dialog = mydialog.MyDialog(f"Vous construisez {nb_builds_done} unités alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
                         dialog.ok_button.bind("click", lambda e, w=True, d=dialog: submit_orders_callback(e, w, d))
                         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_submit_orders_callback(e, d))
                         return
@@ -2074,7 +2074,7 @@ def install_training():
     load_dynamic_stuff()
 
     # Popup
-    mydialog.InfoDialog("Information", INTRODUCTION, True)
+    mydialog.info_stay(INTRODUCTION)
 
     # display map and order console
     MY_SUB_PANEL.clear()

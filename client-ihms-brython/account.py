@@ -195,7 +195,7 @@ def create_account(json_dict):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Votre compte a été créé : {messages}")
+            mydialog.info_go(f"Votre compte a été créé : {messages}")
             alert(f"Félicition, votre compte a été crée.\n\nUn code de vérification vous a été envoyé pour vérifier votre adresse courriel.\n\n Attention : votre compte sera supprimé après {config.IDLE_DAY_TIMEOUT / 30.5} mois d'inactivité")
             alert(welcome.MESSAGE)
 
@@ -532,7 +532,7 @@ def edit_account():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Votre compte a été changé : {messages}")
+            mydialog.info_go(f"Votre compte a été changé : {messages}")
 
         ev.preventDefault()
 
@@ -732,7 +732,7 @@ def validate_email():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}")
+            mydialog.info_go(f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}")
 
         ev.preventDefault()
 
@@ -764,7 +764,7 @@ def validate_email():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Félicitations, votre courriel a été validé : {messages}")
+            mydialog.info_go(f"Félicitations, votre courriel a été validé : {messages}")
 
         ev.preventDefault()
 
@@ -866,7 +866,7 @@ def change_password():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Votre mot de passe a été changé : {messages}")
+            mydialog.info_go(f"Votre mot de passe a été changé : {messages}")
 
         ev.preventDefault()
 
@@ -981,7 +981,7 @@ def delete_account():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Votre compte a été supprimé : {messages}")
+            mydialog.info_go(f"Votre compte a été supprimé : {messages}")
 
             # logout
             login.PANEL_MIDDLE = None
@@ -1003,7 +1003,7 @@ def delete_account():
 
         ev.preventDefault()
 
-        dialog = mydialog.Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
+        dialog = mydialog.MyDialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_account_callback(e, d))
 

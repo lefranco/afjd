@@ -150,7 +150,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La note a été enregistrée ! {messages}")
+            mydialog.info_go(f"La note a été enregistrée ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -195,7 +195,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Vous avez quitté l'arbitrage de la partie : {messages}")
+            mydialog.info_go(f"Vous avez quitté l'arbitrage de la partie : {messages}")
 
             # go to game
             play_low.PANEL_MIDDLE.clear()
@@ -246,7 +246,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La partie a été mise dans l'état 'fin votée' : {messages}")
+            mydialog.info_go(f"La partie a été mise dans l'état 'fin votée' : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -290,7 +290,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'état de la partie a été modifié : {messages}")
+            mydialog.info_go(f"L'état de la partie a été modifié : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -319,7 +319,7 @@ def game_master():
 
         ev.preventDefault()
 
-        dialog = mydialog.Dialog(f"On archive vraiment la partie {play_low.GAME} ?", ok_cancel=True)
+        dialog = mydialog.MyDialog(f"On archive vraiment la partie {play_low.GAME} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, es=expected_state: change_state_game_callback(e, d, es))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_change_state_game_callback(e, d))
 
@@ -345,7 +345,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La partie a été supprimée : {messages}", True)
+            mydialog.info_go(f"La partie a été supprimée : {messages}")
             allgames.unselect_game()
 
             # go to select another game
@@ -369,7 +369,7 @@ def game_master():
 
         ev.preventDefault()
 
-        dialog = mydialog.Dialog(f"On supprime vraiment la partie {play_low.GAME} ?", ok_cancel=True)
+        dialog = mydialog.MyDialog(f"On supprime vraiment la partie {play_low.GAME} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_game_callback(e, d))
 
@@ -434,7 +434,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le joueur a été mis dans la partie: {messages}")
+            mydialog.info_go(f"Le joueur a été mis dans la partie: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -478,7 +478,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le joueur a été retiré de la partie: {messages}")
+            mydialog.info_go(f"Le joueur a été retiré de la partie: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -527,7 +527,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'abandon a été supprimé : {messages}")
+            mydialog.info_go(f"L'abandon a été supprimé : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -558,7 +558,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'incident a été supprimé : {messages}")
+            mydialog.info_go(f"L'incident a été supprimé : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -580,7 +580,7 @@ def game_master():
 
         ev.preventDefault()
 
-        dialog = mydialog.Dialog(f"On supprime vraiment cet abandon pour {text} ?", ok_cancel=True)
+        dialog = mydialog.MyDialog(f"On supprime vraiment cet abandon pour {text} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, p=player_id: remove_dropout_callback(e, d, r, p))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_dropout_callback(e, d))
 
@@ -593,7 +593,7 @@ def game_master():
 
         ev.preventDefault()
 
-        dialog = mydialog.Dialog(f"On supprime vraiment cet incident pour {text} ?", ok_cancel=True)
+        dialog = mydialog.MyDialog(f"On supprime vraiment cet incident pour {text} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, a=advancement: remove_incident_callback(e, d, r, a))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_incident_callback(e, d))
 
@@ -616,7 +616,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le vote a été effacé ! {messages}")
+            mydialog.info_go(f"Le vote a été effacé ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -654,7 +654,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La date limite a été modifiée : {messages}")
+            mydialog.info_go(f"La date limite a été modifiée : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -710,7 +710,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La date limite a été reportée : {messages}")
+            mydialog.info_go(f"La date limite a été reportée : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -753,7 +753,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La date limite a été synchronisée : {messages}")
+            mydialog.info_go(f"La date limite a été synchronisée : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -790,7 +790,7 @@ def game_master():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             desc = {-1: 'Maintenant (au plus tôt)', 0: 'Pas de forçage', 1: 'A la date limite (au plus tard)'}[force]
-            mydialog.InfoDialog("Information", f"Le forçage d'attente à été mis à  {desc} : {messages}")
+            mydialog.info_go(f"Le forçage d'attente à été mis à  {desc} : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -829,7 +829,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            mydialog.InfoDialog("Information", f"Message de rappel (manque ordres) émis vers : {pseudo_there}")
+            mydialog.info_go(f"Message de rappel (manque ordres) émis vers : {pseudo_there}")
 
         ev.preventDefault()
 
@@ -895,7 +895,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            mydialog.InfoDialog("Information", f"Message de rappel (manque d'accord pour résoudre) émis vers : {pseudo_there}")
+            mydialog.info_go(f"Message de rappel (manque d'accord pour résoudre) émis vers : {pseudo_there}")
 
         ev.preventDefault()
 
@@ -957,7 +957,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            mydialog.InfoDialog("Information", f"Message de bienvenue émis vers : {pseudo_there}")
+            mydialog.info_go(f"Message de bienvenue émis vers : {pseudo_there}")
 
         ev.preventDefault()
 
@@ -1017,7 +1017,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            mydialog.InfoDialog("Information", "Message de demande de remplacement émis vers les remplaçants potentiels")
+            mydialog.info_go("Message de demande de remplacement émis vers les remplaçants potentiels")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1079,7 +1079,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}")
+            mydialog.info_go(f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1117,7 +1117,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le joueur s'est vu imposé un accord pour résoudre: {messages}")
+            mydialog.info_go(f"Le joueur s'est vu imposé un accord pour résoudre: {messages}")
 
             adjudicated = req_result['adjudicated']
             if adjudicated:
@@ -1161,7 +1161,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le joueur s'est vu retirer le rôle dans la partie: {messages}")
+            mydialog.info_go(f"Le joueur s'est vu retirer le rôle dans la partie: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1199,7 +1199,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le joueur s'est vu attribuer le rôle dans la partie: {messages}")
+            mydialog.info_go(f"Le joueur s'est vu attribuer le rôle dans la partie: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1269,7 +1269,7 @@ def game_master():
 
     # warning if game not waiting or ongoing
     if play_low.GAME_PARAMETERS_LOADED['current_state'] not in [0, 1]:
-        mydialog.InfoDialog("Information", "Cette partie est archivée ou distinguée !")
+        mydialog.info_go("Cette partie est archivée ou distinguée !")
 
     else:
 
@@ -2140,7 +2140,7 @@ def supervise():
 
             adjudicated = req_result['adjudicated']
             if adjudicated:
-                mydialog.InfoDialog("Information", "La résolution a été forcée.")
+                mydialog.info_go("La résolution a été forcée.")
                 message = "Résolution forcée par la console suite forçage accord"
                 log_stack.insert(message)
 
@@ -2400,7 +2400,7 @@ def supervise():
         return False
 
     # since touchy, this requires a confirmation
-    dialog = mydialog.Dialog("On supervise vraiment la partie (cela peut entrainer des désordres civils) ?", ok_cancel=True)
+    dialog = mydialog.MyDialog("On supervise vraiment la partie (cela peut entrainer des désordres civils) ?", ok_cancel=True)
     dialog.ok_button.bind("click", lambda e, d=dialog: supervise_callback(e, d))
     dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_supervise_callback(e, d))
 

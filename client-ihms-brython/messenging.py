@@ -42,7 +42,7 @@ def private_messages(dest_user_id, initial_content):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le message privé a été supprimé ! {messages}")
+            mydialog.info_go(f"Le message privé a été supprimé ! {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -74,7 +74,7 @@ def private_messages(dest_user_id, initial_content):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le message privé a été envoyé ! {messages}")
+            mydialog.info_go(f"Le message privé a été envoyé ! {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()

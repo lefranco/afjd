@@ -256,7 +256,7 @@ def change_news_admin():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Les nouvelles (administrateur) ont été changées : {messages}")
+            mydialog.info_go(f"Les nouvelles (administrateur) ont été changées : {messages}")
 
         ev.preventDefault()
 
@@ -337,7 +337,7 @@ def change_site_image():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                mydialog.InfoDialog("Information", f"L'image du site a été changée : {messages}")
+                mydialog.info_go(f"L'image du site a été changée : {messages}")
 
                 index.SITE_IMAGE_DICT['image'] = image_str
                 index.SITE_IMAGE_DICT['legend'] = legend_content
@@ -457,7 +457,7 @@ def usurp():
             time_stamp_now = time()
             storage['LOGIN_TIME'] = str(time_stamp_now)
 
-            mydialog.InfoDialog("Information", f"Vous usurpez maintenant : {usurped_user_name}")
+            mydialog.info_go(f"Vous usurpez maintenant : {usurped_user_name}")
             login.show_login()
 
         usurped_user_name = input_usurped.value
@@ -590,7 +590,7 @@ def rectify_parameters():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Les paramètres de la partie ont été modifiés : {messages}")
+            mydialog.info_go(f"Les paramètres de la partie ont été modifiés : {messages}")
 
         ev.preventDefault()
 
@@ -733,7 +733,7 @@ def remove_orders():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Les ordres dans la partie ont été effacés : {messages}")
+            mydialog.info_go(f"Les ordres dans la partie ont été effacés : {messages}")
 
         ev.preventDefault()
 
@@ -796,7 +796,7 @@ def rectify_position():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Vous avez rectifié la position : {messages}")
+            mydialog.info_go(f"Vous avez rectifié la position : {messages}")
 
         # units
         units_list_dict = position_data.save_json1()
@@ -1283,7 +1283,7 @@ def rectify_current_state():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'état de la partie a été modifiés : {messages}")
+            mydialog.info_go(f"L'état de la partie a été modifiés : {messages}")
 
         ev.preventDefault()
 
@@ -1394,7 +1394,7 @@ def rectify_name():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le nom de la partie a été modifié : {messages}")
+            mydialog.info_go(f"Le nom de la partie a été modifié : {messages}")
 
             # Important otherwise we are lost ;-)
             storage['GAME'] = name_selected
@@ -1784,7 +1784,7 @@ def edit_creators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le joueur a été promu créateur : {messages}")
+            mydialog.info_go(f"Le joueur a été promu créateur : {messages}")
             alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
@@ -1827,7 +1827,7 @@ def edit_creators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le joueur a été déchu du rôle de créateur : {messages}")
+            mydialog.info_go(f"Le joueur a été déchu du rôle de créateur : {messages}")
             alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
@@ -1950,7 +1950,7 @@ def edit_moderators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le joueur a été promu modérateur : {messages}")
+            mydialog.info_go(f"Le joueur a été promu modérateur : {messages}")
             alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
@@ -1993,7 +1993,7 @@ def edit_moderators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le joueur a été déchu du rôle de modérateur : {messages}")
+            mydialog.info_go(f"Le joueur a été déchu du rôle de modérateur : {messages}")
             alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
@@ -2116,7 +2116,7 @@ def show_idle_data():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                mydialog.InfoDialog("Information", f"Le compte {player_pseudo} a été supprimé : {messages}")
+                mydialog.info_go(f"Le compte {player_pseudo} a été supprimé : {messages}")
 
                 # back to where we started
                 MY_SUB_PANEL.clear()
@@ -2337,7 +2337,7 @@ def maintain():
             messages = "<br>".join(req_result['msg'].split('\n'))
             print(messages)
 
-            mydialog.InfoDialog("Information", f"Maintenance réalisée :{messages}")
+            mydialog.info_go(f"Maintenance réalisée :{messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
