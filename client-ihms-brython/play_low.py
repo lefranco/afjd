@@ -18,7 +18,6 @@ import variants
 import ratings
 import technical
 import mydialog
-import mypopup
 import play_other  # circular import
 import play  # circular import
 
@@ -354,7 +353,7 @@ def load_special_stuff():
     if ROLE_ID is not None:
         content_loaded = common.game_note_reload(GAME_ID)
         if content_loaded:
-            mydialog.InfoDialog("Information", "Attention, vous avez pris des notes dans cette partie !")
+            mydialog.info_go("Attention, vous avez pris des notes dans cette partie !")
 
     if not (ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         return
@@ -427,7 +426,7 @@ def stack_last_moves_button(frame):
         button.bind('click', otherwise_callback)
         buttons.append(button)
 
-        popup = mypopup.Popup("Derniers mouvements", canvas, content, buttons)
+        popup = mydialog.Popup("Derniers mouvements", canvas, content, buttons)
         frame <= popup
 
     first_advancement = 0
@@ -566,7 +565,7 @@ def stack_last_agreements_button(frame):
         buttons = [button]
 
         # This popup is the only one resizeable
-        popup = mypopup.Popup("Derniers messages", canvas, content, buttons)
+        popup = mydialog.Popup("Derniers messages", canvas, content, buttons)
         frame <= popup
 
     if GAME_PARAMETERS_LOADED['nomessage_current']:
@@ -617,7 +616,7 @@ def stack_position_and_my_orders(frame):
         button.bind('click', otherwise_callback)
         buttons = [button]
 
-        popup = mypopup.Popup("Position et mes ordres", canvas, content, buttons)
+        popup = mydialog.Popup("Position et mes ordres", canvas, content, buttons)
         frame <= popup
 
     # not for game master
@@ -670,7 +669,7 @@ def stack_communications_orders_button(frame):
         button.bind('click', otherwise_callback)
         buttons = [button]
 
-        popup = mypopup.Popup("Mes ordres de com'", canvas, content, buttons)
+        popup = mydialog.Popup("Mes ordres de com'", canvas, content, buttons)
         frame <= popup
 
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz

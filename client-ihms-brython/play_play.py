@@ -98,7 +98,7 @@ def submit_orders():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La note a été enregistrée ! {messages}")
+            mydialog.info_go(f"La note a été enregistrée ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -139,7 +139,7 @@ def submit_orders():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le vote a été enregistré ! {messages}")
+            mydialog.info_go(f"Le vote a été enregistré ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -232,12 +232,12 @@ def submit_orders():
 
             # to better undestand what is going on, on can use code below :
             #  debug_message = req_result['debug_message'].split('\n')
-            #  mydialog.InfoDialog("Information", f"debug_message : {debug_message}", True)
+            #  mydialog.info_stay(f"debug_message : {debug_message}")
 
             if messages:
-                mydialog.InfoDialog("Information", f"Ordres validés avec le(s) message(s) : {messages}", True)
+                mydialog.info_stay(f"Ordres validés avec le(s) message(s) : {messages}")
             else:
-                mydialog.InfoDialog("Information", "Ordres validés !")
+                mydialog.info_go("Ordres validés !")
 
             # special : send timezone, ip address, sublmission  to server
             common.send_submission_data()
@@ -296,7 +296,7 @@ def submit_orders():
                 nb_builds_done = orders_data.number()
                 if nb_builds_done < nb_builds:
                     if not warned:
-                        dialog = mydialog.Dialog(f"Vous construisez {nb_builds_done} unités alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
+                        dialog = mydialog.MyDialog(f"Vous construisez {nb_builds_done} unités alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
                         dialog.ok_button.bind("click", lambda e, w=True, d=dialog: submit_orders_callback(e, w, d))
                         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_submit_orders_callback(e, d))
                         return
@@ -1770,7 +1770,7 @@ def submit_communication_orders():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Vous avez déposé des ordres de communication (ou aucun): {messages}")
+            mydialog.info_go(f"Vous avez déposé des ordres de communication (ou aucun): {messages}")
             if not orders_data.empty():
                 alert("Vos ordres de communication seront publiés dans le prochain compte-rendu de résolution, pourvu que les unités en question aient reçu l'ordre *réel* de tenir ou de se disperser..")
 
@@ -2549,9 +2549,9 @@ def imagine_units():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             if delete:
-                mydialog.InfoDialog("Information", f"Vous avez cessé d'imaginer une unité (vérifiez directement sur la carte) : {messages}")
+                mydialog.info_go(f"Vous avez cessé d'imaginer une unité (vérifiez directement sur la carte) : {messages}")
             else:
-                mydialog.InfoDialog("Information", f"Vous avez imaginé une unité (vérifiez directement sur la carte) : {messages}")
+                mydialog.info_go(f"Vous avez imaginé une unité (vérifiez directement sur la carte) : {messages}")
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             # reload position

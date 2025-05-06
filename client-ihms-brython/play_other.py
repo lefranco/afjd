@@ -80,7 +80,7 @@ def join_game():
             alert("Si elle n'est pas en cours, un courriel vous préviendra de son démarrage mais revenez régulièrement sur le site surveiller pour ne pas le manquer...")
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Vous avez rejoint la partie  : {messages}")
+            mydialog.info_go(f"Vous avez rejoint la partie  : {messages}")
 
             # This needs to be updated
             play_low.ROLE_ID, play_low.IN_GAME = common.get_role_allocated_to_player_in_game(play_low.GAME_ID)
@@ -116,7 +116,7 @@ def join_game():
     game_id = play_low.GAME_ID
 
     alert("Vous vous apprêtez à rejoindre une partie. Pouvons-nous compter sur votre engagement jusqu'à la fin ? Une popup va s'afficher vous demandant confirmation...")
-    dialog = mydialog.Dialog("Vous êtes sûr de jouer ?", ok_cancel=True)
+    dialog = mydialog.MyDialog("Vous êtes sûr de jouer ?", ok_cancel=True)
     dialog.ok_button.bind("click", lambda e, d=dialog: confirm_join_callback(e, d))
     dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_join_callback(e, d))
 
@@ -187,7 +187,7 @@ def show_position(advancement=None):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Vous avez quitté la partie : {messages}")
+            mydialog.info_go(f"Vous avez quitté la partie : {messages}")
 
             # go to game
             play_low.PANEL_MIDDLE.clear()
@@ -229,7 +229,7 @@ def show_position(advancement=None):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Vous avez pris l'arbitrage de la partie : {messages}")
+            mydialog.info_go(f"Vous avez pris l'arbitrage de la partie : {messages}")
 
             # go to game
             play_low.PANEL_MIDDLE.clear()
@@ -332,7 +332,7 @@ def show_position(advancement=None):
 
         if game_parameters_loaded['current_advancement'] == play_low.GAME_PARAMETERS_LOADED['current_advancement']:
             # no change it seeems
-            mydialog.InfoDialog("Information", "Rien de nouveau sous le soleil !")
+            mydialog.info_go("Rien de nouveau sous le soleil !")
             return
 
         alert("La position de la partie a changé !")
@@ -1153,7 +1153,7 @@ def negotiate(default_dest_set, def_focus_role_id):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le message a été envoyé ! {messages}")
+            mydialog.info_go(f"Le message a été envoyé ! {messages}")
 
             # back to where we started
             global CONTENT_BACKUP
@@ -1545,7 +1545,7 @@ def declare():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La presse a été publiée ! {messages}")
+            mydialog.info_go(f"La presse a été publiée ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()

@@ -80,7 +80,7 @@ def login():
                 del storage['DATE_SUFFERING_NOTIFIED']
 
             # inform user
-            mydialog.InfoDialog("Information", f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page")
+            mydialog.info_go(f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page")
             show_login()
 
             # goto directly to page my games
@@ -189,7 +189,7 @@ def login():
         if not effective:
             alert("Déjà déconnecté !")
         else:
-            mydialog.InfoDialog("Information", "Déconnecté avec succès")
+            mydialog.info_go("Déconnecté avec succès")
 
         render(PANEL_MIDDLE)
 
@@ -304,12 +304,12 @@ def check_token():
 
     if 'JWT_TOKEN' not in storage:
         # should not happen (or tweak)
-        mydialog.InfoDialog("Information", "Pour des raisons techniques il faut vous loguer à nouveau !")
+        mydialog.info_go("Pour des raisons techniques il faut vous loguer à nouveau !")
         return
 
     if 'LOGIN_EXPIRATION_TIME' not in storage:
         # should not happen (or tweak or transition period)
-        mydialog.InfoDialog("Information", "Pour des raisons techniques il faut vous loguer à nouveau !")
+        mydialog.info_go("Pour des raisons techniques il faut vous loguer à nouveau !")
         logout()
         return
 

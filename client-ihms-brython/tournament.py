@@ -907,7 +907,7 @@ def create_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le tournoi a été créé : {messages}")
+            mydialog.info_go(f"Le tournoi a été créé : {messages}")
 
             # we may have just created so need to reload
             global TOURNAMENT_DICT
@@ -1014,7 +1014,7 @@ def handle_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le tournoi a été supprimé : {messages}")
+            mydialog.info_go(f"Le tournoi a été supprimé : {messages}")
 
             # back somewhere else
             MY_SUB_PANEL.clear()
@@ -1038,7 +1038,7 @@ def handle_tournament():
 
         ev.preventDefault()
 
-        dialog = mydialog.Dialog("On supprime vraiment le tournoi ?", ok_cancel=True)
+        dialog = mydialog.MyDialog("On supprime vraiment le tournoi ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_tournament_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_tournament_callback(e, d))
 
@@ -1066,7 +1066,7 @@ def handle_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La partie a été mise dans le tournoi : {messages}")
+            mydialog.info_go(f"La partie a été mise dans le tournoi : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1115,7 +1115,7 @@ def handle_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La partie a été retirée du tournoi : {messages}")
+            mydialog.info_go(f"La partie a été retirée du tournoi : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1160,7 +1160,7 @@ def handle_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le nom du tournoi a été modifié : {messages}")
+            mydialog.info_go(f"Le nom du tournoi a été modifié : {messages}")
 
         ev.preventDefault()
 

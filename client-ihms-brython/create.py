@@ -114,7 +114,7 @@ def change_glorious():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Les glorieux ont été changées : {messages}")
+            mydialog.info_go(f"Les glorieux ont été changées : {messages}")
 
         ev.preventDefault()
 
@@ -434,7 +434,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # update progress bar
         games_created_so_far += 1
         # was not possible to have a progress bar for some reason
-        mydialog.InfoDialog("Information", f"Partie {game_to_create_name} ({games_created_so_far}/{number_games}) créé et peuplée..")
+        mydialog.info_go(f"Partie {game_to_create_name} ({games_created_so_far}/{number_games}) créé et peuplée..")
 
     # will increment
     games_created_so_far = 0
@@ -553,7 +553,7 @@ def create_many_games():
 
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create, number_players_expected):
-                dialog = mydialog.Dialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
+                dialog = mydialog.MyDialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
                 dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
                 dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
 

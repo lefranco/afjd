@@ -702,7 +702,7 @@ def my_games(state_name):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La partie a été démarrée : {messages}")
+            mydialog.info_go(f"La partie a été démarrée : {messages}")
 
         ev.preventDefault()
 
@@ -736,7 +736,7 @@ def my_games(state_name):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La partie a été arrêtée : {messages}")
+            mydialog.info_go(f"La partie a été arrêtée : {messages}")
 
         ev.preventDefault()
 
@@ -1400,7 +1400,7 @@ def my_games(state_name):
     storage['GAME_LIST'] = ' '.join(games_list)
 
     if late_games:
-        mydialog.InfoDialog("Information", f"Vous êtes en retard dans la(les) partie(s) : {' '.join(late_games)}")
+        mydialog.info_go(f"Vous êtes en retard dans la(les) partie(s) : {' '.join(late_games)}")
         audio_item = html.AUDIO(src='./sounds/disappoint.wav')
         audio_item.play()
 

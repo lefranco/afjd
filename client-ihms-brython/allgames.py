@@ -222,7 +222,7 @@ def create_game(json_dict):
             show_game_selected()
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La partie a été créé : {messages}.")
+            mydialog.info_go(f"La partie a été créé : {messages}.")
 
             # we do not want stalled games
             alert(f"Attention : la partie devra être démarrée sous {DELAY_FOR_COMPLETING_GAME_DAYS} jours sous peine d'être probablement annulée.")
@@ -759,7 +759,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'accès à l'anonymat a été modifié : {messages}")
+            mydialog.info_go(f"L'accès à l'anonymat a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -793,7 +793,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'accès à la messagerie a été modifié : {messages}")
+            mydialog.info_go(f"L'accès à la messagerie a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -828,7 +828,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"La description a été modifiée : {messages}")
+            mydialog.info_go(f"La description a été modifiée : {messages}")
 
         ev.preventDefault()
 
@@ -864,7 +864,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le droit a voter la fin de la partie a été modifié : {messages}")
+            mydialog.info_go(f"Le droit a voter la fin de la partie a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -898,7 +898,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le scorage a été modifié : {messages}")
+            mydialog.info_go(f"Le scorage a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -934,7 +934,7 @@ def rectify_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Les paramètres de cadence ont été modifiés : {messages}")
+            mydialog.info_go(f"Les paramètres de cadence ont été modifiés : {messages}")
 
         ev.preventDefault()
 
@@ -1823,7 +1823,7 @@ def show_no_game_masters_data():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Vous avez pris l'arbitrage de la partie : {messages}")
+            mydialog.info_go(f"Vous avez pris l'arbitrage de la partie : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()

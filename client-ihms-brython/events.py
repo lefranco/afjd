@@ -210,7 +210,7 @@ def registrations():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le commentaire d'inscription a été prise en compte : {messages}")
+            mydialog.info_go(f"Le commentaire d'inscription a été prise en compte : {messages}")
 
         ev.preventDefault()
 
@@ -245,7 +245,7 @@ def registrations():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le message privé a été envoyé ! {messages}")
+            mydialog.info_go(f"Le message privé a été envoyé ! {messages}")
 
         ev.preventDefault()
 
@@ -299,9 +299,9 @@ def registrations():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             if register:
-                mydialog.InfoDialog("Information", f"L'inscription a été prise en compte : {messages}")
+                mydialog.info_go(f"L'inscription a été prise en compte : {messages}")
             else:
-                mydialog.InfoDialog("Information", f"La désinscription a été prise en compte : {messages}")
+                mydialog.info_go(f"La désinscription a été prise en compte : {messages}")
 
         ev.preventDefault()
 
@@ -624,7 +624,7 @@ def create_event(json_dict):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'événement a été créé : {messages}")
+            mydialog.info_go(f"L'événement a été créé : {messages}")
 
             # selected
             storage['EVENT'] = name
@@ -792,7 +792,7 @@ def handle_event():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'inscription a été modifiée : {messages}")
+            mydialog.info_go(f"L'inscription a été modifiée : {messages}")
 
         ev.preventDefault()
 
@@ -829,7 +829,7 @@ def handle_event():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le message privé a été envoyé (Soyez patient : il en reste encore {len(adressees)}!) {messages}")
+            mydialog.info_go(f"Le message privé a été envoyé (Soyez patient : il en reste encore {len(adressees)}!) {messages}")
 
         def send_next():
 
@@ -903,7 +903,7 @@ def handle_event():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'événement a été supprimé : {messages}")
+            mydialog.info_go(f"L'événement a été supprimé : {messages}")
 
             # not selected
             del storage['EVENT']
@@ -927,7 +927,7 @@ def handle_event():
 
         ev.preventDefault()
 
-        dialog = mydialog.Dialog("On supprime vraiment l'événement ?", ok_cancel=True)
+        dialog = mydialog.MyDialog("On supprime vraiment l'événement ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_event_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_event_callback(e, d))
 
@@ -946,7 +946,7 @@ def handle_event():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'événement a été mis à jour : {messages}")
+            mydialog.info_go(f"L'événement a été mis à jour : {messages}")
 
         ev.preventDefault()
 

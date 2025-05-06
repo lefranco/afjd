@@ -104,7 +104,7 @@ def recruiting_games():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                mydialog.InfoDialog("Information", f"Vous avez quitté la partie (en utilisant la page 'rejoindre') : {messages}")
+                mydialog.info_go(f"Vous avez quitté la partie (en utilisant la page 'rejoindre') : {messages}")
 
             game_id = game_data_sel[game_name][0]
 

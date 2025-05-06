@@ -155,7 +155,7 @@ def change_news_modo():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Les nouvelles (modérateur) ont été changées : {messages}")
+            mydialog.info_go(f"Les nouvelles (modérateur) ont été changées : {messages}")
 
         ev.preventDefault()
 
@@ -230,7 +230,7 @@ def erase_chat_content():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Le contenu des disussions a été effacé ! {messages}")
+            mydialog.info_go(f"Le contenu des disussions a été effacé ! {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -539,7 +539,7 @@ def general_announce():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'annonce dans toutes les parties a été faite ! {messages}")
+            mydialog.info_go(f"L'annonce dans toutes les parties a été faite ! {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -611,7 +611,7 @@ def game_announce():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"L'annonce dans la partie a été faite ! {messages}")
+            mydialog.info_go(f"L'annonce dans la partie a été faite ! {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -2002,7 +2002,7 @@ def revoke_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.InfoDialog("Information", f"Vous avez destitué l'arbitre : {messages}")
+            mydialog.info_go(f"Vous avez destitué l'arbitre : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -2074,7 +2074,7 @@ def change_director():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            mydialog.InfoDialog("Information", f"Il a été promu responsable du tournoi: {director}")
+            mydialog.info_go(f"Il a été promu responsable du tournoi: {director}")
 
         ev.preventDefault()
 
@@ -2169,7 +2169,7 @@ def change_manager():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            mydialog.InfoDialog("Information", f"Il a été promu responsable de l'événement: {manager}")
+            mydialog.info_go(f"Il a été promu responsable de l'événement: {manager}")
 
         ev.preventDefault()
 
