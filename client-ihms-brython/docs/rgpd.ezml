@@ -20,14 +20,14 @@ Ce sont les données conservées dans la base de données liées à la création
 | notification message | oui |oui | - | permet d'éviter les courriels de notification de message/presse/avancement dans les parties |
 | notification remplacement | oui |oui | - | permet de recevoir les courriels de possibilité de remplacement |
 | abonnement newsletter | oui |oui | - |  permet d'éviter de recevoir la newletter de l'association |
-| nom | non |oui | nom de famille | affiché sur le site et dans les sorties JSON de partie |
-| prénom | non |oui | prénom usuel | affiché sur le site et dans les sorties JSON de partie |
-| pays de résidence | oui |oui | - | affiché sur le site |
-| nationalité | oui |oui | - | affiché sur le site |
+| nom | oui |oui | nom de famille | affiché sur le site et dans les sorties JSON de partie |
+| prénom | oui |oui | prénom usuel | affiché sur le site et dans les sorties JSON de partie |
+| pays de résidence | non |oui | - | affiché sur le site |
+| nationalité | non |oui | - | affiché sur le site |
 =
 
 (Suppression du compte)
-Un compte ne peut être supprimé que si'il n'est lié à aucune partie. Un compte est lié à une partie s'il y a un rôle, un retard ou un abandon.
+Un compte ne peut être supprimé que si'il n'est lié à aucune partie. Un compte est lié à une partie s'il y a un rôle.
 
 (Suppression des incidents)
 Les incidents (retards et abandons) sont automatiquement supprimés après un délai d'un an.
@@ -47,13 +47,15 @@ Ce ne sont pas techniquement des fameux "cookies" mais des "local storage"
 $$ Identification
 
 = Local storage pour l'identification
-| Nom | Finalité |
-| _PSEUDO_ | pseudo de l'utilisateur |
-| _JWT TOKEN_ | le jeton d'authenfication obtenu au login et utilisé pour les accès protégés (très important)|
-| _LOGIN TIME_ | date du login |
-| _LOGIN EXPIRATION TIME_ | date d'expitation  login |
-| _IP ADDRESS_ | adresse IP de l'utilisateur. Elle est transmise sur login, sur oubli de mot de passe et sur envoi des ordres sur une partie |
-| _TIME ZONE_ | fuseau horaire de l'utilisateur. Il est transmis sur envoi des ordres sur une partie |
+| Nom | Description | Finalité |
+| _PSEUDO_ | pseudo de l'utilisateur | identification |
+| _JWT TOKEN_ | le jeton d'authenfication obtenu au login et utilisé pour les accès protégés (très important) | identification |
+| _LOGIN TIME_ | date du login | affichage |
+| _LOGIN EXPIRATION TIME_ | date d'expitation login | affichage |
+| _IP ADDRESS_ (1) | adresse IP de l'utilisateur. Transmise sur login, sur oubli de mot de passe | détection des attaques |
+| _IP ADDRESS_ (2) | adresse IP de l'utilisateur. Transmise sur validation des ordres sur une partie | détections des triches par multi-compte |
+| _TIME ZONE_ | fuseau horaire de l'utilisateur. Transmis sur validation des ordres sur une partie | justification des retards  |
+| _DATE DERNIERE SOUMISSION ORDRES_ | date dernière soumission d'ordres de l'utilisateur. Il est transmis sur validation des ordres sur une partie | évaluation des abandons |
 =
 $$ Présentation
 
