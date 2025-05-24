@@ -140,8 +140,8 @@ def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=inval
 def formatted_games(games_dict, game_data_sel, conversion_table, suffering_games):
     """ formatted_games """
 
-    # 4 on PC 3 on smartphone it should be
-    max_col = 3
+    # 3 on PC 2 on smartphone it should be
+    max_col = 2
 
     # init
     games_content = html.DIV()
