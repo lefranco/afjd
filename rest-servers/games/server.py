@@ -3687,17 +3687,17 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     if the_order['order_type'] not in [1, 2, 3, 4, 5]:
                         orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-12-WRONG-PHASE-1")
                         del sql_executor
-                        flask_restful.abort(400, msg="Seems we have a move phase, you must provide move orders! (or more probably, you submitted twice or game changed just before you submitted)")
+                        flask_restful.abort(400, msg="Seems we have a move phase, you must provide move orders! (or more probably, you submitted twice or game changed just before you submitted) - Please reload the game !")
                 if game.current_advancement % 5 in [1, 3]:
                     if the_order['order_type'] not in [6, 7]:
                         orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-13-WRONG-PHASE-2")
                         del sql_executor
-                        flask_restful.abort(400, msg="Seems we have a retreat phase, you must provide retreat orders! (or more probably, you submitted twice or game changed just before you submitted")
+                        flask_restful.abort(400, msg="Seems we have a retreat phase, you must provide retreat orders! (or more probably, you submitted twice or game changed just before you submitted) - Please reload the game !")
                 if game.current_advancement % 5 in [4]:
                     if the_order['order_type'] not in [8, 9]:
                         orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-14-WRONG-PHASE-3")
                         del sql_executor
-                        flask_restful.abort(400, msg="Seems we have a adjustements phase, you must provide adjustments orders! (or more probably, you submitted twice or game changed just before you submitted")
+                        flask_restful.abort(400, msg="Seems we have a adjustements phase, you must provide adjustments orders! (or more probably, you submitted twice or game changed just before you submitted) - Please reload the game !")
 
             # put in database fake units - units for build orders
 
