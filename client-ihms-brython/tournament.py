@@ -363,6 +363,7 @@ def show_games():
 
             value = data[field]
             colour = None
+            arriving = False
             game_name = data['name']
 
             if field == 'name':
@@ -433,6 +434,8 @@ def show_games():
                 advancement_loaded = value
                 nb_max_cycles_to_play = data['nb_max_cycles_to_play']
                 value = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
+                if advancement_loaded > (nb_max_cycles_to_play - 1) * 5 - 1:
+                    arriving = True
 
             if field == 'current_state':
                 state_name = data[field]
@@ -469,9 +472,15 @@ def show_games():
                     value = add_game_table[game_id]
 
             col = html.TD(value)
+ 
             if colour is not None:
                 col.style = {
                     'background-color': colour
+                }
+
+            if arriving:
+                col.style = {
+                    'background-color': config.LAST_YEAR
                 }
 
             row <= col

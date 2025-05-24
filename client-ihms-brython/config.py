@@ -89,6 +89,8 @@ CAN_JOIN = 'LightBlue'
 # to distinguish own games
 MY_RATING = 'LightGrey'
 
+LAST_YEAR = 'LightGrey'
+
 FORCED_VARIANT_NAME = "standard"
 
 SITE_ADDRESS = "https://diplomania-gen.fr"

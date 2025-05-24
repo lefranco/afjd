@@ -1651,6 +1651,7 @@ def all_games(state_name):
 
             value = data[field]
             colour = None
+            arriving = False
             game_name = data['name']
 
             if field == 'name':
@@ -1724,6 +1725,8 @@ def all_games(state_name):
                 advancement_loaded = value
                 nb_max_cycles_to_play = data['nb_max_cycles_to_play']
                 value = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
+                if advancement_loaded > (nb_max_cycles_to_play - 1) * 5 - 1:
+                    arriving = True
 
             if field == 'used_for_elo':
                 value = "Oui" if value else "Non"
@@ -1761,9 +1764,15 @@ def all_games(state_name):
                 value = html.DIV(stats, title=explanation)
 
             col = html.TD(value)
+
             if colour is not None:
                 col.style = {
                     'background-color': colour
+                }
+                
+            if arriving:
+                col.style = {
+                    'background-color': config.LAST_YEAR
                 }
 
             row <= col
