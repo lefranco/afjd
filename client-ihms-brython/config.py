@@ -89,7 +89,11 @@ CAN_JOIN = 'LightBlue'
 # to distinguish own games
 MY_RATING = 'LightGrey'
 
+# to destinguish games in last year
 LAST_YEAR = 'LightGrey'
+
+# to see better dest selected
+DEST_SELECTED = 'Fuchsia'
 
 FORCED_VARIANT_NAME = "standard"
 
