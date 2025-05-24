@@ -17,6 +17,9 @@ import scoring
 import ezml_render
 
 
+# a dropout is worth that meany delays
+FACTOR_DROPOUT = 10
+
 DEFAULT_ELO = 1500
 
 
@@ -444,12 +447,10 @@ def show_rating_reliability():
             if number_advancements_used == 0:
                 number_advancements_used = 1
             # ratio delays/ advancements
-            reliability = round(100 * (number_advancements_used - number_delays) / number_advancements_used, 3)
+            reliability = round(100 * (number_advancements_used - number_delays - FACTOR_DROPOUT * number_dropouts) / number_advancements_used, 3)
             # bonus for no delays
             if number_delays == 0:
                 reliability += number_advancements / 1000
-            # dropouts
-            reliability /= (2 ** number_dropouts)
 
             rating = (player_id, reliability, number_delays, number_dropouts, number_advancements)
             rating_list.append(rating)
@@ -518,7 +519,7 @@ def show_rating_reliability():
                     value = player
 
                 if field == 'reliability':
-                    value = f"{rating[1]} %"
+                    value = f"{rating[1]:.3f} %"
 
                 if field == 'number_delays':
                     value = rating[2]
@@ -547,10 +548,10 @@ def show_rating_reliability():
 
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par fiabilité")
-        explanations = """
+        explanations = f"""
             Ce classement est un ratio du nombre de tours joués moins le nombre de retards par rapport au nombre de tours joués.<br>
             Les joueurs sans retard sont bonifiés du millième du nombre de tours joués.<br>
-            Chaque abandon divise par deux la fiabilité.<br>
+            Chaque abandon compte pour {FACTOR_DROPOUT} retards.<br>
             Seuls les joueurs présents à la fin de la partie ont joué la partie.<br>
             Un joueur qui n'a joué aucune partie (présent parce qu'il a tout de même un retard ou un abandon) reçoit un tour joué.<br>
             Seuls les tours joués lors de la dernière année en temps réel depuis l'instant présent sont pris en compte.<br>
