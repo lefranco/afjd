@@ -1,3 +1,11 @@
+
+NOTE:
+TO GET THE FILES 
+  brython.js
+  brython_stdlib.js
+=> download then from 
+  https://github.com/brython-dev/brython
+
 To run the demo, you can open the file demo.html from the browser "File/Open..." menu.
 
 Another option is to start the built-in Python HTTP server by
