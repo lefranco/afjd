@@ -405,7 +405,7 @@ def show_news():
 
     # ----
 
-    news_events = html.OBJECT(data=f"{config.SITE_ADDRESS}/events/", width="100%", height="500", title="Evénements", alt="Evénements")
+    news_events = html.OBJECT(data=f"{config.SITE_ADDRESS}/events/", width="100%", height="450", title="Evénements", alt="Evénements")
     div_a4 <= news_events
 
     # ----
