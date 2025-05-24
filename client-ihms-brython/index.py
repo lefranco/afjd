@@ -364,21 +364,18 @@ def load_option(_, item_name):
     MENU_LEFT <= html.SMALL("Testé avec Firefox.")
 
 
-# we read timezone now if necessary
-if 'TIMEZONE' not in storage:
-    read_timezone()
+# we update timezone now
+read_timezone()
 
+# we update ip now
+read_ip()
 
-# we read ip now if necessary
-if 'IPADDRESS' not in storage:
-    read_ip()
-
+# get site image
+get_site_image()
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
 OVERALL <= PANEL_MIDDLE
-
-get_site_image()
 
 # starts here
 if 'game' in document.query:
