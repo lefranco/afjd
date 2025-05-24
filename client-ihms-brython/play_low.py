@@ -399,15 +399,45 @@ def stack_last_moves_button(frame):
         position_loaded = transition_loaded['situation']
         position_data = mapping.Position(position_loaded, VARIANT_DATA)
         orders_loaded = transition_loaded['orders']
+        report_loaded = transition_loaded['report_txt']
         communication_orders_loaded = transition_loaded['communication_orders']
         orders_data = mapping.Orders(orders_loaded, position_data, communication_orders_loaded)
         img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
-        # content : season
+        # content : report + season
         content = html.DIV()
+
+        # report formatted
+        report_table = html.TABLE()
+        columns = 3
+        lines = report_loaded.split('\n')
+        split_size = (len(lines) + columns) // columns
+        report_row = html.TR()
+        report_table <= report_row
+        for chunk_num in range(columns):
+            report_col = html.TD()
+            chunk_content = lines[chunk_num * split_size: (chunk_num + 1) * split_size]
+            for line in chunk_content:
+                if line == "":
+                    report_col <= html.DIV("&nbsp", Class='code_info')
+                elif line.find("(échec)") != -1 or line.find("(coupé)") != -1 or line.find("(délogée)") != -1 or line.find("(détruite)") != -1 or line.find("(invalide)") != -1:
+                    report_col <= html.DIV(line, Class='code_failed')
+                elif line.find(":") != -1:
+                    pass  # (shorter)
+                elif line.startswith("*"):
+                    report_col <= html.DIV(line, Class='code_communication')
+                else:
+                    report_col <= html.DIV(line, Class='code_success')
+            report_row <= report_col
+        content <= report_table
+
+        # separator
+        content <= html.BR()
+
+        # season
         season_name = common.readable_season(advancement_selected, VARIANT_DATA)
-        content <= season_name
+        content <= html.B(season_name)
 
         buttons = []
 
@@ -426,7 +456,7 @@ def stack_last_moves_button(frame):
         button.bind('click', otherwise_callback)
         buttons.append(button)
 
-        popup = mydialog.Popup("Derniers mouvements", canvas, content, buttons)
+        popup = mydialog.Popup("Derniers mouvements (et navigation dans les ordres)", canvas, content, buttons)
         frame <= popup
 
     first_advancement = 0
