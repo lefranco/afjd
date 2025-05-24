@@ -7,6 +7,8 @@ from browser import html, window  # pylint: disable=import-error
 from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 
 
+POPUP_TOP = 40
+POPUP_LEFT = 60
 REMOVE_AFTER_SEC = 5
 
 
@@ -17,7 +19,7 @@ class Popup(Dialog):
 
         # parent class
         # inforce can_close to False
-        Dialog.__init__(self, title, can_close=False)
+        Dialog.__init__(self, title, top=POPUP_TOP, left=POPUP_LEFT, can_close=False)
 
         # make it resizeable
         self.attrs['style'] += 'resize: both; overflow: auto;'
