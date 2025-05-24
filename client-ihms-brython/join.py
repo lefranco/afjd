@@ -400,6 +400,7 @@ def recruiting_games():
         for field in fields:
 
             colour = None
+            arriving = False
 
             value = data[field]
             game_name = data['name']
@@ -473,6 +474,8 @@ def recruiting_games():
                 advancement_loaded = value
                 nb_max_cycles_to_play = data['nb_max_cycles_to_play']
                 value = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
+                if advancement_loaded > (nb_max_cycles_to_play - 1) * 5 - 1:
+                    arriving = True
 
             if field == 'allocated':
                 allocated = recruiting_games_dict[int(game_id_str)]['allocated']
@@ -508,9 +511,15 @@ def recruiting_games():
                 value = html.DIV(stats, title=explanation)
 
             col = html.TD(value)
+
             if colour is not None:
                 col.style = {
                     'background-color': colour
+                }
+
+            if arriving:
+                col.style = {
+                    'background-color': config.LAST_YEAR
                 }
 
             row <= col
