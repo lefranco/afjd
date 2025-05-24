@@ -1231,6 +1231,17 @@ def negotiate(default_dest_set, def_focus_role_id):
 
         return messages
 
+    def select_dest_callback(col):
+
+        # invert
+        col_selected[col] = not col_selected[col]
+
+        # display
+        if col_selected[col]:
+            col.style.background = config.DEST_SELECTED
+        else:
+            col.style.background = original_color
+
     if play_low.ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         play.load_option(None, 'Consulter')
@@ -1263,7 +1274,9 @@ def negotiate(default_dest_set, def_focus_role_id):
     fieldset <= legend_destinees
 
     table = html.TABLE()
+    col_selected = {}
     selected = {}
+    original_color = None
 
     # we make sure game master goes first in sorting
     roles_left = sorted(range(play_low.VARIANT_CONTENT_LOADED['roles']['number'] + 1), key=lambda r: (int(r != 0), play_low.VARIANT_DATA.role_name_table[play_low.VARIANT_DATA.roles[r]]))
@@ -1310,6 +1323,12 @@ def negotiate(default_dest_set, def_focus_role_id):
             # the alternative
             input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set, Class='btn-inside')
 
+            # create col
+            col = html.TD()
+
+            # not selected by default
+            col_selected[col] = False
+
             # if there is ony game master as dest we select it automatically
             if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
                 if play_low.ROLE_ID != 0:
@@ -1319,11 +1338,20 @@ def negotiate(default_dest_set, def_focus_role_id):
                         input_dest.checked = True
                         input_dest.disabled = True
 
-            # create col
-            col = html.TD()
+            # width
             col.style = {
                 'width': '70px'
             }
+
+            if original_color is None:
+                original_color = col.style.background
+
+            # if forced or inherited
+            if input_dest.checked:
+                select_dest_callback(col)
+
+            # will emphasize if selected (to see it better)       
+            input_dest.bind("click", lambda e, c=col: select_dest_callback(c))
 
             # now put stuff
             col <= html.CENTER(button_focus)
