@@ -87,7 +87,7 @@ def join_game():
 
             # and we need te refresh
             play_low.MY_SUB_PANEL.clear()
-            show_position(False)
+            show_position()
 
         dialog.close(None)
         json_dict = {
