@@ -472,7 +472,7 @@ def show_games():
                     value = add_game_table[game_id]
 
             col = html.TD(value)
- 
+
             if colour is not None:
                 col.style = {
                     'background-color': colour
