@@ -20,6 +20,12 @@ Then load http://localhost:<port>/demo.html in the browser address bar.
 
 For more information please visit http://brython.info.
 
+To test from a smartphone
+1) same WIFI netwok
+2) ip addr | grep inet  -> get PC server IP address
+3) sudo ufw allow 8000
+4)  load http://<ip address>:<port>/demo.html in the browser address bar on smartphone
+
 ADDITIONAL / IMPORTANT 
 to install do not forget to run :
 brython-cli make_modules
