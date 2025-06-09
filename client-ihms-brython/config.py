@@ -93,7 +93,7 @@ MY_RATING = 'LightGrey'
 LAST_YEAR = 'LightGrey'
 
 # to see better dest selected
-DEST_SELECTED = 'Fuchsia'
+DEST_SELECTED = 'LightGrey'
 
 FORCED_VARIANT_NAME = "standard"
 
