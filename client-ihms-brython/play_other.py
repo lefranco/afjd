@@ -1352,7 +1352,7 @@ def negotiate(default_dest_set, def_focus_role_id):
             if input_dest.checked:
                 select_dest_callback(col)
 
-            # will emphasize if selected (to see it better)       
+            # will emphasize if selected (to see it better)
             input_dest.bind("click", lambda e, c=col: select_dest_callback(c))
 
             # now put stuff

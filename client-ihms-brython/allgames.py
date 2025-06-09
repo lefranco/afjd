@@ -1769,7 +1769,7 @@ def all_games(state_name):
                 col.style = {
                     'background-color': colour
                 }
-                
+
             if arriving:
                 col.style = {
                     'background-color': config.LAST_YEAR
