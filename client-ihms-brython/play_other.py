@@ -1121,6 +1121,8 @@ SLICE_SIZE = 10
 def negotiate(default_dest_set, def_focus_role_id):
     """ negotiate """
 
+    focus_role_id = None
+
     def focus_callback(ev, role_id):  # pylint: disable=invalid-name
         """ focus_callback """
         nonlocal focus_role_id
