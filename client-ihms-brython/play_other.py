@@ -590,7 +590,7 @@ def show_position(advancement=None):
         buttons_right <= html.BR()
 
         # button last moves
-        play_low.stack_last_moves_button(buttons_right)
+        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, None)
 
         buttons_right <= html.H3("Historique")
 
@@ -1529,10 +1529,10 @@ def negotiate(default_dest_set, def_focus_role_id):
     play_low.stack_role_flag(play_low.MY_SUB_PANEL)
 
     # see my orders
-    play_low.stack_position_and_my_orders(play_low.MY_SUB_PANEL)
+    play_low.stack_position_and_my_orders(play_low.MY_SUB_PANEL, play_low.MY_SUB_PANEL, messages_table)
 
     # see last moves
-    play_low.stack_last_moves_button(play_low.MY_SUB_PANEL)
+    play_low.stack_last_moves_button(play_low.MY_SUB_PANEL, play_low.MY_SUB_PANEL, messages_table)
 
     # form
     play_low.MY_SUB_PANEL <= form
@@ -1796,10 +1796,10 @@ def declare():
     play_low.stack_role_flag(play_low.MY_SUB_PANEL)
 
     # see my orders
-    play_low.stack_position_and_my_orders(play_low.MY_SUB_PANEL)
+    play_low.stack_position_and_my_orders(play_low.MY_SUB_PANEL, play_low.MY_SUB_PANEL, declarations_table)
 
     # see last moves
-    play_low.stack_last_moves_button(play_low.MY_SUB_PANEL)
+    play_low.stack_last_moves_button(play_low.MY_SUB_PANEL, play_low.MY_SUB_PANEL, declarations_table)
 
     # form only if allowed
     if play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.ROLE_ID != 0:

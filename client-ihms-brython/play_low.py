@@ -366,11 +366,15 @@ def load_special_stuff():
         return
 
 
-def stack_last_moves_button(frame):
+def stack_last_moves_button(button_container, content_container, insert_before):
     """ stack_last_moves_button """
+
+    additional_content = None
 
     def last_moves_callback(ev, advancement_selected):  # pylint: disable=invalid-name
         """ last_moves_callback """
+
+        nonlocal additional_content
 
         def callback_render(ev):  # pylint: disable=invalid-name
             """ callback_render """
@@ -456,8 +460,35 @@ def stack_last_moves_button(frame):
         button.bind('click', otherwise_callback)
         buttons.append(button)
 
-        popup = mydialog.Popup("Derniers mouvements (et navigation dans les ordres)", canvas, content, buttons)
-        frame <= popup
+        # Now insert in page (forget about popups)
+        if additional_content:
+            content_container.removeChild(additional_content)
+        else:
+            content_container <= html.BR()
+            content_container <= html.BR()
+
+        additional_content = html.DIV()
+        additional_content.style = {
+            "border": "2px solid red",
+            "padding": "10px",
+            "width": "fit-content",
+            "backgroundColor": "#ffeecc"
+        }
+        additional_content <= html.H3("Derniers mouvements (et navigation dans les ordres)")
+        additional_content <= canvas
+        additional_content <= content
+        additional_content <= html.BR()
+        additional_content <= buttons
+
+        if insert_before:
+            content_container.insertBefore(additional_content, insert_before)
+            content_container.insertBefore(html.BR(), insert_before)
+            content_container.insertBefore(html.BR(), insert_before)
+        else:
+            content_container <= additional_content
+
+        input_last_moves.disabled = True
+        input_last_moves.style = {'pointer-events': 'none'}
 
     first_advancement = 0
     if VARIANT_CONTENT_LOADED['start_build']:
@@ -477,20 +508,24 @@ def stack_last_moves_button(frame):
     input_last_moves = html.INPUT(type="submit", value="Derniers mouvements", Class='btn-inside')
     input_last_moves.bind("click", lambda e, ll=adv_last_moves: last_moves_callback(e, ll))
 
-    frame <= input_last_moves
-    frame <= html.BR()
-    frame <= html.BR()
+    button_container <= input_last_moves
+    button_container <= html.BR()
+    button_container <= html.BR()
 
 
 # we show only message not older that that
 SELECT_DAYS = 10
 
 
-def stack_last_agreements_button(frame):
+def stack_last_agreements_button(button_container, content_container, insert_before):
     """ stack_last_agreements_button """
+
+    additional_content = None
 
     def last_agreements_callback(ev):  # pylint: disable=invalid-name
         """ last_agreements_callback """
+
+        nonlocal additional_content
 
         def messages_reload(game_id):
             """ messages_reload """
@@ -536,8 +571,6 @@ def stack_last_agreements_button(frame):
             play.render(PANEL_MIDDLE)
 
         ev.preventDefault()
-
-        canvas = None
 
         content = html.DIV()
 
@@ -594,25 +627,55 @@ def stack_last_agreements_button(frame):
         button.bind('click', otherwise_callback)
         buttons = [button]
 
-        # This popup is the only one resizeable
-        popup = mydialog.Popup("Derniers messages", canvas, content, buttons)
-        frame <= popup
+        # Now insert in page (forget about popups)
+        if additional_content:
+            content_container.removeChild(additional_content)
+        else:
+            content_container <= html.BR()
+            content_container <= html.BR()
+
+        additional_content = html.DIV()
+        additional_content.style = {
+            "border": "2px solid red",
+            "padding": "10px",
+            "width": "fit-content",
+            "backgroundColor": "#ffeecc"
+        }
+        additional_content <= html.H3("Derniers arrangements")
+        # no canvas
+        additional_content <= content
+        additional_content <= html.BR()
+        additional_content <= buttons
+
+        if insert_before:
+            content_container.insertBefore(additional_content, insert_before)
+            content_container.insertBefore(html.BR(), insert_before)
+            content_container.insertBefore(html.BR(), insert_before)
+        else:
+            content_container <= additional_content
+
+        input_last_agreements.disabled = True
+        input_last_agreements.style = {'pointer-events': 'none'}
 
     if GAME_PARAMETERS_LOADED['nomessage_current']:
         return
 
-    input_last_agreements = html.INPUT(type="submit", value="Derniers messages", Class='btn-inside')
+    input_last_agreements = html.INPUT(type="submit", value="Derniers arrangements", Class='btn-inside')
     input_last_agreements.bind("click", last_agreements_callback)
-    frame <= input_last_agreements
-    frame <= html.BR()
-    frame <= html.BR()
+    button_container <= input_last_agreements
+    button_container <= html.BR()
+    button_container <= html.BR()
 
 
-def stack_position_and_my_orders(frame):
+def stack_position_and_my_orders(button_container, content_container, insert_before):
     """ stack_position_and_my_orders """
+
+    additional_content = None
 
     def my_orders_callback(ev):  # pylint: disable=invalid-name
         """ my_orders_callback """
+
+        nonlocal additional_content
 
         def callback_render(ev):  # pylint: disable=invalid-name
             """ callback_render """
@@ -638,16 +701,40 @@ def stack_position_and_my_orders(frame):
         img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
-        # content
-        content = None
-
         # otherwise button
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
         buttons = [button]
 
-        popup = mydialog.Popup("Position et mes ordres", canvas, content, buttons)
-        frame <= popup
+        # Now insert in page (forget about popups)
+        if additional_content:
+            content_container.removeChild(additional_content)
+        else:
+            content_container <= html.BR()
+            content_container <= html.BR()
+
+        additional_content = html.DIV()
+        additional_content.style = {
+            "border": "2px solid red",
+            "padding": "10px",
+            "width": "fit-content",
+            "backgroundColor": "#ffeecc"
+        }
+        additional_content <= html.H3("Position et mes ordres")
+        additional_content <= canvas
+        # no content
+        additional_content <= html.BR()
+        additional_content <= buttons
+
+        if insert_before:
+            content_container.insertBefore(additional_content, insert_before)
+            content_container.insertBefore(html.BR(), insert_before)
+            content_container.insertBefore(html.BR(), insert_before)
+        else:
+            content_container <= additional_content
+
+        input_my_orders.disabled = True
+        input_my_orders.style = {'pointer-events': 'none'}
 
     # not for game master
     if ROLE_ID == 0:
@@ -656,16 +743,20 @@ def stack_position_and_my_orders(frame):
     input_my_orders = html.INPUT(type="submit", value="Position et mes ordres", Class='btn-inside')
     input_my_orders.bind("click", my_orders_callback)
 
-    frame <= input_my_orders
-    frame <= html.BR()
-    frame <= html.BR()
+    button_container <= input_my_orders
+    button_container <= html.BR()
+    button_container <= html.BR()
 
 
-def stack_communications_orders_button(frame):
+def stack_communications_orders_button(button_container, content_container, insert_before):
     """ stack_communications_orders_button """
+
+    additional_content = None
 
     def communications_orders_callback(ev):  # pylint: disable=invalid-name
         """ communications_orders_callback """
+
+        nonlocal additional_content
 
         def callback_render(ev):  # pylint: disable=invalid-name
             """ callback_render """
@@ -691,16 +782,40 @@ def stack_communications_orders_button(frame):
         img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
-        # content
-        content = None
-
         # otherwise button
         button = html.INPUT(type="submit", value="Sinon, directement...", Class='btn-inside')
         button.bind('click', otherwise_callback)
         buttons = [button]
 
-        popup = mydialog.Popup("Mes ordres de com'", canvas, content, buttons)
-        frame <= popup
+        # Now insert in page (forget about popups)
+        if additional_content:
+            content_container.removeChild(additional_content)
+        else:
+            content_container <= html.BR()
+            content_container <= html.BR()
+
+        additional_content = html.DIV()
+        additional_content.style = {
+            "border": "2px solid red",
+            "padding": "10px",
+            "width": "fit-content",
+            "backgroundColor": "#ffeecc"
+        }
+        additional_content <= html.H3("Mes ordres de com' (pour montrer une intention)")
+        additional_content <= canvas
+        # no content
+        additional_content <= html.BR()
+        additional_content <= buttons
+
+        if insert_before:
+            content_container.insertBefore(additional_content, insert_before)
+            content_container.insertBefore(html.BR(), insert_before)
+            content_container.insertBefore(html.BR(), insert_before)
+        else:
+            content_container <= additional_content
+
+        input_communications_orders.disabled = True
+        input_communications_orders.style = {'pointer-events': 'none'}
 
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
         return
@@ -710,9 +825,10 @@ def stack_communications_orders_button(frame):
 
     input_communications_orders = html.INPUT(type="submit", value="Mes ordres de com' (pour montrer une intention)", Class='btn-inside')
     input_communications_orders.bind("click", communications_orders_callback)
-    frame <= input_communications_orders
-    frame <= html.BR()
-    frame <= html.BR()
+
+    button_container <= input_communications_orders
+    button_container <= html.BR()
+    button_container <= html.BR()
 
 
 def stack_explanations_button(frame):

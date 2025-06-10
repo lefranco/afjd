@@ -83,6 +83,8 @@ def submit_orders():
     vote_value = None
     submission_count = 0
 
+    my_sub_panel3 = None
+
     def add_note_callback(ev):  # pylint: disable=invalid-name
         """ add_note_callback """
 
@@ -362,13 +364,13 @@ def submit_orders():
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
-        play_low.stack_communications_orders_button(buttons_right)
+        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
         # button last moves
-        play_low.stack_last_moves_button(buttons_right)
+        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
         # button negotiations
-        play_low.stack_last_agreements_button(buttons_right)
+        play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -418,13 +420,13 @@ def submit_orders():
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
-        play_low.stack_communications_orders_button(buttons_right)
+        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
         # button last moves
-        play_low.stack_last_moves_button(buttons_right)
+        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
         # button negotiations
-        play_low.stack_last_agreements_button(buttons_right)
+        play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, notes_title)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -485,13 +487,13 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            play_low.stack_communications_orders_button(buttons_right)
+            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # button last moves
-            play_low.stack_last_moves_button(buttons_right)
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # button negotiations
-            play_low.stack_last_agreements_button(buttons_right)
+            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -553,13 +555,13 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            play_low.stack_communications_orders_button(buttons_right)
+            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # button last moves
-            play_low.stack_last_moves_button(buttons_right)
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # button negotiations
-            play_low.stack_last_agreements_button(buttons_right)
+            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -748,13 +750,13 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            play_low.stack_communications_orders_button(buttons_right)
+            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # button last moves
-            play_low.stack_last_moves_button(buttons_right)
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # button negotiations
-            play_low.stack_last_agreements_button(buttons_right)
+            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -868,13 +870,13 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            play_low.stack_communications_orders_button(buttons_right)
+            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # button last moves
-            play_low.stack_last_moves_button(buttons_right)
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # button negotiations
-            play_low.stack_last_agreements_button(buttons_right)
+            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -998,13 +1000,13 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            play_low.stack_communications_orders_button(buttons_right)
+            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # button last moves
-            play_low.stack_last_moves_button(buttons_right)
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # button negotiations
-            play_low.stack_last_agreements_button(buttons_right)
+            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1132,13 +1134,13 @@ def submit_orders():
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
-        play_low.stack_communications_orders_button(buttons_right)
+        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
         # button last moves
-        play_low.stack_last_moves_button(buttons_right)
+        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
         # button negotiations
-        play_low.stack_last_agreements_button(buttons_right)
+        play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1575,6 +1577,9 @@ def submit_orders():
     display_left <= rating_colours_window
     display_left <= html.BR()
 
+    # other stuff
+    my_sub_panel3 = html.DIV()
+
     # right side
 
     buttons_right = html.DIV(id='buttons_right')
@@ -1588,15 +1593,15 @@ def submit_orders():
         play_low.stack_cancel_last_adjudication_button(buttons_right)
 
     # button last moves
-    play_low.stack_last_moves_button(buttons_right)
+    play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
     # button negotiations
-    play_low.stack_last_agreements_button(buttons_right)
+    play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
     if play_low.ROLE_ID in submitted_data['needed'] and not game_over:
 
         # button for communication orders
-        play_low.stack_communications_orders_button(buttons_right)
+        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1650,9 +1655,6 @@ def submit_orders():
     my_sub_panel2 <= buttons_right
 
     play_low.MY_SUB_PANEL <= my_sub_panel2
-
-    # other stuff
-    my_sub_panel3 = html.DIV()
 
     if not game_over:
 
@@ -1719,7 +1721,8 @@ def submit_orders():
 
     # notes now
 
-    my_sub_panel3 <= html.H3("Prise de notes")
+    notes_title = html.H3("Prise de notes")
+    my_sub_panel3 <= notes_title
 
     form = html.FORM()
 
@@ -1841,7 +1844,7 @@ def submit_communication_orders():
             play_low.stack_role_flag(buttons_right)
 
             # see my orders
-            play_low.stack_position_and_my_orders(buttons_right)
+            play_low.stack_position_and_my_orders(buttons_right, play_low.MY_SUB_PANEL, None)
 
             # explanations
             play_low.stack_explanations_button(buttons_right)
@@ -1951,7 +1954,7 @@ def submit_communication_orders():
             play_low.stack_role_flag(buttons_right)
 
             # see my orders
-            play_low.stack_position_and_my_orders(buttons_right)
+            play_low.stack_position_and_my_orders(buttons_right, play_low.MY_SUB_PANEL, None)
 
             # explanations
             play_low.stack_explanations_button(buttons_right)
@@ -2027,7 +2030,7 @@ def submit_communication_orders():
             play_low.stack_role_flag(buttons_right)
 
             # see my orders
-            play_low.stack_position_and_my_orders(buttons_right)
+            play_low.stack_position_and_my_orders(buttons_right, play_low.MY_SUB_PANEL, None)
 
             # explanations
             play_low.stack_explanations_button(buttons_right)
@@ -2075,7 +2078,7 @@ def submit_communication_orders():
             play_low.stack_role_flag(buttons_right)
 
             # see my orders
-            play_low.stack_position_and_my_orders(buttons_right)
+            play_low.stack_position_and_my_orders(buttons_right, play_low.MY_SUB_PANEL, None)
 
             # explanations
             play_low.stack_explanations_button(buttons_right)
@@ -2174,7 +2177,7 @@ def submit_communication_orders():
         play_low.stack_role_flag(buttons_right)
 
         # see my orders
-        play_low.stack_position_and_my_orders(buttons_right)
+        play_low.stack_position_and_my_orders(buttons_right, play_low.MY_SUB_PANEL, None)
 
         # explanations
         play_low.stack_explanations_button(buttons_right)
@@ -2496,7 +2499,7 @@ def submit_communication_orders():
     play_low.stack_role_flag(buttons_right)
 
     # see my orders
-    play_low.stack_position_and_my_orders(buttons_right)
+    play_low.stack_position_and_my_orders(buttons_right, play_low.MY_SUB_PANEL, None)
 
     # explanations
     play_low.stack_explanations_button(buttons_right)
