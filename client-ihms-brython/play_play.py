@@ -380,8 +380,8 @@ def submit_orders():
         buttons_right <= legend_select_unit
 
         my_sub_panel2 <= buttons_right
-        play_low.MY_SUB_PANEL <= my_sub_panel2
-        play_low.MY_SUB_PANEL <= my_sub_panel3
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
         stack_orders(buttons_right)
 
@@ -461,8 +461,8 @@ def submit_orders():
         stack_orders_status(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        play_low.MY_SUB_PANEL <= my_sub_panel2
-        play_low.MY_SUB_PANEL <= my_sub_panel3
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
     def select_built_unit_type_callback(_, build_unit_type):
         """ select_built_unit_type_callback """
@@ -514,8 +514,8 @@ def submit_orders():
             stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL <= my_sub_panel2
-            play_low.MY_SUB_PANEL <= my_sub_panel3
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
             # it is a zone we need now
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -615,8 +615,8 @@ def submit_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL <= my_sub_panel2
-                play_low.MY_SUB_PANEL <= my_sub_panel3
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -657,8 +657,8 @@ def submit_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL <= my_sub_panel2
-                play_low.MY_SUB_PANEL <= my_sub_panel3
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -701,8 +701,8 @@ def submit_orders():
             stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL <= my_sub_panel2
-        play_low.MY_SUB_PANEL <= my_sub_panel3
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -841,8 +841,8 @@ def submit_orders():
             stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL <= my_sub_panel2
-            play_low.MY_SUB_PANEL <= my_sub_panel3
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
             return
 
@@ -974,8 +974,8 @@ def submit_orders():
             stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL <= my_sub_panel2
-            play_low.MY_SUB_PANEL <= my_sub_panel3
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -1024,8 +1024,8 @@ def submit_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL <= my_sub_panel2
-                play_low.MY_SUB_PANEL <= my_sub_panel3
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
                 stack_orders(buttons_right)
                 if not orders_data.empty():
@@ -1068,8 +1068,8 @@ def submit_orders():
             stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL <= my_sub_panel2
-            play_low.MY_SUB_PANEL <= my_sub_panel3
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
@@ -1175,8 +1175,8 @@ def submit_orders():
         stack_orders_status(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        play_low.MY_SUB_PANEL <= my_sub_panel2
-        play_low.MY_SUB_PANEL <= my_sub_panel3
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
@@ -1654,7 +1654,7 @@ def submit_orders():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    play_low.MY_SUB_PANEL <= my_sub_panel2
+    play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
 
     if not game_over:
 
@@ -1742,7 +1742,7 @@ def submit_orders():
     form <= input_note_in_game
     my_sub_panel3 <= form
 
-    play_low.MY_SUB_PANEL <= my_sub_panel3
+    play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
     return True
 
@@ -1820,7 +1820,7 @@ def submit_communication_orders():
         put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        play_low.MY_SUB_PANEL <= my_sub_panel2
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
@@ -1898,7 +1898,7 @@ def submit_communication_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL <= my_sub_panel2
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -1921,7 +1921,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL <= my_sub_panel2
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -2010,7 +2010,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL <= my_sub_panel2
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
 
             return
 
@@ -2060,7 +2060,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL <= my_sub_panel2
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
 
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -2096,7 +2096,7 @@ def submit_communication_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL <= my_sub_panel2
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
 
                 stack_orders(buttons_right)
                 if not orders_data.empty():
@@ -2126,7 +2126,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL <= my_sub_panel2
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
@@ -2193,7 +2193,7 @@ def submit_communication_orders():
         put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        play_low.MY_SUB_PANEL <= my_sub_panel2
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
@@ -2522,7 +2522,7 @@ def submit_communication_orders():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    play_low.MY_SUB_PANEL <= my_sub_panel2
+    play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
 
     return True
 
