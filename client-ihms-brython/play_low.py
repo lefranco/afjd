@@ -505,7 +505,7 @@ def stack_last_moves_button(button_container, content_container, insert_before):
         if adv_last_moves % 5 in [0, 2]:
             break
 
-    input_last_moves = html.INPUT(type="submit", value="Derniers mouvements", Class='btn-inside')
+    input_last_moves = html.INPUT(type="submit", value="Afficher les derniers mouvements", Class='btn-inside')
     input_last_moves.bind("click", lambda e, ll=adv_last_moves: last_moves_callback(e, ll))
 
     button_container <= input_last_moves
@@ -660,7 +660,7 @@ def stack_last_agreements_button(button_container, content_container, insert_bef
     if GAME_PARAMETERS_LOADED['nomessage_current']:
         return
 
-    input_last_agreements = html.INPUT(type="submit", value="Derniers arrangements", Class='btn-inside')
+    input_last_agreements = html.INPUT(type="submit", value="Afficher les derniers arrangements", Class='btn-inside')
     input_last_agreements.bind("click", last_agreements_callback)
     button_container <= input_last_agreements
     button_container <= html.BR()
@@ -740,7 +740,7 @@ def stack_position_and_my_orders(button_container, content_container, insert_bef
     if ROLE_ID == 0:
         return
 
-    input_my_orders = html.INPUT(type="submit", value="Position et mes ordres", Class='btn-inside')
+    input_my_orders = html.INPUT(type="submit", value="Afficher la position et mes ordres", Class='btn-inside')
     input_my_orders.bind("click", my_orders_callback)
 
     button_container <= input_my_orders
@@ -801,7 +801,7 @@ def stack_communications_orders_button(button_container, content_container, inse
             "width": "fit-content",
             "backgroundColor": "#ffeecc"
         }
-        additional_content <= html.H3("Mes ordres de com' (pour montrer une intention)")
+        additional_content <= html.H3("Mes ordres de com'")
         additional_content <= canvas
         # no content
         additional_content <= html.BR()
@@ -823,7 +823,7 @@ def stack_communications_orders_button(button_container, content_container, inse
     if GAME_PARAMETERS_LOADED['fog']:  # Fog
         return
 
-    input_communications_orders = html.INPUT(type="submit", value="Mes ordres de com' (pour montrer une intention)", Class='btn-inside')
+    input_communications_orders = html.INPUT(type="submit", value="Afficher mes ordres de com'", Class='btn-inside')
     input_communications_orders.bind("click", communications_orders_callback)
 
     button_container <= input_communications_orders
