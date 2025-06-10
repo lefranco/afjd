@@ -1067,10 +1067,11 @@ def show_informations():
 
         # pseudo
         col = html.TD()
-        player_id_str = role2pseudo[role_id]
-        player_id = int(player_id_str)
-        pseudo_quitter = play_low.ID2PSEUDO[player_id]
-        col <= pseudo_quitter
+        if role_id in role2pseudo:
+            player_id_str = role2pseudo[role_id]
+            player_id = int(player_id_str)
+            pseudo_quitter = play_low.ID2PSEUDO[player_id]
+            col <= pseudo_quitter
         row <= col
 
         # incidents
