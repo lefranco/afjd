@@ -84,6 +84,24 @@ def submit_orders():
     submission_count = 0
 
     my_sub_panel3 = None
+    last_moves_disabled = False
+    last_agreements_disabled = False
+    communications_orders_disabled = False
+
+    def callback_disable_last_moves():
+        """ callback_disable_last_moves """
+        nonlocal last_moves_disabled
+        last_moves_disabled = True
+
+    def callback_disable_last_agreements():
+        """ callback_disable_last_agreements """
+        nonlocal last_agreements_disabled
+        last_agreements_disabled = True
+
+    def callback_disable_communications_orders():
+        """ callback_disable_communications_orders """
+        nonlocal communications_orders_disabled
+        communications_orders_disabled = True
 
     def add_note_callback(ev):  # pylint: disable=invalid-name
         """ add_note_callback """
@@ -364,13 +382,13 @@ def submit_orders():
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
-        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_communications_orders, communications_orders_disabled)
 
         # button last moves
-        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_moves, last_moves_disabled)
 
         # button negotiations
-        play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+        play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_agreements, last_agreements_disabled)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -380,7 +398,7 @@ def submit_orders():
         buttons_right <= legend_select_unit
 
         my_sub_panel2 <= buttons_right
-        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
         play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
         stack_orders(buttons_right)
@@ -420,13 +438,13 @@ def submit_orders():
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
-        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_communications_orders, communications_orders_disabled)
 
         # button last moves
-        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_moves, last_moves_disabled)
 
         # button negotiations
-        play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, notes_title)
+        play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_agreements, last_agreements_disabled)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -461,7 +479,7 @@ def submit_orders():
         stack_orders_status(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
         play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
     def select_built_unit_type_callback(_, build_unit_type):
@@ -487,13 +505,13 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_communications_orders, communications_orders_disabled)
 
             # button last moves
-            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_moves, last_moves_disabled)
 
             # button negotiations
-            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_agreements, last_agreements_disabled)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -514,7 +532,7 @@ def submit_orders():
             stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
             play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
             # it is a zone we need now
@@ -555,13 +573,13 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_communications_orders, communications_orders_disabled)
 
             # button last moves
-            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_moves, last_moves_disabled)
 
             # button negotiations
-            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_agreements, last_agreements_disabled)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -615,7 +633,7 @@ def submit_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
                 play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -657,7 +675,7 @@ def submit_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
                 play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -701,7 +719,7 @@ def submit_orders():
             stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
             play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
     def callback_canvas_click(event):
@@ -750,13 +768,13 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_communications_orders, communications_orders_disabled)
 
             # button last moves
-            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_moves, last_moves_disabled)
 
             # button negotiations
-            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_agreements, last_agreements_disabled)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -841,7 +859,7 @@ def submit_orders():
             stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
             play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
             return
@@ -870,13 +888,13 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_communications_orders, communications_orders_disabled)
 
             # button last moves
-            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_moves, last_moves_disabled)
 
             # button negotiations
-            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_agreements, last_agreements_disabled)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -974,7 +992,7 @@ def submit_orders():
             stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
             play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
@@ -1000,13 +1018,13 @@ def submit_orders():
                 play_low.stack_cancel_last_adjudication_button(buttons_right)
 
             # button for communication orders
-            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_communications_orders, communications_orders_disabled)
 
             # button last moves
-            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_moves, last_moves_disabled)
 
             # button negotiations
-            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+            play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_agreements, last_agreements_disabled)
 
             # information retreats/builds
             play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1024,7 +1042,7 @@ def submit_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
                 play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
                 stack_orders(buttons_right)
@@ -1068,7 +1086,7 @@ def submit_orders():
             stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
             play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -1134,13 +1152,13 @@ def submit_orders():
             play_low.stack_cancel_last_adjudication_button(buttons_right)
 
         # button for communication orders
-        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_communications_orders, communications_orders_disabled)
 
         # button last moves
-        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_moves, last_moves_disabled)
 
         # button negotiations
-        play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+        play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_agreements, last_agreements_disabled)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1175,7 +1193,7 @@ def submit_orders():
         stack_orders_status(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
         play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
 
     def callback_canvas_mouse_move(event):
@@ -1521,7 +1539,8 @@ def submit_orders():
 
     # game status
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
-    play_low.MY_SUB_PANEL <= html.BR()
+    beacon = html.BR()
+    play_low.MY_SUB_PANEL <= beacon
 
     advancement_loaded = play_low.GAME_PARAMETERS_LOADED['current_advancement']
     advancement_season, _ = common.get_short_season(advancement_loaded, play_low.VARIANT_DATA)
@@ -1592,16 +1611,17 @@ def submit_orders():
     if play_low.GAME_PARAMETERS_LOADED['exposition']:
         play_low.stack_cancel_last_adjudication_button(buttons_right)
 
+    if play_low.ROLE_ID in submitted_data['needed'] and not game_over:
+        # button for communication orders
+        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_communications_orders, communications_orders_disabled)
+
     # button last moves
-    play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+    play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_moves, last_moves_disabled)
 
     # button negotiations
-    play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
+    play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_agreements, last_agreements_disabled)
 
     if play_low.ROLE_ID in submitted_data['needed'] and not game_over:
-
-        # button for communication orders
-        play_low.stack_communications_orders_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3)
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
@@ -1654,7 +1674,7 @@ def submit_orders():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+    play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
 
     if not game_over:
 
@@ -1820,7 +1840,7 @@ def submit_communication_orders():
         put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
@@ -1898,7 +1918,7 @@ def submit_communication_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -1921,7 +1941,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -2010,7 +2030,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
 
             return
 
@@ -2060,7 +2080,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
 
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -2096,7 +2116,7 @@ def submit_communication_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+                play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
 
                 stack_orders(buttons_right)
                 if not orders_data.empty():
@@ -2126,7 +2146,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+            play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
@@ -2193,7 +2213,7 @@ def submit_communication_orders():
         put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+        play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
 
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
@@ -2429,7 +2449,8 @@ def submit_communication_orders():
 
     # game status
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
-    play_low.MY_SUB_PANEL <= html.BR()
+    beacon = html.BR()
+    play_low.MY_SUB_PANEL <= beacon
 
     # create canvas
     map_size = play_low.VARIANT_DATA.map_size
@@ -2522,7 +2543,7 @@ def submit_communication_orders():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, play_low.MY_SUB_PANEL.firstChild)
+    play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
 
     return True
 

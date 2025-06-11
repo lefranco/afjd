@@ -366,7 +366,7 @@ def load_special_stuff():
         return
 
 
-def stack_last_moves_button(button_container, content_container, insert_before):
+def stack_last_moves_button(button_container, content_container, insert_before, disable_callback, disabled):
     """ stack_last_moves_button """
 
     additional_content = None
@@ -489,6 +489,8 @@ def stack_last_moves_button(button_container, content_container, insert_before):
 
         input_last_moves.disabled = True
         input_last_moves.style = {'pointer-events': 'none'}
+        if disable_callback:
+            disable_callback()
 
     first_advancement = 0
     if VARIANT_CONTENT_LOADED['start_build']:
@@ -508,6 +510,10 @@ def stack_last_moves_button(button_container, content_container, insert_before):
     input_last_moves = html.INPUT(type="submit", value="Afficher les derniers mouvements", Class='btn-inside')
     input_last_moves.bind("click", lambda e, ll=adv_last_moves: last_moves_callback(e, ll))
 
+    if disabled:
+        input_last_moves.disabled = True
+        input_last_moves.style = {'pointer-events': 'none'}
+
     button_container <= input_last_moves
     button_container <= html.BR()
     button_container <= html.BR()
@@ -517,7 +523,7 @@ def stack_last_moves_button(button_container, content_container, insert_before):
 SELECT_DAYS = 10
 
 
-def stack_last_agreements_button(button_container, content_container, insert_before):
+def stack_last_agreements_button(button_container, content_container, insert_before, disable_callback, disabled):
     """ stack_last_agreements_button """
 
     additional_content = None
@@ -657,11 +663,19 @@ def stack_last_agreements_button(button_container, content_container, insert_bef
         input_last_agreements.disabled = True
         input_last_agreements.style = {'pointer-events': 'none'}
 
+        if disable_callback:
+            disable_callback()
+
     if GAME_PARAMETERS_LOADED['nomessage_current']:
         return
 
     input_last_agreements = html.INPUT(type="submit", value="Afficher les derniers arrangements", Class='btn-inside')
     input_last_agreements.bind("click", last_agreements_callback)
+
+    if disabled:
+        input_last_agreements.disabled = True
+        input_last_agreements.style = {'pointer-events': 'none'}
+
     button_container <= input_last_agreements
     button_container <= html.BR()
     button_container <= html.BR()
@@ -748,7 +762,7 @@ def stack_position_and_my_orders(button_container, content_container, insert_bef
     button_container <= html.BR()
 
 
-def stack_communications_orders_button(button_container, content_container, insert_before):
+def stack_communications_orders_button(button_container, content_container, insert_before, disable_callback, disabled):
     """ stack_communications_orders_button """
 
     additional_content = None
@@ -816,6 +830,8 @@ def stack_communications_orders_button(button_container, content_container, inse
 
         input_communications_orders.disabled = True
         input_communications_orders.style = {'pointer-events': 'none'}
+        if disable_callback:
+            disable_callback()
 
     if GAME_PARAMETERS_LOADED['game_type'] not in [1, 3]:  # Blitz
         return
@@ -825,6 +841,10 @@ def stack_communications_orders_button(button_container, content_container, inse
 
     input_communications_orders = html.INPUT(type="submit", value="Afficher mes ordres de com'", Class='btn-inside')
     input_communications_orders.bind("click", communications_orders_callback)
+
+    if disabled:
+        input_communications_orders.disabled = True
+        input_communications_orders.style = {'pointer-events': 'none'}
 
     button_container <= input_communications_orders
     button_container <= html.BR()
