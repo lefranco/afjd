@@ -38,6 +38,7 @@ OPTIONS = {
     'Editer les créateurs': "Editer les comptes créateurs du site",
     'Editer les modérateurs': "Editer les comptes modérateurs du site",
     'Comptes oisifs': "Lister les comptes oisifs pour les avertir ou les supprimer",
+    'Comptes démissionnaires': "Lister les comptes actifs pour les retirer de toutes leurs parties",
     'Logs du scheduler': "Consulter les logs du scheduleur",
     'Maintenance': "Opération de maintenance à définir"
 }
@@ -2266,6 +2267,121 @@ def show_idle_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
 
 
+def show_active_data():
+    """ show_active_data """
+
+    def dismiss_account_callback(ev, dismissed_pseudo):  # pylint: disable=invalid-name
+        """ dismiss_account_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'éviction du compte {dismissed_pseudo}: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'éviction du compte {dismissed_pseudo} : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.info_go(f"Le compte {dismissed_pseudo} a été retiré de toutes ses parties : {messages}")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            show_active_data()
+
+        ev.preventDefault()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/dismiss/{dismissed_pseudo}"
+
+        # need token (of admin)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    # get the link (allocations) of players
+    active_data = get_active_data()
+    if not active_data:
+        alert("Erreur chargement actifs")
+        return
+
+    active_set = {players_dict[str(i)]['pseudo'] for i in active_data}
+
+    logins_list = get_last_logins()
+    if not logins_list:
+        alert("Erreur chargement logins joueurs")
+        return
+    last_login_time = {ll[0]: ll[2] for ll in logins_list}
+
+    active_table = html.TABLE()
+
+    fields = ['player', 'id', 'last_login', 'email', 'dismiss']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'player': 'joueur', 'id': 'id', 'last_login': 'dernier login', 'email': 'courriel', 'dismiss': 'évincer'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    active_table <= thead
+
+    pseudo2id = {v['pseudo']: int(k) for k, v in players_dict.items()}
+
+    emails_dict = common.get_all_emails()
+
+    count = 0
+    for player in sorted(active_set, key=lambda p: int(last_login_time[p]) if p in last_login_time else 0, reverse=False):
+        row = html.TR()
+
+        for field in fields:
+
+            if field == 'player':
+                value = player
+
+            if field == 'id':
+                value = pseudo2id[player]
+
+            if field == 'last_login':
+                value = ''
+                if player in last_login_time:
+                    time_stamp = last_login_time[player]
+                    date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+                    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+                    value = f"{date_now_gmt_str}"
+
+            if field == 'email':
+                email, _, __, ___, ____ = emails_dict[player]
+                email_link = html.A(href=f"mailto:{email}")
+                email_link <= email
+                value = email_link
+
+            if field == 'dismiss':
+                form = html.FORM()
+                input_dismissed_account = html.INPUT(type="image", src="./images/dismissed.png", title="Pour le retirer de toutes ses parties", Class='btn-inside')
+                input_dismissed_account.bind("click", lambda e, p=player: dismiss_account_callback(e, p))
+                form <= input_dismissed_account
+                value = form
+
+            col = html.TD(value)
+
+            row <= col
+
+        active_table <= row
+        count += 1
+
+    MY_SUB_PANEL <= html.H3("Les actifs")
+    MY_SUB_PANEL <= active_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} actifs")
+
+
 LINES_SCHEDULER_LOGS = 600
 
 
@@ -2432,6 +2548,8 @@ def load_option(_, item_name):
         edit_moderators()
     if item_name == 'Comptes oisifs':
         show_idle_data()
+    if item_name == 'Comptes démissionnaires':
+        show_active_data()
     if item_name == 'Logs du scheduler':
         show_scheduler_logs()
     if item_name == 'Maintenance':
