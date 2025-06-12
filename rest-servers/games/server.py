@@ -9094,6 +9094,69 @@ class ScoldLatePlayersGameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/dismiss/<dismissed>')
+class DismissRessource(flask_restful.Resource):  # type: ignore
+    """ DismissRessource """
+
+    def post(self, dismissed: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        dismiss
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/dismiss - POST - dismiss %s", dismissed)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get admin pseudo
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/pseudo-admin"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
+        admin_pseudo = req_result.json()
+
+        # check user is admin
+        if pseudo != admin_pseudo:
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to dismiss")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{dismissed}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        dismissed_id = req_result.json()
+
+        # remove from all games. Coldly.
+        sql_executor = database.SqlExecutor()
+        sql_executor.execute("UPDATE allocations SET role_id = -1 WHERE player_id = ?", (dismissed_id,))
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': f"Player {dismissed} removed from all games"}
+        return data, 200
+
+
 @API.resource('/maintain')
 class MaintainRessource(flask_restful.Resource):  # type: ignore
     """ MaintainRessource """
