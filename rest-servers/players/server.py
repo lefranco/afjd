@@ -579,11 +579,10 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # first checks locally (players)
         # ----------------------
 
-        # cannot quit if registered to an event
-        registered_list = registrations.Registration.inventory(sql_executor)
-        if player_id in [m[1] for m in registered_list]:
+        # cannot quit if commuter
+        if pseudo == COMMUTER_ACCOUNT:
             del sql_executor
-            flask_restful.abort(404, msg=f"Player {pseudo} is registered to an event")
+            flask_restful.abort(404, msg=f"Player {pseudo} is commuter")
 
         # cannot quit if creator
         creators_list = creators.Creator.inventory(sql_executor)
@@ -607,6 +606,13 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # second checks externally (games)
         # ----------------------
 
+        # player cannot quit if manager of an event
+
+        for event in events.Event.inventory(sql_executor):
+            if event.manager_id == player_id:
+                del sql_executor
+                flask_restful.abort(404, msg=f"Player {pseudo} is manager of an event")
+
         # player cannot quit if assignement (director of tournament)
 
         # get all assignments
@@ -625,7 +631,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
         if player_id in groupings_dict.values():
             del sql_executor
-            flask_restful.abort(400, msg="Player is assigned to a tournament")
+            flask_restful.abort(400, msg=f"Player {pseudo} is assigned to a tournament")
 
         # player cannot quit if allocation (play in game)
 
@@ -644,7 +650,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         allocations_dict = json_dict
         if allocations_dict:
             del sql_executor
-            flask_restful.abort(400, msg="Player is still in a game")
+            flask_restful.abort(400, msg=f"Player {pseudo} is still in a game")
 
         # ----------------------
         # all is ok
@@ -683,6 +689,9 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             del sql_executor
             flask_restful.abort(400, msg=f"Failed to send email to {email_player} : {message}")
+
+        # remove registration to all event
+        registrations.Registration.delete_by_player_id(sql_executor, player_id)
 
         # delete player from timezone table
         timezones.Timezone.delete_by_player_id(sql_executor, player_id)
