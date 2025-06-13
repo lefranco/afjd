@@ -15,6 +15,11 @@ class Allocation:
     """ Class for handling a allocation """
 
     @staticmethod
+    def delete_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> None:
+        """ deleting a player """
+        sql_executor.execute("DELETE FROM allocations where player_id = ?", (player_id,))
+
+    @staticmethod
     def list_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, int, int]]:
         """ class lookup : finds the object in database from fame id """
         allocations_found = sql_executor.execute("SELECT * FROM allocations where player_id = ?", (player_id,), need_result=True)

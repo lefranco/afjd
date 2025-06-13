@@ -15,6 +15,11 @@ class Registration:
     """ Class for handling a registration """
 
     @staticmethod
+    def delete_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> None:
+        """ deleting a player """
+        sql_executor.execute("DELETE FROM registrations where player_id = ?", (player_id,))
+
+    @staticmethod
     def list_by_event_id(sql_executor: database.SqlExecutor, event_id: int) -> typing.List[typing.Tuple[int, int, int, int, str]]:
         """ class lookup : finds the object in database from event id """
         registrations_found = sql_executor.execute("SELECT * FROM registrations where event_id = ?", (event_id,), need_result=True)

@@ -9149,7 +9149,7 @@ class DismissRessource(flask_restful.Resource):  # type: ignore
 
         # remove from all games. Coldly.
         sql_executor = database.SqlExecutor()
-        sql_executor.execute("DELETE FROM allocations WHERE player_id = ?", (dismissed_id,))
+        allocations.Allocation.delete_by_player_id(sql_executor, dismissed_id)
         sql_executor.commit()
         del sql_executor
 
