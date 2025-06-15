@@ -48,7 +48,10 @@ Voici ce qui appliqué sur le site :
 
 (Attention)
 Seules les parties des variantes "standard" et "standard\_pds" sont éligibles pour le calcul du ELO.
-
+.
+Quand il manque un joueur dans une partie, on met provisoirement, juste pour le calcul, l'administrateur à sa place avec le ELO de ELO\_DEF.
+.
+On supprime toujours l'administrateur du résultat final du ELO.
 
 $ Valeur des constantes
 
