@@ -5959,6 +5959,9 @@ class VaporizePlayerRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
+        # replaced by admin as tournament director
+        sql_executor.execute("UPDATE assignments SET player_id = ? WHERE player_id = ?", (ADDRESS_ADMIN, player_id))
+
         # delete incidents
         sql_executor.execute("DELETE FROM incidents WHERE player_id = ?", (player_id,))
 
@@ -7293,7 +7296,7 @@ class AssignmentListRessource(flask_restful.Resource):  # type: ignore
 
     def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
-        Get list of all assignements (dictionary identifier -> director_id)
+        Get list of all assignments (dictionary identifier -> director_id)
         EXPOSED
         """
 

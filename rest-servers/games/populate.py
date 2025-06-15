@@ -153,7 +153,7 @@ def populate_tournaments(sql_executor: database.SqlExecutor) -> None:
     tournaments.Tournament.create_table(sql_executor)
 
 
-def populate_assignements(sql_executor: database.SqlExecutor) -> None:
+def populate_assignments(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
     assignments.Assignment.create_table(sql_executor)
 
@@ -200,7 +200,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_incidents(sql_executor)
     populate_incidents2(sql_executor)
     populate_tournaments(sql_executor)
-    populate_assignements(sql_executor)
+    populate_assignments(sql_executor)
     populate_groupings(sql_executor)
     populate_dropouts(sql_executor)
     populate_replacements(sql_executor)

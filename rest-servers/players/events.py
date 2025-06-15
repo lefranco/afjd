@@ -166,6 +166,11 @@ class Event:
         """ property """
         return self._manager_id
 
+    @manager_id.setter
+    def manager_id(self, manager_id: int) -> None:
+        """ setter """
+        self._manager_id = manager_id
+
     def __str__(self) -> str:
         return f"name={self._name} start_date={self._start_date} start_hour={self._start_hour} end_date={self._end_date} location={self._location} external={self._external} description={self._description} summary={self._summary} manager_id={self._manager_id} "
 

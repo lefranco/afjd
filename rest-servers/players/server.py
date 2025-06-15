@@ -162,6 +162,9 @@ NO_REPEAT_DELAY_SEC = 15
 # eighteen months
 IDLE_DAY_TIMEOUT = 18 * 30.5
 
+# admin id
+ADDRESS_ADMIN = 1
+
 
 class RepeatPreventer(typing.Dict[int, float]):
     """ Table """
@@ -602,40 +605,8 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} is a admin")
 
-        # ----------------------
-        # second checks externally (games)
-        # ----------------------
-
-        # player cannot quit if manager of an event
-
-        for event in events.Event.inventory(sql_executor):
-            if event.manager_id == player_id:
-                del sql_executor
-                flask_restful.abort(404, msg=f"Player {pseudo} is manager of an event")
-
-        # player cannot quit if assignement (director of tournament)
-
-        # get all assignments
-        host = lowdata.SERVER_CONFIG['GAME']['HOST']
-        port = lowdata.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/assignments"
-        jwt_token = flask.request.headers.get('AccessToken')
-        req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"})
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            del sql_executor
-            flask_restful.abort(400, msg=f"Assignement check failed!:{message}")
-        json_dict = req_result.json()
-        groupings_dict = json_dict
-
-        if player_id in groupings_dict.values():
-            del sql_executor
-            flask_restful.abort(400, msg=f"Player {pseudo} is assigned to a tournament")
-
         # player cannot quit if allocation (play in game)
 
-        # get all allocations of the player
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
         port = lowdata.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/player-allocations/{player_id}"
@@ -655,6 +626,12 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # ----------------------
         # all is ok
         # ----------------------
+
+        # replaced by admin as event manager
+        for event in events.Event.inventory(sql_executor):
+            if event.manager_id == player_id:
+                event.manager_id = ADDRESS_ADMIN
+                event.update_database(sql_executor)
 
         # remove all incidents, dropouts, all replacements
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
