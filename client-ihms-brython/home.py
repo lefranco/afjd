@@ -429,7 +429,7 @@ def show_news():
 
     # ----
 
-    news_forum = html.OBJECT(data=f"{config.SITE_ADDRESS}/external_page.php", width="100%", height="700", title="Forums", alt="Forums")
+    news_forum = html.OBJECT(data=f"{config.SITE_ADDRESS}/external_page.php", width="100%", height="800", title="Forums", alt="Forums")
     div_b4 <= news_forum
 
     # ----
