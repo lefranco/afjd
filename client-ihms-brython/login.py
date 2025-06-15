@@ -132,8 +132,8 @@ def login():
         # login (getting token) : no need for token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def forgot_callback(ev):  # pylint: disable=invalid-name
-        """ forgot_callback """
+    def forgot_password_callback(ev):  # pylint: disable=invalid-name
+        """ forgot_password_callback """
 
         def reply_callback(req):
             req_result = loads(req.text)
@@ -178,6 +178,21 @@ def login():
 
         # rescue (getting token) : no need for token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def forgot_pseudo_callback(ev):  # pylint: disable=invalid-name
+        """ forgot_pseudo_callback """
+
+        ev.preventDefault()
+
+        # get the players
+        players_dict = common.get_players_data()
+        if not players_dict:
+            alert("Erreur chargement dictionnaire joueurs")
+            return
+
+        pseudo_list = ' '.join(sorted(v['pseudo'] for v in players_dict.values()))
+
+        mydialog.info_stay(f"Les pseudos existant sur le site :<br><br>{pseudo_list}")
 
     def logout_callback(ev):  # pylint: disable=invalid-name
         """ logout_callback """
@@ -242,8 +257,16 @@ def login():
     # --
 
     input_forgot = html.INPUT(type="submit", value="Mot de passe oublié", Class='btn-inside')
-    input_forgot.bind("click", forgot_callback)
+    input_forgot.bind("click", forgot_password_callback)
     form <= input_forgot
+    form <= html.BR()
+    form <= html.BR()
+
+    # --
+
+    input_forgot2 = html.INPUT(type="submit", value="Pseudo oublié", Class='btn-inside')
+    input_forgot2.bind("click", forgot_pseudo_callback)
+    form <= input_forgot2
     form <= html.BR()
     form <= html.BR()
 
