@@ -33,6 +33,9 @@ FORCED_VARIANT_NAME = 'standard'
 
 SESSION = requests.Session()
 
+# admin id
+ADDRESS_ADMIN = 1
+
 
 def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, typing.Any], games_results_dict: typing.Dict[str, typing.Dict[str, typing.Any]], games_dict: typing.Dict[str, typing.Any], elo_information: typing.List[str]) -> typing.Tuple[typing.List[typing.List[typing.Any]], str]:
     """ returns elo_raw_list, teaser_text """
@@ -86,10 +89,16 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
         classic = game_data['classic']
 
         if len(game_players_dict) != len(effective_roles):
-            elo_information.append(f"WARNING {game_name}: ignored because missing player(s) !!!!")
+
+            # message
+            elo_information.append(f"WARNING {game_name}: has missing player(s) but still proceed !!!!")
             if VERIFY:
                 elo_information.append("-------------------")
-            continue
+
+            # put admin as replacement
+            for r in effective_roles:
+                if r not in game_players_dict.values():
+                    game_players_dict[ADDRESS_ADMIN] = r
 
         # convert time
         before = time.time()
@@ -233,6 +242,10 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
             if elo_table[(player, role_name, classic)] < MINIMUM_ELO:
                 elo_table[(player, role_name, classic)] = MINIMUM_ELO
                 elo_information.append(f"INFORMATION {game_name}: {player}({role_name}) would have less than {MINIMUM_ELO} so forced to this value")
+
+            # no elo for admin
+            if player == num2pseudo[ADDRESS_ADMIN]:
+                del elo_table[(player, role_name, classic)]
 
         after = time.time()
         variation_calculation_time += (after - before)

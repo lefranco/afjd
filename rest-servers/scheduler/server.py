@@ -379,7 +379,7 @@ def acting_threaded_procedure() -> None:
                     mylogger.LOGGER.error("Exception occured with Scolder, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
-            if hour_now == 1:
+            if 1:#hour_now == 1:
                 mylogger.LOGGER.info("ELO Scheduler...")
                 try:
                     elo_scheduler.run(jwt_token)
