@@ -2746,7 +2746,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
 
         # Reject if not spring or autumn
-        if game.current_advancement % 5 not in [0, 2]:
+        if game.current_advancement % 5 not in [0, 2, 4]:
             del sql_executor
             flask_restful.abort(400, msg="Unsafe to rectify a position in this season to play!")
 
