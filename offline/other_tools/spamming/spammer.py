@@ -18,45 +18,34 @@ import flask
 import flask_mail  # type: ignore
 
 
-INTERVAL = 5
+INTERVAL = 1
 
 # mailing suject
-SUBJECT = "Convocation Assemblée Général Association Francophone des Joueurs de Diplomacy Dimanche 2 Mars 15h"
+SUBJECT = "Le diplomate averti : trois semaines avant le championnat de France"
 
 # mailing body
 BODY = """
 Cher joueur de Diplomacy,
 
-Bonjour, nous vous proposons de vous retrouver le dimanche 2 Mars pour notre assemblée générale annuelle à 15h sur Discord. 
+En pièce jointe un document PDF/Acrobat présentant le championnat de France.
 
-L'ordre du jour est le suivant : 
+En résumé :
 
-    1) Présentation des actions menées et soutenues par l'AFJD en 2024, 
+    * Lieu : Château la Tomaze, 6bis rue du Pineau, Champ-sur-Layon à Bellevigne-en-Layon (Maine-et-Loire) : salle de réception des celliers du vignoble La Tomaze.
 
-    2) Présentation des comptes, 
+    * Dates : samedi 12, dimanche 13 et lundi 14 (férié) juillet 2025.
 
-    3) Autres questions posées par les participants 
+    * Restauration possible sur place. Pour le couchage, prévenez idéalement en avance pour réserver un lit, sinon apporter tente ou tapis de sol. Gratuit ou participation libre
 
-    4) Election du nouveau conseil d'administration. 
+    * Contact : Gabriel 06 89 14 64 06, diplomatiegabriel@outlook.com
 
-La réunion se tiendra dans le salon vocal de Discord.
-
-Lien pour assister à cette Assemblée Générale :
-
-    https://discord.gg/Tx2ECbJS
-
-C'est aussi le moment de l'adhésion annuelle pour 2025 qui nous permet notamment de financer les serveurs et soutenir des tournois. 
-Le montant minimum est de 10€ mais si vous pouvez mettre plus cela nous aiderait !
-
-Lien pour cotiser pour 2025 : 
-
-    https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/formulaires/3
+ON PEUT VENIR VOUS CHERCHER À LA GARE À ANGERS OU CHEMILLÉ.
 
 Venez nombreux! 
 
 Ludiquement
-Olivier
-Président de l'Association
+Jérémie
+Secrétaire de l'Association
 """
 
 # mailing official sender
@@ -66,7 +55,7 @@ SENDER = "afjd_serveur_jeu@diplomania-gen.fr"
 REPLY_TO = "jeremie.lefrancois@gmail.com"
 
 # list of attached files (must be PDF)
-PDF_ATT_FILES = []
+PDF_ATT_FILES = ["le_diplomate_averti.pdf"]
 
 
 MAILER = None
@@ -190,8 +179,9 @@ def main() -> None:
 
                 time.sleep(INTERVAL)
 
-        print("Failed to spam:")
-        print(' '.join(failed_to_spam))
+        if failed_to_spam:
+            print("Failed to spam:")
+            print(' '.join(failed_to_spam))
         
 
 if __name__ == '__main__':
