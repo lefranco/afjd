@@ -5,7 +5,7 @@ On suppose que la liste est dans le fichier victims_before
 
 cat victims_before | tr '[:upper:]' '[:lower:]' | sort -u  > possible_victims
 
-2) récupérer les "oui" depuis le site (compte modérateur, préparer un publipostage, télécharger la liste des courriels) :
+2) récupérer les "oui" depuis le site (compte modérateur, préparer un publipostage, télécharger la liste des courriels avec accord) :
 liste dans le fichier emails_yes_for_mailing.txt
 
 cat emails_yes_for_mailing.txt | tr '[:upper:]' '[:lower:]' | sort -u > yes
@@ -20,15 +20,15 @@ cat emails_no_for_mailing.txt | tr '[:upper:]' '[:lower:]' | sort -u  > no
 
 comm -13 yes no > new_no
 
-5) ajouter les oui et trier
+5) ajouter les oui aux victimes possibles et trier
 
 cat yes >> possible_victims
-sort -u possible_victims -o possible_victims
+sort -u possible_victims -o possible_victims_yes
 
-6) retirer les non 
+6) retirer les non des victimes possibles
 (cette commande ne conserve que les lignes dans le deuxième fichier et pas le premier)
 
-comm -13 new_no possible_victims > actual_victims
+comm -13 new_no possible_victims_yes > actual_victims
 
 => On peut spammer sur 'actual_victims'
 
@@ -40,3 +40,4 @@ Si depuis le site :
   
 Si depuis l'annuaire :
   supprimer de l'annuaire (ou plus simplement de la liste dont on repartira au prochain publipostage)
+
