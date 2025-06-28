@@ -114,7 +114,7 @@ class Player:
         sql_executor.execute("CREATE TABLE players (identifier INT UNIQUE PRIMARY KEY, pseudo STR, player_data player)")
         sql_executor.execute("CREATE UNIQUE INDEX pseudo_player ON  players (pseudo)")
 
-    def __init__(self, identifier: int, pseudo: str, email: str, email_confirmed: bool, notify_deadline: bool, notify_adjudication: bool, notify_message: bool, notify_replace: bool, newsletter: bool, family_name: str, first_name: str, residence: str, nationality: str) -> None:
+    def __init__(self, identifier: int, pseudo: str, email: str, email_status: int, notify_deadline: bool, notify_adjudication: bool, notify_message: bool, notify_replace: bool, newsletter: bool, family_name: str, first_name: str, residence: str, nationality: str) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -123,7 +123,7 @@ class Player:
         self._pseudo = pseudo
 
         self._email = email
-        self._email_confirmed = email_confirmed
+        self._email_status = email_status
         self._notify_deadline = notify_deadline
         self._notify_adjudication = notify_adjudication
         self._notify_message = notify_message
@@ -159,7 +159,7 @@ class Player:
             self._email = self._email[:LEN_EMAIL_MAX]
             changed = True
 
-        # email_confirmed cannot be set directly
+        # email_status cannot be set directly
 
         if 'notify_deadline' in json_dict and json_dict['notify_deadline'] is not None and json_dict['notify_deadline'] != self._notify_deadline:
             self._notify_deadline = json_dict['notify_deadline']
@@ -213,7 +213,7 @@ class Player:
         json_dict = {
             'pseudo': self._pseudo,
             'email': self._email,
-            'email_confirmed': self._email_confirmed,
+            'email_status': self._email_status,
             'notify_deadline': self._notify_deadline,
             'notify_adjudication': self._notify_adjudication,
             'notify_message': self._notify_message,
@@ -262,14 +262,14 @@ class Player:
         return self._email
 
     @property
-    def email_confirmed(self) -> bool:
+    def email_status(self) -> int:
         """ property """
-        return self._email_confirmed
+        return self._email_status
 
-    @email_confirmed.setter
-    def email_confirmed(self, email_confirmed: bool) -> None:
+    @email_status.setter
+    def email_status(self, email_status: int) -> None:
         """ setter """
-        self._email_confirmed = email_confirmed
+        self._email_status = email_status
 
     @property
     def notify_deadline(self) -> bool:
@@ -302,11 +302,11 @@ class Player:
         self._newsletter = newsletter
 
     def __str__(self) -> str:
-        return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} notify_deadline={self._notify_deadline} notify_adjudication={self._notify_adjudication} notify_message={self._notify_message} notify_replace={self._notify_replace} newsletter={self._newsletter} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality}"
+        return f"pseudo={self._pseudo} email={self._email} email_status={self._email_status} notify_deadline={self._notify_deadline} notify_adjudication={self._notify_adjudication} notify_message={self._notify_message} notify_replace={self._notify_replace} newsletter={self._newsletter} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality}"
 
     def adapt_player(self) -> bytes:
         """ To put an object in database """
-        return (f"{self._identifier}{database.STR_SEPARATOR}{self._pseudo}{database.STR_SEPARATOR}{self._email}{database.STR_SEPARATOR}{int(bool(self._email_confirmed))}{database.STR_SEPARATOR}{int(bool(self._notify_deadline))}{database.STR_SEPARATOR}{int(bool(self._notify_adjudication))}{database.STR_SEPARATOR}{int(bool(self._notify_message))}{database.STR_SEPARATOR}{int(bool(self._notify_replace))}{database.STR_SEPARATOR}{int(bool(self._newsletter))}{database.STR_SEPARATOR}{self._family_name}{database.STR_SEPARATOR}{self._first_name}{database.STR_SEPARATOR}{self._residence}{database.STR_SEPARATOR}{self._nationality}").encode('ascii')
+        return (f"{self._identifier}{database.STR_SEPARATOR}{self._pseudo}{database.STR_SEPARATOR}{self._email}{database.STR_SEPARATOR}{int(self._email_status)}{database.STR_SEPARATOR}{int(bool(self._notify_deadline))}{database.STR_SEPARATOR}{int(bool(self._notify_adjudication))}{database.STR_SEPARATOR}{int(bool(self._notify_message))}{database.STR_SEPARATOR}{int(bool(self._notify_replace))}{database.STR_SEPARATOR}{int(bool(self._newsletter))}{database.STR_SEPARATOR}{self._family_name}{database.STR_SEPARATOR}{self._first_name}{database.STR_SEPARATOR}{self._residence}{database.STR_SEPARATOR}{self._nationality}").encode('ascii')
 
 
 def convert_player(buffer: bytes) -> Player:
@@ -316,7 +316,7 @@ def convert_player(buffer: bytes) -> Player:
     identifier = int(tab[0].decode())
     pseudo = tab[1].decode()
     email = tab[2].decode()
-    email_confirmed = bool(int(tab[3].decode()))
+    email_status = int(tab[3].decode())
     notify_deadline = bool(int(tab[4].decode()))
     notify_adjudication = bool(int(tab[5].decode()))
     notify_message = bool(int(tab[6].decode()))
@@ -327,7 +327,7 @@ def convert_player(buffer: bytes) -> Player:
     residence = tab[11].decode()
     nationality = tab[12].decode()
 
-    player = Player(identifier, pseudo, email, email_confirmed, notify_deadline, notify_adjudication, notify_message, notify_replace, newsletter, family_name, first_name, residence, nationality)
+    player = Player(identifier, pseudo, email, email_status, notify_deadline, notify_adjudication, notify_message, notify_replace, newsletter, family_name, first_name, residence, nationality)
     return player
 
 
