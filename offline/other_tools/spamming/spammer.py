@@ -21,15 +21,20 @@ import flask_mail  # type: ignore
 INTERVAL = 1
 
 # mailing suject
-SUBJECT = "Bonjour je suis heuruex de vous dire"
+SUBJECT = "Petit message inutile ou pas !"
 
 # mailing body
 BODY = """
-Que diplomatie est un super jeu !
+Vous recevez ce message parce que cette adresse est liée à un commpte sur le site :
+https://diplomania-gen.fr
+L'adresse courriel du compte n'est pas confirmée.
+Le but de ce message :
+ - retour en erreur => l'adresse sera marquée en erreur dans le site, vous devrez changer votre adresse pour continuer à jouer éventuellement
+ - réponse courte de votre part du style "ou c'est bien moi je compte jouer à diplomacy" => l'adresse sera marquée confirmée par opération manuelle
+ - autrement : statu quo.
+ Voila !
+ Amicalement
 
-Ludiquement
-Jérémie
-Secrétaire de l'Association
 """
 
 # mailing official sender
