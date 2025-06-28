@@ -948,6 +948,8 @@ def sandbox():
 
         nonlocal moved_item_id
 
+        event.preventDefault()
+
         # Need to be in this state
         if automaton_state != AutomatonStateEnum.SELECT_ACTIVE_STATE:
             return
