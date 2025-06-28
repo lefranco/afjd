@@ -1164,12 +1164,17 @@ class GameRemoveOrderRessource(flask_restful.Resource):  # type: ignore
                 fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
                 fake_unit.delete_database(sql_executor)  # noqa: F821
 
-            orders_present = orders.Order.list_by_game_id(sql_executor, int(game_id))  # noqa: F821
-
             # remove the orders
+            orders_present = orders.Order.list_by_game_id(sql_executor, int(game_id))  # noqa: F821
             for (_, role_num, _, zone_num, _, _) in orders_present:
                 order = orders.Order(int(game_id), role_num, 0, zone_num, 0, 0)
                 order.delete_database(sql_executor)  # noqa: F821
+
+            # remove the communication orders
+            communication_orders_present = communication_orders.CommunicationOrder.list_by_game_id(sql_executor, int(game_id))  # noqa: F821
+            for (_, role_num, _, zone_num, _, _) in communication_orders_present:
+                communication_order = communication_orders.CommunicationOrder(int(game_id), role_num, 0, zone_num, 0, 0)
+                communication_order.delete_database(sql_executor)  # noqa: F821
 
             # remove the submissions
             submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
@@ -1426,7 +1431,7 @@ class GameSelectListRessource(flask_restful.Resource):  # type: ignore
 
         try:
             selection_list = list(map(int, selection_submitted.split()))
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # pylint: disable=bare-except
             flask_restful.abort(400, msg="Bad selection. Use a space separated list of numbers")
 
         sql_executor = database.SqlExecutor()
@@ -5000,7 +5005,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # get destinees
         try:
             dest_role_ids = list(map(int, dest_role_ids_submitted.split()))
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # pylint: disable=bare-except
             del sql_executor
             flask_restful.abort(400, msg="Bad list of addresses identifiers. Use a space separated list of numbers")
 
