@@ -21,27 +21,11 @@ import flask_mail  # type: ignore
 INTERVAL = 1
 
 # mailing suject
-SUBJECT = "Le diplomate averti : trois semaines avant le championnat de France"
+SUBJECT = "Bonjour je suis heuruex de vous dire"
 
 # mailing body
 BODY = """
-Cher joueur de Diplomacy,
-
-En pièce jointe un document PDF/Acrobat présentant le championnat de France.
-
-En résumé :
-
-    * Lieu : Château la Tomaze, 6bis rue du Pineau, Champ-sur-Layon à Bellevigne-en-Layon (Maine-et-Loire) : salle de réception des celliers du vignoble La Tomaze.
-
-    * Dates : samedi 12, dimanche 13 et lundi 14 (férié) juillet 2025.
-
-    * Restauration possible sur place. Pour le couchage, prévenez idéalement en avance pour réserver un lit, sinon apporter tente ou tapis de sol. Gratuit ou participation libre
-
-    * Contact : Gabriel 06 89 14 64 06, diplomatiegabriel@outlook.com
-
-ON PEUT VENIR VOUS CHERCHER À LA GARE À ANGERS OU CHEMILLÉ.
-
-Venez nombreux! 
+Que diplomatie est un super jeu !
 
 Ludiquement
 Jérémie
@@ -49,13 +33,13 @@ Secrétaire de l'Association
 """
 
 # mailing official sender
-SENDER = "afjd_serveur_jeu@diplomania-gen.fr"
+SENDER = "afjd@welpro.biz"
 
 # mailing real sender
 REPLY_TO = "jeremie.lefrancois@gmail.com"
 
 # list of attached files (must be PDF)
-PDF_ATT_FILES = ["le_diplomate_averti.pdf"]
+PDF_ATT_FILES = []
 
 
 MAILER = None
@@ -152,7 +136,7 @@ def main() -> None:
 
         with open(victim_list_file, encoding='utf-8') as filepointer:
 
-            victims = [l.rstrip('\n').lower() for l in filepointer if l and not l.startswith("#")]
+            victims = [l.rstrip('\n').lower() for l in filepointer if l.rstrip('\n') and not l.startswith("#")]
             nb_victims = len(victims)
             print(f"We have {nb_victims} victims... ")
 
