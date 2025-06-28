@@ -1078,9 +1078,7 @@ def get_game_status():
             PANEL_MIDDLE.clear()
             technical.render(PANEL_MIDDLE)
 
-
         ev.preventDefault()
-
 
         dialog = mydialog.MyDialog("Attention, si vous êtes en train d'entrer vos ordres, ils seront perdus. On va vraiment voir le scorage ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: confirm_callback(e, d))
