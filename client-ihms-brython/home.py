@@ -243,13 +243,13 @@ def formatted_teaser(teasers):
     return teaser_content
 
 
-def email_address_is_confirmed():
+def email_address_status():
     """ email_address_is_confirmed """
 
-    email_confirmed = False
+    email_status = 0
 
     def reply_callback(req):
-        nonlocal email_confirmed
+        nonlocal email_status
         req_result = loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -260,19 +260,19 @@ def email_address_is_confirmed():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        email_confirmed = req_result['email_confirmed']
+        email_status = req_result['email_status']
         return
 
     json_dict = {}
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/email-confirmed"
+    url = f"{host}:{port}/email-status"
 
     # reading new private messages received : need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    return email_confirmed
+    return email_status
 
 
 def show_news():
@@ -709,9 +709,12 @@ def show_news():
         if 'DATE_CONFIRMATION_MISSING_NOTIFIED' in storage:
             day_notified = int(storage['DATE_CONFIRMATION_MISSING_NOTIFIED'])
         if day_now > day_notified:
-            is_confirmed = email_address_is_confirmed()
-            if not is_confirmed:
-                alert("Votre adresse courriel n'est pas confirmée. Soit elle est en rebond, soit vous ne l'avez pas encore confirmée ! Pour le faire : Menu 'Mon compte' / Sous menu 'Valider mon courriel' / Bouton 'Me renvoyer un nouveau code'.\nCela ne vous empêche pas de rejoindre et jouer des parties sur le site !")
+            email_status = email_address_status()
+            if email_status == 0:
+                alert("Votre adresse courriel n'est pas confirmée. Il faut la confirmer! Pour le faire : Menu 'Mon compte' / Sous menu 'Valider mon courriel' / Bouton 'Me renvoyer un nouveau code'.\nCela ne vous empêche pas de rejoindre et jouer des parties sur le site !")
+                storage['DATE_CONFIRMATION_MISSING_NOTIFIED'] = str(day_now)
+            elif email_status == 2:
+                alert("Votre adresse courriel est en rebond. Il faut la changer au plus vite ! Pour le faire : Menu 'Mon compte' / Sous menu 'Valider mon courriel' / Bouton 'Me renvoyer un nouveau code'.\nCela ne vous empêche pas de rejoindre et jouer des parties sur le site !")
                 storage['DATE_CONFIRMATION_MISSING_NOTIFIED'] = str(day_now)
 
     # RGPD

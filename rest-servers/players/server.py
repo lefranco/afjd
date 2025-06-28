@@ -55,7 +55,7 @@ PLAYER_PARSER = flask_restful.reqparse.RequestParser()
 PLAYER_PARSER.add_argument('pseudo', type=str, required=True)
 PLAYER_PARSER.add_argument('password', type=str, required=False)
 PLAYER_PARSER.add_argument('email', type=str, required=False)
-PLAYER_PARSER.add_argument('email_confirmed', type=int, required=False)
+PLAYER_PARSER.add_argument('email_status', type=int, required=False)
 PLAYER_PARSER.add_argument('notify_deadline', type=int, required=False)
 PLAYER_PARSER.add_argument('notify_adjudication', type=int, required=False)
 PLAYER_PARSER.add_argument('notify_message', type=int, required=False)
@@ -503,8 +503,8 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if email_after != email_before:
             email_player = email_after
 
-            # player no more confirmed
-            player.email_confirmed = False
+            # player is now unconfirmed
+            player.email_status = 0
 
             # get a code
             code = random.randint(1000, 9999)
@@ -723,7 +723,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         players_list = players.Player.inventory(sql_executor)
         del sql_executor
 
-        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'email_confirmed': p.email_confirmed, 'notify_replace': p.notify_replace} for p in players_list}
+        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'email_status': p.email_status, 'notify_replace': p.notify_replace} for p in players_list}
 
         return data, 200
 
@@ -1048,7 +1048,7 @@ class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
         players_list = players.Player.inventory(sql_executor)
         del sql_executor
 
-        data = {p.pseudo: (p.email, p.family_name, p.first_name, p.email_confirmed, p.newsletter) for p in players_list}
+        data = {p.pseudo: (p.email, p.family_name, p.first_name, p.email_status, p.newsletter) for p in players_list}
 
         return data, 200
 
@@ -1089,7 +1089,8 @@ class CheckEmailRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(401, msg="Code is incorrect")
 
-        player.email_confirmed = True
+        # player is now unconfirmed
+        player.email_status = 1
         player.update_database(sql_executor)
 
         sql_executor.commit()
@@ -1399,7 +1400,7 @@ class ConfirmEmailRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Receiving player {pseudo_player} does not exist")
 
         assert received is not None
-        received.email_confirmed = True
+        received.email_status = 1
         received.update_database(sql_executor)
         sql_executor.commit()
         del sql_executor
@@ -1407,18 +1408,17 @@ class ConfirmEmailRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': 'Ok receiving patched confirmed'}
         return data, 200
 
-
-@API.resource('/unconfirm-email/<pseudo_player>')
-class UnConfirmEmailRessource(flask_restful.Resource):  # type: ignore
-    """ UnConfirmEmailRessource """
+@API.resource('/error-set-email/<pseudo_player>')
+class ErrorSetEmailRessource(flask_restful.Resource):  # type: ignore
+    """ ErrorSetEmailRessource """
 
     def post(self, pseudo_player: str) -> typing.Tuple[typing.Dict[str, str], int]:  # pylint: disable=R0201
         """
-        Patch email not confirmed bit for a player (he received stuff KO !)
+        Put email as error for player
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/confirm-email - POST - confirm email pseudo=%s", pseudo_player)
+        mylogger.LOGGER.info("/error-set-email - POST - email pseudo=%s", pseudo_player)
 
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1456,12 +1456,12 @@ class UnConfirmEmailRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Receiving player {pseudo_player} does not exist")
 
         assert received is not None
-        received.email_confirmed = False
+        received.email_status = 2
         received.update_database(sql_executor)
         sql_executor.commit()
         del sql_executor
 
-        data = {'msg': 'Ok receiving patched not confirmed'}
+        data = {'msg': 'Ok email unconfirmed'}
         return data, 200
 
 
@@ -2930,17 +2930,17 @@ class NewPrivateMessageReceivedRessource(flask_restful.Resource):  # type: ignor
         return data, 200
 
 
-@API.resource('/email-confirmed')
-class EmailConfirmedRessource(flask_restful.Resource):  # type: ignore
-    """  EmailConfirmedRessource """
+@API.resource('/email-status')
+class EmailStatusRessource(flask_restful.Resource):  # type: ignore
+    """  EmailStatusRessource """
 
     def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
         """
-        Do we have new messages ?
+        Status of my email confirmation ?
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/email-confirmed - GET - new confirmed")
+        mylogger.LOGGER.info("/email-status - GET - status")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -2977,7 +2977,7 @@ class EmailConfirmedRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Player with id {player_id} doesn't exist")
 
         assert player is not None
-        data = {'email_confirmed': player.email_confirmed}
+        data = {'email_status': player.email_status}
         return data, 200
 
 

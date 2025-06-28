@@ -442,7 +442,7 @@ def edit_account():
 
     # declare the values
     email_loaded = None
-    email_confirmed_loaded = None
+    email_status_loaded = None
     notify_deadline_loaded = None
     notify_adjudication_loaded = None
     notify_message_loaded = None
@@ -467,7 +467,7 @@ def edit_account():
         def reply_callback(req):
             nonlocal status
             nonlocal email_loaded
-            nonlocal email_confirmed_loaded
+            nonlocal email_status_loaded
             nonlocal notify_deadline_loaded
             nonlocal notify_adjudication_loaded
             nonlocal notify_message_loaded
@@ -495,7 +495,7 @@ def edit_account():
                 return
 
             email_loaded = req_result['email']
-            email_confirmed_loaded = req_result['email_confirmed']
+            email_status_loaded = req_result['email_status']
             notify_deadline_loaded = req_result['notify_deadline']
             notify_adjudication_loaded = req_result['notify_adjudication']
             notify_message_loaded = req_result['notify_message']
@@ -624,8 +624,15 @@ def edit_account():
     fieldset = html.FIELDSET()
     legend_email_confirmed = html.LEGEND("courriel confirmé", title="(pour information)")
     fieldset <= legend_email_confirmed
-    input_email_confirmed = html.INPUT(type="checkbox", disabled=True, checked=email_confirmed_loaded, Class='btn-inside')
+    input_email_confirmed = html.INPUT(type="checkbox", disabled=True, checked=email_status_loaded == 1, Class='btn-inside')
     fieldset <= input_email_confirmed
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_email_error = html.LEGEND("courriel en erreur", title="(pour information)")
+    fieldset <= legend_email_error
+    input_email_error = html.INPUT(type="checkbox", disabled=True, checked=email_status_loaded == 2, Class='btn-inside')
+    fieldset <= input_email_error
     form <= fieldset
 
     fieldset = html.FIELDSET()
