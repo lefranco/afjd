@@ -714,7 +714,8 @@ def show_news():
                 alert("Votre adresse courriel n'est pas confirmée. Il faut la confirmer! Pour le faire : Menu 'Mon compte' / Sous menu 'Valider mon courriel' / Bouton 'Me renvoyer un nouveau code'.\nCela ne vous empêche pas de rejoindre et jouer des parties sur le site !")
                 storage['DATE_CONFIRMATION_MISSING_NOTIFIED'] = str(day_now)
             elif email_status == 2:
-                alert("Votre adresse courriel est en rebond. Il faut la changer au plus vite ! Pour le faire : Menu 'Mon compte' / Sous menu 'Valider mon courriel' / Bouton 'Me renvoyer un nouveau code'.\nCela ne vous empêche pas de rejoindre et jouer des parties sur le site !")
+                alert("ATTENTION : VOTRE ADRESSE COURRIEL EST EN ERREUR")
+                alert("Il faut la changer au plus vite ! Pour le faire : Menu 'Mon compte' / Sous menu 'Valider mon courriel' / Bouton 'Me renvoyer un nouveau code'.\nCela ne vous empêche pas de rejoindre et jouer des parties sur le site !")
                 storage['DATE_CONFIRMATION_MISSING_NOTIFIED'] = str(day_now)
 
     # RGPD
