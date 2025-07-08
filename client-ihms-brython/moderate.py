@@ -294,6 +294,55 @@ def prepare_mailing():
         download_link.href = window.URL.createObjectURL(text_file_as_blob)
         document['download_link'].click()
 
+    def test_account_callback(ev, player_pseudo, player_email):  # pylint: disable=invalid-name
+        """ test_account_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au test email : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au test email : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.info_go(f"Le message de test a été envoyé ! {messages}")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            prepare_mailing()
+
+        ev.preventDefault()
+
+        subject = f"Message de test de l'adresse courriel de la part du site {config.SITE_ADDRESS} (AFJD)"
+        body = ""
+        body += f"pseudo : {player_pseudo}"
+        body += "\n\n"
+        body += f"Ce message sert uniquement à tester votre addresse courriel soupçonnée de retour en erreur (*bounce*): {player_email}"
+        body += "\n\n"
+        body += "Inutile de répondre à ce message !"
+        body += "\n\n"
+
+        json_dict = {
+            'subject': subject,
+            'body': body,
+            'email': player_email,
+        }
+
+        host = config.SERVER_CONFIG['EMAIL']['HOST']
+        port = config.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/send-email-simple"
+
+        # getting email: need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        prepare_mailing()
+
     def patch_account_refuses_callback(ev, player_pseudo):  # pylint: disable=invalid-name
         """ patch_account_refuses_callback """
 
@@ -396,88 +445,17 @@ def prepare_mailing():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'nom', 'prénom', 'courriel', 'confirmation', 'action', 'publipostage', 'action']:
+    for field in ['pseudo', 'nom', 'prénom', 'courriel', 'confirmation', 'action', 'publipostage', 'action', 'test']:
         col = html.TD(field)
         thead <= col
     emails_table <= thead
 
     emails_unconfirmed_list = []
     emails_yes_list = []
-
-    for pseudo, (email, family_name, first_name, status, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
-
-        if not newsletter:
-            continue
-
-        row = html.TR()
-
-        col = html.TD(pseudo)
-        row <= col
-
-        col = html.TD(family_name)
-        row <= col
-
-        col = html.TD(first_name)
-        row <= col
-
-        emails_yes_list.append(email)
-
-        col = html.TD(email)
-        if status == 2:
-            col.style = {
-                'background-color': 'red'
-            }
-        row <= col
-
-        col = html.TD()
-        if status == 0:
-            col <= "Non confirmé"
-            emails_unconfirmed_list.append(email)
-        elif status == 1:
-            col <= "Confirmé"
-        elif status == 2:
-            col <= "En erreur"
-        row <= col
-
-        col = html.TD()
-        if status != 1:
-            input_patch_account_confirmed = html.BUTTON("Confirmer", Class='btn-inside')
-            input_patch_account_confirmed.bind("click", lambda e, p=pseudo: patch_account_confirmed_callback(e, p))
-            col <= input_patch_account_confirmed
-        if status != 2:
-            input_patch_account_error = html.BUTTON("Mettre en erreur", Class='btn-inside')
-            input_patch_account_error.bind("click", lambda e, p=pseudo: patch_account_error_callback(e, p))
-            col <= input_patch_account_error
-        row <= col
-
-        col = html.TD()
-        col <= "Accepte"
-        row <= col
-
-        col = html.TD()
-        input_patch_account_refuses = html.BUTTON("Faire refuser", Class='btn-inside')
-        input_patch_account_refuses.bind("click", lambda e, p=pseudo: patch_account_refuses_callback(e, p))
-        col <= input_patch_account_refuses
-        row <= col
-
-        emails_table <= row
-
-    emails_table2 = html.TABLE()
-
-    # header
-    thead = html.THEAD()
-    for field in ['pseudo', 'nom', 'prénom', 'courriel', 'confirmation', 'action', 'publipostage']:
-        col = html.TD(field)
-        thead <= col
-    emails_table2 <= thead
-
     emails_no_list = []
 
     for pseudo, (email, family_name, first_name, status, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
 
-        if newsletter:
-            continue
-
         row = html.TR()
 
         col = html.TD(pseudo)
@@ -489,7 +467,10 @@ def prepare_mailing():
         col = html.TD(first_name)
         row <= col
 
-        emails_no_list.append(email)
+        if newsletter:
+            emails_yes_list.append(email)
+        else:
+            emails_no_list.append(email)
 
         col = html.TD(email)
         if status == 2:
@@ -500,8 +481,8 @@ def prepare_mailing():
 
         col = html.TD()
         if status == 0:
-            emails_unconfirmed_list.append(email)
             col <= "Non confirmé"
+            emails_unconfirmed_list.append(email)
         elif status == 1:
             col <= "Confirmé"
         elif status == 2:
@@ -520,35 +501,44 @@ def prepare_mailing():
         row <= col
 
         col = html.TD()
-        col <= "Refuse"
+        if newsletter:
+            col <= "Accepte"
+        else:
+            col <= "Refuse"
         row <= col
 
-        emails_table2 <= row
+        col = html.TD()
+        if newsletter:
+            input_patch_account_refuses = html.BUTTON("Faire refuser", Class='btn-inside')
+            input_patch_account_refuses.bind("click", lambda e, p=pseudo: patch_account_refuses_callback(e, p))
+            col <= input_patch_account_refuses
+        row <= col
 
-    MY_SUB_PANEL <= html.H4("Pour la gestion")
+        col = html.TD()
+        input_test_account = html.BUTTON("Tester", Class='btn-inside')
+        input_test_account.bind("click", lambda e, pp=pseudo, pe=email: test_account_callback(e, pp, pe))
+        col <= input_test_account
+        row <= col
 
-    input_export_emails = html.INPUT(type="submit", value="Télécharger la liste des courriels non confirmés", Class='btn-inside')
-    input_export_emails.bind("click", download_emails2_callback)
-    MY_SUB_PANEL <= input_export_emails
+        emails_table <= row
 
-    MY_SUB_PANEL <= html.H4("Ceux qui sont d'accord pour recevoir la newletter")
+    MY_SUB_PANEL <= html.H4("Liste complète")
 
     MY_SUB_PANEL <= emails_table
-    MY_SUB_PANEL <= html.BR()
 
-    input_export_emails = html.INPUT(type="submit", value="Télécharger la liste des courriels avec accord", Class='btn-inside')
-    input_export_emails.bind("click", lambda e, y=True: download_emails_callback(e, y))
-    MY_SUB_PANEL <= input_export_emails
+    MY_SUB_PANEL <= html.H4("Gestion")
 
-    MY_SUB_PANEL <= html.H4("Ceux qui ne le sont pas (pour information)")
+    input_export_emails1 = html.INPUT(type="submit", value="Télécharger la liste des courriels avec accord", Class='btn-inside')
+    input_export_emails1.bind("click", lambda e, y=True: download_emails_callback(e, y))
+    MY_SUB_PANEL <= input_export_emails1
 
-    MY_SUB_PANEL <= emails_table2
-    MY_SUB_PANEL <= html.BR()
+    input_export_emails2 = html.INPUT(type="submit", value="Télécharger la liste des courriels sans accord", Class='btn-inside')
+    input_export_emails2.bind("click", lambda e, y=False: download_emails_callback(e, y))
+    MY_SUB_PANEL <= input_export_emails2
 
-    input_export_emails = html.INPUT(type="submit", value="Télécharger la liste des courriels sans accord", Class='btn-inside')
-    input_export_emails.bind("click", lambda e, y=False: download_emails_callback(e, y))
-    MY_SUB_PANEL <= input_export_emails
-
+    input_export_emails3 = html.INPUT(type="submit", value="Télécharger la liste des courriels non confirmés", Class='btn-inside')
+    input_export_emails3.bind("click", download_emails2_callback)
+    MY_SUB_PANEL <= input_export_emails3
 
 def general_announce():
     """ general_announce """
