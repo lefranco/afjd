@@ -28,6 +28,7 @@ import populate
 import players
 import newss
 import moderators
+import blacklisteds
 import creators
 import ratings
 import ratings2
@@ -586,6 +587,12 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if pseudo == COMMUTER_ACCOUNT:
             del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} is commuter")
+
+        # cannot quit if blacklisted
+        blacklisted_ones_list = blacklisteds.Blacklisted.inventory(sql_executor)
+        if pseudo in [m[0] for m in blacklisted_ones_list]:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Player {pseudo} is a blacklisted")
 
         # cannot quit if creator
         creators_list = creators.Creator.inventory(sql_executor)
@@ -1408,6 +1415,7 @@ class ConfirmEmailRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': 'Ok receiving patched confirmed'}
         return data, 200
 
+
 @API.resource('/error-set-email/<pseudo_player>')
 class ErrorSetEmailRessource(flask_restful.Resource):  # type: ignore
     """ ErrorSetEmailRessource """
@@ -1462,6 +1470,86 @@ class ErrorSetEmailRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'msg': 'Ok email unconfirmed'}
+        return data, 200
+
+
+@API.resource('/blacklisteds')
+class BlacklistedListRessource(flask_restful.Resource):  # type: ignore
+    """ BlacklistedListRessource """
+
+    def get(self) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=R0201
+        """
+        Provides list of all blacklisted ones
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/blacklisteds - GET - get getting all blacklisteds")
+
+        sql_executor = database.SqlExecutor()
+        blacklisted_ones_list = blacklisteds.Blacklisted.inventory(sql_executor)
+        del sql_executor
+
+        data = [c[0] for c in blacklisted_ones_list]
+
+        return data, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+        """
+        Creates/Deletes a blacklisted
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/blacklisteds - POST - creating/deleting new blacklisted")
+
+        args = CREATOR_PARSER.parse_args(strict=True)
+        player_pseudo = args['player_pseudo']
+        delete = args['delete']
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        sql_executor = database.SqlExecutor()
+
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
+        if pseudo != admin_pseudo:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to edit the list of blacklisted ones!")
+
+        player = players.Player.find_by_pseudo(sql_executor, player_pseudo)
+
+        if player is None:
+            del sql_executor
+            flask_restful.abort(400, msg=f"Player {player_pseudo} does not exist")
+
+        if not delete:
+            blacklisted = blacklisteds.Blacklisted(player_pseudo)
+            blacklisted.update_database(sql_executor)
+
+            sql_executor.commit()
+            del sql_executor
+
+            data = {'msg': 'Ok blacklisted one updated or created'}
+            return data, 201
+
+        blacklisted = blacklisteds.Blacklisted(player_pseudo)
+        blacklisted.delete_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': 'Ok blacklisted deleted if present'}
         return data, 200
 
 

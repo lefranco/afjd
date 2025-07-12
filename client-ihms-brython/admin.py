@@ -35,6 +35,7 @@ OPTIONS = {
     'Connexions manquées': "Les connexions manquées sur le site",
     'Récupérations demandées': "Les récupérations demandées sur le site",
     'Les non alloués': "Les joueurs dans les parties mais sans rôle",
+    'Editer les blacklistés': "Editer les comptes blacklistés du site",
     'Editer les créateurs': "Editer les comptes créateurs du site",
     'Editer les modérateurs': "Editer les comptes modérateurs du site",
     'Comptes oisifs': "Lister les comptes oisifs pour les avertir ou les supprimer",
@@ -83,6 +84,36 @@ def get_active_data():
     return active_data
 
 
+def get_blacklisted_ones():
+    """ get_blacklisted_ones : returns empty list if problem """
+
+    blacklisted_ones_list = []
+
+    def reply_callback(req):
+        nonlocal blacklisted_ones_list
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des blacklistés : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des blacklistés : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        blacklisted_ones_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/blacklisteds"
+
+    # getting blacklisted list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return blacklisted_ones_list
+
+
 def get_creators():
     """ get_creators : returns empty list if problem """
 
@@ -107,7 +138,7 @@ def get_creators():
     port = config.SERVER_CONFIG['PLAYER']['PORT']
     url = f"{host}:{port}/creators"
 
-    # getting moderators list : no need for token
+    # getting creators list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return creators_list
@@ -1762,6 +1793,170 @@ def unallocated():
     MY_SUB_PANEL <= unallocated_table
 
 
+def edit_blacklisted():
+    """ edit_blacklisted """
+
+    def add_blacklisted_callback(ev):  # pylint: disable=invalid-name
+        """ add_blacklisted_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la mise d'un blacklisté : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la mise d'un blacklisté : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                edit_blacklisted()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.info_go(f"Le joueur a été blacklisté : {messages}")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            edit_blacklisted()
+
+        ev.preventDefault()
+
+        player_pseudo = input_incomer.value
+
+        json_dict = {
+            'player_pseudo': player_pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/blacklisteds"
+
+        # putting a blacklisted : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def remove_blacklisted_callback(ev):  # pylint: disable=invalid-name
+        """remove_blacklisted_callback"""
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au retrait d'un blacklisté : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au retrait d'un blacklisté : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                edit_blacklisted()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.info_go(f"Le joueur n'est plus blacklisté : {messages}")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            edit_blacklisted()
+
+        ev.preventDefault()
+
+        player_pseudo = input_outcomer.value
+
+        json_dict = {
+            'player_pseudo': player_pseudo,
+            'delete': 1
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/blacklisteds"
+
+        # removing a blacklisted : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    MY_SUB_PANEL <= html.H3("Editer les blacklistés")
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    blacklisted_ones_list = get_blacklisted_ones()
+
+    form = html.FORM()
+
+    # ---
+
+    fieldset = html.FIELDSET()
+    legend_incomer = html.LEGEND("Entrant", title="Sélectionner le joueur à blacklister")
+    fieldset <= legend_incomer
+
+    # all players can come in
+    possible_incomers = set(players_dict.keys())
+
+    # not those already in
+    possible_incomers -= set(blacklisted_ones_list)
+
+    input_incomer = html.SELECT(type="select-one", value="", Class='btn-inside')
+    for play_pseudo in sorted(possible_incomers, key=lambda pi: pi.upper()):
+        option = html.OPTION(play_pseudo)
+        input_incomer <= option
+
+    fieldset <= input_incomer
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_put_in_game = html.INPUT(type="submit", value="Mettre dans les blacklistés", Class='btn-inside')
+    input_put_in_game.bind("click", add_blacklisted_callback)
+    form <= input_put_in_game
+
+    form <= html.BR()
+    form <= html.BR()
+
+    # ---
+
+    fieldset = html.FIELDSET()
+    fieldset <= html.LEGEND("Sont blacklistés : ")
+    fieldset <= html.DIV(" ".join(sorted(list(set(blacklisted_ones_list)), key=lambda p: p.upper())), Class='note')
+    form <= fieldset
+
+    # ---
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_outcomer = html.LEGEND("Sortant", title="Sélectionner le joueur à ne plus blacklister")
+    fieldset <= legend_outcomer
+
+    # players can come out are the ones not assigned
+    possible_outcomers = blacklisted_ones_list
+
+    input_outcomer = html.SELECT(type="select-one", value="", Class='btn-inside')
+    for play_pseudo in sorted(possible_outcomers):
+        option = html.OPTION(play_pseudo)
+        input_outcomer <= option
+
+    fieldset <= input_outcomer
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_remove_from_game = html.INPUT(type="submit", value="Retirer des blacklistés", Class='btn-inside')
+    input_remove_from_game.bind("click", remove_blacklisted_callback)
+    form <= input_remove_from_game
+
+    MY_SUB_PANEL <= form
+
+
 def edit_creators():
     """ edit_creators """
 
@@ -1805,7 +2000,7 @@ def edit_creators():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/creators"
 
-        # putting a moderator : need token
+        # putting a creator : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def remove_creator_callback(ev):  # pylint: disable=invalid-name
@@ -1848,7 +2043,7 @@ def edit_creators():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/creators"
 
-        # removing a moderator : need token
+        # removing a creator : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     MY_SUB_PANEL <= html.H3("Editer les modérateurs")
@@ -2542,6 +2737,8 @@ def load_option(_, item_name):
         last_rescues()
     if item_name == 'Les non alloués':
         unallocated()
+    if item_name == 'Editer les blacklistés':
+        edit_blacklisted()
     if item_name == 'Editer les créateurs':
         edit_creators()
     if item_name == 'Editer les modérateurs':
