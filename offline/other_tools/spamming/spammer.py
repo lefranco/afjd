@@ -21,7 +21,7 @@ import flask_mail  # type: ignore
 INTERVAL = 5
 
 # mailing suject
-SUBJECT = "Petit message très probablement inutile !"
+SUBJECT = "Petit message très probablemenrt inutile !"
 
 # mailing body
 BODY = """
@@ -39,7 +39,8 @@ Le but de ce message :
 """
 
 # mailing official sender
-SENDER = "afjd@welpro.biz"
+#SENDER = "afjd@welpro.biz"
+SENDER="afjd_serveur_jeu@diplomania-gen.fr"
 
 # mailing real sender
 REPLY_TO = "jeremie.lefrancois@gmail.com"
