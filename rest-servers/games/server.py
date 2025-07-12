@@ -1431,7 +1431,7 @@ class GameSelectListRessource(flask_restful.Resource):  # type: ignore
 
         try:
             selection_list = list(map(int, selection_submitted.split()))
-        except:  # pylint: disable=bare-except
+        except:  # pylint: disable=bare-except # noqa: E722
             flask_restful.abort(400, msg="Bad selection. Use a space separated list of numbers")
 
         sql_executor = database.SqlExecutor()
@@ -1607,10 +1607,6 @@ class UnAllocationListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-# These people may not join games
-OUTCASTS: typing.List[str] = []
-
-
 @API.resource('/allocations')
 class AllocationListRessource(flask_restful.Resource):  # type: ignore
     """ AllocationListRessource """
@@ -1735,9 +1731,28 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         if not delete:
 
-            if pseudo in OUTCASTS:
-                del sql_executor
-                flask_restful.abort(400, msg="Error not allowed to join games")
+            # check not blacklisted
+            # get blacklisted ones list
+            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/blacklisteds"
+            req_result = SESSION.get(url)
+            if req_result.status_code != 200:
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                flask_restful.abort(404, msg=f"Failed to get list of blacklisted ones {message}")
+            the_blacklisted_ones = req_result.json()
+
+            # check pseudo not in blacklisted list
+            if user_id == game_master_id:
+                # game master is putting a player in
+                if player_pseudo in the_blacklisted_ones:
+                    del sql_executor
+                    flask_restful.abort(400, msg=f"This player '{player_pseudo}' seems to be blacklisted. Please contact site administrator !")
+            if user_id == player_id:
+                # player is joining a game
+                if pseudo in the_blacklisted_ones:
+                    del sql_executor
+                    flask_restful.abort(400, msg=f"You ('{player_pseudo}') seem to be blacklisted. Please contact site administrator !")
 
             # put in game
             # cannot fail
@@ -5005,7 +5020,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # get destinees
         try:
             dest_role_ids = list(map(int, dest_role_ids_submitted.split()))
-        except:  # pylint: disable=bare-except
+        except:  # pylint: disable=bare-except  # noqa: E722
             del sql_executor
             flask_restful.abort(400, msg="Bad list of addresses identifiers. Use a space separated list of numbers")
 
@@ -7745,8 +7760,8 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # check moderator rights
-        # get moderator list
+        # check creator rights
+        # get creator list
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/creators"
