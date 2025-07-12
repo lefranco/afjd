@@ -280,7 +280,7 @@ def prepare_mailing():
         download_link.href = window.URL.createObjectURL(text_file_as_blob)
         document['download_link'].click()
 
-    def download_emails2_callback(ev):  # pylint: disable=invalid-name
+    def download_emails2_callback(ev, error):  # pylint: disable=invalid-name
 
         ev.preventDefault()
 
@@ -288,9 +288,9 @@ def prepare_mailing():
         MY_SUB_PANEL <= html.A(id='download_link')
 
         # perform actual exportation
-        text_file_as_blob = window.Blob.new(['\n'.join(emails_unconfirmed_list)], {'type': 'text/plain'})
+        text_file_as_blob = window.Blob.new(['\n'.join(emails_error_list if error else emails_unconfirmed_list)], {'type': 'text/plain'})
         download_link = document['download_link']
-        download_link.download = "emails_unconfirmed_for_mailing.txt"
+        download_link.download = "emails_error_for_mailing.txt" if error else "emails_unconfirmed_for_mailing.txt"
         download_link.href = window.URL.createObjectURL(text_file_as_blob)
         document['download_link'].click()
 
@@ -450,6 +450,7 @@ def prepare_mailing():
         thead <= col
     emails_table <= thead
 
+    emails_error_list = []
     emails_unconfirmed_list = []
     emails_yes_list = []
     emails_no_list = []
@@ -467,10 +468,11 @@ def prepare_mailing():
         col = html.TD(first_name)
         row <= col
 
-        if newsletter:
-            emails_yes_list.append(email)
-        else:
-            emails_no_list.append(email)
+        if status != 2:
+            if newsletter:
+                emails_yes_list.append(email)
+            else:
+                emails_no_list.append(email)
 
         col = html.TD(email)
         if status == 2:
@@ -487,6 +489,7 @@ def prepare_mailing():
             col <= "Confirmé"
         elif status == 2:
             col <= "En erreur"
+            emails_error_list.append(email)
         row <= col
 
         col = html.TD()
@@ -528,17 +531,28 @@ def prepare_mailing():
 
     MY_SUB_PANEL <= html.H4("Gestion")
 
-    input_export_emails1 = html.INPUT(type="submit", value="Télécharger la liste des courriels avec accord", Class='btn-inside')
+    input_export_emails1 = html.INPUT(type="submit", value="Télécharger la liste des courriels avec accord (pas en erreur)", Class='btn-inside')
     input_export_emails1.bind("click", lambda e, y=True: download_emails_callback(e, y))
     MY_SUB_PANEL <= input_export_emails1
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
-    input_export_emails2 = html.INPUT(type="submit", value="Télécharger la liste des courriels sans accord", Class='btn-inside')
+    input_export_emails2 = html.INPUT(type="submit", value="Télécharger la liste des courriels sans accord (pas en erreur)", Class='btn-inside')
     input_export_emails2.bind("click", lambda e, y=False: download_emails_callback(e, y))
     MY_SUB_PANEL <= input_export_emails2
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
-    input_export_emails3 = html.INPUT(type="submit", value="Télécharger la liste des courriels non confirmés", Class='btn-inside')
-    input_export_emails3.bind("click", download_emails2_callback)
+    input_export_emails3 = html.INPUT(type="submit", value="Télécharger la liste des courriels en erreur", Class='btn-inside')
+    input_export_emails3.bind("click", lambda e, ee=True: download_emails2_callback(e, ee))
     MY_SUB_PANEL <= input_export_emails3
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    input_export_emails4 = html.INPUT(type="submit", value="Télécharger la liste des courriels non confirmés", Class='btn-inside')
+    input_export_emails4.bind("click", lambda e, ee=False: download_emails2_callback(e, ee))
+    MY_SUB_PANEL <= input_export_emails4
+
 
 def general_announce():
     """ general_announce """
