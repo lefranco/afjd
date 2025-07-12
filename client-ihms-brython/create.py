@@ -544,6 +544,12 @@ def create_many_games():
                     alert(f"La partie {game_name} est identique à une précédente")
                     return
 
+                # check for blacklisted players
+                for checked_player in players_dict.values():
+                    if checked_player in blacklisted_ones_list:
+                        alert(f"La partie {game_name} comporte un joueur blacklisté '{checked_player}'")
+                        return
+
                 # create dictionnary
                 games_to_create[game_name] = players_dict
 
@@ -597,6 +603,8 @@ def create_many_games():
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
+
+    blacklisted_ones_list = common.get_blacklisted_ones()
 
     if not WARNED:
 
