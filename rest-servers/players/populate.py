@@ -10,6 +10,7 @@ Data : populate database
 import mylogger
 import newss
 import moderators
+import blacklisteds
 import creators
 import players
 import ratings
@@ -44,6 +45,12 @@ def populate_moderators(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
 
     moderators.Moderator.create_table(sql_executor)
+
+
+def populate_blacklisteds(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+
+    blacklisteds.Blacklisted.create_table(sql_executor)
 
 
 def populate_creators(sql_executor: database.SqlExecutor) -> None:
@@ -136,6 +143,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_newss(sql_executor)
     populate_players(sql_executor)
     populate_moderators(sql_executor)
+    populate_blacklisteds(sql_executor)
     populate_creators(sql_executor)
     populate_ratings(sql_executor)
     populate_ratings2(sql_executor)
