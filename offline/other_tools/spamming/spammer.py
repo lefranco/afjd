@@ -18,21 +18,22 @@ import flask
 import flask_mail  # type: ignore
 
 
-INTERVAL = 1
+INTERVAL = 5
 
 # mailing suject
-SUBJECT = "Petit message inutile ou pas !"
+SUBJECT = "Petit message très probablement inutile !"
 
 # mailing body
 BODY = """
 Vous recevez ce message parce que cette adresse est liée à un commpte sur le site :
 https://diplomania-gen.fr
-L'adresse courriel du compte n'est pas confirmée.
+L'adresse courriel du compte n'est pas en erreur.
+Le site a rencontré beaucoup de souci recemment, d'ou la nécessité de ce petit test.
 Le but de ce message :
  - retour en erreur => l'adresse sera marquée en erreur dans le site, vous devrez changer votre adresse pour continuer à jouer éventuellement
- - réponse courte de votre part du style "ou c'est bien moi je compte jouer à diplomacy" => l'adresse sera marquée confirmée par opération manuelle
  - autrement : statu quo.
- Voila !
+ Ignorez ce message de test
+ Désolé
  Amicalement
 
 """
