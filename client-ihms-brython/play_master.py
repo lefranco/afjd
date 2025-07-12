@@ -2050,6 +2050,9 @@ def game_master():
     ############################################
     play_low.MY_SUB_PANEL <= html.H3("Existence de la partie")
 
+    play_low.MY_SUB_PANEL <= html.DIV("Si la partie est dans un tournoi, contacter le responsable du tournoi pour enlever la partie du tournoi préalablement à sa suppression.", Class='note')
+    play_low.MY_SUB_PANEL <= html.BR()
+
     form = html.FORM()
 
     input_delete_game = html.INPUT(type="submit", value="Supprimer la partie", Class='btn-inside')
