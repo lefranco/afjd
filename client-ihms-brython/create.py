@@ -941,6 +941,10 @@ def show_game_quitters():
 
     MY_SUB_PANEL <= html.H3("Les joueurs qui ont abandonné une partie")
 
+    MY_SUB_PANEL <= html.DIV("Eb gras les joueeurs blacklistés", Class='note')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
     # get the games
     games_dict = common.get_games_data(0, 3)  # all games
     if games_dict is None:
@@ -958,6 +962,9 @@ def show_game_quitters():
     quitters_data = get_quitters_data()
     # there can be no quitters
 
+    # get the blacklisted
+    blacklisted_ones_list = common.get_blacklisted_ones()
+
     game_quitters_table = html.TABLE()
 
     fields = ['player', 'game', 'date']
@@ -974,8 +981,12 @@ def show_game_quitters():
 
         row = html.TR()
 
+        col = html.TD()
         player_name = players_dict[str(player_id)]['pseudo']
-        col = html.TD(player_name)
+        if player_name in blacklisted_ones_list:
+            col <= html.B(player_name)
+        else:
+            col <= player_name
         row <= col
 
         game_name = games_dict[str(game_id)]['name']
