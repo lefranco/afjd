@@ -39,8 +39,8 @@ Le but de ce message :
 """
 
 # mailing official sender
-#SENDER = "afjd@welpro.biz"
-SENDER="afjd_serveur_jeu@diplomania-gen.fr"
+SENDER = "afjd@welpro.biz"
+#SENDER="afjd_serveur_jeu@diplomania-gen.fr"
 
 # mailing real sender
 REPLY_TO = "jeremie.lefrancois@gmail.com"
