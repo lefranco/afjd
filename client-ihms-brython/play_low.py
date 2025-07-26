@@ -1097,6 +1097,9 @@ def get_game_status():
 
     advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
     nb_max_cycles_to_play = GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
+    arriving = False
+    if advancement_loaded > (nb_max_cycles_to_play - 1) * 5 - 1:
+        arriving = True
     game_season = common.get_full_season(advancement_loaded, VARIANT_DATA, nb_max_cycles_to_play, True)
 
     deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
@@ -1133,6 +1136,10 @@ def get_game_status():
 
     # season
     col = html.TD(f"Saison {game_season}")
+    if arriving:
+        col.style = {
+            'background-color': config.LAST_YEAR
+        }
     row <= col
 
     global DEADLINE_COL
