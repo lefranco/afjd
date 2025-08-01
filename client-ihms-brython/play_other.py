@@ -770,6 +770,7 @@ def show_informations():
     # conversion
     game_type_conv = {v: k for k, v in config.GAME_TYPES_CODE_TABLE.items()}
     force_wait_conv = {-1: 'Maintenant', 0: 'Pas de forçage', 1: 'A la date limite'}
+    role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
     game_params_table = html.TABLE()
 
@@ -950,8 +951,18 @@ def show_informations():
 
         # pseudo
         col = html.TD()
-        pseudo_quitter = play_low.ID2PSEUDO[player_id]
-        col <= pseudo_quitter
+
+        if player_id in play_low.ID2PSEUDO:
+            pseudo_quitter = play_low.ID2PSEUDO[player_id]
+            player_id_current = None
+            if role_id in role2pseudo:
+                player_id_str = role2pseudo[role_id]
+                player_id_current = int(player_id_str)
+            if player_id == player_id_current:
+                col <= pseudo_quitter
+            else:
+                col <= html.I(html.SMALL(pseudo_quitter))
+
         row <= col
 
         # date
@@ -969,7 +980,12 @@ def show_informations():
     play_low.MY_SUB_PANEL <= html.H4("Retards")
 
     # get the actual incidents of the game
-    game_incidents = play_low.game_incidents_reload(play_low.GAME_ID)
+    if play_low.ROLE_ID == 0:
+        # game master  gets a better picture
+        game_incidents = play_low.game_master_incidents_reload(play_low.GAME_ID)
+    else:
+        # others have None for player_id if anonymous
+        game_incidents = play_low.game_incidents_reload(play_low.GAME_ID)
     # there can be no incidents (if no incident of failed to load)
 
     game_incidents_table = html.TABLE()
@@ -1007,8 +1023,16 @@ def show_informations():
 
         # pseudo
         col = html.TD()
-        if player_id is not None:
-            col <= play_low.ID2PSEUDO[player_id]
+        if player_id in play_low.ID2PSEUDO:
+            pseudo_quitter = play_low.ID2PSEUDO[player_id]
+            player_id_current = None
+            if role_id in role2pseudo:
+                player_id_str = role2pseudo[role_id]
+                player_id_current = int(player_id_str)
+            if player_id == player_id_current:
+                col <= pseudo_quitter
+            else:
+                col <= html.I(html.SMALL(pseudo_quitter))
         row <= col
 
         # season
@@ -1035,6 +1059,8 @@ def show_informations():
     count = {}
 
     for role_id, advancement, player_id, duration, _ in game_incidents:
+        if player_id is None:
+            continue
         if role_id not in count:
             count[role_id] = []
         count[role_id].append(duration)
@@ -1043,7 +1069,7 @@ def show_informations():
 
     # header
     thead = html.THEAD()
-    for field in ['rang', 'role', 'pseudo', 'retards', 'nombre', 'ratio']:
+    for field in ['rang', 'role', 'pseudo', 'retards', 'nombre', 'cumul', 'ratio']:
         col = html.TD(field)
         thead <= col
     recap_table <= thead
@@ -1082,6 +1108,11 @@ def show_informations():
         # incidents number
         incidents_number = len(count.get(role_id, []))
         col = html.TD(f"{incidents_number}")
+        row <= col
+
+        # incidents total
+        incidents_total = sum(count.get(role_id, []))
+        col = html.TD(f"{incidents_total}")
         row <= col
 
         # ratio
