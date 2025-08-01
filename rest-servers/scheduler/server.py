@@ -34,6 +34,7 @@ import archiver_scheduler
 import forgiver_scheduler
 import warner_scheduler
 import extracter_scheduler
+import mailchecker_scheduler
 
 SESSION = requests.Session()
 
@@ -425,6 +426,14 @@ def acting_threaded_procedure() -> None:
                     extracter_scheduler.run(jwt_token, client_id, client_secret)
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Extracter, stack is below")
+                    mylogger.LOGGER.error("%s", traceback.format_exc())
+
+            if hour_now == 7:
+                mylogger.LOGGER.info("Mailchecker Scheduler...")
+                try:
+                    mailchecker_scheduler.run()
+                except:  # noqa: E722 pylint: disable=bare-except
+                    mylogger.LOGGER.error("Exception occured with Mailchecker, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 12:
