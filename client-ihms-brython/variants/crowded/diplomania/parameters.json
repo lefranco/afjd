@@ -446,7 +446,8 @@
             "x_pos": 469,
             "y_pos": 182,
             "x_legend_pos": 469,
-            "y_legend_pos": 168
+            "y_legend_pos": 168,
+            "display": 6
         },
         "25": {
             "name": "Gal",
