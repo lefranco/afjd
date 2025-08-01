@@ -24,7 +24,7 @@ SUPERVISE_REFRESH_TIMER = None
 
 HELP_CONTENT_TABLE = {
 
-    "Comment changer des joueurs ?": "1) retirer le rôle au partant 2) retirer de la partie sélectionnée le partant 3) mettre dans la partie sélectionnée l'arrivant 4) attribuer le role à l'arrivant",
+    "Comment changer des joueurs ?": "1) retirer le rôle au partant 2) retirer de la partie sélectionnée le partant 3) mettre dans la partie sélectionnée l'arrivant 4) attribuer le rôle à l'arrivant",
     "Comment bénéficier du bouton permettant de contacter tous les remplaçants ?": "1) et 2) ci-dessus",
     "Comment forcer la fin de la partie (un joueur tarde à entrer une retraite sans importance) ?": "1) Rectifier le paramètre pour mettre la partie en DC autorisé pour cette saison (si besoin) 2) mettre la DL à maintenant 3) forcer un DC pour ce joueur 4) Annuler la première action (car la partie a été jouée sans DC)",
     "Comment annuler toute mauvaise manipulation (dont la mise du vote de fin de la partie) ?": "Contacter l'administrateur",
@@ -88,6 +88,22 @@ def information_about_distinguish_game2():
 
     information = html.DIV(Class='important')
     information <= "Une partie archivée ne doit être distinguée que si elle est copie d'une partie jouée ailleurs."
+    return information
+
+
+def information_about_debrief_game():
+    """ information_about_debrief_game """
+
+    information = html.DIV(Class='important')
+    information <= "Cette partie anonyme est terminée mais pas archivée."
+    information <= html.BR()
+    information <= "Le canal de messagerie de presse a été automatiquement ouvert pour le debrief."
+    information <= html.BR()
+    information <= "Toutefois, pour rendre son archivage automatique possible (ou pour que les joueurs se connaissent), il reste à lever l'anonymat..."
+    information <= html.BR()
+    information <= "Pour ce faire, utiliser le bouton 'Rectifier les paramètres'."
+    information <= html.BR()
+    information <= "(Si la partie est dans un tournoi anonyme cette attente est tout à fait légitime)."
     return information
 
 
@@ -2037,6 +2053,14 @@ def game_master():
         form <= input_undistinguish_game
 
     play_low.MY_SUB_PANEL <= form
+
+    ############################################
+    if play_low.GAME_PARAMETERS_LOADED['current_state'] == 1:
+        if play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']:
+            if play_low.GAME_PARAMETERS_LOADED['anonymous']:
+
+                play_low.MY_SUB_PANEL <= html.H3("Debrief de la partie")
+                play_low.MY_SUB_PANEL <= information_about_debrief_game()
 
     ############################################
     play_low.MY_SUB_PANEL <= html.H3("Démission de l'arbitrage")
