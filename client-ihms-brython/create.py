@@ -941,7 +941,7 @@ def show_game_quitters():
 
     MY_SUB_PANEL <= html.H3("Les joueurs qui ont abandonné une partie")
 
-    MY_SUB_PANEL <= html.DIV("Eb gras les joueeurs blacklistés", Class='note')
+    MY_SUB_PANEL <= html.DIV("En gras les joueurs blacklistés", Class='note')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
