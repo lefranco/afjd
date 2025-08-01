@@ -1059,7 +1059,14 @@ def show_informations():
     count = {}
 
     for role_id, advancement, player_id, duration, _ in game_incidents:
-        if player_id is None:
+        if player_id not in play_low.ID2PSEUDO:
+            continue
+        pseudo_quitter = play_low.ID2PSEUDO[player_id]
+        player_id_current = None
+        if role_id in role2pseudo:
+            player_id_str = role2pseudo[role_id]
+            player_id_current = int(player_id_str)
+        if player_id != player_id_current:
             continue
         if role_id not in count:
             count[role_id] = []
