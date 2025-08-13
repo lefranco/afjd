@@ -7664,6 +7664,10 @@ class ArchiveFinishedGamesRessource(flask_restful.Resource):  # type: ignore
             if game.nopress_current:
                 continue
 
+            # must not be anonymous
+            if game.anonymous:
+                continue
+
             # ok so now let's really consider the game
 
             game_id = game.identifier
