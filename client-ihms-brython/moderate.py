@@ -1052,6 +1052,9 @@ def all_missing_orders():
         alert("Erreur chargement des ordres manquants dans les parties")
         return
 
+    # TODO : put back for debug ;-)
+    # print(f"{dict_missing_orders_data=}")
+
     delays_table = html.TABLE()
 
     # the display order
@@ -1150,8 +1153,9 @@ def all_missing_orders():
                     role_name = variant_data.role_name_table[role]
                     role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
                     value <= role_icon_img
-                    value <= " "
-                    value <= num2pseudo[player_id]
+                    if player_id != -1:
+                        value <= " "
+                        value <= num2pseudo[player_id]
                     value <= html.BR()
 
             if field == 'deadline':
