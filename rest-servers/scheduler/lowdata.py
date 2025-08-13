@@ -63,6 +63,7 @@ INTERFACE_TABLE = {
     'crowded': ['diplomania'],
     'coldwar': ['diplomania'],
     'coldwar_redux': ['diplomania'],
+    'v1900': ['diplomania'],
     'spiceislands': ['diplomania'],
     'crepusculerome': ['diplomania'],
     'chaos': ['diplomania'],
