@@ -11,6 +11,7 @@ import collections
 
 
 SUBMISSION_FILE = './logdir/orders.log'
+MASTERS_ACTIONS_FILE = './logdir/masters_actions.log'
 
 
 class ConfigFile:

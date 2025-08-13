@@ -60,6 +60,7 @@ import dropouts
 import replacements
 import exporter
 import orders_logger
+import masters_actions_logger
 
 SESSION = requests.Session()
 
@@ -625,6 +626,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         # keep a note of game state before
         current_state_before = game.current_state
+        anonymous_before = game.anonymous
 
         assert game is not None
         changed = game.load_json(args)
@@ -719,6 +721,8 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                         del sql_executor
                         flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
+                    masters_actions_logger.LOGGER.info("%s STARTED GAME %s", pseudo, game.name)
+
             elif current_state_before == 1 and game.current_state == 2:
 
                 # ----
@@ -771,13 +775,15 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                         del sql_executor
                         flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
+                    masters_actions_logger.LOGGER.info("%s ARCHIVED GAME %s", pseudo, game.name)
+
             elif current_state_before == 0 and game.current_state == 3:
                 # ----
                 # we are distinguishing a waiting game
                 # ----
 
                 # nothing to do actually
-                pass
+                masters_actions_logger.LOGGER.info("%s DISTINGUISHED GAME %s (was waiting)", pseudo, game.name)
 
             elif current_state_before == 2 and game.current_state == 3:
 
@@ -785,8 +791,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 # we are distinguishing a archived  game
                 # ----
 
-                # nothing to do actually
-                pass
+                masters_actions_logger.LOGGER.info("%s DISTINGUISHED GAME %s (was archived)", pseudo, game.name)
 
             elif current_state_before == 3 and game.current_state == 2:
 
@@ -794,13 +799,15 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 # we are undistinguishing the game
                 # ----
 
-                # nothing to do actually
-                pass
+                masters_actions_logger.LOGGER.info("%s UNDISTINGUISHED GAME %s", pseudo, game.name)
 
             else:
                 data = {'name': name, 'msg': 'Transition not allowed'}
                 del sql_executor
                 return data, 400
+
+        if game.anonymous != anonymous_before:
+            masters_actions_logger.LOGGER.info("%s CHANGED ANONIMITY OF %s TO %d", pseudo, game.name, game.anonymous)
 
         game.update_database(sql_executor)
         sql_executor.commit()
@@ -1052,17 +1059,17 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
         if current_state_before == 1 and game.current_state == 0:
             # ongoing to waiting
             # nothing to do
-            pass
+            masters_actions_logger.LOGGER.info("%s (admin) CHANGED STATE OF %s TO %d", pseudo, game.name, game.current_state)
 
         elif current_state_before == 2 and game.current_state == 1:
             # archived to ongoing
             # nothing to do
-            pass
+            masters_actions_logger.LOGGER.info("%s (admin) CHANGED STATE OF %s TO %d", pseudo, game.name, game.current_state)
 
         elif current_state_before == 2 and game.current_state == 0:
             # archived to waiting
             # nothing to do
-            pass
+            masters_actions_logger.LOGGER.info("%s (admin) CHANGED STATE OF %s TO %d", pseudo, game.name, game.current_state)
 
         elif current_state_before != game.current_state:
             # rejected
@@ -7627,7 +7634,7 @@ class ArchiveFinishedGamesRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         if pseudo != COMMUTER_ACCOUNT:
-            flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to archiove old games")
+            flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to archive finished games")
 
         sql_executor = database.SqlExecutor()
         games_list = games.Game.inventory(sql_executor)
@@ -7724,6 +7731,8 @@ class ArchiveFinishedGamesRessource(flask_restful.Resource):  # type: ignore
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                 del sql_executor
                 flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+            masters_actions_logger.LOGGER.info("%s (commuter) ARCHIVED %s", pseudo, game.name)
 
         sql_executor.commit()
 
@@ -8680,10 +8689,36 @@ class AccessSubmissionLogsRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/access-logs - GET - accessing submission logs lines=%s", lines)
+        mylogger.LOGGER.info("/access-submission-logs - GET - accessing submission logs lines=%s", lines)
 
         # extract from log file
         with open(lowdata.SUBMISSION_FILE, encoding='UTF-8') as file:
+            log_lines = file.readlines()
+
+        # remove trailing '\n'
+        log_lines = [ll.rstrip('\n') for ll in log_lines]
+
+        # take only last part
+        log_lines = log_lines[- int(lines):]
+
+        data = log_lines
+        return data, 200
+
+
+@API.resource('/access-masters-actions-logs/<lines>')
+class AccessMasterActionLogsRessource(flask_restful.Resource):  # type: ignore
+    """ AccessSubmissioAccessMasterActionLogsRessourcenLogsRessource """
+
+    def get(self, lines: int) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=R0201
+        """
+        Simply return logs content
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/access-masters-actions-logs - GET - accessing masters actions logs lines=%s", lines)
+
+        # extract from log file
+        with open(lowdata.MASTERS_ACTIONS_FILE, encoding='UTF-8') as file:
             log_lines = file.readlines()
 
         # remove trailing '\n'
@@ -8910,7 +8945,7 @@ class WarnDeadlinePlayersGameRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         if pseudo != COMMUTER_ACCOUNT:
-            flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to scold late player")
+            flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to warn players of incoming deadline")
 
         sql_executor = database.SqlExecutor()
 
@@ -9263,6 +9298,7 @@ def main() -> None:
     lowdata.load_servers_config()
 
     orders_logger.start_logger('orders')
+    masters_actions_logger.start_logger('masters_actions')
 
     # emergency
     if not database.db_present():
