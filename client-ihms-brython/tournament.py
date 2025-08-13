@@ -185,12 +185,12 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'game_type', 'synchronize']
+    fields = ['name', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'anonymous', 'game_type', 'synchronize']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'presse', 'nomessage_current': 'messagerie', 'game_type': 'type de partie', 'synchronize': 'synchroniser'}[field]
+        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_current': 'presse', 'nomessage_current': 'messagerie', 'anonymous': 'anonyme', 'game_type': 'type de partie', 'synchronize': 'synchroniser'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -198,7 +198,7 @@ def show_games():
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'game_type']:
+        if field in ['name', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_current', 'nomessage_current', 'anonymous', 'game_type']:
 
             if field == 'name':
 
@@ -260,6 +260,8 @@ def show_games():
         def key_function(g): return int(g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nomessage_current':
         def key_function(g): return int(g[1]['nomessage_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'anonymous':
+        def key_function(g): return int(g[1]['anonymous'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'game_type':
         def key_function(g): return int(g[1]['game_type'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'deadline':
@@ -459,6 +461,11 @@ def show_games():
             if field == 'nomessage_current':
                 explanation = "Indique si les joueurs peuvent actuellement utiliser la messagerie privée"
                 stats = "Non" if data['nomessage_current'] else "Oui"
+                value = html.DIV(stats, title=explanation)
+
+            if field == 'anonymous':
+                explanation = "Indique si les joueurs sont actuellement anonymes"
+                stats = "Oui" if data['anonymous'] else "Non"
                 value = html.DIV(stats, title=explanation)
 
             if field == 'game_type':
