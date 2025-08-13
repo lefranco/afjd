@@ -46,6 +46,7 @@ VARIANT_NAMES_DICT = {
     'coldwar_redux': 4,
     'mediterranee': 5,
     'egeemonie': 6,
+    'v1900': 7,
     'spiceislands': 7,
     'crepusculerome': 8,
     'successionautriche': 9,
