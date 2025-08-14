@@ -63,16 +63,16 @@
             "adjective_name": "britannique",
             "letter_name": "B",
             "red": [
-                50,
-                70
+                60,
+                80
             ],
             "green": [
-                30,
-                50
+                40,
+                60
             ],
             "blue": [
                 168,
-                188
+                178
             ]
         },
         "3": {
@@ -84,12 +84,12 @@
                 10
             ],
             "green": [
-                118,
-                138
+                128,
+                148
             ],
             "blue": [
-                208,
-                228
+                218,
+                238
             ]
         },
         "4": {
@@ -97,15 +97,15 @@
             "adjective_name": "allemand",
             "letter_name": "G",
             "red": [
-                40,
+                20,
                 60
             ],
             "green": [
-                40,
+                20,
                 60
             ],
             "blue": [
-                40,
+                20,
                 60
             ]
         },
@@ -132,15 +132,15 @@
             "letter_name": "R",
             "red": [
                 75,
-                95
+                105
             ],
             "green": [
                 107,
-                127
+                137
             ],
             "blue": [
                 47,
-                57
+                77
             ]
         },
         "7": {
@@ -148,16 +148,16 @@
             "adjective_name": "turc",
             "letter_name": "T",
             "red": [
-                235,
-                255
+                185,
+                205
             ],
             "green": [
-                20,
-                0
+                70,
+                50
             ],
             "blue": [
-                20,
-                0
+                70,
+                50
             ]
         }
     },
@@ -276,8 +276,8 @@
         "12": {
             "name": "Ber",
             "full_name": "Berlin",
-            "x_pos": 471,
-            "y_pos": 389,
+            "x_pos": 467,
+            "y_pos": 397,
             "x_legend_pos": 496,
             "y_legend_pos": 378,
             "display": 4
