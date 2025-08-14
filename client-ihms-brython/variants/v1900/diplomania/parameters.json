@@ -181,24 +181,24 @@
     },
     "zones": {
         "1": {
-            "name": "AFG",
-            "full_name": "Afghanistan",
+            "name": "ADR",
+            "full_name": "Mer Adriatique",
             "x_pos": 532,
             "y_pos": 584,
             "x_legend_pos": 525,
             "y_legend_pos": 571
         },
         "2": {
-            "name": "AKI",
-            "full_name": "Akita",
+            "name": "EGE",
+            "full_name": "Mer Égée",
             "x_pos": 644,
             "y_pos": 680,
             "x_legend_pos": 644,
             "y_legend_pos": 666
         },
         "3": {
-            "name": "AMU",
-            "full_name": "Amur",
+            "name": "Alg",
+            "full_name": "Algérie",
             "x_pos": 332,
             "y_pos": 711,
             "x_legend_pos": 332,
@@ -206,8 +206,8 @@
             "display": 3
         },
         "4": {
-            "name": "ARA",
-            "full_name": "Arabia",
+            "name": "Als",
+            "full_name": "Alsace",
             "x_pos": 409,
             "y_pos": 455,
             "x_legend_pos": 399,
@@ -215,8 +215,8 @@
             "display": 4
         },
         "5": {
-            "name": "ARM ",
-            "full_name": "Armenia",
+            "name": "Ank",
+            "full_name": "Ankara",
             "x_pos": 770,
             "y_pos": 578,
             "x_legend_pos": 770,
@@ -224,8 +224,8 @@
             "display": 7
         },
         "6": {
-            "name": "ASE",
-            "full_name": "Arabian Sea",
+            "name": "Apu",
+            "full_name": "Apulie",
             "x_pos": 488,
             "y_pos": 575,
             "x_legend_pos": 506,
@@ -233,16 +233,16 @@
             "display": 5
         },
         "7": {
-            "name": "ASM",
-            "full_name": "Assam",
+            "name": "Ara",
+            "full_name": "Arabie",
             "x_pos": 872,
             "y_pos": 711,
             "x_legend_pos": 872,
             "y_legend_pos": 697
         },
         "8": {
-            "name": "BAG",
-            "full_name": "Baghdad",
+            "name": "Arm",
+            "full_name": "Arménie",
             "x_pos": 862,
             "y_pos": 587,
             "x_legend_pos": 862,
@@ -251,31 +251,31 @@
         },
         "9": {
             "name": "BAL",
-            "full_name": "Baluchistan",
+            "full_name": "Mer Baltique",
             "x_pos": 541,
             "y_pos": 329,
             "x_legend_pos": 541,
             "y_legend_pos": 315
         },
         "10": {
-            "name": "BAN",
-            "full_name": "Banda Sea",
+            "name": "BAR",
+            "full_name": "Mer de Barents",
             "x_pos": 665,
             "y_pos": 32,
             "x_legend_pos": 665,
             "y_legend_pos": 18
         },
         "11": {
-            "name": "BLA",
-            "full_name": "Black Sea",
+            "name": "Bel",
+            "full_name": "Belgique",
             "x_pos": 380,
             "y_pos": 410,
             "x_legend_pos": 362,
             "y_legend_pos": 399
         },
         "12": {
-            "name": "BOB",
-            "full_name": "Bay of Bengal",
+            "name": "Ber",
+            "full_name": "Berlin",
             "x_pos": 467,
             "y_pos": 397,
             "x_legend_pos": 496,
@@ -283,16 +283,16 @@
             "display": 4
         },
         "13": {
-            "name": "BOM",
-            "full_name": "Bombay",
+            "name": "NOI",
+            "full_name": "Mer Noire",
             "x_pos": 722,
             "y_pos": 540,
             "x_legend_pos": 722,
             "y_legend_pos": 526
         },
         "14": {
-            "name": "BOR",
-            "full_name": "Borneo",
+            "name": "Boh",
+            "full_name": "Bohème",
             "x_pos": 493,
             "y_pos": 435,
             "x_legend_pos": 497,
@@ -300,8 +300,8 @@
             "display": 1
         },
         "15": {
-            "name": "BUL",
-            "full_name": "Bulgaria",
+            "name": "Bos",
+            "full_name": "Bosnie",
             "x_pos": 539,
             "y_pos": 543,
             "x_legend_pos": 544,
@@ -309,8 +309,8 @@
             "display": 1
         },
         "16": {
-            "name": "BUR",
-            "full_name": "Burma",
+            "name": "Bre",
+            "full_name": "Brest",
             "x_pos": 312,
             "y_pos": 458,
             "x_legend_pos": 312,
@@ -318,8 +318,8 @@
             "display": 3
         },
         "17": {
-            "name": "CAL",
-            "full_name": "Calcutta",
+            "name": "Bud",
+            "full_name": "Budapest",
             "x_pos": 578,
             "y_pos": 479,
             "x_legend_pos": 578,
@@ -327,16 +327,16 @@
             "display": 1
         },
         "18": {
-            "name": "CAM",
-            "full_name": "Cambodia",
+            "name": "Bul",
+            "full_name": "Bulgarie",
             "x_pos": 657,
             "y_pos": 561,
             "x_legend_pos": 631,
             "y_legend_pos": 561
         },
         "19": {
-            "name": "CAN",
-            "full_name": "Canton",
+            "name": "Bou",
+            "full_name": "Bourgogne",
             "x_pos": 384,
             "y_pos": 462,
             "x_legend_pos": 380,
@@ -344,8 +344,8 @@
             "display": 3
         },
         "20": {
-            "name": "CHU",
-            "full_name": "Chungking",
+            "name": "Cly",
+            "full_name": "Clyde",
             "x_pos": 318,
             "y_pos": 268,
             "x_legend_pos": 323,
@@ -353,8 +353,8 @@
             "display": 2
         },
         "21": {
-            "name": "CON",
-            "full_name": "Constantinople",
+            "name": "Col",
+            "full_name": "Cologne",
             "x_pos": 421,
             "y_pos": 420,
             "x_legend_pos": 416,
@@ -362,8 +362,8 @@
             "display": 4
         },
         "22": {
-            "name": "CPO",
-            "full_name": " Central Pacific Ocean",
+            "name": "Con",
+            "full_name": "Constantinople",
             "x_pos": 713,
             "y_pos": 615,
             "x_legend_pos": 713,
@@ -371,16 +371,16 @@
             "display": 7
         },
         "23": {
-            "name": "CSE",
-            "full_name": "Celebes Sea",
+            "name": "Cyr",
+            "full_name": "Cyrénaïque",
             "x_pos": 624,
             "y_pos": 800,
             "x_legend_pos": 624,
             "y_legend_pos": 786
         },
         "24": {
-            "name": "DAM",
-            "full_name": "Damascus",
+            "name": "Dam",
+            "full_name": "Damas",
             "x_pos": 853,
             "y_pos": 658,
             "x_legend_pos": 853,
@@ -388,24 +388,24 @@
             "display": 7
         },
         "25": {
-            "name": "DEL",
-            "full_name": "Delhi",
+            "name": "Dan",
+            "full_name": "Danemark",
             "x_pos": 466,
             "y_pos": 312,
             "x_legend_pos": 437,
             "y_legend_pos": 315
         },
         "26": {
-            "name": "ECS",
-            "full_name": "East China Sea",
+            "name": "MOR",
+            "full_name": "Méditerranée Orientale",
             "x_pos": 727,
             "y_pos": 723,
             "x_legend_pos": 727,
             "y_legend_pos": 709
         },
         "27": {
-            "name": "EGY",
-            "full_name": "Egypt",
+            "name": "Edi",
+            "full_name": "Édimbourg",
             "x_pos": 339,
             "y_pos": 272,
             "x_legend_pos": 322,
@@ -413,8 +413,8 @@
             "display": 2
         },
         "28": {
-            "name": "EIO",
-            "full_name": "East Indian Ocean",
+            "name": "Egy",
+            "full_name": "Égypte",
             "x_pos": 763,
             "y_pos": 805,
             "x_legend_pos": 754,
@@ -422,16 +422,16 @@
             "display": 2
         },
         "29": {
-            "name": "FOR",
-            "full_name": "Formosa",
+            "name": "MAN",
+            "full_name": "Manche",
             "x_pos": 294,
             "y_pos": 412,
             "x_legend_pos": 272,
             "y_legend_pos": 409
         },
         "30": {
-            "name": "GOM",
-            "full_name": "Gulf of Martaban",
+            "name": "Fin",
+            "full_name": "Finlande",
             "x_pos": 609,
             "y_pos": 190,
             "x_legend_pos": 609,
@@ -439,8 +439,8 @@
             "display": 6
         },
         "31": {
-            "name": "GOS",
-            "full_name": "Gulf of Siam",
+            "name": "Gal",
+            "full_name": "Galicie",
             "x_pos": 610,
             "y_pos": 434,
             "x_legend_pos": 585,
@@ -448,8 +448,8 @@
             "display": 1
         },
         "32": {
-            "name": "HAN",
-            "full_name": "Hanoi",
+            "name": "Gas",
+            "full_name": "Gascogne",
             "x_pos": 299,
             "y_pos": 519,
             "x_legend_pos": 304,
@@ -457,16 +457,16 @@
             "display": 3
         },
         "33": {
-            "name": "HKO",
-            "full_name": " Hong Kong",
+            "name": "GBO",
+            "full_name": "Golfe de Botnie",
             "x_pos": 560,
             "y_pos": 260,
             "x_legend_pos": 560,
             "y_legend_pos": 246
         },
         "34": {
-            "name": "HUE",
-            "full_name": "Hue",
+            "name": "GIB",
+            "full_name": "Gibraltar",
             "x_pos": 219,
             "y_pos": 654,
             "x_legend_pos": 176,
@@ -474,24 +474,24 @@
             "display": 2
         },
         "35": {
-            "name": "IRK",
-            "full_name": "Irkutsk",
+            "name": "GLI",
+            "full_name": "Golfe du Lion",
             "x_pos": 411,
             "y_pos": 567,
             "x_legend_pos": 411,
             "y_legend_pos": 553
         },
         "36": {
-            "name": "JAV",
-            "full_name": "Java",
+            "name": "Gre",
+            "full_name": "Grèce",
             "x_pos": 596,
             "y_pos": 636,
             "x_legend_pos": 604,
             "y_legend_pos": 663
         },
         "37": {
-            "name": "JSE",
-            "full_name": "Java Sea",
+            "name": "Hed",
+            "full_name": "Hedjaz",
             "x_pos": 876,
             "y_pos": 823,
             "x_legend_pos": 863,
@@ -499,32 +499,32 @@
             "display": 7
         },
         "38": {
-            "name": "KAN",
-            "full_name": "Kansu",
+            "name": "HEL",
+            "full_name": "Baie de Héligoland",
             "x_pos": 415,
             "y_pos": 353,
             "x_legend_pos": 419,
             "y_legend_pos": 341
         },
         "39": {
-            "name": "KAR",
-            "full_name": "Karimata Strait",
+            "name": "Isl",
+            "full_name": "Islande",
             "x_pos": 261,
             "y_pos": 86,
             "x_legend_pos": 261,
             "y_legend_pos": 72
         },
         "40": {
-            "name": "KAS",
-            "full_name": "Kashmir",
+            "name": "ION",
+            "full_name": "Mer Ionienne",
             "x_pos": 553,
             "y_pos": 723,
             "x_legend_pos": 553,
             "y_legend_pos": 709
         },
         "41": {
-            "name": "KHA",
-            "full_name": "Khabarovsk",
+            "name": "Ire",
+            "full_name": "Irlande",
             "x_pos": 262,
             "y_pos": 323,
             "x_legend_pos": 272,
@@ -532,16 +532,16 @@
             "display": 2
         },
         "42": {
-            "name": "KIR",
-            "full_name": "Kirghiz",
+            "name": "MIR",
+            "full_name": "Mer d'Irlande",
             "x_pos": 253,
             "y_pos": 371,
             "x_legend_pos": 267,
             "y_legend_pos": 364
         },
         "43": {
-            "name": "KOR",
-            "full_name": "Korea",
+            "name": "Kie",
+            "full_name": "Kiel",
             "x_pos": 459,
             "y_pos": 366,
             "x_legend_pos": 426,
@@ -549,8 +549,8 @@
             "display": 4
         },
         "44": {
-            "name": "KYO",
-            "full_name": "Kyoto",
+            "name": "Kon",
+            "full_name": "Konya",
             "x_pos": 765,
             "y_pos": 643,
             "x_legend_pos": 765,
@@ -558,8 +558,8 @@
             "display": 7
         },
         "45": {
-            "name": "LAO",
-            "full_name": "Laos",
+            "name": "Lon",
+            "full_name": "Londres",
             "x_pos": 332,
             "y_pos": 383,
             "x_legend_pos": 343,
@@ -567,8 +567,8 @@
             "display": 2
         },
         "46": {
-            "name": "MAD",
-            "full_name": "Madras",
+            "name": "Lvn",
+            "full_name": "Livonie",
             "x_pos": 621,
             "y_pos": 331,
             "x_legend_pos": 613,
@@ -576,8 +576,8 @@
             "display": 6
         },
         "47": {
-            "name": "MAL",
-            "full_name": "Malaya",
+            "name": "Lvp",
+            "full_name": "Liverpool",
             "x_pos": 320,
             "y_pos": 342,
             "x_legend_pos": 318,
@@ -585,8 +585,8 @@
             "display": 2
         },
         "48": {
-            "name": "MAN",
-            "full_name": "Manchuria",
+            "name": "Mac",
+            "full_name": "Macédoine",
             "x_pos": 594,
             "y_pos": 591,
             "x_legend_pos": 588,
@@ -594,8 +594,8 @@
             "display": 7
         },
         "49": {
-            "name": "MAR",
-            "full_name": "Maritime Province",
+            "name": "Mar",
+            "full_name": "Marseille",
             "x_pos": 377,
             "y_pos": 526,
             "x_legend_pos": 361,
@@ -603,16 +603,16 @@
             "display": 3
         },
         "50": {
-            "name": "MED",
-            "full_name": "Mediterranean Sea",
+            "name": "ATL",
+            "full_name": "Océan Atlantique Moyen",
             "x_pos": 111,
             "y_pos": 418,
             "x_legend_pos": 111,
             "y_legend_pos": 404
         },
         "51": {
-            "name": "MON",
-            "full_name": "Mongolia",
+            "name": "Mil",
+            "full_name": "Milan",
             "x_pos": 439,
             "y_pos": 517,
             "x_legend_pos": 435,
@@ -620,16 +620,16 @@
             "display": 5
         },
         "52": {
-            "name": "MOS",
-            "full_name": "Moscow",
+            "name": "Mrc",
+            "full_name": "Maroc",
             "x_pos": 106,
             "y_pos": 775,
             "x_legend_pos": 106,
             "y_legend_pos": 761
         },
         "53": {
-            "name": "PEK",
-            "full_name": "Peking",
+            "name": "Mos",
+            "full_name": "Moscou",
             "x_pos": 745,
             "y_pos": 320,
             "x_legend_pos": 745,
@@ -637,8 +637,8 @@
             "display": 6
         },
         "54": {
-            "name": "PER",
-            "full_name": "Persia",
+            "name": "Mun",
+            "full_name": "Munich",
             "x_pos": 449,
             "y_pos": 451,
             "x_legend_pos": 449,
@@ -646,8 +646,8 @@
             "display": 4
         },
         "55": {
-            "name": "PGU",
-            "full_name": "Persian Gulf",
+            "name": "Nap",
+            "full_name": "Naples",
             "x_pos": 520,
             "y_pos": 615,
             "x_legend_pos": 528,
@@ -655,48 +655,48 @@
             "display": 5
         },
         "56": {
-            "name": "PHI",
-            "full_name": "Philippines",
+            "name": "ATN",
+            "full_name": "Océan Atlantique Nord",
             "x_pos": 130,
             "y_pos": 175,
             "x_legend_pos": 130,
             "y_legend_pos": 161
         },
         "57": {
-            "name": "PSE",
-            "full_name": "Philippine Sea",
+            "name": "PaB",
+            "full_name": "Pays-Bas",
             "x_pos": 390,
             "y_pos": 393,
             "x_legend_pos": 374,
             "y_legend_pos": 384
         },
         "58": {
-            "name": "RED",
-            "full_name": "Red Sea",
+            "name": "NRD",
+            "full_name": "Mer du Nord",
             "x_pos": 380,
             "y_pos": 306,
             "x_legend_pos": 380,
             "y_legend_pos": 292
         },
         "59": {
-            "name": "Rumania",
-            "full_name": "Norvège",
+            "name": "MNG",
+            "full_name": "Mer de Norvège",
             "x_pos": 398,
             "y_pos": 97,
             "x_legend_pos": 398,
             "y_legend_pos": 83
         },
         "60": {
-            "name": "SAI",
-            "full_name": "Saigon",
+            "name": "Nge",
+            "full_name": "Norvège",
             "x_pos": 459,
             "y_pos": 206,
             "x_legend_pos": 459,
             "y_legend_pos": 192
         },
         "61": {
-            "name": "SAR",
-            "full_name": "Sarawak",
+            "name": "Pal",
+            "full_name": "Palestine",
             "x_pos": 835,
             "y_pos": 756,
             "x_legend_pos": 835,
@@ -704,8 +704,8 @@
             "display": 7
         },
         "62": {
-            "name": "SAS",
-            "full_name": "Sasebo",
+            "name": "Par",
+            "full_name": "Paris",
             "x_pos": 348,
             "y_pos": 473,
             "x_legend_pos": 348,
@@ -713,8 +713,8 @@
             "display": 3
         },
         "63": {
-            "name": "SCS",
-            "full_name": "South China Sea",
+            "name": "Pic",
+            "full_name": "Picardie",
             "x_pos": 357,
             "y_pos": 417,
             "x_legend_pos": 367,
@@ -722,8 +722,8 @@
             "display": 3
         },
         "64": {
-            "name": "SEV",
-            "full_name": "Sevastopol",
+            "name": "Pie",
+            "full_name": "Piémont",
             "x_pos": 408,
             "y_pos": 523,
             "x_legend_pos": 408,
@@ -731,16 +731,16 @@
             "display": 5
         },
         "65": {
-            "name": "SHA",
-            "full_name": "Shanghai",
+            "name": "Por",
+            "full_name": "Portugal",
             "x_pos": 176,
             "y_pos": 573,
             "x_legend_pos": 184,
             "y_legend_pos": 559
         },
         "66": {
-            "name": "SHI",
-            "full_name": "Shikoku",
+            "name": "Pru",
+            "full_name": "Prusse",
             "x_pos": 567,
             "y_pos": 349,
             "x_legend_pos": 538,
@@ -748,8 +748,8 @@
             "display": 4
         },
         "67": {
-            "name": "SIA",
-            "full_name": "Siam",
+            "name": "Rom",
+            "full_name": "Rome",
             "x_pos": 448,
             "y_pos": 557,
             "x_legend_pos": 444,
@@ -757,24 +757,24 @@
             "display": 5
         },
         "68": {
-            "name": "SIB",
-            "full_name": "Siberia",
+            "name": "Rou",
+            "full_name": "Roumanie",
             "x_pos": 665,
             "y_pos": 518,
             "x_legend_pos": 665,
             "y_legend_pos": 504
         },
         "69": {
-            "name": "SIN",
-            "full_name": "Sinkiang",
+            "name": "Ser",
+            "full_name": "Serbie",
             "x_pos": 590,
             "y_pos": 543,
             "x_legend_pos": 589,
             "y_legend_pos": 561
         },
         "70": {
-            "name": "SIO",
-            "full_name": "South Indian Ocean",
+            "name": "Seb",
+            "full_name": "Sébastopol",
             "x_pos": 846,
             "y_pos": 446,
             "x_legend_pos": 846,
@@ -782,8 +782,8 @@
             "display": 6
         },
         "71": {
-            "name": "SOJ",
-            "full_name": "Sea of Japan",
+            "name": "Sib",
+            "full_name": "Sibérie",
             "x_pos": 850,
             "y_pos": 209,
             "x_legend_pos": 850,
@@ -791,8 +791,8 @@
             "display": 6
         },
         "72": {
-            "name": "SOO",
-            "full_name": "Sea of Okhotsk",
+            "name": "Sil",
+            "full_name": "Silésie",
             "x_pos": 524,
             "y_pos": 412,
             "x_legend_pos": 509,
@@ -800,16 +800,16 @@
             "display": 4
         },
         "73": {
-            "name": "SUM",
-            "full_name": "Sumatra",
+            "name": "SKA",
+            "full_name": "Skagerrak",
             "x_pos": 456,
             "y_pos": 276,
             "x_legend_pos": 432,
             "y_legend_pos": 284
         },
         "74": {
-            "name": "TIB",
-            "full_name": "Tibet",
+            "name": "AMe",
+            "full_name": "Algérie Méridionale",
             "x_pos": 283,
             "y_pos": 795,
             "x_legend_pos": 283,
@@ -817,16 +817,16 @@
             "display": 3
         },
         "75": {
-            "name": "TOK",
-            "full_name": "Tokyo",
+            "name": "Esp",
+            "full_name": "Espagne",
             "x_pos": 241,
             "y_pos": 587,
             "x_legend_pos": 241,
             "y_legend_pos": 560
         },
         "76": {
-            "name": "TOM",
-            "full_name": "Tomsk",
+            "name": "StP",
+            "full_name": "Saint-Pétersbourg",
             "x_pos": 785,
             "y_pos": 113,
             "x_legend_pos": 785,
@@ -834,24 +834,24 @@
             "display": 6
         },
         "77": {
-            "name": "TUR",
-            "full_name": "Turkestan",
+            "name": "Sue",
+            "full_name": "Suède",
             "x_pos": 494,
             "y_pos": 274,
             "x_legend_pos": 494,
             "y_legend_pos": 260
         },
         "78": {
-            "name": "WIO",
-            "full_name": "West Indian Ocean",
+            "name": "Sui",
+            "full_name": "Suisse",
             "x_pos": 413,
             "y_pos": 485,
             "x_legend_pos": 428,
             "y_legend_pos": 493
         },
         "79": {
-            "name": "YEL",
-            "full_name": "Yellow Sea",
+            "name": "Tri",
+            "full_name": "Trieste",
             "x_pos": 522,
             "y_pos": 511,
             "x_legend_pos": 542,
@@ -859,16 +859,16 @@
             "display": 1
         },
         "80": {
-            "name": "YES",
-            "full_name": "Yesso",
+            "name": "Trp",
+            "full_name": "Tripolitaine",
             "x_pos": 482,
             "y_pos": 806,
             "x_legend_pos": 482,
             "y_legend_pos": 792
         },
         "81": {
-            "name": "YUN",
-            "full_name": "Yunnan",
+            "name": "Tun",
+            "full_name": "Tunis",
             "x_pos": 401,
             "y_pos": 741,
             "x_legend_pos": 401,
@@ -876,6 +876,85 @@
             "display": 3
         },
         "82": {
+            "name": "TYN",
+            "full_name": "Mer Tyrrhénienne",
+            "x_pos": 455,
+            "y_pos": 623,
+            "x_legend_pos": 455,
+            "y_legend_pos": 609
+        },
+        "83": {
+            "name": "Tyr",
+            "full_name": "Tyrol",
+            "x_pos": 457,
+            "y_pos": 491,
+            "x_legend_pos": 472,
+            "y_legend_pos": 487,
+            "display": 1
+        },
+        "84": {
+            "name": "Ukr",
+            "full_name": "Ukraine",
+            "x_pos": 669,
+            "y_pos": 428,
+            "x_legend_pos": 669,
+            "y_legend_pos": 414,
+            "display": 6
+        },
+        "85": {
+            "name": "Ven",
+            "full_name": "Vénétie",
+            "x_pos": 470,
+            "y_pos": 555,
+            "x_legend_pos": 456,
+            "y_legend_pos": 538,
+            "display": 5
+        },
+        "86": {
+            "name": "Vie",
+            "full_name": "Vienne",
+            "x_pos": 505,
+            "y_pos": 490,
+            "x_legend_pos": 508,
+            "y_legend_pos": 477,
+            "display": 1
+        },
+        "87": {
+            "name": "PGa",
+            "full_name": "Pays de Galles",
+            "x_pos": 297,
+            "y_pos": 366,
+            "x_legend_pos": 301,
+            "y_legend_pos": 352,
+            "display": 2
+        },
+        "88": {
+            "name": "Var",
+            "full_name": "Varsovie",
+            "x_pos": 562,
+            "y_pos": 404,
+            "x_legend_pos": 560,
+            "y_legend_pos": 380,
+            "display": 6
+        },
+        "89": {
+            "name": "MOC",
+            "full_name": "Méditerranée Occidentale",
+            "x_pos": 364,
+            "y_pos": 632,
+            "x_legend_pos": 364,
+            "y_legend_pos": 618
+        },
+        "90": {
+            "name": "Yor",
+            "full_name": "Yorkshire",
+            "x_pos": 333,
+            "y_pos": 354,
+            "x_legend_pos": 333,
+            "y_legend_pos": 340,
+            "display": 2
+        },
+        "91": {
             "name": "",
             "full_name": "",
             "x_pos": 575,
@@ -883,7 +962,7 @@
             "x_legend_pos": 575,
             "y_legend_pos": 590
         },
-        "83": {
+        "92": {
             "name": "",
             "full_name": "",
             "x_pos": 615,
@@ -891,7 +970,7 @@
             "x_legend_pos": 617,
             "y_legend_pos": 587
         },
-        "84": {
+        "93": {
             "name": "",
             "full_name": "",
             "x_pos": 229,
@@ -899,7 +978,7 @@
             "x_legend_pos": 229,
             "y_legend_pos": 531
         },
-        "85": {
+        "94": {
             "name": "",
             "full_name": "",
             "x_pos": 194,
@@ -907,23 +986,7 @@
             "x_legend_pos": 201,
             "y_legend_pos": 599
         },
-        "86": {
-            "name": "",
-            "full_name": "",
-            "x_pos": 229,
-            "y_pos": 516,
-            "x_legend_pos": 229,
-            "y_legend_pos": 531
-        },
-        "87": {
-            "name": "",
-            "full_name": "",
-            "x_pos": 194,
-            "y_pos": 613,
-            "x_legend_pos": 201,
-            "y_legend_pos": 599
-        },
-        "88": {
+        "95": {
             "name": "",
             "full_name": "",
             "x_pos": 278,
@@ -931,7 +994,7 @@
             "x_legend_pos": 278,
             "y_legend_pos": 577
         },
-        "89": {
+        "96": {
             "name": "",
             "full_name": "",
             "x_pos": 677,
@@ -939,7 +1002,7 @@
             "x_legend_pos": 677,
             "y_legend_pos": 173
         },
-        "90": {
+        "97": {
             "name": "",
             "full_name": "",
             "x_pos": 643,
