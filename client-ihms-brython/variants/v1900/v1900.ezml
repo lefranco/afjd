@@ -17,9 +17,6 @@ $ Côtes spéciales
 _
 $ Particularités de la carte
 
-(Gibraltar)
-La zone Gibraltar est une Mer, une flotte peut y convoyer mais une arméee ne peut pas y accéder (contrairement à la variante officielle qui permet à une armée d'y stationner)
-
 (Cly - Ire)
 Les unités (armées et flottes) peuvent se déplacer ou apporter leur soutien de Irelande à Clyde ou vice versa indépendamment de la présence d'une flotte dans le Atlantique Nord.
 
@@ -29,15 +26,11 @@ Les armées peuvent se déplacer ou apporter leur soutien de Espagne à Maroc ou
 (Hej - Egy)
 Les flottes peuvent se déplacer ou apporter leur soutien de Egypte à Hejaz ou vice versa indépendamment de la présence d'une flotte dans l'Océan Atlantique Moyen (Mer Rouge). (Cf. dernier paragraphe.)
 
-*La carte possède la particularité d’avoir une sorte de fusion entre la Mer Rouge et l'Océan Atlantique Moyen*
-.
-(ATTENTION)
-Selon les règles de la variante, une attaque, un soutien sont plus faibles lorsque réalisés en utilisant cette fusion. (Cf. dernier paragraphe.)
-.
-Charge à l'arbitre de faire respecter cette règle.
-
 (Palestine)
-Pas de voisinage par flotte entre la Palestine et Océan Atlantique Moyen (Mer Rouge) contrairement à ce que la carte laisse à penser.
+Pas de voisinage par flotte entre la Palestine et Océan Atlantique Moyen (Mer Rouge) contrairement à ce que la carte laisse à penser. (Cf. dernier paragraphe.)
+
+(ATTENTION)
+La carte possède la particularité d’avoir une sorte de fusion entre la Mer Rouge et l'Océan Atlantique Moyen (Cf. dernier paragraphe.)
 
 _
 $ Datation
@@ -51,12 +44,8 @@ $ Centres de ravitaillement
 
 Il y a *39* centres de ravitaillement sur le plateau. 
 .
-Le gagnant est donc la puissance qui détient *19* centres de ravitaillement ou plus pendant une phase d'ajustement.
+Le gagnant est donc la puissance qui détient *19* centres de ravitaillement ou plus pendant une phase d'ajustement, sauf spécificité (Cf. dernier paragraphe.)
 .
-(ATTENTION)
-Selon les règles de la variante, le gagnant est le premier joueur à attendre 18 centres et être seul à la faire
-.
-Charge à l'arbitre de faire respecter cette règle.
 
 _
 $ Puissances en présence
@@ -78,7 +67,7 @@ Il y a sept puissances dont les unités de départ sont les suivantes :
 _
 $ Pièges de la variante
 
-Multiples !
+Multiples ! (Cf. dernier paragraphe.)
 
 _
 $ Nomenclature
@@ -179,18 +168,21 @@ $ Nomenclature
 _
 $ Expansionnisme (non)
 
-Constructions sur les centres de départ.
-
-(ATTENTION)
-Selon les règles de la variante:
-- le joueur britannique ne peut pas construire en Égypte
-- le joueur français ne peut pas construire en Algérie 
-- le joueur russe peut construire en Sibérie sous certaines conditions  (Cf. dernier paragraphe.)
-
-Charge à l'arbitre de faire respecter cette règle.
-
+Constructions sur les centres de départ, sauf spécificité. (Cf. dernier paragraphe.)
 _
-$ Règles spéciales (à appliquer manuellement par l'arbitre)
+$ Règles spéciales
+
+(Solo à 18 centres seul)
+Selon les règles de la variante, le gagnant est le premier joueur à attendre 18 centres et être seul à le faire. Il faut continuer la partie en cas d'égalité à 18 centres. L'arrêt à 19 centres (majorité absolue) reste appliqué par le système.
+
+(Egypte)
+Le joueur britannique ne peut pas construire en Égypte.
+
+(Algérie)
+Le joueur français ne peut pas construire en Algérie.
+
+(Gibraltar)
+Une flotte à cet endroit peut convoyer (même si c'est une côte). Une armée peut y stationner.
 
 (Construction en Sibérie)
 Lorsque la Russie possède au moins un, MAIS PAS LES QUATRE, de ses centres de ravitaillement d'origine, elle a le droit de maintenir une unité supplémentaire sur la carte (c'est-à-dire une de plus que le nombre de centres de ravitaillement qu'elle contrôle actuellement). De plus, tant que la Russie est dans cette situation, le joueur russe peut utiliser la Sibérie comme site de construction pendant la phase d'ajustement, si elle est inoccupée. 
@@ -202,15 +194,20 @@ Les mouvements entre l'Égypte ou le Hedjaz et le l'Océan Atlantique Moyen sont
 .
 On suppose que l'unité contourne la pointe sud de l'Afrique.
 .
-Une unité qui se déplace de cette manière le fait à moitié de ses effectifs. Cela signifie qu'une unité adjacente à l'Égypte ou au Hedjaz peut s'y déplacer si elle est seulement contrariée par une flotte venant du milieu de l'Atlantique, et qu'une flotte adjacente au milieu de l'Atlantique peut s'y déplacer si elle est seulement contrariée par une flotte venant d'Égypte ou du Hedjaz.
+Une unité qui se déplace de cette manière le fait à la moitié de ses effectifs. Cela signifie qu'une unité adjacente à l'Égypte ou au Hedjaz peut s'y déplacer si elle est seulement contrariée par une flotte venant du milieu de l'Atlantique, et qu'une flotte adjacente à l'Océan Atlantique Moyen peut s'y déplacer si elle est seulement contrariée par une flotte venant d'Égypte ou du Hedjaz.
 .
-Une flotte en Égypte ou au Hedjaz ne peut pas soutenir une unité qui se maintient ou se déplace vers le milieu de l'Atlantique. Ceci est vrai même si la flotte en Égypte ou au Hedjaz peut elle-même se déplacer vers le milieu de l'Atlantique.
+Une flotte en Égypte ou au Hedjaz ne peut pas soutenir une unité qui se maintient ou se déplace vers l'Océan Atlantique Moyen. Ceci est vrai même si la flotte en Égypte ou au Hedjaz peut elle-même se déplacer vers l'Océan Atlantique Moyen.
 .
-De même, une flotte au milieu de l'Atlantique ne peut pas soutenir une unité qui se maintient ou se déplace vers l'Égypte ou le Hedjaz. Une flotte se déplaçant d'Égypte ou du Hedjaz vers le centre de l'Atlantique ne réduit pas le soutien fourni par une flotte déjà présente dans cette zone, sauf si l'attaque entraîne le déplacement de l'unité. L'inverse est également vrai. Une flotte se déplaçant du centre de l'Atlantique vers l'Égypte ou le Hedjaz ne réduit pas le soutien fourni par une unité déjà présente dans cette zone, sauf si l'attaque entraîne le déplacement de l'unité.
+De même, une flotte en Océan Atlantique Moyen ne peut pas soutenir une unité qui se maintient ou se déplace vers l'Égypte ou le Hedjaz. Une flotte se déplaçant d'Égypte ou du Hedjaz vers l'Océan Atlantique Moyen ne réduit pas le soutien fourni par une flotte déjà présente dans cette zone, sauf si l'attaque entraîne le déplacement de l'unité. L'inverse est également vrai. 
 .
-Le centre de l'Atlantique peut convoyer une armée depuis ou vers l'Égypte ou le Hedjaz. Une armée convoyée depuis l'Égypte ou le Hedjaz attaque sa zone de destination à pleine puissance. Une armée convoyée vers l'Égypte ou le Hedjaz attaque à moitié puissance.
+Une flotte se déplaçant du centre de l'Océan Atlantique Moyen vers l'Égypte ou le Hedjaz ne réduit pas le soutien fourni par une unité déjà présente dans cette zone, sauf si l'attaque entraîne le déplacement de l'unité.
 .
-Si deux unités se replient vers l'Égypte, le Hedjaz ou le centre de l'Atlantique, et que l'une d'elles doit contourner la pointe sud de l'Afrique, l'unité qui ne contourne pas l'Afrique australe peut se replier tandis que l'autre unité est dissoute.
+L'Océan Atlantique Moyen peut convoyer une armée depuis ou vers l'Égypte ou le Hedjaz. Une armée convoyée depuis l'Égypte ou le Hedjaz attaque sa zone de destination à pleine puissance. Une armée convoyée vers l'Égypte ou le Hedjaz attaque à moitié puissance.
+.
+Si deux unités se replient vers l'Égypte, le Hedjaz ou l'Océan Atlantique Moyen, et que l'une d'elles doit contourner la pointe sud de l'Afrique, l'unité qui ne contourne pas l'Afrique australe peut se replier tandis que l'autre unité est dissoute.
+
+(IMPORTANT)
+*Seul l'arbitre peut manuellement appliquer ces règles spéciales. Voir avec elle/lui.*
 
 _
 $ Sur le wiki
