@@ -218,7 +218,10 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
             if not acceptable(unit_type, zone1):
                 continue
 
-            print(f"  Finding neighbours by {'army' if unit_type == 1 else 'fleet'} of {zone1} ({zone1.number}):")
+            if unit_type == 1:
+                print(f"\033[32m Finding neighbours by army of {zone1} ({zone1.number}):\033[0m")
+            if unit_type == 2:
+                print(f"\033[34m Finding neighbours by fleet of {zone1} ({zone1.number}):\033[0m")
 
             dict_unit_type[str(zone1.number)] = []
             assert zone1.polygon is not None
@@ -243,7 +246,11 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
                     continue
 
                 dict_unit_type[str(zone1.number)].append(zone2.number)
-                print(f"    {zone2}({zone2.number}) is adjacent by {'army' if unit_type == 1 else 'fleet'}")
+
+                if unit_type == 1:
+                    print(f"\033[32m    {zone2}({zone2.number}) is adjacent by army\033[0m")
+                if unit_type == 2:
+                    print(f"\033[34m    {zone2}({zone2.number}) is adjacent by fleet\033[0m")
 
         result_queue.put(dict_unit_type)
         print(f"Done with {'army' if unit_type == 1 else 'fleet'}.")
