@@ -189,8 +189,8 @@
             "y_legend_pos": 571
         },
         "2": {
-            "name": "AEG",
-            "full_name": "Mer d'Égée",
+            "name": "EGE",
+            "full_name": "Mer Égée",
             "x_pos": 644,
             "y_pos": 680,
             "x_legend_pos": 644,
@@ -283,7 +283,7 @@
             "display": 4
         },
         "13": {
-            "name": "BLA",
+            "name": "NOI",
             "full_name": "Mer Noire",
             "x_pos": 722,
             "y_pos": 540,
@@ -335,7 +335,7 @@
             "y_legend_pos": 561
         },
         "19": {
-            "name": "Bur",
+            "name": "Bou",
             "full_name": "Bourgogne",
             "x_pos": 384,
             "y_pos": 462,
@@ -372,7 +372,7 @@
         },
         "23": {
             "name": "Cyr",
-            "full_name": "Cyrannéique",
+            "full_name": "Cyrénaïque",
             "x_pos": 624,
             "y_pos": 800,
             "x_legend_pos": 624,
@@ -388,7 +388,7 @@
             "display": 7
         },
         "25": {
-            "name": "Den",
+            "name": "Dan",
             "full_name": "Danemark",
             "x_pos": 466,
             "y_pos": 312,
@@ -396,7 +396,7 @@
             "y_legend_pos": 315
         },
         "26": {
-            "name": "EAS",
+            "name": "MOR",
             "full_name": "Méditerranée Orientale",
             "x_pos": 727,
             "y_pos": 723,
@@ -422,7 +422,7 @@
             "display": 2
         },
         "29": {
-            "name": "ENG",
+            "name": "MAN",
             "full_name": "Manche",
             "x_pos": 294,
             "y_pos": 412,
@@ -458,7 +458,7 @@
         },
         "33": {
             "name": "GBO",
-            "full_name": "Golfe de Bothnie",
+            "full_name": "Golfe de Botnie",
             "x_pos": 560,
             "y_pos": 260,
             "x_legend_pos": 560,
@@ -474,8 +474,8 @@
             "display": 2
         },
         "35": {
-            "name": "GLY",
-            "full_name": "Golfe du Lyon",
+            "name": "GLI",
+            "full_name": "Golfe du Lion",
             "x_pos": 411,
             "y_pos": 567,
             "x_legend_pos": 411,
@@ -490,8 +490,8 @@
             "y_legend_pos": 663
         },
         "37": {
-            "name": "Hej",
-            "full_name": "Hejaz",
+            "name": "Hed",
+            "full_name": "Hedjaz",
             "x_pos": 876,
             "y_pos": 823,
             "x_legend_pos": 863,
@@ -500,14 +500,14 @@
         },
         "38": {
             "name": "HEL",
-            "full_name": "Baie de Helgoland",
+            "full_name": "Baie de Héligoland",
             "x_pos": 415,
             "y_pos": 353,
             "x_legend_pos": 419,
             "y_legend_pos": 341
         },
         "39": {
-            "name": "Ice",
+            "name": "Isl",
             "full_name": "Islande",
             "x_pos": 261,
             "y_pos": 86,
@@ -532,7 +532,7 @@
             "display": 2
         },
         "42": {
-            "name": "IRI",
+            "name": "MIR",
             "full_name": "Mer d'Irlande",
             "x_pos": 253,
             "y_pos": 371,
@@ -567,7 +567,7 @@
             "display": 2
         },
         "46": {
-            "name": "Lvo",
+            "name": "Lvn",
             "full_name": "Livonie",
             "x_pos": 621,
             "y_pos": 331,
@@ -603,8 +603,8 @@
             "display": 3
         },
         "50": {
-            "name": "MID",
-            "full_name": "Atlantique Ouest",
+            "name": "ATL",
+            "full_name": "Océan Atlantique Moyen",
             "x_pos": 111,
             "y_pos": 418,
             "x_legend_pos": 111,
@@ -620,7 +620,7 @@
             "display": 5
         },
         "52": {
-            "name": "Mor",
+            "name": "Mrc",
             "full_name": "Maroc",
             "x_pos": 106,
             "y_pos": 775,
@@ -655,15 +655,15 @@
             "display": 5
         },
         "56": {
-            "name": "NAT",
-            "full_name": "Atlantique Nord",
+            "name": "ATN",
+            "full_name": "Océan Atlantique Nord",
             "x_pos": 130,
             "y_pos": 175,
             "x_legend_pos": 130,
             "y_legend_pos": 161
         },
         "57": {
-            "name": "Net",
+            "name": "PaB",
             "full_name": "Pays-Bas",
             "x_pos": 390,
             "y_pos": 393,
@@ -671,7 +671,7 @@
             "y_legend_pos": 384
         },
         "58": {
-            "name": "NTH",
+            "name": "NRD",
             "full_name": "Mer du Nord",
             "x_pos": 380,
             "y_pos": 306,
@@ -679,7 +679,7 @@
             "y_legend_pos": 292
         },
         "59": {
-            "name": "NWG",
+            "name": "MNG",
             "full_name": "Mer de Norvège",
             "x_pos": 398,
             "y_pos": 97,
@@ -687,7 +687,7 @@
             "y_legend_pos": 83
         },
         "60": {
-            "name": "Nwy",
+            "name": "Nge",
             "full_name": "Norvège",
             "x_pos": 459,
             "y_pos": 206,
@@ -757,7 +757,7 @@
             "display": 5
         },
         "68": {
-            "name": "Rum",
+            "name": "Rou",
             "full_name": "Roumanie",
             "x_pos": 665,
             "y_pos": 518,
@@ -773,7 +773,7 @@
             "y_legend_pos": 561
         },
         "70": {
-            "name": "Sev",
+            "name": "Seb",
             "full_name": "Sébastopol",
             "x_pos": 846,
             "y_pos": 446,
@@ -808,8 +808,8 @@
             "y_legend_pos": 284
         },
         "74": {
-            "name": "Sou",
-            "full_name": "Algérie Sud",
+            "name": "AMe",
+            "full_name": "Algérie Méridionale",
             "x_pos": 283,
             "y_pos": 795,
             "x_legend_pos": 283,
@@ -817,7 +817,7 @@
             "display": 3
         },
         "75": {
-            "name": "Spa",
+            "name": "Esp",
             "full_name": "Espagne",
             "x_pos": 241,
             "y_pos": 587,
@@ -834,7 +834,7 @@
             "display": 6
         },
         "77": {
-            "name": "Swe",
+            "name": "Sue",
             "full_name": "Suède",
             "x_pos": 494,
             "y_pos": 274,
@@ -842,7 +842,7 @@
             "y_legend_pos": 260
         },
         "78": {
-            "name": "Swi",
+            "name": "Sui",
             "full_name": "Suisse",
             "x_pos": 413,
             "y_pos": 485,
@@ -860,7 +860,7 @@
         },
         "80": {
             "name": "Trp",
-            "full_name": "Tripoli",
+            "full_name": "Tripolitaine",
             "x_pos": 482,
             "y_pos": 806,
             "x_legend_pos": 482,
@@ -876,7 +876,7 @@
             "display": 3
         },
         "82": {
-            "name": "TYS",
+            "name": "TYN",
             "full_name": "Mer Tyrrhénienne",
             "x_pos": 455,
             "y_pos": 623,
@@ -903,7 +903,7 @@
         },
         "85": {
             "name": "Ven",
-            "full_name": "Vénitie",
+            "full_name": "Vénétie",
             "x_pos": 470,
             "y_pos": 555,
             "x_legend_pos": 456,
@@ -920,7 +920,7 @@
             "display": 1
         },
         "87": {
-            "name": "Wal",
+            "name": "PGa",
             "full_name": "Pays de Galles",
             "x_pos": 297,
             "y_pos": 366,
@@ -929,7 +929,7 @@
             "display": 2
         },
         "88": {
-            "name": "War",
+            "name": "Var",
             "full_name": "Varsovie",
             "x_pos": 562,
             "y_pos": 404,
@@ -938,7 +938,7 @@
             "display": 6
         },
         "89": {
-            "name": "WES",
+            "name": "MOC",
             "full_name": "Méditerranée Occidentale",
             "x_pos": 364,
             "y_pos": 632,
