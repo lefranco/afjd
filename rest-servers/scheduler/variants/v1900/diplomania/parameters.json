@@ -42,105 +42,122 @@
             ]
         },
         "1": {
-            "name": "Austria",
-            "adjective_name": "austrian",
+            "name": "Autriche",
+            "adjective_name": "autrichien",
             "letter_name": "A",
             "red": [
-                47,
-                131
+                235,
+                255
             ],
             "green": [
-                138,
-                185
+                235,
+                255
             ],
             "blue": [
-                170,
-                204
+                10,
+                30
             ]
         },
         "2": {
-            "name": "Britain",
-            "adjective_name": "british",
+            "name": "GrandeBretagne",
+            "adjective_name": "britannique",
             "letter_name": "B",
             "red": [
-                83,
-                152
+                50,
+                70
             ],
             "green": [
-                210,
-                228
+                30,
+                50
             ],
             "blue": [
-                224,
-                237
+                168,
+                188
             ]
         },
         "3": {
-            "name": "Germany",
-            "adjective_name": "german",
-            "letter_name": "G",
+            "name": "France",
+            "adjective_name": "français",
+            "letter_name": "F",
             "red": [
-                173,
-                206
+                30,
+                10
             ],
             "green": [
-                122,
-                176
+                118,
+                138
             ],
             "blue": [
-                55,
-                135
+                208,
+                228
             ]
         },
         "4": {
-            "name": "Italy",
-            "adjective_name": "italian",
-            "letter_name": "I",
+            "name": "Allemagne",
+            "adjective_name": "allemand",
+            "letter_name": "G",
             "red": [
-                109,
-                168
+                40,
+                60
             ],
             "green": [
-                224,
-                237
+                40,
+                60
             ],
             "blue": [
-                105,
-                165
+                40,
+                60
             ]
         },
         "5": {
-            "name": "Russia",
-            "adjective_name": "russian",
-            "letter_name": "R",
+            "name": "Italie",
+            "adjective_name": "italien",
+            "letter_name": "I",
             "red": [
-                239,
-                246
+                20,
+                0
             ],
             "green": [
-                249,
-                252
+                235,
+                255
             ],
             "blue": [
-                248,
-                251
+                20,
+                0
+            ]
+        },
+        "6": {
+            "name": "Russie",
+            "adjective_name": "russe",
+            "letter_name": "R",
+            "red": [
+                75,
+                95
+            ],
+            "green": [
+                107,
+                127
+            ],
+            "blue": [
+                47,
+                57
             ]
         },
         "7": {
-            "name": "Turkey",
-            "adjective_name": "turkish",
+            "name": "Turquie",
+            "adjective_name": "turc",
             "letter_name": "T",
             "red": [
-                224,
-                237
+                235,
+                255
             ],
             "green": [
-                211,
-                229
+                20,
+                0
             ],
             "blue": [
-                51,
-                133
+                20,
+                0
             ]
         }
     },
@@ -164,7 +181,7 @@
     },
     "zones": {
         "1": {
-            "name": "Adr",
+            "name": "ADR",
             "full_name": "Mer Adriatique",
             "x_pos": 532,
             "y_pos": 584,
@@ -172,8 +189,8 @@
             "y_legend_pos": 571
         },
         "2": {
-            "name": "AEG",
-            "full_name": "Mer d'Egée",
+            "name": "EGE",
+            "full_name": "Mer Égée",
             "x_pos": 644,
             "y_pos": 680,
             "x_legend_pos": 644,
@@ -181,46 +198,47 @@
         },
         "3": {
             "name": "Alg",
-            "full_name": "Albanie",
+            "full_name": "Algérie",
             "x_pos": 332,
             "y_pos": 711,
             "x_legend_pos": 332,
-            "y_legend_pos": 697
+            "y_legend_pos": 697,
+            "display": 3
         },
         "4": {
             "name": "Als",
-            "full_name": "Albanie",
+            "full_name": "Alsace",
             "x_pos": 409,
-            "y_pos": 452,
-            "x_legend_pos": 400,
-            "y_legend_pos": 449
+            "y_pos": 455,
+            "x_legend_pos": 399,
+            "y_legend_pos": 450,
+            "display": 4
         },
         "5": {
             "name": "Ank",
             "full_name": "Ankara",
-            "x_pos": 761,
-            "y_pos": 584,
-            "x_legend_pos": 761,
-            "y_legend_pos": 570,
+            "x_pos": 770,
+            "y_pos": 578,
+            "x_legend_pos": 770,
+            "y_legend_pos": 564,
             "display": 7
         },
         "6": {
             "name": "Apu",
             "full_name": "Apulie",
-            "x_pos": 481,
-            "y_pos": 574,
-            "x_legend_pos": 481,
-            "y_legend_pos": 560,
-            "display": 4
+            "x_pos": 488,
+            "y_pos": 575,
+            "x_legend_pos": 506,
+            "y_legend_pos": 589,
+            "display": 5
         },
         "7": {
             "name": "Ara",
-            "full_name": "Apulie",
+            "full_name": "Arabie",
             "x_pos": 872,
             "y_pos": 711,
             "x_legend_pos": 872,
-            "y_legend_pos": 697,
-            "display": 4
+            "y_legend_pos": 697
         },
         "8": {
             "name": "Arm",
@@ -232,15 +250,15 @@
             "display": 7
         },
         "9": {
-            "name": "Bal",
+            "name": "BAL",
             "full_name": "Mer Baltique",
             "x_pos": 541,
-            "y_pos": 301,
+            "y_pos": 329,
             "x_legend_pos": 541,
-            "y_legend_pos": 287
+            "y_legend_pos": 315
         },
         "10": {
-            "name": "Bar",
+            "name": "BAR",
             "full_name": "Mer de Barents",
             "x_pos": 665,
             "y_pos": 32,
@@ -252,20 +270,20 @@
             "full_name": "Belgique",
             "x_pos": 380,
             "y_pos": 410,
-            "x_legend_pos": 380,
-            "y_legend_pos": 396
+            "x_legend_pos": 362,
+            "y_legend_pos": 399
         },
         "12": {
             "name": "Ber",
             "full_name": "Berlin",
             "x_pos": 471,
             "y_pos": 389,
-            "x_legend_pos": 471,
-            "y_legend_pos": 375,
-            "display": 3
+            "x_legend_pos": 496,
+            "y_legend_pos": 378,
+            "display": 4
         },
         "13": {
-            "name": "Bla",
+            "name": "NOI",
             "full_name": "Mer Noire",
             "x_pos": 722,
             "y_pos": 540,
@@ -279,15 +297,16 @@
             "y_pos": 435,
             "x_legend_pos": 497,
             "y_legend_pos": 425,
-            "display": 5
+            "display": 1
         },
         "15": {
             "name": "Bos",
-            "full_name": "Golfe de Botnie",
+            "full_name": "Bosnie",
             "x_pos": 539,
             "y_pos": 543,
             "x_legend_pos": 544,
-            "y_legend_pos": 561
+            "y_legend_pos": 561,
+            "display": 1
         },
         "16": {
             "name": "Bre",
@@ -296,7 +315,7 @@
             "y_pos": 458,
             "x_legend_pos": 312,
             "y_legend_pos": 444,
-            "display": 2
+            "display": 3
         },
         "17": {
             "name": "Bud",
@@ -305,7 +324,7 @@
             "y_pos": 479,
             "x_legend_pos": 578,
             "y_legend_pos": 465,
-            "display": 5
+            "display": 1
         },
         "18": {
             "name": "Bul",
@@ -316,31 +335,31 @@
             "y_legend_pos": 561
         },
         "19": {
-            "name": "Bur",
+            "name": "Bou",
             "full_name": "Bourgogne",
             "x_pos": 384,
             "y_pos": 462,
             "x_legend_pos": 380,
             "y_legend_pos": 448,
-            "display": 2
+            "display": 3
         },
         "20": {
             "name": "Cly",
             "full_name": "Clyde",
             "x_pos": 318,
             "y_pos": 268,
-            "x_legend_pos": 318,
+            "x_legend_pos": 323,
             "y_legend_pos": 254,
-            "display": 1
+            "display": 2
         },
         "21": {
             "name": "Col",
-            "full_name": "Clyde",
-            "x_pos": 417,
-            "y_pos": 411,
-            "x_legend_pos": 417,
-            "y_legend_pos": 397,
-            "display": 1
+            "full_name": "Cologne",
+            "x_pos": 421,
+            "y_pos": 420,
+            "x_legend_pos": 416,
+            "y_legend_pos": 401,
+            "display": 4
         },
         "22": {
             "name": "Con",
@@ -353,32 +372,32 @@
         },
         "23": {
             "name": "Cyr",
-            "full_name": "Constantinople",
+            "full_name": "Cyrénaïque",
             "x_pos": 624,
             "y_pos": 800,
             "x_legend_pos": 624,
-            "y_legend_pos": 786,
-            "display": 7
+            "y_legend_pos": 786
         },
         "24": {
             "name": "Dam",
-            "full_name": "Danemark",
+            "full_name": "Damas",
             "x_pos": 853,
             "y_pos": 658,
             "x_legend_pos": 853,
-            "y_legend_pos": 644
+            "y_legend_pos": 644,
+            "display": 7
         },
         "25": {
-            "name": "Den",
+            "name": "Dan",
             "full_name": "Danemark",
             "x_pos": 466,
-            "y_pos": 320,
-            "x_legend_pos": 466,
-            "y_legend_pos": 306
+            "y_pos": 312,
+            "x_legend_pos": 437,
+            "y_legend_pos": 315
         },
         "26": {
-            "name": "EAS",
-            "full_name": "Méditerranée orientale",
+            "name": "MOR",
+            "full_name": "Méditerranée Orientale",
             "x_pos": 727,
             "y_pos": 723,
             "x_legend_pos": 727,
@@ -387,28 +406,28 @@
         "27": {
             "name": "Edi",
             "full_name": "Édimbourg",
-            "x_pos": 322,
-            "y_pos": 300,
+            "x_pos": 339,
+            "y_pos": 272,
             "x_legend_pos": 322,
             "y_legend_pos": 286,
-            "display": 1
+            "display": 2
         },
         "28": {
             "name": "Egy",
-            "full_name": "Édimbourg",
+            "full_name": "Égypte",
             "x_pos": 763,
             "y_pos": 805,
-            "x_legend_pos": 763,
+            "x_legend_pos": 754,
             "y_legend_pos": 791,
-            "display": 1
+            "display": 2
         },
         "29": {
-            "name": "Eng",
+            "name": "MAN",
             "full_name": "Manche",
             "x_pos": 294,
             "y_pos": 412,
-            "x_legend_pos": 294,
-            "y_legend_pos": 398
+            "x_legend_pos": 272,
+            "y_legend_pos": 409
         },
         "30": {
             "name": "Fin",
@@ -416,7 +435,8 @@
             "x_pos": 609,
             "y_pos": 190,
             "x_legend_pos": 609,
-            "y_legend_pos": 176
+            "y_legend_pos": 176,
+            "display": 6
         },
         "31": {
             "name": "Gal",
@@ -425,7 +445,7 @@
             "y_pos": 434,
             "x_legend_pos": 585,
             "y_legend_pos": 432,
-            "display": 5
+            "display": 1
         },
         "32": {
             "name": "Gas",
@@ -434,27 +454,28 @@
             "y_pos": 519,
             "x_legend_pos": 304,
             "y_legend_pos": 507,
-            "display": 2
+            "display": 3
         },
         "33": {
             "name": "GBO",
-            "full_name": "Golfe du Lion",
+            "full_name": "Golfe de Botnie",
             "x_pos": 560,
             "y_pos": 260,
             "x_legend_pos": 560,
             "y_legend_pos": 246
         },
         "34": {
-            "name": "Gib",
-            "full_name": "Golfe du Lion",
+            "name": "GIB",
+            "full_name": "Gibraltar",
             "x_pos": 219,
             "y_pos": 654,
-            "x_legend_pos": 219,
-            "y_legend_pos": 640
+            "x_legend_pos": 176,
+            "y_legend_pos": 646,
+            "display": 2
         },
         "35": {
-            "name": "Gly",
-            "full_name": "Grèce",
+            "name": "GLI",
+            "full_name": "Golfe du Lion",
             "x_pos": 411,
             "y_pos": 567,
             "x_legend_pos": 411,
@@ -465,35 +486,36 @@
             "full_name": "Grèce",
             "x_pos": 596,
             "y_pos": 636,
-            "x_legend_pos": 596,
-            "y_legend_pos": 622
+            "x_legend_pos": 604,
+            "y_legend_pos": 663
         },
         "37": {
-            "name": "Hej",
-            "full_name": "Grèce",
+            "name": "Hed",
+            "full_name": "Hedjaz",
             "x_pos": 876,
             "y_pos": 823,
-            "x_legend_pos": 867,
-            "y_legend_pos": 811
+            "x_legend_pos": 863,
+            "y_legend_pos": 810,
+            "display": 7
         },
         "38": {
-            "name": "Hel",
-            "full_name": "Baie de Helgoland",
+            "name": "HEL",
+            "full_name": "Baie de Héligoland",
             "x_pos": 415,
             "y_pos": 353,
             "x_legend_pos": 419,
             "y_legend_pos": 341
         },
         "39": {
-            "name": "Ice",
-            "full_name": "Hollande",
+            "name": "Isl",
+            "full_name": "Islande",
             "x_pos": 261,
             "y_pos": 86,
             "x_legend_pos": 261,
             "y_legend_pos": 72
         },
         "40": {
-            "name": "Ion",
+            "name": "ION",
             "full_name": "Mer Ionienne",
             "x_pos": 553,
             "y_pos": 723,
@@ -505,50 +527,51 @@
             "full_name": "Irlande",
             "x_pos": 262,
             "y_pos": 323,
-            "x_legend_pos": 262,
-            "y_legend_pos": 309
+            "x_legend_pos": 272,
+            "y_legend_pos": 313,
+            "display": 2
         },
         "42": {
-            "name": "Iri",
+            "name": "MIR",
             "full_name": "Mer d'Irlande",
             "x_pos": 253,
             "y_pos": 371,
-            "x_legend_pos": 253,
-            "y_legend_pos": 357
+            "x_legend_pos": 267,
+            "y_legend_pos": 364
         },
         "43": {
             "name": "Kie",
             "full_name": "Kiel",
-            "x_pos": 441,
-            "y_pos": 377,
-            "x_legend_pos": 441,
-            "y_legend_pos": 363,
-            "display": 3
+            "x_pos": 459,
+            "y_pos": 366,
+            "x_legend_pos": 426,
+            "y_legend_pos": 376,
+            "display": 4
         },
         "44": {
             "name": "Kon",
-            "full_name": "Kiel",
+            "full_name": "Konya",
             "x_pos": 765,
             "y_pos": 643,
             "x_legend_pos": 765,
             "y_legend_pos": 629,
-            "display": 3
+            "display": 7
         },
         "45": {
             "name": "Lon",
             "full_name": "Londres",
             "x_pos": 332,
             "y_pos": 383,
-            "x_legend_pos": 332,
-            "y_legend_pos": 369,
-            "display": 1
+            "x_legend_pos": 343,
+            "y_legend_pos": 374,
+            "display": 2
         },
         "46": {
-            "name": "Lvo",
+            "name": "Lvn",
             "full_name": "Livonie",
             "x_pos": 621,
             "y_pos": 331,
-            "x_legend_pos": 621,
+            "x_legend_pos": 613,
             "y_legend_pos": 317,
             "display": 6
         },
@@ -557,18 +580,18 @@
             "full_name": "Liverpool",
             "x_pos": 320,
             "y_pos": 342,
-            "x_legend_pos": 320,
-            "y_legend_pos": 328,
-            "display": 1
+            "x_legend_pos": 318,
+            "y_legend_pos": 326,
+            "display": 2
         },
         "48": {
             "name": "Mac",
-            "full_name": "Marseille",
-            "x_pos": 590,
-            "y_pos": 596,
-            "x_legend_pos": 590,
-            "y_legend_pos": 582,
-            "display": 2
+            "full_name": "Macédoine",
+            "x_pos": 594,
+            "y_pos": 591,
+            "x_legend_pos": 588,
+            "y_legend_pos": 580,
+            "display": 7
         },
         "49": {
             "name": "Mar",
@@ -577,11 +600,11 @@
             "y_pos": 526,
             "x_legend_pos": 361,
             "y_legend_pos": 521,
-            "display": 2
+            "display": 3
         },
         "50": {
-            "name": "MID",
-            "full_name": "Atlantique",
+            "name": "ATL",
+            "full_name": "Océan Atlantique Moyen",
             "x_pos": 111,
             "y_pos": 418,
             "x_legend_pos": 111,
@@ -589,15 +612,16 @@
         },
         "51": {
             "name": "Mil",
-            "full_name": "Atlantique",
+            "full_name": "Milan",
             "x_pos": 439,
             "y_pos": 517,
-            "x_legend_pos": 432,
-            "y_legend_pos": 504
+            "x_legend_pos": 435,
+            "y_legend_pos": 508,
+            "display": 5
         },
         "52": {
-            "name": "Mor",
-            "full_name": "Atlantique",
+            "name": "Mrc",
+            "full_name": "Maroc",
             "x_pos": 106,
             "y_pos": 775,
             "x_legend_pos": 106,
@@ -619,35 +643,35 @@
             "y_pos": 451,
             "x_legend_pos": 449,
             "y_legend_pos": 437,
-            "display": 3
+            "display": 4
         },
         "55": {
             "name": "Nap",
             "full_name": "Naples",
-            "x_pos": 495,
-            "y_pos": 594,
-            "x_legend_pos": 495,
-            "y_legend_pos": 580,
-            "display": 4
+            "x_pos": 520,
+            "y_pos": 615,
+            "x_legend_pos": 528,
+            "y_legend_pos": 637,
+            "display": 5
         },
         "56": {
-            "name": "NAT",
-            "full_name": "Atlantique Nord",
+            "name": "ATN",
+            "full_name": "Océan Atlantique Nord",
             "x_pos": 130,
             "y_pos": 175,
             "x_legend_pos": 130,
             "y_legend_pos": 161
         },
         "57": {
-            "name": "Net",
-            "full_name": "Atlantique Nord",
+            "name": "PaB",
+            "full_name": "Pays-Bas",
             "x_pos": 390,
             "y_pos": 393,
-            "x_legend_pos": 390,
-            "y_legend_pos": 379
+            "x_legend_pos": 374,
+            "y_legend_pos": 384
         },
         "58": {
-            "name": "Nrd",
+            "name": "NRD",
             "full_name": "Mer du Nord",
             "x_pos": 380,
             "y_pos": 306,
@@ -655,15 +679,15 @@
             "y_legend_pos": 292
         },
         "59": {
-            "name": "Nwg",
-            "full_name": "Norvège",
+            "name": "MNG",
+            "full_name": "Mer de Norvège",
             "x_pos": 398,
             "y_pos": 97,
             "x_legend_pos": 398,
             "y_legend_pos": 83
         },
         "60": {
-            "name": "Nwy",
+            "name": "Nge",
             "full_name": "Norvège",
             "x_pos": 459,
             "y_pos": 206,
@@ -672,11 +696,12 @@
         },
         "61": {
             "name": "Pal",
-            "full_name": "Norvège",
+            "full_name": "Palestine",
             "x_pos": 835,
             "y_pos": 756,
             "x_legend_pos": 835,
-            "y_legend_pos": 742
+            "y_legend_pos": 742,
+            "display": 7
         },
         "62": {
             "name": "Par",
@@ -685,16 +710,16 @@
             "y_pos": 473,
             "x_legend_pos": 348,
             "y_legend_pos": 459,
-            "display": 2
+            "display": 3
         },
         "63": {
             "name": "Pic",
             "full_name": "Picardie",
             "x_pos": 357,
             "y_pos": 417,
-            "x_legend_pos": 357,
-            "y_legend_pos": 403,
-            "display": 2
+            "x_legend_pos": 367,
+            "y_legend_pos": 431,
+            "display": 3
         },
         "64": {
             "name": "Pie",
@@ -702,15 +727,15 @@
             "x_pos": 408,
             "y_pos": 523,
             "x_legend_pos": 408,
-            "y_legend_pos": 509,
-            "display": 4
+            "y_legend_pos": 512,
+            "display": 5
         },
         "65": {
             "name": "Por",
             "full_name": "Portugal",
             "x_pos": 176,
             "y_pos": 573,
-            "x_legend_pos": 176,
+            "x_legend_pos": 184,
             "y_legend_pos": 559
         },
         "66": {
@@ -720,62 +745,62 @@
             "y_pos": 349,
             "x_legend_pos": 538,
             "y_legend_pos": 361,
-            "display": 3
+            "display": 4
         },
         "67": {
             "name": "Rom",
             "full_name": "Rome",
-            "x_pos": 449,
-            "y_pos": 553,
-            "x_legend_pos": 440,
-            "y_legend_pos": 541,
-            "display": 4
+            "x_pos": 448,
+            "y_pos": 557,
+            "x_legend_pos": 444,
+            "y_legend_pos": 548,
+            "display": 5
         },
         "68": {
             "name": "Rou",
             "full_name": "Roumanie",
             "x_pos": 665,
-            "y_pos": 521,
+            "y_pos": 518,
             "x_legend_pos": 665,
-            "y_legend_pos": 507
+            "y_legend_pos": 504
         },
         "69": {
             "name": "Ser",
             "full_name": "Serbie",
-            "x_pos": 583,
-            "y_pos": 545,
+            "x_pos": 590,
+            "y_pos": 543,
             "x_legend_pos": 589,
             "y_legend_pos": 561
         },
         "70": {
-            "name": "Sev",
+            "name": "Seb",
             "full_name": "Sébastopol",
             "x_pos": 846,
-            "y_pos": 477,
+            "y_pos": 446,
             "x_legend_pos": 846,
-            "y_legend_pos": 463,
+            "y_legend_pos": 433,
             "display": 6
         },
         "71": {
             "name": "Sib",
-            "full_name": "Silésie",
+            "full_name": "Sibérie",
             "x_pos": 850,
             "y_pos": 209,
             "x_legend_pos": 850,
             "y_legend_pos": 195,
-            "display": 3
+            "display": 6
         },
         "72": {
             "name": "Sil",
             "full_name": "Silésie",
             "x_pos": 524,
             "y_pos": 412,
-            "x_legend_pos": 511,
+            "x_legend_pos": 509,
             "y_legend_pos": 407,
-            "display": 3
+            "display": 4
         },
         "73": {
-            "name": "Ska",
+            "name": "SKA",
             "full_name": "Skagerrak",
             "x_pos": 456,
             "y_pos": 276,
@@ -783,15 +808,16 @@
             "y_legend_pos": 284
         },
         "74": {
-            "name": "Sou",
-            "full_name": "Skagerrak",
+            "name": "AMe",
+            "full_name": "Algérie Méridionale",
             "x_pos": 283,
             "y_pos": 795,
             "x_legend_pos": 283,
-            "y_legend_pos": 781
+            "y_legend_pos": 781,
+            "display": 3
         },
         "75": {
-            "name": "Spa",
+            "name": "Esp",
             "full_name": "Espagne",
             "x_pos": 241,
             "y_pos": 587,
@@ -801,14 +827,14 @@
         "76": {
             "name": "StP",
             "full_name": "Saint-Pétersbourg",
-            "x_pos": 615,
-            "y_pos": 147,
-            "x_legend_pos": 613,
-            "y_legend_pos": 134,
+            "x_pos": 785,
+            "y_pos": 113,
+            "x_legend_pos": 785,
+            "y_legend_pos": 99,
             "display": 6
         },
         "77": {
-            "name": "Swe",
+            "name": "Sue",
             "full_name": "Suède",
             "x_pos": 494,
             "y_pos": 274,
@@ -816,12 +842,12 @@
             "y_legend_pos": 260
         },
         "78": {
-            "name": "Swi",
+            "name": "Sui",
             "full_name": "Suisse",
             "x_pos": 413,
             "y_pos": 485,
-            "x_legend_pos": 413,
-            "y_legend_pos": 471
+            "x_legend_pos": 428,
+            "y_legend_pos": 493
         },
         "79": {
             "name": "Tri",
@@ -830,16 +856,15 @@
             "y_pos": 511,
             "x_legend_pos": 542,
             "y_legend_pos": 520,
-            "display": 5
+            "display": 1
         },
         "80": {
             "name": "Trp",
-            "full_name": "Trieste",
+            "full_name": "Tripolitaine",
             "x_pos": 482,
-            "y_pos": 802,
+            "y_pos": 806,
             "x_legend_pos": 482,
-            "y_legend_pos": 788,
-            "display": 5
+            "y_legend_pos": 792
         },
         "81": {
             "name": "Tun",
@@ -847,10 +872,11 @@
             "x_pos": 401,
             "y_pos": 741,
             "x_legend_pos": 401,
-            "y_legend_pos": 727
+            "y_legend_pos": 727,
+            "display": 3
         },
         "82": {
-            "name": "Tys",
+            "name": "TYN",
             "full_name": "Mer Tyrrhénienne",
             "x_pos": 455,
             "y_pos": 623,
@@ -863,7 +889,8 @@
             "x_pos": 457,
             "y_pos": 491,
             "x_legend_pos": 472,
-            "y_legend_pos": 487
+            "y_legend_pos": 487,
+            "display": 1
         },
         "84": {
             "name": "Ukr",
@@ -876,12 +903,12 @@
         },
         "85": {
             "name": "Ven",
-            "full_name": "Venise",
-            "x_pos": 472,
-            "y_pos": 556,
-            "x_legend_pos": 479,
-            "y_legend_pos": 544,
-            "display": 4
+            "full_name": "Vénétie",
+            "x_pos": 470,
+            "y_pos": 555,
+            "x_legend_pos": 456,
+            "y_legend_pos": 538,
+            "display": 5
         },
         "86": {
             "name": "Vie",
@@ -890,29 +917,29 @@
             "y_pos": 490,
             "x_legend_pos": 508,
             "y_legend_pos": 477,
-            "display": 5
+            "display": 1
         },
         "87": {
-            "name": "Wal",
+            "name": "PGa",
             "full_name": "Pays de Galles",
             "x_pos": 297,
             "y_pos": 366,
-            "x_legend_pos": 297,
+            "x_legend_pos": 301,
             "y_legend_pos": 352,
-            "display": 1
+            "display": 2
         },
         "88": {
-            "name": "War",
+            "name": "Var",
             "full_name": "Varsovie",
-            "x_pos": 561,
-            "y_pos": 395,
-            "x_legend_pos": 561,
-            "y_legend_pos": 381,
+            "x_pos": 562,
+            "y_pos": 404,
+            "x_legend_pos": 560,
+            "y_legend_pos": 380,
             "display": 6
         },
         "89": {
-            "name": "Wes",
-            "full_name": "Méditerranée occidentale",
+            "name": "MOC",
+            "full_name": "Méditerranée Occidentale",
             "x_pos": 364,
             "y_pos": 632,
             "x_legend_pos": 364,
@@ -925,7 +952,7 @@
             "y_pos": 354,
             "x_legend_pos": 333,
             "y_legend_pos": 340,
-            "display": 1
+            "display": 2
         },
         "91": {
             "name": "",
@@ -1038,12 +1065,12 @@
             "y_pos": 779
         },
         "14": {
-            "x_pos": 596,
-            "y_pos": 636
+            "x_pos": 620,
+            "y_pos": 647
         },
         "15": {
-            "x_pos": 441,
-            "y_pos": 377
+            "x_pos": 446,
+            "y_pos": 352
         },
         "16": {
             "x_pos": 338,
@@ -1074,8 +1101,8 @@
             "y_pos": 466
         },
         "23": {
-            "x_pos": 495,
-            "y_pos": 594
+            "x_pos": 502,
+            "y_pos": 599
         },
         "24": {
             "x_pos": 390,
@@ -1094,8 +1121,8 @@
             "y_pos": 576
         },
         "28": {
-            "x_pos": 449,
-            "y_pos": 553
+            "x_pos": 464,
+            "y_pos": 575
         },
         "29": {
             "x_pos": 654,
@@ -3561,7 +3588,7 @@
                 ],
                 [
                     455,
-                    393
+                    392
                 ],
                 [
                     455,
@@ -3608,8 +3635,48 @@
                     371
                 ],
                 [
-                    487,
-                    362
+                    486,
+                    365
+                ],
+                [
+                    485,
+                    363
+                ],
+                [
+                    479,
+                    364
+                ],
+                [
+                    476,
+                    361
+                ],
+                [
+                    477,
+                    359
+                ],
+                [
+                    471,
+                    353
+                ],
+                [
+                    471,
+                    351
+                ],
+                [
+                    476,
+                    350
+                ],
+                [
+                    482,
+                    356
+                ],
+                [
+                    484,
+                    355
+                ],
+                [
+                    486,
+                    361
                 ],
                 [
                     492,
@@ -5028,8 +5095,8 @@
                     256
                 ],
                 [
-                    323,
-                    257
+                    324,
+                    256
                 ],
                 [
                     323,
@@ -5040,20 +5107,12 @@
                     264
                 ],
                 [
-                    329,
+                    332,
                     262
                 ],
                 [
                     333,
-                    263
-                ],
-                [
-                    329,
-                    266
-                ],
-                [
-                    328,
-                    270
+                    264
                 ],
                 [
                     322,
@@ -5064,12 +5123,68 @@
                     277
                 ],
                 [
+                    310,
+                    285
+                ],
+                [
                     312,
-                    280
+                    292
+                ],
+                [
+                    311,
+                    301
+                ],
+                [
+                    314,
+                    303
+                ],
+                [
+                    314,
+                    307
+                ],
+                [
+                    317,
+                    308
+                ],
+                [
+                    319,
+                    311
+                ],
+                [
+                    301,
+                    311
+                ],
+                [
+                    301,
+                    308
+                ],
+                [
+                    305,
+                    308
+                ],
+                [
+                    302,
+                    309
+                ],
+                [
+                    301,
+                    307
+                ],
+                [
+                    303,
+                    306
+                ],
+                [
+                    302,
+                    305
                 ],
                 [
                     309,
-                    289
+                    294
+                ],
+                [
+                    309,
+                    290
                 ],
                 [
                     304,
@@ -6444,6 +6559,54 @@
         "28": {
             "area": [
                 [
+                    827,
+                    785
+                ],
+                [
+                    827,
+                    788
+                ],
+                [
+                    823,
+                    792
+                ],
+                [
+                    820,
+                    804
+                ],
+                [
+                    819,
+                    799
+                ],
+                [
+                    814,
+                    802
+                ],
+                [
+                    803,
+                    788
+                ],
+                [
+                    799,
+                    787
+                ],
+                [
+                    797,
+                    790
+                ],
+                [
+                    809,
+                    810
+                ],
+                [
+                    813,
+                    820
+                ],
+                [
+                    819,
+                    826
+                ],
+                [
                     825,
                     840
                 ],
@@ -6484,8 +6647,8 @@
                     783
                 ],
                 [
-                    671,
-                    778
+                    670,
+                    779
                 ],
                 [
                     683,
@@ -6512,8 +6675,16 @@
                     766
                 ],
                 [
-                    770,
+                    757,
+                    763
+                ],
+                [
+                    774,
                     759
+                ],
+                [
+                    777,
+                    761
                 ],
                 [
                     788,
@@ -6529,23 +6700,51 @@
                 ],
                 [
                     798,
+                    785
+                ],
+                [
+                    799,
+                    782
+                ],
+                [
+                    800,
+                    785
+                ],
+                [
+                    801,
                     784
                 ],
                 [
-                    797,
-                    791
+                    792,
+                    765
+                ],
+                [
+                    794,
+                    763
+                ],
+                [
+                    800,
+                    764
                 ],
                 [
                     809,
-                    810
+                    757
                 ],
                 [
-                    813,
-                    820
+                    811,
+                    757
                 ],
                 [
-                    819,
-                    826
+                    816,
+                    766
+                ],
+                [
+                    821,
+                    771
+                ],
+                [
+                    823,
+                    779
                 ]
             ]
         },
@@ -17712,36 +17911,784 @@
         "76": {
             "area": [
                 [
-                    560,
-                    507
+                    878,
+                    0
                 ],
                 [
-                    566,
-                    507
+                    878,
+                    37
                 ],
                 [
-                    570,
-                    511
+                    876,
+                    41
                 ],
                 [
-                    570,
-                    515
+                    874,
+                    56
                 ],
                 [
-                    566,
-                    519
+                    871,
+                    62
                 ],
                 [
-                    560,
-                    519
+                    871,
+                    67
                 ],
                 [
-                    556,
-                    515
+                    874,
+                    72
                 ],
                 [
-                    556,
-                    511
+                    876,
+                    95
+                ],
+                [
+                    859,
+                    106
+                ],
+                [
+                    856,
+                    134
+                ],
+                [
+                    850,
+                    140
+                ],
+                [
+                    846,
+                    148
+                ],
+                [
+                    839,
+                    154
+                ],
+                [
+                    836,
+                    161
+                ],
+                [
+                    826,
+                    167
+                ],
+                [
+                    823,
+                    173
+                ],
+                [
+                    814,
+                    180
+                ],
+                [
+                    810,
+                    187
+                ],
+                [
+                    810,
+                    192
+                ],
+                [
+                    805,
+                    196
+                ],
+                [
+                    806,
+                    202
+                ],
+                [
+                    804,
+                    206
+                ],
+                [
+                    800,
+                    210
+                ],
+                [
+                    794,
+                    204
+                ],
+                [
+                    780,
+                    212
+                ],
+                [
+                    766,
+                    212
+                ],
+                [
+                    760,
+                    210
+                ],
+                [
+                    752,
+                    217
+                ],
+                [
+                    750,
+                    222
+                ],
+                [
+                    750,
+                    228
+                ],
+                [
+                    745,
+                    231
+                ],
+                [
+                    737,
+                    239
+                ],
+                [
+                    731,
+                    237
+                ],
+                [
+                    728,
+                    243
+                ],
+                [
+                    723,
+                    247
+                ],
+                [
+                    719,
+                    243
+                ],
+                [
+                    714,
+                    246
+                ],
+                [
+                    715,
+                    251
+                ],
+                [
+                    713,
+                    253
+                ],
+                [
+                    707,
+                    253
+                ],
+                [
+                    703,
+                    259
+                ],
+                [
+                    705,
+                    263
+                ],
+                [
+                    704,
+                    269
+                ],
+                [
+                    699,
+                    273
+                ],
+                [
+                    692,
+                    273
+                ],
+                [
+                    687,
+                    278
+                ],
+                [
+                    685,
+                    282
+                ],
+                [
+                    687,
+                    287
+                ],
+                [
+                    683,
+                    291
+                ],
+                [
+                    684,
+                    298
+                ],
+                [
+                    676,
+                    309
+                ],
+                [
+                    676,
+                    313
+                ],
+                [
+                    678,
+                    316
+                ],
+                [
+                    677,
+                    318
+                ],
+                [
+                    674,
+                    318
+                ],
+                [
+                    669,
+                    313
+                ],
+                [
+                    666,
+                    313
+                ],
+                [
+                    658,
+                    321
+                ],
+                [
+                    654,
+                    317
+                ],
+                [
+                    654,
+                    315
+                ],
+                [
+                    649,
+                    311
+                ],
+                [
+                    630,
+                    312
+                ],
+                [
+                    619,
+                    307
+                ],
+                [
+                    617,
+                    305
+                ],
+                [
+                    625,
+                    295
+                ],
+                [
+                    629,
+                    281
+                ],
+                [
+                    631,
+                    279
+                ],
+                [
+                    634,
+                    279
+                ],
+                [
+                    631,
+                    273
+                ],
+                [
+                    631,
+                    270
+                ],
+                [
+                    633,
+                    268
+                ],
+                [
+                    630,
+                    261
+                ],
+                [
+                    631,
+                    258
+                ],
+                [
+                    623,
+                    254
+                ],
+                [
+                    624,
+                    253
+                ],
+                [
+                    621,
+                    249
+                ],
+                [
+                    621,
+                    244
+                ],
+                [
+                    625,
+                    241
+                ],
+                [
+                    635,
+                    240
+                ],
+                [
+                    646,
+                    235
+                ],
+                [
+                    641,
+                    231
+                ],
+                [
+                    649,
+                    224
+                ],
+                [
+                    656,
+                    211
+                ],
+                [
+                    661,
+                    197
+                ],
+                [
+                    661,
+                    186
+                ],
+                [
+                    656,
+                    179
+                ],
+                [
+                    641,
+                    165
+                ],
+                [
+                    640,
+                    158
+                ],
+                [
+                    631,
+                    151
+                ],
+                [
+                    624,
+                    138
+                ],
+                [
+                    623,
+                    131
+                ],
+                [
+                    626,
+                    129
+                ],
+                [
+                    627,
+                    123
+                ],
+                [
+                    623,
+                    116
+                ],
+                [
+                    621,
+                    108
+                ],
+                [
+                    621,
+                    98
+                ],
+                [
+                    614,
+                    88
+                ],
+                [
+                    605,
+                    80
+                ],
+                [
+                    600,
+                    73
+                ],
+                [
+                    601,
+                    70
+                ],
+                [
+                    612,
+                    58
+                ],
+                [
+                    611,
+                    55
+                ],
+                [
+                    615,
+                    53
+                ],
+                [
+                    617,
+                    55
+                ],
+                [
+                    617,
+                    59
+                ],
+                [
+                    624,
+                    59
+                ],
+                [
+                    626,
+                    61
+                ],
+                [
+                    626,
+                    67
+                ],
+                [
+                    630,
+                    59
+                ],
+                [
+                    642,
+                    58
+                ],
+                [
+                    649,
+                    62
+                ],
+                [
+                    654,
+                    62
+                ],
+                [
+                    663,
+                    66
+                ],
+                [
+                    671,
+                    67
+                ],
+                [
+                    686,
+                    74
+                ],
+                [
+                    690,
+                    84
+                ],
+                [
+                    690,
+                    92
+                ],
+                [
+                    681,
+                    101
+                ],
+                [
+                    674,
+                    101
+                ],
+                [
+                    670,
+                    99
+                ],
+                [
+                    654,
+                    99
+                ],
+                [
+                    649,
+                    96
+                ],
+                [
+                    640,
+                    94
+                ],
+                [
+                    632,
+                    89
+                ],
+                [
+                    630,
+                    90
+                ],
+                [
+                    630,
+                    95
+                ],
+                [
+                    636,
+                    98
+                ],
+                [
+                    644,
+                    106
+                ],
+                [
+                    650,
+                    108
+                ],
+                [
+                    656,
+                    113
+                ],
+                [
+                    657,
+                    117
+                ],
+                [
+                    655,
+                    122
+                ],
+                [
+                    665,
+                    140
+                ],
+                [
+                    673,
+                    141
+                ],
+                [
+                    677,
+                    144
+                ],
+                [
+                    687,
+                    146
+                ],
+                [
+                    687,
+                    139
+                ],
+                [
+                    678,
+                    133
+                ],
+                [
+                    677,
+                    127
+                ],
+                [
+                    681,
+                    126
+                ],
+                [
+                    687,
+                    132
+                ],
+                [
+                    689,
+                    132
+                ],
+                [
+                    691,
+                    129
+                ],
+                [
+                    696,
+                    128
+                ],
+                [
+                    713,
+                    128
+                ],
+                [
+                    713,
+                    126
+                ],
+                [
+                    703,
+                    123
+                ],
+                [
+                    700,
+                    118
+                ],
+                [
+                    692,
+                    111
+                ],
+                [
+                    692,
+                    107
+                ],
+                [
+                    698,
+                    95
+                ],
+                [
+                    705,
+                    88
+                ],
+                [
+                    708,
+                    90
+                ],
+                [
+                    711,
+                    87
+                ],
+                [
+                    715,
+                    92
+                ],
+                [
+                    721,
+                    92
+                ],
+                [
+                    717,
+                    87
+                ],
+                [
+                    714,
+                    71
+                ],
+                [
+                    706,
+                    69
+                ],
+                [
+                    704,
+                    67
+                ],
+                [
+                    704,
+                    62
+                ],
+                [
+                    701,
+                    57
+                ],
+                [
+                    701,
+                    50
+                ],
+                [
+                    696,
+                    45
+                ],
+                [
+                    706,
+                    41
+                ],
+                [
+                    714,
+                    44
+                ],
+                [
+                    719,
+                    49
+                ],
+                [
+                    719,
+                    51
+                ],
+                [
+                    711,
+                    57
+                ],
+                [
+                    711,
+                    62
+                ],
+                [
+                    729,
+                    66
+                ],
+                [
+                    733,
+                    62
+                ],
+                [
+                    732,
+                    49
+                ],
+                [
+                    735,
+                    45
+                ],
+                [
+                    735,
+                    37
+                ],
+                [
+                    741,
+                    25
+                ],
+                [
+                    743,
+                    24
+                ],
+                [
+                    746,
+                    29
+                ],
+                [
+                    750,
+                    28
+                ],
+                [
+                    750,
+                    21
+                ],
+                [
+                    747,
+                    17
+                ],
+                [
+                    747,
+                    14
+                ],
+                [
+                    750,
+                    11
+                ],
+                [
+                    754,
+                    13
+                ],
+                [
+                    753,
+                    27
+                ],
+                [
+                    755,
+                    34
+                ],
+                [
+                    766,
+                    48
+                ],
+                [
+                    770,
+                    47
+                ],
+                [
+                    770,
+                    45
+                ],
+                [
+                    766,
+                    42
+                ],
+                [
+                    766,
+                    38
+                ],
+                [
+                    761,
+                    30
+                ],
+                [
+                    763,
+                    23
+                ],
+                [
+                    762,
+                    3
+                ],
+                [
+                    764,
+                    0
                 ]
             ]
         },
