@@ -46,16 +46,16 @@
             "adjective_name": "autrichien",
             "letter_name": "A",
             "red": [
-                255,
-                235
+                235,
+                255
             ],
             "green": [
-                255,
-                235
+                235,
+                255
             ],
             "blue": [
-                0,
-                20
+                10,
+                30
             ]
         },
         "2": {
@@ -63,16 +63,16 @@
             "adjective_name": "britannique",
             "letter_name": "B",
             "red": [
-                0,
-                20
+                40,
+                60
             ],
             "green": [
-                0,
-                20
+                40,
+                60
             ],
             "blue": [
-                128,
-                148
+                168,
+                188
             ]
         },
         "3": {
@@ -80,16 +80,16 @@
             "adjective_name": "français",
             "letter_name": "F",
             "red": [
-                20,
-                0
+                30,
+                10
             ],
             "green": [
-                168,
-                148
+                118,
+                138
             ],
             "blue": [
-                188,
-                168
+                208,
+                228
             ]
         },
         "4": {
@@ -97,16 +97,16 @@
             "adjective_name": "allemand",
             "letter_name": "G",
             "red": [
-                30,
-                50
+                50,
+                70
             ],
             "green": [
-                30,
-                50
+                50,
+                70
             ],
             "blue": [
-                30,
-                50
+                50,
+                70
             ]
         },
         "5": {
@@ -114,16 +114,16 @@
             "adjective_name": "italien",
             "letter_name": "I",
             "red": [
-                0,
-                20
+                20,
+                0
             ],
             "green": [
-                255,
-                235
+                235,
+                255
             ],
             "blue": [
-                0,
-                20
+                20,
+                0
             ]
         },
         "6": {
@@ -148,16 +148,16 @@
             "adjective_name": "turc",
             "letter_name": "T",
             "red": [
-                255,
-                235
+                235,
+                255
             ],
             "green": [
-                0,
-                20
+                20,
+                0
             ],
             "blue": [
-                0,
-                20
+                20,
+                0
             ]
         }
     },
@@ -267,8 +267,8 @@
             "full_name": "Belgique",
             "x_pos": 380,
             "y_pos": 410,
-            "x_legend_pos": 372,
-            "y_legend_pos": 389
+            "x_legend_pos": 362,
+            "y_legend_pos": 399
         },
         "12": {
             "name": "Ber",
@@ -662,8 +662,8 @@
             "full_name": "Pays-Bas",
             "x_pos": 390,
             "y_pos": 393,
-            "x_legend_pos": 383,
-            "y_legend_pos": 373
+            "x_legend_pos": 374,
+            "y_legend_pos": 384
         },
         "58": {
             "name": "NTH",
@@ -804,7 +804,7 @@
         },
         "74": {
             "name": "Sou",
-            "full_name": "Soudan",
+            "full_name": "Algérie Sud",
             "x_pos": 283,
             "y_pos": 795,
             "x_legend_pos": 283,
@@ -901,7 +901,7 @@
             "full_name": "Venise",
             "x_pos": 470,
             "y_pos": 555,
-            "x_legend_pos": 460,
+            "x_legend_pos": 456,
             "y_legend_pos": 538,
             "display": 5
         },
@@ -1064,8 +1064,8 @@
             "y_pos": 647
         },
         "15": {
-            "x_pos": 441,
-            "y_pos": 377
+            "x_pos": 446,
+            "y_pos": 352
         },
         "16": {
             "x_pos": 338,
