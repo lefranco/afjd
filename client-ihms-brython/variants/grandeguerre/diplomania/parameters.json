@@ -1,5 +1,9 @@
 {
-    "additional_text": "Attention : l'Italie est neutre dans cette variante.",
+    "author": {
+        "x_pos" : 600,
+        "y_pos" : 10
+    },
+    "additional_text": "Duel. Trois contre trois.\nAttention : l'Italie est neutre dans cette variante.",
     "map": {
         "width": 761,
         "height": 703

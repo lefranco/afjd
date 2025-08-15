@@ -1,5 +1,9 @@
 {
-    "additional_text": "Carte pour les daltoniens",
+    "author": {
+        "x_pos" : 600,
+        "y_pos" : 10
+    },
+   "additional_text": "Carte pour les daltoniens",
    "map": {
         "width": 761,
         "height": 703

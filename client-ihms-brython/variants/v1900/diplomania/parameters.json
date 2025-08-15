@@ -1,5 +1,9 @@
 {
-    "additional_text": "",
+    "author": {
+        "x_pos" : 10,
+        "y_pos" : 10
+    },
+    "additional_text": "Une version améliorée et plus équilibrée de Diplomacy standard.\nATTENTION Plusieurs règles spéciales s'appliquent.\nLire la description détaillée de la variante.",
     "map": {
         "width": 895,
         "height": 843
