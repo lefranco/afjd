@@ -1,5 +1,9 @@
 {
-    "additional_text": "la variante à 34 joueurs !",
+    "author": {
+        "x_pos" : 600,
+        "y_pos" : 10
+    },
+    "additional_text": "La fameuse variante à 34 joueurs (chacun un centre) !",
     "map": {
         "width": 761,
         "height": 703

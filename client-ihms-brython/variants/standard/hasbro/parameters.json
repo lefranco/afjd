@@ -1,5 +1,9 @@
 {
-    "additional_text": "Codes internationaux.",
+    "author": {
+        "x_pos" : 600,
+        "y_pos" : 10
+    },
+    "additional_text": "Carte avec les codes internationaux.",
     "map": {
         "width": 761,
         "height": 703

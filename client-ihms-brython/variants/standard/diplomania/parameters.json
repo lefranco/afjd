@@ -1,4 +1,8 @@
 {
+    "author": {
+        "x_pos" : 600,
+        "y_pos" : 10
+    },
     "additional_text": "",
     "map": {
         "width": 761,

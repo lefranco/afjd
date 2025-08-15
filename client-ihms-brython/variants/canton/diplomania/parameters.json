@@ -1,5 +1,9 @@
 {
-    "additional_text": "",
+    "author": {
+        "x_pos" : 350,
+        "y_pos" : 10
+    },
+    "additional_text": "Diplomacy transposé en Asie (même époque).",
     "map": {
         "width": 967,
         "height": 733
@@ -101,12 +105,12 @@
                 255
             ],
             "green": [
-                193,
-                213
+                183,
+                203
             ],
             "blue": [
-                100,
-                128
+                110,
+                138
             ]
         },
         "5": {
@@ -118,12 +122,12 @@
                 255
             ],
             "green": [
-                200,
-                180
+                210,
+                190
             ],
             "blue": [
-                173,
-                193
+                183,
+                203
             ]
         },
         "6": {
@@ -437,10 +441,10 @@
         "31": {
             "name": "GOS",
             "full_name": "Gulf of Siam",
-            "x_pos": 641,
-            "y_pos": 583,
-            "x_legend_pos": 642,
-            "y_legend_pos": 570
+            "x_pos": 631,
+            "y_pos": 578,
+            "x_legend_pos": 632,
+            "y_legend_pos": 565
         },
         "32": {
             "name": "HAN",
@@ -676,10 +680,10 @@
         "59": {
             "name": "RUM",
             "full_name": "Rumania",
-            "x_pos": 77,
-            "y_pos": 29,
-            "x_legend_pos": 77,
-            "y_legend_pos": 15
+            "x_pos": 76,
+            "y_pos": 28,
+            "x_legend_pos": 76,
+            "y_legend_pos": 14
         },
         "60": {
             "name": "SAI",
@@ -703,8 +707,8 @@
             "full_name": "Sasebo",
             "x_pos": 865,
             "y_pos": 254,
-            "x_legend_pos": 859,
-            "y_legend_pos": 234,
+            "x_legend_pos": 882,
+            "y_legend_pos": 246,
             "display": 5
         },
         "63": {
@@ -815,8 +819,8 @@
             "full_name": "Tokyo",
             "x_pos": 892,
             "y_pos": 130,
-            "x_legend_pos": 915,
-            "y_legend_pos": 139,
+            "x_legend_pos": 914,
+            "y_legend_pos": 143,
             "display": 5
         },
         "76": {
@@ -939,15 +943,15 @@
     "centers": {
         "1": {
             "x_pos": 342,
-            "y_pos": 281
+            "y_pos": 282
         },
         "2": {
             "x_pos": 137,
             "y_pos": 225
         },
         "3": {
-            "x_pos": 312,
-            "y_pos": 341
+            "x_pos": 313,
+            "y_pos": 342
         },
         "4": {
             "x_pos": 754,
@@ -1058,8 +1062,8 @@
             "y_pos": 247
         },
         "31": {
-            "x_pos": 132,
-            "y_pos": 41
+            "x_pos": 133,
+            "y_pos": 42
         },
         "32": {
             "x_pos": 769,

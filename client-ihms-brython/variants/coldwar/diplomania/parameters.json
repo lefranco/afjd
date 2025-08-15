@@ -1,5 +1,9 @@
 {
-    "additional_text": "",
+    "author": {
+        "x_pos" : 10,
+        "y_pos" : 10
+    },
+    "additional_text": "Duel. La guerre froide.",
     "map": {
         "width": 1248,
         "height": 739
