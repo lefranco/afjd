@@ -360,11 +360,11 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
             if zone2.region_type != 1:  # coast
                 continue
             if not seas_of_zones[zone1] & seas_of_zones[zone2]:
-                print(f"Removing {zone2}({zone2.number}) from neighbours of {zone1}({zone1.number}) because no common sea")
+                print(f"\033[34m Removing {zone2}({zone2.number}) from neighbours of {zone1}({zone1.number}) because no common sea\033[0m")
                 neighbours.remove(zone_num2)
                 continue
             if int(zone_num1) in special2region and zone_num2 in special2region and special2region[int(zone_num1)] == special2region[zone_num2]:
-                print(f"Removing {zone2}({zone2.number}) from neighbours of {zone1}({zone1.number}) because two special coasts of same region!")
+                print(f"\033[34m Removing {zone2}({zone2.number}) from neighbours of {zone1}({zone1.number}) because two special coasts of same region!\033[0m")
                 neighbours.remove(zone_num2)
 
     old_neighbouring = json_variant_data['neighbouring'].copy()
