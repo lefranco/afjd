@@ -25,8 +25,21 @@ def main() -> None:
     army_neighbouring = neighbouring[0]
     fleet_neighbouring = neighbouring[1]
 
+    regions = parameters_read['regions']
+
     for neighbouring in army_neighbouring, fleet_neighbouring:
         for zone1, neighbours in neighbouring.items():
+
+            # check compatibility
+            # 1 = coast 2 = land 3 = sea
+            if int(zone1) - 1 in range(len(regions)):
+                if (neighbouring == army_neighbouring and regions[int(zone1) - 1] not in [1, 2]) or (neighbouring == fleet_neighbouring and regions[int(zone1) - 1] not in [1, 3]):
+                    print(f"By {'army' if neighbouring == army_neighbouring else 'fleet'} {zone1} is not expected since zone type not compatible with unit concerned with neighbourhood")
+            else:
+                if neighbouring == army_neighbouring:
+                    print(f"special coast neighbouring for army for {zone1}")
+
+            # check reciprocity
             for zone2 in neighbours:
                 if str(zone2) not in neighbouring:
                     print(f"By {'army' if neighbouring == army_neighbouring else 'fleet'} {zone2} is in {zone1}' neighbours list but has no neighbour at all")
