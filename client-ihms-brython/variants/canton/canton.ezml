@@ -2,35 +2,29 @@
 
 _
 $ Contexte
-C'est une version épurée du Diplomacy classique, plus équilibrée et plus conforme à la réalité historique.
+C'est une transposition du Diplomacy classique en Asie, sur fond de guerre coloniale.
 
 _
 $ Côtes spéciales
 
-(Espagne)
-   Elle a 3 côtes, Ouest, Est et Nord.
-(Macédoine)
+(Bulgarie)
+   Elle a 2 côtes, Est et Sud.
+(Canton)
+   Elle a 2 côtes, Est et Sud.
+(Damascus)
+   Elle a 2 côtes, Ouest et Sud.
+(Siam)
    Elle a 2 côtes, Ouest et Est.
-(Saint Pétersboug)
-   Elle a 2 côtes, Nord et Sud.
 
 _
 $ Particularités de la carte
 
-(Cly - Ire)
-Les unités (armées et flottes) peuvent se déplacer ou apporter leur soutien de Irelande à Clyde ou vice versa indépendamment de la présence d'une flotte dans le Atlantique Nord.
+La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question
 
-(Spa - Mor)
-Les armées peuvent se déplacer ou apporter leur soutien de Espagne à Maroc ou vice versa indépendamment de la présence d'une flotte dans le Gibraltar.
-
-(Hej - Egy)
-Les flottes peuvent se déplacer ou apporter leur soutien de Egypte à Hejaz ou vice versa indépendamment de la présence d'une flotte dans l'Océan Atlantique Moyen (Mer Rouge). (Cf. dernier paragraphe.)
-
-(Palestine)
-Pas de voisinage par flotte entre la Palestine et Océan Atlantique Moyen (Mer Rouge) contrairement à ce que la carte laisse à penser. (Cf. dernier paragraphe.)
-
-(ATTENTION)
-La carte possède la particularité d’avoir une sorte de fusion entre la Mer Rouge et l'Océan Atlantique Moyen (Cf. dernier paragraphe.)
+(Canal en Egypte)
+De Mer Rouge (RED) à Mer Méditerrannée (MED) en passant par Egypte (EGY) (et réciproquement)
+(Canal à Constantinople)
+De Mer Méditerranée (MED) à Mer Noire (BLA) en passant par Constantinople (CON) (et réciproquement)
 
 _
 $ Datation
@@ -42,9 +36,9 @@ Chaque tour représente *1* années
 _
 $ Centres de ravitaillement
 
-Il y a *39* centres de ravitaillement sur le plateau. 
+Il y a *36* centres de ravitaillement sur le plateau. 
 .
-Le gagnant est donc la puissance qui détient *19* centres de ravitaillement ou plus pendant une phase d'ajustement, sauf spécificité (Cf. dernier paragraphe.)
+Le gagnant est donc la puissance qui détient *19* centres de ravitaillement ou plus pendant une phase d'ajustement.
 .
 
 _
@@ -55,161 +49,113 @@ Il y a sept puissances dont les unités de départ sont les suivantes :
 .
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés|
-|Autriche | 3 | Budapest, Trieste, Vienne |  | |
-|Grande-Bretagne | 4 | | Liverpool Edimbourg, Londres, Gibraltar | |
-|France | 4 | Algérie, Paris, Marseille | Brest | |
-|Allemagne | 4 | Berlin, Cologne, Munich | Kiel | |
-|Italie | 3 | Milan, Rome| Naples | |
-|Russie | 4 | Moscou, Varsovie| Sébastopol, Saint-Pétersbourg (côte sud) | |
-|Turquie | 3 | Constantinople, Damas | Ankara | |
+|Grande-Bretagne | 3 | Calcutta, Delhi | Madras| |
+|Chine | 4 | Chungking, Shanghai, Tibet | Peking | |
+|France | 3 | Hanoi, Hue | Saigon | |
+|Hollande | 3 | | Borneo, Java, Sumatra | |
+|Japon | 3 | Kyoto | Sasebo, Tokyo | |
+|Russie | 4 |Irkutsk, Moscow | Khabarovsk, Sevastopol | |
+|Turquie | 3 | Bagdad, Damas | Constantinople | |
 =
 
 _
 $ Pièges de la variante
 
-Multiples ! (Cf. dernier paragraphe.)
+Sans objet.
 
 _
 $ Nomenclature
 
 = Régions et abréviations de la variante
 | Abréviation | Nom complet |
-| ADR | Mer Adriatique |
-| Alg | Algérie |
-| Als | Alsace |
-| AMe | Algérie Méridionale |
-| Ank | Ankara |
-| Apu | Apulie |
-| Ara | Arabie |
-| Arm | Arménie |
-| ATL | Océan Atlantique Moyen |
-| ATN | Océan Atlantique Nord |
-| BAL | Mer Baltique |
-| BAR | Mer de Barents |
-| Bel | Belgique |
-| Ber | Berlin |
-| Boh | Bohème |
-| Bos | Bosnie |
-| Bou | Bourgogne |
-| Bre | Brest |
-| Bud | Budapest |
-| Bul | Bulgarie |
-| Cly | Clyde |
-| Col | Cologne |
-| Con | Constantinople |
-| Cyr | Cyrénaïque |
-| Dam | Damas |
-| Dan | Danemark |
-| Edi | Édimbourg |
-| EGE | Mer Égée |
-| Egy | Égypte |
-| Esp | Espagne |
-| Fin | Finlande |
-| Gal | Galicie |
-| Gas | Gascogne |
-| GBO | Golfe de Botnie |
-| GIB | Gibraltar |
-| GLI | Golfe du Lion |
-| Gre | Grèce |
-| Hed | Hedjaz |
-| HEL | Baie de Héligoland |
-| ION | Mer Ionienne |
-| Ire | Irlande |
-| Isl | Islande |
-| Kie | Kiel |
-| Kon | Konya |
-| Lon | Londres |
-| Lvn | Livonie |
-| Lvp | Liverpool |
-| Mac | Macédoine |
-| MAN | Manche |
-| Mar | Marseille |
-| Mil | Milan |
-| MIR | Mer d'Irlande |
-| MNG | Mer de Norvège |
-| MOC | Méditerranée Occidentale |
-| MOR | Méditerranée Orientale |
-| Mos | Moscou |
-| Mrc | Maroc |
-| Mun | Munich |
-| Nap | Naples |
-| Nge | Norvège |
-| NOI | Mer Noire |
-| NRD | Mer du Nord |
-| PaB | Pays-Bas |
-| Pal | Palestine |
-| Par | Paris |
-| PGa | Pays de Galles |
-| Pic | Picardie |
-| Pie | Piémont |
-| Por | Portugal |
-| Pru | Prusse |
-| Rom | Rome |
-| Rou | Roumanie |
-| Seb | Sébastopol |
-| Ser | Serbie |
-| Sib | Sibérie |
-| Sil | Silésie |
-| SKA | Skagerrak |
-| StP | Saint-Pétersbourg |
-| Sue | Suède |
-| Sui | Suisse |
-| Tri | Trieste |
-| Trp | Tripolitaine |
-| Tun | Tunis |
-| TYN | Mer Tyrrhénienne |
-| Tyr | Tyrol |
-| Ukr | Ukraine |
-| Var | Varsovie |
-| Ven | Vénétie |
-| Vie | Vienne |
-| Yor | Yorkshire |
+| AFG | Afghanistan |
+| AKI | Akita |
+| AMU | Amur |
+| ARA | Arabia |
+| ARM  | Armenia |
+| ASE | Arabian Sea |
+| ASM | Assam |
+| BAG | Baghdad |
+| BAL | Baluchistan |
+| BAN | Banda Sea |
+| BLA | Black Sea |
+| BOB | Bay of Bengal |
+| BOM | Bombay |
+| BOR | Borneo |
+| BUL | Bulgaria |
+| BUR | Burma |
+| CAL | Calcutta |
+| CAM | Cambodia |
+| CAN | Canton |
+| CHU | Chungking |
+| CON | Constantinople |
+| CPO |  Central Pacific Ocean |
+| CSE | Celebes Sea |
+| DAM | Damascus |
+| DEL | Delhi |
+| ECS | East China Sea |
+| EGY | Egypt |
+| EIO | East Indian Ocean |
+| FOR | Formosa |
+| GOM | Gulf of Martaban |
+| GOS | Gulf of Siam |
+| HAN | Hanoi |
+| HKO |  Hong Kong |
+| HUE | Hue |
+| IRK | Irkutsk |
+| JAV | Java |
+| JSE | Java Sea |
+| KAN | Kansu |
+| KAR | Karimata Strait |
+| KAS | Kashmir |
+| KHA | Khabarovsk |
+| KIR | Kirghiz |
+| KOR | Korea |
+| KYO | Kyoto |
+| LAO | Laos |
+| MAD | Madras |
+| MAL | Malaya |
+| MAN | Manchuria |
+| MAR | Maritime Province |
+| MED | Mediterranean Sea |
+| MON | Mongolia |
+| MOS | Moscow |
+| PEK | Peking |
+| PER | Persia |
+| PGU | Persian Gulf |
+| PHI | Philippines |
+| PSE | Philippine Sea |
+| RED | Red Sea |
+| RUM | Rumania |
+| SAI | Saigon |
+| SAR | Sarawak |
+| SAS | Sasebo |
+| SCS | South China Sea |
+| SEV | Sevastopol |
+| SHA | Shanghai |
+| SHI | Shikoku |
+| SIA | Siam |
+| SIB | Siberia |
+| SIN | Sinkiang |
+| SIO | South Indian Ocean |
+| SOJ | Sea of Japan |
+| SOO | Sea of Okhotsk |
+| SUM | Sumatra |
+| TIB | Tibet |
+| TOK | Tokyo |
+| TOM | Tomsk |
+| TUR | Turkestan |
+| WIO | West Indian Ocean |
+| YEL | Yellow Sea |
+| YES | Yesso |
+| YUN | Yunnan |
 =
 _
 $ Expansionnisme (non)
 
-Constructions sur les centres de départ, sauf spécificité. (Cf. dernier paragraphe.)
-_
-$ Règles spéciales
-
-(Solo à 18 centres seul)
-Selon les règles de la variante, le gagnant est le premier joueur à attendre 18 centres et être seul à le faire. Il faut continuer la partie en cas d'égalité à 18 centres. L'arrêt à 19 centres (majorité absolue) reste appliqué par le système.
-
-(Egypte)
-Le joueur britannique ne peut pas construire en Égypte.
-
-(Algérie)
-Le joueur français ne peut pas construire en Algérie.
-
-(Gibraltar)
-Une flotte à cet endroit peut convoyer (même si c'est une côte). Une armée peut y stationner.
-
-(Construction en Sibérie)
-Lorsque la Russie possède au moins un, MAIS PAS LES QUATRE, de ses centres de ravitaillement d'origine, elle a le droit de maintenir une unité supplémentaire sur la carte (c'est-à-dire une de plus que le nombre de centres de ravitaillement qu'elle contrôle actuellement). De plus, tant que la Russie est dans cette situation, le joueur russe peut utiliser la Sibérie comme site de construction pendant la phase d'ajustement, si elle est inoccupée. 
-.
-Si la Russie ne possède pas au moins un centre de ravitaillement ou si elle reprend possession de ses quatre centres de ravitaillement, elle perd la possibilité de maintenir une unité supplémentaire et toute unité excédentaire doit être dissoute lors de la phase d'ajustement suivante. De plus, la Sibérie retrouve son statut normal (elle n'est plus un site de construction).
-
-(Fusion Mer Rouge et Océan Atlantique Moyen)
-Les mouvements entre l'Égypte ou le Hedjaz et le l'Océan Atlantique Moyen sont autorisés. 
-.
-On suppose que l'unité contourne la pointe sud de l'Afrique.
-.
-Une unité qui se déplace de cette manière le fait à la moitié de ses effectifs. Cela signifie qu'une unité adjacente à l'Égypte ou au Hedjaz peut s'y déplacer si elle est seulement contrariée par une flotte venant du milieu de l'Atlantique, et qu'une flotte adjacente à l'Océan Atlantique Moyen peut s'y déplacer si elle est seulement contrariée par une flotte venant d'Égypte ou du Hedjaz.
-.
-Une flotte en Égypte ou au Hedjaz ne peut pas soutenir une unité qui se maintient ou se déplace vers l'Océan Atlantique Moyen. Ceci est vrai même si la flotte en Égypte ou au Hedjaz peut elle-même se déplacer vers l'Océan Atlantique Moyen.
-.
-De même, une flotte en Océan Atlantique Moyen ne peut pas soutenir une unité qui se maintient ou se déplace vers l'Égypte ou le Hedjaz. Une flotte se déplaçant d'Égypte ou du Hedjaz vers l'Océan Atlantique Moyen ne réduit pas le soutien fourni par une flotte déjà présente dans cette zone, sauf si l'attaque entraîne le déplacement de l'unité. L'inverse est également vrai. 
-.
-Une flotte se déplaçant du centre de l'Océan Atlantique Moyen vers l'Égypte ou le Hedjaz ne réduit pas le soutien fourni par une unité déjà présente dans cette zone, sauf si l'attaque entraîne le déplacement de l'unité.
-.
-L'Océan Atlantique Moyen peut convoyer une armée depuis ou vers l'Égypte ou le Hedjaz. Une armée convoyée depuis l'Égypte ou le Hedjaz attaque sa zone de destination à pleine puissance. Une armée convoyée vers l'Égypte ou le Hedjaz attaque à moitié puissance.
-.
-Si deux unités se replient vers l'Égypte, le Hedjaz ou l'Océan Atlantique Moyen, et que l'une d'elles doit contourner la pointe sud de l'Afrique, l'unité qui ne contourne pas l'Afrique australe peut se replier tandis que l'autre unité est dissoute.
-
-(IMPORTANT)
-*Seul l'arbitre peut manuellement appliquer ces règles spéciales. Voir avec elle/lui.*
+Constructions sur les centres de départ.
 
 _
 $ Sur le wiki
 
-Sans objet
+[[https://diplomania-gen.fr/dokuwiki/doku.php?id=variante:canton]]
