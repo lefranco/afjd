@@ -46,23 +46,6 @@
             "adjective_name": "britannique",
             "letter_name": "B",
             "red": [
-                235,
-                255
-            ],
-            "green": [
-                235,
-                255
-            ],
-            "blue": [
-                10,
-                30
-            ]
-        },
-        "2": {
-            "name": "Chine",
-            "adjective_name": "chinois",
-            "letter_name": "C",
-            "red": [
                 60,
                 80
             ],
@@ -73,6 +56,23 @@
             "blue": [
                 168,
                 178
+            ]
+        },
+        "2": {
+            "name": "Chine",
+            "adjective_name": "chinois",
+            "letter_name": "C",
+            "red": [
+                235,
+                255
+            ],
+            "green": [
+                235,
+                255
+            ],
+            "blue": [
+                10,
+                30
             ]
         },
         "3": {
@@ -97,16 +97,16 @@
             "adjective_name": "hollandais",
             "letter_name": "H",
             "red": [
-                20,
-                60
+                235,
+                255
             ],
             "green": [
-                20,
-                60
+                193,
+                213
             ],
             "blue": [
-                20,
-                60
+                100,
+                128
             ]
         },
         "5": {
@@ -114,16 +114,16 @@
             "adjective_name": "japonais",
             "letter_name": "J",
             "red": [
-                20,
-                0
-            ],
-            "green": [
                 235,
                 255
             ],
+            "green": [
+                200,
+                180
+            ],
             "blue": [
-                20,
-                0
+                173,
+                193
             ]
         },
         "6": {
@@ -194,7 +194,8 @@
             "x_pos": 886,
             "y_pos": 173,
             "x_legend_pos": 886,
-            "y_legend_pos": 159
+            "y_legend_pos": 159,
+            "display": 5
         },
         "3": {
             "name": "AMU",
@@ -202,7 +203,8 @@
             "x_pos": 723,
             "y_pos": 74,
             "x_legend_pos": 723,
-            "y_legend_pos": 60
+            "y_legend_pos": 60,
+            "display": 6
         },
         "4": {
             "name": "ARA",
@@ -210,7 +212,8 @@
             "x_pos": 126,
             "y_pos": 368,
             "x_legend_pos": 126,
-            "y_legend_pos": 354
+            "y_legend_pos": 354,
+            "display": 7
         },
         "5": {
             "name": "ARM ",
@@ -234,7 +237,8 @@
             "x_pos": 541,
             "y_pos": 377,
             "x_legend_pos": 541,
-            "y_legend_pos": 363
+            "y_legend_pos": 363,
+            "display": 1
         },
         "8": {
             "name": "BAG",
@@ -242,7 +246,8 @@
             "x_pos": 142,
             "y_pos": 201,
             "x_legend_pos": 142,
-            "y_legend_pos": 187
+            "y_legend_pos": 187,
+            "display": 7
         },
         "9": {
             "name": "BAL",
@@ -282,7 +287,8 @@
             "x_pos": 366,
             "y_pos": 456,
             "x_legend_pos": 366,
-            "y_legend_pos": 442
+            "y_legend_pos": 442,
+            "display": 1
         },
         "14": {
             "name": "BOR",
@@ -290,7 +296,8 @@
             "x_pos": 756,
             "y_pos": 639,
             "x_legend_pos": 756,
-            "y_legend_pos": 625
+            "y_legend_pos": 625,
+            "display": 4
         },
         "15": {
             "name": "BUL",
@@ -314,7 +321,8 @@
             "x_pos": 492,
             "y_pos": 403,
             "x_legend_pos": 492,
-            "y_legend_pos": 389
+            "y_legend_pos": 389,
+            "display": 1
         },
         "18": {
             "name": "CAM",
@@ -330,7 +338,8 @@
             "x_pos": 691,
             "y_pos": 379,
             "x_legend_pos": 691,
-            "y_legend_pos": 365
+            "y_legend_pos": 365,
+            "display": 2
         },
         "20": {
             "name": "CHU",
@@ -338,7 +347,8 @@
             "x_pos": 628,
             "y_pos": 327,
             "x_legend_pos": 628,
-            "y_legend_pos": 313
+            "y_legend_pos": 313,
+            "display": 2
         },
         "21": {
             "name": "CON",
@@ -346,7 +356,8 @@
             "x_pos": 100,
             "y_pos": 135,
             "x_legend_pos": 100,
-            "y_legend_pos": 121
+            "y_legend_pos": 121,
+            "display": 7
         },
         "22": {
             "name": "CPO",
@@ -370,7 +381,8 @@
             "x_pos": 102,
             "y_pos": 184,
             "x_legend_pos": 102,
-            "y_legend_pos": 170
+            "y_legend_pos": 170,
+            "display": 7
         },
         "25": {
             "name": "DEL",
@@ -378,7 +390,8 @@
             "x_pos": 411,
             "y_pos": 387,
             "x_legend_pos": 411,
-            "y_legend_pos": 373
+            "y_legend_pos": 373,
+            "display": 1
         },
         "26": {
             "name": "ECS",
@@ -391,10 +404,11 @@
         "27": {
             "name": "EGY",
             "full_name": "Egypt",
-            "x_pos": 18,
+            "x_pos": 17,
             "y_pos": 292,
-            "x_legend_pos": 18,
-            "y_legend_pos": 278
+            "x_legend_pos": 17,
+            "y_legend_pos": 278,
+            "display": 7
         },
         "28": {
             "name": "EIO",
@@ -434,7 +448,8 @@
             "x_pos": 656,
             "y_pos": 427,
             "x_legend_pos": 656,
-            "y_legend_pos": 413
+            "y_legend_pos": 413,
+            "display": 3
         },
         "33": {
             "name": "HKO",
@@ -450,7 +465,8 @@
             "x_pos": 687,
             "y_pos": 502,
             "x_legend_pos": 687,
-            "y_legend_pos": 488
+            "y_legend_pos": 488,
+            "display": 3
         },
         "35": {
             "name": "IRK",
@@ -458,7 +474,8 @@
             "x_pos": 636,
             "y_pos": 56,
             "x_legend_pos": 636,
-            "y_legend_pos": 42
+            "y_legend_pos": 42,
+            "display": 6
         },
         "36": {
             "name": "JAV",
@@ -466,7 +483,8 @@
             "x_pos": 703,
             "y_pos": 710,
             "x_legend_pos": 703,
-            "y_legend_pos": 696
+            "y_legend_pos": 696,
+            "display": 4
         },
         "37": {
             "name": "JSE",
@@ -482,7 +500,8 @@
             "x_pos": 558,
             "y_pos": 244,
             "x_legend_pos": 558,
-            "y_legend_pos": 230
+            "y_legend_pos": 230,
+            "display": 2
         },
         "39": {
             "name": "KAR",
@@ -498,7 +517,8 @@
             "x_pos": 388,
             "y_pos": 314,
             "x_legend_pos": 388,
-            "y_legend_pos": 300
+            "y_legend_pos": 300,
+            "display": 1
         },
         "41": {
             "name": "KHA",
@@ -514,7 +534,8 @@
             "x_pos": 290,
             "y_pos": 107,
             "x_legend_pos": 290,
-            "y_legend_pos": 93
+            "y_legend_pos": 93,
+            "display": 6
         },
         "43": {
             "name": "KOR",
@@ -530,7 +551,8 @@
             "x_pos": 860,
             "y_pos": 223,
             "x_legend_pos": 860,
-            "y_legend_pos": 209
+            "y_legend_pos": 209,
+            "display": 5
         },
         "45": {
             "name": "LAO",
@@ -538,7 +560,8 @@
             "x_pos": 636,
             "y_pos": 455,
             "x_legend_pos": 636,
-            "y_legend_pos": 441
+            "y_legend_pos": 441,
+            "display": 3
         },
         "46": {
             "name": "MAD",
@@ -546,7 +569,8 @@
             "x_pos": 417,
             "y_pos": 471,
             "x_legend_pos": 417,
-            "y_legend_pos": 457
+            "y_legend_pos": 457,
+            "display": 1
         },
         "47": {
             "name": "MAL",
@@ -570,7 +594,8 @@
             "x_pos": 820,
             "y_pos": 121,
             "x_legend_pos": 820,
-            "y_legend_pos": 107
+            "y_legend_pos": 107,
+            "display": 6
         },
         "50": {
             "name": "MED",
@@ -586,7 +611,8 @@
             "x_pos": 581,
             "y_pos": 165,
             "x_legend_pos": 581,
-            "y_legend_pos": 151
+            "y_legend_pos": 151,
+            "display": 2
         },
         "52": {
             "name": "MOS",
@@ -594,7 +620,8 @@
             "x_pos": 265,
             "y_pos": 37,
             "x_legend_pos": 265,
-            "y_legend_pos": 23
+            "y_legend_pos": 23,
+            "display": 6
         },
         "53": {
             "name": "PEK",
@@ -602,7 +629,8 @@
             "x_pos": 659,
             "y_pos": 238,
             "x_legend_pos": 659,
-            "y_legend_pos": 224
+            "y_legend_pos": 224,
+            "display": 2
         },
         "54": {
             "name": "PER",
@@ -658,7 +686,8 @@
             "x_pos": 678,
             "y_pos": 539,
             "x_legend_pos": 678,
-            "y_legend_pos": 525
+            "y_legend_pos": 525,
+            "display": 3
         },
         "61": {
             "name": "SAR",
@@ -674,7 +703,8 @@
             "x_pos": 859,
             "y_pos": 248,
             "x_legend_pos": 859,
-            "y_legend_pos": 234
+            "y_legend_pos": 234,
+            "display": 5
         },
         "63": {
             "name": "SCS",
@@ -690,7 +720,8 @@
             "x_pos": 134,
             "y_pos": 27,
             "x_legend_pos": 134,
-            "y_legend_pos": 13
+            "y_legend_pos": 13,
+            "display": 6
         },
         "65": {
             "name": "SHA",
@@ -698,7 +729,8 @@
             "x_pos": 713,
             "y_pos": 290,
             "x_legend_pos": 713,
-            "y_legend_pos": 276
+            "y_legend_pos": 276,
+            "display": 2
         },
         "66": {
             "name": "SHI",
@@ -706,7 +738,8 @@
             "x_pos": 892,
             "y_pos": 187,
             "x_legend_pos": 892,
-            "y_legend_pos": 173
+            "y_legend_pos": 173,
+            "display": 5
         },
         "67": {
             "name": "SIA",
@@ -722,7 +755,8 @@
             "x_pos": 369,
             "y_pos": 43,
             "x_legend_pos": 369,
-            "y_legend_pos": 29
+            "y_legend_pos": 29,
+            "display": 6
         },
         "69": {
             "name": "SIN",
@@ -730,7 +764,8 @@
             "x_pos": 456,
             "y_pos": 244,
             "x_legend_pos": 456,
-            "y_legend_pos": 230
+            "y_legend_pos": 230,
+            "display": 2
         },
         "70": {
             "name": "SIO",
@@ -762,7 +797,8 @@
             "x_pos": 610,
             "y_pos": 667,
             "x_legend_pos": 610,
-            "y_legend_pos": 653
+            "y_legend_pos": 653,
+            "display": 4
         },
         "74": {
             "name": "TIB",
@@ -778,7 +814,8 @@
             "x_pos": 903,
             "y_pos": 161,
             "x_legend_pos": 903,
-            "y_legend_pos": 147
+            "y_legend_pos": 147,
+            "display": 5
         },
         "76": {
             "name": "TOM",
@@ -786,7 +823,8 @@
             "x_pos": 430,
             "y_pos": 119,
             "x_legend_pos": 430,
-            "y_legend_pos": 105
+            "y_legend_pos": 105,
+            "display": 6
         },
         "77": {
             "name": "TUR",
@@ -794,7 +832,8 @@
             "x_pos": 335,
             "y_pos": 196,
             "x_legend_pos": 335,
-            "y_legend_pos": 182
+            "y_legend_pos": 182,
+            "display": 6
         },
         "78": {
             "name": "WIO",
@@ -818,7 +857,8 @@
             "x_pos": 875,
             "y_pos": 100,
             "x_legend_pos": 875,
-            "y_legend_pos": 86
+            "y_legend_pos": 86,
+            "display": 5
         },
         "81": {
             "name": "YUN",
@@ -826,7 +866,8 @@
             "x_pos": 623,
             "y_pos": 398,
             "x_legend_pos": 623,
-            "y_legend_pos": 384
+            "y_legend_pos": 384,
+            "display": 2
         },
         "82": {
             "name": "",
@@ -7677,12 +7718,92 @@
                     189
                 ],
                 [
-                    27,
+                    33,
                     189
                 ],
                 [
+                    35,
+                    191
+                ],
+                [
+                    34,
+                    194
+                ],
+                [
+                    34,
+                    192
+                ],
+                [
+                    36,
+                    191
+                ],
+                [
+                    45,
+                    199
+                ],
+                [
+                    51,
+                    200
+                ],
+                [
+                    51,
+                    205
+                ],
+                [
+                    53,
+                    207
+                ],
+                [
+                    53,
+                    211
+                ],
+                [
+                    55,
+                    214
+                ],
+                [
+                    55,
+                    217
+                ],
+                [
+                    51,
+                    220
+                ],
+                [
+                    50,
+                    223
+                ],
+                [
+                    44,
+                    227
+                ],
+                [
+                    41,
+                    227
+                ],
+                [
+                    39,
+                    225
+                ],
+                [
+                    39,
+                    221
+                ],
+                [
+                    34,
+                    216
+                ],
+                [
+                    34,
+                    210
+                ],
+                [
+                    31,
+                    208
+                ],
+                [
                     30,
-                    204
+                    209
                 ],
                 [
                     31,
