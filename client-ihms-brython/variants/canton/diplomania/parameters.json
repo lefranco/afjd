@@ -1,7 +1,7 @@
 {
     "author": {
-        "x_pos" : 350,
-        "y_pos" : 10
+        "x_pos": 350,
+        "y_pos": 10
     },
     "additional_text": "Diplomacy transposé en Asie (même époque).",
     "map": {
@@ -187,9 +187,9 @@
         "1": {
             "name": "AFG",
             "full_name": "Afghanistan",
-            "x_pos": 326,
+            "x_pos": 324,
             "y_pos": 281,
-            "x_legend_pos": 326,
+            "x_legend_pos": 324,
             "y_legend_pos": 267
         },
         "2": {
@@ -223,9 +223,9 @@
             "name": "ARM ",
             "full_name": "Armenia",
             "x_pos": 185,
-            "y_pos": 143,
+            "y_pos": 145,
             "x_legend_pos": 185,
-            "y_legend_pos": 129
+            "y_legend_pos": 131
         },
         "6": {
             "name": "ASE",
@@ -256,9 +256,9 @@
         "9": {
             "name": "BAL",
             "full_name": "Baluchistan",
-            "x_pos": 291,
+            "x_pos": 290,
             "y_pos": 342,
-            "x_legend_pos": 291,
+            "x_legend_pos": 290,
             "y_legend_pos": 328
         },
         "10": {
@@ -547,8 +547,8 @@
             "full_name": "Korea",
             "x_pos": 812,
             "y_pos": 225,
-            "x_legend_pos": 825,
-            "y_legend_pos": 205
+            "x_legend_pos": 786,
+            "y_legend_pos": 195
         },
         "44": {
             "name": "KYO",
@@ -649,9 +649,9 @@
             "name": "PGU",
             "full_name": "Persian Gulf",
             "x_pos": 259,
-            "y_pos": 391,
+            "y_pos": 392,
             "x_legend_pos": 259,
-            "y_legend_pos": 377
+            "y_legend_pos": 378
         },
         "56": {
             "name": "PHI",
@@ -681,9 +681,9 @@
             "name": "RUM",
             "full_name": "Rumania",
             "x_pos": 76,
-            "y_pos": 28,
+            "y_pos": 29,
             "x_legend_pos": 76,
-            "y_legend_pos": 14
+            "y_legend_pos": 15
         },
         "60": {
             "name": "SAI",
