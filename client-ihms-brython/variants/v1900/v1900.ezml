@@ -20,10 +20,7 @@ $ Particularités de la carte
 (Cly - Ire)
 Les unités (armées et flottes) peuvent se déplacer ou apporter leur soutien de Irlande à Clyde ou vice versa indépendamment de la présence d'une flotte dans l'Atlantique Nord.
 
-(Esp - Mrc)
-Les armées peuvent se déplacer ou apporter leur soutien de Espagne à Maroc ou vice versa indépendamment de la présence d'une flotte dans le Gibraltar.
-
-(Hej - Egy)
+(Hed - Egy)
 Les flottes peuvent se déplacer ou apporter leur soutien de Egypte à Hedjaz ou vice versa indépendamment de la présence d'une flotte dans l'Océan Atlantique Moyen (Mer Rouge). (Cf. dernier paragraphe.)
 
 (Palestine)
@@ -35,16 +32,14 @@ La carte possède la particularité d’avoir une sorte de fusion entre la Mer R
 _
 $ Datation
 
-La partie commence en *1901*. 
-Chaque tour représente *1* années 
-"en temps réel".
+La partie commence en *1901*. Chaque tour représente *1* année "en temps réel".
 
 _
 $ Centres de ravitaillement
 
 Il y a *39* centres de ravitaillement sur le plateau. 
 .
-Le gagnant est donc la puissance qui détient *19* centres de ravitaillement ou plus pendant une phase d'ajustement, sauf spécificité (Cf. dernier paragraphe.)
+Le gagnant est donc la puissance qui détient *20* centres de ravitaillement ou plus pendant une phase d'ajustement, sauf spécificité (Cf. dernier paragraphe.)
 .
 
 _
@@ -56,7 +51,7 @@ Il y a sept puissances dont les unités de départ sont les suivantes :
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés|
 |Autriche | 3 | Budapest, Trieste, Vienne |  | |
-|Grande-Bretagne | 4 | | Liverpool Edimbourg, Londres, Gibraltar | |
+|Grande-Bretagne | 4 | | Égypte, Edimbourg, Londres, Gibraltar | |
 |France | 4 | Algérie, Paris, Marseille | Brest | |
 |Allemagne | 4 | Berlin, Cologne, Munich | Kiel | |
 |Italie | 3 | Milan, Rome| Naples | |
@@ -173,7 +168,7 @@ _
 $ Règles spéciales
 
 (Solo à 18 centres seul)
-Selon les règles de la variante, le gagnant est le premier joueur à attendre 18 centres et être seul à le faire. Il faut continuer la partie en cas d'égalité à 18 centres. L'arrêt à 19 centres (majorité absolue) reste appliqué par le système.
+Selon les règles de la variante, le gagnant est le premier joueur à attendre 18 centres et être seul à le faire. Il faut continuer la partie en cas d'égalité à 18 centres. L'arrêt à 20 centres (majorité absolue) reste appliqué par le système.
 
 (Egypte)
 Le joueur britannique ne peut pas construire en Égypte.
@@ -188,6 +183,8 @@ Une flotte à cet endroit peut convoyer (même si c'est une côte). Une armée p
 Lorsque la Russie possède au moins un, MAIS PAS LES QUATRE, de ses centres de ravitaillement d'origine, elle a le droit de maintenir une unité supplémentaire sur la carte (c'est-à-dire une de plus que le nombre de centres de ravitaillement qu'elle contrôle actuellement). De plus, tant que la Russie est dans cette situation, le joueur russe peut utiliser la Sibérie comme site de construction pendant la phase d'ajustement, si elle est inoccupée. 
 .
 Si la Russie ne possède pas au moins un centre de ravitaillement ou si elle reprend possession de ses quatre centres de ravitaillement, elle perd la possibilité de maintenir une unité supplémentaire et toute unité excédentaire doit être dissoute lors de la phase d'ajustement suivante. De plus, la Sibérie retrouve son statut normal (elle n'est plus un site de construction).
+.
+Noter que la Sibérie, même si elle peut devenir un chantier de construction, n'atteint JAMAIS le statut de centre d'approvisionnement.
 
 (Fusion Mer Rouge et Océan Atlantique Moyen)
 Les mouvements entre l'Égypte ou le Hedjaz et le l'Océan Atlantique Moyen sont autorisés. 
@@ -211,5 +208,10 @@ Si deux unités se replient vers l'Égypte, le Hedjaz ou l'Océan Atlantique Moy
 
 _
 $ Sur le wiki
+
+_
+$ Crédits
+
+W Alex Ronke (pour la design de la carte)
 
 Sans objet
