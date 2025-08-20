@@ -1,7 +1,7 @@
 {
     "author": {
-        "x_pos" : 10,
-        "y_pos" : 10
+        "x_pos": 10,
+        "y_pos": 10
     },
     "additional_text": "Une version améliorée et plus équilibrée de Diplomacy standard.\nATTENTION Plusieurs règles spéciales s'appliquent.\nLire la description détaillée de la variante.",
     "map": {
@@ -608,7 +608,7 @@
         },
         "50": {
             "name": "ATL",
-            "full_name": "Océan Atlantique Moyen",
+            "full_name": "Océan Atlantique",
             "x_pos": 111,
             "y_pos": 418,
             "x_legend_pos": 111,
@@ -669,8 +669,8 @@
         "57": {
             "name": "PaB",
             "full_name": "Pays-Bas",
-            "x_pos": 390,
-            "y_pos": 393,
+            "x_pos": 389,
+            "y_pos": 394,
             "x_legend_pos": 374,
             "y_legend_pos": 384
         },
@@ -1025,8 +1025,8 @@
             "y_pos": 594
         },
         "3": {
-            "x_pos": 384,
-            "y_pos": 410
+            "x_pos": 388,
+            "y_pos": 419
         },
         "4": {
             "x_pos": 480,
@@ -1109,8 +1109,8 @@
             "y_pos": 599
         },
         "24": {
-            "x_pos": 390,
-            "y_pos": 393
+            "x_pos": 400,
+            "y_pos": 387
         },
         "25": {
             "x_pos": 462,
