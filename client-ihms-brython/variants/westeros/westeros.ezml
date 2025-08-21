@@ -1,4 +1,4 @@
-1900 
+Westeros 
 
 _
 $ Contexte
@@ -7,37 +7,50 @@ Diplomacy dans l'univers de "Game of Throne" (Throne de Fer)
 _
 $ Côtes spéciales
 
-(Bulgarie)
-   Elle a 2 côtes, Est et Sud.
-(Canton)
-   Elle a 2 côtes, Est et Sud.
-(Damascus)
-   Elle a 2 côtes, Ouest et Sud.
-(Siam)
+(Beyond the Wall)
    Elle a 2 côtes, Ouest et Est.
+(Castle Black)
+   Elle a 2 côtes, Ouest et Est.
+(Braavosi Coastlands)
+   Elle a 2 côtes, Ouest et Est.
+(Harrenhal)
+   Elle a 2 côtes, Nord et Sud.
 
 _
 $ Particularités de la carte
 
 La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question
 
-(Canal en Egypte)
-De Mer Rouge (RED) à Mer Méditerrannée (MED) en passant par Egypte (EGY) (et réciproquement)
-(Canal à Constantinople)
-De Mer Méditerranée (MED) à Mer Noire (BLA) en passant par Constantinople (CON) (et réciproquement)
+(Blackwater)
+Ce canal relie la mer Blackwater Rush à la Mer God's Eye (en passant par les régions adjacentes)
+Les regions touchant le canal sont des côtes et accessibles à une flotte qui emprunte le canal.
+Ce canal peut être traversé par une armée ou une flotte.
+
+(Mander)
+Ce canal relie la mer Shield Islands à Highgarden (en passant par les régions adjacentes)
+Les regions touchant le canal sont des côtes et accesibles à une flotte qui emprunte le canal.
+Ce canal peut être traversé par une armée ou une flotte.
+
+(Le Trident n'est pas un canal)
+Riverrun et Kingsroad sont des terres, donc inaccesibles aux flottes. 
+Riverland est une côte accesible uniquement par l'ouest (la mer Ironman's Bay par exemple.)
+Le trident peut être traversé par une armée ou une flotte, donc sont adjacants : Kingsroad et Riverland; Riverland et Riverun; Kingsroad at Harrenhal.
+L'embouchure du Trident bloque l'accés entre Riverlands et Harrenhal et l'accès entre Riverrun et Kingsroad.
+
+(Montagne)
+La montagne au sud de Blackmont est impassable.
 
 _
 $ Datation
 
-La partie commence en *1901*. Chaque tour représente *1* année "en temps réel".
+La partie commence en *298*. Chaque tour représente *1* pseudo année "en temps réel".
 
 _
 $ Centres de ravitaillement
 
-Il y a *36* centres de ravitaillement sur le plateau. 
+Il y a *34* centres de ravitaillement sur le plateau. 
 .
-Le gagnant est donc la puissance qui détient *19* centres de ravitaillement ou plus pendant une phase d'ajustement.
-.
+Le gagnant est donc la puissance qui détient *18* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
 _
 $ Puissances en présence
@@ -46,114 +59,127 @@ Il y a sept puissances dont les unités de départ sont les suivantes :
 .
 .
 = Position de départ
-|Puissance | Centres |  Armées | Flottes | Centres inoccupés|
-|Grande-Bretagne | 3 | Calcutta, Delhi | Madras| |
-|Chine | 4 | Chungking, Shanghai, Tibet | Peking | |
-|France | 3 | Hanoi, Hue | Saigon | |
-|Hollande | 3 | | Borneo, Java, Sumatra | |
-|Japon | 3 | Kyoto | Sasebo, Tokyo | |
-|Russie | 4 |Irkutsk, Moscow | Khabarovsk, Sevastopol | |
-|Turquie | 3 | Bagdad, Damas | Constantinople | |
+|Puissance | Centres |  Armées | Flottes | Centres inoccupés |
+|Baratheon | 3 | Kingswood, Storm's End | Griffin's Roost| King's Landing West|
+|Greyjoy | 3 | | Harlaw, Great Wyk, Pyke | |
+|Lannister | 3 | Casterly Rock, Crownlands | Lannisport | King's Landing East |
+|Martell | 3 |  Prince's Pass, Godsgrace | Sunspear | |
+|Stark | 3 | Winterfall, Karhold | White Harbor | |
+|Targaryen | 2 | Pentos | Dragonstone | |
+|Tyrell | 3 | Highgarden, Oldtown | The Arbor | |
 =
 
 _
 $ Pièges de la variante
 
-Sans objet.
-
+Pas de construction dans les centres de King's Landing.
 _
 $ Nomenclature
 
 = Régions et abréviations de la variante
 | Abréviation | Nom complet |
-| AFG | Afghanistan |
-| AKI | Akita |
-| AMU | Amur |
-| ARA | Arabia |
-| ARM  | Armenia |
-| ASE | Arabian Sea |
-| ASM | Assam |
-| BAG | Baghdad |
-| BAL | Baluchistan |
-| BAN | Banda Sea |
-| BLA | Black Sea |
-| BOB | Bay of Bengal |
-| BOM | Bombay |
-| BOR | Borneo |
-| BUL | Bulgaria |
-| BUR | Burma |
-| CAL | Calcutta |
-| CAM | Cambodia |
-| CAN | Canton |
-| CHU | Chungking |
-| CON | Constantinople |
-| CPO |  Central Pacific Ocean |
-| CSE | Celebes Sea |
-| DAM | Damascus |
-| DEL | Delhi |
-| ECS | East China Sea |
-| EGY | Egypt |
-| EIO | East Indian Ocean |
-| FOR | Formosa |
-| GOM | Gulf of Martaban |
-| GOS | Gulf of Siam |
-| HAN | Hanoi |
-| HKO |  Hong Kong |
-| HUE | Hue |
-| IRK | Irkutsk |
-| JAV | Java |
-| JSE | Java Sea |
-| KAN | Kansu |
-| KAR | Karimata Strait |
-| KAS | Kashmir |
-| KHA | Khabarovsk |
-| KIR | Kirghiz |
-| KOR | Korea |
-| KYO | Kyoto |
-| LAO | Laos |
-| MAD | Madras |
-| MAL | Malaya |
-| MAN | Manchuria |
-| MAR | Maritime Province |
-| MED | Mediterranean Sea |
-| MON | Mongolia |
-| MOS | Moscow |
-| PEK | Peking |
-| PER | Persia |
-| PGU | Persian Gulf |
-| PHI | Philippines |
-| PSE | Philippine Sea |
-| RED | Red Sea |
-| RUM | Rumania |
-| SAI | Saigon |
-| SAR | Sarawak |
-| SAS | Sasebo |
-| SCS | South China Sea |
-| SEV | Sevastopol |
-| SHA | Shanghai |
-| SHI | Shikoku |
-| SIA | Siam |
-| SIB | Siberia |
-| SIN | Sinkiang |
-| SIO | South Indian Ocean |
-| SOJ | Sea of Japan |
-| SOO | Sea of Okhotsk |
-| SUM | Sumatra |
-| TIB | Tibet |
-| TOK | Tokyo |
-| TOM | Tomsk |
-| TUR | Turkestan |
-| WIO | West Indian Ocean |
-| YEL | Yellow Sea |
-| YES | Yesso |
-| YUN | Yunnan |
+
+$ Nomenclature
+
+= Régions et abréviations de la variante
+| Abréviation | Nom complet |
+| Arb | The Arbor |
+| Ash | Ashford |
+| Bar | Barrowlands |
+| Bit | The Bite |
+| BlB | Blazewater Bay |
+| Bmt | Blackmont |
+| BoC | Bay of Crabs |
+| BoI | Bay of Ice |
+| BoS | Bay of Seals |
+| Bra | Braavos |
+| BtW | Beyond the Wall |
+| BwB | Blackwater Bay |
+| BwR | Blackwater Rush |
+| CaB | Castle Black  |
+| Cai | Moat Cailin |
+| Cas | Casterly Rock |
+| Coa | Braavosi Coastlands |
+| Cro | Crownlands |
+| Dis | The Disputed Lands |
+| Dra | Dragonstone |
+| Dre | The Dreadfort |
+| End | Storm's End |
+| ESS | East Summer Sea |
+| Eye | God's Eye |
+| Eyr | The Eyrie |
+| Fin | The Fingers |
+| Fli | Flint's Finger |
+| God | Godsgrace |
+| Har | Harlaw |
+| Hhl | Harrenhal |
+| Hig | Highgarden |
+| Hor | Horn Hill |
+| IrB | Ironman's Bay |
+| Kar | Karhold |
+| KLE | King's Landing East |
+| KLW |  King's Landing West |
+| Krd | Kingsroad |
+| Kwd | Kingswood |
+| Lan | Lannisport |
+| Mar | Dornish Marches |
+| Moo | Mountains of the Moon |
+| Mot | Deepwood Motte |
+| Myr | Myr |
+| Nec | The Neck |
+| NNS | North Narrow Sea |
+| NSS | North Sunset Sea |
+| Old | Oldtown |
+| Pas | Prince's Pass |
+| Pen | Pentos |
+| Pyk | Pyke |
+| Rea | The Reach |
+| ReS | Redwyne Straits  |
+| Riv | Riverlands |
+| Roo | Griffin's Roost |
+| Run | Riverrun |
+| Sal | Salt Shore |
+| San | Sandstone |
+| Sep | Stoney Sept |
+| ShB | Shipbreaker Bay |
+| Shi | Shield Islands |
+| SNS | South Narrow Sea |
+| SoD | Sea of Dorne |
+| SoM | Sea of Myrth |
+| Srd | Searoad |
+| SSS | South Sunset Sea |
+| Sta | Starfall |
+| Ste | The Stepstones |
+| Sto | Stony Shore |
+| Str | Stormlands |
+| Sun | Sunspear |
+| TGS | The Golden Sound |
+| TNS | The Narrow Sea |
+| TSS | The Shivering Sea |
+| Twi | The Twins |
+| Tyr | Tyrosh |
+| Wes | Westerlands |
+| Whi | White Harbor |
+| Win | Winterfell |
+| WSS | West Summer Sea |
+| Wyk | Great Wyk |
+| Yro | Yronwood |
 =
 _
-$ Expansionnisme (non)
+$ Expansionnisme (oui)
 
-Constructions sur les centres de départ.
+Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. 
+.
+Exception : King's Landing West et King's Landing East ne sont pas des centres de construction.
 
 _
 $ Sur le wiki
 
-[[https://diplomania-gen.fr/dokuwiki/doku.php?id=variante:canton]]
+Sans objet.
+
+_
+$ Notes
+Certaines petites adaptation ont du êtres réalisées par rapport à la source de la variante (UK Diplomacy Archive) :
+- Au sujet des îles/centres (notamment le fait que GreyJoy commence avec une flotte à Harlaw parce qu'une armée ne peut être en mer)
+- Au sujet de King's landing (puisqu'un centre ne peut pas être dédoublé).
+
