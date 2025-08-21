@@ -189,7 +189,7 @@
             "full_name": "The Arbor",
             "x_pos": 75,
             "y_pos": 1101,
-            "x_legend_pos": 75,
+            "x_legend_pos": 54,
             "y_legend_pos": 1087
         },
         "2": {
@@ -227,26 +227,26 @@
         "6": {
             "name": "BoC",
             "full_name": "Bay of Crabs",
-            "x_pos": 500,
-            "y_pos": 638,
-            "x_legend_pos": 500,
-            "y_legend_pos": 624
+            "x_pos": 501,
+            "y_pos": 644,
+            "x_legend_pos": 501,
+            "y_legend_pos": 630
         },
         "7": {
             "name": "BoI",
             "full_name": "Bay of Ice",
-            "x_pos": 193,
-            "y_pos": 159,
-            "x_legend_pos": 193,
-            "y_legend_pos": 145
+            "x_pos": 210,
+            "y_pos": 143,
+            "x_legend_pos": 210,
+            "y_legend_pos": 129
         },
         "8": {
             "name": "BoS",
             "full_name": "Bay of Seals",
-            "x_pos": 489,
-            "y_pos": 68,
-            "x_legend_pos": 489,
-            "y_legend_pos": 54
+            "x_pos": 499,
+            "y_pos": 46,
+            "x_legend_pos": 499,
+            "y_legend_pos": 32
         },
         "9": {
             "name": "Bra",
@@ -268,32 +268,32 @@
             "name": "BwB",
             "full_name": "Blackwater Bay",
             "x_pos": 431,
-            "y_pos": 732,
+            "y_pos": 737,
             "x_legend_pos": 431,
-            "y_legend_pos": 718
+            "y_legend_pos": 723
         },
         "12": {
             "name": "BwR",
             "full_name": "Blackwater Rush",
             "x_pos": 443,
             "y_pos": 764,
-            "x_legend_pos": 443,
-            "y_legend_pos": 750
+            "x_legend_pos": 422,
+            "y_legend_pos": 777
         },
         "13": {
             "name": "CaB",
             "full_name": "Castle Black ",
-            "x_pos": 391,
+            "x_pos": 327,
             "y_pos": 142,
-            "x_legend_pos": 391,
-            "y_legend_pos": 128
+            "x_legend_pos": 352,
+            "y_legend_pos": 142
         },
         "14": {
             "name": "Cai",
             "full_name": "Moat Cailin",
-            "x_pos": 289,
+            "x_pos": 286,
             "y_pos": 400,
-            "x_legend_pos": 289,
+            "x_legend_pos": 286,
             "y_legend_pos": 386
         },
         "15": {
@@ -323,10 +323,10 @@
         "18": {
             "name": "Dra",
             "full_name": "Dragonstone",
-            "x_pos": 490,
-            "y_pos": 718,
-            "x_legend_pos": 490,
-            "y_legend_pos": 704
+            "x_pos": 492,
+            "y_pos": 725,
+            "x_legend_pos": 491,
+            "y_legend_pos": 713
         },
         "19": {
             "name": "Dre",
@@ -347,18 +347,18 @@
         "21": {
             "name": "ESS",
             "full_name": "East Summer Sea",
-            "x_pos": 593,
+            "x_pos": 570,
             "y_pos": 1078,
-            "x_legend_pos": 593,
+            "x_legend_pos": 570,
             "y_legend_pos": 1064
         },
         "22": {
             "name": "Eye",
             "full_name": "God's Eye",
             "x_pos": 315,
-            "y_pos": 707,
-            "x_legend_pos": 315,
-            "y_legend_pos": 693
+            "y_pos": 714,
+            "x_legend_pos": 310,
+            "y_legend_pos": 701
         },
         "23": {
             "name": "Eyr",
@@ -387,26 +387,26 @@
         "26": {
             "name": "God",
             "full_name": "Godsgrace",
-            "x_pos": 373,
-            "y_pos": 1036,
-            "x_legend_pos": 373,
-            "y_legend_pos": 1022
+            "x_pos": 388,
+            "y_pos": 1038,
+            "x_legend_pos": 369,
+            "y_legend_pos": 1030
         },
         "27": {
             "name": "Har",
             "full_name": "Harlaw",
             "x_pos": 122,
             "y_pos": 591,
-            "x_legend_pos": 122,
-            "y_legend_pos": 577
+            "x_legend_pos": 135,
+            "y_legend_pos": 585
         },
         "28": {
             "name": "Hhl",
             "full_name": "Harrenhal",
-            "x_pos": 329,
-            "y_pos": 678,
-            "x_legend_pos": 329,
-            "y_legend_pos": 664
+            "x_pos": 302,
+            "y_pos": 669,
+            "x_legend_pos": 354,
+            "y_legend_pos": 691
         },
         "29": {
             "name": "Hig",
@@ -427,10 +427,10 @@
         "31": {
             "name": "IrB",
             "full_name": "Ironman's Bay",
-            "x_pos": 224,
-            "y_pos": 527,
-            "x_legend_pos": 224,
-            "y_legend_pos": 513
+            "x_pos": 146,
+            "y_pos": 546,
+            "x_legend_pos": 146,
+            "y_legend_pos": 532
         },
         "32": {
             "name": "Kar",
@@ -443,18 +443,18 @@
         "33": {
             "name": "KLW",
             "full_name": " King's Landing West",
-            "x_pos": 359,
-            "y_pos": 767,
-            "x_legend_pos": 359,
-            "y_legend_pos": 753
+            "x_pos": 354,
+            "y_pos": 770,
+            "x_legend_pos": 332,
+            "y_legend_pos": 775
         },
         "34": {
             "name": "KLE",
             "full_name": "King's Landing East",
-            "x_pos": 388,
-            "y_pos": 750,
-            "x_legend_pos": 388,
-            "y_legend_pos": 736
+            "x_pos": 397,
+            "y_pos": 749,
+            "x_legend_pos": 383,
+            "y_legend_pos": 747
         },
         "35": {
             "name": "Krd",
@@ -516,9 +516,9 @@
             "name": "Nec",
             "full_name": "The Neck",
             "x_pos": 277,
-            "y_pos": 451,
+            "y_pos": 454,
             "x_legend_pos": 277,
-            "y_legend_pos": 437
+            "y_legend_pos": 440
         },
         "43": {
             "name": "NNS",
@@ -565,8 +565,8 @@
             "full_name": "Pyke",
             "x_pos": 118,
             "y_pos": 626,
-            "x_legend_pos": 118,
-            "y_legend_pos": 612
+            "x_legend_pos": 108,
+            "y_legend_pos": 646
         },
         "49": {
             "name": "Rea",
@@ -635,18 +635,18 @@
         "57": {
             "name": "ShB",
             "full_name": "Shipbreaker Bay",
-            "x_pos": 485,
-            "y_pos": 874,
-            "x_legend_pos": 485,
-            "y_legend_pos": 860
+            "x_pos": 470,
+            "y_pos": 895,
+            "x_legend_pos": 470,
+            "y_legend_pos": 882
         },
         "58": {
             "name": "Shi",
             "full_name": "Shield Islands",
-            "x_pos": 90,
-            "y_pos": 908,
-            "x_legend_pos": 90,
-            "y_legend_pos": 894
+            "x_pos": 71,
+            "y_pos": 924,
+            "x_legend_pos": 71,
+            "y_legend_pos": 910
         },
         "59": {
             "name": "SNS",
@@ -668,9 +668,9 @@
             "name": "SoM",
             "full_name": "Sea of Myrth",
             "x_pos": 604,
-            "y_pos": 908,
+            "y_pos": 910,
             "x_legend_pos": 604,
-            "y_legend_pos": 894
+            "y_legend_pos": 896
         },
         "62": {
             "name": "Srd",
@@ -691,18 +691,18 @@
         "64": {
             "name": "Sta",
             "full_name": "Starfall",
-            "x_pos": 204,
-            "y_pos": 1061,
-            "x_legend_pos": 204,
-            "y_legend_pos": 1047
+            "x_pos": 198,
+            "y_pos": 1077,
+            "x_legend_pos": 198,
+            "y_legend_pos": 1063
         },
         "65": {
             "name": "Ste",
             "full_name": "The Stepstones",
-            "x_pos": 541,
-            "y_pos": 988,
-            "x_legend_pos": 541,
-            "y_legend_pos": 974
+            "x_pos": 521,
+            "y_pos": 1006,
+            "x_legend_pos": 520,
+            "y_legend_pos": 990
         },
         "66": {
             "name": "Sto",
@@ -724,9 +724,9 @@
             "name": "Sun",
             "full_name": "Sunspear",
             "x_pos": 472,
-            "y_pos": 1037,
+            "y_pos": 1039,
             "x_legend_pos": 472,
-            "y_legend_pos": 1023
+            "y_legend_pos": 1025
         },
         "69": {
             "name": "TGS",
@@ -763,10 +763,10 @@
         "73": {
             "name": "Tyr",
             "full_name": "Tyrosh",
-            "x_pos": 557,
-            "y_pos": 929,
-            "x_legend_pos": 557,
-            "y_legend_pos": 915
+            "x_pos": 550,
+            "y_pos": 924,
+            "x_legend_pos": 548,
+            "y_legend_pos": 950
         },
         "74": {
             "name": "Wes",
@@ -819,10 +819,10 @@
         "80": {
             "name": "Ash",
             "full_name": "Ashford",
-            "x_pos": 289,
-            "y_pos": 929,
-            "x_legend_pos": 289,
-            "y_legend_pos": 915
+            "x_pos": 286,
+            "y_pos": 934,
+            "x_legend_pos": 286,
+            "y_legend_pos": 920
         },
         "81": {
             "name": "Dis",
@@ -837,7 +837,7 @@
             "full_name": "",
             "x_pos": 78,
             "y_pos": 53,
-            "x_legend_pos": 78,
+            "x_legend_pos": 58,
             "y_legend_pos": 39
         },
         "83": {
@@ -845,23 +845,23 @@
             "full_name": "",
             "x_pos": 343,
             "y_pos": 37,
-            "x_legend_pos": 343,
-            "y_legend_pos": 23
+            "x_legend_pos": 344,
+            "y_legend_pos": 22
         },
         "84": {
             "name": "",
             "full_name": "",
             "x_pos": 261,
             "y_pos": 155,
-            "x_legend_pos": 261,
-            "y_legend_pos": 141
+            "x_legend_pos": 249,
+            "y_legend_pos": 137
         },
         "85": {
             "name": "",
             "full_name": "",
             "x_pos": 399,
             "y_pos": 138,
-            "x_legend_pos": 399,
+            "x_legend_pos": 416,
             "y_legend_pos": 124
         },
         "86": {
@@ -869,7 +869,7 @@
             "full_name": "",
             "x_pos": 609,
             "y_pos": 650,
-            "x_legend_pos": 609,
+            "x_legend_pos": 595,
             "y_legend_pos": 636
         },
         "87": {
@@ -877,15 +877,15 @@
             "full_name": "",
             "x_pos": 714,
             "y_pos": 632,
-            "x_legend_pos": 714,
-            "y_legend_pos": 618
+            "x_legend_pos": 717,
+            "y_legend_pos": 614
         },
         "88": {
             "name": "",
             "full_name": "",
             "x_pos": 333,
             "y_pos": 670,
-            "x_legend_pos": 333,
+            "x_legend_pos": 347,
             "y_legend_pos": 656
         },
         "89": {
@@ -893,8 +893,8 @@
             "full_name": "",
             "x_pos": 327,
             "y_pos": 688,
-            "x_legend_pos": 327,
-            "y_legend_pos": 674
+            "x_legend_pos": 323,
+            "y_legend_pos": 706
         }
     },
     "centers": {
@@ -5717,120 +5717,184 @@
         "31": {
             "area": [
                 [
-                    170,
-                    491
+                    73,
+                    524
                 ],
                 [
-                    182,
-                    495
+                    81,
+                    519
                 ],
                 [
-                    233,
-                    495
+                    91,
+                    524
                 ],
                 [
-                    245,
-                    501
+                    100,
+                    519
                 ],
                 [
-                    254,
-                    510
+                    118,
+                    521
                 ],
                 [
-                    256,
-                    523
+                    131,
+                    506
                 ],
                 [
-                    265,
-                    534
+                    141,
+                    508
                 ],
                 [
-                    257,
+                    146,
+                    518
+                ],
+                [
+                    161,
+                    516
+                ],
+                [
+                    166,
+                    526
+                ],
+                [
+                    181,
+                    532
+                ],
+                [
+                    189,
+                    533
+                ],
+                [
+                    190,
                     543
                 ],
                 [
-                    243,
-                    568
-                ],
-                [
-                    230,
-                    583
-                ],
-                [
-                    223,
-                    578
-                ],
-                [
-                    211,
-                    577
-                ],
-                [
-                    206,
-                    581
-                ],
-                [
                     202,
-                    580
-                ],
-                [
-                    194,
-                    591
-                ],
-                [
-                    182,
-                    591
-                ],
-                [
-                    174,
-                    584
-                ],
-                [
-                    173,
-                    572
-                ],
-                [
-                    175,
-                    570
-                ],
-                [
-                    193,
-                    565
+                    552
                 ],
                 [
                     202,
                     557
                 ],
                 [
+                    191,
+                    566
+                ],
+                [
+                    173,
+                    571
+                ],
+                [
+                    173,
+                    583
+                ],
+                [
+                    182,
+                    591
+                ],
+                [
+                    194,
+                    591
+                ],
+                [
+                    201,
+                    581
+                ],
+                [
+                    207,
+                    581
+                ],
+                [
+                    212,
+                    577
+                ],
+                [
+                    223,
+                    578
+                ],
+                [
+                    229,
+                    583
+                ],
+                [
+                    225,
+                    596
+                ],
+                [
+                    231,
+                    602
+                ],
+                [
+                    221,
+                    610
+                ],
+                [
+                    221,
+                    614
+                ],
+                [
                     202,
-                    551
+                    617
                 ],
                 [
-                    190,
-                    542
+                    199,
+                    628
                 ],
                 [
-                    190,
-                    533
+                    196,
+                    631
                 ],
                 [
-                    178,
-                    531
+                    188,
+                    635
                 ],
                 [
-                    167,
-                    526
+                    172,
+                    632
                 ],
                 [
-                    164,
-                    523
+                    148,
+                    617
                 ],
                 [
-                    162,
-                    517
+                    151,
+                    614
                 ],
                 [
-                    166,
-                    509
+                    155,
+                    603
+                ],
+                [
+                    154,
+                    592
+                ],
+                [
+                    148,
+                    582
+                ],
+                [
+                    139,
+                    574
+                ],
+                [
+                    122,
+                    566
+                ],
+                [
+                    106,
+                    563
+                ],
+                [
+                    92,
+                    563
+                ],
+                [
+                    91,
+                    555
+                ],
+                [
+                    87,
+                    544
                 ]
             ]
         },
