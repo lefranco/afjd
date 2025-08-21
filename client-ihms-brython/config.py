@@ -48,6 +48,7 @@ VARIANT_NAMES_DICT = {
     'egeemonie': 6,
     'canton': 7,
     'v1900': 7,
+    'westeros': 7,
     'spiceislands': 7,
     'crepusculerome': 8,
     'successionautriche': 9,
