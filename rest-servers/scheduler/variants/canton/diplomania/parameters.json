@@ -1,5 +1,9 @@
 {
-    "additional_text": "",
+    "author": {
+        "x_pos": 350,
+        "y_pos": 10
+    },
+    "additional_text": "Diplomacy transposé en Asie (même époque).",
     "map": {
         "width": 967,
         "height": 733
@@ -93,20 +97,20 @@
             ]
         },
         "4": {
-            "name": "Hollande",
-            "adjective_name": "hollandais",
+            "name": "PaysBas",
+            "adjective_name": "néerlandais",
             "letter_name": "H",
             "red": [
                 235,
                 255
             ],
             "green": [
-                193,
-                213
+                183,
+                203
             ],
             "blue": [
-                100,
-                128
+                110,
+                138
             ]
         },
         "5": {
@@ -118,12 +122,12 @@
                 255
             ],
             "green": [
-                200,
-                180
+                210,
+                190
             ],
             "blue": [
-                173,
-                193
+                183,
+                203
             ]
         },
         "6": {
@@ -183,9 +187,9 @@
         "1": {
             "name": "AFG",
             "full_name": "Afghanistan",
-            "x_pos": 326,
+            "x_pos": 324,
             "y_pos": 281,
-            "x_legend_pos": 326,
+            "x_legend_pos": 324,
             "y_legend_pos": 267
         },
         "2": {
@@ -216,12 +220,12 @@
             "display": 7
         },
         "5": {
-            "name": "ARM ",
+            "name": "ARM",
             "full_name": "Armenia",
             "x_pos": 185,
-            "y_pos": 143,
+            "y_pos": 145,
             "x_legend_pos": 185,
-            "y_legend_pos": 129
+            "y_legend_pos": 131
         },
         "6": {
             "name": "ASE",
@@ -252,9 +256,9 @@
         "9": {
             "name": "BAL",
             "full_name": "Baluchistan",
-            "x_pos": 291,
+            "x_pos": 290,
             "y_pos": 342,
-            "x_legend_pos": 291,
+            "x_legend_pos": 290,
             "y_legend_pos": 328
         },
         "10": {
@@ -437,10 +441,10 @@
         "31": {
             "name": "GOS",
             "full_name": "Gulf of Siam",
-            "x_pos": 641,
-            "y_pos": 583,
-            "x_legend_pos": 642,
-            "y_legend_pos": 570
+            "x_pos": 631,
+            "y_pos": 578,
+            "x_legend_pos": 632,
+            "y_legend_pos": 565
         },
         "32": {
             "name": "HAN",
@@ -543,8 +547,8 @@
             "full_name": "Korea",
             "x_pos": 812,
             "y_pos": 225,
-            "x_legend_pos": 825,
-            "y_legend_pos": 205
+            "x_legend_pos": 786,
+            "y_legend_pos": 195
         },
         "44": {
             "name": "KYO",
@@ -645,9 +649,9 @@
             "name": "PGU",
             "full_name": "Persian Gulf",
             "x_pos": 259,
-            "y_pos": 391,
+            "y_pos": 392,
             "x_legend_pos": 259,
-            "y_legend_pos": 377
+            "y_legend_pos": 378
         },
         "56": {
             "name": "PHI",
@@ -676,9 +680,9 @@
         "59": {
             "name": "RUM",
             "full_name": "Rumania",
-            "x_pos": 77,
+            "x_pos": 76,
             "y_pos": 29,
-            "x_legend_pos": 77,
+            "x_legend_pos": 76,
             "y_legend_pos": 15
         },
         "60": {
@@ -703,8 +707,8 @@
             "full_name": "Sasebo",
             "x_pos": 865,
             "y_pos": 254,
-            "x_legend_pos": 859,
-            "y_legend_pos": 234,
+            "x_legend_pos": 882,
+            "y_legend_pos": 246,
             "display": 5
         },
         "63": {
@@ -815,8 +819,8 @@
             "full_name": "Tokyo",
             "x_pos": 892,
             "y_pos": 130,
-            "x_legend_pos": 915,
-            "y_legend_pos": 139,
+            "x_legend_pos": 914,
+            "y_legend_pos": 143,
             "display": 5
         },
         "76": {
@@ -939,15 +943,15 @@
     "centers": {
         "1": {
             "x_pos": 342,
-            "y_pos": 281
+            "y_pos": 282
         },
         "2": {
             "x_pos": 137,
             "y_pos": 225
         },
         "3": {
-            "x_pos": 312,
-            "y_pos": 341
+            "x_pos": 313,
+            "y_pos": 342
         },
         "4": {
             "x_pos": 754,
@@ -1058,8 +1062,8 @@
             "y_pos": 247
         },
         "31": {
-            "x_pos": 132,
-            "y_pos": 41
+            "x_pos": 133,
+            "y_pos": 42
         },
         "32": {
             "x_pos": 769,
