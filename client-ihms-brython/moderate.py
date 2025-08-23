@@ -1052,9 +1052,6 @@ def all_missing_orders():
         alert("Erreur chargement des ordres manquants dans les parties")
         return
 
-    # TODO : put back for debug ;-)
-    # print(f"{dict_missing_orders_data=}")
-
     delays_table = html.TABLE()
 
     # the display order
@@ -1244,6 +1241,12 @@ def all_missing_orders():
         delays_table <= row
 
     MY_SUB_PANEL <= delays_table
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    information = html.DIV(Class='note')
+    information <= "Certaines parties peuvent ne pas avoir de retardataires parce qu'elles attendent le passage de l'automate."
+    MY_SUB_PANEL <= information
 
 
 def current_worst_annoyers():
