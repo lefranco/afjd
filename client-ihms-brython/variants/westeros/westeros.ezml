@@ -22,19 +22,26 @@ $ Particularités de la carte
 La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question
 
 (Blackwater)
-Ce canal relie la mer Blackwater Rush à la Mer God's Eye (en passant par les régions adjacentes)
+Ce canal relie la mer Blackwater Rush à la Mer God's Eye (en passant par les régions adjacentes).
+.
 Les regions touchant le canal sont des côtes et accessibles à une flotte qui emprunte le canal.
+.
 Ce canal peut être traversé par une armée ou une flotte.
 
 (Mander)
-Ce canal relie la mer Shield Islands à Highgarden (en passant par les régions adjacentes)
+Ce canal relie la mer Shield Islands à Highgarden (en passant par les régions adjacentes).
+.
 Les regions touchant le canal sont des côtes et accesibles à une flotte qui emprunte le canal.
+.
 Ce canal peut être traversé par une armée ou une flotte.
 
 (Le Trident n'est pas un canal)
 Riverrun et Kingsroad sont des terres, donc inaccesibles aux flottes. 
+.
 Riverland est une côte accesible uniquement par l'ouest (la mer Ironman's Bay par exemple.)
+.
 Le trident peut être traversé par une armée ou une flotte, donc sont adjacants : Kingsroad et Riverland; Riverland et Riverun; Kingsroad at Harrenhal.
+.
 L'embouchure du Trident bloque l'accés entre Riverlands et Harrenhal et l'accès entre Riverrun et Kingsroad.
 
 (Montagne)
@@ -170,7 +177,7 @@ $ Expansionnisme (oui)
 
 Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. 
 .
-Par exemple, le Dragon peut construire à Lannisport si ce centre est vacant et qu'il en est propriétaire
+Par exemple, le Dragon peut construire à Lannisport si ce centre est vacant et qu'il en est propriétaire.
 .
 Exception : King's Landing West et King's Landing East ne sont pas des centres de construction.
 
@@ -181,7 +188,7 @@ Sans objet.
 
 _
 $ Notes
-Certaines petites adaptation ont du êtres réalisées par rapport à la source de la variante (UK Diplomacy Archive) :
-- Au sujet des îles/centres (notamment le fait que GreyJoy commence avec une flotte à Harlaw parce qu'une armée ne peut être en mer)
-- Au sujet de King's landing (puisqu'un centre ne peut pas être dédoublé).
+Certaines petites adaptation ont du êtres réalisées par rapport à la source de la variante (UK Diplomacy Archive / DipWiki) :
+- Au sujet des îles/centres (notamment le fait que Kraken commence avec une flotte à Harlaw parce qu'une armée ne peut être en mer)
+- Au sujet de King's Landing (puisqu'un centre ne peut pas être dédoublé).
 
