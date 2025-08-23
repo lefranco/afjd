@@ -65,6 +65,7 @@ INTERFACE_TABLE = {
     'coldwar_redux': ['diplomania'],
     'canton': ['diplomania'],
     'v1900': ['diplomania'],
+    'westeros': ['diplomania'],
     'spiceislands': ['diplomania'],
     'crepusculerome': ['diplomania'],
     'chaos': ['diplomania'],
