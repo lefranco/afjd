@@ -46,122 +46,122 @@
             ]
         },
         "1": {
-            "name": "Baratheon",
+            "name": "Cerf",
             "adjective_name": "baratheon",
             "letter_name": "B",
             "red": [
-                60,
-                80
+                75,
+                95
             ],
             "green": [
-                40,
-                60
+                235,
+                255
             ],
             "blue": [
-                168,
-                178
+                221,
+                241
             ]
         },
         "2": {
-            "name": "Greyjoy",
+            "name": "Kraken",
             "adjective_name": "greyjoy",
             "letter_name": "G",
             "red": [
-                235,
-                255
+                57,
+                77
             ],
             "green": [
-                235,
-                255
+                79,
+                99
             ],
             "blue": [
-                10,
-                30
+                89,
+                109
             ]
         },
         "3": {
-            "name": "Lannister",
+            "name": "Lion",
             "adjective_name": "lannister",
             "letter_name": "L",
             "red": [
-                30,
-                10
+                235,
+                255
             ],
             "green": [
-                128,
-                148
+                215,
+                235
             ],
             "blue": [
-                218,
-                238
+                0,
+                20
             ]
         },
         "4": {
-            "name": "Martell",
+            "name": "Soleil",
             "adjective_name": "martell",
             "letter_name": "M",
             "red": [
-                235,
-                255
+                225,
+                245
             ],
             "green": [
-                183,
-                203
+                129,
+                149
             ],
             "blue": [
-                110,
-                138
+                40,
+                60
             ]
         },
         "5": {
-            "name": "Stark",
+            "name": "Loup",
             "adjective_name": "stark",
             "letter_name": "S",
             "red": [
-                235,
-                255
+                199,
+                219
             ],
             "green": [
-                210,
-                190
+                199,
+                219
             ],
             "blue": [
-                183,
-                203
+                199,
+                219
             ]
         },
         "6": {
-            "name": "Targaryen",
+            "name": "Dragon",
             "adjective_name": "targaryen",
             "letter_name": "T",
             "red": [
-                75,
-                105
+                228,
+                248
             ],
             "green": [
-                107,
-                137
+                4,
+                24
             ],
             "blue": [
-                47,
-                77
+                4,
+                24
             ]
         },
         "7": {
-            "name": "Tyrell",
+            "name": "Fleur",
             "adjective_name": "tyrell",
             "letter_name": "Y",
             "red": [
-                185,
-                205
+                34,
+                54
             ],
             "green": [
-                70,
-                50
+                139,
+                159
             ],
             "blue": [
-                70,
-                50
+                34,
+                54
             ]
         }
     },
