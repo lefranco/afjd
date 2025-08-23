@@ -118,16 +118,16 @@
             "adjective_name": "stark",
             "letter_name": "S",
             "red": [
-                199,
-                219
+                245,
+                225
             ],
             "green": [
-                199,
-                219
+                245,
+                225
             ],
             "blue": [
-                199,
-                219
+                245,
+                221
             ]
         },
         "6": {
@@ -190,7 +190,8 @@
             "x_pos": 75,
             "y_pos": 1101,
             "x_legend_pos": 54,
-            "y_legend_pos": 1087
+            "y_legend_pos": 1087,
+            "display": 7
         },
         "2": {
             "name": "Bar",
@@ -198,7 +199,8 @@
             "x_pos": 202,
             "y_pos": 385,
             "x_legend_pos": 202,
-            "y_legend_pos": 371
+            "y_legend_pos": 371,
+            "display": 5
         },
         "3": {
             "name": "Bit",
@@ -222,7 +224,8 @@
             "x_pos": 198,
             "y_pos": 994,
             "x_legend_pos": 198,
-            "y_legend_pos": 980
+            "y_legend_pos": 980,
+            "display": 7
         },
         "6": {
             "name": "BoC",
@@ -302,7 +305,8 @@
             "x_pos": 158,
             "y_pos": 662,
             "x_legend_pos": 158,
-            "y_legend_pos": 648
+            "y_legend_pos": 648,
+            "display": 3
         },
         "16": {
             "name": "Coa",
@@ -326,7 +330,8 @@
             "x_pos": 492,
             "y_pos": 725,
             "x_legend_pos": 491,
-            "y_legend_pos": 713
+            "y_legend_pos": 713,
+            "display": 6
         },
         "19": {
             "name": "Dre",
@@ -334,7 +339,8 @@
             "x_pos": 367,
             "y_pos": 309,
             "x_legend_pos": 367,
-            "y_legend_pos": 295
+            "y_legend_pos": 295,
+            "display": 5
         },
         "20": {
             "name": "End",
@@ -342,7 +348,8 @@
             "x_pos": 413,
             "y_pos": 870,
             "x_legend_pos": 413,
-            "y_legend_pos": 856
+            "y_legend_pos": 856,
+            "display": 1
         },
         "21": {
             "name": "ESS",
@@ -390,7 +397,8 @@
             "x_pos": 388,
             "y_pos": 1038,
             "x_legend_pos": 369,
-            "y_legend_pos": 1030
+            "y_legend_pos": 1030,
+            "display": 4
         },
         "27": {
             "name": "Har",
@@ -398,7 +406,8 @@
             "x_pos": 122,
             "y_pos": 591,
             "x_legend_pos": 135,
-            "y_legend_pos": 585
+            "y_legend_pos": 585,
+            "display": 2
         },
         "28": {
             "name": "Hhl",
@@ -414,7 +423,8 @@
             "x_pos": 224,
             "y_pos": 928,
             "x_legend_pos": 224,
-            "y_legend_pos": 914
+            "y_legend_pos": 914,
+            "display": 7
         },
         "30": {
             "name": "Hor",
@@ -422,7 +432,8 @@
             "x_pos": 122,
             "y_pos": 965,
             "x_legend_pos": 122,
-            "y_legend_pos": 951
+            "y_legend_pos": 951,
+            "display": 7
         },
         "31": {
             "name": "IrB",
@@ -438,7 +449,8 @@
             "x_pos": 440,
             "y_pos": 219,
             "x_legend_pos": 440,
-            "y_legend_pos": 205
+            "y_legend_pos": 205,
+            "display": 5
         },
         "33": {
             "name": "KLW",
@@ -478,7 +490,8 @@
             "x_pos": 136,
             "y_pos": 783,
             "x_legend_pos": 136,
-            "y_legend_pos": 769
+            "y_legend_pos": 769,
+            "display": 3
         },
         "38": {
             "name": "Mar",
@@ -542,7 +555,8 @@
             "x_pos": 134,
             "y_pos": 1022,
             "x_legend_pos": 134,
-            "y_legend_pos": 1008
+            "y_legend_pos": 1008,
+            "display": 7
         },
         "46": {
             "name": "Pas",
@@ -566,7 +580,8 @@
             "x_pos": 118,
             "y_pos": 626,
             "x_legend_pos": 108,
-            "y_legend_pos": 646
+            "y_legend_pos": 646,
+            "display": 2
         },
         "49": {
             "name": "Rea",
@@ -598,7 +613,8 @@
             "x_pos": 424,
             "y_pos": 935,
             "x_legend_pos": 424,
-            "y_legend_pos": 921
+            "y_legend_pos": 921,
+            "display": 1
         },
         "53": {
             "name": "Run",
@@ -614,7 +630,8 @@
             "x_pos": 327,
             "y_pos": 1066,
             "x_legend_pos": 327,
-            "y_legend_pos": 1052
+            "y_legend_pos": 1052,
+            "display": 4
         },
         "55": {
             "name": "San",
@@ -710,7 +727,8 @@
             "x_pos": 116,
             "y_pos": 348,
             "x_legend_pos": 116,
-            "y_legend_pos": 334
+            "y_legend_pos": 334,
+            "display": 5
         },
         "67": {
             "name": "Str",
@@ -726,7 +744,8 @@
             "x_pos": 472,
             "y_pos": 1039,
             "x_legend_pos": 472,
-            "y_legend_pos": 1025
+            "y_legend_pos": 1025,
+            "display": 4
         },
         "69": {
             "name": "TGS",
@@ -774,7 +793,8 @@
             "x_pos": 208,
             "y_pos": 754,
             "x_legend_pos": 208,
-            "y_legend_pos": 740
+            "y_legend_pos": 740,
+            "display": 3
         },
         "75": {
             "name": "Whi",
@@ -782,7 +802,8 @@
             "x_pos": 363,
             "y_pos": 399,
             "x_legend_pos": 363,
-            "y_legend_pos": 385
+            "y_legend_pos": 385,
+            "display": 5
         },
         "76": {
             "name": "Win",
@@ -790,7 +811,8 @@
             "x_pos": 249,
             "y_pos": 276,
             "x_legend_pos": 249,
-            "y_legend_pos": 262
+            "y_legend_pos": 262,
+            "display": 5
         },
         "77": {
             "name": "WSS",
@@ -806,15 +828,17 @@
             "x_pos": 70,
             "y_pos": 597,
             "x_legend_pos": 70,
-            "y_legend_pos": 583
+            "y_legend_pos": 583,
+            "display": 2
         },
         "79": {
             "name": "Yro",
             "full_name": "Yronwood",
-            "x_pos": 274,
-            "y_pos": 995,
-            "x_legend_pos": 274,
-            "y_legend_pos": 981
+            "x_pos": 333,
+            "y_pos": 1023,
+            "x_legend_pos": 308,
+            "y_legend_pos": 1031,
+            "display": 4
         },
         "80": {
             "name": "Ash",
@@ -822,7 +846,8 @@
             "x_pos": 286,
             "y_pos": 934,
             "x_legend_pos": 286,
-            "y_legend_pos": 920
+            "y_legend_pos": 920,
+            "display": 7
         },
         "81": {
             "name": "Dis",
@@ -838,7 +863,8 @@
             "x_pos": 408,
             "y_pos": 708,
             "x_legend_pos": 408,
-            "y_legend_pos": 694
+            "y_legend_pos": 694,
+            "display": 6
         },
         "83": {
             "name": "",
@@ -13617,120 +13643,52 @@
         "79": {
             "area": [
                 [
-                    333,
-                    966
-                ],
-                [
-                    331,
-                    977
-                ],
-                [
-                    329,
-                    979
-                ],
-                [
-                    323,
-                    980
-                ],
-                [
-                    323,
-                    986
-                ],
-                [
-                    315,
-                    991
-                ],
-                [
-                    317,
-                    995
-                ],
-                [
-                    309,
-                    1004
-                ],
-                [
-                    307,
-                    1009
-                ],
-                [
-                    297,
-                    1009
-                ],
-                [
-                    283,
-                    1015
-                ],
-                [
-                    273,
+                    279,
                     1017
                 ],
                 [
-                    258,
-                    1012
+                    293,
+                    1010
                 ],
                 [
-                    250,
-                    1000
+                    313,
+                    1010
                 ],
                 [
-                    247,
-                    1000
+                    318,
+                    1007
                 ],
                 [
-                    244,
-                    995
+                    323,
+                    1011
                 ],
                 [
-                    241,
-                    996
+                    340,
+                    1011
                 ],
                 [
-                    239,
-                    1001
+                    350,
+                    1013
                 ],
                 [
-                    238,
-                    1000
+                    354,
+                    1019
                 ],
                 [
-                    239,
-                    980
+                    354,
+                    1025
                 ],
                 [
-                    241,
-                    975
+                    347,
+                    1036
                 ],
                 [
-                    245,
-                    971
+                    306,
+                    1035
                 ],
                 [
-                    256,
-                    970
-                ],
-                [
-                    276,
-                    973
-                ],
-                [
-                    292,
-                    973
-                ],
-                [
-                    309,
-                    970
-                ],
-                [
-                    320,
-                    966
-                ],
-                [
-                    328,
-                    961
-                ],
-                [
-                    330,
-                    961
+                    286,
+                    1037
                 ]
             ]
         },
