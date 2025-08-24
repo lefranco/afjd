@@ -1010,15 +1010,7 @@ def get_game_status():
     def show_variant_callback(ev, variant_name):  # pylint: disable=invalid-name
         """ show_variant_callback """
 
-        def cancel_callback(_, dialog):
-            """ cancel_callback """
-            dialog.close(None)
-
-        def confirm_callback(_, dialog):
-            """ confirm_callback """
-
-            dialog.close(None)
-
+        def show_variant():
             arrival = 'variant'
 
             # so that will go to proper page
@@ -1028,15 +1020,6 @@ def get_game_status():
             PANEL_MIDDLE.clear()
             variants.render(PANEL_MIDDLE)
 
-        ev.preventDefault()
-
-        dialog = mydialog.MyDialog("Attention, si vous êtes en train d'entrer vos ordres, ils seront perdus. On va vraiment voir la variante ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog: confirm_callback(e, d))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_callback(e, d))
-
-    def show_scoring_callback(ev, scoring_name):  # pylint: disable=invalid-name
-        """ show_scoring_callback """
-
         def cancel_callback(_, dialog):
             """ cancel_callback """
             dialog.close(None)
@@ -1045,7 +1028,22 @@ def get_game_status():
             """ confirm_callback """
 
             dialog.close(None)
+            show_variant()
 
+        ev.preventDefault()
+
+        if ROLE_ID is not None and ROLE_ID > 1:
+            dialog = mydialog.MyDialog("Attention, si vous êtes en train d'entrer vos ordres, ils seront perdus. On va vraiment voir la variante ?", ok_cancel=True)
+            dialog.ok_button.bind("click", lambda e, d=dialog: confirm_callback(e, d))
+            dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_callback(e, d))
+        else:
+            show_variant()
+
+    def show_scoring_callback(ev, scoring_name):  # pylint: disable=invalid-name
+        """ show_scoring_callback """
+
+        def show_scoring():
+            """ show_scoring """
             # so that will go to proper page
             ratings.set_arrival(scoring_name)
 
@@ -1053,14 +1051,36 @@ def get_game_status():
             PANEL_MIDDLE.clear()
             ratings.render(PANEL_MIDDLE)
 
+        def cancel_callback(_, dialog):
+            """ cancel_callback """
+            dialog.close(None)
+
+        def confirm_callback(_, dialog):
+            """ confirm_callback """
+
+            dialog.close(None)
+            show_scoring()
+
         ev.preventDefault()
 
-        dialog = mydialog.MyDialog("Attention, si vous êtes en train d'entrer vos ordres, ils seront perdus. On va vraiment voir le scorage ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog: confirm_callback(e, d))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_callback(e, d))
+        if ROLE_ID is not None and ROLE_ID > 0:
+            dialog = mydialog.MyDialog("Attention, si vous êtes en train d'entrer vos ordres, ils seront perdus. On va vraiment voir le scorage ?", ok_cancel=True)
+            dialog.ok_button.bind("click", lambda e, d=dialog: confirm_callback(e, d))
+            dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_callback(e, d))
+        else:
+            show_scoring()
 
     def show_option_callback(ev):  # pylint: disable=invalid-name
         """ show_option_callback """
+
+        def show_option():
+            """ show_option """
+            # so that will go to proper page
+            technical.set_arrival('brouillard')
+
+            # action of going to game page
+            PANEL_MIDDLE.clear()
+            technical.render(PANEL_MIDDLE)
 
         def cancel_callback(_, dialog):
             """ cancel_callback """
@@ -1070,19 +1090,18 @@ def get_game_status():
             """ confirm_callback """
 
             dialog.close(None)
+            show_option()
 
-            # so that will go to proper page
-            technical.set_arrival('brouillard')
-
-            # action of going to game page
-            PANEL_MIDDLE.clear()
-            technical.render(PANEL_MIDDLE)
 
         ev.preventDefault()
 
-        dialog = mydialog.MyDialog("Attention, si vous êtes en train d'entrer vos ordres, ils seront perdus. On va vraiment voir le scorage ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog: confirm_callback(e, d))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_callback(e, d))
+        if ROLE_ID is not None and ROLE_ID > 0:
+            dialog = mydialog.MyDialog("Attention, si vous êtes en train d'entrer vos ordres, ils seront perdus. On va vraiment voir l'option ?", ok_cancel=True)
+            dialog.ok_button.bind("click", lambda e, d=dialog: confirm_callback(e, d))
+            dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_callback(e, d))
+        else:              
+            show_option()
+
 
     game_name = GAME_PARAMETERS_LOADED['name']
     game_description = GAME_PARAMETERS_LOADED['description']
