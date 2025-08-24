@@ -46,7 +46,7 @@
             ]
         },
         "1": {
-            "name": "Cerf",
+            "name": "Baratheon",
             "adjective_name": "baratheon",
             "letter_name": "B",
             "red": [
@@ -63,7 +63,7 @@
             ]
         },
         "2": {
-            "name": "Kraken",
+            "name": "Greyjoy",
             "adjective_name": "greyjoy",
             "letter_name": "G",
             "red": [
@@ -80,7 +80,7 @@
             ]
         },
         "3": {
-            "name": "Lion",
+            "name": "Lannister",
             "adjective_name": "lannister",
             "letter_name": "L",
             "red": [
@@ -97,7 +97,7 @@
             ]
         },
         "4": {
-            "name": "Soleil",
+            "name": "Martell",
             "adjective_name": "martell",
             "letter_name": "M",
             "red": [
@@ -114,24 +114,24 @@
             ]
         },
         "5": {
-            "name": "Loup",
+            "name": "Stark",
             "adjective_name": "stark",
             "letter_name": "S",
             "red": [
                 245,
-                225
+                215
             ],
             "green": [
                 245,
-                225
+                215
             ],
             "blue": [
                 245,
-                221
+                215
             ]
         },
         "6": {
-            "name": "Dragon",
+            "name": "Targaryen",
             "adjective_name": "targaryen",
             "letter_name": "T",
             "red": [
@@ -148,7 +148,7 @@
             ]
         },
         "7": {
-            "name": "Fleur",
+            "name": "Tyrell",
             "adjective_name": "tyrell",
             "letter_name": "Y",
             "red": [
@@ -647,7 +647,8 @@
             "x_pos": 278,
             "y_pos": 725,
             "x_legend_pos": 278,
-            "y_legend_pos": 711
+            "y_legend_pos": 711,
+            "display": 3
         },
         "57": {
             "name": "ShB",
