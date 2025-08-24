@@ -26,19 +26,19 @@ Ce canal relie la mer Blackwater Rush à la Mer God's Eye (en passant par les r�
 .
 Les regions touchant le canal sont des côtes et accessibles à une flotte qui emprunte le canal.
 .
-Ce canal peut être traversé par une armée ou une flotte.
+Ce canal peut être traversé latéralement par une armée ou une flotte.
 
 (Mander)
 Ce canal relie la mer Shield Islands à Highgarden (en passant par les régions adjacentes).
 .
-Les regions touchant le canal sont des côtes et accesibles à une flotte qui emprunte le canal.
+Les regions touchant le canal sont des côtes et accessibles à une flotte qui emprunte le canal.
 .
-Ce canal peut être traversé par une armée ou une flotte.
+Ce canal peut être traversé latéralement par une armée ou une flotte.
 
 (Le Trident n'est pas un canal)
-Riverrun et Kingsroad sont des terres, donc inaccesibles aux flottes. 
+Riverrun et Kingsroad sont des terres, donc inaccessibles aux flottes. 
 .
-Riverland est une côte accesible uniquement par l'ouest (la mer Ironman's Bay par exemple.)
+Riverland est une côte accessible uniquement par l'ouest (la mer Ironman's Bay par exemple.)
 .
 Le trident peut être traversé par une armée ou une flotte, donc sont adjacants : Kingsroad et Riverland; Riverland et Riverun; Kingsroad et Harrenhal.
 .
@@ -122,7 +122,7 @@ $ Nomenclature
 | IrB | Ironman's Bay |
 | Kar | Karhold |
 | KLE | King's Landing East |
-| KLW |  King's Landing West |
+| KLW | King's Landing West |
 | Krd | Kingsroad |
 | Kwd | Kingswood |
 | Lan | Lannisport |
@@ -174,7 +174,7 @@ $ Expansionnisme (oui)
 
 Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. 
 .
-Par exemple, le Dragon peut construire à Lannisport si ce centre est vacant et qu'il en est propriétaire.
+Par exemple, Targaryen peut construire à Lannisport si ce centre est vacant et qu'il en est propriétaire.
 .
 Exception : King's Landing West et King's Landing East ne sont pas des centres de construction.
 
