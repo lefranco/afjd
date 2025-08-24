@@ -68,112 +68,112 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| ALA | Alanie |
-| ALE | Alemanie |
-| ALO | Alodie |
-| ALX | Alexandrie |
-| ANT | Antioche |
-| APU | Apulum |
-| AQU | Aquae Granni |
-| ARM | Armenie |
-| ARV | Arvorig |
-| AST | Asturie |
-| ATI | Atil |
-| AUS | Austrasie |
-| AXU | Axum |
-| BAB | Barbarie |
-| BAC | Bachikiristan |
-| BAE | Baetica |
-| BAM | Bamiyan |
-| BAR | Barghawata |
-| BAV | Baviere |
-| BEN | Benevent |
-| BRA | Bracara |
-| BUL | Bulgaria |
-| BUR | Burgondie |
-| CAE | Caesarea |
-| CAL | Calabre |
-| CAT | Carthage |
-| CHA | Chalukya |
-| CON | Constantinople |
-| CTE | Ctesiphon |
-| DAC | Dacie |
-| DEI | Deira |
-| DOM | Domnonea |
-| EDE | Edesse |
-| EPH | Ephese |
-| EST | Estakhr |
-| GAR | Garamantea |
-| gARA | Golfe d'Arabie |
-| GHA | Ghassan |
-| gPER | Golfe Persique |
-| gSAV | Golfe Savatahanan |
-| GUR | Gurganj |
-| GWY | Gwynned |
-| HIM | Himyar |
-| HYR | Hyrcania |
-| KAD | Kadambas |
-| KHO | Khorassan |
-| KIM | Kimekistan |
-| LAK | Lakhmia |
-| LEO | Leon |
-| LON | Londres |
-| MAK | Makran |
-| MAU | Mauretanie |
-| mCAN | Mer Cantabrique |
-| mDAL | Mer Dalmatienne |
-| MEV | Merv |
-| mEXT | Mer Exterieure |
-| mHIB | Mer d'Hibernie |
-| mLEV | Mer Levantine |
-| mLIG | Mer Ligurienne |
-| mLYB | Mer Lybienne |
-| mMAZ | Mer de Mazandaran |
-| mNOR | Mer Nordique |
-| MOE | Moesie |
-| mTYR | Mer Tyrrheniene |
-| NAO | Naoned |
-| NEU | Neustrie |
-| NOR | Norique |
-| NUB | Nubie |
-| OGH | Oghurie |
-| OST | Ostrogothie |
-| PAR | Paris |
-| PAS | Parsticum |
-| PAV | Pavie |
-| pEUX | Pont Euxin |
-| pMOE | Palus Moetique |
-| POL | Pologne |
-| PTH | Parthia |
-| QUR | Qurayshia |
-| RAV | Ravenne |
-| RHE | Rhetie |
-| ROM | Rome |
-| S1 | Steppes 1 |
-| S2 | Steppes 2 |
-| S3 | Steppes 3 |
-| SAB | Sabiristan |
-| SAL | Salona |
-| SAX | Saxe |
-| SEV | Severie |
-| SOR | Sorbie |
-| SPO | Spolete |
-| SUY | Suyab |
-| SYR | Syrie |
-| TAA | Taank |
-| TAR | Tarraconensis |
-| THU | Thuringe |
-| TIN | Tingis |
-| TOK | Tokharia |
-| TOL | Tolede |
-| TOS | Toscane |
-| TOU | Toulouse |
-| TYR | Tyras |
-| VAL | Valencia |
-| VAR | Varnataka |
-| VAS | Vasconia |
-| VER | Verone |
+| Abréviation | Nom complet | type | centre |
+| ALA | Alanie | côte | \* |
+| ALE | Alemanie | terre | \* |
+| ALO | Alodie | terre |  |
+| ALX | Alexandrie | côte | \* |
+| ANT | Antioche | côte | \* |
+| APU | Apulum | terre | \* |
+| AQU | Aquae Granni | côte | \* |
+| ARM | Armenie | côte |  |
+| ARV | Arvorig | côte | \* |
+| AST | Asturie | côte |  |
+| ATI | Atil | côte | \* |
+| AUS | Austrasie | terre |  |
+| AXU | Axum | côte | \* |
+| BAB | Barbarie | côte |  |
+| BAC | Bachikiristan | terre |  |
+| BAE | Baetica | côte |  |
+| BAM | Bamiyan | terre | \* |
+| BAR | Barghawata | côte |  |
+| BAV | Baviere | terre | \* |
+| BEN | Benevent | côte | \* |
+| BRA | Bracara | côte | \* |
+| BUL | Bulgaria | côte | \* |
+| BUR | Burgondie | côte |  |
+| CAE | Caesarea | côte | \* |
+| CAL | Calabre | côte |  |
+| CAT | Carthage | côte | \* |
+| CHA | Chalukya | côte | \* |
+| CON | Constantinople | côte | \* |
+| CTE | Ctesiphon | côte | \* |
+| DAC | Dacie | terre |  |
+| DEI | Deira | côte |  |
+| DOM | Domnonea | côte |  |
+| EDE | Edesse | terre |  |
+| EPH | Ephese | côte | \* |
+| EST | Estakhr | côte | \* |
+| GAR | Garamantea | terre |  |
+| gARA | Golfe d'Arabie | mer |  |
+| GHA | Ghassan | côte | \* |
+| gPER | Golfe Persique | mer |  |
+| gSAV | Golfe Savatahanan | mer |  |
+| GUR | Gurganj | côte | \* |
+| GWY | Gwynned | côte |  |
+| HIM | Himyar | côte | \* |
+| HYR | Hyrcania | côte |  |
+| KAD | Kadambas | côte |  |
+| KHO | Khorassan | terre |  |
+| KIM | Kimekistan | terre |  |
+| LAK | Lakhmia | côte |  |
+| LEO | Leon | terre |  |
+| LON | Londres | côte | \* |
+| MAK | Makran | côte |  |
+| MAU | Mauretanie | côte |  |
+| mCAN | Mer Cantabrique | mer |  |
+| mDAL | Mer Dalmatienne | mer |  |
+| MEV | Merv | terre | \* |
+| mEXT | Mer Exterieure | mer |  |
+| mHIB | Mer d'Hibernie | mer |  |
+| mLEV | Mer Levantine | mer |  |
+| mLIG | Mer Ligurienne | mer |  |
+| mLYB | Mer Lybienne | mer |  |
+| mMAZ | Mer de Mazandaran | mer |  |
+| mNOR | Mer Nordique | mer |  |
+| MOE | Moesie | côte |  |
+| mTYR | Mer Tyrrheniene | mer |  |
+| NAO | Naoned | côte |  |
+| NEU | Neustrie | terre |  |
+| NOR | Norique | terre |  |
+| NUB | Nubie | côte |  |
+| OGH | Oghurie | côte |  |
+| OST | Ostrogothie | côte | \* |
+| PAR | Paris | côte | \* |
+| PAS | Parsticum | terre | \* |
+| PAV | Pavie | côte | \* |
+| pEUX | Pont Euxin | mer |  |
+| pMOE | Palus Moetique | mer |  |
+| POL | Pologne | terre |  |
+| PTH | Parthia | côte |  |
+| QUR | Qurayshia | côte |  |
+| RAV | Ravenne | côte |  |
+| RHE | Rhetie | terre |  |
+| ROM | Rome | côte | \* |
+| S1 | Steppes 1 | terre |  |
+| S2 | Steppes 2 | terre |  |
+| S3 | Steppes 3 | terre |  |
+| SAB | Sabiristan | terre |  |
+| SAL | Salona | côte | \* |
+| SAX | Saxe | côte |  |
+| SEV | Severie | terre |  |
+| SOR | Sorbie | terre |  |
+| SPO | Spolete | côte |  |
+| SUY | Suyab | terre | \* |
+| SYR | Syrie | côte |  |
+| TAA | Taank | terre |  |
+| TAR | Tarraconensis | côte |  |
+| THU | Thuringe | terre | \* |
+| TIN | Tingis | côte | \* |
+| TOK | Tokharia | terre |  |
+| TOL | Tolede | terre | \* |
+| TOS | Toscane | côte |  |
+| TOU | Toulouse | côte | \* |
+| TYR | Tyras | côte | \* |
+| VAL | Valencia | côte | \* |
+| VAR | Varnataka | terre |  |
+| VAS | Vasconia | côte | \* |
+| VER | Verone | terre | \* |
 =
 
 _

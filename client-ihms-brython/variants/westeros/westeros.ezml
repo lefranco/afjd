@@ -80,95 +80,96 @@ _
 $ Pièges de la variante
 
 Pas de construction dans les centres de King's Landing.
+
 _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| Abréviation | Nom complet |
-| Arb | The Arbor |
-| Ash | Ashford |
-| Bar | Barrowlands |
-| Bit | The Bite |
-| BlB | Blazewater Bay |
-| Bmt | Blackmont |
-| BoC | Bay of Crabs |
-| BoI | Bay of Ice |
-| BoS | Bay of Seals |
-| Bra | Braavos |
-| BtW | Beyond the Wall |
-| BwB | Blackwater Bay |
-| BwR | Blackwater Rush |
-| CaB | Castle Black  |
-| Cai | Moat Cailin |
-| Cas | Casterly Rock |
-| Coa | Braavosi Coastlands |
-| Cra | Cracklaw Point |
-| Cro | Crownlands |
-| Dis | The Disputed Lands |
-| Dra | Dragonstone |
-| Dre | The Dreadfort |
-| End | Storm's End |
-| ESS | East Summer Sea |
-| Eye | God's Eye |
-| Eyr | The Eyrie |
-| Fin | The Fingers |
-| Fli | Flint's Finger |
-| God | Godsgrace |
-| Har | Harlaw |
-| Hhl | Harrenhal |
-| Hig | Highgarden |
-| Hor | Horn Hill |
-| IrB | Ironman's Bay |
-| Kar | Karhold |
-| KLE | King's Landing East |
-| KLW | King's Landing West |
-| Krd | Kingsroad |
-| Kwd | Kingswood |
-| Lan | Lannisport |
-| Mar | Dornish Marches |
-| Moo | Mountains of the Moon |
-| Mot | Deepwood Motte |
-| Myr | Myr |
-| Nec | The Neck |
-| NNS | North Narrow Sea |
-| NSS | North Sunset Sea |
-| Old | Oldtown |
-| Pas | Prince's Pass |
-| Pen | Pentos |
-| Pyk | Pyke |
-| Rea | The Reach |
-| ReS | Redwyne Straits  |
-| Riv | Riverlands |
-| Roo | Griffin's Roost |
-| Run | Riverrun |
-| Sal | Salt Shore |
-| San | Sandstone |
-| Sep | Stoney Sept |
-| ShB | Shipbreaker Bay |
-| Shi | Shield Islands |
-| SNS | South Narrow Sea |
-| SoD | Sea of Dorne |
-| SoM | Sea of Myrth |
-| Srd | Searoad |
-| SSS | South Sunset Sea |
-| Sta | Starfall |
-| Ste | The Stepstones |
-| Sto | Stony Shore |
-| Str | Stormlands |
-| Sun | Sunspear |
-| TGS | The Golden Sound |
-| TNS | The Narrow Sea |
-| TSS | The Shivering Sea |
-| Twi | The Twins |
-| Tyr | Tyrosh |
-| Wes | Westerlands |
-| Whi | White Harbor |
-| Win | Winterfell |
-| WSS | West Summer Sea |
-| Wyk | Great Wyk |
-| Yro | Yronwood |
+| Abréviation | Nom complet | type | centre |
+| Arb | The Arbor | côte | \* |
+| Ash | Ashford | terre |  |
+| Bar | Barrowlands | côte |  |
+| Bit | The Bite | mer |  |
+| BlB | Blazewater Bay | mer |  |
+| Bmt | Blackmont | terre |  |
+| BoC | Bay of Crabs | mer |  |
+| BoI | Bay of Ice | mer |  |
+| BoS | Bay of Seals | mer |  |
+| Bra | Braavos | côte | \* |
+| BtW | Beyond the Wall | côte | \* |
+| BwB | Blackwater Bay | mer |  |
+| BwR | Blackwater Rush | mer |  |
+| CaB | Castle Black  | côte |  |
+| Cai | Moat Cailin | côte | \* |
+| Cas | Casterly Rock | côte | \* |
+| Coa | Braavosi Coastlands | côte |  |
+| Cra | Craclaw Point | côte |  |
+| Cro | Crownlands | côte |  |
+| Dis | The Disputed Lands | côte |  |
+| Dra | Dragonstone | mer | \* |
+| Dre | The Dreadfort | côte |  |
+| End | Storm's End | côte | \* |
+| ESS | East Summer Sea | mer |  |
+| Eye | God's Eye | mer |  |
+| Eyr | The Eyrie | côte | \* |
+| Fin | The Fingers | côte |  |
+| Fli | Flint's Finger | côte | \* |
+| God | Godsgrace | côte | \* |
+| Har | Harlaw | mer | \* |
+| Hhl | Harrenhal | côte | \* |
+| Hig | Highgarden | côte | \* |
+| Hor | Horn Hill | côte |  |
+| IrB | Ironman's Bay | mer |  |
+| Kar | Karhold | côte | \* |
+| KLE | King's Landing East | côte | \* |
+| KLW | King's Landing West | côte | \* |
+| Krd | Kingsroad | terre |  |
+| Kwd | Kingswood | côte |  |
+| Lan | Lannisport | côte | \* |
+| Mar | Dornish Marches | côte | \* |
+| Moo | Mountains of the Moon | côte |  |
+| Mot | Deepwood Motte | côte |  |
+| Myr | Myr | côte | \* |
+| Nec | The Neck | côte |  |
+| NNS | North Narrow Sea | mer |  |
+| NSS | North Sunset Sea | mer |  |
+| Old | Oldtown | côte | \* |
+| Pas | Prince's Pass | côte |  |
+| Pen | Pentos | côte | \* |
+| Pyk | Pyke | mer | \* |
+| Rea | The Reach | côte |  |
+| ReS | Redwyne Straits  | mer |  |
+| Riv | Riverlands | côte |  |
+| Roo | Griffin's Roost | côte | \* |
+| Run | Riverrun | terre | \* |
+| Sal | Salt Shore | côte |  |
+| San | Sandstone | côte | \* |
+| Sep | Stoney Sept | côte |  |
+| ShB | Shipbreaker Bay | mer |  |
+| Shi | Shield Islands | mer | \* |
+| SNS | South Narrow Sea | mer |  |
+| SoD | Sea of Dorne | mer |  |
+| SoM | Sea of Myrth | mer |  |
+| Srd | Searoad | côte |  |
+| SSS | South Sunset Sea | mer |  |
+| Sta | Starfall | côte | \* |
+| Ste | The Stepstones | mer |  |
+| Sto | Stony Shore | côte |  |
+| Str | Stormlands | côte |  |
+| Sun | Sunspear | côte | \* |
+| TGS | The Golden Sound | mer |  |
+| TNS | The Narrow Sea | mer |  |
+| TSS | The Shivering Sea | mer |  |
+| Twi | The Twins | côte | \* |
+| Tyr | Tyrosh | mer | \* |
+| Wes | Westerlands | terre |  |
+| Whi | White Harbor | côte | \* |
+| Win | Winterfell | côte | \* |
+| WSS | West Summer Sea | mer |  |
+| Wyk | Great Wyk | mer | \* |
+| Yro | Yronwood | côte | \* |
 =
+
 _
 $ Expansionnisme (oui)
 

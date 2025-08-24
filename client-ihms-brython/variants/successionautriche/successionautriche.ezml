@@ -80,109 +80,109 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| ALB | Albanie |
-| ALG | Algérie |
-| ANA | Anatolie |
-| AND | Andalousie |
-| APU | Apulie |
-| AQU | Aquitaine |
-| ARA | Aragon |
-| BEL | Belgrade |
-| BER | Berlin |
-| bHEL | Baie de Héligoland |
-| BOH | Bohème |
-| BOR | Bordeaux |
-| BOS | Bosnie |
-| BOU | Bourgogne |
-| BRE | Brest |
-| BRI | Bristol |
-| BUD | Budapest |
-| BUL | Bulgarie |
-| CAR | Carinthie |
-| CAS | Castille |
-| CHA | Champagne |
-| CON | Constantinople |
-| COR | Corse |
-| CRI | Crimée |
-| CRO | Croatie |
-| cSTG | Canal Saint Georges |
-| DAL | Dalmatie |
-| DAN | Danemark |
-| dMAN | La Manche |
-| dSKA | Détroit de Skaggerak |
-| ECO | Ecosse |
-| FIN | Finlande |
-| FLA | Flandres |
-| GAL | Galicie |
-| gBOT | Golfe de Botnie |
-| gGAS | Golfe de Gascogne |
-| gLIO | Golfe de Lyon |
-| GRE | Grèce |
-| HAN | Hanovre |
-| HES | Hesse |
-| HOL | Hollande |
-| IRL | Irlande |
-| KIV | Kiev |
-| LAN | Languedoc |
-| LIT | Lituanie |
-| LON | Londres |
-| LOR | Lorraine |
-| LUB | Lublin |
-| mADR | Mer Adriatique |
-| MAR | Maroc |
-| mBAL | Mer Baltique |
-| mEGE | Mer Egée |
-| MEK | Mecklemburg |
-| MIL | Milan |
-| mION | Mer Ionienne |
-| mNOI | Mer Noire |
-| mNRD | Mer du Nord |
-| mNVG | Mer de Norvège |
-| mOCC | Mediteranée Occidentale |
-| MOL | Moldavie |
-| mORI | Mediteranée Orientale |
-| MOS | Moscou |
-| mTYR | Mer Tyrrhénienne |
-| MUN | Munich |
-| NAP | Naples |
-| NOR | Norvège |
-| oATL | Atlantique Moyen |
-| oEXT | Atlantique Extérieur |
-| PAL | Palatinat |
-| PAP | Papauté |
-| PAR | Paris |
-| PIC | Picardie |
-| PIE | Piémont |
-| POR | Portugal |
-| POS | Posnanie |
-| PRO | Provence |
-| PRU | Prusse |
-| PSK | Pinsk |
-| REG | Regensburg |
-| RHE | Rhénanie |
-| RIG | Riga |
-| RUT | Ruthénie Blanche |
-| SAR | Sardaigne |
-| SAV | Savoie |
-| SAX | Saxe |
-| SER | Serbie |
-| SIC | Sicile |
-| SIL | Silésie |
-| STE | Stettin |
-| STP | Saint-Pétersbourg |
-| SUE | Suède |
-| TOS | Toscane |
-| TSY | Transylvanie |
-| TUN | Tunisie |
-| TYR | Tyrol |
-| VAL | Valachie |
-| VAR | Varsovie |
-| VEN | Vénétie |
-| VIE | Vienne |
-| VLY | Volhynie |
-| WES | Westphalie |
-| YOR | York |
+| Abréviation | Nom complet | type | centre |
+| ALB | Albanie | côte |  |
+| ALG | Algérie | côte |  |
+| ANA | Anatolie | côte |  |
+| AND | Andalousie | côte | \* |
+| APU | Apulie | côte |  |
+| AQU | Aquitaine | côte |  |
+| ARA | Aragon | côte | \* |
+| BEL | Belgrade | terre | \* |
+| BER | Berlin | terre | \* |
+| bHEL | Baie de Héligoland | mer |  |
+| BOH | Bohème | terre |  |
+| BOR | Bordeaux | côte | \* |
+| BOS | Bosnie | côte |  |
+| BOU | Bourgogne | terre |  |
+| BRE | Brest | côte | \* |
+| BRI | Bristol | côte | \* |
+| BUD | Budapest | terre | \* |
+| BUL | Bulgarie | côte | \* |
+| CAR | Carinthie | côte |  |
+| CAS | Castille | côte | \* |
+| CHA | Champagne | terre |  |
+| CON | Constantinople | côte | \* |
+| COR | Corse | côte |  |
+| CRI | Crimée | côte |  |
+| CRO | Croatie | côte | \* |
+| cSTG | Canal Saint Georges | mer |  |
+| DAL | Dalmatie | côte |  |
+| DAN | Danemark | côte | \* |
+| dMAN | La Manche | mer |  |
+| dSKA | Détroit de Skaggerak | mer |  |
+| ECO | Ecosse | côte | \* |
+| FIN | Finlande | côte |  |
+| FLA | Flandres | côte |  |
+| GAL | Galicie | terre |  |
+| gBOT | Golfe de Botnie | mer |  |
+| gGAS | Golfe de Gascogne | mer |  |
+| gLIO | Golfe de Lyon | mer |  |
+| GRE | Grèce | côte | \* |
+| HAN | Hanovre | côte |  |
+| HES | Hesse | terre |  |
+| HOL | Hollande | côte | \* |
+| IRL | Irlande | côte | \* |
+| KIV | Kiev | côte | \* |
+| LAN | Languedoc | côte |  |
+| LIT | Lituanie | côte |  |
+| LON | Londres | côte | \* |
+| LOR | Lorraine | terre | \* |
+| LUB | Lublin | terre | \* |
+| mADR | Mer Adriatique | mer |  |
+| MAR | Maroc | côte | \* |
+| mBAL | Mer Baltique | mer |  |
+| mEGE | Mer Egée | mer |  |
+| MEK | Mecklemburg | côte |  |
+| MIL | Milan | côte | \* |
+| mION | Mer Ionienne | mer |  |
+| mNOI | Mer Noire | mer |  |
+| mNRD | Mer du Nord | mer |  |
+| mNVG | Mer de Norvège | mer |  |
+| mOCC | Mediteranée Occidentale | mer |  |
+| MOL | Moldavie | terre | \* |
+| mORI | Mediteranée Orientale | mer |  |
+| MOS | Moscou | terre | \* |
+| mTYR | Mer Tyrrhénienne | mer |  |
+| MUN | Munich | terre | \* |
+| NAP | Naples | côte | \* |
+| NOR | Norvège | côte | \* |
+| oATL | Atlantique Moyen | mer |  |
+| oEXT | Atlantique Extérieur | mer |  |
+| PAL | Palatinat | terre | \* |
+| PAP | Papauté | côte | \* |
+| PAR | Paris | terre | \* |
+| PIC | Picardie | côte | \* |
+| PIE | Piémont | côte | \* |
+| POR | Portugal | côte | \* |
+| POS | Posnanie | côte |  |
+| PRO | Provence | côte |  |
+| PRU | Prusse | côte | \* |
+| PSK | Pinsk | terre | \* |
+| REG | Regensburg | terre | \* |
+| RHE | Rhénanie | terre | \* |
+| RIG | Riga | côte |  |
+| RUT | Ruthénie Blanche | terre |  |
+| SAR | Sardaigne | côte | \* |
+| SAV | Savoie | terre | \* |
+| SAX | Saxe | terre | \* |
+| SER | Serbie | terre |  |
+| SIC | Sicile | côte | \* |
+| SIL | Silésie | terre | \* |
+| STE | Stettin | côte | \* |
+| STP | Saint-Pétersbourg | côte | \* |
+| SUE | Suède | côte | \* |
+| TOS | Toscane | côte |  |
+| TSY | Transylvanie | terre |  |
+| TUN | Tunisie | côte | \* |
+| TYR | Tyrol | terre |  |
+| VAL | Valachie | terre |  |
+| VAR | Varsovie | terre | \* |
+| VEN | Vénétie | côte | \* |
+| VIE | Vienne | terre | \* |
+| VLY | Volhynie | terre |  |
+| WES | Westphalie | côte | \* |
+| YOR | York | côte |  |
 =
 
 

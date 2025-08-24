@@ -63,148 +63,148 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| ada | Adana |
-| adr | Mer Adriatique |
-| alb | Albanie |
-| ale | Alexandrie |
-| alg | Algérie |
-| als | Alsace |
-| ana | Anatolie |
-| and | Andalousie |
-| ank | Ankara |
-| apu | Apulie |
-| ara | Arabie Saoudite |
-| arm | Arménie |
-| asw | Assouan |
-| aut | Autriche |
-| auv | Auvergne |
-| aze | Azerbaïdjan |
-| bal | Mer Baltique |
-| bar | Barcelone |
-| bbi | Golfe de Gascogne |
-| bel | Belgique |
-| ber | Berlin |
-| bhm | Mer de Bornholm |
-| bie | Biélorussie |
-| bla | Mer Blanche |
-| bor | Bordeaux |
-| bos | Bosnie |
-| bre | Brest |
-| bul | Bulgarie |
-| cai | Le Caire |
-| cas | Mer Caspienne |
-| cau | Caucase |
-| cly | Clyde |
-| cro | Croatie |
-| dan | Danemark |
-| dgi | Détroit de Gibraltar |
-| don | Donetsk |
-| edi | Edimbourg |
-| ege | Mer Egée |
-| eme | Mer Méditérranéenne Orientale |
-| est | Estonie |
-| fin | Finlande |
-| fra | Francfort |
-| gar | Golfe Arabique |
-| gda | Gdansk |
-| geo | Géorgie |
-| gib | Gibraltar |
-| gly | Golfe de Lyon |
-| gob | Golfe de Botnie |
-| gor | Gorki |
-| gre | Grèce |
-| ham | Hambourg |
-| hel | Baie de Héligoland |
-| hol | Hollande |
-| hon | Hongrie |
-| ice | Islande |
-| ion | Mer Ionnienne |
-| ire | Irlande |
-| irk | Irak |
-| irn | Iran |
-| isr | Israël |
-| ist | Istambul |
-| izm | Izmir |
-| jor | Jordanie |
-| kaz | Kazakhstan |
-| kha | Kharkov |
-| kie | Kiev |
-| kra | Cracovie |
-| lap | Laponie |
-| let | Lettonie |
-| lib | Libye |
-| lig | Mer Ligurienne |
-| lit | Lituanie |
-| liv | Liverpool |
-| lon | Londres |
-| lyo | Lyon |
-| mac | Macédoine |
-| mad | Madrid |
-| mal | Mer Maltaise |
-| man | Manche |
-| mar | Maroc |
-| mba | Mer de Barents |
-| mil | Milan |
-| mir | Mer d'Irlande |
-| mli | Mer de Libye |
-| mol | Moldavie |
-| mon | Monaco |
-| mos | Moscou |
-| mro | Mer Rouge |
-| mrs | Marseille |
-| mun | Munich |
-| mur | Mourmansk |
-| nap | Naples |
-| nav | Navarre |
-| noe | Mer Noire Orientale |
-| noo | Mer Noire Occidentale |
-| nor | Norvège |
-| nrd | Mer du Nord |
-| nvg | Mer de Norvège |
-| oan | Océan Atlantique Nord |
-| oar | Océan Arctique |
-| oas | Océan Atlantique Sud |
-| ode | Odessa |
-| oma | Océan Moyen Atlantique |
-| ome | Mer Méditeranéenne Occidentale |
-| osa | Sahara Occidental |
-| our | Oural |
-| par | Paris |
-| pcr | Plateau Central Russe |
-| per | Golfe Persique |
-| pic | Picardie |
-| pie | Piémont |
-| pod | Podolia |
-| por | Portugal |
-| pru | Prusse |
-| rhe | Rhénanie |
-| rom | Rome |
-| ros | Rostov |
-| rou | Roumanie |
-| sae | Sahara Oriental |
-| sax | Saxe |
-| seb | Sébastopol |
-| ser | Serbie |
-| sib | Sibérie |
-| sil | Silésie |
-| sin | Sinaï |
-| ska | Skagerrak |
-| slo | Slovaquie |
-| spt | Saint-Pétersbourg |
-| sue | Suède |
-| sui | Suisse |
-| sve | Séville |
-| syr | Syrie |
-| tch | Tchécoslovaquie |
-| tos | Toscane |
-| tun | Tunis |
-| tyr | Mer Tyrrhénienne |
-| var | Varsovie |
-| ven | Venise |
-| vol | Volga |
-| wal | Pays de Galles |
-| yor | Yorkshire |
+| Abréviation | Nom complet | type | centre |
+| ada | Adana | côte | \* |
+| adr | Mer Adriatique | mer |  |
+| alb | Albanie | côte |  |
+| ale | Alexandrie | côte | \* |
+| alg | Algérie | côte |  |
+| als | Alsace | terre |  |
+| ana | Anatolie | côte |  |
+| and | Andalousie | côte |  |
+| ank | Ankara | côte | \* |
+| apu | Apulie | côte |  |
+| ara | Arabie Saoudite | côte | \* |
+| arm | Arménie | terre |  |
+| asw | Assouan | côte | \* |
+| aut | Autriche | terre | \* |
+| auv | Auvergne | côte |  |
+| aze | Azerbaïdjan | côte |  |
+| bal | Mer Baltique | mer |  |
+| bar | Barcelone | côte | \* |
+| bbi | Golfe de Gascogne | mer |  |
+| bel | Belgique | côte | \* |
+| ber | Berlin | côte | \* |
+| bhm | Mer de Bornholm | mer |  |
+| bie | Biélorussie | terre | \* |
+| bla | Mer Blanche | mer |  |
+| bor | Bordeaux | côte | \* |
+| bos | Bosnie | terre |  |
+| bre | Brest | côte |  |
+| bul | Bulgarie | côte | \* |
+| cai | Le Caire | côte | \* |
+| cas | Mer Caspienne | mer |  |
+| cau | Caucase | côte |  |
+| cly | Clyde | côte |  |
+| cro | Croatie | côte | \* |
+| dan | Danemark | côte | \* |
+| dgi | Détroit de Gibraltar | mer |  |
+| don | Donetsk | côte |  |
+| edi | Edimbourg | côte | \* |
+| ege | Mer Egée | mer |  |
+| eme | Mer Méditérranéenne Orientale | mer |  |
+| est | Estonie | côte |  |
+| fin | Finlande | côte |  |
+| fra | Francfort | terre | \* |
+| gar | Golfe Arabique | mer |  |
+| gda | Gdansk | côte | \* |
+| geo | Géorgie | côte | \* |
+| gib | Gibraltar | côte | \* |
+| gly | Golfe de Lyon | mer |  |
+| gob | Golfe de Botnie | mer |  |
+| gor | Gorki | terre | \* |
+| gre | Grèce | côte | \* |
+| ham | Hambourg | côte | \* |
+| hel | Baie de Héligoland | mer |  |
+| hol | Hollande | côte | \* |
+| hon | Hongrie | terre | \* |
+| ice | Islande | côte |  |
+| ion | Mer Ionnienne | mer |  |
+| ire | Irlande | côte | \* |
+| irk | Irak | côte |  |
+| irn | Iran | côte | \* |
+| isr | Israël | côte | \* |
+| ist | Istambul | côte | \* |
+| izm | Izmir | côte | \* |
+| jor | Jordanie | côte |  |
+| kaz | Kazakhstan | côte |  |
+| kha | Kharkov | terre | \* |
+| kie | Kiev | terre | \* |
+| kra | Cracovie | terre | \* |
+| lap | Laponie | côte |  |
+| let | Lettonie | côte |  |
+| lib | Libye | côte | \* |
+| lig | Mer Ligurienne | mer |  |
+| lit | Lituanie | côte | \* |
+| liv | Liverpool | côte | \* |
+| lon | Londres | côte | \* |
+| lyo | Lyon | terre | \* |
+| mac | Macédoine | terre |  |
+| mad | Madrid | terre | \* |
+| mal | Mer Maltaise | mer |  |
+| man | Manche | mer |  |
+| mar | Maroc | côte | \* |
+| mba | Mer de Barents | mer |  |
+| mil | Milan | terre | \* |
+| mir | Mer d'Irlande | mer |  |
+| mli | Mer de Libye | mer |  |
+| mol | Moldavie | terre |  |
+| mon | Monaco | côte | \* |
+| mos | Moscou | terre | \* |
+| mro | Mer Rouge | mer |  |
+| mrs | Marseille | côte | \* |
+| mun | Munich | terre | \* |
+| mur | Mourmansk | côte | \* |
+| nap | Naples | côte | \* |
+| nav | Navarre | côte |  |
+| noe | Mer Noire Orientale | mer |  |
+| noo | Mer Noire Occidentale | mer |  |
+| nor | Norvège | côte | \* |
+| nrd | Mer du Nord | mer |  |
+| nvg | Mer de Norvège | mer |  |
+| oan | Océan Atlantique Nord | mer |  |
+| oar | Océan Arctique | mer |  |
+| oas | Océan Atlantique Sud | mer |  |
+| ode | Odessa | côte | \* |
+| oma | Océan Moyen Atlantique | mer |  |
+| ome | Mer Méditeranéenne Occidentale | mer |  |
+| osa | Sahara Occidental | terre |  |
+| our | Oural | côte |  |
+| par | Paris | terre | \* |
+| pcr | Plateau Central Russe | terre |  |
+| per | Golfe Persique | mer |  |
+| pic | Picardie | côte |  |
+| pie | Piémont | côte |  |
+| pod | Podolia | terre |  |
+| por | Portugal | côte | \* |
+| pru | Prusse | côte |  |
+| rhe | Rhénanie | terre |  |
+| rom | Rome | côte | \* |
+| ros | Rostov | côte | \* |
+| rou | Roumanie | côte | \* |
+| sae | Sahara Oriental | côte |  |
+| sax | Saxe | terre |  |
+| seb | Sébastopol | côte | \* |
+| ser | Serbie | côte | \* |
+| sib | Sibérie | terre |  |
+| sil | Silésie | terre |  |
+| sin | Sinaï | côte |  |
+| ska | Skagerrak | mer |  |
+| slo | Slovaquie | terre |  |
+| spt | Saint-Pétersbourg | côte | \* |
+| sue | Suède | côte | \* |
+| sui | Suisse | terre | \* |
+| sve | Séville | côte | \* |
+| syr | Syrie | côte |  |
+| tch | Tchécoslovaquie | terre | \* |
+| tos | Toscane | côte |  |
+| tun | Tunis | côte | \* |
+| tyr | Mer Tyrrhénienne | mer |  |
+| var | Varsovie | terre | \* |
+| ven | Venise | côte | \* |
+| vol | Volga | côte |  |
+| wal | Pays de Galles | côte |  |
+| yor | Yorkshire | côte |  |
 =
 
 _

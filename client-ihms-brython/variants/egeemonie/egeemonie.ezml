@@ -63,94 +63,94 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| ACH | Achaia |
-| aDEL | Delos |
-| aDOD | Dodecanese |
-| AGS | Argos |
-| aLIM | Limnos |
-| AMB | Ambragia |
-| aNAX | Naxos |
-| ARC | Arkadia |
-| aSPO | Sporades |
-| aTER | Thera |
-| ATH | Athinai |
-| BEO | Beotia |
-| BIT | Bithynia |
-| BYZ | Byzantion |
-| CAR | Caria |
-| CHI | Chiros |
-| CHK | Chalkis |
-| CYD | Cydonia |
-| DIO | Dion |
-| DOL | Dolopia |
-| DPH | Delphoi |
-| ELY | Elymaia |
-| EPE | Epeiros |
-| EPH | Ephesus |
-| ERE | Eretre |
-| ETO | Etolia |
-| HAL | Halicarnassos |
-| HKK | Halkidiki |
-| HLP | Hellespont |
-| ILY | Ilyria |
-| kADR | Adrmytinos Kolpos |
-| kEVV | Evvoiko Kolpos |
-| kITH | Ithaca Pelagos |
-| kKOR | Korinthios Kolpos |
-| kKRM | Keramaikos Kolpos |
-| kMAK | Malkri Kolpos |
-| KNO | Knossos |
-| KOR | Korinthios |
-| kSAR | Saronikos Kolpos |
-| kTRM | Thermaikos Kolpos |
-| KUZ | Kuzykos |
-| LAK | Lakonia |
-| LAR | Larissa |
-| LES | Lesbos |
-| LET | Lete |
-| LYD | Lydia |
-| LYN | Lyncestus |
-| LYT | Lyttos |
-| MAL | Malis |
-| MAR | Marathon |
-| MEG | Megara |
-| MIL | Miletos |
-| MYG | Mygdonia |
-| MYS | Mysia |
-| ODR | Odrysia |
-| OLY | Olympia |
-| PAN | Paionia |
-| PEL | Pella |
-| PER | Pergamon |
-| pEXO | Exoterico Ionio Pelagos |
-| PHA | Phaistos |
-| pIKA | Ikario Pelagos |
-| pION | Ionio Pelagos |
-| pKAR | Karpathio Pegalos |
-| pKRI | Kritiko Pelagos |
-| pLAK | Lakonia Pelagos |
-| pLYC | Lykia Pelagos |
-| pMYR | Myrtoo Pelagos |
-| pPEX | Pont Euxinos Pelagos |
-| pPRO | Propontis Pelagos |
-| PRY | Phrygia |
-| pTKK | Thrakiko Pelagos |
-| PYL | Pylos |
-| RHO | Rhodos |
-| SAM | Samos |
-| SAR | Sardis |
-| sHYD | Steno Hydrus |
-| sMIT | Steno Mitilinis |
-| SMY | Smyrna |
-| SPA | Sparta |
-| STR | Stratos |
-| sZAK | Steno Zakynthos |
-| TEB | Thebai |
-| TRA | Thraki |
-| TRO | Troia |
-| XAN | Xanthos |
-| ZAK | Zakros |
+| Abréviation | Nom complet | type | centre |
+| ACH | Achaia | côte |  |
+| aDEL | Delos | mer | \* |
+| aDOD | Dodecanese | mer |  |
+| AGS | Argos | côte | \* |
+| aLIM | Limnos | mer | \* |
+| AMB | Ambragia | côte | \* |
+| aNAX | Naxos | mer | \* |
+| ARC | Arkadia | terre |  |
+| aSPO | Sporades | mer |  |
+| aTER | Thera | mer | \* |
+| ATH | Athinai | côte | \* |
+| BEO | Beotia | côte |  |
+| BIT | Bithynia | côte |  |
+| BYZ | Byzantion | côte | \* |
+| CAR | Caria | côte |  |
+| CHI | Chiros | côte | \* |
+| CHK | Chalkis | côte |  |
+| CYD | Cydonia | côte | \* |
+| DIO | Dion | côte | \* |
+| DOL | Dolopia | terre | \* |
+| DPH | Delphoi | côte | \* |
+| ELY | Elymaia | terre |  |
+| EPE | Epeiros | côte | \* |
+| EPH | Ephesus | côte | \* |
+| ERE | Eretre | côte | \* |
+| ETO | Etolia | côte |  |
+| HAL | Halicarnassos | côte | \* |
+| HKK | Halkidiki | côte |  |
+| HLP | Hellespont | côte |  |
+| ILY | Ilyria | côte |  |
+| kADR | Adrmytinos Kolpos | mer |  |
+| kEVV | Evvoiko Kolpos | mer |  |
+| kITH | Ithaca Pelagos | mer |  |
+| kKOR | Korinthios Kolpos | mer |  |
+| kKRM | Keramaikos Kolpos | mer |  |
+| kMAK | Malkri Kolpos | mer |  |
+| KNO | Knossos | côte | \* |
+| KOR | Korinthios | côte | \* |
+| kSAR | Saronikos Kolpos | mer |  |
+| kTRM | Thermaikos Kolpos | mer |  |
+| KUZ | Kuzykos | côte | \* |
+| LAK | Lakonia | côte |  |
+| LAR | Larissa | côte | \* |
+| LES | Lesbos | côte | \* |
+| LET | Lete | côte | \* |
+| LYD | Lydia | terre |  |
+| LYN | Lyncestus | terre |  |
+| LYT | Lyttos | côte |  |
+| MAL | Malis | côte |  |
+| MAR | Marathon | côte | \* |
+| MEG | Megara | côte |  |
+| MIL | Miletos | côte | \* |
+| MYG | Mygdonia | côte | \* |
+| MYS | Mysia | terre |  |
+| ODR | Odrysia | côte |  |
+| OLY | Olympia | côte | \* |
+| PAN | Paionia | terre |  |
+| PEL | Pella | côte | \* |
+| PER | Pergamon | côte | \* |
+| pEXO | Exoterico Ionio Pelagos | mer |  |
+| PHA | Phaistos | côte |  |
+| pIKA | Ikario Pelagos | mer |  |
+| pION | Ionio Pelagos | mer |  |
+| pKAR | Karpathio Pegalos | mer |  |
+| pKRI | Kritiko Pelagos | mer |  |
+| pLAK | Lakonia Pelagos | mer |  |
+| pLYC | Lykia Pelagos | mer |  |
+| pMYR | Myrtoo Pelagos | mer |  |
+| pPEX | Pont Euxinos Pelagos | mer |  |
+| pPRO | Propontis Pelagos | mer |  |
+| PRY | Phrygia | terre |  |
+| pTKK | Thrakiko Pelagos | mer |  |
+| PYL | Pylos | côte | \* |
+| RHO | Rhodos | côte | \* |
+| SAM | Samos | côte | \* |
+| SAR | Sardis | terre | \* |
+| sHYD | Steno Hydrus | mer |  |
+| sMIT | Steno Mitilinis | mer |  |
+| SMY | Smyrna | côte |  |
+| SPA | Sparta | terre | \* |
+| STR | Stratos | côte |  |
+| sZAK | Steno Zakynthos | mer |  |
+| TEB | Thebai | côte | \* |
+| TRA | Thraki | terre |  |
+| TRO | Troia | côte | \* |
+| XAN | Xanthos | côte | \* |
+| ZAK | Zakros | côte | \* |
 =
 
 
