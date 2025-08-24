@@ -50,16 +50,16 @@
             "adjective_name": "baratheon",
             "letter_name": "B",
             "red": [
-                75,
-                95
-            ],
-            "green": [
                 235,
                 255
             ],
+            "green": [
+                215,
+                235
+            ],
             "blue": [
-                221,
-                241
+                0,
+                20
             ]
         },
         "2": {
@@ -84,16 +84,16 @@
             "adjective_name": "lannister",
             "letter_name": "L",
             "red": [
+                75,
+                95
+            ],
+            "green": [
                 235,
                 255
             ],
-            "green": [
-                215,
-                235
-            ],
             "blue": [
-                0,
-                20
+                221,
+                241
             ]
         },
         "4": {
