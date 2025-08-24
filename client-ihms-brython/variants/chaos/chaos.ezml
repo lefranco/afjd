@@ -43,45 +43,45 @@ Le gagnant est donc la puissance qui détient *18* centres de ravitaillement ou 
 _
 $ Puissances en présence
 
-Il y a sept puissances dont les unités de départ sont les suivantes :
+Il y a 34 puissances dont les unités de départ sont les suivantes :
 .
 .
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés|
-|ankara | 1 | |  | |
-|belgique | 1 | |  | |
-|berlin | 1 | |  | |
-|brest | 1 | |  | |
-|budapest | 1 | |  | |
-|bulgarie | 1 | |  | |
-|constantinople | 1 | |  | |
-|danemark | 1 | |  | |
-|edimbourg | 1 | |  | |
-|grece | 1 | |  | |
-|hollande | 1 | |  | |
-|kiel | 1 | |  | |
-|londres | 1 | |  | |
-|liverpool | 1 | |  | |
-|marseille | 1 | |  | |
-|moscou | 1 | |  | |
-|munich | 1 | |  | |
-|naples | 1 | |  | |
-|norvege | 1 | |  | |
-|paris | 1 | |  | |
-|portugal | 1 | |  | |
-|rome | 1 | |  | |
-|roumanie | 1 | |  | |
-|serbie | 1 | |  | |
-|sebastopol | 1 | |  | |
-|smyrne | 1 | |  | |
-|espagne | 1 | |  | |
-|saintpetersbourg | 1 | |  | |
-|suede | 1 | |  | |
-|trieste | 1 | |  | |
-|tunis | 1 | |  | |
-|venise | 1 | |  | |
-|vienne | 1 | |  | |
-|varsovie | 1 | |  | |
+|ankara | 1 | |  | ankara|
+|belgique | 1 | |  | belgique|
+|berlin | 1 | |  | berlin|
+|brest | 1 | |  | brest|
+|budapest | 1 | |  | budapest|
+|bulgarie | 1 | |  | bulgarie|
+|constantinople | 1 | |  | constantinople|
+|danemark | 1 | |  | danemark|
+|edimbourg | 1 | |  | edimbourg|
+|grece | 1 | |  | grece|
+|hollande | 1 | |  | hollande|
+|kiel | 1 | |  | kiel|
+|londres | 1 | |  | londres|
+|liverpool | 1 | |  | liverpool|
+|marseille | 1 | |  | marseille|
+|moscou | 1 | |  | moscou|
+|munich | 1 | |  | munich|
+|naples | 1 | |  | naples|
+|norvege | 1 | |  | norvege|
+|paris | 1 | |  | paris|
+|portugal | 1 | |  | portugal|
+|rome | 1 | |  | rome|
+|roumanie | 1 | |  | roumanie|
+|serbie | 1 | |  | serbie|
+|sebastopol | 1 | |  | sebastopol|
+|smyrne | 1 | |  | smyrne|
+|espagne | 1 | |  | espagne|
+|saintpetersbourg | 1 | |  | saintpetersbourg|
+|suede | 1 | |  | suede|
+|trieste | 1 | |  | trieste|
+|tunis | 1 | |  | tunis|
+|venise | 1 | |  | venise|
+|vienne | 1 | |  | vienne|
+|varsovie | 1 | |  | varsovie|
 =
 
 _
@@ -93,82 +93,82 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| Adr | Mer Adriatique |
-| AfN | Afrique du Nord |
-| Alb | Albanie |
-| Ank | Ankara |
-| Apu | Apulie |
-| Arm | Arménie |
-| AtN | Atlantique Nord |
-| Atl | Atlantique |
-| Bal | Mer Baltique |
-| Bar | Mer de Barents |
-| Bel | Belgique |
-| Ber | Berlin |
-| Boh | Bohème |
-| Bot | Golfe de Botnie |
-| Bou | Bourgogne |
-| Bre | Brest |
-| Bud | Budapest |
-| Bul | Bulgarie |
-| Cly | Clyde |
-| Con | Constantinople |
-| Dan | Danemark |
-| Edi | Édimbourg |
-| Ege | Mer d'Egée |
-| Esp | Espagne |
-| Fin | Finlande |
-| GLi | Golfe du Lion |
-| Gal | Galicie |
-| Gas | Gascogne |
-| Gre | Grèce |
-| Hel | Baie de Helgoland |
-| Hol | Hollande |
-| Ion | Mer Ionienne |
-| Irl | Mer d'Irlande |
-| Kie | Kiel |
-| Lon | Londres |
-| Lvn | Livonie |
-| Lvp | Liverpool |
-| MNg | Mer de Norvège |
-| MOc | Méditerranée occidentale |
-| MOr | Méditerranée orientale |
-| MTy | Mer Tyrrhénienne |
-| Man | Manche |
-| Mar | Marseille |
-| Mos | Moscou |
-| Mun | Munich |
-| Nap | Naples |
-| Nge | Norvège |
-| Noi | Mer Noire |
-| Nrd | Mer du Nord |
-| PGa | Pays de Galles |
-| Par | Paris |
-| Pic | Picardie |
-| Pie | Piémont |
-| Por | Portugal |
-| Pru | Prusse |
-| Rom | Rome |
-| Rou | Roumanie |
-| Ruh | Ruhr |
-| Seb | Sébastopol |
-| Ser | Serbie |
-| Sil | Silésie |
-| Ska | Skagerrak |
-| Smy | Smyrne |
-| StP | Saint-Pétersbourg |
-| Sue | Suède |
-| Syr | Syrie |
-| Tos | Toscane |
-| Tri | Trieste |
-| Tun | Tunis |
-| Tyr | Tyrol |
-| Ukr | Ukraine |
-| Var | Varsovie |
-| Ven | Venise |
-| Vie | Vienne |
-| Yor | Yorkshire |
+| Abréviation | Nom complet | type | centre |
+| Adr | Mer Adriatique | mer |  |
+| AfN | Afrique du Nord | côte |  |
+| Alb | Albanie | côte |  |
+| Ank | Ankara | côte | \* |
+| Apu | Apulie | côte |  |
+| Arm | Arménie | côte |  |
+| Atl | Atlantique | mer |  |
+| AtN | Atlantique Nord | mer |  |
+| Bal | Mer Baltique | mer |  |
+| Bar | Mer de Barents | mer |  |
+| Bel | Belgique | côte | \* |
+| Ber | Berlin | côte | \* |
+| Boh | Bohème | terre |  |
+| Bot | Golfe de Botnie | mer |  |
+| Bou | Bourgogne | terre |  |
+| Bre | Brest | côte | \* |
+| Bud | Budapest | terre | \* |
+| Bul | Bulgarie | côte | \* |
+| Cly | Clyde | côte |  |
+| Con | Constantinople | côte | \* |
+| Dan | Danemark | côte | \* |
+| Edi | Édimbourg | côte | \* |
+| Ege | Mer d'Egée | mer |  |
+| Esp | Espagne | côte | \* |
+| Fin | Finlande | côte |  |
+| Gal | Galicie | terre |  |
+| Gas | Gascogne | côte |  |
+| GLi | Golfe du Lion | mer |  |
+| Gre | Grèce | côte | \* |
+| Hel | Baie de Helgoland | mer |  |
+| Hol | Hollande | côte | \* |
+| Ion | Mer Ionienne | mer |  |
+| Irl | Mer d'Irlande | mer |  |
+| Kie | Kiel | côte | \* |
+| Lon | Londres | côte | \* |
+| Lvn | Livonie | côte |  |
+| Lvp | Liverpool | côte | \* |
+| Man | Manche | mer |  |
+| Mar | Marseille | côte | \* |
+| MNg | Mer de Norvège | mer |  |
+| MOc | Méditerranée occidentale | mer |  |
+| MOr | Méditerranée orientale | mer |  |
+| Mos | Moscou | terre | \* |
+| MTy | Mer Tyrrhénienne | mer |  |
+| Mun | Munich | terre | \* |
+| Nap | Naples | côte | \* |
+| Nge | Norvège | côte | \* |
+| Noi | Mer Noire | mer |  |
+| Nrd | Mer du Nord | mer |  |
+| Par | Paris | terre | \* |
+| PGa | Pays de Galles | côte |  |
+| Pic | Picardie | côte |  |
+| Pie | Piémont | côte |  |
+| Por | Portugal | côte | \* |
+| Pru | Prusse | côte |  |
+| Rom | Rome | côte | \* |
+| Rou | Roumanie | côte | \* |
+| Ruh | Ruhr | terre |  |
+| Seb | Sébastopol | côte | \* |
+| Ser | Serbie | terre | \* |
+| Sil | Silésie | terre |  |
+| Ska | Skagerrak | mer |  |
+| Smy | Smyrne | côte | \* |
+| StP | Saint-Pétersbourg | côte | \* |
+| Sue | Suède | côte | \* |
+| Syr | Syrie | côte |  |
+| Tos | Toscane | côte |  |
+| Tri | Trieste | côte | \* |
+| Tun | Tunis | côte | \* |
+| Tyr | Tyrol | terre |  |
+| Ukr | Ukraine | terre |  |
+| Var | Varsovie | terre | \* |
+| Ven | Venise | côte | \* |
+| Vie | Vienne | terre | \* |
+| Yor | Yorkshire | côte |  |
 =
 
 _

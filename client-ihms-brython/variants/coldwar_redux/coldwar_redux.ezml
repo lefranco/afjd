@@ -77,97 +77,97 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| AfE | Afrique de l’Est |
-| afg | Afghanistan |
-| AfN | Afrique du Nord |
-| Ala | Alaska |
-| Alb | Albanie |
-| AlE | Allemagne de l’Est |
-| AlO | Allemagne de l’Ouest |
-| AmC | Amérique Centrale |
-| Ana | Anadyr |
-| Arb | Arabie |
-| AsS | Asie du Sud |
-| ATE | Atlantique Est |
-| ATO | Atlantique Ouest |
-| Aus | Australie |
-| BHU | Baie d’Hudson |
-| Bng | Bangladesh |
-| Bre | Brésil |
-| CaO | Canada Occidental |
-| Cau | Caucase |
-| CdN | Corée du Nord |
-| CdS | Corée du Sud |
-| Col | Colombie |
-| Cub | Cuba |
-| Dan | Danemark |
-| Egy | Egypte |
-| Fin | Finlande |
-| Flo | Floride |
-| Fra | France |
-| GAL | Golfe d’Alaska |
-| GBE | Golfe du Bengale |
-| GBr |  Grande Bretagne  |
-| GME | Golfe du Mexique |
-| Gre | Grèce |
-| Gro | Groënland |
-| Han | Hanoï |
-| Ibe | Ibérie |
-| Ids | Indonésie |
-| Ind | Inde |
-| Irk | Irak |
-| Irn | Iran |
-| Ita | Italie |
-| Jap | Japon |
-| Kur | Kurdistan |
-| LAn | Los Angeles |
-| Len | Léningrad |
-| Lev | Levant |
-| Lib | Libye |
-| Man | Mandchourie |
-| MAR | Mer d’Arabie |
-| MBA | Mer Baltique |
-| MBE | Mer de Béring |
-| MCA | Mer des Caraïbes |
-| MCS | Mer de Chine Sud |
-| MDN | Mer du Nord |
-| Mex | Mexique |
-| mid | Midwest |
-| MIO | Mer Ionienne |
-| MJN | Mer Jaune |
-| MJP | Mer du Japon |
-| MME | Mer Méditerranée Est |
-| MMO | Mer Méditerranée Ouest |
-| MNG | Mer de Norvège |
-| MNO | Mer Noire |
-| mon | Mongolie |
-| mos | Moscou |
-| MRO | Mer Rouge |
-| Nge | Norvège |
-| NYo | New York |
-| OAR | Océan Arctique |
-| OIN | Océan Indien |
-| Our | Oural |
-| PAE | Pacifique Est |
-| Pak | Pakistan |
-| Pan | Panama |
-| PAO | Pacifique Ouest |
-| Phi | Philippines |
-| Que | Québec |
-| Sha | Shanghaï |
-| Sib | Sibérie |
-| SoW | South West |
-| Sue | Suède |
-| SVi | Sud Vietnam |
-| Tor | Toronto |
-| Tun | Tunisie |
-| Tur | Turquie |
-| Ukr | Ukraine |
-| uru | Urumchi |
-| Ven | Vénézuela |
-| Vla | Vladivostok |
-| You | Yougoslavie |
+| Abréviation | Nom complet | type | centre |
+| AfE | Afrique de l’Est | côte |  |
+| afg | Afghanistan | terre |  |
+| AfN | Afrique du Nord | côte |  |
+| Ala | Alaska | côte | \* |
+| Alb | Albanie | côte |  |
+| AlE | Allemagne de l’Est | côte | \* |
+| AlO | Allemagne de l’Ouest | côte | \* |
+| AmC | Amérique Centrale | côte |  |
+| Ana | Anadyr | côte | \* |
+| Arb | Arabie | côte |  |
+| AsS | Asie du Sud | côte |  |
+| ATE | Atlantique Est | mer |  |
+| ATO | Atlantique Ouest | mer |  |
+| Aus | Australie | côte | \* |
+| BHU | Baie d’Hudson | mer |  |
+| Bng | Bangladesh | côte |  |
+| Bre | Brésil | côte | \* |
+| CaO | Canada Occidental | côte |  |
+| Cau | Caucase | côte |  |
+| CdN | Corée du Nord | côte |  |
+| CdS | Corée du Sud | côte | \* |
+| Col | Colombie | côte |  |
+| Cub | Cuba | côte | \* |
+| Dan | Danemark | côte |  |
+| Egy | Egypte | côte | \* |
+| Fin | Finlande | côte |  |
+| Flo | Floride | côte |  |
+| Fra | France | côte | \* |
+| GAL | Golfe d’Alaska | mer |  |
+| GBE | Golfe du Bengale | mer |  |
+| GBr |  Grande Bretagne  | côte | \* |
+| GME | Golfe du Mexique | mer |  |
+| Gre | Grèce | côte |  |
+| Gro | Groënland | côte |  |
+| Han | Hanoï | côte | \* |
+| Ibe | Ibérie | côte |  |
+| Ids | Indonésie | côte | \* |
+| Ind | Inde | côte | \* |
+| Irk | Irak | côte |  |
+| Irn | Iran | côte | \* |
+| Ita | Italie | côte |  |
+| Jap | Japon | côte | \* |
+| Kur | Kurdistan | côte |  |
+| LAn | Los Angeles | côte | \* |
+| Len | Léningrad | côte | \* |
+| Lev | Levant | côte |  |
+| Lib | Libye | côte |  |
+| Man | Mandchourie | côte |  |
+| MAR | Mer d’Arabie | mer |  |
+| MBA | Mer Baltique | mer |  |
+| MBE | Mer de Béring | mer |  |
+| MCA | Mer des Caraïbes | mer |  |
+| MCS | Mer de Chine Sud | mer |  |
+| MDN | Mer du Nord | mer |  |
+| Mex | Mexique | côte |  |
+| mid | Midwest | terre |  |
+| MIO | Mer Ionienne | mer |  |
+| MJN | Mer Jaune | mer |  |
+| MJP | Mer du Japon | mer |  |
+| MME | Mer Méditerranée Est | mer |  |
+| MMO | Mer Méditerranée Ouest | mer |  |
+| MNG | Mer de Norvège | mer |  |
+| MNO | Mer Noire | mer |  |
+| mon | Mongolie | terre |  |
+| mos | Moscou | terre | \* |
+| MRO | Mer Rouge | mer |  |
+| Nge | Norvège | côte |  |
+| NYo | New York | côte | \* |
+| OAR | Océan Arctique | mer |  |
+| OIN | Océan Indien | mer |  |
+| Our | Oural | côte |  |
+| PAE | Pacifique Est | mer |  |
+| Pak | Pakistan | côte |  |
+| Pan | Panama | côte | \* |
+| PAO | Pacifique Ouest | mer |  |
+| Phi | Philippines | côte |  |
+| Que | Québec | côte |  |
+| Sha | Shanghaï | côte | \* |
+| Sib | Sibérie | côte |  |
+| SoW | South West | côte |  |
+| Sue | Suède | côte | \* |
+| SVi | Sud Vietnam | côte | \* |
+| Tor | Toronto | côte | \* |
+| Tun | Tunisie | côte | \* |
+| Tur | Turquie | côte | \* |
+| Ukr | Ukraine | côte |  |
+| uru | Urumchi | terre | \* |
+| Ven | Vénézuela | côte |  |
+| Vla | Vladivostok | côte |  |
+| You | Yougoslavie | côte |  |
 =
 
 _

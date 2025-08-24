@@ -65,87 +65,87 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| Ace | Aceh |
-| Ava | Ava |
-| Ayu | Ayutthaya |
-| BaS | Banda Sea |
-| Bik | Bikol |
-| Bru | Brunei |
-| Bun | Butuan |
-| Bur | Buru |
-| But | Buton |
-| Cha | Chaiya |
-| Chi | Chiangmai |
-| Chk | Champassak |
-| Chp | Champa |
-| ChS | Champa Sea |
-| Daw | Dawei |
-| EaO | Eastern Ocean |
-| ECS | East China Sea |
-| Fai | Faifo |
-| GDV | Gulf of Dai Viet |
-| GuS | Gulf of Siam |
-| GuT | Gulf of Tomini |
-| Hai | Haiphong |
-| Hal | Halmahera |
-| Han | Hanoi |
-| Jam | Jambi |
-| JaS | Java Sea |
-| Jav | Javadvipa |
-| KaS | Karimata Sea |
-| Kas | Kasiguran |
-| Kel | Kelatan |
-| Khm | Khmer |
-| Kut | Kutai |
-| LaX | Lan Xang |
-| LnS | Luson Sea |
-| Lum | Lumajang |
-| Lus | Luson |
-| Luw | Luwuk |
-| Mai | Mait Sea |
-| Mak | Makassar |
-| Mal | Malacca |
-| MaS | Makassar Strait |
-| Min | Minahassa |
-| Mio | Mindanao |
-| Miu | Minangkabau |
-| MoS | Moluccan Sea |
-| Nam | Namayan |
-| NeD | Negara Daha |
-| OcE | Oc Eo |
-| Pag | Palembang |
-| Pah | Pahang |
-| Paj | Pajajaran |
-| Pal | Palawan |
-| Ped | Pedir |
-| Peg | Pegu |
-| Ria | Riau |
-| RoE | Roi Et |
-| Sam | Sambas |
-| Sat | Sampit |
-| SCS | South China Sea |
-| Ser | Seram |
-| Sha | Shan |
-| SiS | Sibuyan Sea |
-| SlS | Sulu Sea |
-| SoI | Sea of India |
-| SoM | Straits of Malacca |
-| SoO | Southern Ocean |
-| SoT | Straits of Taiwan |
-| Suk | Sukadana |
-| Sun | Sunda |
-| SuS | Sulawesi Sea |
-| Tai | Taiwan |
-| TiS | Timor Sea |
-| Ton | Tondo |
-| Tro | Trowulan |
-| Tun | Tunku |
-| ViS | Visayas Sea |
-| Weh | Wehali |
-| WeO | Western Ocean |
-| Wia | Wiangium |
-| Zam | Zamboanga |
+| Abréviation | Nom complet | type | centre |
+| Ace | Aceh | côte | \* |
+| Ava | Ava | côte | \* |
+| Ayu | Ayutthaya | côte | \* |
+| BaS | Banda Sea | mer |  |
+| Bik | Bikol | côte |  |
+| Bru | Brunei | côte | \* |
+| Bun | Butuan | côte | \* |
+| Bur | Buru | côte | \* |
+| But | Buton | côte |  |
+| Cha | Chaiya | côte |  |
+| Chi | Chiangmai | terre |  |
+| Chk | Champassak | terre |  |
+| Chp | Champa | côte |  |
+| ChS | Champa Sea | mer |  |
+| Daw | Daiwei | côte | \* |
+| EaO | Eastern Ocean | mer |  |
+| ECS | East China Sea | mer |  |
+| Fai | Faifo | côte | \* |
+| GDV | Gulf of Dai Viet | mer |  |
+| GuS | Gulf of Siam | mer |  |
+| GuT | Gulf of Tomini | mer |  |
+| Hai | Haiphong | côte | \* |
+| Hal | Halmahera | côte | \* |
+| Han | Hanoi | terre | \* |
+| Jam | Jambi | côte |  |
+| JaS | Java Sea | mer |  |
+| Jav | Javadvipa | côte | \* |
+| Kan | Kasiguran | côte | \* |
+| KaS | Karimata Sea | mer |  |
+| Kel | Kelatan | côte |  |
+| Khm | Khmer | côte |  |
+| Kut | Kutai | côte |  |
+| LaX | Lan Xang | terre | \* |
+| LnS | Luson Sea | mer |  |
+| Lum | Lumajang | côte |  |
+| Lus | Luson | côte |  |
+| Luw | Luwuk | côte |  |
+| Mai | Mait Sea | mer |  |
+| Mak | Makassar | côte | \* |
+| Mal | Malacca | côte | \* |
+| MaS | Makassar Strait | mer |  |
+| Min | Minahassa | côte | \* |
+| Mio | Mindanao | côte |  |
+| Miu | Minangkabau | côte |  |
+| MoS | Moluccan Sea | mer |  |
+| Nam | Namayan | côte | \* |
+| NeD | Negara Daha | terre | \* |
+| OcE | Oc Eo | côte | \* |
+| Pag | Palembang | côte | \* |
+| Pah | Pahang | côte | \* |
+| Paj | Pajajaran | côte | \* |
+| Pal | Palawan | côte | \* |
+| Ped | Pedir | côte |  |
+| Peg | Pegu | côte |  |
+| Ria | Riau | côte | \* |
+| RoE | Roi Et | terre | \* |
+| Sam | Sambas | côte | \* |
+| Sat | Sampit | côte | \* |
+| SCS | South China Sea | mer |  |
+| Ser | Seram | côte | \* |
+| Sha | Shan | terre |  |
+| SiS | Sibuyan Sea | mer |  |
+| SlS | Sulu Sea | mer |  |
+| SoI | Sea of India | mer |  |
+| SoM | Straits of Malacca | mer |  |
+| SoO | Southern Ocean | mer |  |
+| SoT | Straits of Taiwan | mer |  |
+| Suk | Sukadana | côte |  |
+| Sun | Sunda | côte |  |
+| SuS | Sulawesi Sea | mer |  |
+| Tai | Taiwan | côte | \* |
+| TiS | Timor Sea | mer |  |
+| Ton | Tondo | côte | \* |
+| Tro | Trowulan | côte | \* |
+| Tun | Tunku | côte | \* |
+| ViS | Visayas Sea | mer |  |
+| Weh | Wehali | côte | \* |
+| WeO | Western Ocean | mer |  |
+| Wia | Wiangium | terre |  |
+| Zam | Zamboanga | côte | \* |
 =
 
 _

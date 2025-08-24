@@ -68,48 +68,48 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| Als | Alsace |
-| Ang | Anglie |
-| Anj | Anjou |
-| Ara | Aragon |
-| Atl | Atlantique |
-| Bis | Biscay |
-| Bre | Bretagne |
-| Brs | Canal de Bristol |
-| Cal | Calais |
-| Can | Cantons |
-| Cas | Castille |
-| Cha | Charolais |
-| Dau | Dauphiné |
-| Dev | Comté du Devon |
-| Dij | Dijon |
-| Eco | Ecosse |
-| Fla | Flandres |
-| Fri | Friedland |
-| Gal | Pays de Galles |
-| Guy | Guyenne |
-| Hol | Hollande |
-| Irl | Mer d'Irlande |
-| Lim | Limousin |
-| Lon | Londres |
-| Lor | Lorraine |
-| Lux | Luxembourg |
-| Man | Manche |
-| Med | Mer Méditerranée |
-| Min | Minch du Nord |
-| Nom | Normandie |
-| Nor | Mer du Nord |
-| Not | Northumbrie |
-| Orl | Orléanais |
-| Pal | Pale |
-| Par | Paris |
-| Pas | Pas de Calais |
-| Poi | Poitou |
-| Pro | Provence |
-| Sav | Savoie |
-| Tou | Toulouse |
-| Was | Wash |
+| Abréviation | Nom complet | type | centre |
+| Als | Alsace | terre |  |
+| Ang | Anglie | côte |  |
+| Anj | Anjou | terre |  |
+| Ara | Aragon | côte |  |
+| Atl | Atlantique | mer |  |
+| Bis | Biscay | mer |  |
+| Bre | Bretagne | côte | \* |
+| Brs | Canal de Bristol | mer |  |
+| Cal | Calais | côte | \* |
+| Can | Cantons | terre | \* |
+| Cas | Castille | côte | \* |
+| Cha | Charolais | terre |  |
+| Dau | Dauphiné | terre | \* |
+| Dev | Comté du Devon | côte | \* |
+| Dij | Dijon | terre | \* |
+| Eco | Ecosse | côte | \* |
+| Fla | Flandres | côte | \* |
+| Fri | Friedland | côte |  |
+| Gal | Pays de Galles | côte |  |
+| Guy | Guyenne | côte | \* |
+| Hol | Hollande | côte | \* |
+| Irl | Mer d'Irlande | mer |  |
+| Lim | Limousin | terre |  |
+| Lon | Londres | côte | \* |
+| Lor | Lorraine | terre |  |
+| Lux | Luxembourg | terre | \* |
+| Man | Manche | mer |  |
+| Med | Mer Méditerranée | mer |  |
+| Min | Minch du Nord | mer |  |
+| Nom | Normandie | côte | \* |
+| Nor | Mer du Nord | mer |  |
+| Not | Northumbrie | côte |  |
+| Orl | Orléanais | terre | \* |
+| Pal | Pale | côte |  |
+| Par | Paris | terre | \* |
+| Pas | Pas de Calais | mer |  |
+| Poi | Poitou | terre |  |
+| Pro | Provence | côte |  |
+| Sav | Savoie | côte |  |
+| Tou | Toulouse | côte | \* |
+| Was | Wash | mer |  |
 =
 
 _

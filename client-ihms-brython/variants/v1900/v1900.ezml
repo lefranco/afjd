@@ -68,97 +68,97 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| ADR | Mer Adriatique |
-| Alg | Algérie |
-| Als | Alsace |
-| AMe | Algérie Méridionale |
-| Ank | Ankara |
-| Apu | Apulie |
-| Ara | Arabie |
-| Arm | Arménie |
-| ATL | Océan Atlantique |
-| ATN | Océan Atlantique Nord |
-| BAL | Mer Baltique |
-| BAR | Mer de Barents |
-| Bel | Belgique |
-| Ber | Berlin |
-| Boh | Bohème |
-| Bos | Bosnie |
-| Bou | Bourgogne |
-| Bre | Brest |
-| Bud | Budapest |
-| Bul | Bulgarie |
-| Cly | Clyde |
-| Col | Cologne |
-| Con | Constantinople |
-| Cyr | Cyrénaïque |
-| Dam | Damas |
-| Dan | Danemark |
-| Edi | Édimbourg |
-| EGE | Mer Égée |
-| Egy | Égypte |
-| Esp | Espagne |
-| Fin | Finlande |
-| Gal | Galicie |
-| Gas | Gascogne |
-| GBO | Golfe de Botnie |
-| GIB | Gibraltar |
-| GLI | Golfe du Lion |
-| Gre | Grèce |
-| Hed | Hedjaz |
-| HEL | Baie de Héligoland |
-| ION | Mer Ionienne |
-| Ire | Irlande |
-| Isl | Islande |
-| Kie | Kiel |
-| Kon | Konya |
-| Lon | Londres |
-| Lvn | Livonie |
-| Lvp | Liverpool |
-| Mac | Macédoine |
-| MAN | Manche |
-| Mar | Marseille |
-| Mil | Milan |
-| MIR | Mer d'Irlande |
-| MNG | Mer de Norvège |
-| MOC | Méditerranée Occidentale |
-| MOR | Méditerranée Orientale |
-| Mos | Moscou |
-| Mrc | Maroc |
-| Mun | Munich |
-| Nap | Naples |
-| Nge | Norvège |
-| NOI | Mer Noire |
-| NRD | Mer du Nord |
-| PaB | Pays-Bas |
-| Pal | Palestine |
-| Par | Paris |
-| PGa | Pays de Galles |
-| Pic | Picardie |
-| Pie | Piémont |
-| Por | Portugal |
-| Pru | Prusse |
-| Rom | Rome |
-| Rou | Roumanie |
-| Seb | Sébastopol |
-| Ser | Serbie |
-| Sib | Sibérie |
-| Sil | Silésie |
-| SKA | Skagerrak |
-| StP | Saint-Pétersbourg |
-| Sue | Suède |
-| Sui | Suisse |
-| Tri | Trieste |
-| Trp | Tripolitaine |
-| Tun | Tunis |
-| TYN | Mer Tyrrhénienne |
-| Tyr | Tyrol |
-| Ukr | Ukraine |
-| Var | Varsovie |
-| Ven | Vénétie |
-| Vie | Vienne |
-| Yor | Yorkshire |
+| Abréviation | Nom complet | type | centre |
+| ADR | Mer Adriatique | mer |  |
+| Alg | Algérie | côte | \* |
+| Als | Alsace | terre |  |
+| AMe | Algérie Méridionale | terre |  |
+| Ank | Ankara | côte | \* |
+| Apu | Apulie | côte |  |
+| Ara | Arabie | terre |  |
+| Arm | Arménie | côte |  |
+| ATL | Océan Atlantique | mer |  |
+| ATN | Océan Atlantique Nord | mer |  |
+| BAL | Mer Baltique | mer |  |
+| BAR | Mer de Barents | mer |  |
+| Bel | Belgique | côte | \* |
+| Ber | Berlin | côte | \* |
+| Boh | Bohème | terre |  |
+| Bos | Bosnie | côte |  |
+| Bou | Bourgogne | terre |  |
+| Bre | Brest | côte | \* |
+| Bud | Budapest | terre | \* |
+| Bul | Bulgarie | côte | \* |
+| Cly | Clyde | côte |  |
+| Col | Cologne | terre | \* |
+| Con | Constantinople | côte | \* |
+| Cyr | Cyrénaïque | côte |  |
+| Dam | Damas | côte | \* |
+| Dan | Danemark | côte | \* |
+| Edi | Édimbourg | côte | \* |
+| EGE | Mer Égée | mer |  |
+| Egy | Égypte | côte | \* |
+| Esp | Espagne | côte | \* |
+| Fin | Finlande | côte |  |
+| Gal | Galicie | terre |  |
+| Gas | Gascogne | côte |  |
+| GBO | Golfe de Botnie | mer |  |
+| GIB | Gibraltar | côte |  |
+| GLI | Golfe du Lion | mer |  |
+| Gre | Grèce | côte | \* |
+| Hed | Hedjaz | côte |  |
+| HEL | Baie de Héligoland | mer |  |
+| ION | Mer Ionienne | mer |  |
+| Ire | Irlande | côte |  |
+| Isl | Islande | côte |  |
+| Kie | Kiel | côte | \* |
+| Kon | Konya | côte |  |
+| Lon | Londres | côte | \* |
+| Lvn | Livonie | côte |  |
+| Lvp | Liverpool | côte | \* |
+| Mac | Macédoine | côte |  |
+| MAN | Manche | mer |  |
+| Mar | Marseille | côte | \* |
+| Mil | Milan | terre | \* |
+| MIR | Mer d'Irlande | mer |  |
+| MNG | Mer de Norvège | mer |  |
+| MOC | Méditerranée Occidentale | mer |  |
+| MOR | Méditerranée Orientale | mer |  |
+| Mos | Moscou | terre | \* |
+| Mrc | Maroc | côte | \* |
+| Mun | Munich | terre | \* |
+| Nap | Naples | côte | \* |
+| Nge | Norvège | côte | \* |
+| NOI | Mer Noire | mer |  |
+| NRD | Mer du Nord | mer |  |
+| PaB | Pays-Bas | côte | \* |
+| Pal | Palestine | côte |  |
+| Par | Paris | terre | \* |
+| PGa | Pays de Galles | côte |  |
+| Pic | Picardie | côte |  |
+| Pie | Piémont | côte |  |
+| Por | Portugal | côte | \* |
+| Pru | Prusse | côte |  |
+| Rom | Rome | côte | \* |
+| Rou | Roumanie | côte | \* |
+| Seb | Sébastopol | côte | \* |
+| Ser | Serbie | terre | \* |
+| Sib | Sibérie | terre |  |
+| Sil | Silésie | terre |  |
+| SKA | Skagerrak | mer |  |
+| StP | Saint-Pétersbourg | côte | \* |
+| Sue | Suède | côte | \* |
+| Sui | Suisse | terre | \* |
+| Tri | Trieste | côte | \* |
+| Trp | Tripolitaine | côte | \* |
+| Tun | Tunis | côte |  |
+| TYN | Mer Tyrrhénienne | mer |  |
+| Tyr | Tyrol | terre |  |
+| Ukr | Ukraine | terre |  |
+| Var | Varsovie | terre | \* |
+| Ven | Vénétie | côte |  |
+| Vie | Vienne | terre | \* |
+| Yor | Yorkshire | côte |  |
 =
 _
 $ Expansionnisme (non)

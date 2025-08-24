@@ -65,88 +65,88 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| AFG | Afghanistan |
-| AKI | Akita |
-| AMU | Amur |
-| ARA | Arabia |
-| ARM  | Armenia |
-| ASE | Arabian Sea |
-| ASM | Assam |
-| BAG | Baghdad |
-| BAL | Baluchistan |
-| BAN | Banda Sea |
-| BLA | Black Sea |
-| BOB | Bay of Bengal |
-| BOM | Bombay |
-| BOR | Borneo |
-| BUL | Bulgaria |
-| BUR | Burma |
-| CAL | Calcutta |
-| CAM | Cambodia |
-| CAN | Canton |
-| CHU | Chungking |
-| CON | Constantinople |
-| CPO |  Central Pacific Ocean |
-| CSE | Celebes Sea |
-| DAM | Damascus |
-| DEL | Delhi |
-| ECS | East China Sea |
-| EGY | Egypt |
-| EIO | East Indian Ocean |
-| FOR | Formosa |
-| GOM | Gulf of Martaban |
-| GOS | Gulf of Siam |
-| HAN | Hanoi |
-| HKO |  Hong Kong |
-| HUE | Hue |
-| IRK | Irkutsk |
-| JAV | Java |
-| JSE | Java Sea |
-| KAN | Kansu |
-| KAR | Karimata Strait |
-| KAS | Kashmir |
-| KHA | Khabarovsk |
-| KIR | Kirghiz |
-| KOR | Korea |
-| KYO | Kyoto |
-| LAO | Laos |
-| MAD | Madras |
-| MAL | Malaya |
-| MAN | Manchuria |
-| MAR | Maritime Province |
-| MED | Mediterranean Sea |
-| MON | Mongolia |
-| MOS | Moscow |
-| PEK | Peking |
-| PER | Persia |
-| PGU | Persian Gulf |
-| PHI | Philippines |
-| PSE | Philippine Sea |
-| RED | Red Sea |
-| RUM | Rumania |
-| SAI | Saigon |
-| SAR | Sarawak |
-| SAS | Sasebo |
-| SCS | South China Sea |
-| SEV | Sevastopol |
-| SHA | Shanghai |
-| SHI | Shikoku |
-| SIA | Siam |
-| SIB | Siberia |
-| SIN | Sinkiang |
-| SIO | South Indian Ocean |
-| SOJ | Sea of Japan |
-| SOO | Sea of Okhotsk |
-| SUM | Sumatra |
-| TIB | Tibet |
-| TOK | Tokyo |
-| TOM | Tomsk |
-| TUR | Turkestan |
-| WIO | West Indian Ocean |
-| YEL | Yellow Sea |
-| YES | Yesso |
-| YUN | Yunnan |
+| Abréviation | Nom complet | type | centre |
+| AFG | Afghanistan | terre | \* |
+| AKI | Akita | côte |  |
+| AMU | Amur | terre |  |
+| ARA | Arabia | côte |  |
+| ARM | Armenia | côte |  |
+| ASE | Arabian Sea | mer |  |
+| ASM | Assam | terre |  |
+| BAG | Baghdad | côte | \* |
+| BAL | Baluchistan | côte | \* |
+| BAN | Banda Sea | mer |  |
+| BLA | Black Sea | mer |  |
+| BOB | Bay of Bengal | mer |  |
+| BOM | Bombay | côte |  |
+| BOR | Borneo | côte | \* |
+| BUL | Bulgaria | côte |  |
+| BUR | Burma | côte | \* |
+| CAL | Calcutta | côte | \* |
+| CAM | Cambodia | côte | \* |
+| CAN | Canton | côte |  |
+| CHU | Chungking | terre | \* |
+| CON | Constantinople | côte | \* |
+| CPO |  Central Pacific Ocean | mer |  |
+| CSE | Celebes Sea | mer |  |
+| DAM | Damascus | côte | \* |
+| DEL | Delhi | terre | \* |
+| ECS | East China Sea | mer |  |
+| EGY | Egypt | côte |  |
+| EIO | East Indian Ocean | mer |  |
+| FOR | Formosa | côte | \* |
+| GOM | Gulf of Martaban | mer |  |
+| GOS | Gulf of Siam | mer |  |
+| HAN | Hanoi | côte | \* |
+| HKO |  Hong Kong | côte | \* |
+| HUE | Hue | côte | \* |
+| IRK | Irkutsk | terre | \* |
+| JAV | Java | côte | \* |
+| JSE | Java Sea | mer |  |
+| KAN | Kansu | terre |  |
+| KAR | Karimata Strait | mer |  |
+| KAS | Kashmir | terre |  |
+| KHA | Khabarovsk | côte | \* |
+| KIR | Kirghiz | côte |  |
+| KOR | Korea | côte | \* |
+| KYO | Kyoto | côte | \* |
+| LAO | Laos | terre |  |
+| MAD | Madras | côte | \* |
+| MAL | Malaya | côte | \* |
+| MAN | Manchuria | côte | \* |
+| MAR | Maritime Province | côte |  |
+| MED | Mediterranean Sea | mer |  |
+| MON | Mongolia | terre |  |
+| MOS | Moscow | terre | \* |
+| PEK | Peking | côte | \* |
+| PER | Persia | côte | \* |
+| PGU | Persian Gulf | mer |  |
+| PHI | Philippines | côte | \* |
+| PSE | Philippine Sea | mer |  |
+| RED | Red Sea | mer |  |
+| RUM | Rumania | côte | \* |
+| SAI | Saigon | côte | \* |
+| SAR | Sarawak | côte |  |
+| SAS | Sasebo | côte | \* |
+| SCS | South China Sea | mer |  |
+| SEV | Sevastopol | côte | \* |
+| SHA | Shanghai | côte | \* |
+| SHI | Shikoku | côte |  |
+| SIA | Siam | côte | \* |
+| SIB | Siberia | terre |  |
+| SIN | Sinkiang | terre |  |
+| SIO | South Indian Ocean | mer |  |
+| SOJ | Sea of Japan | mer |  |
+| SOO | Sea of Okhotsk | mer |  |
+| SUM | Sumatra | côte | \* |
+| TIB | Tibet | terre | \* |
+| TOK | Tokyo | côte | \* |
+| TOM | Tomsk | terre |  |
+| TUR | Turkestan | terre |  |
+| WIO | West Indian Ocean | mer |  |
+| YEL | Yellow Sea | mer |  |
+| YES | Yesso | côte |  |
+| YUN | Yunnan | terre |  |
 =
 _
 $ Expansionnisme (non)

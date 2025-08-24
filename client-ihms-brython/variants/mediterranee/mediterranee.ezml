@@ -112,86 +112,86 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| Adr | Adriatic Sea  |
-| Aeg | Aegaen Sea |
-| Ale | Alexandria |
-| Ant | Antioch |
-| Apu | Apulia |
-| Ara | Arabia |
-| Arm | Armenia |
-| Ath | Athena |
-| Aus | Ausanian Sea |
-| Bal | Baleares |
-| Bar | Barber Sea |
-| Bay | Bayuda |
-| Bit | Bithynia |
-| Bla | Black Sea |
-| Byz | Byzantinum |
-| Cap | Capadocia |
-| Car | Carthage |
-| Che | Chersonesus |
-| Cil | Cilician Strait |
-| Cir | Cirta |
-| Cor | Corsica |
-| Cre | Crete |
-| Cyp | Cyprus |
-| Cyr | Cyrene |
-| Dac | Dacia |
-| Dal | Dalmatia |
-| Dam | Damascus |
-| Egy | Egyptian Sea  |
-| Epi | Epirus |
-| Etr | Etruria |
-| Gal | Galatia |
-| Gau | Gaul |
-| GoP | Gulf of Pelusium |
-| GoS | Gulf of Syrtis |
-| GoT | Gulf of Tacape |
-| Ibe | Iberian Sea |
-| Ill | Illyria |
-| Ion | Ionian Sea |
-| Isa | Isauria |
-| Jer | Jerusalem |
-| Lep | Leptis |
-| Lig | Ligurian Sea |
-| Lus | Lusitania |
-| Lyb | Lybian Sea |
-| Mab | Mabatea |
-| Mac | Macedonia |
-| Mar | Marmarica |
-| Mas | Massilia |
-| Mau | Mauretania |
-| Mem | Memphis |
-| Mes | Messenian Sea |
-| Mil | Miletus |
-| Min | Minoan Sea |
-| Nea | Neapolis |
-| Num | Numidia |
-| Pet | Petia |
-| Pha | Phazania |
-| Pun | Punic Sea |
-| Rav | Ravenna |
-| Red | Red Sea |
-| Rha | Rhaetia |
-| Rom | Roma |
-| Sad | Sardinia |
-| Sag | Saguntum |
-| Sah | Sahara |
-| Sam | Sarmatia |
-| Sic | Sicilia |
-| Sid | Sidon |
-| Sii | Sinai |
-| Sip | Sinope |
-| Spa | Sparta |
-| Syr | Syrian Sea |
-| Tar | Tarraconensis |
-| Tha | Thapsus |
-| The | Thebes |
-| Tye | Tyre |
-| Tyn | Thyrrhenean Sea |
-| Ven | Venetia |
-| Vin | Vindobona |
+| Abréviation | Nom complet | type | centre |
+| Adr | Adriatic Sea  | mer |  |
+| Aeg | Aegaen Sea | mer |  |
+| Ale | Alexandria | côte | \* |
+| Ant | Antioch | côte | \* |
+| Apu | Apulia | côte |  |
+| Ara | Arabia | terre |  |
+| Arm | Armenia | terre |  |
+| Ath | Athena | côte | \* |
+| Aus | Ausanian Sea | mer |  |
+| Bal | Baleares | mer | \* |
+| Bar | Barber Sea | mer |  |
+| Bay | Bayuda | terre |  |
+| Bit | Bithynia | côte |  |
+| Bla | Black Sea | mer |  |
+| Byz | Byzantinum | côte | \* |
+| Cap | Capadocia | côte |  |
+| Car | Carthage | côte | \* |
+| Che | Chersonesus | côte | \* |
+| Cil | Cilician Strait | mer |  |
+| Cir | Cirta | terre | \* |
+| Cor | Corsica | côte |  |
+| Cre | Crete | côte | \* |
+| Cyp | Cyprus | côte | \* |
+| Cyr | Cyrene | côte | \* |
+| Dac | Dacia | côte |  |
+| Dal | Dalmatia | côte | \* |
+| Dam | Damascus | terre | \* |
+| Egy | Egyptian Sea  | mer |  |
+| Epi | Epirus | côte |  |
+| Etr | Etruria | côte |  |
+| Gal | Galatia | terre |  |
+| Gau | Gaul | terre |  |
+| GoP | Gulf of Pelusium | mer |  |
+| GoS | Gulf of Syrtis | mer |  |
+| GoT | Gulf of Tacape | mer |  |
+| Ibe | Iberian Sea | mer |  |
+| Ill | Illyria | terre |  |
+| Ion | Ionian Sea | mer |  |
+| Isa | Isauria | côte |  |
+| Jer | Jerusalem | côte | \* |
+| Lep | Leptis | côte | \* |
+| Lig | Ligurian Sea | mer |  |
+| Lus | Lusitania | terre |  |
+| Lyb | Lybian Sea | mer |  |
+| Mab | Mabatea | côte |  |
+| Mac | Macedonia | côte | \* |
+| Mar | Marmarica | terre |  |
+| Mas | Massilia | côte | \* |
+| Mau | Mauretania | côte |  |
+| Mem | Memphis | côte | \* |
+| Mes | Messenian Sea | mer |  |
+| Mil | Miletus | côte | \* |
+| Min | Minoan Sea | mer |  |
+| Nea | Neapolis | côte | \* |
+| Num | Numidia | côte | \* |
+| Pet | Petia | côte | \* |
+| Pha | Phazania | terre |  |
+| Pun | Punic Sea | mer |  |
+| Rav | Ravenna | côte | \* |
+| Red | Red Sea | mer |  |
+| Rha | Rhaetia | terre |  |
+| Rom | Roma | côte | \* |
+| Sad | Sardinia | côte | \* |
+| Sag | Saguntum | côte | \* |
+| Sah | Sahara | terre |  |
+| Sam | Sarmatia | terre |  |
+| Sic | Sicilia | côte | \* |
+| Sid | Sidon | côte | \* |
+| Sii | Sinai | côte |  |
+| Sip | Sinope | côte | \* |
+| Spa | Sparta | côte | \* |
+| Syr | Syrian Sea | mer |  |
+| Tar | Tarraconensis | côte |  |
+| Tha | Thapsus | côte | \* |
+| The | Thebes | côte | \* |
+| Tye | Tyre | côte | \* |
+| Tyn | Thyrrhenean Sea | mer |  |
+| Ven | Venetia | côte |  |
+| Vin | Vindobona | terre | \* |
 =
 
 _

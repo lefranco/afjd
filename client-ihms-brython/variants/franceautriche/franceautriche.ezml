@@ -51,82 +51,82 @@ _
 $ Nomenclature
 
 = Régions et abréviations de la variante
-| Abréviation | Nom complet |
-| Adr | Mer Adriatique |
-| AfN | Afrique du Nord |
-| Alb | Albanie |
-| Ank | Ankara |
-| Apu | Apulie |
-| Arm | Arménie |
-| AtN | Atlantique Nord |
-| Atl | Atlantique |
-| Bal | Mer Baltique |
-| Bar | Mer de Barents |
-| Bel | Belgique |
-| Ber | Berlin |
-| Boh | Bohème |
-| Bot | Golfe de Botnie |
-| Bou | Bourgogne |
-| Bre | Brest |
-| Bud | Budapest |
-| Bul | Bulgarie |
-| Cly | Clyde |
-| Con | Constantinople |
-| Dan | Danemark |
-| Edi | Édimbourg |
-| Ege | Mer d'Egée |
-| Esp | Espagne |
-| Fin | Finlande |
-| GLi | Golfe du Lion |
-| Gal | Galicie |
-| Gas | Gascogne |
-| Gre | Grèce |
-| Hel | Baie de Helgoland |
-| Hol | Hollande |
-| Ion | Mer Ionienne |
-| Irl | Mer d'Irlande |
-| Kie | Kiel |
-| Lon | Londres |
-| Lvn | Livonie |
-| Lvp | Liverpool |
-| MNg | Mer de Norvège |
-| MOc | Méditerranée occidentale |
-| MOr | Méditerranée orientale |
-| MTy | Mer Tyrrhénienne |
-| Man | Manche |
-| Mar | Marseille |
-| Mos | Moscou |
-| Mun | Munich |
-| Nap | Naples |
-| Nge | Norvège |
-| Noi | Mer Noire |
-| Nrd | Mer du Nord |
-| PGa | Pays de Galles |
-| Par | Paris |
-| Pic | Picardie |
-| Pie | Piémont |
-| Por | Portugal |
-| Pru | Prusse |
-| Rom | Rome |
-| Rou | Roumanie |
-| Ruh | Ruhr |
-| Seb | Sébastopol |
-| Ser | Serbie |
-| Sil | Silésie |
-| Ska | Skagerrak |
-| Smy | Smyrne |
-| StP | Saint-Pétersbourg |
-| Sue | Suède |
-| Syr | Syrie |
-| Tos | Toscane |
-| Tri | Trieste |
-| Tun | Tunis |
-| Tyr | Tyrol |
-| Ukr | Ukraine |
-| Var | Varsovie |
-| Ven | Venise |
-| Vie | Vienne |
-| Yor | Yorkshire |
+| Abréviation | Nom complet | type | centre |
+| Adr | Mer Adriatique | mer |  |
+| AfN | Afrique du Nord | côte |  |
+| Alb | Albanie | côte |  |
+| Ank | Ankara | côte | \* |
+| Apu | Apulie | côte |  |
+| Arm | Arménie | côte |  |
+| Atl | Atlantique | mer |  |
+| AtN | Atlantique Nord | mer |  |
+| Bal | Mer Baltique | mer |  |
+| Bar | Mer de Barents | mer |  |
+| Bel | Belgique | côte | \* |
+| Ber | Berlin | côte | \* |
+| Boh | Bohème | terre |  |
+| Bot | Golfe de Botnie | mer |  |
+| Bou | Bourgogne | terre |  |
+| Bre | Brest | côte | \* |
+| Bud | Budapest | terre | \* |
+| Bul | Bulgarie | côte | \* |
+| Cly | Clyde | côte |  |
+| Con | Constantinople | côte | \* |
+| Dan | Danemark | côte | \* |
+| Edi | Édimbourg | côte | \* |
+| Ege | Mer d'Egée | mer |  |
+| Esp | Espagne | côte | \* |
+| Fin | Finlande | côte |  |
+| Gal | Galicie | terre |  |
+| Gas | Gascogne | côte |  |
+| GLi | Golfe du Lion | mer |  |
+| Gre | Grèce | côte | \* |
+| Hel | Baie de Helgoland | mer |  |
+| Hol | Hollande | côte | \* |
+| Ion | Mer Ionienne | mer |  |
+| Irl | Mer d'Irlande | mer |  |
+| Kie | Kiel | côte | \* |
+| Lon | Londres | côte | \* |
+| Lvn | Livonie | côte |  |
+| Lvp | Liverpool | côte | \* |
+| Man | Manche | mer |  |
+| Mar | Marseille | côte | \* |
+| MNg | Mer de Norvège | mer |  |
+| MOc | Méditerranée occidentale | mer |  |
+| MOr | Méditerranée orientale | mer |  |
+| Mos | Moscou | terre | \* |
+| MTy | Mer Tyrrhénienne | mer |  |
+| Mun | Munich | terre | \* |
+| Nap | Naples | côte | \* |
+| Nge | Norvège | côte | \* |
+| Noi | Mer Noire | mer |  |
+| Nrd | Mer du Nord | mer |  |
+| Par | Paris | terre | \* |
+| PGa | Pays de Galles | côte |  |
+| Pic | Picardie | côte |  |
+| Pie | Piémont | côte |  |
+| Por | Portugal | côte | \* |
+| Pru | Prusse | côte |  |
+| Rom | Rome | côte | \* |
+| Rou | Roumanie | côte | \* |
+| Ruh | Ruhr | terre |  |
+| Seb | Sébastopol | côte | \* |
+| Ser | Serbie | terre | \* |
+| Sil | Silésie | terre |  |
+| Ska | Skagerrak | mer |  |
+| Smy | Smyrne | côte | \* |
+| StP | Saint-Pétersbourg | côte | \* |
+| Sue | Suède | côte | \* |
+| Syr | Syrie | côte |  |
+| Tos | Toscane | côte |  |
+| Tri | Trieste | côte | \* |
+| Tun | Tunis | côte | \* |
+| Tyr | Tyrol | terre |  |
+| Ukr | Ukraine | terre |  |
+| Var | Varsovie | terre | \* |
+| Ven | Venise | côte | \* |
+| Vie | Vienne | terre | \* |
+| Yor | Yorkshire | côte |  |
 =
 
 _
