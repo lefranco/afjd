@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
 from json import loads, dumps
+from time import time
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -16,6 +17,9 @@ import mydialog
 OPTIONS = {
     'Messages personnels': "Lire mes messages personnels et en envoyer",
 }
+
+
+TIMEOUT_REMOVE_MESSAGE_DAYS = 30
 
 
 def private_messages(dest_user_id, initial_content):
@@ -202,6 +206,8 @@ def private_messages(dest_user_id, initial_content):
         thead <= col
     messages_table <= thead
 
+    time_stamp_now = time()
+
     for id_, from_user_id, time_stamp, dest_user_id2, read, content in messages:
 
         class_ = 'text'
@@ -246,7 +252,8 @@ def private_messages(dest_user_id, initial_content):
         row <= col
 
         col = html.TD()
-        if dest_user_id2 == pseudo_id or read:
+        old_message = time_stamp < time_stamp_now - TIMEOUT_REMOVE_MESSAGE_DAYS * 24 * 3600
+        if dest_user_id2 == pseudo_id or read or old_message:
             button = html.BUTTON("Supprimer", Class='btn-inside')
             button.bind("click", lambda e, i=id_: suppress_message_callback(e, i))
             col <= button

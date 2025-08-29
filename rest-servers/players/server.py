@@ -152,6 +152,8 @@ LEN_EVENT_MAX = 50
 # let 's say one Mo
 MAX_SIZE_IMAGE = (4 / 3) * 1000000
 
+# allow to remove old messages
+TIMEOUT_REMOVE_MESSAGE_DAYS = 30
 
 # account allowed to update ratings
 COMMUTER_ACCOUNT = "TheCommuter"
@@ -2949,10 +2951,12 @@ class PrivateMessagesDeleteRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # check owner
-        addressee_id, read = messages.Message.addressee_read_by_message_id(sql_executor, message_id)
-        if not (player_id == addressee_id or read):
-            flask_restful.abort(403, msg=f"Not owner of message {addressee_id=} != {player_id=} or message read")
+        # check right to remove
+        time_stamp_now = time.time()
+        time_stamp, addressee_id, read = messages.Message.addressee_read_by_message_id(sql_executor, message_id)
+        old_message = time_stamp < time_stamp_now - TIMEOUT_REMOVE_MESSAGE_DAYS * 24 * 3600
+        if not (player_id == addressee_id or read or old_message):
+            flask_restful.abort(403, msg=f"Not owner of message {addressee_id=} != {player_id=} or message read or old_message")
 
         # remove message
         message = messages.Message(0, 0, False, int(message_id))
