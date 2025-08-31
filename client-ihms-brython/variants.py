@@ -15,7 +15,9 @@ import sandbox
 import index
 import ezml_render
 
-OPTIONS = {f"{variant_name} ({nb_players}j.)": f"La variante {variant_name}" for variant_name, nb_players in config.VARIANT_NAMES_DICT.items()}
+
+OPTIONS = {'Généralités': "Génaralités sur les variantes implémentées sur le site"}
+OPTIONS.update({f"{variant_name} ({nb_players}j.)": f"La variante {variant_name}" for variant_name, nb_players in config.VARIANT_NAMES_DICT.items()})
 OPTIONS.update({'Fréquentation des variantes': "Statistiques de fréquentation des variantes sur le site"})
 
 ARRIVAL = None
@@ -239,6 +241,14 @@ def show_variant():
     my_ezml.render(MY_SUB_PANEL)
 
 
+def show_variant_basics():
+    """ show_variant_basics """
+
+    ezml_file = "./variants/generalites.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
+
+
 def show_variants_frequentation_data():
     """ show_variants_frequentation_data """
 
@@ -340,7 +350,9 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Fréquentation des variantes':
+    if item_name == 'Généralités':
+        show_variant_basics()
+    elif item_name == 'Fréquentation des variantes':
         show_variants_frequentation_data()
     else:
         # remove the number of players on the right
