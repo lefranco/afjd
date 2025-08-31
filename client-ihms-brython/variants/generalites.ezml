@@ -1,9 +1,104 @@
 Généralités sur les variantes
 
 _
-$ Explication
+$ Introduction
 Une variante dévie du jeu Diplomacy classique, appelé ici "standard". 
 .
-Cette page a pour but de détailler les différentes manières.
+Cette page a pour but de détailler les différentes manières. 
+.
+Chaque différence est illustée par exemple pris dans une des variantes.
+
+_
+$ Particularités de carte
+
+- Côte Ouest
+(Une région peut avoir "Côte Ouest" comme côte spéciale)
+_Canton_ : Damascus possède une côte orientée Ouest.
+
+# Plus de deux côtes
+(Une région peut avoir plus de deux côtes spéciales.)
+_v1900_ : Espagne possède trois côtes : Ouest, Est et Nord.
+
+- Archipel
+(Un centre peut se trouver en Mer. On parle dans ce cas d'"Archipel".)
+_Egéemonie_ : Thera est un archîpel.
+
+- Canaux
+(Il peut y avoir des canaux, c'est à dire un voisinage entre flotte en dehors d'une mer)
+_Moderne_ : Un canal permet d'aller de Héligoland à Bornholm en passant par Danemark.
+
+- Ponts
+(Il peut y avoir des ponts, c'est à dire un voisinage entre deux côte non "naturel" sur la carte.)
+_Hundred_ : Un pont existe  entre Londres et Calais
+
+- Région décorative
+(Une région peut être inaccessible \(elle est "décorative".\))
+_Cold War Redux_ : L'Albanie est inaccessible..
+
+$ Condition de victoire
+
+- Pas de solo
+(La notion de solo peut disparaître purement et simplement.)
+_Standard pds_ : on continue après le solo.
+
+- Solo ajusté
+(Il peut arriver que le solo ne soit pas à la majorité absolue des centres.)
+_Cold War_ : le solo requiert 17 centres au lieu des 14 "logiques"
+
+
+_
+$ Position de départ
+
+- Dette en centres
+(Certaines puissances peuvent avoir plus d'unité que de centres au départ.)
+_Hundred_ : La France a une armée en plus en Provence
+
+- Avoir en centres
+(Certaines puissances peuvent avoir un centre de départ innocupé.)
+_Hundred_ : L'Angleterre a une centre inocupé en Devon
+
+
+_
+$ Changements majeurs de règles
+
+- Début sur ajustement
+(La première saison jouée peut être un phase de construction.)
+_Chaos_ : Chaque joueur possède un centre et commence par construire.
+
+- Expansionnisme
+(La variante peut être expansioniste, c'est à dire que l'on peut constuire sur tout centre possédé.)
+_Spice Island_ : cette variante est expansioniste
+
+- Constructions et Départ
+(Les centres de construction peuvent être différents des centres de départ.)
+_v1900_ : Le français ne peut pas construire en Algérie mais commence avec une armée à cet endroit.
+
+- Constructions interdites
+(Certains centres peuvent être interdits à la construction dans une  variante expansioniste.)
+_Westeros_ : Personne ne peut construire en Kings' Landing East et West
+
+- Iles
+(Une région peut être une île. Comme une côte mais une flotte peut y convoyer)
+_Médireranée_ : Les Iles baléares sont une île.
+
+- Construction de secours
+(Un pays peut avoir un centre de constrution de secours.)
+_v1900_ : La Russie peut constuire en Sibérie sous certaines conditions.
+
+- Pays neutralisé
+(Un pays peut être "neutralisé". Il est et reste en désordre civil.)
+_Grande Guerre_ : L'Italie est neutre.
+
+
+_
+$ Changements mineurs de règles
+
+- Première année
+(La première année de datation est susceptible de changer.)
+_Westeros_ : La première année est 1.
+
+- Incrément
+(L'incrément année de datation est susceptible de changer)
+_Hundred_ : L'incrément en année par tour année est de 5
 
 
