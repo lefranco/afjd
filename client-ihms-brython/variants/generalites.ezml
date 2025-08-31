@@ -23,6 +23,10 @@ _v1900_ : Espagne possède trois côtes : Ouest, Est et Nord.
 (Un centre peut se trouver en Mer. On parle dans ce cas d'"Archipel".)
 _Egéemonie_ : Thera est un archîpel.
 
+- Iles
+(Une région peut être une île. Comme une côte mais une flotte peut y convoyer)
+_Médireranée_ : Les Iles baléares sont une île.
+
 - Canaux
 (Il peut y avoir des canaux, c'est à dire un voisinage entre flotte en dehors d'une mer)
 _Moderne_ : Un canal permet d'aller de Héligoland à Bornholm en passant par Danemark.
@@ -76,10 +80,6 @@ _v1900_ : Le français ne peut pas construire en Algérie mais commence avec une
 - Constructions interdites
 (Certains centres peuvent être interdits à la construction dans une  variante expansioniste.)
 _Westeros_ : Personne ne peut construire en Kings' Landing East et West
-
-- Iles
-(Une région peut être une île. Comme une côte mais une flotte peut y convoyer)
-_Médireranée_ : Les Iles baléares sont une île.
 
 - Construction de secours
 (Un pays peut avoir un centre de constrution de secours.)
