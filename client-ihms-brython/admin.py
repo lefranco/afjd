@@ -264,9 +264,7 @@ def change_news_admin():
         ev.preventDefault()
 
         news_content = input_news_content.value
-        if not news_content:
-            alert("Contenu nouvelles manquant")
-            return
+        # can be empty
 
         json_dict = {
             'topic': 'admin',
