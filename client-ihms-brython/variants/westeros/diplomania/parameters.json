@@ -370,10 +370,10 @@
         "23": {
             "name": "Eyr",
             "full_name": "The Eyrie",
-            "x_pos": 412,
-            "y_pos": 590,
-            "x_legend_pos": 412,
-            "y_legend_pos": 576
+            "x_pos": 441,
+            "y_pos": 572,
+            "x_legend_pos": 441,
+            "y_legend_pos": 558
         },
         "24": {
             "name": "Fin",
