@@ -534,6 +534,17 @@ def show_informations():
 
     MY_SUB_PANEL <= html.H3(f"Informations tournoi {tournament_name}")
 
+    # get the players (masters)
+    players_dict2 = common.get_players_data()
+    if not players_dict2:
+        return
+
+    MY_SUB_PANEL <= html.H4("Le directeur du tournoi")
+
+    director_id = TOURNAMENT_DICT['director_id']
+    director_pseudo = players_dict2[str(director_id)]['pseudo']
+    MY_SUB_PANEL <= director_pseudo
+
     MY_SUB_PANEL <= html.H4("Les participants du tournoi")
 
     tournament_id = TOURNAMENT_DICT['identifier']
