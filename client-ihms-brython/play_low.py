@@ -1092,16 +1092,14 @@ def get_game_status():
             dialog.close(None)
             show_option()
 
-
         ev.preventDefault()
 
         if ROLE_ID is not None and ROLE_ID > 0:
             dialog = mydialog.MyDialog("Attention, si vous êtes en train d'entrer vos ordres, ils seront perdus. On va vraiment voir l'option ?", ok_cancel=True)
             dialog.ok_button.bind("click", lambda e, d=dialog: confirm_callback(e, d))
             dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_callback(e, d))
-        else:              
+        else:
             show_option()
-
 
     game_name = GAME_PARAMETERS_LOADED['name']
     game_description = GAME_PARAMETERS_LOADED['description']
