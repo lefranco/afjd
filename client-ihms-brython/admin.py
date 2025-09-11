@@ -6,7 +6,7 @@ from json import loads, dumps
 from time import time
 from base64 import standard_b64encode
 
-from browser import html, ajax, alert, window  # pylint: disable=import-error
+from browser import html, ajax, alert, document, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -2307,6 +2307,20 @@ def edit_moderators():
 def show_idle_data():
     """ show_idle_data """
 
+    def download_emails_callback(ev):  # pylint: disable=invalid-name
+
+        ev.preventDefault()
+
+        # needed too for some reason
+        MY_SUB_PANEL <= html.A(id='download_link')
+
+        # perform actual exportation
+        text_file_as_blob = window.Blob.new(['\n'.join(emails_list)], {'type': 'text/plain'})
+        download_link = document['download_link']
+        download_link.download = "emails_idles_for_mailing.txt"
+        download_link.href = window.URL.createObjectURL(text_file_as_blob)
+        document['download_link'].click()
+
     def delete_account_callback(ev, player_pseudo):  # pylint: disable=invalid-name
         """ delete_account_callback """
 
@@ -2423,6 +2437,7 @@ def show_idle_data():
     time_stamp_now = time()
 
     count = 0
+    emails_list = []
     for player in sorted(idle_set, key=lambda p: int(last_login_time[p]) if p in last_login_time else 0, reverse=False):
         row = html.TR()
 
@@ -2452,6 +2467,7 @@ def show_idle_data():
                 email_link = html.A(href=f"mailto:{email}")
                 email_link <= email
                 value = email_link
+                emails_list.append(email)
 
             if field == 'delete':
                 form = html.FORM()
@@ -2475,6 +2491,12 @@ def show_idle_data():
     MY_SUB_PANEL <= html.H3("Les oisifs")
     MY_SUB_PANEL <= idle_table
     MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
+
+    input_export_emails = html.INPUT(type="submit", value="Télécharger la liste des courriels", Class='btn-inside')
+    input_export_emails.bind("click", download_emails_callback)
+    MY_SUB_PANEL <= input_export_emails
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
 
 def show_active_data():
