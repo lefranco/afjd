@@ -21,26 +21,46 @@ import flask_mail  # type: ignore
 INTERVAL = 5
 
 # mailing suject
-SUBJECT = "Petit message très probablemenrt inutile !"
+SUBJECT = "Diplomania : un site fait pour JOUER à diplomacy et ses variantes !"
 
 # mailing body
 BODY = """
-Vous recevez ce message parce que cette adresse est liée à un commpte sur le site :
-https://diplomania-gen.fr
-L'adresse courriel du compte n'est pas en erreur.
-Le site a rencontré beaucoup de souci recemment, d'ou la nécessité de ce petit test.
-Le but de ce message :
- - retour en erreur => l'adresse sera marquée en erreur dans le site, vous devrez changer votre adresse pour continuer à jouer éventuellement
- - autrement : statu quo.
- Ignorez ce message de test
- Désolé
- Amicalement
+Cher joueur de Diplomacy,
 
+Tu t'es crée un compte sur le site https://diplomania-gen.fr à une date de moins d'un an et demi dans le passé.
+Mais il semble aujourd'hui que tu n'as jamais rejoint de parties.
+
+Nous cherchons en permanence à améliorer le site, tes commentaires sont donc les bienvenus :
+
+ - N'as-tu pas réussi à t'inscrire dans une partie (parce que c'est trop compliqué - par exemple) ?
+ - As-tu trouvé depuis un autre site qui répond mieux à tes attentes ?
+ - As-tu rencontré un problème sur le site qui te semble rédhibitoire ?
+
+Quelques conseils de notre côté :
+
+Après t'être connecté(e), tu peux tout de suite t'inscrire dans des parties en attente
+(boutons "Les parties" puis "Rejoindre une partie").
+
+Si tu hésites entre différentes variantes, le bouton "Variantes" les décrit.
+
+En attendant que les parties démarrent, si tu ne connais pas bien les règles du jeu Diplomacy ou si tu veux te familiariser avec l'interface de Diplomania, nous te recommandons de cliquer sur "Tutoriels et défis"
+et d'utiliser l' "Aide" ou le "Wiki".
+
+Tu peux aussi faire un tour sur le "Forum"...
+
+Et l'AFJD te propose également son serveur Discord pour échanger (lien depuis la page d'accueil du site).
+
+N'hésite pas à échanger avec moi en répondant directement à ce courriel (jeremie.lefrancois@gmail.com).
+
+Tes remarques sur le site de jeu nous intéressent vivement.
+
+Jérémie
+Administrateur du site
 """
 
 # mailing official sender
-SENDER = "afjd@welpro.biz"
-#SENDER="afjd_serveur_jeu@diplomania-gen.fr"
+#SENDER = "afjd@welpro.biz"
+SENDER="afjd_serveur_jeu@diplomania-gen.fr"
 
 # mailing real sender
 REPLY_TO = "jeremie.lefrancois@gmail.com"
