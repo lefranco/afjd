@@ -37,8 +37,6 @@ with open("./data/game_type_list.json", "r", encoding="utf-8") as read_file:
 
 # default is first one
 VARIANT_NAMES_DICT = {
-    'standard': 7,
-    'standard_pds': 7,
     'coldwar': 2,
     'grandeguerre': 2,
     'franceautriche': 2,
@@ -46,6 +44,8 @@ VARIANT_NAMES_DICT = {
     'coldwar_redux': 4,
     'mediterranee': 5,
     'egeemonie': 6,
+    'standard': 7,
+    'standard_pds': 7,
     'canton': 7,
     'v1900': 7,
     'westeros': 7,
