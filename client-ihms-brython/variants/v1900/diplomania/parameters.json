@@ -67,16 +67,16 @@
             "adjective_name": "britannique",
             "letter_name": "B",
             "red": [
+                100,
+                120
+            ],
+            "green": [
                 80,
                 100
             ],
-            "green": [
-                60,
-                80
-            ],
             "blue": [
-                188,
-                198
+                208,
+                218
             ]
         },
         "3": {
