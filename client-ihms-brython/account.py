@@ -107,11 +107,20 @@ def information_about_account():
     return information
 
 
-def information_about_account2():
-    """ information_about_account2 """
+def information_about_idle_account():
+    """ information_about_idle_account """
 
     information = html.DIV(Class='important')
     information <= f"ATTENTION : Un compte oisif plus de {config.IDLE_DAY_TIMEOUT} jours sera supprimé pour ne pas encombrer le système."
+    return information
+
+def information_about_remove_account():
+    """ information_about_remove_account """
+
+    information = html.DIV(Class='important')
+    information <= "ATTENTION : Si votre compte est dans une ou plusieurs partaies, il est impératif de les quitter au préable !"
+    information <= html.BR()
+    information <= "Dans ce cas, contacter les arbitres des parties ou déclarer un incident s'il y a beaucoup de partie (en expliquant alors votre motivation)."
     return information
 
 
@@ -430,7 +439,7 @@ def create_account(json_dict):
     MY_SUB_PANEL <= form
 
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= information_about_account2()
+    MY_SUB_PANEL <= information_about_idle_account()
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= information_about_pseudo()
     MY_SUB_PANEL <= html.BR()
@@ -1034,6 +1043,9 @@ def delete_account():
     input_delete_account.bind("click", delete_account_callback_confirm)
     form <= input_delete_account
     form <= html.BR()
+
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= information_about_remove_account()
 
 
 MY_PANEL = html.DIV()
