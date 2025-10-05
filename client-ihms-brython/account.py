@@ -114,6 +114,7 @@ def information_about_idle_account():
     information <= f"ATTENTION : Un compte oisif plus de {config.IDLE_DAY_TIMEOUT} jours sera supprimé pour ne pas encombrer le système."
     return information
 
+
 def information_about_remove_account():
     """ information_about_remove_account """
 
