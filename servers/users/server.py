@@ -92,6 +92,16 @@ class RepeatPreventer(typing.Dict[str, float]):
             del self[key]
 
 
+@APP.route('/check', methods=['POST'])
+def check() -> typing.Tuple[typing.Any, int]:
+    """
+    check server is present
+    """
+    mylogger.LOGGER.info("/check - POST - check server")
+
+    return flask.jsonify({"msg": "Back-end is OK"}), 200
+
+
 @APP.route('/add', methods=['POST'])
 def add_user() -> typing.Tuple[typing.Any, int]:
     """
