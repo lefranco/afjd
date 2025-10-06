@@ -224,6 +224,9 @@ def create_game(json_dict):
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.info_go(f"La partie a été créé : {messages}.")
 
+            if input_just_play_game.checked:
+                alert("Félicitation, vous avez créer une partie pour la jouer ! Nous espérons très fort compter sur votre engagement jusqu'à la fin...")
+
             # we do not want stalled games
             alert(f"Attention : la partie devra être démarrée sous {DELAY_FOR_COMPLETING_GAME_DAYS} jours sous peine d'être probablement annulée.")
 
