@@ -67,16 +67,16 @@
             "adjective_name": "britannique",
             "letter_name": "B",
             "red": [
+                120,
+                140
+            ],
+            "green": [
                 100,
                 120
             ],
-            "green": [
-                80,
-                100
-            ],
             "blue": [
-                208,
-                218
+                228,
+                248
             ]
         },
         "3": {
@@ -101,16 +101,16 @@
             "adjective_name": "allemand",
             "letter_name": "G",
             "red": [
-                40,
-                80
+                20,
+                60
             ],
             "green": [
-                40,
-                80
+                20,
+                60
             ],
             "blue": [
-                40,
-                80
+                20,
+                60
             ]
         },
         "5": {
