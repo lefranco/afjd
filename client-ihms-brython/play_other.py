@@ -1452,6 +1452,8 @@ def negotiate(default_dest_set, def_focus_role_id):
 
     for type_, _, id_, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
 
+        class_ = ''
+
         if type_ is common.MessageTypeEnum.TEXT:
             # if focusing ignore other messages
             if focus_role_id is not None:
@@ -1753,6 +1755,8 @@ def declare():
     role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
     for type_, _, id_, announce, anonymous, role_id_msg, time_stamp, content in declarations:
+
+        class_ = ''
 
         if type_ is common.MessageTypeEnum.TEXT:
             if announce:

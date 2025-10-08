@@ -994,8 +994,10 @@ def rectify_position():
             # create unit
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
                 new_unit = mapping.Army(position_data, role, selected_drop_zone, None, False)
-            if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+            elif type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
                 new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None, False)
+            else:
+                assert False, "Unknown unit type"
 
             # remove previous occupant if applicable
             if selected_drop_region in position_data.occupant_table:
@@ -1130,8 +1132,10 @@ def rectify_position():
 
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
                 pickable_unit = mapping.Army(position_data, role, None, None, False)
-            if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+            elif type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
                 pickable_unit = mapping.Fleet(position_data, role, None, None, False)
+            else:
+                assert False, "Unknown unit type"
 
             identifier = f"unit_{num}"
             unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Cliquez-moi dessus !")
@@ -1785,11 +1789,12 @@ def unallocated():
         row = html.TR()
         for field in fields:
 
+            value = ''
+
             if field == 'pseudo':
                 value = num2pseudo[int(player_id)]
 
             if field == 'games':
-                value = ""
                 for game_id in sorted(games):
                     game_id_str = str(game_id)
                     game_name = games_dict[game_id_str]['name']
@@ -2443,6 +2448,7 @@ def show_idle_data():
 
         for field in fields:
 
+            value = ''
             colour = None
 
             if field == 'player':
@@ -2452,7 +2458,6 @@ def show_idle_data():
                 value = pseudo2id[player]
 
             if field == 'last_login':
-                value = ''
                 if player in last_login_time:
                     time_stamp = last_login_time[player]
                     day_idle = int(time_stamp_now - time_stamp) // (24 * 3600)
@@ -2575,6 +2580,8 @@ def show_active_data():
 
         for field in fields:
 
+            value = ''
+
             if field == 'player':
                 value = player
 
@@ -2582,7 +2589,6 @@ def show_active_data():
                 value = pseudo2id[player]
 
             if field == 'last_login':
-                value = ''
                 if player in last_login_time:
                     time_stamp = last_login_time[player]
                     date_now_gmt = mydatetime.fromtimestamp(time_stamp)

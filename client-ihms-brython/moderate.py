@@ -743,6 +743,8 @@ def game_announce():
     game_master_id = common.get_game_master(game_id)
     if game_master_id is not None:
         game_master = id2pseudo[game_master_id]
+    else:
+        game_master = None
 
     game_players_dict = common.get_game_players_data(game_id)
     if not game_players_dict:
@@ -824,6 +826,8 @@ def game_announce():
     role2pseudo = {v: k for k, v in game_players_dict.items()}
 
     for type_, _, id_, announce, anonymous, role_id_msg, time_stamp, content in declarations:
+
+        class_ = ''
 
         if type_ is common.MessageTypeEnum.TEXT:
             if announce:
@@ -1772,6 +1776,8 @@ def show_last_submissions():
         row = html.TR()
         for field in fields:
 
+            value = ''
+
             if field == 'date':
                 time_stamp = data[0]
                 submit_time = mydatetime.fromtimestamp(time_stamp)
@@ -1828,6 +1834,8 @@ def show_time_zones():
 
         row = html.TR()
         for field in fields:
+
+            value = ''
 
             if field == 'pseudo':
                 value = num2pseudo[data[0]]
@@ -1887,6 +1895,9 @@ def show_ip_addresses():
         row = html.TR()
         for field in fields:
 
+            value = ''
+            colour = None
+
             if field == 'pseudo':
                 value = num2pseudo[data[1]]
 
@@ -1895,11 +1906,8 @@ def show_ip_addresses():
 
                 if value in duplicated_ips:
                     colour = 'red'
-                else:
-                    colour = None
 
             if field == 'date':
-                value = ''
                 if data[2] is not None:
                     date_now_gmt = mydatetime.fromtimestamp(data[2])
                     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
@@ -1953,6 +1961,7 @@ def show_all_emails():
         row = html.TR()
         for field in fields:
 
+            value = ''
             colour = None
 
             if field == 'email':

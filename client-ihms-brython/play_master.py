@@ -2330,14 +2330,13 @@ def supervise():
                 if role_id in needed_roles_list and role_id not in submitted_roles_list:
                     missing_orders.append(role_id)
 
-            alterated = False
+            message = ''
             if missing_orders:
                 role_id = RANDOM.choice(missing_orders)
                 civil_disorder_callback(None, role_id)
                 role = play_low.VARIANT_DATA.roles[role_id]
                 role_name = play_low.VARIANT_DATA.role_name_table[role]
                 message = f"Désordre civil pour {role_name}"
-                alterated = True
             else:
                 missing_agreements = []
                 for role_id in play_low.VARIANT_DATA.roles:
@@ -2349,9 +2348,8 @@ def supervise():
                     role = play_low.VARIANT_DATA.roles[role_id]
                     role_name = play_low.VARIANT_DATA.role_name_table[role]
                     message = f"Forçage accord pour {role_name}"
-                    alterated = True
 
-            if alterated:
+            if message:
 
                 log_stack.insert(message)
 
