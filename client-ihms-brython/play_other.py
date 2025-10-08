@@ -42,7 +42,6 @@ def date_last_visit_update(game_id, role_id, visit_type):
                 alert(f"Problème à la mise à jour de la dernière visite de la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
-            return
 
     json_dict = {
         'role_id': role_id,

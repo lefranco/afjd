@@ -11,12 +11,11 @@ from browser import document, html, alert, timer, ajax, window  # pylint: disabl
 from browser.local_storage import storage  # pylint: disable=import-error
 
 # must be first
-import check   # noqa: F401
+import check   # noqa: F401   # pylint: disable=unused-import
 
 import common
 import play_master
 import play
-
 import config
 import home
 import login

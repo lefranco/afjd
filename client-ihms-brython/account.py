@@ -45,7 +45,6 @@ def date_last_visit_update():
                 alert(f"Problème à la mise à jour de la dernière visite des messages prives : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
-            return
 
     json_dict = {
     }

@@ -17,12 +17,12 @@ disable=
 ## code
 	too-many-locals,too-many-statements,too-many-branches,too-many-nested-blocks,too-many-lines,too-many-boolean-expressions,
 ## functions
-	too-many-arguments, too-many-return-statements,
+	too-many-arguments, too-many-return-statements, too-many-positional-arguments,
 ## classes
 	too-many-instance-attributes,too-many-public-methods,too-many-ancestors,
 
-# TODO
-#	fixme,
+# cyclic
+	cyclic-import,
 
 # duplicate
 	duplicate-code,

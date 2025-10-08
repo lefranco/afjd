@@ -956,7 +956,6 @@ def declare_incident(json_dict_params):
                     alert(f"Problème à l'envoi de courrier électronique : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
-                return
 
         ev.preventDefault()
 

@@ -1062,7 +1062,6 @@ def send_submission_data():
                 alert(f"Problème à l'envoi des données de soumission : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
-            return
 
     # must have a timezone (should be the case)
     time_zone = '?'
