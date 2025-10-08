@@ -439,6 +439,8 @@ def my_delays(ev):  # pylint: disable=invalid-name
         row = html.TR()
         for field in fields:
 
+            value = ''
+
             if field == 'date':
                 datetime_deadline_delay = mydatetime.fromtimestamp(date_delay)
                 datetime_deadline_delay_str = mydatetime.strftime(*datetime_deadline_delay, year_first=True)
@@ -611,6 +613,8 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
 
         row = html.TR()
         for field in fields:
+
+            value = ''
 
             if field == 'date':
                 datetime_deadline_dropout = mydatetime.fromtimestamp(date_dropout)

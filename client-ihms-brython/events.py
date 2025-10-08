@@ -321,13 +321,6 @@ def registrations():
         MY_SUB_PANEL.clear()
         registrations()
 
-    def copy_url_register_callback(_):
-        """ copy_url_consult_callback """
-        input_copy_url_register.select()
-        # ev.setSelectionRange(0, 99999) # For mobile devices
-        window.navigator.clipboard.writeText(input_copy_url_register.value)
-        alert(f"Lien '{input_copy_url_register.value}' copié dans le presse papier...")
-
     player_id = None
     if 'PSEUDO' in storage:
         pseudo = storage['PSEUDO']
@@ -392,6 +385,7 @@ def registrations():
 
         row = html.TR()
         for field in fields:
+
             value = data[field]
 
             if field == 'pseudo':
@@ -543,6 +537,14 @@ def registrations():
 
     # provide the link
     if not external:
+
+        def copy_url_register_callback(_):
+            """ copy_url_consult_callback """
+            input_copy_url_register.select()
+            # ev.setSelectionRange(0, 99999) # For mobile devices
+            window.navigator.clipboard.writeText(input_copy_url_register.value)
+            alert(f"Lien '{input_copy_url_register.value}' copié dans le presse papier...")
+
         url = f"{config.SITE_ADDRESS}?event={name}"
         input_copy_url_register = html.INPUT(type="text", value=url)
         button_copy_url_register = html.BUTTON("Copier le lien pour inviter un joueur à s'inscrire à cet événement.", Class='btn-inside')
@@ -1075,6 +1077,7 @@ def handle_event():
 
         row = html.TR()
         for field in fields:
+
             value = data[field]
 
             if field == 'rank':

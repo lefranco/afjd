@@ -267,14 +267,16 @@ def show_rating_performance(classic, role_id):
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
+            colour = None
+
             player = num2pseudo[rating[2]] if rating[2] in num2pseudo else ""
             if player == pseudo:
                 colour = config.MY_RATING
-            else:
-                colour = None
 
             row = html.TR()
             for field in fields:
+
+                value = ''
 
                 if field == 'rank':
                     value = rank_table[rating[2]]
@@ -503,14 +505,16 @@ def show_rating_reliability():
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
+            colour = None
+
             player = num2pseudo[rating[0]] if rating[0] in num2pseudo else ""
             if player == pseudo:
                 colour = config.MY_RATING
-            else:
-                colour = None
 
             row = html.TR()
             for field in fields:
+
+                value = ''
 
                 if field == 'rank':
                     value = rank_table[rating[0]]
@@ -682,6 +686,8 @@ def show_rating_regularity():
 
             row = html.TR()
             for field in fields:
+
+                value = ''
 
                 if field == 'rank':
                     value = rank_table[rating[0]]

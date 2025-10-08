@@ -1494,6 +1494,7 @@ def show_tournaments_data():
     for tournament_id, data in sorted(tournaments_dict.items(), key=lambda t: (t[1].get('first_start_time', 0), int(t[0])), reverse=True):
         row = html.TR()
         for field in fields:
+            value = ''
             if field == 'tournament':
                 tournament_name = data['name']
                 # get a game from tournament
@@ -1514,13 +1515,9 @@ def show_tournaments_data():
                     date_now_gmt = mydatetime.fromtimestamp(time_stamp)
                     date_now_gmt_str = mydatetime.strftime(*date_now_gmt, year_first=True, day_only=True)
                     value = date_now_gmt_str
-                else:
-                    value = "..."
             if field == 'affluence':
                 if field in data and data[field] is not None:
                     value = data['affluence']
-                else:
-                    value = "..."
             if field == 'games':
                 games_ids = groupings_dict[str(tournament_id)]
                 games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
