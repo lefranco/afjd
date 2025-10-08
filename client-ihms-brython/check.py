@@ -5,7 +5,6 @@ from json import dumps, loads
 from browser import alert, ajax  # pylint: disable=import-error
 
 import config
-import sys
 
 
 class MyException(Exception):
