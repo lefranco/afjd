@@ -903,7 +903,6 @@ def slide_submit_orders(table_of_contents):
 
             # it is a zone we need now
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
-            return
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """

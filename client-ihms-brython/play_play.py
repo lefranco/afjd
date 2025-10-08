@@ -76,6 +76,9 @@ def submit_orders():
     input_now = None
     input_after = None
     input_never = None
+    input_stop = None
+    input_continue = None
+    input_abstention = None
 
     orders_in = None
     definitive_value = None
@@ -537,7 +540,6 @@ def submit_orders():
 
             # it is a zone we need now
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
-            return
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
@@ -2661,7 +2663,6 @@ def imagine_units():
 
             # it is a zone we need now
             automaton_state = AutomatonStateEnum2.SELECT_POSITION_STATE
-            return
 
     def select_remove_unit_callback(_):
         """ select_remove_unit_callback """

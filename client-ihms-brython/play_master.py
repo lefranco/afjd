@@ -2131,7 +2131,6 @@ def supervise():
                     alert(f"Problème à la soumission d'ordres de désordre civil dans la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
-                return
 
         if ev is not None:
             ev.preventDefault()

@@ -8,6 +8,7 @@ import config
 
 
 class MyException(Exception):
+    """ My exception """
     def __init__(self, message):
         super().__init__(message)
 
@@ -42,6 +43,6 @@ def check_back_end_present():
 # check backend is present
 try:
     check_back_end_present()
-except:  # noqa: E722 pylint: disable=bare-except
+except Exception as exc:
     alert("Mmm. Il semble que le back end ne fonctionne pas. Le mieux ? Contacter le bureau de l'Association...")
-    raise SystemExit("Fin du programme Brython")
+    raise SystemExit("Fin du programme Brython") from exc
