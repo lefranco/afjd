@@ -150,7 +150,7 @@ def sender_threaded_procedure() -> None:
 class SendMailSimpleRessource(flask_restful.Resource):  # type: ignore
     """ SendMailSimpleRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Simply sends an email (no token) usage : welcome and rescue
         EXPOSED
@@ -174,7 +174,7 @@ class SendMailSimpleRessource(flask_restful.Resource):  # type: ignore
 class SendMailSupportRessource(flask_restful.Resource):  # type: ignore
     """ SendMailSupportRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Sends an email to support
         EXPOSED
@@ -199,7 +199,7 @@ class SendMailSupportRessource(flask_restful.Resource):  # type: ignore
 class SendEmailRessource(flask_restful.Resource):  # type: ignore
     """ SendEmailRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         send an email
         PROTECTED : called only by player block (account creation/email change)
@@ -246,7 +246,7 @@ CHAT_PERSISTANCE_SEC = 24 * 60 * 60
 class ChatMessageRessource(flask_restful.Resource):  # type: ignore
     """ ChatMessageRessource """
 
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[float, str, str]], int]:  # pylint: disable=R0201
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[float, str, str]], int]:
         """
         Gets all chats
         EXPOSED
@@ -256,7 +256,7 @@ class ChatMessageRessource(flask_restful.Resource):  # type: ignore
 
         return CHATS, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Adds a chat
         EXPOSED
@@ -282,7 +282,7 @@ class ChatMessageRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': 'Chat message was inserted'}
         return data, 201
 
-    def delete(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def delete(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Deletes all chats
         EXPOSED

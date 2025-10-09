@@ -89,6 +89,8 @@ def advancement2game_season_year(advancement: int) -> typing.Tuple[int, int]:
         game_season = 2
     elif advancement % 5 == 4:
         game_season = 3
+    else:
+        assert False, "What advancement"
 
     return game_season, game_year
 
