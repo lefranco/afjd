@@ -213,6 +213,8 @@ def submit_orders():
             flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais à la date limite")
         elif definitive_value == 0:
             flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
+        else:
+            assert False, "Cannot set flag"
 
         # once every two we flip
         if submission_count % 2 == 1:
@@ -873,6 +875,8 @@ def submit_orders():
                     unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_active_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
                 elif selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
                     unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_passive_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
+                else:
+                    assert False, "What type order"
                 selected_dest_zone = play_low.VARIANT_DATA.closest_zone(pos, unit_reference_type)
 
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
@@ -957,8 +961,10 @@ def submit_orders():
                     if accepted:  # actual build
                         if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
                             fake_unit = mapping.Army(play_low.POSITION_DATA, deducted_role, selected_build_zone, None, False)
-                        if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                        elif selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
                             fake_unit = mapping.Fleet(play_low.POSITION_DATA, deducted_role, selected_build_zone, None, False)
+                        else:
+                            assert False, "What type build unit"
                         # create order
                         order = mapping.Order(play_low.POSITION_DATA, selected_order_type, fake_unit, None, None, False)
                         orders_data.insert_order(order)
@@ -1065,14 +1071,13 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
                 legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
-            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
-            buttons_right <= legend_selected_passive
-
-            if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
                 legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue", Class='instruction')
-            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+            elif selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+                legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
                 legend_select_destination = html.DIV("Sélectionner la destination du convoi", Class='instruction')
+            else:
+                assert False, "What type order"
+            buttons_right <= legend_selected_passive
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
@@ -1623,6 +1628,8 @@ def submit_orders():
     # button negotiations
     play_low.stack_last_agreements_button(buttons_right, play_low.MY_SUB_PANEL, my_sub_panel3, callback_disable_last_agreements, last_agreements_disabled)
 
+    nb_builds = 0
+
     if play_low.ROLE_ID in submitted_data['needed'] and not game_over:
 
         # information retreats/builds
@@ -1633,7 +1640,6 @@ def submit_orders():
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
-        nb_builds = 0
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
 
             # take a note of build / remove
@@ -2042,6 +2048,8 @@ def submit_communication_orders():
                 unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_active_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
             elif selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
                 unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_passive_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
+            else:
+                assert False, "What type order"
             selected_dest_zone = play_low.VARIANT_DATA.closest_zone(pos, unit_reference_type)
 
             my_sub_panel2.removeChild(buttons_right)
@@ -2131,14 +2139,13 @@ def submit_communication_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
                 legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
-            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
-            buttons_right <= legend_selected_passive
-
-            if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
                 legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue", Class='instruction')
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+                legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
                 legend_select_destination = html.DIV("Sélectionner la destination du convoi", Class='instruction')
+            else:
+                assert False, "What order type"
+            buttons_right <= legend_selected_passive
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)

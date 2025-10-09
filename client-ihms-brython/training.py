@@ -1199,6 +1199,8 @@ def slide_submit_orders(table_of_contents):
                     unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_active_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
                 elif selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
                     unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_passive_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
+                else:
+                    assert False, "What type selected order"
                 selected_dest_zone = VARIANT_DATA.closest_zone(pos, unit_reference_type)
 
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
@@ -1270,8 +1272,10 @@ def slide_submit_orders(table_of_contents):
                     if accepted:  # actual build
                         if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
                             fake_unit = mapping.Army(POSITION_DATA, deducted_role, selected_build_zone, None, False)
-                        if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                        elif selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
                             fake_unit = mapping.Fleet(POSITION_DATA, deducted_role, selected_build_zone, None, False)
+                        else:
+                            assert False, "What type selected build"
                         # create order
                         order = mapping.Order(POSITION_DATA, selected_order_type, fake_unit, None, None, False)
                         orders_data.insert_order(order)
@@ -1357,14 +1361,18 @@ def slide_submit_orders(table_of_contents):
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
                 legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
-            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+            elif selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
                 legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
+            else:
+                assert False, "What type selected passive"
             buttons_right <= legend_selected_passive
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
                 legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue", Class='instruction')
-            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+            elif selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
                 legend_select_destination = html.DIV("Sélectionner la destination du convoi", Class='instruction')
+            else:
+                assert False, "What type selected order"
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)

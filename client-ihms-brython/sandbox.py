@@ -574,6 +574,8 @@ def sandbox():
                 unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_active_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
             elif selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
                 unit_reference_type = mapping.UnitTypeEnum.ARMY_UNIT if isinstance(selected_passive_unit, mapping.Army) else mapping.UnitTypeEnum.FLEET_UNIT
+            else:
+                assert False, "What order type"
 
             selected_dest_zone = VARIANT_DATA.closest_zone(pos, unit_reference_type)
 
@@ -660,14 +662,13 @@ def sandbox():
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
                 legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
-            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
-            buttons_right <= legend_selected_passive
-
-            if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
                 legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue", Class='instruction')
-            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+            elif selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+                legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
                 legend_select_destination = html.DIV("Sélectionner la destination du convoi", Class='instruction')
+            else:
+                assert False, "What type order"
+            buttons_right <= legend_selected_passive
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
@@ -988,8 +989,10 @@ def sandbox():
             # create unit
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
                 new_unit = mapping.Army(POSITION_DATA, role, selected_drop_zone, None, False)
-            if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+            elif type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
                 new_unit = mapping.Fleet(POSITION_DATA, role, selected_drop_zone, None, False)
+            else:
+                assert False, "What type unit"
 
             # remove previous occupant if applicable
             if selected_drop_region in POSITION_DATA.occupant_table:
@@ -1119,8 +1122,10 @@ def sandbox():
 
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
                 pickable_unit = mapping.Army(POSITION_DATA, role, None, None, False)
-            if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+            elif type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
                 pickable_unit = mapping.Fleet(POSITION_DATA, role, None, None, False)
+            else:
+                assert False, "What type unit"
 
             identifier = f"unit_{num}"
             unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Cliquez-moi dessus !")
