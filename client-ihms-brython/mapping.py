@@ -1690,8 +1690,10 @@ class Position(Renderable):
                 zone = variant._zones[zone_number]
                 if type_unit is UnitTypeEnum.ARMY_UNIT:
                     unit = Army(self, role, zone, None, False)
-                if type_unit is UnitTypeEnum.FLEET_UNIT:
+                elif type_unit is UnitTypeEnum.FLEET_UNIT:
                     unit = Fleet(self, role, zone, None, False)  # type: ignore
+                else:
+                    assert False, "What type unit"
                 self._units.append(unit)
                 region = zone.region
                 self._occupant_table[region] = unit
@@ -1971,9 +1973,11 @@ class Position(Renderable):
             if isinstance(dislodged_unit, Fleet):
                 type_name = self._variant.unit_name_table[UnitTypeEnum.FLEET_UNIT].lower()
                 where_to = ' / '.join([f"{self._variant.full_zone_name_table[z]} ({self._variant.zone_name_table[z]})" for z in dislodged_unit.zone.neighbours[UnitTypeEnum.FLEET_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
-            if isinstance(dislodged_unit, Army):
+            elif isinstance(dislodged_unit, Army):
                 type_name = self._variant.unit_name_table[UnitTypeEnum.ARMY_UNIT].lower()
                 where_to = ' / '.join([f"{self._variant.full_zone_name_table[z]} ({self._variant.zone_name_table[z]})" for z in dislodged_unit.zone.neighbours[UnitTypeEnum.ARMY_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
+            else:
+                assert False, "What type dislodged unit"
 
             information = f"Votre {type_name} en {self._variant.full_zone_name_table[dislodged_unit.zone]} ({self._variant.zone_name_table[dislodged_unit.zone]}) peut retraiter en : {where_to}"
             informations.append(information)
@@ -2403,8 +2407,10 @@ class Orders(Renderable):
             role = self._position.variant.roles[role_num]
             if unit_type is UnitTypeEnum.ARMY_UNIT:
                 fake_unit = Army(self._position, role, zone, None, False)
-            if unit_type is UnitTypeEnum.FLEET_UNIT:
+            elif unit_type is UnitTypeEnum.FLEET_UNIT:
                 fake_unit = Fleet(self._position, role, zone, None, False)  # type: ignore
+            else:
+                assert False, "What unit type"
             self._fake_units[zone_num] = fake_unit
 
         # orders

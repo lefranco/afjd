@@ -173,6 +173,8 @@ def select_event():
 def registrations():
     """ registrations """
 
+    input_copy_url_register = None
+
     def download_players_callback(ev):  # pylint: disable=invalid-name
 
         ev.preventDefault()
@@ -320,6 +322,13 @@ def registrations():
         # back to where we started
         MY_SUB_PANEL.clear()
         registrations()
+
+    def copy_url_register_callback(_):
+        """ copy_url_consult_callback """
+        input_copy_url_register.select()
+        # ev.setSelectionRange(0, 99999) # For mobile devices
+        window.navigator.clipboard.writeText(input_copy_url_register.value)
+        alert(f"Lien '{input_copy_url_register.value}' copié dans le presse papier...")
 
     player_id = None
     if 'PSEUDO' in storage:
@@ -537,13 +546,6 @@ def registrations():
 
     # provide the link
     if not external:
-
-        def copy_url_register_callback(_):
-            """ copy_url_consult_callback """
-            input_copy_url_register.select()
-            # ev.setSelectionRange(0, 99999) # For mobile devices
-            window.navigator.clipboard.writeText(input_copy_url_register.value)
-            alert(f"Lien '{input_copy_url_register.value}' copié dans le presse papier...")
 
         url = f"{config.SITE_ADDRESS}?event={name}"
         input_copy_url_register = html.INPUT(type="text", value=url)

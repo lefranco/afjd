@@ -150,6 +150,8 @@ def game_master():
 
     players_dict = {}
     allocated = []
+    input_deadline_day = None
+    input_deadline_hour = None
 
     def add_note_callback(ev):  # pylint: disable=invalid-name
         """ add_note_callback """
