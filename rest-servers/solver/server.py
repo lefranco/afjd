@@ -53,7 +53,7 @@ COMMAND_PARSER.add_argument('cmd', type=str, required=True)
 class SolveRessource(flask_restful.Resource):  # type: ignore
     """ SolveRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Performs an adjudication
         EXPOSED (since there can be simulation)
@@ -123,7 +123,7 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
 class PrintRessource(flask_restful.Resource):  # type: ignore
     """ PrintRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Print orders
         NOT EXPOSED
@@ -175,7 +175,7 @@ class PrintRessource(flask_restful.Resource):  # type: ignore
 class DisorderRessource(flask_restful.Resource):  # type: ignore
     """ DisorderRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Performs an civil disorder orders extraction
         EXPOSED
@@ -234,7 +234,7 @@ class DisorderRessource(flask_restful.Resource):  # type: ignore
 class CommandRessource(flask_restful.Resource):  # type: ignore
     """ CommandRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=R0201
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Performs a command (typically a compilation of solver)
         EXPOSED

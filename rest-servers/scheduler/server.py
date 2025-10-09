@@ -461,7 +461,7 @@ def acting_threaded_procedure() -> None:
 class AccessLogsRessource(flask_restful.Resource):  # type: ignore
     """ AccessLogsRessource """
 
-    def get(self, lines: int) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=R0201
+    def get(self, lines: int) -> typing.Tuple[typing.List[str], int]:
         """
         Simply return logs content
         EXPOSED
