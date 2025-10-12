@@ -80,8 +80,8 @@ OVERALL.attrs['style'] = 'display: table-row'
 OVERALL_TOP <= OVERALL
 
 # menu-left
-MENU_LEFT = html.DIV()
-MENU_LEFT.attrs['style'] = 'display: table-cell; width: 10%; vertical-align: top;'
+MENU_LEFT = html.UL()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width: 10%; vertical-align: top; padding: 0;'
 OVERALL <= MENU_LEFT
 
 # menu-selection
