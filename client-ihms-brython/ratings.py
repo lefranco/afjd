@@ -1111,8 +1111,8 @@ MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
 # menu-left
-MENU_LEFT = html.DIV()
-MENU_LEFT.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+MENU_LEFT = html.UL()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top; padding: 0;'
 MY_PANEL <= MENU_LEFT
 
 # menu-selection
