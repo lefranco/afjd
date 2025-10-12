@@ -406,7 +406,7 @@ def stack_last_moves_button(button_container, content_container, insert_before, 
         report_loaded = transition_loaded['report_txt']
         communication_orders_loaded = transition_loaded['communication_orders']
         orders_data = mapping.Orders(orders_loaded, position_data, communication_orders_loaded)
-        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+        img = common.read_map(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
         # content : report + season
@@ -712,7 +712,7 @@ def stack_position_and_my_orders(button_container, content_container, insert_bef
         ctx = canvas.getContext("2d")
         orders_loaded = game_orders_reload(GAME_ID)
         orders_data = mapping.Orders(orders_loaded, POSITION_DATA, [])
-        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+        img = common.read_map(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
         # otherwise button
@@ -793,7 +793,7 @@ def stack_communications_orders_button(button_container, content_container, inse
         ctx = canvas.getContext("2d")
         communication_orders_loaded = game_communication_orders_reload(GAME_ID)
         orders_data = mapping.Orders(communication_orders_loaded, POSITION_DATA, [])
-        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+        img = common.read_map(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
         # otherwise button
@@ -1444,7 +1444,7 @@ def show_board(panel):
         return
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    img = common.read_map(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
     panel <= canvas

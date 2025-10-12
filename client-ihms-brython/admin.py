@@ -1197,7 +1197,7 @@ def rectify_position():
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(variant_name_loaded, interface_chosen)
+    img = common.read_map(variant_name_loaded, interface_chosen)
     img.bind('load', lambda _: callback_render(True))
 
     # left side

@@ -628,7 +628,7 @@ def slide_just_display(table_of_contents):
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    img = common.read_map(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
     rating_colours_window = common.make_rating_colours_window(False, False, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, None, None, None, None)
@@ -1687,7 +1687,7 @@ def slide_submit_orders(table_of_contents):
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    img = common.read_map(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
     rating_colours_window = common.make_rating_colours_window(False, False, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, None, None, None, None)
@@ -2001,7 +2001,7 @@ def slide_show_adjudication(table_of_contents):
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    img = common.read_map(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
     rating_colours_window = common.make_rating_colours_window(False, False, VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, None, None, None, None)

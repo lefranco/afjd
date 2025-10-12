@@ -196,7 +196,7 @@ def show_variant():
         return
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME, INTERFACE_CHOSEN)
+    img = common.read_map(VARIANT_NAME, INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
     # left side
