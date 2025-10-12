@@ -575,12 +575,12 @@ def read_parameters(variant_name_loaded, interface_chosen):
     return parameters_read
 
 
-def read_image(variant_name_loaded, interface_chosen):
-    """ read_image """
+def read_map(variant_name_loaded, interface_chosen):
+    """ read_map """
 
     # create image
     # change version 12345 in map.png?v=12345 to force refreseh
-    image = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png?v=123456")
+    image = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png")
 
     # it must not move on screen !
     image.attrs['style'] = 'position: absolute;'

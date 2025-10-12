@@ -1581,7 +1581,7 @@ def submit_orders():
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
+    img = common.read_map(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
     fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
@@ -2499,7 +2499,7 @@ def submit_communication_orders():
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
+    img = common.read_map(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
     fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
@@ -2957,7 +2957,7 @@ def imagine_units():
     canvas.bind("mousedown", callback_canvas_click)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
+    img = common.read_map(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
     fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
