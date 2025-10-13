@@ -413,7 +413,7 @@ def tournament_position_reload(tournament_id):
 def display_flag(variant_name, interface, role_id, role_name):
     """ display_flag """
 
-    return html.IMG(src=f"./variants/{variant_name}/{interface}/roles/{role_id}.jpg", title=role_name)
+    return html.IMG(src=f"./variants/{variant_name}/{interface}/roles/{role_id}.jpg", alt=role_name, title=role_name)
 
 
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
@@ -580,7 +580,7 @@ def read_map(variant_name_loaded, interface_chosen):
 
     # create image
     # change version 12345 in map.png?v=12345 to force refreseh
-    image = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png")
+    image = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png", alt="map...")
 
     # it must not move on screen !
     image.attrs['style'] = 'position: absolute;'

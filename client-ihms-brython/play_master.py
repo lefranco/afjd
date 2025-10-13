@@ -59,7 +59,7 @@ class Logger(list):
 def stack_clock(frame, period):
     """ stack_clock """
 
-    clock_icon_img = html.IMG(src="./images/clock.png", title=f"Cette page est rafraichie périodiquement toutes les {period} secondes")
+    clock_icon_img = html.IMG(src="./images/clock.png", alt="Horloge", title=f"Cette page est rafraichie périodiquement toutes les {period} secondes")
     frame <= clock_icon_img
 
 
@@ -1461,9 +1461,9 @@ def game_master():
             flag = ""
             if role_id in needed_roles_list:
                 if role_id in submitted_roles_list:
-                    flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
+                    flag = html.IMG(src="./images/orders_in.png", alt="Validés", title="Les ordres sont validés")
                 else:
-                    flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
+                    flag = html.IMG(src="./images/orders_missing.png", alt="Non validés", title="Les ordres ne sont pas validés")
             col <= flag
             row <= col
 
@@ -1503,11 +1503,11 @@ def game_master():
             if role_id in needed_roles_list:
                 if role_id in submitted_roles_list:
                     if role_id in agreed_now_roles_list:
-                        flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
+                        flag = html.IMG(src="./images/agreed.jpg", alt="Oui", title="D'accord pour résoudre maintenant")
                     elif role_id in agreed_after_roles_list:
-                        flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre à la date limite")
+                        flag = html.IMG(src="./images/agreed_after.jpg", alt="D.L.", title="D'accord pour résoudre à la date limite")
                     else:
-                        flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
+                        flag = html.IMG(src="./images/not_agreed.jpg", alt="Non", title="Pas d'accord pour résoudre")
             col <= flag
             row <= col
 
@@ -1552,9 +1552,9 @@ def game_master():
                 # must show gm vote value
                 col2 = html.TD()
                 if vote_values_table[role_id]:
-                    flag = html.IMG(src="./images/stop.png", title="Le joueur a voté pour arrêter la partie")
+                    flag = html.IMG(src="./images/stop.png", alt="Arrêter", title="Le joueur a voté pour arrêter la partie")
                 else:
-                    flag = html.IMG(src="./images/continue.jpg", title="Le joueur a voté pour continuer la partie")
+                    flag = html.IMG(src="./images/continue.jpg", alt="Continuer", title="Le joueur a voté pour continuer la partie")
                 col2 <= flag
                 row2 <= col2
 
@@ -2240,9 +2240,9 @@ def supervise():
             flag = ""
             if role_id in needed_roles_list:
                 if role_id in submitted_roles_list:
-                    flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
+                    flag = html.IMG(src="./images/orders_in.png", alt="Validés", title="Les ordres sont validés")
                 else:
-                    flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
+                    flag = html.IMG(src="./images/orders_missing.png", alt="Non validés", title="Les ordres ne sont pas validés")
             col <= flag
             row <= col
 
@@ -2251,11 +2251,11 @@ def supervise():
             if role_id in needed_roles_list:
                 if role_id in submitted_roles_list:
                     if role_id in agreed_now_roles_list:
-                        flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
+                        flag = html.IMG(src="./images/agreed.jpg", alt="Oui", title="D'accord pour résoudre maintenant")
                     elif role_id in agreed_after_roles_list:
-                        flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre à la date limite")
+                        flag = html.IMG(src="./images/agreed_after.jpg", alt="D.L.", title="D'accord pour résoudre à la date limite")
                     else:
-                        flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
+                        flag = html.IMG(src="./images/not_agreed.jpg", alt="Non", title="Pas d'accord pour résoudre")
             col <= flag
             row <= col
 
@@ -2263,9 +2263,9 @@ def supervise():
             flag = ""
             if role_id in vote_values_table:
                 if vote_values_table[role_id]:
-                    flag = html.IMG(src="./images/stop.png", title="Arrêter la partie")
+                    flag = html.IMG(src="./images/stop.png", alt="Arrêter", title="Arrêter la partie")
                 else:
-                    flag = html.IMG(src="./images/continue.jpg", title="Continuer la partie")
+                    flag = html.IMG(src="./images/continue.jpg", alt="Continuer", title="Continuer la partie")
             col <= flag
             row <= col
 

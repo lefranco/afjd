@@ -411,7 +411,7 @@ def registrations():
             if field in ['residence', 'nationality']:
                 code = value
                 country_name = code_country_table[code]
-                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
+                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, alt=country_name, width="25", height="17")
 
             if field == 'status':
                 value = {-1: "Refusé", 0: "En attente", 1: "Accepté"}[value]
@@ -1093,7 +1093,7 @@ def handle_event():
             if field in ['residence', 'nationality']:
                 code = value
                 country_name = code_country_table[code]
-                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
+                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, alt=country_name, width="25", height="17")
 
             if field == 'status':
                 value = {-1: "Refusé", 0: "En attente", 1: "Accepté"}[value]

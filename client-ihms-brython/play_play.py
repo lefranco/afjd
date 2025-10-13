@@ -206,13 +206,13 @@ def submit_orders():
         orders_status = html.DIV(id='orders_status')
 
         if orders_in is False:
-            flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
+            flag = html.IMG(src="./images/orders_missing.png", alt="N.A.", title="Les ordres ne sont pas validés")
         elif definitive_value == 1:
-            flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
+            flag = html.IMG(src="./images/agreed.jpg", alt="Oui", title="D'accord pour résoudre maintenant")
         elif definitive_value == 2:
-            flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais à la date limite")
+            flag = html.IMG(src="./images/agreed_after.jpg", alt="D.L.", title="D'accord pour résoudre mais à la date limite")
         elif definitive_value == 0:
-            flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
+            flag = html.IMG(src="./images/not_agreed.jpg", alt="Non", title="Pas d'accord pour résoudre")
         else:
             assert False, "Cannot set flag"
 
