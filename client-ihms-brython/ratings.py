@@ -901,7 +901,7 @@ def show_players_masters_data():
             if field in ['residence', 'nationality']:
                 code = value
                 country_name = code_country_table[code]
-                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
+                value = html.IMG(src=f"./national_flags/{code}.png", alt=country_name, title=country_name, width="25", height="17")
 
             if field == 'activity':
                 value = ""

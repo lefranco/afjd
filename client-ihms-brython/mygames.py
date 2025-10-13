@@ -1233,7 +1233,7 @@ def my_games(state_name):
             if field == 'role_played':
                 value = ""
                 if role_id is None:
-                    role_icon_img = html.IMG(src="./images/assigned.png", title="Affecté à la partie")
+                    role_icon_img = html.IMG(src="./images/assigned.png", alt="Affecté", title="Affecté à la partie")
                 else:
                     role = variant_data.roles[role_id]
                     role_name = variant_data.role_name_table[role]
@@ -1272,10 +1272,10 @@ def my_games(state_name):
                             submitted_roles_list = submitted_data['submitted']
                             needed_roles_list = submitted_data['needed']
                             if role_id in submitted_roles_list:
-                                flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
+                                flag = html.IMG(src="./images/orders_in.png", alt="Validés", title="Les ordres sont validés")
                                 value = flag
                             elif role_id in needed_roles_list:
-                                flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
+                                flag = html.IMG(src="./images/orders_missing.png", alt="Pas validés", title="Les ordres ne sont pas validés")
                                 value = flag
                                 if after_deadline:
                                     missing_orders = True
@@ -1289,13 +1289,13 @@ def my_games(state_name):
                             agreed_now_roles_list = submitted_data['agreed_now']
                             agreed_after_roles_list = submitted_data['agreed_after']
                             if role_id in agreed_now_roles_list:
-                                flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
+                                flag = html.IMG(src="./images/agreed.jpg", alt="Oui", title="D'accord pour résoudre maintenant")
                                 value = flag
                             elif role_id in agreed_after_roles_list:
-                                flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais à la date limite")
+                                flag = html.IMG(src="./images/agreed_after.jpg", alt="D.L.", title="D'accord pour résoudre mais à la date limite")
                                 value = flag
                             elif role_id in needed_roles_list:
-                                flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
+                                flag = html.IMG(src="./images/not_agreed.jpg", alt="Non", title="Pas d'accord pour résoudre")
                                 value = flag
                                 if after_deadline:
                                     missing_orders = True
@@ -1319,7 +1319,7 @@ def my_games(state_name):
                             form <= input_jump_game
                             value = form
                         else:
-                            img = html.IMG(src="./images/press_published.jpg", title="Cliquer pour aller voir les nouvelles presses")
+                            img = html.IMG(src="./images/press_published.jpg", alt="Presse", title="Cliquer pour aller voir les nouvelles presses")
                             link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
                             link <= img
                             value = link
@@ -1337,7 +1337,7 @@ def my_games(state_name):
                             form <= input_jump_game
                             value = form
                         else:
-                            img = html.IMG(src="./images/messages_received.jpg", title="Cliquer pour aller voir les nouveaux messages privés")
+                            img = html.IMG(src="./images/messages_received.jpg", alt="Messages", title="Cliquer pour aller voir les nouveaux messages privés")
                             link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
                             link <= img
                             value = link
@@ -1377,7 +1377,7 @@ def my_games(state_name):
                             form <= input_edit_game
                             value = form
                         else:
-                            img = html.IMG(src="./images/edit_game.png", title="Pour éditer les paramètres de la partie")
+                            img = html.IMG(src="./images/edit_game.png", alt="Editer", title="Pour éditer les paramètres de la partie")
                             link = html.A(href=f"?edit_game={game_name}", target="_blank")
                             link <= img
                             value = link

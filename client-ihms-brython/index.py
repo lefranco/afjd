@@ -209,7 +209,7 @@ def set_site_image(_, value):
 def show_site_image(_):
     """ show_site_image """
     document.clear()
-    image_full = html.IMG(src=f"data:image/jpeg;base64,{SITE_IMAGE_DICT['image']}")
+    image_full = html.IMG(src=f"data:image/jpeg;base64,{SITE_IMAGE_DICT['image']}", alt="Image", title="Image du jour")
     document <= image_full
 
 

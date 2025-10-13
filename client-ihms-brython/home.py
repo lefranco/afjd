@@ -458,25 +458,25 @@ def show_news():
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/pay.png")
+    img = html.IMG(src="./images/pay.png", alt="Contribuer")
     col <= img
     row <= col
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/support.png")
+    img = html.IMG(src="./images/support.png", alt="Support")
     col <= img
     row <= col
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/tuto.jpg")
+    img = html.IMG(src="./images/tuto.jpg", alt="Tutoriels")
     col <= img
     row <= col
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/chart.png")
+    img = html.IMG(src="./images/chart.png", alt="La charte")
     col <= img
     row <= col
 
@@ -524,25 +524,25 @@ def show_news():
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/facebook.png")
+    img = html.IMG(src="./images/facebook.png", alt="Cul-de-chèvre")
     col <= img
     row <= col
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/abydos.jpeg")
+    img = html.IMG(src="./images/abydos.jpeg", alt="Copinage")
     col <= img
     row <= col
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/chat.png")
+    img = html.IMG(src="./images/chat.png", alt="Discord")
     col <= img
     row <= col
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/database.png")
+    img = html.IMG(src="./images/database.png", alt="Database")
     col <= img
     row <= col
 
