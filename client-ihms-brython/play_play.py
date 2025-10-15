@@ -2140,7 +2140,7 @@ def submit_communication_orders():
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
                 legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
                 legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue", Class='instruction')
-            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+            elif selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
                 legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
                 legend_select_destination = html.DIV("Sélectionner la destination du convoi", Class='instruction')
             else:
