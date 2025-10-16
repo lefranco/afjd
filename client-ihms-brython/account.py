@@ -153,6 +153,55 @@ def information_about_confirm():
     return information
 
 
+def check_correct_email(email):
+    """  check_correct_email """
+
+    if not email:
+        alert("L'email ne doit pas être vide")
+        return False
+
+    if '@' not in email or '.' not in email:
+        alert("L'email doit contenir un '@' et au moins un '.'")
+        return False
+
+    if email.count('@') != 1:
+        alert("L'email ne doit contenir qu'un seul '@'")
+        return False
+
+    try:
+        local_part, domain = email.split('@')
+    except ValueError:
+        alert("Erreur interne vérification email 1")
+        return False
+
+    if not local_part:
+        alert("La partie locale ne doit pas être vide")
+        return False
+
+    if not domain:
+        alert("Le domaine ne doivt pas être vide")
+        return False
+
+    if '.' not in domain:
+        alert("Le domaine doit contenir au moins un '.'")
+        return False
+
+    if domain.startswith('.') or domain.endswith('.'):
+        alert("Le domaine ne doit pas commencer ni finir par un '.'")
+        return False
+
+    try:
+        suffixe = domain.split('.')[-1]
+        if len(suffixe) < 2:
+            alert("Mauvais suffixe : trop court")
+            return False
+    except IndexError:
+        alert("Erreur interne vérification email 2")
+        return False
+
+    return True
+
+
 def create_account(json_dict):
     """ create_account """
 
@@ -279,16 +328,7 @@ def create_account(json_dict):
             create_account(json_dict)
             return
 
-        if not email:
-            alert("courriel manquant")
-            MY_SUB_PANEL.clear()
-            create_account(json_dict)
-            return
-
-        if email.find('@') == -1:
-            alert("@ dans courriel manquant")
-            MY_SUB_PANEL.clear()
-            create_account(json_dict)
+        if not check_correct_email(email):
             return
 
         del json_dict['password_again']
@@ -546,16 +586,7 @@ def edit_account():
         ev.preventDefault()
 
         email = input_email.value
-        if not email:
-            alert("email manquant")
-            MY_SUB_PANEL.clear()
-            edit_account()
-            return
-
-        if email.find('@') == -1:
-            alert("@ dans email manquant")
-            MY_SUB_PANEL.clear()
-            edit_account()
+        if not check_correct_email(email):
             return
 
         notify_deadline = int(input_notify_deadline.checked)
