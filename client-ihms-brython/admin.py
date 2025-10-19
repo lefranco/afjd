@@ -1066,7 +1066,7 @@ def rectify_position():
         alert("ERREUR : identifiant de partie introuvable")
         return
 
-    alert("Attention :\n 1) Ne pas rectifier une position en dehors des phases de mouvements !\n 2) Ne pas supprimer une unité qui a déjà reçu un ordre !\n (DANGER !!!)")
+    alert("Cette action sera rejetée si ce n'est pas un saison de mouvements ou si des ordres ont été entrés (il faut les effacer au préalable)...")
 
     # from variant name get variant content
 
@@ -1113,7 +1113,7 @@ def rectify_position():
     reserve_table = html.TABLE()
 
     num = 1
-    for role in variant_data.roles.values():
+    for role in sorted(variant_data.roles.values(), key=lambda r: r.identifier):
 
         # ignore GM
         if role.identifier == 0:
@@ -1138,7 +1138,7 @@ def rectify_position():
                 assert False, "Unknown unit type"
 
             identifier = f"unit_{num}"
-            unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Cliquez-moi dessus !")
+            unit_canvas = html.CANVAS(id=identifier, width=32, height=32, title="Cliquez-moi dessus !")
             unit_info_table[identifier] = (type_unit, role)
             num += 1
 
@@ -1155,7 +1155,7 @@ def rectify_position():
         pickable_ownership = mapping.Ownership(position_data, role, None)
 
         identifier = f"center_{num}"
-        ownership_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Cliquez-moi dessus !")
+        ownership_canvas = html.CANVAS(id=identifier, width=32, height=32, title="Cliquez-moi dessus !")
         ownership_info_table[identifier] = (role, )
         num += 1
 
