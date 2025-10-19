@@ -1128,7 +1128,7 @@ def sandbox():
                 assert False, "What type unit"
 
             identifier = f"unit_{num}"
-            unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Cliquez-moi dessus !")
+            unit_canvas = html.CANVAS(id=identifier, width=32, height=32, title="Cliquez-moi dessus !")
             unit_info_table[identifier] = (type_unit, role)
             num += 1
 
@@ -1145,7 +1145,7 @@ def sandbox():
         pickable_ownership = mapping.Ownership(POSITION_DATA, role, None)
 
         identifier = f"center_{num}"
-        ownership_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Cliquez-moi dessus !")
+        ownership_canvas = html.CANVAS(id=identifier, width=32, height=32, title="Cliquez-moi dessus !")
         ownership_info_table[identifier] = (role, )
         num += 1
 
