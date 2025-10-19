@@ -1291,6 +1291,7 @@ def select_game(selected_variant, selected_state):
         storage['GAME_VARIANT'] = game_variant
 
         show_game_selected()
+        alert(f"La partie '{game_name}' est sélectionnée, vous pouvez vous y rendre par 'Retourner dans la partie' (par exemple)")
 
         # back to where we started
         MY_SUB_PANEL.clear()
