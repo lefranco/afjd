@@ -734,9 +734,18 @@ class Game:
     def civil_disorder_allowed(self) -> bool:
         """ civil_disorder_allowed """
 
+        variant_name = self.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+
         # first season : never allowed
-        if self._current_advancement == 0:
-            return False
+        if variant_data['start_build']:
+            # start at build (4)
+            if self._current_advancement in [4, 5]:
+                return False
+        else:
+            if self._current_advancement == 0:
+                return False
 
         # what is the season next to play ?
         if self._current_advancement % 5 in [0, 2]:
