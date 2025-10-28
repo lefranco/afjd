@@ -1,0 +1,128 @@
+services:
+
+  users_service:
+    build: ./users_service
+    command: sh -c "python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.users.rule=Host(`users.traefik.me`)"
+      - "traefik.http.routers.users.entrypoints=websecure"
+      - "traefik.http.routers.users.tls=true"
+      - "traefik.http.services.users.loadbalancer.server.port=5001"
+    volumes:
+      - "./users_service/db:/app/db"
+      - "./users_service/logdir:/app/logdir"
+    networks:
+      - backend
+
+  emails_service:
+    build: ./emails_service
+    command: sh -c "python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.emails.rule=Host(`emails.traefik.me`)"
+      - "traefik.http.routers.emails.entrypoints=websecure"
+      - "traefik.http.routers.emails.tls=true"
+      - "traefik.http.services.emails.loadbalancer.server.port=5002"
+    volumes:
+      - "./emails_service/logdir:/app/logdir"
+    networks:
+      - backend
+
+  players_service:
+    build: ./players_service
+    command: sh -c "python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.players.rule=Host(`players.traefik.me`)"
+      - "traefik.http.routers.players.entrypoints=websecure"
+      - "traefik.http.routers.players.tls=true"
+      - "traefik.http.services.players.loadbalancer.server.port=5003"
+    volumes:
+      - "./players_service/db:/app/db"
+      - "./players_service/logdir:/app/logdir"
+    networks:
+      - backend
+
+  games_service:
+    build: ./games_service
+    command: sh -c "python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.games.rule=Host(`games.traefik.me`)"
+      - "traefik.http.routers.games.entrypoints=websecure"
+      - "traefik.http.routers.games.tls=true"
+      - "traefik.http.services.games.loadbalancer.server.port=5004"
+    volumes:
+      - "./games_service/db:/app/db"
+      - "./games_service/logdir:/app/logdir"
+    networks:
+      - backend
+
+  solver_service:
+    build: ./solver_service
+    command: sh -c "python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.solver.rule=Host(`solver.traefik.me`)"
+      - "traefik.http.routers.solver.entrypoints=websecure"
+      - "traefik.http.routers.solver.tls=true"
+      - "traefik.http.services.solver.loadbalancer.server.port=5005"
+    volumes:
+      - "./solver_service/logdir:/app/logdir"
+    networks:
+      - backend
+
+  scheduler_service:
+    build: ./scheduler_service
+    command: sh -c "sleep 10 && python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.scheduler.rule=Host(`scheduler.traefik.me`)"
+      - "traefik.http.routers.scheduler.entrypoints=websecure"
+      - "traefik.http.routers.scheduler.tls=true"
+      - "traefik.http.services.scheduler.loadbalancer.server.port=5006"
+    volumes:
+      - "./scheduler_service/db:/app/db"
+      - "./scheduler_service/logdir:/app/logdir"
+    networks:
+      - backend
+
+  traefik:
+    image: traefik:v3.0
+    command:
+      - sh
+      - -c
+      - |
+        sleep 10 && traefik \
+          --api.dashboard=true \
+          --api.insecure=true \
+          --providers.docker=true \
+          --providers.file.filename=/etc/traefik/dynamic_conf.yml \
+          --entrypoints.web.address=:80 \
+          --entrypoints.websecure.address=:443 \
+          --entrypoints.websecure.http.tls.certificates[0].certfile=/etc/traefik/selfsigned.crt \
+          --entrypoints.websecure.http.tls.certificates[0].keyfile=/etc/traefik/selfsigned.key
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./traefik/dynamic_conf.yml:/etc/traefik/dynamic_conf.yml:ro"
+      - "./traefik/selfsigned.crt:/etc/traefik/selfsigned.crt:ro"
+      - "./traefik/selfsigned.key:/etc/traefik/selfsigned.key:ro"
+    networks:
+      - backend
+    depends_on:
+      - users_service
+      - emails_service
+      - players_service
+      - games_service
+      - solver_service
+      - scheduler_service
+
+networks:
+  backend:
+    driver: bridge
