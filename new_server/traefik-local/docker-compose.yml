@@ -14,6 +14,8 @@ services:
       - "./users_service/logdir:/app/logdir"
     networks:
       - backend
+#    tls:
+#      certResolver: letsencrypt
 
   emails_service:
     build: ./emails_service
@@ -28,6 +30,8 @@ services:
       - "./emails_service/logdir:/app/logdir"
     networks:
       - backend
+#    tls:
+#      certResolver: letsencrypt
 
   players_service:
     build: ./players_service
@@ -43,6 +47,8 @@ services:
       - "./players_service/logdir:/app/logdir"
     networks:
       - backend
+#    tls:
+#      certResolver: letsencrypt
 
   games_service:
     build: ./games_service
@@ -58,6 +64,8 @@ services:
       - "./games_service/logdir:/app/logdir"
     networks:
       - backend
+#    tls:
+#      certResolver: letsencrypt
 
   solver_service:
     build: ./solver_service
@@ -72,6 +80,8 @@ services:
       - "./solver_service/logdir:/app/logdir"
     networks:
       - backend
+#    tls:
+#      certResolver: letsencrypt
 
   scheduler_service:
     build: ./scheduler_service
@@ -87,6 +97,8 @@ services:
       - "./scheduler_service/logdir:/app/logdir"
     networks:
       - backend
+#    tls:
+#      certResolver: letsencrypt
 
   traefik:
     image: traefik:v3.0
@@ -111,8 +123,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
       - "./traefik/dynamic_conf.yml:/etc/traefik/dynamic_conf.yml:ro"
-      - "./traefik/selfsigned.crt:/etc/traefik/selfsigned.crt:ro"
-      - "./traefik/selfsigned.key:/etc/traefik/selfsigned.key:ro"
+      - "./traefik/certs:/etc/traefik/certs:ro"
     networks:
       - backend
     depends_on:
