@@ -54,7 +54,6 @@ Les lignes deviendront des balises header ne niveau 2 de plus que le nombre de \
 <code>
 $$ titre niveau 2
 $$$ titre niveau 3
-$$$$ titre niveau 4
 $$$ rien
 $$ rien
 </code>
@@ -63,7 +62,6 @@ deviendra :
 .
 $$ titre niveau 2
 $$$ titre niveau 3
-$$$$ titre niveau 4
 $$$ rien
 $$ rien
 
@@ -166,7 +164,7 @@ $ Balises telles quelles
 Ces balises sont copiées en l'état dans le résultat html
 .
 .
-= Table des balsie
+= Table des balises
 | Balise HTML | Description |
 | center | pour centrer du texte |
 | blockquote | pour citer du texte |

@@ -31,7 +31,7 @@ class MyEzml(ezml.Ezml):
                     # 'h2' --> browser.html.H2()
                     sub_panel = getattr(browser.html, name.upper())()
                 except:  # noqa: E722 pylint: disable=bare-except
-                    print("ERROR : html  for element name {name}")
+                    print(f"ERROR : html for element name {name}")
 
                 # attributes
                 for key, value in child.attributes.items():
