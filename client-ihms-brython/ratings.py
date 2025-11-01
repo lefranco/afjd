@@ -313,7 +313,10 @@ def show_rating_performance(classic, role_id):
 
             ratings_table <= row
 
-        average = round(sum(r[3] for r in rating_list) / len(rating_list))
+        if rating_list:
+            average = round(sum(r[3] for r in rating_list) / len(rating_list))
+        else:
+            average = DEFAULT_ELO
         return ratings_table, average
 
     def refresh():
