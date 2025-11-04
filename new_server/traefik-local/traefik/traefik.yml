@@ -17,10 +17,10 @@ providers:
   file:
     filename: "/etc/traefik/dynamic_conf.yml"
 
-#certificatesResolvers:
-#  letsencrypt:
-#    acme:
-#      email: admin@tondomaine.com
-#      storage: /etc/traefik/acme.json
-#      httpChallenge:
-#        entryPoint: web
+certificatesResolvers:
+  myle:
+    acme:
+      email: afjdiplo@outlook.com
+      storage: /etc/traefik/acme.json
+      httpChallenge:
+        entryPoint: web
