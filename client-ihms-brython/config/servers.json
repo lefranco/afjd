@@ -1,26 +1,26 @@
 {
     "USER": {
-        "HOST": "https://users.diplomania.fr",
+        "HOST": "https://users.diplomania2.fr",
         "PORT": 443
     },
     "EMAIL": {
-        "HOST": "https://emails.diplomania.fr",
+        "HOST": "https://emails.diplomania2.fr",
         "PORT": 443
     },
     "PLAYER": {
-        "HOST": "https://players.diplomania.fr",
+        "HOST": "https://players.diplomania2.fr",
         "PORT": 443
     },
     "GAME": {
-        "HOST": "https://games.diplomania.fr",
+        "HOST": "https://games.diplomania2.fr",
         "PORT": 443
     },
     "SOLVER": {
-        "HOST": "https://solver.diplomania.fr",
+        "HOST": "https://solver.diplomania2.fr",
         "PORT": 443
     },
     "SCHEDULER": {
-        "HOST": "https://scheduler.diplomania.fr",
+        "HOST": "https://scheduler.diplomania2.fr",
         "PORT": 443
     }
 }
