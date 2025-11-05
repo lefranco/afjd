@@ -60,7 +60,8 @@ Administrateur du site
 
 # mailing official sender
 #SENDER = "afjd@welpro.biz"
-SENDER="afjd_serveur_jeu@diplomania-gen.fr"
+#SENDER="afjd_serveur_jeu@diplomania-gen.fr"
+SENDER="afjdiplo@diplomania2.fr"
 
 # mailing real sender
 REPLY_TO = "jeremie.lefrancois@gmail.com"
