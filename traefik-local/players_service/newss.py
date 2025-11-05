@@ -30,13 +30,13 @@ class News:
 
         # news
         sql_executor.execute("CREATE TABLE newss (topic str, content str)")
-        sql_executor.execute("INSERT INTO newss (topic, content) VALUES (?, ?)", ("admin", " "))
-        sql_executor.execute("INSERT INTO newss (topic, content) VALUES (?, ?)", ("modo", " "))
-        sql_executor.execute("INSERT INTO newss (topic, content) VALUES (?, ?)", ("glory", " "))
+        sql_executor.execute("INSERT INTO newss (topic, content) VALUES (?, ?)", ("admin", ""))
+        sql_executor.execute("INSERT INTO newss (topic, content) VALUES (?, ?)", ("modo", ""))
+        sql_executor.execute("INSERT INTO newss (topic, content) VALUES (?, ?)", ("glory", ""))
 
         # data from hello asso
-        sql_executor.execute("INSERT INTO newss (topic, content) VALUES (?, ?)", ("raised", " "))
-        sql_executor.execute("INSERT INTO newss (topic, content) VALUES (?, ?)", ("members", " "))
+        sql_executor.execute("INSERT INTO newss (topic, content) VALUES (?, ?)", ("raised", "0"))
+        sql_executor.execute("INSERT INTO newss (topic, content) VALUES (?, ?)", ("members", "0"))
 
     def __init__(self, topic: str, content: str) -> None:
 

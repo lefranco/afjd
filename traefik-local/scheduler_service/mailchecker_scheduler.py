@@ -52,7 +52,7 @@ def run() -> None:
     host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
     port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
     url = f"{host}:{port}/send-email-simple"
-    req_result = SESSION.post(url, data=json_dict)
+    req_result = SESSION.post(url, json=json_dict)
     if req_result.status_code != 200:
         mylogger.LOGGER.error("ERROR = %s", req_result.text)
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"

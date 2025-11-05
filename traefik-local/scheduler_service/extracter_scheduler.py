@@ -41,7 +41,7 @@ def run(jwt_token: str, client_id: str, client_secret: str) -> None:
         'grant_type': 'client_credentials',
     }
 
-    req_result = SESSION.post(f"{SERVER}/{TOKEN_DOMAIN}", data=json_dict)
+    req_result = SESSION.post(f"{SERVER}/{TOKEN_DOMAIN}", json=json_dict)
     if req_result.status_code != 200:
         mylogger.LOGGER.error("ERROR = %s", req_result.text)
         return
@@ -119,7 +119,7 @@ def run(jwt_token: str, client_id: str, client_secret: str) -> None:
     host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
     url = f"{host}:{port}/news"
-    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict2)
+    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict2)
     if req_result.status_code != 201:
         if 'msg' in req_result.json():
             mylogger.LOGGER.error(req_result.json()['msg'])
@@ -139,7 +139,7 @@ def run(jwt_token: str, client_id: str, client_secret: str) -> None:
     host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
     url = f"{host}:{port}/news"
-    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict3)
+    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict3)
     if req_result.status_code != 201:
         if 'msg' in req_result.json():
             mylogger.LOGGER.error(req_result.json()['msg'])

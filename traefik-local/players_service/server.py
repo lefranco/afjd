@@ -9,7 +9,6 @@ The server
 
 import typing
 import random
-import argparse
 import json
 import time
 import sys
@@ -376,7 +375,7 @@ class ResendCodeRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
         port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
         url = f"{host}:{port}/send-email"
-        req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, data=json_dict)
+        req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, json=json_dict)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -446,8 +445,9 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             host = lowdata.SERVER_CONFIG['USER']['HOST']
             port = lowdata.SERVER_CONFIG['USER']['PORT']
             url = f"{host}:{port}/change"
+            json_dict = {'user_name': pseudo, 'password': args['password']}
             jwt_token = flask.request.headers.get('AccessToken')
-            req_result = SESSION.post(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo, 'password': args['password']})
+            req_result = SESSION.post(url, headers={'Authorization': f"Bearer {jwt_token}"}, json=json_dict)
             if req_result.status_code != 201:
                 mylogger.LOGGER.error("ERROR = %s", req_result.text)
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -528,7 +528,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
             port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
             url = f"{host}:{port}/send-email"
-            req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, data=json_dict)
+            req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, json=json_dict)
             if req_result.status_code != 200:
                 mylogger.LOGGER.error("ERROR = %s", req_result.text)
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -669,7 +669,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
         port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
         url = f"{host}:{port}/send-email"
-        req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, data=json_dict)
+        req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, json=json_dict)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -695,8 +695,9 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
         url = f"{host}:{port}/remove"
+        json_dict = {'user_name': pseudo}
         jwt_token = flask.request.headers.get('AccessToken')
-        req_result = SESSION.post(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
+        req_result = SESSION.post(url, headers={'Authorization': f"Bearer {jwt_token}"}, json=json_dict)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -795,7 +796,8 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
             host = lowdata.SERVER_CONFIG['USER']['HOST']
             port = lowdata.SERVER_CONFIG['USER']['PORT']
             url = f"{host}:{port}/add"
-            req_result = SESSION.post(url, json={'user_name': pseudo, 'password': args['password']})
+            json_dict = {'user_name': pseudo, 'password': args['password']}
+            req_result = SESSION.post(url, json=json_dict)
             if req_result.status_code != 201:
                 mylogger.LOGGER.error("ERROR = %s", req_result.text)
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -827,7 +829,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
         port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
         url = f"{host}:{port}/send-email-simple"
-        req_result = SESSION.post(url, data=json_dict)
+        req_result = SESSION.post(url, json=json_dict)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -1001,7 +1003,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
             host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
             port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
             url = f"{host}:{port}/send-email"
-            req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, data=json_dict)
+            req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, json=json_dict)
             if req_result.status_code != 200:
                 mylogger.LOGGER.error("ERROR = %s", req_result.text)
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -1772,6 +1774,7 @@ class EloClassicRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
         ratings_list = ratings.Rating.list_by_classic(sql_executor, bool(int(classic)))
+
         del sql_executor
 
         return ratings_list, 200
@@ -2569,7 +2572,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
         port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
         url = f"{host}:{port}/send-email"
-        req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, data=json_dict)
+        req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, json=json_dict)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -2726,7 +2729,7 @@ class RescuePlayerRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
         port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
         url = f"{host}:{port}/send-email-simple"
-        req_result = SESSION.post(url, data=json_dict)
+        req_result = SESSION.post(url, json=json_dict)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -2844,7 +2847,7 @@ class PrivateMessagesRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/mail-players"
         # for a rest API headers are presented differently
-        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -3128,10 +3131,6 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
 def main() -> None:
     """ main """
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--debug', required=False, help='mode debug to test stuff', action='store_true')
-    args = parser.parse_args()
-
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
 
@@ -3148,10 +3147,7 @@ def main() -> None:
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
 
-    if args.debug:
-        APP.run(debug=True, port=port)
-    else:
-        waitress.serve(APP, port=port)
+    waitress.serve(APP, port=port)
 
 
 if __name__ == '__main__':

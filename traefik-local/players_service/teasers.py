@@ -2,7 +2,7 @@
 
 
 """
-File : newss.py
+File : teasers.py
 
 Handles the teaser
 """
@@ -28,7 +28,7 @@ class Teaser:
         # create actual table
         sql_executor.execute("DROP TABLE IF EXISTS teasers")
         sql_executor.execute("CREATE TABLE teasers (content str)")
-        sql_executor.execute("INSERT INTO teasers (content) VALUES (?)", (" ",))
+        sql_executor.execute("INSERT INTO teasers (content) VALUES (?)", ("",))
 
     def __init__(self, content: str) -> None:
 

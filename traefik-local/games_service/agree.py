@@ -106,7 +106,7 @@ def disorder(game_id: int, role_id: int, game: games.Game, variant_dict: typing.
     host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
     port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
     url = f"{host}:{port}/disorder"
-    req_result = SESSION.post(url, data=json_dict)
+    req_result = SESSION.post(url, json=json_dict)
 
     if 'msg' in req_result.json():
         submission_report = req_result.json()['msg']
@@ -346,7 +346,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
     port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
     url = f"{host}:{port}/solve"
-    req_result = SESSION.post(url, data=json_dict)
+    req_result = SESSION.post(url, json=json_dict)
 
     if 'msg' in req_result.json():
         adjudication_report = req_result.json()['msg']
@@ -525,7 +525,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
     port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
     url = f"{host}:{port}/print"
-    req_result = SESSION.post(url, data=json_dict)
+    req_result = SESSION.post(url, json=json_dict)
 
     # print failed
     if req_result.status_code != 201:

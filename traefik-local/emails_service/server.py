@@ -8,7 +8,6 @@ The server
 """
 
 import typing
-import argparse
 import queue
 import threading
 import time
@@ -321,10 +320,6 @@ EMAIL_SUPPORT = ''
 def main() -> None:
     """ main """
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--debug', required=False, help='mode debug to test stuff', action='store_true')
-    args = parser.parse_args()
-
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
     load_support_config()
@@ -337,10 +332,7 @@ def main() -> None:
     sender_thread = threading.Thread(target=sender_threaded_procedure, daemon=True)
     sender_thread.start()
 
-    if args.debug:
-        APP.run(debug=True, port=port)
-    else:
-        waitress.serve(APP, port=port)
+    waitress.serve(APP, port=port)
 
 
 if __name__ == '__main__':

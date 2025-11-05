@@ -12,7 +12,6 @@ import collections
 import json
 import datetime
 import time
-import argparse
 import sys
 import threading
 import pathlib
@@ -714,7 +713,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
                     url = f"{host}:{port}/mail-players"
                     # for a rest API headers are presented differently
-                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
                     if req_result.status_code != 200:
                         print(f"ERROR from server  : {req_result.text}")
                         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -768,7 +767,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
                     url = f"{host}:{port}/mail-players"
                     # for a rest API headers are presented differently
-                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
                     if req_result.status_code != 200:
                         print(f"ERROR from server  : {req_result.text}")
                         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -1803,7 +1802,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
                     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
                     url = f"{host}:{port}/mail-players"
                     # for a rest API headers are presented differently
-                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
                     if req_result.status_code != 200:
                         print(f"ERROR from server  : {req_result.text}")
                         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -3356,7 +3355,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
                 url = f"{host}:{port}/mail-players"
                 # for a rest API headers are presented differently
-                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
                 if req_result.status_code != 200:
                     print(f"ERROR from server  : {req_result.text}")
                     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -3406,7 +3405,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
                     url = f"{host}:{port}/mail-players"
                     # for a rest API headers are presented differently
-                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
                     if req_result.status_code != 200:
                         print(f"ERROR from server  : {req_result.text}")
                         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -3564,7 +3563,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
                 url = f"{host}:{port}/mail-players"
                 # for a rest API headers are presented differently
-                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
                 if req_result.status_code != 200:
                     print(f"ERROR from server  : {req_result.text}")
                     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -3866,7 +3865,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
             port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
             url = f"{host}:{port}/solve"
-            req_result = SESSION.post(url, data=json_dict)
+            req_result = SESSION.post(url, json=json_dict)
 
             if 'msg' in req_result.json():
                 submission_report = req_result.json()['msg']
@@ -3972,7 +3971,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
                     url = f"{host}:{port}/mail-players"
                     # for a rest API headers are presented differently
-                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
                     if req_result.status_code != 200:
                         print(f"ERROR from server  : {req_result.text}")
                         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -4224,7 +4223,7 @@ class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
         port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
         url = f"{host}:{port}/disorder"
-        req_result = SESSION.post(url, data=json_dict)
+        req_result = SESSION.post(url, json=json_dict)
 
         if 'msg' in req_result.json():
             submission_report = req_result.json()['msg']
@@ -4931,7 +4930,7 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
         port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
         url = f"{host}:{port}/solve"
-        req_result = SESSION.post(url, data=json_dict)
+        req_result = SESSION.post(url, json=json_dict)
 
         if 'msg' in req_result.json():
             adjudication_report = req_result.json()['msg']
@@ -5105,7 +5104,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/mail-players"
         # for a rest API headers are presented differently
-        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -5379,7 +5378,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/mail-players"
         # for a rest API headers are presented differently
-        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -7729,7 +7728,7 @@ class ArchiveFinishedGamesRessource(flask_restful.Resource):  # type: ignore
             port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
             url = f"{host}:{port}/mail-players"
             # for a rest API headers are presented differently
-            req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+            req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
             if req_result.status_code != 200:
                 print(f"ERROR from server  : {req_result.text}")
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -7946,8 +7945,15 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
                 players_set.add(player_id)
                 active_players[player_id] += 1
 
-        most_active_master_id = active_masters.most_common(1)[0][0]
-        most_active_player_id = active_players.most_common(1)[0][0]
+        if active_masters.most_common(1):
+            most_active_master_id = active_masters.most_common(1)[0][0]
+        else: 
+            most_active_master_id = -1
+
+        if active_players.most_common(1):
+            most_active_player_id = active_players.most_common(1)[0][0]
+        else:
+            most_active_player_id = -1
 
         data = {'dying_games': dying_games, 'stalled_games': stalled_games, 'suffering_games': suffering_games, 'ongoing_games': len(ongoing_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set), 'most_active_master': most_active_master_id, 'most_active_player': most_active_player_id}
         return data, 200
@@ -8669,7 +8675,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
             port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
             url = f"{host}:{port}/mail-players"
             # for a rest API headers are presented differently
-            req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+            req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
             if req_result.status_code != 200:
                 print(f"ERROR from server  : {req_result.text}")
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -8855,7 +8861,7 @@ class TrainingRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
         port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
         url = f"{host}:{port}/solve"
-        req_result = SESSION.post(url, data=json_dict)
+        req_result = SESSION.post(url, json=json_dict)
 
         if 'msg' in req_result.json():
             submission_report = req_result.json()['msg']
@@ -9033,7 +9039,7 @@ class WarnDeadlinePlayersGameRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/mail-players"
         # for a rest API headers are presented differently
-        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -9143,7 +9149,7 @@ class ScoldLatePlayersGameRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/mail-players"
         # for a rest API headers are presented differently
-        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -9294,10 +9300,6 @@ def create_game_locks() -> None:
 def main() -> None:
     """ main """
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--debug', required=False, help='mode debug to test stuff', action='store_true')
-    args = parser.parse_args()
-
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
 
@@ -9320,10 +9322,7 @@ def main() -> None:
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['GAME']['PORT']
 
-    if args.debug:
-        APP.run(debug=True, port=port)
-    else:
-        waitress.serve(APP, port=port)
+    waitress.serve(APP, port=port)
 
 
 if __name__ == '__main__':

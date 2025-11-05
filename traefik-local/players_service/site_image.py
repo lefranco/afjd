@@ -29,7 +29,7 @@ class SiteImage:
 
         sql_executor.execute("DROP TABLE IF EXISTS site_image")
         sql_executor.execute("CREATE TABLE site_image (legend STR, content BLOB)")
-        sql_executor.execute("INSERT INTO site_image (legend, content) VALUES (?, ?)", (" ", " "))
+        sql_executor.execute("INSERT INTO site_image (legend, content) VALUES (?, ?)", ("", b""))
 
     def __init__(self, legend: str, content: bytes) -> None:
 

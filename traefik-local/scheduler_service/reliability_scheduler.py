@@ -194,7 +194,7 @@ def run(jwt_token: str) -> None:
     host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
     url = f"{host}:{port}/reliability_rating"
-    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
     if req_result.status_code != 200:
         if 'msg' in req_result.json():
             mylogger.LOGGER.error(req_result.json()['msg'])

@@ -11,7 +11,6 @@ import typing
 
 import json
 import time
-import argparse
 import threading
 import traceback
 
@@ -119,7 +118,7 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
     host = lowdata.SERVER_CONFIG['GAME']['HOST']
     port = lowdata.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/game-commute-agree-solve/{game_id}"
-    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
     if req_result.status_code == 201:
         return True
 
@@ -156,7 +155,7 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
     host = lowdata.SERVER_CONFIG['GAME']['HOST']
     port = lowdata.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/game-orders-submitted/{game_id}"
-    req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+    req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
 
     if req_result.status_code != 200:
         if 'msg' in req_result.json():
@@ -189,7 +188,7 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
         port = lowdata.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-force-no-orders/{game_id}"
-        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
 
         if req_result.status_code != 201:
             if 'msg' in req_result.json():
@@ -214,7 +213,7 @@ def commute_game(jwt_token: str, now: float, game_id: int, game_full_dict: typin
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
         port = lowdata.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-force-agree-solve/{game_id}"
-        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, json=json_dict)
 
         if req_result.status_code != 201:
             if 'msg' in req_result.json():
@@ -333,7 +332,7 @@ def acting_threaded_procedure() -> None:
             'password': password,
             'ip_address': external_ip
         }
-        req_result = SESSION.post(url, headers={'content-type': 'application/json'}, data=json.dumps(json_dict))
+        req_result = SESSION.post(url, headers={'content-type': 'application/json'}, json=json_dict)
         if req_result.status_code != 200:
             if 'msg' in req_result.json():
                 mylogger.LOGGER.error(req_result.json()['msg'])
@@ -491,10 +490,6 @@ class AccessLogsRessource(flask_restful.Resource):  # type: ignore
 def main() -> None:
     """ main """
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--debug', required=False, help='mode debug to test stuff', action='store_true')
-    args = parser.parse_args()
-
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
     load_credentials_config()
@@ -508,13 +503,10 @@ def main() -> None:
 
     # use separate thread to do stuff
     acting_thread = threading.Thread(target=acting_threaded_procedure, daemon=True)
+
     acting_thread.start()
 
-    if args.debug:
-        APP.run(debug=True, port=port)
-    else:
-        waitress.serve(APP, port=port)
-
+    waitress.serve(APP, port=port)
 
 if __name__ == '__main__':
     main()
