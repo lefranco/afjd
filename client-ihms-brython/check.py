@@ -44,5 +44,5 @@ def check_back_end_present():
 try:
     check_back_end_present()
 except Exception as exc:
-    alert("Mmm. Il semble que le back end ne fonctionne pas. Le mieux ? Contacter le bureau de l'Association...")
+    alert("Mmm. Il semble que le back end ne fonctionne pas.")
     raise SystemExit("Fin du programme Brython") from exc
