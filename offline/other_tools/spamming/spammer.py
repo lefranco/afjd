@@ -8,6 +8,7 @@ Justs sends plenty of emails
 import typing
 import argparse
 import configparser
+import datetime
 import os
 import sys
 import time
@@ -21,54 +22,108 @@ import flask_mail  # type: ignore
 INTERVAL = 5
 
 # mailing suject
-SUBJECT = "Diplomania : un site fait pour JOUER à diplomacy et ses variantes !"
+SUBJECT = "Diplomania : la résurrection"
 
 # mailing body
 BODY = """
 Cher joueur de Diplomacy,
 
-Tu t'es crée un compte sur le site https://diplomania-gen.fr à une date de moins d'un an et demi dans le passé.
-Mais il semble aujourd'hui que tu n'as jamais rejoint de parties.
+** Interruption de service **
 
-Nous cherchons en permanence à améliorer le site, tes commentaires sont donc les bienvenus :
+Le site qui nous permet de jouer accumulant les frais d'hébergement (un composant back end et un composant front end) il a été envisagé de tout déplacer sur des ordinateurs de la société d'un membre de l'association.
+Au cours de la copie une mauvaise manipulation a entrainé le blocage de tous les serveurs back end. Identifier le problème a pris du temps, et il n'a jamais été possible de rétablir la situation malgré les efforts de plusieurs personnes.
+Le problème a donc été résolu en réalisant une nouvelle installation, à partir de rien, plus simple, sur un nouveau back end.
+Ce, avec une formule d'hébergement beaucoup moins chère mais équivalente en terme de performances.
 
- - N'as-tu pas réussi à t'inscrire dans une partie (parce que c'est trop compliqué - par exemple) ?
- - As-tu trouvé depuis un autre site qui répond mieux à tes attentes ?
- - As-tu rencontré un problème sur le site qui te semble rédhibitoire ?
+=> Le site est rétabli hier Mercredi 5 Novembre.
 
-Quelques conseils de notre côté :
+A noter : à ce jour le front end reste à migrer également, cela sera fait dans le jours qui suivent.
+En attendant le service est rétabli et nous présentons nos excuses pour la gène occasionnée.
 
-Après t'être connecté(e), tu peux tout de suite t'inscrire dans des parties en attente
-(boutons "Les parties" puis "Rejoindre une partie").
+Nous pouvons reprendre nos parties !
 
-Si tu hésites entre différentes variantes, le bouton "Variantes" les décrit.
+** Invitations **
 
-En attendant que les parties démarrent, si tu ne connais pas bien les règles du jeu Diplomacy ou si tu veux te familiariser avec l'interface de Diplomania, nous te recommandons de cliquer sur "Tutoriels et défis"
-et d'utiliser l' "Aide" ou le "Wiki".
+Sur le face à face, nous en profitons pour vous inviter à deux événements dans un futur immédiat :
 
-Tu peux aussi faire un tour sur le "Forum"...
+========== OPEN DE PARIS ================
 
-Et l'AFJD te propose également son serveur Discord pour échanger (lien depuis la page d'accueil du site).
+Open international de Paris / Championnat d'Île-de-France 2025
+Tournoi principal de la région Île-de-France pour 2025. Il s'agit d'un tournoi mixte de négociation/blitz (speedboat).
+L'Open de Paris est une étape du Grand Prix européen 2025 et du Tour de France 2024/2025.
 
-N'hésite pas à échanger avec moi en répondant directement à ce courriel (jeremie.lefrancois@gmail.com).
+Organisation
+  Organisateur : Lei Saarlainen
+  Assistant organisateur : Olivier Prigent
+  Directeur du tournoi : Olivier Prigent
+  Assistant directeur du tournoi : Emmanuel du Pontavice
 
-Tes remarques sur le site de jeu nous intéressent vivement.
+Lieu
+  France Île-de-France Paris
+  Hôtel La Louisianne, 60 rue de Seine
+
+Structure du tournoi
+  6 rondes : 3 négociation, 3 speedboat
+  Fin de l'année : 1907 (négociation) 1906 (speedboat)
+  Système de scorage : C-Diplo Namur
+  Agrégation des résultats : 3 meilleurs résultats (Speedboat à 70 %)
+
+Programme :
+  Vendredi 5 décembre 20 h / Speedboat 1
+  Vendredi 5 décembre 22 h / Speedboat 2
+  Samedi 6 décembre 10 h / Négociation 1
+  Samedi 6 décembre 15H / Négociation 2
+  Samedi 6 décembre 20H Repas communautaire
+  Dimanche 7 décembre 10H / Speedboat 3
+  Dimanche 7 décembre 12H30 / Négociation 3
+  Dimanche 7 décembre 16H30 / Remise des prix
+
+Championnat de France Speedboat / Blitz Live
+  Les 3 rondes Speedboat font partie du Championnat de France Speedboat.
+  Les autres rondes seront jouées sur le serveur Diplomania au cours de l'année à venir jusqu'au prochain CDF à Paris
+
+Les résultats seront agrégés comme suit : addition de tous les scores/parties + 3
+
+Ligue d'Ile de France
+  Les 3 manches de négociation feront partie de la Ligue d'Ile de France
+  Les autres manches se dérouleront en Ile de France au cours de l'année à venir jusqu'au prochain CDF à Paris
+
+Les résultats seront agrégés comme suit : addition de tous les scores/parties+3
+
+Contact pour question ou préinscription : lei saarlainen sur Discord ou par mail leisaarlainen@gmail.com
+
+(Lei)
+
+===  CHAMPIONNAT DE BRETAGNE  ==================
+
+Ô diplomates, les vendredi 21 et samedi 22 novembre (donc dans moins de 3 semaines), j'organise des parties de ***Diplomatie*** à Rennes au resto-bar culturel La Reine de Cœur.
+
+C'est le 4e championnat de Bretagne. C'est ouvert à tous, à vous joueurs expérimentés, à vous joueurs intermédiaires, à vous joueurs novices, y compris complets débutants. Toutes les parties (au nombre de trois) précédées d'une initiation de 30 à 45 minutes une heure avant le lancement du jeu. Suivre une initiation n'engage à rien, ni à jouer la partie qui suit ni les deux autres parties du week-end.
+
+Lieu : La Reine de Cœur, 48 rue de Saint-Brieuc (près de l'Agro) dans l'ouest de Rennes.
+Prix : une consommation obligatoire minimum par partie.
+
+Horaires : vendredi soir de 20h à minuit (initiation à 19h), samedi après-midi de 14 à 18h (initiation à 13h) et samedi soir de 20h à minuit (initiation à 19h). Remise des prix à minuit et demi.
+
+Possibilité de s'inscrire sur place jusqu'au dernier moment, les inscriptions à chaque partie sont indépendantes les unes des autres. + d'infos ou pré-inscription en me contactant par messagerie privée Discord ou par texto (06 89 14 64 06) ou https://tdfdiplo.fandom.com/fr/wiki/Règlement_du_championnat_de_Bretagne.
+
+(Gabriel)
+
+=============================================
 
 Jérémie
 Administrateur du site
+https://diplomania-gen.fr
 """
 
 # mailing official sender
-#SENDER = "afjd@welpro.biz"
-#SENDER="afjd_serveur_jeu@diplomania-gen.fr"
-SENDER="afjdiplo@diplomania2.fr"
+SENDER = "afjdiplo_server_noreply@diplomania2.fr"
 
 # mailing real sender
 REPLY_TO = "jeremie.lefrancois@gmail.com"
 
 # list of attached files (must be PDF)
-PDF_ATT_FILES = []
-
+PDF_ATT_FILES: typing.List[str] = []
 
 MAILER = None
 
@@ -161,23 +216,24 @@ def main() -> None:
 
         already_spammed = set()
         failed_to_spam = set()
+        start_time = datetime.datetime.now()
 
         with open(victim_list_file, encoding='utf-8') as filepointer:
 
-            victims = [l.rstrip('\n').lower() for l in filepointer if l.rstrip('\n') and not l.startswith("#")]
+            victims = [ll.rstrip('\n').replace(' ', '').lower() for ll in filepointer if ll.rstrip('\n') and not ll.startswith("#")]
             nb_victims = len(victims)
             print(f"We have {nb_victims} victims... ")
 
             for rank, victim in enumerate(victims):
 
-                print(f"spamming '{victim}'... ", end='')
+                print(f"{rank+1:4} spamming '{victim}'... ", end='')
 
                 # check we do not send twice to same
                 if victim in already_spammed:
                     print("=================== ALREADY SPAMMED!")
                     continue
 
-                percent = round((rank +1) / nb_victims* 100)
+                percent = round((rank + 1) / nb_victims * 100)
 
                 try:
                     send_mail(victim)
@@ -189,12 +245,20 @@ def main() -> None:
 
                 already_spammed.add(victim)
 
+                if (rank + 1) % 10 == 0:
+                    elapsed = (datetime.datetime.now() - start_time).total_seconds()
+                    speed = elapsed / (rank + 1)
+                    still = len(victims) - (rank + 1)
+                    rest_time = datetime.timedelta(seconds=(still * speed))
+                    eta = datetime.datetime.now() + rest_time
+                    print(f"Estimated ETA : {eta.strftime('%Y-%m-%d %H:%M:%S')}")
+
                 time.sleep(INTERVAL)
 
         if failed_to_spam:
             print("Failed to spam:")
             print(' '.join(failed_to_spam))
-        
+
 
 if __name__ == '__main__':
     main()
