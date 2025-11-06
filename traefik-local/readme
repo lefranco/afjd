@@ -1,30 +1,11 @@
-access to dash board
+mot de passe dashboard
 
-  navigator
-    https://traefik.localhost/dashboard/
+apt install apache2-utils
+htpasswd -nb admin ton_mot_de_passe
+-> hash
 
-put in file /etc/hosts lines below
+doubler les $
 
-  127.0.0.1 users.traefik.me
-  127.0.0.1 emails.traefik.me
-  127.0.0.1 players.traefik.me
-  127.0.0.1 games.traefik.me
-  127.0.0.1 solver.traefik.me
-  127.0.0.1 scheduler.traefik.me
-  127.0.0.1 traefik.localhost
-
-and restart with command:
-  sudo systemctl restart NetworkManager
-
-certificaates creation
-  openssl genrsa -out traefik/certs/selfsigned.key 2048
-  openssl req -x509 -new -nodes -key traefik/certs/selfsigned.key -sha256 -days 365 -out traefik/certs/selfsigned.crt -subj "/C=FR/ST=Ile-de-France/L=Paris/O=MonEntreprise/CN=traefik.localhost"
-
-
-overpass certificats
-  navigator
-  for every service
-    https://users.traefik.me
-    accept risk
-  
+mettre ici :
+"traefik.http.middlewares.auth.basicauth.users=<hash>
 
