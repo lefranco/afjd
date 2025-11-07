@@ -382,7 +382,7 @@ def acting_threaded_procedure() -> None:
             if hour_now == 1:
                 mylogger.LOGGER.info("ELO Scheduler...")
                 try:
-                    elo_scheduler.run(jwt_token)
+                    elo_scheduler.run(jwt_token, COMMUTER_ACCOUNT)
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with ELO, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
@@ -507,6 +507,7 @@ def main() -> None:
     acting_thread.start()
 
     waitress.serve(APP, port=port)
+
 
 if __name__ == '__main__':
     main()

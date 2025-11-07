@@ -37,7 +37,7 @@ SESSION = requests.Session()
 ADDRESS_ADMIN = 1
 
 
-def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, typing.Any], games_results_dict: typing.Dict[str, typing.Dict[str, typing.Any]], games_dict: typing.Dict[str, typing.Any], elo_information: typing.List[str]) -> typing.Tuple[typing.List[typing.List[typing.Any]], str]:
+def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, typing.Any], games_results_dict: typing.Dict[str, typing.Dict[str, typing.Any]], games_dict: typing.Dict[str, typing.Any], elo_information: typing.List[str], commuter_account: str) -> typing.Tuple[typing.List[typing.List[typing.Any]], str]:
     """ returns elo_raw_list, teaser_text """
 
     lowdata.start()
@@ -158,6 +158,9 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
         memo = {}
         for num in effective_roles:
             role_name = num2rolename[num]
+            # put commuter where player is missing
+            if role_name not in pseudo_table:
+                pseudo_table[role_name] = commuter_account
             player = pseudo_table[role_name]
             memo[num] = (role_name, player)
 
@@ -400,7 +403,7 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
     return elo_raw_list_sorted, teaser_text
 
 
-def run(jwt_token: str) -> None:
+def run(jwt_token: str, commuter_account: str) -> None:
     """ elo_scheduler """
 
     # ========================
@@ -479,7 +482,7 @@ def run(jwt_token: str) -> None:
     # ========================
 
     elo_information: typing.List[str] = []
-    elo_raw_list, teaser_text = process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information)
+    elo_raw_list, teaser_text = process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information, commuter_account)
 
     # dump ELO logs into a log file
     with open("./logdir/ELO.log", "w", encoding='utf-8') as file_ptr:
