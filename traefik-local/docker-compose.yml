@@ -101,7 +101,7 @@ services:
       - backend
 
   traefik:
-    image: traefik:v3.5.4
+    image: traefik:latest
     restart: unless-stopped
     command:
       - "--api.dashboard=true"
