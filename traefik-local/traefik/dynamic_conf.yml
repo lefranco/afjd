@@ -2,19 +2,34 @@
 
 http:
   middlewares:
+    # Middleware pour sécuriser les headers
     secureHeaders:
       headers:
         frameDeny: true
         contentTypeNosniff: true
         browserXssFilter: true
-        sslRedirect: true
+
+    # Middleware pour rediriger HTTP vers HTTPS (appliqué aux services, pas ACME)
+    redirectSecure:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
   routers:
+    # Dashboard Traefik sécurisé sur HTTPS
     dashboard:
       entryPoints:
         - websecure
-      rule: "Host(`traefik.localhost`)"  # modifie selon ton domaine
+      rule: "Host(`traefik.diplomania2.fr`)"
       service: api@internal
       tls: {}
       middlewares:
         - secureHeaders
 
+    # Router spécial pour le challenge ACME HTTP-01
+    acme-http:
+      entryPoints:
+        - web
+      rule: "PathPrefix(`/.well-known/acme-challenge/`)"
+      service: noop@internal
+      priority: 100  # prioritaire pour capter ACME avant tes services
