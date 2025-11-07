@@ -46,7 +46,7 @@
             ]
         },
         "1": {
-            "name": "Autriche",
+            "name": "AutricheHongrie",
             "adjective_name": "autrichien",
             "letter_name": "A",
             "red": [
@@ -63,7 +63,7 @@
             ]
         },
         "2": {
-            "name": "GrandeBretagne",
+            "name": "RoyaumeUni",
             "adjective_name": "britannique",
             "letter_name": "B",
             "red": [
@@ -148,8 +148,8 @@
             ]
         },
         "7": {
-            "name": "Turquie",
-            "adjective_name": "turc",
+            "name": "EmpireOttoman",
+            "adjective_name": "ottoman",
             "letter_name": "T",
             "red": [
                 185,
