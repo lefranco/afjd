@@ -32,13 +32,14 @@ def load_mail_config(app: typing.Any) -> None:
         app.config['MAIL_PORT'] = int(mail_data['MAIL_PORT'])
         app.config['MAIL_USE_TLS'] = bool(int(mail_data['MAIL_USE_TLS']))
         app.config['MAIL_USE_SSL'] = bool(int(mail_data['MAIL_USE_SSL']))
+        app.config['MAIL_SENDER'] = mail_data['MAIL_SENDER']
         app.config['MAIL_USERNAME'] = mail_data['MAIL_USERNAME']
         app.config['MAIL_PASSWORD'] = mail_data['MAIL_PASSWORD']
 
     global MAILER
     MAILER = flask_mail.Mail(app)
     global SENDER
-    SENDER = app.config['MAIL_USERNAME']
+    SENDER = f"{app.config['MAIL_SENDER']} <{app.config['MAIL_USERNAME']}>"
 
 
 def send_mail(subject: str, body: str, addressee: str, reply_to: typing.Optional[str]) -> typing.Tuple[bool, str]:

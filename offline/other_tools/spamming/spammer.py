@@ -117,7 +117,10 @@ https://diplomania-gen.fr
 """
 
 # mailing official sender
-SENDER = "afjdiplo_server_noreply@diplomania2.fr"
+NAME_SENDER = "Lettre d'information de la part de l'A.f.J.D. (Diplomania)'"
+MAIL_SENDER = "afjdiplo_server_noreply@diplomania2.fr"
+
+SENDER = f"{NAME_SENDER} <{MAIL_SENDER}>"
 
 # mailing real sender
 REPLY_TO = "jeremie.lefrancois@gmail.com"
@@ -170,7 +173,7 @@ def load_mail_config() -> None:
         APP.config['MAIL_USERNAME'] = mail_data['MAIL_USERNAME']
         APP.config['MAIL_PASSWORD'] = mail_data['MAIL_PASSWORD']
 
-        assert APP.config['MAIL_USERNAME'] == SENDER, "Use from same as sender to avoid being tagged as spam"
+        assert APP.config['MAIL_USERNAME'] == MAIL_SENDER, "Use from same as sender to avoid being tagged as spam"
 
     global MAILER
     MAILER = flask_mail.Mail(APP)
