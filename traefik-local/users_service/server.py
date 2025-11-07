@@ -268,7 +268,9 @@ def login_user() -> typing.Tuple[typing.Any, int]:
         return flask.jsonify({"msg": "Missing password parameter"}), 400
 
     # not mandatory
-    ip_address = flask.request.json.get('ip_address', 'none')
+    ip_address = flask.request.json.get('ip_address')
+    if ip_address is None:
+        ip_address = 'none'
 
     sql_executor = database.SqlExecutor()
 
