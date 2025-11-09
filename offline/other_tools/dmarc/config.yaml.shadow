@@ -1,0 +1,8 @@
+imap:
+  server: xxx
+  port: xxx
+  user: xxx
+  password: xxx
+  mailbox: "INBOX"
+  max_emails: 0 
+work_dir: ./tmp
