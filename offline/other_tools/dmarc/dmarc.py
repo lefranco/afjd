@@ -6,12 +6,12 @@ from __future__ import annotations
 
 import imaplib
 import email
-from email.header import decode_header
+import email.header
 import argparse
 import pathlib
 import os
 import zipfile
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree
 import gzip
 import shutil
 import sys
@@ -57,45 +57,39 @@ def read_config(config_file: pathlib.Path) -> None:
     WORK_DIR = config["work_dir"]
 
 
-ITEMS_DICT = {}
-IHM_TABLE = {}
+ITEMS_DICT: dict[str, tuple[str, bool, list[str]]] = {}
+IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
-def parse_xml(xml_file: str) -> None:
+def parse_xml(xml_file: str) -> tuple[str, bool, list[str]]:
     """Parse an XML file."""
 
-    print(f"Parsing {xml_file=}...", end='')
+    def get_text(parent: xml.etree.ElementTree.Element, tag: str) -> str:
+        elem = parent.find(tag)
+        if elem is None or elem.text is None:
+            raise ValueError(f"Missing or empty <{tag}> element")
+        return elem.text.strip()
+    
+        print(f"Parsing {xml_file=}...", end='')
 
-    tree = ET.parse(xml_file)
+    tree = xml.etree.ElementTree.parse(xml_file)
     root = tree.getroot()
 
-    for elem in root.iter():
-        if '}' in elem.tag:
-            elem.tag = elem.tag.split('}', 1)[1]  # garde seulement le nom après }
-
-    # Récupérer les infos du rapport
+    # Retrieve info from report
     report_metadata = root.find("report_metadata")
     assert report_metadata, "No metadata!"
-    report_id = report_metadata.find("report_id").text
-    org_name = report_metadata.find("org_name").text
-    #  print(f"Rapport {report_id} de {org_name}")
+    report_id = get_text(report_metadata, "report_id")
+    org_name = get_text(report_metadata, "org_name")
 
-    # Domaine testé
-#    policy = root.find("policy_published")
-#    domain = policy.find("domain").text
-#    adkim = policy.find("adkim").text
-#    aspf = policy.find("aspf").text
-#    print(f"  Domaine testé: {domain}, DKIM={adkim}, SPF={aspf}")
-
-    # Parcourir les enregistrements
+    # Scan records
     attention = False
     stuff = []
     for record in root.findall("record"):
-        source_ip = record.find("row/source_ip").text
-        count = record.find("row/count").text
-        disposition = record.find("row/policy_evaluated/disposition").text
-        dkim = record.find("row/policy_evaluated/dkim").text
-        spf = record.find("row/policy_evaluated/spf").text
+        source_ip = get_text(record, "row/source_ip")
+        count = get_text(record, "row/count")
+        disposition = get_text(record, "row/policy_evaluated/disposition")
+        dkim = get_text(record, "row/policy_evaluated/dkim")
+        spf = get_text(record, "row/policy_evaluated/spf")
         line = f"  IP: {source_ip}, Count: {count}, Disposition: {disposition}, DKIM: {dkim}, SPF: {spf}"
         if disposition != 'none':
             attention = True
@@ -111,8 +105,8 @@ def display_callback(stuff: list[str]) -> None:
     tkinter.messagebox.showinfo("Info", '\n'.join(stuff))
 
 
-def delete_mail(message_id) -> None:
-    """ main """
+def delete_mail(message_id: str) -> None:
+    """Delete an identified email."""
 
     print(f"Connecting to {IMAP_SERVER}:{IMAP_PORT} ...")
     imap = imaplib.IMAP4(IMAP_SERVER, IMAP_PORT)
@@ -159,20 +153,25 @@ def load_mails() -> None:
     status, data = imap.search(None, "ALL")
     assert status == "OK"
 
-    print("Number of mails :", len(data[0].split()))
-
     for num in data[0].split():
 
         status, msg_data = imap.fetch(num, '(BODY.PEEK[])')
         assert status == "OK"
 
-        raw_email = msg_data[0][1]
+        item = msg_data[0]
+        if isinstance(item, tuple):
+            raw_email = item[1]
+        elif isinstance(item, bytes):
+            raw_email = item
+        else:
+            assert False, f"Unexpected fetch result: {item}"
+
         msg = email.message_from_bytes(raw_email)
 
         message_id = num.decode()
         description = str(message_id)
         attention = False
-        stuff = []
+        stuff: list[str] = []
 
         # Parcours des parties du mail
         for part in msg.walk():
@@ -183,13 +182,13 @@ def load_mails() -> None:
             if disposition != "attachment":
                 continue
 
-            filename = part.get_filename()
-            assert filename
-            filename = decode_header(filename)[0][0]
-            if isinstance(filename, bytes):
-                filename = filename.decode("utf-8", errors="replace")
-
-            # TODO code for zip and gz should be more similar
+            filename_part = part.get_filename()
+            assert filename_part
+            filename1 = email.header.decode_header(filename_part)[0][0]
+            if isinstance(filename1, bytes):
+                filename = filename1.decode("utf-8", errors="replace")
+            else:
+                filename = filename1
 
             if filename.lower().endswith('zip'):
                 print("Found zip file!")
@@ -215,12 +214,11 @@ def load_mails() -> None:
                 assert payload, "No payload"
                 with open(gz_path, "wb") as fic:
                     fic.write(payload)
-                extracted_file = os.path.join(WORK_DIR, os.path.splitext(filename)[0])  # data.xml
-                files_in_gzip = [extracted_file]
+                extracted_file = os.path.join(WORK_DIR, os.path.splitext(filename)[0])
                 with gzip.open(gz_path, 'rb') as f_in, open(extracted_file, 'wb') as f_out:
                     shutil.copyfileobj(f_in, f_out)
                 os.remove(gz_path)
-                for xml_file in files_in_gzip:
+                for xml_file in [extracted_file]:
                     assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, stuff = parse_xml(xml_file)
                     ITEMS_DICT[description] = (message_id, attention, stuff)
@@ -278,6 +276,10 @@ def main() -> None:
     # from server
     load_mails()
 
+    if not ITEMS_DICT:
+        print("Nothing in mailbox!")
+        sys.exit(0)
+
     # create
     root = tkinter.Tk()
 
@@ -295,11 +297,11 @@ def main() -> None:
         fg = 'Red' if attention else 'Black'
 
         # to display
-        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda s=stuff: display_callback(s))
+        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda s=stuff: display_callback(s))  # type: ignore[misc]
         display_button.grid(row=i, column=0)
 
         # to delete
-        delete_button = tkinter.Button(buttons_frame, text='delete me', font=("Arial", 8), fg=fg, command=lambda m=message_id, d=description: delete_callback(m, d))
+        delete_button = tkinter.Button(buttons_frame, text='delete me', font=("Arial", 8), fg=fg, command=lambda m=message_id, d=description: delete_callback(m, d))  # type: ignore[misc]
         delete_button.grid(row=i, column=1)
 
         # remember so to destroy
