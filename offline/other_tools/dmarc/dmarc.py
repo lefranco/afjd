@@ -18,6 +18,7 @@ import sys
 import typing
 import tkinter
 import tkinter.messagebox
+import magic
 
 import yaml
 
@@ -28,6 +29,9 @@ IMAP_PASSWORD = ''
 IMAP_MAILBOX = ''
 MAX_EMAILS = 0
 WORK_DIR = ''
+
+# Regex to match a UUID
+UUID_REGEX = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 
 def read_config(config_file: pathlib.Path) -> None:
@@ -85,7 +89,7 @@ def parse_xml(xml_file: str) -> None:
     domain = policy.find("domain").text
     adkim = policy.find("adkim").text
     aspf = policy.find("aspf").text
-    #  print(f"  Domaine testé: {domain}, DKIM={adkim}, SPF={aspf}")
+    print(f"  Domaine testé: {domain}, DKIM={adkim}, SPF={aspf}")
 
     # Parcourir les enregistrements
     attention = False   # TODO calculate this
@@ -100,8 +104,7 @@ def parse_xml(xml_file: str) -> None:
         stuff.append(line)
 
     description = f"{org_name}/{report_id}"
-    
-    print(f"done!")
+    print("done!")
     return description, attention, stuff
 
 
@@ -119,21 +122,19 @@ def delete_mail(uid_delete) -> None:
     imap.login(IMAP_USER, IMAP_PASSWORD)
     imap.select(IMAP_MAILBOX)
 
-    typ, msg_data = imap.uid('SEARCH', None, 'UID', uid_delete) 
-    if typ != "OK":
-        print("Failed to search for emails")
-        return
-    if not msg_data[0]:
-        print(f"No email found with {uid_delete}")
-        return
+    print(f"Deleting email with {uid_delete=}")
 
     # Mark the email for deletion
-    imap.uid('STORE', uid_delete, '+FLAGS', '\\Deleted')
+    status, data = imap.uid('STORE', uid_delete, '+FLAGS', '(\\Deleted)')
+    if status != 'OK':
+        raise RuntimeError(f"Failed to set Deleted flag on UID {uid_delete}: {data}")
 
     # Permanently delete flagged emails
-    imap.expunge()
-    print("Deleted successfully.")
+    status, data = imap.expunge()
+    if status != 'OK':
+        raise RuntimeError(f"Expunge failed: {data}")
 
+    print("Deleted successfully.")
     imap.logout()
 
 
@@ -150,9 +151,6 @@ def delete_callback(uid: str, name: str) -> None:
     del IHM_TABLE[name]
 
 
-TITLE = "My DMARC elements"
-
-
 def load_mails() -> None:
     """ main """
 
@@ -162,95 +160,79 @@ def load_mails() -> None:
     imap.login(IMAP_USER, IMAP_PASSWORD)
     imap.select(IMAP_MAILBOX)
 
-    typ, data = imap.search(None, "ALL")
-    if typ != "OK":
-        print("Failed to retrieve emails")
-        return
+    status, data = imap.search(None, "ALL")
+    assert status == "OK"
 
     print("Number of mails :", len(data[0].split()))
-    print()
 
-    uids = data[0].split()
-    for uid in uids:
-        #  print(f"UID {uid.decode()}")
-        typ, msg_data = imap.fetch(uid, "(RFC822)")
-        if typ != "OK":
-            continue
-        msg = email.message_from_bytes(msg_data[0][1])
+    for num in data[0].split():
 
-        # Subject
-        subject = decode_header(msg.get("Subject"))[0][0]
-        if isinstance(subject, bytes):
-            subject = subject.decode("utf-8", errors="replace")
-        #  print("Subject: {subject}")
+        status, msg_data = imap.fetch(num, '(BODY.PEEK[])')
+        assert status == "OK"
 
-        # Sender
-        from_ = decode_header(msg.get("From"))[0][0]
-        if isinstance(from_, bytes):
-            from_ = from_.decode("utf-8", errors="replace")
-        #  print(f"From: {from_}")
+        raw_email = msg_data[0][1]
+        msg = email.message_from_bytes(raw_email)
+
+        message_id = num.decode()
+        description = str(message_id)
+        attention = False
+        stuff = []
 
         # Parcours des parties du mail
         for part in msg.walk():
+
             content_type = part.get_content_type()
             disposition = part.get_content_disposition()
 
             # Attachment
-            if disposition == "attachment":
-                filename = part.get_filename()
-                if filename:
-                    filename = decode_header(filename)[0][0]
-                    if isinstance(filename, bytes):
-                        filename = filename.decode("utf-8", errors="replace")
+            if disposition != "attachment":
+                continue
 
-                    # TODO code for zip and gz should be more similar
+            filename = part.get_filename()
+            assert filename
+            filename = decode_header(filename)[0][0]
+            if isinstance(filename, bytes):
+                filename = filename.decode("utf-8", errors="replace")
 
-                    if filename.lower().endswith('zip'):
-                        print("Found zip file!")
-                        zip_path = os.path.join(WORK_DIR, filename)
-                        with open(zip_path, "wb") as fic:
-                            fic.write(part.get_payload(decode=True))
-                        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                            files_in_zip = zip_ref.namelist()
-                            zip_ref.extractall(WORK_DIR)
-                        os.remove(zip_path)
-                        extracted_files = [os.path.join(WORK_DIR, f) for f in files_in_zip]
-                        for xml_file in extracted_files:
-                            assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
-                            description, attention, stuff = parse_xml(xml_file)
-                            ITEMS_DICT[description] = (uid, attention, stuff)
+            # TODO code for zip and gz should be more similar
 
-                    elif filename.lower().endswith(".gz"):
-                        print("Found gz file!")
-                        gz_path = os.path.join(WORK_DIR, filename)
-                        with open(gz_path, "wb") as fic:
-                            fic.write(part.get_payload(decode=True))
-                        extracted_file = os.path.join(WORK_DIR, os.path.splitext(filename)[0])  # data.xml
-                        files_in_gzip = [extracted_file]
-                        with gzip.open(gz_path, 'rb') as f_in, open(extracted_file, 'wb') as f_out:
-                            shutil.copyfileobj(f_in, f_out)
-                        os.remove(gz_path)
-                        for xml_file in files_in_gzip:
-                            assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
-                            description, attention, stuff = parse_xml(xml_file)
-                            ITEMS_DICT[description] = (uid, attention, stuff)
+            if filename.lower().endswith('zip'):
+                print("Found zip file!")
+                zip_path = os.path.join(WORK_DIR, filename)
+                payload = part.get_payload(decode=True)
+                assert payload, "No payload"
+                with open(zip_path, "wb") as fic:
+                    fic.write(payload)
+                with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                    files_in_zip = zip_ref.namelist()
+                    zip_ref.extractall(WORK_DIR)
+                os.remove(zip_path)
+                extracted_files = [os.path.join(WORK_DIR, f) for f in files_in_zip]
+                for xml_file in extracted_files:
+                    assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
+                    description, attention, stuff = parse_xml(xml_file)
+                    ITEMS_DICT[description] = (message_id, attention, stuff)
 
-                    else:
-                        pass
-                        # print("Unknown attachment type")
+            elif filename.lower().endswith(".gz"):
+                print("Found gz file!")
+                gz_path = os.path.join(WORK_DIR, filename)
+                payload = part.get_payload(decode=True)
+                assert payload, "No payload"
+                with open(gz_path, "wb") as fic:
+                    fic.write(payload)
+                extracted_file = os.path.join(WORK_DIR, os.path.splitext(filename)[0])  # data.xml
+                files_in_gzip = [extracted_file]
+                with gzip.open(gz_path, 'rb') as f_in, open(extracted_file, 'wb') as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+                os.remove(gz_path)
+                for xml_file in files_in_gzip:
+                    assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
+                    description, attention, stuff = parse_xml(xml_file)
+                    ITEMS_DICT[description] = (message_id, attention, stuff)
 
-            # Body
-            elif content_type == "text/plain" and disposition is None:
-                pass
-                #  body = part.get_payload(decode=True).decode(part.get_content_charset() or "utf-8", errors="replace")
-                #  print("Body (text) :")
-                #  print(body)
+            else:
+                print(f"Unknown attachment type {filename=}")
 
-            elif content_type == "text/html" and disposition is None:
-                pass
-                #  html_body = part.get_payload(decode=True).decode(part.get_content_charset() or "utf-8", errors="replace")
-                #  print("Body (HTML) :")
-                #  print(html_body)
 
     imap.logout()
 
@@ -285,6 +267,9 @@ def position(root: typing.Any) -> None:
 
     # geometry string
     root.geometry(f"+{x}+{y}")
+
+
+TITLE = "My DMARC elements"
 
 
 def main() -> None:
