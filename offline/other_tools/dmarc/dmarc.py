@@ -18,7 +18,6 @@ import sys
 import typing
 import tkinter
 import tkinter.messagebox
-import magic
 
 import yaml
 
@@ -29,9 +28,6 @@ IMAP_PASSWORD = ''
 IMAP_MAILBOX = ''
 MAX_EMAILS = 0
 WORK_DIR = ''
-
-# Regex to match a UUID
-UUID_REGEX = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 
 def read_config(config_file: pathlib.Path) -> None:
@@ -85,14 +81,14 @@ def parse_xml(xml_file: str) -> None:
     #  print(f"Rapport {report_id} de {org_name}")
 
     # Domaine testé
-    policy = root.find("policy_published")
-    domain = policy.find("domain").text
-    adkim = policy.find("adkim").text
-    aspf = policy.find("aspf").text
-    print(f"  Domaine testé: {domain}, DKIM={adkim}, SPF={aspf}")
+#    policy = root.find("policy_published")
+#    domain = policy.find("domain").text
+#    adkim = policy.find("adkim").text
+#    aspf = policy.find("aspf").text
+#    print(f"  Domaine testé: {domain}, DKIM={adkim}, SPF={aspf}")
 
     # Parcourir les enregistrements
-    attention = False   # TODO calculate this
+    attention = False
     stuff = []
     for record in root.findall("record"):
         source_ip = record.find("row/source_ip").text
@@ -101,6 +97,8 @@ def parse_xml(xml_file: str) -> None:
         dkim = record.find("row/policy_evaluated/dkim").text
         spf = record.find("row/policy_evaluated/spf").text
         line = f"  IP: {source_ip}, Count: {count}, Disposition: {disposition}, DKIM: {dkim}, SPF: {spf}"
+        if disposition != 'none':
+            attention = True
         stuff.append(line)
 
     description = f"{org_name}/{report_id}"
@@ -113,7 +111,7 @@ def display_callback(stuff: list[str]) -> None:
     tkinter.messagebox.showinfo("Info", '\n'.join(stuff))
 
 
-def delete_mail(uid_delete) -> None:
+def delete_mail(message_id) -> None:
     """ main """
 
     print(f"Connecting to {IMAP_SERVER}:{IMAP_PORT} ...")
@@ -122,33 +120,31 @@ def delete_mail(uid_delete) -> None:
     imap.login(IMAP_USER, IMAP_PASSWORD)
     imap.select(IMAP_MAILBOX)
 
-    print(f"Deleting email with {uid_delete=}")
+    print(f"Deleting email with {message_id=}")
 
     # Mark the email for deletion
-    status, data = imap.uid('STORE', uid_delete, '+FLAGS', '(\\Deleted)')
-    if status != 'OK':
-        raise RuntimeError(f"Failed to set Deleted flag on UID {uid_delete}: {data}")
+    status, data = imap.store(message_id, '+FLAGS', '(\\Deleted)')
+    assert status == 'OK', f"Failed to set Deleted flag on UID {message_id}: {data}"
 
     # Permanently delete flagged emails
     status, data = imap.expunge()
-    if status != 'OK':
-        raise RuntimeError(f"Expunge failed: {data}")
+    assert status == 'OK', f"Expunge failed: {data}"
 
     print("Deleted successfully.")
     imap.logout()
 
 
-def delete_callback(uid: str, name: str) -> None:
+def delete_callback(message_id: str, description: str) -> None:
     """Delete email."""
 
     # delete from server
-    delete_mail(uid)
+    delete_mail(message_id)
 
     # delete from ihm
-    display_button, delete_button = IHM_TABLE[name]
+    display_button, delete_button = IHM_TABLE[description]
     display_button.destroy()
     delete_button.destroy()
-    del IHM_TABLE[name]
+    del IHM_TABLE[description]
 
 
 def load_mails() -> None:
@@ -181,7 +177,6 @@ def load_mails() -> None:
         # Parcours des parties du mail
         for part in msg.walk():
 
-            content_type = part.get_content_type()
             disposition = part.get_content_disposition()
 
             # Attachment
@@ -232,7 +227,6 @@ def load_mails() -> None:
 
             else:
                 print(f"Unknown attachment type {filename=}")
-
 
     imap.logout()
 
@@ -296,7 +290,7 @@ def main() -> None:
     buttons_frame.pack()
 
     # all buttons inside
-    for i, (description, (uid, attention, stuff)) in enumerate(ITEMS_DICT.items()):
+    for i, (description, (message_id, attention, stuff)) in enumerate(ITEMS_DICT.items()):
 
         fg = 'Red' if attention else 'Black'
 
@@ -305,7 +299,7 @@ def main() -> None:
         display_button.grid(row=i, column=0)
 
         # to delete
-        delete_button = tkinter.Button(buttons_frame, text='delete me', font=("Arial", 8), fg=fg, command=lambda u=uid, d=description: delete_callback(u, d))
+        delete_button = tkinter.Button(buttons_frame, text='delete me', font=("Arial", 8), fg=fg, command=lambda m=message_id, d=description: delete_callback(m, d))
         delete_button.grid(row=i, column=1)
 
         # remember so to destroy
