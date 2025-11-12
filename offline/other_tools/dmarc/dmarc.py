@@ -21,6 +21,9 @@ import tkinter.scrolledtext
 
 import yaml
 
+WINDOW_WIDTH = 600
+WINDOW_HEIGHT = 900
+
 IMAP_SERVER = ''
 IMAP_PORT = 0
 IMAP_USER = ''
@@ -121,27 +124,38 @@ def display_callback(description: str, stuff: list[str]) -> None:
     txt.config(state=tkinter.DISABLED)
 
 
-def delete_mail(message_id: str) -> None:
+def delete_mail(message_uid: str) -> None:
     """Delete an identified email."""
+
+    assert message_uid.isdigit()
 
     print(f"Connecting to {IMAP_SERVER}:{IMAP_PORT} ...")
     imap = imaplib.IMAP4(IMAP_SERVER, IMAP_PORT)
     imap.starttls()
     imap.login(IMAP_USER, IMAP_PASSWORD)
-    imap.select(IMAP_MAILBOX)
+    status, data = imap.select(IMAP_MAILBOX, readonly=False)
+    print(f"Select: {status=} {data=}")
 
-    print(f"Deleting email with {message_id=}")
+    print(f"Deleting email with {message_uid=}")
 
     # Mark the email for deletion
-    status, data = imap.store(message_id, '+FLAGS', '(\\Deleted)')
-    assert status == 'OK', f"Failed to set Deleted flag on UID {message_id}: {data}"
+    status, data = imap.uid("store", message_uid, "+FLAGS.SILENT", "(\\Deleted)")
+    print("STORE:", status, data)
+    assert status == "OK", f"Store failed: {data}"
 
     # Permanently delete flagged emails
     status, data = imap.expunge()
     assert status == 'OK', f"Expunge failed: {data}"
 
-    print("Deleted successfully.")
+    # Check
+    status, data = imap.uid("fetch", message_uid, "(FLAGS)")
+    assert status == 'OK', "Failed to check"
+    print("After expunge:", data)
+    assert data[0] is None, "Not suppressed!"
+
+    imap.close()
     imap.logout()
+    print("Deleted successfully.")
 
 
 def delete_callback(message_id: str, description: str) -> None:
@@ -166,12 +180,12 @@ def load_mails() -> None:
     imap.login(IMAP_USER, IMAP_PASSWORD)
     imap.select(IMAP_MAILBOX)
 
-    status, data = imap.search(None, "ALL")
+    status, data = imap.uid("search", None, "ALL")
     assert status == "OK", f"Search failed {data}"
 
-    for num in data[0].split():
+    for uid in data[0].split():
 
-        status, msg_data = imap.fetch(num, '(BODY.PEEK[])')
+        status, msg_data = imap.uid("fetch", uid, '(BODY.PEEK[])')
         assert status == "OK", f"Fetch failed {data}"
 
         item = msg_data[0]
@@ -182,10 +196,10 @@ def load_mails() -> None:
         else:
             assert False, f"Unexpected fetch result: {item}"
 
-        msg = email.message_from_bytes(raw_email)
+        msg = email.message_from_bytes(raw_email, policy=email.policy.default)
 
-        message_id = num.decode()
-        description = str(message_id)
+        message_uid = uid.decode()
+        description = str(message_uid)
         attention = False
         stuff: list[str] = []
 
@@ -224,7 +238,7 @@ def load_mails() -> None:
                 for xml_file in extracted_files:
                     assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, stuff = parse_xml(xml_file)
-                    ITEMS_DICT[description] = (message_id, attention, stuff)
+                    ITEMS_DICT[description] = (message_uid, attention, stuff)
 
             elif filename.lower().endswith(".gz"):
                 print("Found gz file!")
@@ -240,7 +254,7 @@ def load_mails() -> None:
                 for xml_file in [extracted_file]:
                     assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, stuff = parse_xml(xml_file)
-                    ITEMS_DICT[description] = (message_id, attention, stuff)
+                    ITEMS_DICT[description] = (message_uid, attention, stuff)
 
             else:
                 print(f"Unknown attachment type {filename=}")
@@ -308,7 +322,7 @@ def main() -> None:
     root.title(TITLE)
 
     # Canvas pour faire défiler
-    canvas = tkinter.Canvas(root, width=600, height=400)
+    canvas = tkinter.Canvas(root, width=WINDOW_WIDTH, height=WINDOW_HEIGHT)
     canvas.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=True)
 
     # Scrollbar verticale

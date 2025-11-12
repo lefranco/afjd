@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""DMARC."""
+"""BOUNCE."""
 
 from __future__ import annotations
 
@@ -35,8 +35,8 @@ SAID = 'said:'
 def parse_content(content: str) -> tuple[str, str, str, str, str, str, str, str, str]:
     """Parse a string that is the content of a bounce message."""
 
-    print(content)
-    print("================")
+    #print(content)
+    #print("================")
 
     host_reporter = ""
     subject = ""
@@ -141,26 +141,37 @@ def display_callback(description: str, body_text: list[str]) -> None:
     tkinter.messagebox.showinfo(description, body_text)
 
 
-def delete_mail(message_id: str) -> None:
+def delete_mail(message_uid: str) -> None:
     """Delete an identified email."""
+
+    assert message_uid.isdigit()
 
     print(f"Connecting to {IMAP_SERVER}:{IMAP_PORT} ...")
     imap = imaplib.IMAP4_SSL(IMAP_SERVER, IMAP_PORT)
     imap.login(IMAP_USER, IMAP_PASSWORD)
-    imap.select(IMAP_MAILBOX)
+    status, data = imap.select(IMAP_MAILBOX, readonly=False)
+    print(f"Select: {status=} {data=}")
 
-    print(f"Deleting email with {message_id=}")
+    print(f"Deleting email with {message_uid=}")
 
     # Mark the email for deletion
-    status, data = imap.store(message_id, '+FLAGS', '(\\Deleted)')
-    assert status == 'OK', f"Failed to set Deleted flag on UID {message_id}: {data}"
+    status, data = imap.uid("store", message_uid, "+FLAGS.SILENT", "(\\Deleted)")
+    print("STORE:", status, data)
+    assert status == "OK", f"Store failed: {data}"
 
     # Permanently delete flagged emails
     status, data = imap.expunge()
     assert status == 'OK', f"Expunge failed: {data}"
 
-    print("Deleted successfully.")
+    # Check
+    status, data = imap.uid("fetch", message_uid, "(FLAGS)")
+    assert status == 'OK', "Failed to check"
+    print("After expunge:", data)
+    assert data[0] is None, "Not suppressed!"
+
+    imap.close()
     imap.logout()
+    print("Deleted successfully.")
 
 
 def delete_callback(message_id: str, description: str) -> None:
@@ -184,12 +195,12 @@ def load_mails() -> None:
     imap.login(IMAP_USER, IMAP_PASSWORD)
     imap.select(IMAP_MAILBOX)
 
-    status, data = imap.search(None, "ALL")
+    status, data = imap.uid("search", None, "ALL")
     assert status == "OK", f"Search failed {data}"
 
-    for num in data[0].split():
+    for uid in data[0].split():
 
-        status, msg_data = imap.fetch(num, '(BODY.PEEK[])')
+        status, msg_data = imap.uid("fetch", uid, '(BODY.PEEK[])')
         assert status == "OK", f"Fetch failed {data}"
 
         item = msg_data[0]
@@ -207,7 +218,6 @@ def load_mails() -> None:
             content_type = part.get_content_type()
             content_disposition = str(part.get("Content-Disposition") or "")
 
-            # On cherche la partie texte principale (plain ou HTML)
             if "attachment" in content_disposition:
                 continue
             if content_type in ("text/plain", "text/html"):
@@ -222,11 +232,11 @@ def load_mails() -> None:
         if not body_text:
             body_text = "(Pas de corps trouvé)"
         else:
-            title = f"{email_dest}[{client_ip}] {code_class} {code_value} {num.decode()}"
-            message_id = num.decode()
+            title = f"{email_dest}[{client_ip}] {code_class} {code_value} {uid.decode()}"
+            message_uid = uid.decode()
             description = body_text.replace('\r\n\r\n', '\r\n')
             attention = False  # TODO : think of something
-            ITEMS_DICT[title] = (message_id, attention, description)
+            ITEMS_DICT[title] = (message_uid, attention, description)
 
         print(".", end='', flush=True)
 
