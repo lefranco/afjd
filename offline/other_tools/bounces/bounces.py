@@ -61,45 +61,6 @@ ITEMS_DICT: dict[str, tuple[str, bool, list[str]]] = {}
 IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
-def parse_xml(xml_file: str) -> tuple[str, bool, list[str]]:
-    """Parse an XML file."""
-
-    def get_text(parent: xml.etree.ElementTree.Element, tag: str) -> str:
-        elem = parent.find(tag)
-        if elem is None or elem.text is None:
-            raise ValueError(f"Missing or empty <{tag}> element")
-        return elem.text.strip()
-    
-        print(f"Parsing {xml_file=}...", end='')
-
-    tree = xml.etree.ElementTree.parse(xml_file)
-    root = tree.getroot()
-
-    # Retrieve info from report
-    report_metadata = root.find("report_metadata")
-    assert report_metadata, "No metadata!"
-    report_id = get_text(report_metadata, "report_id")
-    org_name = get_text(report_metadata, "org_name")
-
-    # Scan records
-    attention = False
-    stuff = []
-    for record in root.findall("record"):
-        source_ip = get_text(record, "row/source_ip")
-        count = get_text(record, "row/count")
-        disposition = get_text(record, "row/policy_evaluated/disposition")
-        dkim = get_text(record, "row/policy_evaluated/dkim")
-        spf = get_text(record, "row/policy_evaluated/spf")
-        line = f"  IP: {source_ip}, Count: {count}, Disposition: {disposition}, DKIM: {dkim}, SPF: {spf}"
-        if disposition != 'none':
-            attention = True
-        stuff.append(line)
-
-    description = f"{org_name}/{report_id}"
-    print("done!")
-    return description, attention, stuff
-
-
 def display_callback(stuff: list[str]) -> None:
     """Display information about content in email."""
     tkinter.messagebox.showinfo("Info", '\n'.join(stuff))
@@ -109,8 +70,7 @@ def delete_mail(message_id: str) -> None:
     """Delete an identified email."""
 
     print(f"Connecting to {IMAP_SERVER}:{IMAP_PORT} ...")
-    imap = imaplib.IMAP4(IMAP_SERVER, IMAP_PORT)
-    imap.starttls()
+    imap = imaplib.IMAP4_SSL(IMAP_SERVER, IMAP_PORT)
     imap.login(IMAP_USER, IMAP_PASSWORD)
     imap.select(IMAP_MAILBOX)
 
@@ -145,8 +105,7 @@ def load_mails() -> None:
     """ main """
 
     print(f"Connecting to {IMAP_SERVER}:{IMAP_PORT} ...")
-    imap = imaplib.IMAP4(IMAP_SERVER, IMAP_PORT)
-    imap.starttls()
+    imap = imaplib.IMAP4_SSL(IMAP_SERVER, IMAP_PORT)
     imap.login(IMAP_USER, IMAP_PASSWORD)
     imap.select(IMAP_MAILBOX)
 
@@ -173,58 +132,7 @@ def load_mails() -> None:
         attention = False
         stuff: list[str] = []
 
-        # Parcours des parties du mail
-        for part in msg.walk():
-
-            disposition = part.get_content_disposition()
-
-            # Attachment
-            if disposition != "attachment":
-                continue
-
-            filename_part = part.get_filename()
-            assert filename_part
-            filename1 = email.header.decode_header(filename_part)[0][0]
-            if isinstance(filename1, bytes):
-                filename = filename1.decode("utf-8", errors="replace")
-            else:
-                filename = filename1
-
-            if filename.lower().endswith('zip'):
-                print("Found zip file!")
-                zip_path = os.path.join(WORK_DIR, filename)
-                payload = part.get_payload(decode=True)
-                assert payload, "No payload"
-                with open(zip_path, "wb") as fic:
-                    fic.write(payload)
-                with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                    files_in_zip = zip_ref.namelist()
-                    zip_ref.extractall(WORK_DIR)
-                os.remove(zip_path)
-                extracted_files = [os.path.join(WORK_DIR, f) for f in files_in_zip]
-                for xml_file in extracted_files:
-                    assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
-                    description, attention, stuff = parse_xml(xml_file)
-                    ITEMS_DICT[description] = (message_id, attention, stuff)
-
-            elif filename.lower().endswith(".gz"):
-                print("Found gz file!")
-                gz_path = os.path.join(WORK_DIR, filename)
-                payload = part.get_payload(decode=True)
-                assert payload, "No payload"
-                with open(gz_path, "wb") as fic:
-                    fic.write(payload)
-                extracted_file = os.path.join(WORK_DIR, os.path.splitext(filename)[0])
-                with gzip.open(gz_path, 'rb') as f_in, open(extracted_file, 'wb') as f_out:
-                    shutil.copyfileobj(f_in, f_out)
-                os.remove(gz_path)
-                for xml_file in [extracted_file]:
-                    assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
-                    description, attention, stuff = parse_xml(xml_file)
-                    ITEMS_DICT[description] = (message_id, attention, stuff)
-
-            else:
-                print(f"Unknown attachment type {filename=}")
+        ITEMS_DICT[description] = (message_id, attention, stuff)
 
     imap.logout()
 
