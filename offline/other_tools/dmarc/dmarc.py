@@ -65,18 +65,28 @@ def parse_xml(xml_file: str) -> tuple[str, bool, list[str]]:
     """Parse an XML file."""
 
     def get_text(parent: xml.etree.ElementTree.Element, tag: str) -> str:
-        elem = parent.find(tag)
+
+        elem = parent.find(f"{tag_prefix}{tag}", ns)
         if elem is None or elem.text is None:
             raise ValueError(f"Missing or empty <{tag}> element")
         return elem.text.strip()
     
-        print(f"Parsing {xml_file=}...", end='')
+    print(f"Parsing {xml_file=}...", end='')
 
     tree = xml.etree.ElementTree.parse(xml_file)
     root = tree.getroot()
 
+    # Detect namespace, if exists
+    ns = {}
+    if root.tag.startswith("{"):
+        uri = root.tag.split("}")[0].strip("{")
+        ns["ns"] = uri
+        tag_prefix = "ns:"
+    else:
+        tag_prefix = ""
+
     # Retrieve info from report
-    report_metadata = root.find("report_metadata")
+    report_metadata = root.find(f"{tag_prefix}report_metadata", ns)
     assert report_metadata, "No metadata!"
     report_id = get_text(report_metadata, "report_id")
     org_name = get_text(report_metadata, "org_name")
