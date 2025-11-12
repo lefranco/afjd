@@ -16,6 +16,9 @@ import tkinter.messagebox
 
 import yaml
 
+WINDOW_WIDTH = 600
+WINDOW_HEIGHT = 900
+
 IMAP_SERVER = ''
 IMAP_PORT = 0
 IMAP_USER = ''
@@ -23,6 +26,83 @@ IMAP_PASSWORD = ''
 IMAP_MAILBOX = ''
 MAX_EMAILS = 0
 WORK_DIR = ''
+
+HOST_REPORTER = "This is the mail system at host "
+THE_MAIL_SYSTEM = "The mail system"
+SAID = 'said:'
+
+
+def parse_content(content: str) -> tuple[str, str, str, str, str, str, str, str, str]:
+    """Parse a string that is the content of a bounce message."""
+
+    print(content)
+    print("================")
+
+    host_reporter = ""
+    subject = ""
+    discourse = ""
+    state = 'init'
+
+    for line in content.split('\n'):
+
+        if not line:
+            continue
+
+        match state:
+            case 'init':
+                if line.startswith(HOST_REPORTER):
+                    host_reporter = line[len(HOST_REPORTER):].strip().rstrip('.')
+                    continue
+
+                if THE_MAIL_SYSTEM in line:
+                    state = 'mail'
+                    continue
+
+            case 'mail':
+                if SAID not in line:
+                    subject += line
+                else:
+                    subject1, _, discourse = line.partition(SAID)
+                    subject += subject1
+                    state = 'said'
+                    continue
+
+            case 'said':
+                discourse += " " + line
+
+    # Extract recipient email
+    email_dest, _, rest = subject.partition(':')
+    email_dest = email_dest.strip('<>').strip()
+
+    # Extract reporter host and IP
+    _, _, rest = rest.partition('host ')
+    reporter_host, _, reporter_ip = rest.partition('[')
+    reporter_host = reporter_host.strip()
+    reporter_ip = reporter_ip.strip('] ')
+    reporter_ip = reporter_ip.strip()
+
+    # Extract code and explanation
+    if ';' in discourse:
+        code_part, _, rest = discourse.partition(';')
+    elif ',' in discourse:
+        code_part, _, rest = discourse.partition(',')
+    else:
+        assert False, "Missing terminator"
+    code_part = ' '.join(code_part.split())
+    code_class, _, code_part = code_part.partition(' ')
+    code_class = code_class.strip()
+    code_value, _, code_desc = code_part.partition(' ')
+    code_value = ' '.join(code_value.split())
+    code_desc = ' '.join(code_desc.split())
+
+    client, _, explanations = rest.partition(']')
+    _, _, client_ip = client.partition('[')
+    client_ip = client_ip.strip()
+    explanations = ' '.join(explanations.split())
+
+    #print(f"{host_reporter=}\n{email_dest=}\n{reporter_host=}\n{reporter_ip=}\n{code_class=}\n{code_value=}\n{code_desc=}\n{client_ip=}\n{explanations=}")
+
+    return host_reporter, email_dest, reporter_host, reporter_ip, code_class, code_value, code_desc, client_ip, explanations
 
 
 def read_config(config_file: pathlib.Path) -> None:
@@ -52,7 +132,7 @@ def read_config(config_file: pathlib.Path) -> None:
     WORK_DIR = config["work_dir"]
 
 
-ITEMS_DICT: dict[str, tuple[str, bool, list[str]]] = {}
+ITEMS_DICT: dict[str, tuple[str, bool, str, str]] = {}
 IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
@@ -133,6 +213,7 @@ def load_mails() -> None:
             if content_type in ("text/plain", "text/html"):
                 try:
                     body_text = part.get_content()
+                    host_reporter, email_dest, reporter_host, reporter_ip, code_class, code_value, code_desc, client_ip, explanations = parse_content(body_text)
                 except Exception as e:
                     print(f"Error decoding body: {e}")
                     body_text = None
@@ -140,12 +221,12 @@ def load_mails() -> None:
 
         if not body_text:
             body_text = "(Pas de corps trouvé)"
-
-        message_id = num.decode()
-        description = str(message_id)
-        attention = False
-
-        ITEMS_DICT[description] = (message_id, attention, body_text)
+        else:
+            title = f"{email_dest}[{client_ip}] {code_class} {code_value} {num.decode()}"
+            message_id = num.decode()
+            description = body_text.replace('\r\n\r\n', '\r\n')
+            attention = False  # TODO : think of something
+            ITEMS_DICT[title] = (message_id, attention, description)
 
         print(".", end='', flush=True)
 
@@ -214,7 +295,7 @@ def main() -> None:
     root.title(TITLE)
 
     # Canvas pour faire défiler
-    canvas = tkinter.Canvas(root, width=600, height=400)
+    canvas = tkinter.Canvas(root, width=WINDOW_WIDTH, height=WINDOW_HEIGHT)
     canvas.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=True)
 
     # Scrollbar verticale
@@ -229,12 +310,12 @@ def main() -> None:
     buttons_frame.bind("<Configure>", on_frame_configure)
 
     # all buttons inside
-    for i, (description, (message_id, attention, stuff)) in enumerate(ITEMS_DICT.items()):
+    for i, (description, (message_id, attention, content)) in enumerate(sorted(ITEMS_DICT.items(), key=lambda t: t[0])):
 
         fg = 'Red' if attention else 'Black'
 
         # to display
-        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, s=stuff: display_callback(d, s))  # type: ignore[misc]
+        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, c=content: display_callback(d, c))  # type: ignore[misc]
         display_button.grid(row=i + 1, column=0)
 
         # to delete
@@ -252,4 +333,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+
+#    content = """ """
+#    parse_content(content)
+
     main()
