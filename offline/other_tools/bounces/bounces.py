@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import imaplib
 import email
+import email.policy
 import argparse
 import pathlib
 import sys
@@ -55,9 +56,9 @@ ITEMS_DICT: dict[str, tuple[str, bool, list[str]]] = {}
 IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
-def display_callback(description: str, stuff: list[str]) -> None:
+def display_callback(description: str, body_text: list[str]) -> None:
     """Display information about content in email."""
-    tkinter.messagebox.showinfo(description, '\n'.join(stuff))
+    tkinter.messagebox.showinfo(description, body_text)
 
 
 def delete_mail(message_id: str) -> None:
@@ -119,18 +120,34 @@ def load_mails() -> None:
         else:
             assert False, f"Unexpected fetch result: {item}"
 
-        msg = email.message_from_bytes(raw_email)
+        msg = email.message_from_bytes(raw_email, policy=email.policy.default)
 
-        # TODO : use msg
+        body_text = None
+        for part in msg.walk():
+            content_type = part.get_content_type()
+            content_disposition = str(part.get("Content-Disposition") or "")
+
+            # On cherche la partie texte principale (plain ou HTML)
+            if "attachment" in content_disposition:
+                continue
+            if content_type in ("text/plain", "text/html"):
+                try:
+                    body_text = part.get_content()
+                except Exception as e:
+                    print(f"Error decoding body: {e}")
+                    body_text = None
+                break
+
+        if not body_text:
+            body_text = "(Pas de corps trouvé)"
 
         message_id = num.decode()
         description = str(message_id)
         attention = False
-        stuff: list[str] = []
 
-        ITEMS_DICT[description] = (message_id, attention, stuff)
+        ITEMS_DICT[description] = (message_id, attention, body_text)
 
-        print(".", end='')
+        print(".", end='', flush=True)
 
     print()
 
