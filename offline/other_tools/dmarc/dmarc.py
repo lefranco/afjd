@@ -17,7 +17,7 @@ import shutil
 import sys
 import typing
 import tkinter
-import tkinter.messagebox
+import tkinter.scrolledtext
 
 import yaml
 
@@ -65,12 +65,13 @@ def parse_xml(xml_file: str) -> tuple[str, bool, list[str]]:
     """Parse an XML file."""
 
     def get_text(parent: xml.etree.ElementTree.Element, tag: str) -> str:
-
-        elem = parent.find(f"{tag_prefix}{tag}", ns)
+        """Find and return text for a nested tag, respecting namespace."""
+        path = "/".join(f"{tag_prefix}{t}" for t in tag.split("/"))
+        elem = parent.find(path, ns)
         if elem is None or elem.text is None:
-            raise ValueError(f"Missing or empty <{tag}> element")
+            raise ValueError(f"Missing or empty <{tag}> element in {xml_file}")
         return elem.text.strip()
-    
+
     print(f"Parsing {xml_file=}...", end='')
 
     tree = xml.etree.ElementTree.parse(xml_file)
@@ -94,7 +95,7 @@ def parse_xml(xml_file: str) -> tuple[str, bool, list[str]]:
     # Scan records
     attention = False
     stuff = []
-    for record in root.findall("record"):
+    for record in root.findall(f"{tag_prefix}record", ns):
         source_ip = get_text(record, "row/source_ip")
         count = get_text(record, "row/count")
         disposition = get_text(record, "row/policy_evaluated/disposition")
@@ -110,9 +111,14 @@ def parse_xml(xml_file: str) -> tuple[str, bool, list[str]]:
     return description, attention, stuff
 
 
-def display_callback(stuff: list[str]) -> None:
+def display_callback(description: str, stuff: list[str]) -> None:
     """Display information about content in email."""
-    tkinter.messagebox.showinfo("Info", '\n'.join(stuff))
+    win = tkinter.Toplevel()
+    win.title(description)
+    txt = tkinter.scrolledtext.ScrolledText(win, wrap=tkinter.WORD)
+    txt.pack(expand=True, fill="both", padx=10, pady=10)
+    txt.insert(tkinter.END, '\n'.join(stuff))
+    txt.config(state=tkinter.DISABLED)
 
 
 def delete_mail(message_id: str) -> None:
@@ -161,12 +167,12 @@ def load_mails() -> None:
     imap.select(IMAP_MAILBOX)
 
     status, data = imap.search(None, "ALL")
-    assert status == "OK"
+    assert status == "OK", f"Search failed {data}"
 
     for num in data[0].split():
 
         status, msg_data = imap.fetch(num, '(BODY.PEEK[])')
-        assert status == "OK"
+        assert status == "OK", f"Fetch failed {data}"
 
         item = msg_data[0]
         if isinstance(item, tuple):
@@ -183,7 +189,8 @@ def load_mails() -> None:
         attention = False
         stuff: list[str] = []
 
-        # Parcours des parties du mail
+        # Go through email parts
+        num_part = 0
         for part in msg.walk():
 
             disposition = part.get_content_disposition()
@@ -192,8 +199,10 @@ def load_mails() -> None:
             if disposition != "attachment":
                 continue
 
+            num_part += 1
+            assert num_part == 1, "More than one attachement"
             filename_part = part.get_filename()
-            assert filename_part
+            assert filename_part, "No fileame for attachment"
             filename1 = email.header.decode_header(filename_part)[0][0]
             if isinstance(filename1, bytes):
                 filename = filename1.decode("utf-8", errors="replace")
@@ -277,9 +286,9 @@ TITLE = "My DMARC elements"
 def main() -> None:
     """Main."""
 
-    # Mettre à jour scrollregion automatiquement
-    def on_frame_configure(_):
-        canvas.configure(scrollregion=canvas.bbox("all")) 
+    def on_frame_configure(_: typing.Any) -> None:
+        """Move cursor."""
+        canvas.configure(scrollregion=canvas.bbox("all"))
 
     parser = argparse.ArgumentParser(description="IMAP parameters to read emails")
     parser.add_argument("-c", "--config", required=True, help="Path to YAML file")
@@ -296,6 +305,7 @@ def main() -> None:
 
     # create
     root = tkinter.Tk()
+    root.title(TITLE)
 
     # Canvas pour faire défiler
     canvas = tkinter.Canvas(root, width=600, height=400)
@@ -312,22 +322,18 @@ def main() -> None:
 
     buttons_frame.bind("<Configure>", on_frame_configure)
 
-    # title
-    title_label = tkinter.Label(buttons_frame, text=TITLE, font=("Arial", 10), fg="blue")
-    title_label.grid(row=0, column=0)
-
     # all buttons inside
     for i, (description, (message_id, attention, stuff)) in enumerate(ITEMS_DICT.items()):
 
         fg = 'Red' if attention else 'Black'
 
         # to display
-        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda s=stuff: display_callback(s))  # type: ignore[misc]
-        display_button.grid(row=i+1, column=0)
+        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, s=stuff: display_callback(d, s))  # type: ignore[misc]
+        display_button.grid(row=i + 1, column=0)
 
         # to delete
         delete_button = tkinter.Button(buttons_frame, text='delete me', font=("Arial", 8), fg=fg, command=lambda m=message_id, d=description: delete_callback(m, d))  # type: ignore[misc]
-        delete_button.grid(row=i+1, column=1)
+        delete_button.grid(row=i + 1, column=1)
 
         # remember so to destroy
         IHM_TABLE[description] = (display_button, delete_button)
