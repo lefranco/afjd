@@ -200,6 +200,29 @@ def load_mails() -> None:
 
     for uid in data[0].split():
 
+        # -----
+        # 1 Date
+        # -----
+
+        status, date_data = imap.uid("fetch", uid, '(INTERNALDATE)')
+        assert status == "OK", f"Fetch failed {data}"
+
+        # Find the element containing the date string
+        metadata_bytes = date_data[0]
+        if isinstance(metadata_bytes, tuple):
+            metadata_bytes = metadata_bytes[0]
+                
+        metadata_str = metadata_bytes.decode(errors="ignore")
+        
+        # Use robust parsing to get the date string
+        if "INTERNALDATE" in metadata_str:
+            date_part = metadata_str.split('INTERNALDATE', 1)[1].strip()
+            date_str = date_part.split('"')[1]
+
+        # -----
+        # 2 Body
+        # -----
+
         status, msg_data = imap.uid("fetch", uid, '(BODY.PEEK[])')
         assert status == "OK", f"Fetch failed {data}"
 
@@ -231,7 +254,7 @@ def load_mails() -> None:
         assert body_text is not None
 
         host_reporter, email_dest, reporter_host, reporter_ip, code_class, code_value, code_desc, client_ip, explanations = parse_content(body_text)
-        title = f"{email_dest}[{client_ip}] {code_class} {code_value} {uid.decode()}"
+        title = f"{email_dest}[{client_ip}] {code_class} {code_value} {uid.decode()} {date_str}"
         message_uid = uid.decode()
         description = body_text.replace('\r\n\r\n', '\r\n')
         attention = False  # TODO : think of something
