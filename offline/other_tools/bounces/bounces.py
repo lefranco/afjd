@@ -223,20 +223,19 @@ def load_mails() -> None:
             if content_type in ("text/plain", "text/html"):
                 try:
                     body_text = part.get_content()
-                    host_reporter, email_dest, reporter_host, reporter_ip, code_class, code_value, code_desc, client_ip, explanations = parse_content(body_text)
                 except Exception as e:
                     print(f"Error decoding body: {e}")
                     body_text = None
                 break
 
-        if not body_text:
-            body_text = "(Pas de corps trouvé)"
-        else:
-            title = f"{email_dest}[{client_ip}] {code_class} {code_value} {uid.decode()}"
-            message_uid = uid.decode()
-            description = body_text.replace('\r\n\r\n', '\r\n')
-            attention = False  # TODO : think of something
-            ITEMS_DICT[title] = (message_uid, attention, description)
+        assert body_text is not None
+
+        host_reporter, email_dest, reporter_host, reporter_ip, code_class, code_value, code_desc, client_ip, explanations = parse_content(body_text)
+        title = f"{email_dest}[{client_ip}] {code_class} {code_value} {uid.decode()}"
+        message_uid = uid.decode()
+        description = body_text.replace('\r\n\r\n', '\r\n')
+        attention = False  # TODO : think of something
+        ITEMS_DICT[title] = (message_uid, attention, description)
 
         print(".", end='', flush=True)
 
