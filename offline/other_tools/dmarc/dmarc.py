@@ -7,6 +7,7 @@ from __future__ import annotations
 import imaplib
 import email
 import email.header
+import email.policy
 import argparse
 import pathlib
 import os
