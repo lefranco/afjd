@@ -249,6 +249,7 @@ def load_mails() -> None:
                 for xml_file in extracted_files:
                     assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, content_map = parse_xml(xml_file)
+                    os.remove(xml_file)
                     ITEMS_DICT[description] = (message_uid, attention, content_map)
 
             elif filename.lower().endswith(".gz"):
@@ -265,6 +266,7 @@ def load_mails() -> None:
                 for xml_file in [extracted_file]:
                     assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, content_map = parse_xml(xml_file)
+                    os.remove(xml_file)
                     ITEMS_DICT[description] = (message_uid, attention, content_map)
 
             else:
