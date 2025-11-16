@@ -1,0 +1,32 @@
+
+services:
+  brython:
+    image: nginx:alpine
+    container_name: brython_site
+    volumes:
+      - ./brython:/usr/share/nginx/html:ro
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.brython.rule=Host(`brython.monsite.fr`)"
+      - "traefik.http.routers.brython.entrypoints=websecure"
+      - "traefik.http.routers.brython.tls.certresolver=myresolver"
+
+  special_page:
+    image: nginx:alpine
+    container_name: special_page
+    volumes:
+      - ./special:/usr/share/nginx/html:ro
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.special.rule=Host(`special.monsite.fr`)"
+      - "traefik.http.routers.special.entrypoints=websecure"
+      - "traefik.http.routers.special.tls.certresolver=myresolver"
+
+networks:
+  web:
+    external: true
+

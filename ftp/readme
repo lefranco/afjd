@@ -1,3 +1,7 @@
 Command to do just once :
 
 docker network create web
+
+Command to check :
+docker network inspect web
+

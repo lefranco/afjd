@@ -1,0 +1,108 @@
+services:
+
+  # -------------------- Services Python --------------------
+  users_service:
+    build: ./users_service
+    restart: unless-stopped
+    command: sh -c "python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.users.rule=Host(`users.diplomania2.fr`)"
+      - "traefik.http.routers.users.entrypoints=websecure"
+      - "traefik.http.routers.users.tls=true"
+      - "traefik.http.routers.users.tls.certresolver=myle"
+      - "traefik.http.services.users_service.loadbalancer.server.port=5001"
+    volumes:
+      - "./users_service/db:/app/db"
+      - "./users_service/logdir:/app/logdir"
+    networks:
+      - web
+
+  emails_service:
+    build: ./emails_service
+    restart: unless-stopped
+    command: sh -c "python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.emails.rule=Host(`emails.diplomania2.fr`)"
+      - "traefik.http.routers.emails.entrypoints=websecure"
+      - "traefik.http.routers.emails.tls=true"
+      - "traefik.http.routers.emails.tls.certresolver=myle"
+      - "traefik.http.services.emails_service.loadbalancer.server.port=5002"
+    volumes:
+      - "./emails_service/logdir:/app/logdir"
+    networks:
+      - web
+
+  players_service:
+    build: ./players_service
+    restart: unless-stopped
+    command: sh -c "python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.players.rule=Host(`players.diplomania2.fr`)"
+      - "traefik.http.routers.players.entrypoints=websecure"
+      - "traefik.http.routers.players.tls=true"
+      - "traefik.http.routers.players.tls.certresolver=myle"
+      - "traefik.http.services.players_service.loadbalancer.server.port=5003"
+    volumes:
+      - "./players_service/db:/app/db"
+      - "./players_service/logdir:/app/logdir"
+    networks:
+      - web
+
+  games_service:
+    build: ./games_service
+    restart: unless-stopped
+    command: sh -c "python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.games.rule=Host(`games.diplomania2.fr`)"
+      - "traefik.http.routers.games.entrypoints=websecure"
+      - "traefik.http.routers.games.tls=true"
+      - "traefik.http.routers.games.tls.certresolver=myle"
+      - "traefik.http.services.games_service.loadbalancer.server.port=5004"
+    volumes:
+      - "./games_service/db:/app/db"
+      - "./games_service/logdir:/app/logdir"
+    networks:
+      - web
+
+  solver_service:
+    build: ./solver_service
+    restart: unless-stopped
+    command: sh -c "python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.solver.rule=Host(`solver.diplomania2.fr`)"
+      - "traefik.http.routers.solver.entrypoints=websecure"
+      - "traefik.http.routers.solver.tls=true"
+      - "traefik.http.routers.solver.tls.certresolver=myle"
+      - "traefik.http.services.solver_service.loadbalancer.server.port=5005"
+    volumes:
+      - "./solver_service/logdir:/app/logdir"
+    networks:
+      - web
+
+  scheduler_service:
+    build: ./scheduler_service
+    restart: unless-stopped
+    command: sh -c "sleep 10 && python3 ./server.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.scheduler.rule=Host(`scheduler.diplomania2.fr`)"
+      - "traefik.http.routers.scheduler.entrypoints=websecure"
+      - "traefik.http.routers.scheduler.tls=true"
+      - "traefik.http.routers.scheduler.tls.certresolver=myle"
+      - "traefik.http.services.scheduler_service.loadbalancer.server.port=5006"
+    volumes:
+      - "./scheduler_service/db:/app/db"
+      - "./scheduler_service/logdir:/app/logdir"
+    networks:
+      - web
+
+
+networks:
+  web:
+    external: true
+
