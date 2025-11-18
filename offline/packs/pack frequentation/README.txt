@@ -1,1 +1,0 @@
-Tout mettre dans le répertoire frequentation à la racine du site
