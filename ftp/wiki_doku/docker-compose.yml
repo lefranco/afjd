@@ -19,6 +19,22 @@ services:
     networks:
       - proxy
 
+  dokuwiki2:
+    restart: unless-stopped
+    image: dokuwiki/dokuwiki:stable
+    container_name: dokuwiki2
+    volumes:
+      - ./dokuwiki-data2:/storage
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dokuwiki2.rule=Host(`dokuwiki2.diplomania2.fr`)"
+      - "traefik.http.routers.dokuwiki2.entrypoints=websecure"
+      - "traefik.http.routers.dokuwiki2.tls=true"
+      - "traefik.http.routers.dokuwiki2.tls.certresolver=myle"
+      - "traefik.http.services.dokuwiki2.loadbalancer.server.port=8080"
+    networks:
+      - proxy
+
 networks:
   proxy:
     external: true
