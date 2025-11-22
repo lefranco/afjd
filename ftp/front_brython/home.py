@@ -405,7 +405,12 @@ def show_news():
 
     # ----
 
-    news_events = html.OBJECT(data=f"{config.SITE_ADDRESS}/events/", width="100%", height="450", title="Evénements", alt="Evénements")
+    # load events directly
+    host = config.SERVER_CONFIG['EVENTS']['HOST']
+    port = config.SERVER_CONFIG['EVENTS']['PORT']
+    url = f"{host}:{port}/"
+
+    news_events = html.OBJECT(data=url, width="100%", height="450", title="Evénements", alt="Evénements")
     div_a4 <= news_events
 
     # ----

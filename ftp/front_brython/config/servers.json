@@ -26,5 +26,9 @@
     "FREQUENTATION": {
         "HOST": "https://frequentation.diplomania2.fr",
         "PORT": 443
+    },
+    "EVENTS": {
+        "HOST": "https://events.diplomania2.fr",
+        "PORT": 443
     }
 }
