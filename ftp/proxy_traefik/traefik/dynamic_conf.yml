@@ -20,7 +20,7 @@ http:
     auth:
       basicAuth:
         users:
-          - "admin:$$apr1$$H3J/gN7n$$B1CJQ9xuWLCUtjrLNg1i11"
+          - "admin:$apr1$wVsXcDwl$kjcwtJq67m0PmRY9e.qw4/"
 
     # Middleware for securing headers
     secureHeaders:
