@@ -1,10 +1,11 @@
-# static configuration
+# traefik : static configuration
 
 log:
   level: INFO
 
 api:
   dashboard: true
+  insecure: false
 
 entryPoints:
   web:

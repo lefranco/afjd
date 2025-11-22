@@ -1,4 +1,4 @@
-# dynamic configuration
+# traefik : dynamic configuration
 
 http:
   middlewares:
