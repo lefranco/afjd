@@ -502,11 +502,14 @@ def frequentation_evolution():
     """ frequentation_evolution """
 
     # load frequentation directly
+    host = config.SERVER_CONFIG['FREQUENTATION']['HOST']
+    port = config.SERVER_CONFIG['FREQUENTATION']['PORT']
+    url = f"{host}:{port}/"
 
     # use button
     button = html.BUTTON("Lancement du calcul de fréquentation", id='frequentation_link', Class='btn-inside')
     MY_SUB_PANEL <= button
-    button.bind("click", lambda e: window.open(f"{config.SITE_ADDRESS}/frequentation"))
+    button.bind("click", lambda e: window.open(url))
     document['frequentation_link'].click()
 
 

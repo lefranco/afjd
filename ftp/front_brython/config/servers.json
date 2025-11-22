@@ -22,5 +22,9 @@
     "SCHEDULER": {
         "HOST": "https://scheduler.diplomania2.fr",
         "PORT": 443
+    },
+    "FREQUENTATION": {
+        "HOST": "https://frequentation.diplomania2.fr",
+        "PORT": 443
     }
 }
