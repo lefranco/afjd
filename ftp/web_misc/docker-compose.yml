@@ -11,7 +11,6 @@ services:
       - "traefik.http.routers.frequentation.entrypoints=websecure"
       - "traefik.http.routers.frequentation.tls=true"
       - "traefik.http.routers.frequentation.tls.certresolver=myle"
-      - "traefik.http.routers.frequentation.service=frequentation"
       - "traefik.http.services.frequentation.loadbalancer.server.port=80"
     networks:
       - proxy

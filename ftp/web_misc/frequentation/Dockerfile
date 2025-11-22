@@ -2,7 +2,7 @@
 FROM nginx:alpine
 
 # Copie le contenu de ton site dans le dossier servi par Nginx
-COPY . /usr/share/nginx/html
+COPY ./html/ /usr/share/nginx/html/
 
 # Expose le port 80 dans le container
 EXPOSE 80
