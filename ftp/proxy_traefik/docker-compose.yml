@@ -31,8 +31,8 @@ services:
       - "./traefik/acme.json:/etc/traefik/acme.json"
 
     networks:
-      - web
+      - proxy
 
 networks:
-  web:
+  proxy:
     external: true

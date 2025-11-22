@@ -19,7 +19,7 @@ services:
       - "./users_service/db:/app/db"
       - "./users_service/logdir:/app/logdir"
     networks:
-      - web
+      - proxy
 
   emails_service:
     build: ./emails_service
@@ -36,7 +36,7 @@ services:
     volumes:
       - "./emails_service/logdir:/app/logdir"
     networks:
-      - web
+      - proxy
 
   players_service:
     build: ./players_service
@@ -54,7 +54,7 @@ services:
       - "./players_service/db:/app/db"
       - "./players_service/logdir:/app/logdir"
     networks:
-      - web
+      - proxy
 
   games_service:
     build: ./games_service
@@ -72,7 +72,7 @@ services:
       - "./games_service/db:/app/db"
       - "./games_service/logdir:/app/logdir"
     networks:
-      - web
+      - proxy
 
   solver_service:
     build: ./solver_service
@@ -89,7 +89,7 @@ services:
     volumes:
       - "./solver_service/logdir:/app/logdir"
     networks:
-      - web
+      - proxy
 
   scheduler_service:
     build: ./scheduler_service
@@ -107,9 +107,9 @@ services:
       - "./scheduler_service/db:/app/db"
       - "./scheduler_service/logdir:/app/logdir"
     networks:
-      - web
+      - proxy
 
 
 networks:
-  web:
+  proxy:
     external: true

@@ -13,8 +13,8 @@ services:
       - "traefik.http.routers.frequentation.tls.certresolver=myle"
       - "traefik.http.services.frequentation.loadbalancer.server.port=80"
     networks:
-      - web
+      - proxy
 
 networks:
-  web:
+  proxy:
     external: true

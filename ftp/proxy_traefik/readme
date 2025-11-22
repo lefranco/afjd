@@ -1,11 +1,25 @@
-mot de passe dashboard
+# mot de passe dashboard
 
 apt install apache2-utils
 htpasswd -nb admin ton_mot_de_passe
 -> hash
 
-doubler les $
-
 mettre ici :
-"traefik.http.middlewares.auth.basicauth.users=<hash>
+<fichier dynamic conf >
+  middlewares:
+    # Middleware for dashboard
+    auth:
+      basicAuth:
+        users:
+          - "xxx"
+
+# creation fichier acme
+cd <repertoire trefik>
+rm -f acme.json
+touch acme.json
+chmod 600 acme.json
+
+
+# creation reseau
+docker network create proxy
 
