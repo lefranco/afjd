@@ -3,7 +3,7 @@
 http:
 
   routers:
-    # Dashboard Traefik sécurisé sur HTTPS
+    # Dashboard Traefik secure on HTTPS
     dashboard:
       entryPoints:
         - websecure
@@ -11,32 +11,32 @@ http:
       service: api@internal
       tls: {}
       middlewares:
-        - auth
+        - authDashboard
         - secureHeaders
 
-    # Router spécial pour le challenge ACME HTTP-01
+    # Special router for challenge ACME HTTP-01 (TO DELETE ???)
     acme-http:
       entryPoints:
         - web
       rule: "PathPrefix(`/.well-known/acme-challenge/`)"
       service: noop@internal
-      priority: 100  # prioritaire pour capter ACME avant tes services
+      priority: 100  # priority
 
   middlewares:
-    # Middleware pour dahboard
-    auth
+    # Middleware for dahboard
+    authDashboard
       basicAuth:
         users:
           - "admin:$$apr1$$H3J/gN7n$$B1CJQ9xuWLCUtjrLNg1i11"
 
-    # Middleware pour sécuriser les headers
+    # Middleware for securing headers
     secureHeaders:
       headers:
         frameDeny: true
         contentTypeNosniff: true
         browserXssFilter: true
 
-    # Middleware pour rediriger HTTP vers HTTPS (appliqué aux services, pas ACME)
+    # Middleware pour redirect HTTP to HTTPS 
     redirectSecure:
       redirectScheme:
         scheme: https

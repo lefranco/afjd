@@ -14,7 +14,7 @@ entryPoints:
     address: ":443"
 
 providers:
-  docker: {}
+  docker: {}  # making it exposedByDefault breaks
   file:
     filename: "/etc/traefik/dynamic_conf.yml"
     watch: true
@@ -26,4 +26,8 @@ certificatesResolvers:
       storage: /etc/traefik/acme.json
       httpChallenge:
         entryPoint: web
+
+experimental:
+  fastProxy: {}
+
 
