@@ -1,4 +1,5 @@
 # docker compose for traefik
+---
 
 services:
 
@@ -35,4 +36,3 @@ services:
 networks:
   web:
     external: true
-

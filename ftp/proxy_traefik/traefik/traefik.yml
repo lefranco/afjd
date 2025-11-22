@@ -1,4 +1,6 @@
 # traefik : static configuration
+---
+
 
 log:
   level: INFO
@@ -30,5 +32,3 @@ certificatesResolvers:
 
 experimental:
   fastProxy: {}
-
-
