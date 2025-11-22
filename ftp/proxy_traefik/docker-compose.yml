@@ -29,10 +29,6 @@ services:
       # acme certificates
       - "./traefik/acme.json:/etc/traefik/acme.json"
 
-    labels:
-      - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$H3J/gN7n$$B1CJQ9xuWLCUtjrLNg1i11"
-      - "traefik.http.routers.traefik.middlewares=auth"
-
     networks:
       - web
 

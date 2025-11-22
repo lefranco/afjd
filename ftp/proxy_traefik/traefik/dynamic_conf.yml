@@ -11,6 +11,7 @@ http:
       service: api@internal
       tls: {}
       middlewares:
+        - auth
         - secureHeaders
 
     # Router spécial pour le challenge ACME HTTP-01
@@ -22,6 +23,12 @@ http:
       priority: 100  # prioritaire pour capter ACME avant tes services
 
   middlewares:
+    # Middleware pour dahboard
+    auth
+      basicAuth:
+        users:
+          - "admin:$$apr1$$H3J/gN7n$$B1CJQ9xuWLCUtjrLNg1i11"
+
     # Middleware pour sécuriser les headers
     secureHeaders:
       headers:
