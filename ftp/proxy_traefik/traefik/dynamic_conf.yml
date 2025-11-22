@@ -16,7 +16,7 @@ http:
         - secureHeaders
 
   middlewares:
-    # Middleware for dahboard
+    # Middleware for dashboard
     auth:
       basicAuth:
         users:
