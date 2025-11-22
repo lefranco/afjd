@@ -2,20 +2,6 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
-
-#################
-# TEMPORARY
-from browser import window, alert
-
-# Récupérer le userAgent
-user_agent = window.navigator.userAgent
-
-if "Gecko" in user_agent and "like Gecko" not in user_agent:
-    alert("Navigateur Firefox (Gecko) détecté... hélas... le site ne fonctionne pas avec en général (pour le moment !)")
-# TEMPORARY
-#################
-
-
 from json import loads, dumps
 from time import time
 
