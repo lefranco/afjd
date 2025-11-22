@@ -1,19 +1,6 @@
 # traefik : dynamic configuration
 
 http:
-  middlewares:
-    # Middleware pour sécuriser les headers
-    secureHeaders:
-      headers:
-        frameDeny: true
-        contentTypeNosniff: true
-        browserXssFilter: true
-
-    # Middleware pour rediriger HTTP vers HTTPS (appliqué aux services, pas ACME)
-    redirectSecure:
-      redirectScheme:
-        scheme: https
-        permanent: true
 
   routers:
     # Dashboard Traefik sécurisé sur HTTPS
@@ -33,3 +20,19 @@ http:
       rule: "PathPrefix(`/.well-known/acme-challenge/`)"
       service: noop@internal
       priority: 100  # prioritaire pour capter ACME avant tes services
+
+  middlewares:
+    # Middleware pour sécuriser les headers
+    secureHeaders:
+      headers:
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+
+    # Middleware pour rediriger HTTP vers HTTPS (appliqué aux services, pas ACME)
+    redirectSecure:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+
