@@ -1,0 +1,24 @@
+# docker compose for doku wikis
+---
+
+services:
+
+  dokuwiki:
+    restart: unless-stopped
+    image: dokuwiki/dokuwiki:stable
+    container_name: dokuwiki
+    volumes:
+      - ./dokuwiki-data:/storage
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dokuwiki.rule=Host(`dokuwiki.diplomania2.fr`)"
+      - "traefik.http.routers.dokuwiki.entrypoints=websecure"
+      - "traefik.http.routers.dokuwiki.tls=true"
+      - "traefik.http.routers.dokuwiki.tls.certresolver=myle"
+      - "traefik.http.services.dokuwiki.loadbalancer.server.port=8080"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

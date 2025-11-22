@@ -637,7 +637,12 @@ def show_news():
 
     # ----
 
-    news_wiki = html.IFRAME(src=f"{config.SITE_ADDRESS}/dokuwiki/doku.php?id=start&do=export_xhtml", width="100%", height="350", title="Wiki", alt="Wiki", allow="fullscreen")
+    # load wiki directly
+    host = config.SERVER_CONFIG['DOKUWIKI']['HOST']
+    port = config.SERVER_CONFIG['DOKUWIKI']['PORT']
+    url = f"{host}:{port}/"
+
+    news_wiki = html.IFRAME(src=f"{url}/doku.php?id=start&do=export_xhtml", width="100%", height="350", title="Wiki", alt="Wiki", allow="fullscreen")
     div_b2 <= news_wiki
 
     # ----

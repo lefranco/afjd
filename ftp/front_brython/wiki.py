@@ -19,9 +19,12 @@ def render(panel_middle):
     panel_middle <= MY_SUB_PANEL
 
     # load wiki directly
+    host = config.SERVER_CONFIG['DOKUWIKI']['HOST']
+    port = config.SERVER_CONFIG['DOKUWIKI']['PORT']
+    url = f"{host}:{port}/"
 
     # use button
     button = html.BUTTON("Lancement du wiki (DokuWiki)", id='wiki_link', Class='btn-inside')
     MY_SUB_PANEL <= button
-    button.bind("click", lambda e: window.open(f"{config.SITE_ADDRESS}/dokuwiki/"))
+    button.bind("click", lambda e: window.open(url))
     document['wiki_link'].click()
