@@ -12,6 +12,7 @@ services:
       - "traefik.http.routers.users.entrypoints=websecure"
       - "traefik.http.routers.users.tls=true"
       - "traefik.http.routers.users.tls.certresolver=myle"
+      - "traefik.http.routers.users.service=users_service"
       - "traefik.http.services.users_service.loadbalancer.server.port=5001"
     volumes:
       - "./users_service/db:/app/db"
@@ -29,6 +30,7 @@ services:
       - "traefik.http.routers.emails.entrypoints=websecure"
       - "traefik.http.routers.emails.tls=true"
       - "traefik.http.routers.emails.tls.certresolver=myle"
+      - "traefik.http.routers.emails.service=emails_service"
       - "traefik.http.services.emails_service.loadbalancer.server.port=5002"
     volumes:
       - "./emails_service/logdir:/app/logdir"
@@ -45,6 +47,7 @@ services:
       - "traefik.http.routers.players.entrypoints=websecure"
       - "traefik.http.routers.players.tls=true"
       - "traefik.http.routers.players.tls.certresolver=myle"
+      - "traefik.http.routers.players.service=players_service"
       - "traefik.http.services.players_service.loadbalancer.server.port=5003"
     volumes:
       - "./players_service/db:/app/db"
@@ -62,6 +65,7 @@ services:
       - "traefik.http.routers.games.entrypoints=websecure"
       - "traefik.http.routers.games.tls=true"
       - "traefik.http.routers.games.tls.certresolver=myle"
+      - "traefik.http.routers.games.service=games_service"
       - "traefik.http.services.games_service.loadbalancer.server.port=5004"
     volumes:
       - "./games_service/db:/app/db"
@@ -79,6 +83,7 @@ services:
       - "traefik.http.routers.solver.entrypoints=websecure"
       - "traefik.http.routers.solver.tls=true"
       - "traefik.http.routers.solver.tls.certresolver=myle"
+      - "traefik.http.routers.solver.service=solver_service"
       - "traefik.http.services.solver_service.loadbalancer.server.port=5005"
     volumes:
       - "./solver_service/logdir:/app/logdir"
@@ -95,6 +100,7 @@ services:
       - "traefik.http.routers.scheduler.entrypoints=websecure"
       - "traefik.http.routers.scheduler.tls=true"
       - "traefik.http.routers.scheduler.tls.certresolver=myle"
+      - "traefik.http.routers.scheduler.service=scheduler_service"
       - "traefik.http.services.scheduler_service.loadbalancer.server.port=5006"
     volumes:
       - "./scheduler_service/db:/app/db"
