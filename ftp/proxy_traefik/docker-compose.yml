@@ -9,11 +9,7 @@ services:
     restart: unless-stopped
 
     command:
-      - "--api.dashboard=true"
-      - "--providers.docker=true"
-      - "--providers.file.filename=/etc/traefik/dynamic_conf.yml"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
+      - --configFile=/etc/traefik/traefik.yml
 
     ports:
       - "80:80"
@@ -30,16 +26,10 @@ services:
       # dynamic configuration
       - "./traefik/dynamic_conf.yml:/etc/traefik/dynamic_conf.yml:ro"
 
-
       # acme certificates
       - "./traefik/acme.json:/etc/traefik/acme.json"
 
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.diplomania2.fr`)"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.tls.certresolver=myle"
-      - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$H3J/gN7n$$B1CJQ9xuWLCUtjrLNg1i11"
       - "traefik.http.routers.traefik.middlewares=auth"
 
