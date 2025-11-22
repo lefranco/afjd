@@ -1,6 +1,7 @@
+# docker compose for api flask
+
 services:
 
-  # -------------------- Services Python --------------------
   users_service:
     build: ./users_service
     restart: unless-stopped

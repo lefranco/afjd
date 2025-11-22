@@ -1,4 +1,4 @@
-# traefik : docker compose
+# docker compose for traefik
 
 services:
 
