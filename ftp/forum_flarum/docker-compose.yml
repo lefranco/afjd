@@ -1,0 +1,62 @@
+# docker compose for forum flarum
+---
+
+services:
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: flarum_mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: superrootpassword
+      MYSQL_DATABASE: diplomania
+      MYSQL_USER: flarum
+      MYSQL_PASSWORD: flarum_password
+    volumes:
+      - ./forum/mariadb:/var/lib/mysql
+
+  flarum:
+    build: ./forum
+    container_name: flarum
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    environment:
+
+      # --- URL ---
+      FORUM_URL: https://forum.diplomania2.fr
+
+      # --- MariaDB Database ---
+      DB_HOST: mariadb
+      DB_NAME: diplomania
+      DB_USER: flarum
+      DB_PASSWORD: flarum_password
+      DB_PREFIX: flarum_
+
+      MAIL_DRIVER: smtp
+      MAIL_HOST: pro3.mail.ovh.net
+      MAIL_PORT: 587
+      MAIL_ENCRYPTION: tls
+      MAIL_USERNAME: afjdiplo_server_noreply@diplomania2.fr
+      MAIL_PASSWORD: PythonShallRuleAll24!
+      MAIL_FROM: afjdiplo_server_noreply@diplomania2.fr
+      MAIL_FROM_NAME: "Notifications du forum de l'A.F.J.D. (Diplomania)"
+
+      # --- Misc ---
+      DEBUG: true
+
+    volumes:
+      - ./forum/flarum:/flarum
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flarum.rule=Host(`forum.diplomania2.fr`)"
+      - "traefik.http.routers.flarum.entrypoints=websecure"
+      - "traefik.http.routers.flarum.tls=true"
+      - "traefik.http.routers.flarum.tls.certresolver=myle"
+      - "traefik.http.services.flarum.loadbalancer.server.port=8888"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

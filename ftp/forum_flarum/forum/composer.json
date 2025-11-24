@@ -1,0 +1,18 @@
+{
+  "require": {
+    "flarum/core": "^1.8",
+    "flarum/markdown": "^1.8",
+    "flarum/likes": "^1.8",
+    "flarum/emoji": "^1.8",
+    "flarum/lock": "^1.8",
+    "flarum/sticky": "^1.8",
+    "flarum/tags": "^1.8",
+    "fof/upload": "^1.0",
+    "fof/linguist": "^1.0",
+    "fof/sitemap": "^1.0",
+    "fof/reactions": "^1.0"
+  },
+  "minimum-stability": "beta",
+  "prefer-stable": true
+}
+
