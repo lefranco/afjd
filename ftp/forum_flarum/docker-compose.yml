@@ -7,11 +7,8 @@ services:
     image: mariadb:10.11
     container_name: flarum_mariadb
     restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: superrootpassword
-      MYSQL_DATABASE: diplomania
-      MYSQL_USER: flarum
-      MYSQL_PASSWORD: flarum_password
+    env_file:
+      - ./flarum.env
     volumes:
       - ./forum/mariadb:/var/lib/mysql
 
@@ -21,32 +18,11 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
-    environment:
-
-      # --- URL ---
-      FORUM_URL: https://forum.diplomania2.fr
-
-      # --- MariaDB Database ---
-      DB_HOST: mariadb
-      DB_NAME: diplomania
-      DB_USER: flarum
-      DB_PASSWORD: flarum_password
-      DB_PREFIX: flarum_
-
-      MAIL_DRIVER: smtp
-      MAIL_HOST: pro3.mail.ovh.net
-      MAIL_PORT: 587
-      MAIL_ENCRYPTION: tls
-      MAIL_USERNAME: afjdiplo_server_noreply@diplomania2.fr
-      MAIL_PASSWORD: PythonShallRuleAll24!
-      MAIL_FROM: afjdiplo_server_noreply@diplomania2.fr
-      MAIL_FROM_NAME: "Notifications du forum de l'A.F.J.D. (Diplomania)"
-
-      # --- Misc ---
-      DEBUG: true
-
     volumes:
-      - ./forum/flarum:/flarum
+      - ./forum/flarum/assets:/flarum/app/public/assets
+      - ./forum/flarum/extensions:/flarum/app/extensions
+      - ./forum/flarum/storage/logs:/flarum/app/storage/logs
+      - ./forum/flarum/nginx:/etc/nginx/flarum
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.flarum.rule=Host(`forum.diplomania2.fr`)"
