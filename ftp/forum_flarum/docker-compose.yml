@@ -11,19 +11,30 @@ services:
       - ./flarum.env
     volumes:
       - ./forum/mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - flarum_net
 
   flarum:
     build: ./forum
     container_name: flarum
     restart: unless-stopped
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
+    env_file:
+      - ./flarum.env
     volumes:
-      - ./forum/flarum/assets:/flarum/app/public/assets
-      - ./forum/flarum/extensions:/flarum/app/extensions
-      - ./forum/flarum/storage/logs:/flarum/app/storage/logs
-      - ./forum/flarum/nginx:/etc/nginx/flarum
+      - ./forum/flarum:/flarum/app
     labels:
+
+      - "traefik.http.middlewares.flarum-timeout.timeout=60s"
+
       - "traefik.enable=true"
       - "traefik.http.routers.flarum.rule=Host(`forum.diplomania2.fr`)"
       - "traefik.http.routers.flarum.entrypoints=websecure"
@@ -32,7 +43,10 @@ services:
       - "traefik.http.services.flarum.loadbalancer.server.port=8888"
     networks:
       - proxy
+      - flarum_net
 
 networks:
   proxy:
     external: true
+  flarum_net:
+    driver: bridge
