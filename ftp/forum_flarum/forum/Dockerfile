@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
 # Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-WORKDIR /flarum
+WORKDIR /flarum/app
 
 # Copier composer.json corrigé
 COPY composer.json composer.json

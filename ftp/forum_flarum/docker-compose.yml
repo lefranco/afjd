@@ -8,11 +8,11 @@ services:
     container_name: flarum_mariadb
     restart: unless-stopped
     env_file:
-      - ./flarum.env
+      - ./mariadb.env
     volumes:
       - ./forum/mariadb:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -40,7 +40,7 @@ services:
       - "traefik.http.routers.flarum.entrypoints=websecure"
       - "traefik.http.routers.flarum.tls=true"
       - "traefik.http.routers.flarum.tls.certresolver=myle"
-      - "traefik.http.services.flarum.loadbalancer.server.port=8888"
+      - "traefik.http.services.flarum.loadbalancer.server.port=9000"
     networks:
       - proxy
       - flarum_net
