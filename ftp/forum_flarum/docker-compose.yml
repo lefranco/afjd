@@ -15,7 +15,7 @@ services:
       - flarum_net
 
   flarum:
-    build: ./forum
+    image: mondedie/flarum:latest
     container_name: flarum
     restart: unless-stopped
     depends_on:
