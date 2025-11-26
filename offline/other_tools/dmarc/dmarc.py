@@ -247,7 +247,7 @@ def load_mails() -> None:
                 os.remove(zip_path)
                 extracted_files = [os.path.join(WORK_DIR, f) for f in files_in_zip]
                 for xml_file in extracted_files:
-                    assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
+                    #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, content_map = parse_xml(xml_file)
                     os.remove(xml_file)
                     ITEMS_DICT[description] = (message_uid, attention, content_map)
@@ -264,7 +264,7 @@ def load_mails() -> None:
                     shutil.copyfileobj(f_in, f_out)
                 os.remove(gz_path)
                 for xml_file in [extracted_file]:
-                    assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
+                    #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, content_map = parse_xml(xml_file)
                     os.remove(xml_file)
                     ITEMS_DICT[description] = (message_uid, attention, content_map)
