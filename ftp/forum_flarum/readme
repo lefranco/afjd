@@ -1,0 +1,3 @@
+# add flarum extension
+
+docker exec -ti flarum extension require some/extension
