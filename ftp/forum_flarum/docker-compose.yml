@@ -43,7 +43,7 @@ services:
       - flarum_app
     volumes:
       # VOLUME PARTAGÉ: Permet à Nginx de lire le code Flarum (doit correspondre à flarum_app)
-      - ./flarum:/var/www/html
+      - ./flarum/flarum:/var/www/html
       - ./nginx/flarum.conf:/etc/nginx/conf.d/default.conf:ro
     labels:
       - "traefik.enable=true"

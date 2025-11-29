@@ -13,10 +13,23 @@ docker compose up -d
 
 docker exec flarum_app composer create-project flarum/flarum --stability=stable
 
-# sudo chown -R 82:82 ./flarum
 
-(TROUVER POUR RENDRE AUTOMATIQUE)
-docker exec flarum_app php flarum install 
+docker exec -it flarum_app sh
+
+chown -R www-data:www-data /var/www/html/flarum
+
+# vérifier les droits
+find /var/www/html/flarum -type d -exec chmod 755 {} \;
+find /var/www/html/flarum -type f -exec chmod 644 {} \;
+
+# dossiers qui doivent être 777
+chmod -R 777 /var/www/html/flarum/storage
+chmod -R 777 /var/www/html/flarum/public/assets
+
+docker compose restart flarum_app flarum_nginx
+
+
+aller sur le site du forum
 
 ENTRER:
 BASE URL : https://forum.diplomania2.fr
