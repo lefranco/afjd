@@ -1,7 +1,50 @@
-# add flarum extension
+(if already attempted)
 
-docker exec -ti flarum extension require some/extension
+docker compose down
 
-sudo chown -R 82:82 ./forum/flarum
-docker restart flarum
-docker exec flarum php flarum cache:clear
+sudo rm -rf ./mariadb/*
+sudo rm -fr  flarum/*
+
+(start)
+
+docker compose up -d
+
+(installation after first start)
+
+docker exec flarum_app composer create-project flarum/flarum --stability=stable
+
+# sudo chown -R 82:82 ./flarum
+
+(TROUVER POUR RENDRE AUTOMATIQUE)
+docker exec flarum_app php flarum install 
+
+ENTRER:
+BASE URL : https://forum.diplomania2.fr
+DATABASE HOST : mariadb
+DB_NAME : flarum_db
+DB_USER : flarum_user
+DB_PASS : flarum_password
+PREFIX : flarum_
+ADMIN_USER : admin
+ADMIN_PASS : superrootpassword
+ADMIN_EMAIL : postmaster@diplomania2.fr
+FORUM_TITLE : "Forum du site Diplomania"
+
+docker exec flarum_app php flarum cache:clear
+
+(check install)
+
+docker exec -it mariadb mysql -u flarum_user -p flarum_db
+# puis
+SHOW TABLES;
+=> settings, users, discussions
+
+(install extension)
+
+docker exec -it flarum bash
+cd /flarum
+composer require fof/<extension>
+php flarum admin:enable fof-<extension>
+php flarum cache:clear
+docker restart flarum  (if change does not seem to work)
+
