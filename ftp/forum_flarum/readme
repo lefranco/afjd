@@ -1,3 +1,7 @@
 # add flarum extension
 
 docker exec -ti flarum extension require some/extension
+
+sudo chown -R 82:82 ./forum/flarum
+docker restart flarum
+docker exec flarum php flarum cache:clear
