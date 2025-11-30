@@ -3,7 +3,7 @@
 docker compose down
 
 sudo rm -rf ./mariadb/*
-sudo rm -fr  flarum/*
+sudo rm -fr ./flarum/*
 
 (start)
 
@@ -11,23 +11,17 @@ docker compose up -d
 
 (installation after first start)
 
-docker exec flarum_app composer create-project flarum/flarum --stability=stable
+docker exec -it  flarum_app sh
+docker>rm empty
+docker>exit
 
-docker exec -it flarum_app sh
+docker exec flarum_app composer create-project flarum/flarum . --stability=stable
 
+docker exec -it  flarum_app sh
 docker>chown -R www-data:www-data /var/www/html/flarum
-
-docker>find /var/www/html/flarum -type d -exec chmod 755 {} \;
-docker>find /var/www/html/flarum -type f -exec chmod 644 {} \;
-
-docker>chmod -R 777 /var/www/html/flarum/storage
-docker>chmod -R 777 /var/www/html/flarum/public/assets
-
-
-docker exec -u root flarum_app chown -R www-data:www-data /var/www/html/flarum
+docker>exit
 
 docker compose restart flarum_app flarum_nginx
-
 
 aller sur le site du forum
 

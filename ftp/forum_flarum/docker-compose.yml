@@ -30,8 +30,7 @@ services:
     env_file:
       - ./flarum.env
     volumes:
-      # Local: ./flarum <==> Conteneur: /var/www/html (Chemin de travail PHP standard)
-       - ./flarum/flarum:/var/www/html
+       - ./flarum:/var/www/html
     networks:
       - flarum_net
 
@@ -42,8 +41,7 @@ services:
     depends_on:
       - flarum_app
     volumes:
-      # VOLUME PARTAGÉ: Permet à Nginx de lire le code Flarum (doit correspondre à flarum_app)
-      - ./flarum/flarum:/var/www/html
+      - ./flarum:/var/www/html
       - ./nginx/flarum.conf:/etc/nginx/conf.d/default.conf:ro
     labels:
       - "traefik.enable=true"
