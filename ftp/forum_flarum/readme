@@ -18,7 +18,7 @@ docker>exit
 docker exec flarum_app composer create-project flarum/flarum . --stability=stable
 
 docker exec -it  flarum_app sh
-docker>chown -R www-data:www-data /var/www/html/flarum
+docker>chown -R www-data:www-data /var/www/html
 docker>exit
 
 docker compose restart flarum_app flarum_nginx
