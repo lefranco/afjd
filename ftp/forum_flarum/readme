@@ -13,18 +13,18 @@ docker compose up -d
 
 docker exec flarum_app composer create-project flarum/flarum --stability=stable
 
-
 docker exec -it flarum_app sh
 
-chown -R www-data:www-data /var/www/html/flarum
+docker>chown -R www-data:www-data /var/www/html/flarum
 
-# vérifier les droits
-find /var/www/html/flarum -type d -exec chmod 755 {} \;
-find /var/www/html/flarum -type f -exec chmod 644 {} \;
+docker>find /var/www/html/flarum -type d -exec chmod 755 {} \;
+docker>find /var/www/html/flarum -type f -exec chmod 644 {} \;
 
-# dossiers qui doivent être 777
-chmod -R 777 /var/www/html/flarum/storage
-chmod -R 777 /var/www/html/flarum/public/assets
+docker>chmod -R 777 /var/www/html/flarum/storage
+docker>chmod -R 777 /var/www/html/flarum/public/assets
+
+
+docker exec -u root flarum_app chown -R www-data:www-data /var/www/html/flarum
 
 docker compose restart flarum_app flarum_nginx
 
@@ -32,25 +32,17 @@ docker compose restart flarum_app flarum_nginx
 aller sur le site du forum
 
 ENTRER:
-BASE URL : https://forum.diplomania2.fr
+FORUM_TITLE : "Forum du site Diplomania"
 DATABASE HOST : mariadb
-DB_NAME : flarum_db
-DB_USER : flarum_user
-DB_PASS : flarum_password
+MYSQL_NAME : flarum_db
+MYSQL_USER : flarum_user
+MYSQL_PASS : flarum_password
 PREFIX : flarum_
 ADMIN_USER : admin
-ADMIN_PASS : superrootpassword
 ADMIN_EMAIL : postmaster@diplomania2.fr
-FORUM_TITLE : "Forum du site Diplomania"
+ADMIN_PASS : superrootpassword
+BASE URL : https://forum.diplomania2.fr
 
-docker exec flarum_app php flarum cache:clear
-
-(check install)
-
-docker exec -it mariadb mysql -u flarum_user -p flarum_db
-# puis
-SHOW TABLES;
-=> settings, users, discussions
 
 (install extension)
 
