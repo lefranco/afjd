@@ -3,15 +3,18 @@
 docker compose down
 
 sudo rm -rf ./mariadb/*
+sudo rm -rf ./mariadb/.*
 sudo rm -fr ./flarum/*
+sudo rm -fr ./flarum/.*
 
 (start)
 
 docker compose up -d
+docker compose exec flarum_nginx nginx -s reload
 
 (installation after first start)
 
-docker exec -it  flarum_app sh
+
 docker>rm empty
 docker>exit
 
