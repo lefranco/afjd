@@ -35,15 +35,5 @@ PREFIX : flarum_
 ADMIN_USER : admin
 ADMIN_EMAIL : postmaster@diplomania2.fr
 ADMIN_PASS : superrootpassword
-BASE URL : https://forum.diplomania2.fr
 
-
-(install extension)
-
-docker exec -it flarum bash
-cd /flarum
-composer require fof/<extension>
-php flarum admin:enable fof-<extension>
-php flarum cache:clear
-docker restart flarum  (if change does not seem to work)
 
