@@ -9,22 +9,20 @@ sudo rm -fr ./flarum/.*
 
 (start)
 
-docker compose up -d
-docker compose exec flarum_nginx nginx -s reload
+docker compose up -d 
+
 
 (installation after first start)
 
-
-docker>rm empty
-docker>exit
+(docker exec -it -u root flarum_app sh)
+(docker>rm empty)
+(docker>exit)
 
 docker exec flarum_app composer create-project flarum/flarum . --stability=stable
+docker exec flarum_app composer require flarum/extension-manager:"*"
 
-docker exec -it  flarum_app sh
-docker>chown -R www-data:www-data /var/www/html
-docker>exit
-
-docker compose restart flarum_app flarum_nginx
+(docker compose restart)
+(docker compose exec flarum_nginx nginx -s reload)
 
 aller sur le site du forum
 
@@ -38,5 +36,12 @@ PREFIX : flarum_
 ADMIN_USER : admin
 ADMIN_EMAIL : postmaster@diplomania2.fr
 ADMIN_PASS : superrootpassword
+
+
+
+
+
+
+
 
 
