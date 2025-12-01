@@ -45,6 +45,5 @@ COPY custom.ini /usr/local/etc/php/conf.d/custom.ini
 # Définir le répertoire de travail pour le code Flarum (partagé avec Nginx)
 WORKDIR /var/www/html
 
-# TODO ???
-# USER www-data
+USER www-data
 
