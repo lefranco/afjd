@@ -1,17 +1,18 @@
 {
   "url": "https://forum.diplomania2.fr",
-  "secret": "tartempion1234",
+  "secret": "unechainealeatoire",
   "database": "mongo",
   "mongo": {
     "host": "mongo",
     "port": 27017,
-    "dbname": "nodebb"
+    "username": "",
+    "password": "",
+    "database": "nodebb"
   },
   "redis": {
     "host": "redis",
-    "port": 6379,
-    "password": "",
-    "database": 0
-  }
+    "port": 6379
+  },
+  "port": 4567
 }
 
