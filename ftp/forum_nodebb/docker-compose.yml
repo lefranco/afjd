@@ -1,0 +1,53 @@
+# docker compose for forum discours
+---
+services:
+
+  mongo:
+    image: mongo:5
+    container_name: mongo
+    restart: unless-stopped
+    volumes:
+      - ./data/mongo:/data/db
+    networks:
+      - nodebb_internal
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - ./data/redis:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - nodebb_internal
+
+  nodebb:
+    image: ghcr.io/nodebb/nodebb:latest
+    container_name: nodebb
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./config.json:/usr/src/app/config.json
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nodebb.rule=Host(`forum.diplomania2.fr`)"
+      - "traefik.http.routers.nodebb.entrypoints=websecure"
+      - "traefik.http.routers.nodebb.tls=true"
+      - "traefik.http.routers.nodebb.tls.certresolver=myle"
+      - "traefik.http.services.nodebb.loadbalancer.server.port=4567"
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      proxy:
+        aliases:
+          - nodebb
+      nodebb_internal:
+
+networks:
+  proxy:
+    external: true
+  nodebb_internal:
+    driver: bridge
+
