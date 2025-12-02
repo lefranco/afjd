@@ -5,14 +5,13 @@
   "mongo": {
     "host": "mongo",
     "port": 27017,
-    "username": "",
-    "password": "",
+    "username": "nodebb",
+    "password": "nodebb",
     "database": "nodebb"
   },
   "redis": {
     "host": "redis",
     "port": 6379
-  },
-  "port": 4567
+  }
 }
 

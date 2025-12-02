@@ -1,5 +1,30 @@
-# sudo chown -R 1000:1000 ./discourse/shared ./discourse/postgres
+
+Modifier pour ajouter dans docker-compose.yml:
+services:
+  nodebb:
+>    ports:
+>      - "4567:4567"
+
+docker compose up
 
 # watch the logs before connecting...
-docker-compose logs -f discourse
-# wait for "puma starting"
+docker compose logs -f nodebb
+
+# wait for "web installer listening"
+
+# goto to:
+http://forum.diplomania2.fr:4567
+
+# install
+(leave web address as it is)
+
+docker compose down
+
+Modifier pour retirer docker-compose.yml
+services:
+  nodebb:
+>    ports:
+>      - "4567:4567"
+
+docker compose up
+

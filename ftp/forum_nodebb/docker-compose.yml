@@ -1,13 +1,17 @@
-# docker compose for forum discours
+# docker compose for forum node BB
 ---
+
 services:
 
   mongo:
     image: mongo:5
     container_name: mongo
     restart: unless-stopped
+    env_file:
+      - ./mongo.env
     volumes:
       - ./data/mongo:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d:ro
     networks:
       - nodebb_internal
 
@@ -28,7 +32,7 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
-      - ./config.json:/usr/src/app/config.json
+      - ./config.json:/opt/nodebb/config.json
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nodebb.rule=Host(`forum.diplomania2.fr`)"
