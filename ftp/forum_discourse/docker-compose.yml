@@ -1,0 +1,42 @@
+# docker compose for forum discours
+---
+services:
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    env_file:
+      - ./postgres.env
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  discourse:
+    build: ./discourse
+    image: discourse/base:2.8.0 
+    container_name: discourse
+    restart: unless-stopped
+    env_file:
+      - ./discourse.env
+    volumes:
+      - ./discourse_shared:/var/discourse/shared
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.discourse.rule=Host(`forum.diplomania2.fr`)"
+      - "traefik.http.routers.discourse.entrypoints=websecure"
+      - "traefik.http.routers.discourse.tls=true"
+      - "traefik.http.routers.discourse.tls.certresolver=myle"
+      - "traefik.http.services.discourse.loadbalancer.server.port=3000"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+
