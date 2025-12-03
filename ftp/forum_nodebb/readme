@@ -1,30 +1,27 @@
 
-Modifier pour ajouter dans docker-compose.yml:
-services:
-  nodebb:
->    ports:
->      - "4567:4567"
 
-docker compose up
+docker compose up -d
 
 # watch the logs before connecting...
 docker compose logs -f nodebb
 
 # wait for "web installer listening"
 
-# goto to:
-http://forum.diplomania2.fr:4567
-
-# install
-(leave web address as it is)
+docker exec nodebb /usr/src/app/nodebb stop
+docker exec nodebb /usr/src/app/nodebb build
 
 docker compose down
+docker compose up -d
 
-Modifier pour retirer docker-compose.yml
-services:
-  nodebb:
->    ports:
->      - "4567:4567"
+# goto web page:
+https://forum.diplomania2.fr
 
-docker compose up
+# install
+
+Database type : MongoDB
+Host : mongo
+Port : 27017
+User : nodebb
+Password : nodebb
+Database name : nodebb
 

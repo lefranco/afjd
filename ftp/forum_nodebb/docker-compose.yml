@@ -4,35 +4,27 @@
 services:
 
   mongo:
-    image: mongo:5
-    container_name: mongo
+    image: mongo:latest
+    container_name: nodebb-mongo
     restart: unless-stopped
     env_file:
       - ./mongo.env
     volumes:
       - ./data/mongo:/data/db
-      - ./mongo-init:/docker-entrypoint-initdb.d:ro
-    networks:
-      - nodebb_internal
-
-  redis:
-    image: redis:7
-    container_name: redis
-    restart: unless-stopped
-    volumes:
-      - ./data/redis:/data
-    command: ["redis-server", "--appendonly", "yes"]
     networks:
       - nodebb_internal
 
   nodebb:
-    image: ghcr.io/nodebb/nodebb:latest
+    build: ./nodebb
     container_name: nodebb
     restart: unless-stopped
-    environment:
-      - NODE_ENV=production
+    env_file:
+      - ./nodebb.env
+    ports:
+      - "127.0.0.1:4567:4567"
     volumes:
-      - ./config.json:/opt/nodebb/config.json
+      - ./data/nodebb/uploads:/usr/src/app/public/uploads
+      - ./data/nodebb/config:/usr/src/app/config
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nodebb.rule=Host(`forum.diplomania2.fr`)"
@@ -40,8 +32,7 @@ services:
       - "traefik.http.routers.nodebb.tls=true"
       - "traefik.http.routers.nodebb.tls.certresolver=myle"
       - "traefik.http.services.nodebb.loadbalancer.server.port=4567"
-    depends_on:
-      - redis
+    depends_on: 
       - mongo
     networks:
       proxy:
