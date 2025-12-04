@@ -1,29 +1,25 @@
 
+
 docker compose build --no-cache
 approx. 3 minutes
 
 docker compose up -d
-
-# watch the logs before connecting...
 docker compose logs -f nodebb
 
 # wait for "web installer listening"
 
-docker exec nodebb /usr/src/app/nodebb stop
-docker exec nodebb /usr/src/app/nodebb build
+# wait additional 30 secs
 
-docker compose down
-docker compose up -d
+docker compose restart  traefik 
 
 # goto web page:
 https://forum.diplomania2.fr
 
 # install
+# create admin account
 
-Database type : MongoDB
-Host : mongo
-Port : 27017
-User : nodebb
-Password : nodebb
-Database name : nodebb
+username : admin
+email : postmaster@diplomania2.fr
+password : 
+
 

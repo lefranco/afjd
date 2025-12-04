@@ -14,10 +14,13 @@ RUN find . -name "package.json" -type f -exec cp {} . \; 2>/dev/null || true && 
 
 # Fix SASS
 RUN npm install sass --no-save --omit=dev && \
+    rm -rf node_modules/sass-embedded* 2>/dev/null || true && \
     sed -i 's/"sass-embedded"/"sass"/g' package.json 2>/dev/null || true
 
+# Installer dépendances
 RUN npm install --omit=dev --legacy-peer-deps
 
 EXPOSE 4567
 
-CMD ["sh", "-c", "export NODEBB_SKIP_SASS=1 && node loader.js"]
+CMD ["node", "loader.js"]
+
