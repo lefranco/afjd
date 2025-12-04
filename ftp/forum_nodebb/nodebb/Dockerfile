@@ -1,9 +1,21 @@
-FROM node:18-slim
-RUN apt-get update && apt-get install -y git
+FROM node:18-bookworm-slim
+
+RUN apt-get update && apt-get install -y git python3 make g++
+
 WORKDIR /app
-RUN git clone https://github.com/NodeBB/NodeBB.git .
-RUN find . -name "package.json" -exec cp {} . \; 2>/dev/null || true
-RUN [ -f "package.json" ] || echo '{"name":"nodebb"}' > package.json
-RUN npm install
+
+# Clone et préparation
+RUN git clone --branch v3.x --depth 1 https://github.com/NodeBB/NodeBB.git . && \
+    # Garantir package.json à la racine
+    find . -name "package.json" -type f -exec cp {} . \; 2>/dev/null || true && \
+    [ -f "package.json" ] || echo '{"name":"nodebb"}' > package.json
+
+# Fix SASS
+RUN npm install sass --no-save --omit=dev && \
+    sed -i 's/sass-embedded/sass/g' package.json 2>/dev/null || true
+
+RUN npm install --omit=dev
+
 EXPOSE 4567
-CMD ["node", "loader.js"]
+
+CMD ["sh", "-c", "export NODEBB_SKIP_SASS=1 && node loader.js"]

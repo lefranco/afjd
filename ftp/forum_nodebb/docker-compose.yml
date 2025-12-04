@@ -18,10 +18,13 @@ services:
     build: ./nodebb
     container_name: nodebb
     restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NODEBB_SKIP_SASS=1  # DÉSACTIVER SASS
     env_file:
       - ./nodebb.env
     ports:
-      - "127.0.0.1:4567:4567"
+      - "4567:4567"
     volumes:
       - ./data/nodebb/uploads:/usr/src/app/public/uploads
       - ./data/nodebb/config:/usr/src/app/config
