@@ -10,7 +10,8 @@ docker compose logs -f nodebb
 
 # wait additional 30 secs
 
-docker compose restart  traefik 
+docker compose restart  traefik  # En principe pas besoin
+docker kill -s HUP traefik  # Envoie un signal HUP (en desespoir de cause)
 
 # goto web page:
 https://forum.diplomania2.fr
