@@ -3,6 +3,7 @@
   "port": "4567",
   "bind_address": "0.0.0.0",
   "secret": "change-this-to-a-random-string",
+
   "database": "mongo",
   "mongo": {
     "host": "mongo",
@@ -11,11 +12,17 @@
     "password": "nodebbpassword123",
     "database": "nodebb"
   },
-  "redis": {
-    "host": "redis",
-    "port": 6379,
-    "database": 0
+
+  "secure": false,
+  "trustProxy": true,
+
+  "cookie": {
+      "secure": true,
+      "domain": "forum.diplomania2.fr"
   },
-  "trustProxy": true
+  "csrf": {
+      "originWhitelist": ["https://forum.diplomania2.fr"]
+  }
+
 }
 
