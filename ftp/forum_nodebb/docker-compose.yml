@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - NODEBB_SKIP_SASS=1  # DÉSACTIVER SASS
+      - NODEBB_SKIP_SASS=1
     env_file:
       - ./nodebb.env
     ports:
@@ -36,6 +36,11 @@ services:
       - "traefik.http.routers.nodebb.tls=true"
       - "traefik.http.routers.nodebb.tls.certresolver=myle"
       - "traefik.http.services.nodebb.loadbalancer.server.port=4567"
+      # HTTPS -> HTTS
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.nodebb-redirect.rule=Host(`forum.diplomania2.fr`)"
+      - "traefik.http.routers.nodebb-redirect.entrypoints=web"
+      - "traefik.http.routers.nodebb-redirect.middlewares=redirect-to-https@docker"
     depends_on: 
       - mongo
     networks:

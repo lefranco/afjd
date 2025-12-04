@@ -2,7 +2,7 @@
   "url": "https://forum.diplomania2.fr",
   "port": "4567",
   "bind_address": "0.0.0.0",
-  "secret": "unechainealeatoire",
+  "secret": "change-this-to-a-random-string",
   "database": "mongo",
   "mongo": {
     "host": "mongo",
@@ -11,7 +11,11 @@
     "password": "nodebbpassword123",
     "database": "nodebb"
   },
-  "secure": false,
+  "redis": {
+    "host": "redis",
+    "port": 6379,
+    "database": 0
+  },
   "trustProxy": true
 }
 
