@@ -16,9 +16,6 @@ services:
       - "80:80"
       - "443:443"
 
-    labels:
-      - "traefik.providers.docker.watch=true"  # Auto-détection
-
     volumes:
 
       # docker socket
