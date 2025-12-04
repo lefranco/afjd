@@ -11,6 +11,7 @@ services:
       - ./mongo.env
     volumes:
       - ./data/mongo:/data/db
+      - ./mongo-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
       - nodebb_internal
 
@@ -24,7 +25,7 @@ services:
     env_file:
       - ./nodebb.env
     ports:
-      - "4567:4567"
+      - "127.0.0.1:4567:4567"
     volumes:
       - ./data/nodebb/uploads:/usr/src/app/public/uploads
       - ./data/nodebb/config:/usr/src/app/config
