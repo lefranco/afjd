@@ -29,7 +29,7 @@ services:
     volumes:
       - ./data/nodebb/uploads:/usr/src/app/public/uploads
       - ./data/nodebb/config:/usr/src/app/config
-
+      - ./data/nodebb/logs:/usr/src/app/logs
     labels:
 
       - "traefik.enable=true"
