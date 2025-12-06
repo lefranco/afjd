@@ -12,8 +12,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./data/mongdb:/data/db
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./data/mongodb:/data/db
     networks:
       nodebb_internal:
 
@@ -22,6 +21,10 @@ services:
     container_name: nodebb
     restart: no # later unless-stopped
     user: forum
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./nodebb.env
     volumes:
       - ./data/nodebb/uploads:/app/nodebb/public/uploads
       - ./data/nodebb/config:/app/nodebb/config
