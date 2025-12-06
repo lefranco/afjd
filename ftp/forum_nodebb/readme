@@ -1,20 +1,48 @@
 
+============================
+docker compose exec mongodb sh
 
+mongosh -u admin -p admin123
 
+use nodebb
+
+db.createUser({
+  user: "nodebb",
+  pwd: "nodebb123",
+  roles: [
+    { role: "readWrite", db: "nodebb" }
+  ]
+})
+
+db.auth("nodebb", "nodebb123")
+
+=> 1
+
+quit()
+
+============================
 docker compose exec nodebb ./nodebb setup
 
 ENONENT normal ?
 
-attendre 1 minute
+wait 1 minute
 
 site https://forum.diplomania2.fr
-secret ?
+secret secret
 submit no
 database mongo
-dbIP mongodb
-dbport 27017
-db username nodebb
-db password nodebb123
-db name nodebb
+MongoDB connection URI  mongodb://nodebb:nodebb123@mongodb:27017/nodebb
 
-=> 
+  dbIP mongodb
+  dbport 27017
+  db username nodebb
+  db password nodebb123
+  db name nodebb
+
+AdministratorUsername admin
+AdministratorEmail postmaster@diplomania2.fr
+AdministratorPassword Diplomania24!
+
+============================
+docker compose exec nodebb ./nodebb start
+
