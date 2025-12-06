@@ -1,26 +1,22 @@
-FROM node:18-bookworm-slim
+FROM ubuntu:24.04
 
-# Installer
-RUN apt-get update && apt-get install -y git python3 make g++
+ENV DEBIAN_FRONTEND=noninteractive
 
-WORKDIR /usr/src/app
+RUN apt-get update && apt-get install -y \
+    bash \
+    curl \
+    nano \
+    iputils-ping \
+    net-tools \
+    curl \
+    gnupg \
+    ca-certificates \
+    && apt-get clean
 
-# Cloner
-RUN git clone --branch v3.x --depth 1 https://github.com/NodeBB/NodeBB.git .
 
-# Garantir package.json à la racine
-RUN find . -name "package.json" -type f -exec cp {} . \; 2>/dev/null || true && \
-    [ -f "package.json" ] || echo '{"name":"nodebb"}' > package.json
+# From NodeBB website installation
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN apt-get install -y nodejs
 
-# Fix SASS
-RUN npm install sass --no-save --omit=dev && \
-    rm -rf node_modules/sass-embedded* 2>/dev/null || true && \
-    sed -i 's/"sass-embedded"/"sass"/g' package.json 2>/dev/null || true
-
-# Installer dépendances
-RUN npm install --omit=dev --legacy-peer-deps
-
-EXPOSE 4567
-
-CMD ["node", "loader.js"]
-
+CMD ["tail", "-f", "/dev/null"]
