@@ -4,9 +4,16 @@
 services:
 
   mongodb:
-    build: ./mongodb
+    image: mongo:latest
     container_name: nodebb-mongodb
     restart: no # later unless-stopped
+    env_file:
+      - ./mongodb.env
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/mongdb:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
       nodebb_internal:
 
@@ -14,6 +21,10 @@ services:
     build: ./nodebb
     container_name: nodebb
     restart: no # later unless-stopped
+    user: forum
+    volumes:
+      - ./data/nodebb/uploads:/app/nodebb/public/uploads
+      - ./data/nodebb/config:/app/nodebb/config
     ports:
       - "127.0.0.1:4567:4567"
 
