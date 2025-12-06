@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     coreutils \
     build-essential \
+    nano \
     && apt-get clean
 
 # From NodeBB website installation
@@ -26,9 +27,6 @@ RUN apt-get install -y nodejs
 RUN mkdir -p /app \
     && cd /opt \
     && git clone -b v4.x https://github.com/NodeBB/NodeBB.git /app/nodebb
-
-# deepseek insists on this but official installation guide does not mention it
-# RUN cd /app/nodebb && npm ci --only=production
 
 # Créer l'utilisateur forum
 RUN groupadd -r forum && useradd -r -g forum -m -s /bin/bash forum
