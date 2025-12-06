@@ -1,0 +1,17 @@
+{
+  "url": "https://forum.diplomania2.fr",
+  "port": "4567",
+  "bind_address": "0.0.0.0",
+  "secret": "unechainealeatoire",
+  "database": "mongo",
+  "mongo": {
+    "host": "mongo",
+    "port": 27017,
+    "username": "nodebb",
+    "password": "nodebbpassword123",
+    "database": "nodebb"
+  },
+  "secure": false,
+  "trustProxy": true
+}
+

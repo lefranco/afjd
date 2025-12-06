@@ -1,0 +1,66 @@
+# docker compose for forum node BB
+---
+
+services:
+
+  mongo:
+    image: mongo:latest
+    container_name: nodebb-mongo
+    restart: unless-stopped
+    env_file:
+      - ./mongo.env
+    volumes:
+      - ./data/mongo:/data/db
+      - ./mongo-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - nodebb_internal
+
+  nodebb:
+    build: ./nodebb
+    container_name: nodebb
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NODEBB_SKIP_SASS=1
+    env_file:
+      - ./nodebb.env
+    ports:
+      - "127.0.0.1:4567:4567"
+    volumes:
+      - ./data/nodebb/uploads:/usr/src/app/public/uploads
+      - ./data/nodebb/config:/usr/src/app/config
+      - ./data/nodebb/logs:/usr/src/app/logs
+    labels:
+
+      - "traefik.enable=true"
+      - "traefik.http.routers.nodebb.rule=Host(`forum.diplomania2.fr`)"
+      - "traefik.http.routers.nodebb.entrypoints=websecure"
+      - "traefik.http.routers.nodebb.tls=true"
+      - "traefik.http.routers.nodebb.tls.certresolver=myle"
+      - "traefik.http.services.nodebb.loadbalancer.server.port=4567"
+
+      # Headers CRITIQUES pour NodeBB
+      - "traefik.http.middlewares.nodebb-proto.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.nodebb-proto.headers.customrequestheaders.X-Forwarded-Host=forum.diplomania2.fr"
+      - "traefik.http.routers.nodebb.middlewares=nodebb-proto@docker"
+
+      # Redirection HTTP→HTTPS
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.nodebb-redirect.rule=Host(`forum.diplomania2.fr`)"
+      - "traefik.http.routers.nodebb-redirect.entrypoints=web"
+      - "traefik.http.routers.nodebb-redirect.middlewares=redirect-to-https@docker"
+
+    depends_on: 
+      - mongo
+    networks:
+      proxy:
+        aliases:
+          - nodebb
+      nodebb_internal:
+
+networks:
+  proxy:
+    external: true
+  nodebb_internal:
+    driver: bridge
+
