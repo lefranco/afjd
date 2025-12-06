@@ -1,0 +1,59 @@
+
+
+docker compose build --no-cache
+approx. 3 minutes
+
+docker compose up -d
+docker compose logs -f nodebb
+
+# wait for "web installer listening"
+
+# wait additional 30 secs
+
+docker compose restart  traefik  # En principe pas besoin
+docker kill -s HUP traefik  # Envoie un signal HUP (en desespoir de cause)
+
+pour scanner
+
+docker exec traefik ls -la /letsencrypt/acme.json
+docker logs traefik | grep -i "certificate\|acme\|letencrypt" | tail -20
+
+nslookup forum.diplomania2.fr
+dig forum.diplomania2.fr
+
+docker logs traefik | grep -i "reload\|configuration" | tail -10
+
+docker logs -f traefik 2>&1 | grep -E "(nodebb|forum.diplomania2.fr|certificate|router|middleware)"
+docker logs traefik --tail=100
+docker logs traefik 2>&1 | grep -v "DEBUG" | grep -v "level=debug"
+
+docker-compose logs -f nodebb | grep -E "(GET|POST|HEAD|HTTP)"
+docker-compose logs nodebb --tail=50 | grep -i "error\|warn\|failed"
+
+sudo netstat -tulpn | grep -E "(4567|traefik)"
+ss -tuln | grep :4567
+
+# Test 1: Certificat
+curl -kv https://forum.diplomania2.fr 2>&1 | grep -A5 "SSL certificate"
+
+# Test 2: Headers
+curl -I https://forum.diplomania2.fr
+
+# Test 3: Contenu
+curl -s https://forum.diplomania2.fr | grep -o "<title>[^<]*</title>"
+
+# Test 4: Traefik dashboard
+curl -s http://localhost:8080/api/rawdata | jq '.routers[] | select(.rule=="Host(`forum.diplomania2.fr`)" )'
+
+# goto web page:
+https://forum.diplomania2.fr
+
+# install
+# create admin account
+
+web : httpS://forum.diplomania2.fr
+username : admin
+email : postmaster@diplomania2.fr
+password : 
+
+
