@@ -22,15 +22,13 @@ services:
     restart: unless-stopped
     user: forum
     environment:
-      - NODE_ENV=production
-      - NODEBB_URL=https://forum.diplomania2.fr  # IMPORTANT !
+      NODE_ENV: production
     env_file:
       - ./nodebb.env
     ports:
       - "127.0.0.1:4567:4567"
     volumes:
-      - ./nodebb_data:/usr/src/app
-      - ./uploads:/usr/src/app/public/uploads
+      - ./data/nodebb/uploads:/usr/src/app/public/uploads
     labels:
 
      # Activation
@@ -46,7 +44,7 @@ services:
       - "traefik.http.routers.nodebb-https.rule=Host(`forum.diplomania2.fr`)"
       - "traefik.http.routers.nodebb-https.tls=true"
       - "traefik.http.routers.nodebb-https.tls.certresolver=myle"
-      
+
       # Service
       - "traefik.http.services.nodebb.loadbalancer.server.port=4567"
       
