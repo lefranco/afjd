@@ -23,29 +23,41 @@ services:
     user: forum
     environment:
       - NODE_ENV=production
+      - NODEBB_URL=https://forum.diplomania2.fr  # IMPORTANT !
     env_file:
       - ./nodebb.env
     ports:
       - "127.0.0.1:4567:4567"
+    volumes:
+      - ./nodebb_data:/usr/src/app
+      - ./uploads:/usr/src/app/public/uploads
     labels:
 
+     # Activation
       - "traefik.enable=true"
-      - "traefik.http.routers.nodebb.rule=Host(`forum.diplomania2.fr`)"
-      - "traefik.http.routers.nodebb.entrypoints=websecure"
-      - "traefik.http.routers.nodebb.tls=true"
-      - "traefik.http.routers.nodebb.tls.certresolver=myle"
+      
+      # Router HTTP (redirection vers HTTPS)
+      - "traefik.http.routers.nodebb-http.entrypoints=web"
+      - "traefik.http.routers.nodebb-http.rule=Host(`forum.diplomania2.fr`)"
+      - "traefik.http.routers.nodebb-http.middlewares=redirect-to-https"
+      
+      # Router HTTPS
+      - "traefik.http.routers.nodebb-https.entrypoints=websecure"
+      - "traefik.http.routers.nodebb-https.rule=Host(`forum.diplomania2.fr`)"
+      - "traefik.http.routers.nodebb-https.tls=true"
+      - "traefik.http.routers.nodebb-https.tls.certresolver=myle"
+      
+      # Service
       - "traefik.http.services.nodebb.loadbalancer.server.port=4567"
-
-      # Headers CRITIQUES pour NodeBB
-      - "traefik.http.middlewares.nodebb-proto.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.middlewares.nodebb-proto.headers.customrequestheaders.X-Forwarded-Host=forum.diplomania2.fr"
-      - "traefik.http.routers.nodebb.middlewares=nodebb-proto@docker"
-
-      # Redirection HTTP→HTTPS
+      
+      # Middleware de redirection
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.nodebb-redirect.rule=Host(`forum.diplomania2.fr`)"
-      - "traefik.http.routers.nodebb-redirect.entrypoints=web"
-      - "traefik.http.routers.nodebb-redirect.middlewares=redirect-to-https@docker"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
+      
+      # Headers CRITIQUES pour NodeBB
+      - "traefik.http.middlewares.nodebb-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.nodebb-headers.headers.customrequestheaders.X-Forwarded-Host=forum.diplomania2.fr"
+      - "traefik.http.routers.nodebb-https.middlewares=nodebb-headers"
 
     depends_on: 
       - mongodb
