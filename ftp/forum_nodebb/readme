@@ -25,55 +25,8 @@ quit()
 
 
 ============================
-create database. erase everything
-docker compose exec nodebb ./nodebb setup
-
-ENONENT normal about '/app/nodebb/package.json' ???
-
-wait 1-2 minute
-
-site https://forum.diplomania2.fr
-secret secret
-submit no
-database mongo
-MongoDB connection URI  mongodb://nodebb:nodebb123@mongodb:27017/nodebb
-
-[  dbIP mongodb
-  dbport 27017
-  db username nodebb
-  db password nodebb123
-  db name nodebb ]
-
-AdministratorUsername admin
-AdministratorEmail postmaster@diplomania2.fr
-AdministratorPassword admin123
-
-============================
-docker compose exec nodebb nano /app/nodebb/config.json
-
-copy / paste : 
-
-{
-    "url": "https://forum.diplomania2.fr",
-    "secret": "secret",
-    "database": "mongo",
-    "mongo": {
-        "host": "mongodb",
-        "port": "27017",
-        "username": "nodebb",
-        "password": "nodeb123",
-        "database": "nodebb",
-        "uri": "mongodb://nodebb:nodebb123@mongodb:27017/nodebb"
-    },
-    "port": 4567,
-    "bind_address": "0.0.0.0",
-    "use_port": false,
-    "socketio": {
-        "origins": "https://forum.diplomania2.fr:*"
-    },
-    "relative_path": ""
-}
-
+(inutile)
+docker compose exec nodebb ./nodebb upgrade
 
 ============================
 (après chaque modification)

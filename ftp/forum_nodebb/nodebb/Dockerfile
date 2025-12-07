@@ -2,6 +2,7 @@ FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# System depedencies
 RUN apt-get update && apt-get install -y \
     bash \
     curl \
@@ -16,31 +17,28 @@ RUN apt-get update && apt-get install -y \
     nano \
     && apt-get clean
 
-# From NodeBB website installation
-
-# node js installation
+# Install node JS
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x -o nodesource_setup.sh
 RUN bash nodesource_setup.sh
 RUN apt-get install -y nodejs
 
-# Clone NodeBB
-RUN mkdir -p /app \
-    && cd /opt \
-    && git clone -b v4.x https://github.com/NodeBB/NodeBB.git /app/nodebb
-
-# Créer l'utilisateur forum
+#  forum user
 RUN groupadd -r forum && useradd -r -g forum -m -s /bin/bash forum
 
-# Changer les permissions APRÈS l'installation
-RUN chown -R forum:forum /app
+# NodeBB folder
+RUN mkdir -p /app && chown -R forum:forum /app
 
-# Définir le répertoire de travail
+USER forum
+WORKDIR /app
+
+# Clone NodeBB
+RUN git clone -b v4.x https://github.com/NodeBB/NodeBB.git nodebb
+
 WORKDIR /app/nodebb
 
 # Exposer le port de NodeBB
 EXPOSE 4567
 
-USER forum
-
 # keep it alive"
 CMD ["tail", "-f", "/dev/null"]
+
