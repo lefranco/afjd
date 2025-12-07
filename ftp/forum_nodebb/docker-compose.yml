@@ -31,31 +31,25 @@ services:
       - ./data/nodebb/uploads:/usr/src/app/public/uploads
     labels:
 
-     # Activation
       - "traefik.enable=true"
-      
-      # Router HTTP (redirection vers HTTPS)
+    
+      # HTTP Router (redirect to HTTPS)
       - "traefik.http.routers.nodebb-http.entrypoints=web"
       - "traefik.http.routers.nodebb-http.rule=Host(`forum.diplomania2.fr`)"
       - "traefik.http.routers.nodebb-http.middlewares=redirect-to-https"
-      
-      # Router HTTPS
+    
+      # HTTPS Router
       - "traefik.http.routers.nodebb-https.entrypoints=websecure"
       - "traefik.http.routers.nodebb-https.rule=Host(`forum.diplomania2.fr`)"
       - "traefik.http.routers.nodebb-https.tls=true"
-      - "traefik.http.routers.nodebb-https.tls.certresolver=myle"
+      - "traefik.http.routers.nodebb-https.tls.certresolver=myle"  # Use your cert resolver name
+    
+      # Service - Use full URL format
+      - "traefik.http.services.nodebb.loadbalancer.server.url=http://nodebb:4567"
 
-      # Service
-      - "traefik.http.services.nodebb.loadbalancer.server.port=4567"
-      
-      # Middleware de redirection
+      # Middleware
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
-      
-      # Headers CRITIQUES pour NodeBB
-      - "traefik.http.middlewares.nodebb-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.middlewares.nodebb-headers.headers.customrequestheaders.X-Forwarded-Host=forum.diplomania2.fr"
-      - "traefik.http.routers.nodebb-https.middlewares=nodebb-headers"
 
     depends_on: 
       - mongodb

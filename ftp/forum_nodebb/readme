@@ -23,20 +23,25 @@ db.auth("nodebb", "nodebb123")
 
 quit()
 
+============================
+docker compose exec nodebb ./nodebb setup
 
 ============================
-(inutile)
-docker compose exec nodebb ./nodebb upgrade
+docker compose exec nodebb nano /app/nodebb/config.json
+insert :
 
-============================
-(après chaque modification)
-docker compose exec nodebb ./nodebb build 
+    "bind_address": "0.0.0.0",
+    "trust_proxy": true,
+    "trust_proxy_header": "x-forwarded-for",
+    "trust_proxy_proto": true,
+    "trust_proxy_host": true,
+
 
 ============================
 docker compose exec nodebb ./nodebb start
+docker compose exec nodebb ./nodebb status
+docker compose exec nodebb ./nodebb logs + CtrlC
 
 ============================
 aller sur https://forum.diplomania2.fr/admin
-
-
 
