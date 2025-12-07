@@ -51,19 +51,28 @@ AdministratorPassword admin123
 docker compose exec nodebb nano /app/nodebb/config.json
 
 copy / paste : 
+
 {
     "url": "https://forum.diplomania2.fr",
     "secret": "secret",
     "database": "mongo",
     "mongo": {
         "host": "mongodb",
-        "port": 27017,
+        "port": "27017",
         "username": "nodebb",
-        "password": "nodebb123",
+        "password": "nodeb123",
         "database": "nodebb",
         "uri": "mongodb://nodebb:nodebb123@mongodb:27017/nodebb"
-    }
+    },
+    "port": 4567,
+    "bind_address": "0.0.0.0",
+    "use_port": false,
+    "socketio": {
+        "origins": "https://forum.diplomania2.fr:*"
+    },
+    "relative_path": ""
 }
+
 
 ============================
 docker compose exec nodebb ./nodebb start
