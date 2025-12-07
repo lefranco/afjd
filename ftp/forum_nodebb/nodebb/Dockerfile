@@ -36,7 +36,7 @@ RUN git clone -b v4.x https://github.com/NodeBB/NodeBB.git nodebb
 
 WORKDIR /app/nodebb
 
-# Exposer le port de NodeBB
+# Expose NodeBB port
 EXPOSE 4567
 
 # keep it alive"
