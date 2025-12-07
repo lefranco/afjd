@@ -13,6 +13,7 @@ import sys
 import typing
 import tkinter
 import tkinter.messagebox
+import tkinter.scrolledtext
 
 import yaml
 
@@ -87,7 +88,7 @@ def parse_content(content: str) -> tuple[str, str, str, str, str, str, str, str,
     elif ',' in discourse:
         code_part, _, rest = discourse.partition(',')
     else:
-        assert False, "Missing terminator"
+        code_part, _, rest = discourse, '', ''
     code_part = ' '.join(code_part.split())
     code_class, _, code_part = code_part.partition(' ')
     code_class = code_class.strip()
@@ -137,9 +138,16 @@ IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
 def display_callback(description: str, body_text: list[str]) -> None:
-    """Display information about content in email."""
-    tkinter.messagebox.showinfo(description, body_text)
+    """Display information about content in email with copy/paste."""
+    win = tkinter.Toplevel()
+    win.title(description)
 
+    txt = tkinter.scrolledtext.ScrolledText(win, wrap=tkinter.WORD)
+    txt.pack(expand=True, fill="both", padx=10, pady=10)
+
+    txt.insert("1.0", body_text)
+    txt.config(state=tkinter.DISABLED)
+    txt.focus()
 
 def delete_mail(message_uid: str) -> None:
     """Delete an identified email."""
@@ -256,7 +264,7 @@ def load_mails() -> None:
         host_reporter, email_dest, reporter_host, reporter_ip, code_class, code_value, code_desc, client_ip, explanations = parse_content(body_text)
         title = f"{email_dest}[{client_ip}] {code_class} {code_value} {uid.decode()} {date_str}"
         message_uid = uid.decode()
-        description = body_text.replace('\r\n\r\n', '\r\n')
+        description = body_text.replace('\r\n', '\n')
         attention = False  # TODO : think of something
         ITEMS_DICT[title] = (message_uid, attention, description)
 
