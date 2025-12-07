@@ -82,3 +82,8 @@ docker compose exec nodebb ./nodebb build
 ============================
 docker compose exec nodebb ./nodebb start
 
+============================
+aller sur https://forum.diplomania2.fr/admin
+
+
+
