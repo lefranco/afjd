@@ -25,6 +25,7 @@ quit()
 
 
 ============================
+create database. erase everything
 docker compose exec nodebb ./nodebb setup
 
 ENONENT normal about '/app/nodebb/package.json' ???
@@ -73,6 +74,10 @@ copy / paste :
     "relative_path": ""
 }
 
+
+============================
+(après chaque modification)
+docker compose exec nodebb ./nodebb build 
 
 ============================
 docker compose exec nodebb ./nodebb start
