@@ -152,34 +152,52 @@ def information_about_confirm():
     information <= html.BR()
     return information
 
-
+   
 def check_correct_email(email):
     """  check_correct_email """
+
+    ascii_letters = ''.join(chr(i) for i in range(ord('A'), ord('Z') + 1)) + ''.join(chr(i) for i in range(ord('a'), ord('z') + 1))
+    digits = ''.join(chr(i) for i in range(ord('0'), ord('9') + 1))
+    allowed_local_labels = set(ascii_letters + digits + "_%+-")
+    allowed_domain_labels = set(ascii_letters + digits + "-")
+
+    # ===========
+    # general test
+    # ===========
 
     if not email:
         alert("L'email ne doit pas être vide")
         return False
 
-    if '@' not in email or '.' not in email:
-        alert("L'email doit contenir un '@' et au moins un '.'")
-        return False
-
     if email.count('@') != 1:
-        alert("L'email ne doit contenir qu'un seul '@'")
+        alert("L'email doit contenir un (et un seul) '@'")
         return False
 
-    try:
-        local_part, domain = email.split('@')
-    except ValueError:
-        alert("Erreur interne vérification email 1")
-        return False
+    local_part, domain = email.split('@')
 
+    # ===========
+    # local part
+    # ===========
+    
     if not local_part:
         alert("La partie locale ne doit pas être vide")
         return False
+            
+    labels = local_part.split(".")
+    for label in labels:
+        if not label:
+            alert("La partie locale ne doit pas contenir de label vide")
+            return False
+        if not all(c in allowed_local_labels for c in label):
+            alert("La partie locale ne doit pas contenir de caractère interdit")
+            return False
+        
+    # ===========
+    # domain
+    # ===========
 
     if not domain:
-        alert("Le domaine ne doivt pas être vide")
+        alert("Le domaine ne doit pas être vide")
         return False
 
     if '.' not in domain:
@@ -190,15 +208,28 @@ def check_correct_email(email):
         alert("Le domaine ne doit pas commencer ni finir par un '.'")
         return False
 
-    try:
-        suffixe = domain.split('.')[-1]
-        if len(suffixe) < 2:
-            alert("Mauvais suffixe : trop court")
-            return False
-    except IndexError:
-        alert("Erreur interne vérification email 2")
+    if '..' in domain:
+        alert("Le domaine ne doit pas contenir '..'")
         return False
 
+    labels = domain.split(".")
+    for label in labels:
+        if not label:
+            alert("Le domaine ne doit pas contenir de label vide")
+            return False
+        if label.startswith('-') or label.endswith('-'):
+            alert("Le domaine ne doit pas contenir de label debutant ou finissant par un '-'")
+            return False
+        if not all(c in allowed_domain_labels for c in label):
+            alert("Le domaine ne doit pas contenir de label contenant un caractère interdit")
+            return False
+            
+    # TLD
+    tld = labels[-1]
+    if len(tld) < 2 or not tld.isalpha():
+        alert("Le label de premier niveau du domaine (tld) est incorrect")
+        return False
+        
     return True
 
 

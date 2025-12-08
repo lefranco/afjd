@@ -68,8 +68,11 @@ def sender_threaded_procedure() -> None:
 
     def will_retry(exception: str) -> bool:
         """ will_retry """
-        # do not put failed message back on queue if bad address
+        # do not put failed message back on queue if bad address (v1)
         if exception.find("Recipient address rejected:") != -1:
+            return False
+        # do not put failed message back on queue if bad address (v2)
+        if exception.find("Invalid address") != -1:
             return False
         # do not put failed message back on queue if email has an accent
         if exception.find("'ascii' codec can't encode character") != -1:
