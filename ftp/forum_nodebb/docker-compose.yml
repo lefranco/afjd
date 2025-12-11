@@ -28,7 +28,7 @@ services:
     ports:
       - "127.0.0.1:4567:4567"
     volumes:
-      - ./data/nodebb/uploads:/usr/src/app/public/uploads
+      - ./data/nodebb/uploads:/app/nodebb/public/uploads
     labels:
 
       - "traefik.enable=true"
