@@ -2,14 +2,14 @@
 
 """
 direct_import.py - Import phpBB data directly into NodeBB v4.7.0
-
-# 1. MANDATORY BACKUP
-Beforehand : Backup your current NodeBB database
-mongodump --uri="mongodb://localhost:27017/nodebb" --out ./nodebb_pre_import_backup_$(date +%Y%m%d)
 """
 
 import json
 import pathlib
+import secrets
+import string
+import hashlib
+import bcrypt
 
 import pandas as pd  # pip3 install pandas --break-system-packages
 import pymongo # pip3 install pymongo --break-system-packages
@@ -64,16 +64,55 @@ class NodeBBImporter:
         )
         
         print(f"\n✅ Deleted {total} forum documents")
-        print("✅ Config, themes, settings preserved")    
-
+        print("✅ Config, themes, settings preserved")
+    
+    def _generate_random_password(self, length=6):
+        """Generate a secure random password."""
+        alphabet = string.ascii_letters + string.digits
+        password = ''.join(secrets.choice(alphabet) for _ in range(length))
+        return password
+    
+    def _generate_fast_password_hash(self, password):
+        """Generate a fast SHA512 hash for import speed.
+        Users will need to reset passwords anyway, so we don't need bcrypt security.
+        """
+        # Generate random salt
+        salt = secrets.token_hex(8)  # 16-character hex salt
+        
+        # SHA512 hash (fast!)
+        hash_obj = hashlib.sha512()
+        hash_obj.update(salt.encode('utf-8'))
+        hash_obj.update(password.encode('utf-8'))
+        hashed = hash_obj.hexdigest()
+        
+        # Format: sha512$salt$hash
+        return f"sha512${salt}${hashed}"
+        
     def import_users(self, users_csv):
-        """Import users from CSV."""
+        """Import users from CSV with random passwords."""
         users_df = pd.read_csv(users_csv)
         print(f"📊 Loading {len(users_df)} users...")
 
         imported_users = {}
+        password_list = []  # Store passwords for admin reference
 
         for _, row in users_df.iterrows():
+
+            # Generate random password for this user
+            plain_password = self._generate_random_password()
+            
+            # Generate bcrypt hash (NodeBB's preferred format)
+            password_hash = self._generate_fast_password_hash(plain_password)
+                        
+            # Store password for admin reference
+            password_list.append({
+                "user_id": int(row['user_id']),
+                "username": str(row['username']),
+                "email": str(row['email']),
+                "password": plain_password,
+                "hash": password_hash
+            })
+
             # NodeBB user document structure
             user_doc = {
                 "_key": f"user:{row['user_id']}",
@@ -104,21 +143,53 @@ class NodeBBImporter:
             self.db.objects.insert_one(user_doc)
 
             # Also create in 'users' collection for authentication
-            # NOTE: Passwords cannot be migrated - will require reset
+            # WITH THE RANDOM PASSWORD HASH
             users_collection_doc = {
                 "_key": f"user:{row['user_id']}",
                 "uid": int(row['user_id']),
                 "username": str(row['username']),
-                "password": "",  # Empty - users must reset password
+                "password": password_hash,  # Now has a proper hash!
                 "email": str(row['email']),
-                "joindate": int(row['joindate'])
+                "joindate": int(row['joindate']),
+                "passwordExpiry": 0,
+                "password:shaWrapped": 1  # Important flag for NodeBB
             }
             self.db.users.insert_one(users_collection_doc)
 
-            imported_users[row['user_id']] = users_collection_doc
+            imported_users[row['user_id']] = {
+                "doc": users_collection_doc,
+                "plain_password": plain_password
+            }
 
-        print(f"✅ Imported {len(imported_users)} users")
+        # Save passwords to a secure file for admin use
+        self._save_passwords_to_file(password_list)
+        
+        print(f"✅ Imported {len(imported_users)} users with random passwords")
         return imported_users
+
+    def _save_passwords_to_file(self, password_list):
+        """Save generated passwords to a secure JSON file."""
+        # Create a summary file (encrypt this in production!)
+        summary_file = "user_passwords_summary.json"
+        
+        summary = []
+        for item in password_list:
+            summary.append({
+                "user_id": item["user_id"],
+                "username": item["username"],
+                "email": item["email"],
+                "password": item["password"]
+            })
+        
+        # Create a CSV for usage
+        csv_file = "user_passwords.csv"
+        df = pd.DataFrame(summary)
+        df.to_csv(csv_file, index=False)
+        print(f"🔐 Generated passwords saved to: {csv_file}")
+        
+        # Security warning
+        print("⚠️  SECURITY WARNING: This file contain plain-text passwords!")
+        print("   Secure or delete it immediately after distributing passwords.")
 
     def import_categories(self, forums_csv):
         """Import forum categories."""
@@ -311,32 +382,23 @@ class NodeBBImporter:
         print(f"   Topics: {len(topics_map)}")
         print(f"   Posts: {post_count}")
 
-        # Create user reset tokens (for password reset)
-        self._create_password_reset_tokens(users_map)
+        # Update global counters
+        self._update_global_counters(len(users_map), len(topics_map), post_count)
 
         return True
 
-    def _create_password_reset_tokens(self, users_map):
-        """Create password reset tokens for imported users."""
-        print("\n🔐 Creating password reset tokens...")
-
-        reset_info = []
-        for user_id, user_doc in users_map.items():
-
-            # Generate a reset token (simplified - NodeBB has its own system)
-            reset_info.append({
-                "user_id": user_id,
-                "username": user_doc.get('username', f'user_{user_id}'),
-                "email": user_doc.get('email', f'email_{user_id}'),
-                "action": "password_reset_required"
-            })
-
-        # Save reset info to file
-        with open("user_password_reset_info.json", "w") as f:
-            json.dump(reset_info, f, indent=2)
-
-        print("✅ Password reset info saved to user_password_reset_info.json")
-        print("   IMPORTANT: All users must reset their passwords!")
+    def _update_global_counters(self, user_count, topic_count, post_count):
+        """Update global counters in NodeBB."""
+        self.db.objects.update_one(
+            {"_key": "global"},
+            {"$set": {
+                "userCount": user_count,
+                "topicCount": topic_count,
+                "postCount": post_count
+            }},
+            upsert=True
+        )
+        print("✅ Updated global counters")
 
 
 def main():
@@ -352,6 +414,9 @@ def main():
     print(f"   MongoDB: {MONGO_URI}")
     print("\nRequired backup command:")
     print(f'   mongodump --uri="{MONGO_URI}/{NODEBB_DB}" --out ./nodebb_backup')
+    
+    print("\n🔐 IMPORTANT: All users will get RANDOM passwords!")
+    print("   Passwords will be saved to user_passwords.csv")
 
     # Safety confirmation
     response = input("\nContinue (all data will be deleted)? (y/N)")
@@ -382,8 +447,12 @@ def main():
         print("\n" + "=" * 60)
         print("🎉 IMPORT COMPLETE SUCCESSFULLY!")
         print("=" * 60)
+        print("\n🔐 Password Information:")
+        print("   Generated passwords saved to: user_passwords.csv")
+        print("   Users can now login with these random passwords")
+        print("   Recommend forcing password reset on first login")
         print("\nNext steps:")
-        print("1. Send password reset emails to users")
+        print("1. Distribute passwords to users securely")
         print("2. Configure NodeBB admin permissions")
         print("3. Copy attachment files to NodeBB uploads directory")
     else:
