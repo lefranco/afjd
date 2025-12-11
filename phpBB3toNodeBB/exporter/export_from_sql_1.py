@@ -16,6 +16,7 @@ EOF
 """
 
 import pathlib
+import time
 
 import pandas as pd  # pip3 install pandas --break-system-packages
 import pymysql # pip3 install pymysql --break-system-packages
@@ -28,6 +29,36 @@ CONFIG = {
     'password': 'safe_password_123',
     'table_prefix': 'phpbb_'  # From your config.php
 }
+
+
+def add_custom_user_to_csv_files(export_dir):
+    """Add custom user to exported CSV files."""
+
+    users_csv = export_dir / 'users.csv'
+    if users_csv.exists():
+        df_users = pd.read_csv(users_csv)
+
+        # Custom user details
+        custom_user = {
+            'user_id': 1,
+            'username': 'Libertor',
+            'email': 'custom.user@example.com',
+            'joindate': int(time.time()),
+            'postcount': 0,
+            'password_hash': ''
+        }
+
+        # Check if user already exists
+        if custom_user['user_id'] not in df_users['user_id'].values:
+            new_user_row = pd.DataFrame([custom_user])
+            df_users = pd.concat([df_users, new_user_row], ignore_index=True)
+            df_users.to_csv(users_csv, index=False)
+            print(f"✅ Added custom user '{custom_user['username']}' to users.csv")
+        else:
+            print(f"⚠️ Custom user already exists in users.csv")
+    else:
+        print("❌ users.csv not found")
+
 
 def main():
     """Main."""
@@ -98,6 +129,9 @@ def main():
 
     # 4. CLEANUP
     connection.close()
+
+    # 5. ADD CUSTOM USER
+    add_custom_user_to_csv_files(export_dir)
 
     print("🎉 Export complete! Check the 'phpbb_export' directory.")
     print("Next steps:")
