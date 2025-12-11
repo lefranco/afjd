@@ -28,35 +28,43 @@ class NodeBBImporter:
         self.db = self.client[db_name]
         print(f"✅ Connected to NodeBB database: {db_name}")
 
-        # UNCONDITIONAL CLEANUP
-        self._clean_existing_data()
+        # SELECTIVE cleanup - only forum data
+        self._clean_forum_data_only()
 
-    def _clean_existing_data(self):
-        """Delete all existing data from NodeBB collections."""
-        print("\n🧹 CLEANING EXISTING DATA...")
-        print("=" * 50)
-
-        collections_to_clean = [
-            ('objects', 'Main storage (users, categories, topics, posts)'),
-            ('users', 'User authentication data'),
-            ('categories', 'Category metadata'),
-            ('topics', 'Topic metadata'),
-            ('posts', 'Post metadata')
-        ]
-
-        total_deleted = 0
-
-        for collection_name, description in collections_to_clean:
-            if collection_name in self.db.list_collection_names():
-                count = self.db[collection_name].count_documents({})
-                if count > 0:
-                    self.db[collection_name].delete_many({})
-                    print(f"   Deleted {count:6d} documents from '{collection_name}' ({description})")
-                    total_deleted += count
-
-        print(f"\n✅ Total deleted: {total_deleted} documents")
-        print("Database is now empty and ready for import.")
-        print("=" * 50)
+    def _clean_forum_data_only(self):
+        """Remove only forum content."""
+        print("\n🧹 Cleaning forum data only (preserving config/theme)...")
+        
+        # Delete specific patterns
+        patterns = ["^user:", "^category:", "^topic:", "^post:", "^cid:.*:tids"]
+        
+        total = 0
+        for pattern in patterns:
+            result = self.db.objects.delete_many({"_key": {"$regex": pattern}})
+            if result.deleted_count > 0:
+                name = pattern.replace('^', '').replace(':', '').replace('.*', '')
+                print(f"   Deleted {result.deleted_count:6d} {name} documents")
+                total += result.deleted_count
+        
+        # Clear users collection
+        if 'users' in self.db.list_collection_names():
+            result = self.db.users.delete_many({})
+            print(f"   Deleted {result.deleted_count:6d} users (auth)")
+            total += result.deleted_count
+        
+        # Reset global counters
+        self.db.objects.update_one(
+            {"_key": "global"},
+            {"$set": {
+                "topicCount": 0,
+                "postCount": 0,
+                "userCount": 0
+            }},
+            upsert=True
+        )
+        
+        print(f"\n✅ Deleted {total} forum documents")
+        print("✅ Config, themes, settings preserved")    
 
     def import_users(self, users_csv):
         """Import users from CSV."""
