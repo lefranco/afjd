@@ -25,10 +25,11 @@ quit()
 
 ============================
 docker compose exec nodebb ./nodebb setup
+(ignore ENOENT error)
 
 ============================
 docker compose exec nodebb nano /app/nodebb/config.json
-insert :
+insert after :
 
     "bind_address": "0.0.0.0",
     "trust_proxy": true,
