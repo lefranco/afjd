@@ -29,14 +29,30 @@ class NodeBBImporter:
         print(f"✅ Connected to NodeBB database: {db_name}")
 
         # SELECTIVE cleanup - only forum data
-        self._clean_forum_data_only()
+        self._clean_forum_content_only()
 
-    def _clean_forum_data_only(self):
-        """Remove only forum content."""
-        print("\n🧹 Cleaning forum data only (preserving config/theme)...")
+    def _clean_forum_content_only(self):
+        """Delete ONLY forum user/content data, preserve ALL settings."""
+
+        print("\n🧹 CLEANING ONLY FORUM CONTENT")
         
-        # Delete specific patterns
-        patterns = ["^user:", "^category:", "^topic:", "^post:", "^cid:.*:tids"]
+        # ONLY these patterns (forum content)
+        patterns = [
+            "^user:[0-9]+$",      # user:1, user:2 (NOT settings:user)
+            "^category:[0-9]+$",  # category:1
+            "^topic:[0-9]+$",     # topic:1  
+            "^post:[0-9]+$",      # post:1
+            "^cid:[0-9]+:tids$",  # cid:1:tids
+        ]
+        
+        # DO NOT DELETE:
+        # - settings:*    (settings:url, settings:theme:id, etc.)
+        # - theme:*       (theme data)
+        # - config        (main config)
+        # - plugins       (plugins list)
+        # - admin         (admin menu)
+        # - privileges:*  (permissions)
+        # - group:*       (user groups)
         
         total = 0
         for pattern in patterns:
@@ -169,8 +185,6 @@ class NodeBBImporter:
 
     def _save_passwords_to_file(self, password_list):
         """Save generated passwords to a secure JSON file."""
-        # Create a summary file (encrypt this in production!)
-        summary_file = "user_passwords_summary.json"
         
         summary = []
         for item in password_list:
@@ -349,6 +363,7 @@ class NodeBBImporter:
 
     def run_import(self, data_dir="./phpbb_export"):
         """Run the complete import process."""
+
         print("\n" + "=" * 60)
         print("🚀 IMPORTING PHPBB DATA INTO CLEAN DATABASE")
         print("=" * 60)
