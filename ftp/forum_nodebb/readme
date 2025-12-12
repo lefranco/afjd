@@ -29,7 +29,7 @@ docker compose exec nodebb ./nodebb setup
 
 ============================
 docker compose exec nodebb nano /app/nodebb/config.json
-insert after :
+insert after "port": 4567:
 
     "bind_address": "0.0.0.0",
     "trust_proxy": true,
