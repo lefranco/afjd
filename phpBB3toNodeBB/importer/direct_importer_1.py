@@ -4,12 +4,10 @@
 direct_import.py - Import phpBB data directly into NodeBB v4.7.0
 """
 
-import json
 import pathlib
 import secrets
 import string
 import hashlib
-import bcrypt
 
 import pandas as pd  # pip3 install pandas --break-system-packages
 import pymongo # pip3 install pymongo --break-system-packages
@@ -28,82 +26,72 @@ class NodeBBImporter:
         self.db = self.client[db_name]
         print(f"✅ Connected to NodeBB database: {db_name}")
 
-        # SELECTIVE cleanup - only forum data
-        self._clean_forum_content_only()
+        # SELECTIVE cleanup
+        self._clean_existing_data()
 
-    def _clean_forum_content_only(self):
-        """Delete ONLY forum user/content data, preserve ALL settings."""
+    def _clean_existing_data(self):
+        """Super precise: delete ONLY forum structure, keep everything else."""
 
-        print("\n🧹 CLEANING ONLY FORUM CONTENT")
-        
-        # ONLY these patterns (forum content)
-        patterns = [
-            "^user:[0-9]+$",      # user:1, user:2 (NOT settings:user)
-            "^category:[0-9]+$",  # category:1
-            "^topic:[0-9]+$",     # topic:1  
-            "^post:[0-9]+$",      # post:1
-            "^cid:[0-9]+:tids$",  # cid:1:tids
+        print("\n🧹 PRECISE CLEANUP: Forum content only")
+
+        # Track what we delete
+        deletions = []
+
+        # Only delete these EXACT patterns in 'objects'
+        delete_patterns = [
+            ("^category:", "Categories"),
+            ("^topic:", "Topics"),
+            ("^post:", "Posts"),
+            ("^cid:[0-9]+:tids$", "Category sorted sets")
         ]
-        
-        # DO NOT DELETE:
-        # - settings:*    (settings:url, settings:theme:id, etc.)
-        # - theme:*       (theme data)
-        # - config        (main config)
-        # - plugins       (plugins list)
-        # - admin         (admin menu)
-        # - privileges:*  (permissions)
-        # - group:*       (user groups)
-        
-        total = 0
-        for pattern in patterns:
+
+        for pattern, description in delete_patterns:
             result = self.db.objects.delete_many({"_key": {"$regex": pattern}})
             if result.deleted_count > 0:
-                name = pattern.replace('^', '').replace(':', '').replace('.*', '')
-                print(f"   Deleted {result.deleted_count:6d} {name} documents")
-                total += result.deleted_count
-        
-        # Clear users collection
-        if 'users' in self.db.list_collection_names():
-            result = self.db.users.delete_many({})
-            print(f"   Deleted {result.deleted_count:6d} users (auth)")
-            total += result.deleted_count
-        
-        # Reset global counters
-        self.db.objects.update_one(
-            {"_key": "global"},
-            {"$set": {
-                "topicCount": 0,
-                "postCount": 0,
-                "userCount": 0
-            }},
-            upsert=True
-        )
-        
-        print(f"\n✅ Deleted {total} forum documents")
-        print("✅ Config, themes, settings preserved")
-    
-    def _generate_random_password(self, length=6):
+                deletions.append(f"{description}: {result.deleted_count}")
+
+        # Optional: Also clear standalone collections
+        for coll in ['categories', 'topics', 'posts']:
+            if coll in self.db.list_collection_names():
+                count = self.db[coll].count_documents({})
+                if count > 0:
+                    self.db[coll].delete_many({})
+                    deletions.append(f"{coll} collection: {count}")
+
+        # Summary
+        if deletions:
+            print("   Deleted:")
+            for item in deletions:
+                print(f"     - {item}")
+        else:
+            print("   No forum content found to delete")
+
+        print("\n✅ Ready for import. All non-forum data preserved.")
+
+    def _generate_random_password(self):
         """Generate a secure random password."""
+
+        pass_length = 4
         alphabet = string.ascii_letters + string.digits
-        password = ''.join(secrets.choice(alphabet) for _ in range(length))
+        password = ''.join(secrets.choice(alphabet) for _ in range(pass_length))
         return password
-    
+
     def _generate_fast_password_hash(self, password):
         """Generate a fast SHA512 hash for import speed.
         Users will need to reset passwords anyway, so we don't need bcrypt security.
         """
         # Generate random salt
         salt = secrets.token_hex(8)  # 16-character hex salt
-        
+
         # SHA512 hash (fast!)
         hash_obj = hashlib.sha512()
         hash_obj.update(salt.encode('utf-8'))
         hash_obj.update(password.encode('utf-8'))
         hashed = hash_obj.hexdigest()
-        
+
         # Format: sha512$salt$hash
         return f"sha512${salt}${hashed}"
-        
+
     def import_users(self, users_csv):
         """Import users from CSV with random passwords."""
         users_df = pd.read_csv(users_csv)
@@ -116,10 +104,10 @@ class NodeBBImporter:
 
             # Generate random password for this user
             plain_password = self._generate_random_password()
-            
-            # Generate bcrypt hash (NodeBB's preferred format)
+
+            # Generate hash
             password_hash = self._generate_fast_password_hash(plain_password)
-                        
+
             # Store password for admin reference
             password_list.append({
                 "user_id": int(row['user_id']),
@@ -179,13 +167,13 @@ class NodeBBImporter:
 
         # Save passwords to a secure file for admin use
         self._save_passwords_to_file(password_list)
-        
+
         print(f"✅ Imported {len(imported_users)} users with random passwords")
         return imported_users
 
     def _save_passwords_to_file(self, password_list):
         """Save generated passwords to a secure JSON file."""
-        
+
         summary = []
         for item in password_list:
             summary.append({
@@ -194,13 +182,13 @@ class NodeBBImporter:
                 "email": item["email"],
                 "password": item["password"]
             })
-        
+
         # Create a CSV for usage
         csv_file = "user_passwords.csv"
         df = pd.DataFrame(summary)
         df.to_csv(csv_file, index=False)
         print(f"🔐 Generated passwords saved to: {csv_file}")
-        
+
         # Security warning
         print("⚠️  SECURITY WARNING: This file contain plain-text passwords!")
         print("   Secure or delete it immediately after distributing passwords.")
@@ -254,6 +242,8 @@ class NodeBBImporter:
             category_id = int(row['cid'])
 
             # VALIDATE RELATIONSHIPS
+            if user_id == 1:   # the Libertor issue
+                user_id = 300
             if user_id not in users_map:
                 print(f"⚠️  Topic {topic_id}: User {user_id} not found, skipping")
                 skipped_topics += 1
@@ -310,6 +300,8 @@ class NodeBBImporter:
             topic_id = int(row['tid'])
 
             # VALIDATE RELATIONSHIPS
+            if user_id == 1:   # the Libertor issue
+                user_id = 300
             if user_id not in users_map:
                 print(f"⚠️  Post {post_id}: User {user_id} not found, skipping")
                 skipped_posts += 1
@@ -361,6 +353,96 @@ class NodeBBImporter:
             )
         print(f"✅ Updated {len(first_posts)} topics with mainPid")
 
+    def update_category_counts(self):
+        """Update topic and post counts in all categories."""
+        print("\n📊 Updating category counts...")
+
+        # Get all categories
+        categories = list(self.db.objects.find({"_key": {"$regex": "^category:"}}))
+
+        for category in categories:
+            cid = category['cid']
+
+            # Count topics in this category
+            topic_count = self.db.objects.count_documents({
+                "_key": {"$regex": "^topic:"},
+                "cid": cid
+            })
+
+            # Count posts in topics of this category
+            # First get all topic IDs in this category
+            topic_ids = [doc['tid'] for doc in self.db.objects.find(
+                {"_key": {"$regex": "^topic:"}, "cid": cid},
+                {"tid": 1}
+            )]
+
+            post_count = 0
+            if topic_ids:
+                post_count = self.db.objects.count_documents({
+                    "_key": {"$regex": "^post:"},
+                    "tid": {"$in": topic_ids}
+                })
+
+            # Update the category
+            self.db.objects.update_one(
+                {"_key": f"category:{cid}"},
+                {"$set": {
+                    "topic_count": topic_count,
+                    "post_count": post_count
+                }}
+            )
+
+            if len(categories) <= 10:  # Only show details for small forums
+                print(f"   Category {cid}: {topic_count} topics, {post_count} posts")
+            elif (categories.index(category) + 1) % 20 == 0:  # Progress for large forums
+                print(f"   Progress: {categories.index(category) + 1}/{len(categories)} categories")
+
+        print(f"✅ Updated {len(categories)} category counts")
+
+    def create_sorted_sets(self):
+        """Create cid:{cid}:tids sorted sets that NodeBB needs to display topics."""
+
+        print("\n🔗 Creating category sorted sets...")
+
+        # Get all categories
+        categories = list(self.db.objects.find({"_key": {"$regex": "^category:"}}))
+
+        sets_created = 0
+
+        for category in categories:
+            cid = category['cid']
+            sorted_set_key = f"cid:{cid}:tids"
+
+            # Get all topics in this category, sorted by lastposttime (newest first)
+            topics = list(self.db.objects.find(
+                {"_key": {"$regex": "^topic:"}, "cid": cid},
+                sort=[("lastposttime", -1)]  # Descending = newest first
+            ))
+
+            if topics:
+                # Create the sorted set document
+                sorted_set = {
+                    "_key": sorted_set_key,
+                    "value": [topic['tid'] for topic in topics],
+                    "scores": [topic.get('lastposttime', topic.get('timestamp', 0)) for topic in topics]
+                }
+
+                # Insert or update
+                self.db.objects.update_one(
+                    {"_key": sorted_set_key},
+                    {"$set": sorted_set},
+                    upsert=True
+                )
+
+                sets_created += 1
+
+                # Progress indicator for large forums
+                if len(categories) > 20 and sets_created % 10 == 0:
+                    print(f"   Created {sets_created}/{len(categories)} sorted sets...")
+
+        print(f"✅ Created {sets_created} category sorted sets")
+        return sets_created
+
     def run_import(self, data_dir="./phpbb_export"):
         """Run the complete import process."""
 
@@ -388,6 +470,12 @@ class NodeBBImporter:
             users_map,
             topics_map
         )
+
+        # Update category counts
+        self.update_category_counts()
+
+        # Create sorted sets
+        self.create_sorted_sets()
 
         print("=" * 60)
         print("🎉 IMPORT COMPLETE!")
@@ -429,7 +517,7 @@ def main():
     print(f"   MongoDB: {MONGO_URI}")
     print("\nRequired backup command:")
     print(f'   mongodump --uri="{MONGO_URI}/{NODEBB_DB}" --out ./nodebb_backup')
-    
+
     print("\n🔐 IMPORTANT: All users will get RANDOM passwords!")
     print("   Passwords will be saved to user_passwords.csv")
 
