@@ -13,7 +13,7 @@ After:
 
 Check:
 ls -la ./public/uploads/avatars/
-ls -la ./data/uploads/
+ls -la ./public/uploads
 
 mongo mongodb://nodebb:nodebb123@37.59.100.228:27017/nodebb
 > db.objects.count({"_key": /^topic:/})
