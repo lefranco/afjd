@@ -40,12 +40,11 @@ def add_custom_user_to_csv_files(export_dir):
 
         # Custom user details
         custom_user = {
-            'user_id': 1,
+            'user_id': 300,   # must not exist
             'username': 'Libertor',
             'email': 'custom.user@example.com',
             'joindate': int(time.time()),
-            'postcount': 0,
-            'password_hash': ''
+            'postcount': 0
         }
 
         # Check if user already exists
@@ -55,7 +54,7 @@ def add_custom_user_to_csv_files(export_dir):
             df_users.to_csv(users_csv, index=False)
             print(f"✅ Added custom user '{custom_user['username']}' to users.csv")
         else:
-            print(f"⚠️ Custom user already exists in users.csv")
+            print("⚠️ Custom user already exists in users.csv")
     else:
         print("❌ users.csv not found")
 
@@ -85,7 +84,7 @@ def main():
         # Core tables for NodeBB import
         'users': f"""
             SELECT user_id, username, user_email as email, user_regdate as joindate,
-                user_posts as postcount, user_password as password_hash
+                user_posts as postcount
             FROM {prefix}users
             WHERE user_type != 2 -- Exclude bots (INACTIVE)
             ORDER BY user_id
@@ -131,7 +130,7 @@ def main():
     connection.close()
 
     # 5. ADD CUSTOM USER
-    add_custom_user_to_csv_files(export_dir)
+    add_custom_user_to_csv_files(export_dir)  # The Libertor issue
 
     print("🎉 Export complete! Check the 'phpbb_export' directory.")
     print("Next steps:")

@@ -365,6 +365,7 @@ class AccurateAttachmentMapper:
 
     def run(self, phpbb_installation_path):
         """Run the complete accurate attachment migration."""
+        
         print("=" * 60)
         print("COMPLETE ATTACHMENT MIGRATION FOR SMALL FORUMS")
         print("=" * 60)
@@ -372,13 +373,13 @@ class AccurateAttachmentMapper:
         # Step 1: Export from database
         attachments_df = self.export_attachments_csv()
         if attachments_df is None or len(attachments_df) == 0:
-            print("\n⚠️  No attachments found in database. Skipping file migration.")
+            print("\n⚠️  No attachments found in database. Cannot proceed with file migration.")
             return False
 
         # Step 2: Find phpBB files
         phpbb_info = self.find_phpbb_files(phpbb_installation_path)
         if not phpbb_info:
-            print("\n⚠️  No PhpBB file. Skipping file migration.")
+            print("\n⚠️  No PhpBB file. Cannot proceed with file migration.")
             return False
 
         # Step 3: Verify files exist
