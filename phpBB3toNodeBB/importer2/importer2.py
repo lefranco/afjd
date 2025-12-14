@@ -21,7 +21,7 @@ mongo mongodb://nodebb:nodebb123@37.59.100.228:27017/nodebb
 
 Restart:
 ./nodebb build
-./nodebb restart
+./nodebb (re)start
 
 Check:
 Les avatars s’affichent correctement
@@ -35,7 +35,7 @@ import re
 
 import pandas as pd
 import pymongo # pip3 install pymongo --break-system-packages
-import slugify # pip3 install slugify --break-system-packages
+import slugify # pip3 install python-slugify --break-system-packages
 
 # -------------------------
 # CONFIGURATION
@@ -219,7 +219,6 @@ def main():
         # Seulement le premier post du topic (maintenant que c'est trié par timestamp)
         if tid not in first_posts:
             first_posts[tid] = pid
-            print(f"  First post for topic {tid} is {pid} (timestamp: {row['timestamp']})")
 
     print(f"✅ Imported {len(df_posts)} posts + {nb_attachments} attachments")
 
