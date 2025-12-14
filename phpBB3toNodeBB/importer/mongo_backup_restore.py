@@ -15,7 +15,6 @@ import os
 import sys
 
 
-
 def run(cmd):
     """Run."""
     print(">>>", " ".join(cmd))
