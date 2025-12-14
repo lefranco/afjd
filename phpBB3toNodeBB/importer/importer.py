@@ -9,6 +9,8 @@ import time
 import pathlib
 import re
 import sys
+import secrets
+import string
 
 import requests
 import pandas as pd
@@ -29,9 +31,101 @@ RATE_LIMIT = 0.1
 # Get from admin interface
 TOKEN = '8d72634b-fded-471d-95a7-adf26a38d2cf'
 
+# Identify admin
 ADMIN_UID = 1
 
+# Be patient if server is busy
 TIMEOUT = 30
+
+
+# -------------------------
+# Tools
+# -------------------------
+def generate_random_password() -> str:
+    """Generate a secure random password."""
+
+    pass_length = 8
+    alphabet = string.ascii_letters + string.digits
+    password = ''.join(secrets.choice(alphabet) for _ in range(pass_length))
+    return password
+
+
+def save_passwords_to_file(password_list: list[dict]):
+    """Save generated passwords to a secure CSV file."""
+
+    # Create a CSV for usage
+    csv_file = "user_passwords.csv"
+    df = pd.DataFrame(password_list)
+    df.to_csv(csv_file, index=False)
+    print(f"🔐 Generated passwords saved to: {csv_file}")
+
+    # Security warning
+    print("⚠️  SECURITY WARNING: This file contain plain-text passwords!")
+    print("   Secure or delete it immediately after distributing passwords.")
+
+
+def convert_bbcode_to_nodebb(content: str) -> str:
+    """Convert phpBB BBCode to NodeBB format."""
+
+    if not isinstance(content, str):
+        return str(content) if content else ""
+
+    # Preserve line breaks
+    content = content.replace('\n', '<br>')
+
+    # Bold: [b]text[/b] → **text**
+    content = re.sub(r'\[b\](.*?)\[/b\]', r'**\1**', content, flags=re.IGNORECASE)
+
+    # Italic: [i]text[/i] → *text*
+    content = re.sub(r'\[i\](.*?)\[/i\]', r'*\1*', content, flags=re.IGNORECASE)
+
+    # Underline: [u]text[/u] → <u>text</u>
+    content = re.sub(r'\[u\](.*?)\[/u\]', r'<u>\1</u>', content, flags=re.IGNORECASE)
+
+    # Strikethrough: [s]text[/s] → ~~text~~
+    content = re.sub(r'\[s\](.*?)\[/s\]', r'~~\1~~', content, flags=re.IGNORECASE)
+
+    # Code blocks: [code]text[/code] → ```text```
+    content = re.sub(r'\[code\](.*?)\[/code\]', r'```\1```', content, flags=re.IGNORECASE)
+
+    # Inline code: [inline]text[/inline] → `text`
+    content = re.sub(r'\[inline\](.*?)\[/inline\]', r'`\1`', content, flags=re.IGNORECASE)
+
+    # Quotes: [quote]text[/quote] → > text
+    # Multi-line quote handling
+    def replace_quote(match):
+        quote_text = match.group(1).strip()
+        # Add > to each line
+        lines = quote_text.split('<br>')
+        quoted_lines = [f'> {line}' if line.strip() else '>' for line in lines]
+        return '<br>'.join(quoted_lines)
+
+    content = re.sub(r'\[quote\](.*?)\[/quote\]', replace_quote, content, flags=re.IGNORECASE | re.DOTALL)
+
+    # URLs: [url]http://...[/url] → http://...
+    content = re.sub(r'\[url\](.*?)\[/url\]', r'\1', content, flags=re.IGNORECASE)
+
+    # URLs with text: [url=http://...]text[/url] → [text](http://...)
+    content = re.sub(r'\[url=(.*?)\](.*?)\[/url\]', r'[\2](\1)', content, flags=re.IGNORECASE)
+
+    # Images: [img]http://...[/img] → ![](http://...)
+    content = re.sub(r'\[img\](.*?)\[/img\]', r'![](\1)', content, flags=re.IGNORECASE)
+
+    # Lists: [list][*]item[/list] → * item
+    content = re.sub(r'\[list\](.*?)\[/list\]', r'\1', content, flags=re.IGNORECASE | re.DOTALL)
+    content = re.sub(r'\[\*\](.*?)(?=\[\*\]|\[/list\]|$)', r'* \1<br>', content, flags=re.IGNORECASE)
+
+    # Size (simplify): [size=85]text[/size] → text
+    content = re.sub(r'\[size=.*?\](.*?)\[/size\]', r'\1', content, flags=re.IGNORECASE)
+
+    # Color (remove): [color=red]text[/color] → text
+    content = re.sub(r'\[color=.*?\](.*?)\[/color\]', r'\1', content, flags=re.IGNORECASE)
+
+    # Clean up any remaining BBCode tags
+    content = re.sub(r'\[/\w+\]', '', content)
+    content = re.sub(r'\[\w+[^\]]*\]', '', content)
+
+    return content
 
 
 # -------------------------
@@ -69,13 +163,13 @@ class NodeBBImporter:
             time.sleep(RATE_LIMIT)
 
             if response.status_code not in [200, 201]:
-                print(f"❌ API Error ({response.status_code}): {response.text}")
+                print(f"❌ API Error ({response.status_code}): {response.text} ({method=} {url=})")
                 return None
 
             return response.json()
 
         except Exception as e:
-            print(f"❌ Request error: {e}")
+            print(f"❌ Request error: {e} ({method=} {url=} {endpoint=})")
             return None
 
     # -----------
@@ -127,7 +221,7 @@ class NodeBBImporter:
     def delete_post(self, pid: int) -> bool:
         """Delete a post"""
         print(f"🗑️  Deleting post {pid}...")
-        result = self._make_request("DELETE", "/api/v3/posts/{pid}")
+        result = self._make_request("DELETE", f"/api/v3/posts/{pid}")
         return result is not None
 
     # -----------
@@ -149,13 +243,13 @@ class NodeBBImporter:
 
     def create_category(self, name: str, description: str = "", parent_cid: int = 0, order: int = 0) -> int | None:
         """Create a new category"""
+
         category_data = {
             "name": name,
             "description": description,
             "parentCid": parent_cid,
             "order": order
         }
-
         result = self._make_request("POST", "/api/v3/categories", data=category_data)
         if result and 'response' in result:
             return result['response']['cid']
@@ -163,31 +257,36 @@ class NodeBBImporter:
 
     def create_topic(self, cid: int, title: str, content: str, uid: int, timestamp: int | None = None) -> dict | None:
         """Create a new topic"""
+
+        # convert
+        content2 = convert_bbcode_to_nodebb(content)
+
         topic_data = {
             "cid": cid,
             "title": title,
-            "content": content,
+            "content": content2,
             "uid": uid
         }
         if timestamp:
             # NodeBB might not accept custom timestamps via API
             # You might need to adjust this based on your NodeBB version
             pass
-
         result = self._make_request("POST", "/api/v3/topics", data=topic_data)
-        print(f"{result=}")
         if result and 'response' in result:
             return result['response']
         return None
 
     def create_post(self, tid: int, content: str, uid: int) -> int | None:
         """Create a reply post"""
+
+        # convert
+        content2 = convert_bbcode_to_nodebb(content)
+
         post_data = {
             "tid": tid,
-            "content": content,
+            "content": content2,
             "uid": uid
         }
-
         result = self._make_request("POST", f"/api/v3/topics/{tid}", data=post_data)
         if result and 'response' in result:
             return result['response']['pid']
@@ -199,11 +298,11 @@ class NodeBBImporter:
 
     def upload_file(self, file_path: pathlib.Path, uid: int) -> str | None:
         """Upload a file and return its URL"""
+
         if not file_path.exists():
             return None
 
         url = f"{self.base_url}/api/v3/users/{uid}/uploads"
-
         try:
             with open(file_path, 'rb') as f:
                 files = {'files[]': (file_path.name, f, 'application/octet-stream')}
@@ -233,28 +332,33 @@ def clear_existing_data(api: NodeBBImporter) -> None:
 
     # 1. Delete all topics and posts
     print("\n🗑️  Deleting topics (and posts)...")
-    topics = api.get_all_topics()
-    for topic in topics:
-        posts = api.get_all_posts_in_topics(topic['tid'])
-        for post in posts:
-            api.delete_topic(post['pid'])
-        api.delete_topic(topic['tid'])
+    while True:
+        topics = api.get_all_topics()
+        if not topics:
+            break
+        for topic in topics:
+            api.delete_topic(topic['tid'])
 
     # 2. Delete all categories (except default ones)
     print("\n🗑️  Deleting categories...")
-    categories = api.get_all_categories()
-    for category in categories:
-        if category['cid'] not in [1, 2]:  # Don't delete default categories
+    while True:
+        categories = api.get_all_categories()
+        if not categories:
+            break
+        for category in categories:
             api.delete_category(int(category['cid']))
 
     # 3. Delete all users (except admin)
     print("\n🗑️  Deleting users...")
-    users = api.get_all_users()
-    for user in users:
-        if user['uid'] == ADMIN_UID:
-            print(f"⚠️  Skipping admin user {user['uid']}")
-            continue
-        api.delete_user(user['uid'])
+    while True:
+        users = api.get_all_users()
+        if len(users) <= 1:
+            break
+        for user in users:
+            if user['uid'] == ADMIN_UID:
+                print(f"⚠️  Skipping admin user {user['uid']}")
+                continue
+            api.delete_user(user['uid'])
 
     print("✅ Data cleared successfully")
 
@@ -275,6 +379,8 @@ def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int, int]
 
     print(f"Found {len(df_users)} users to import")
 
+    password_list = []
+
     for _, row in df_users.iterrows():
         old_uid = int(row['user_id'])
         username = str(row['username']).strip()
@@ -283,18 +389,28 @@ def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int, int]
         print(f"  Creating user: {username}")
 
         # Create user via API
-        password = "PaSsWoRd123"  # TODO random one stored and sent
-        new_uid = api.create_user(username, email, password)
+        plain_password = generate_random_password()
 
-        if new_uid:
-            user_map[old_uid] = new_uid
-            print(f"    ✅ Created (UID: {new_uid})")
-        else:
+        new_uid = api.create_user(username, email, plain_password)
+
+        if not new_uid:
             print(f"    ❌ Failed to create {username}")
+            continue
 
-        time.sleep(RATE_LIMIT)
+        user_map[old_uid] = new_uid
+        print(f"    ✅ Created (UID: {new_uid})")
 
-    print(f"\n✅ Imported {len(user_map)} users")
+        # Store password for admin reference
+        password_list.append({
+            "user_id": new_uid,
+            "username": username,
+            "email": email,
+            "password": plain_password,
+        })
+
+    save_passwords_to_file(password_list)
+
+    print(f"\n✅ Imported {len(user_map)} users with random passwords")
     return user_map
 
 
@@ -333,8 +449,6 @@ def import_categories(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int,
             else:
                 print(f"    ❌ Failed to create {name}")
 
-            time.sleep(RATE_LIMIT)
-
     # Then import child categories
     for _, row in df_forums.iterrows():
         parent_cid = int(row['parentCid'])
@@ -352,8 +466,6 @@ def import_categories(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int,
                 print(f"    ✅ Created (CID: {new_cid})")
             else:
                 print(f"    ❌ Failed to create {name}")
-
-            time.sleep(RATE_LIMIT)
 
     print(f"\n✅ Imported {len(category_map)} categories")
     return category_map
@@ -452,15 +564,11 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
                 api.create_post(new_tid, post_content, post_uid)
 
                 if post_idx % 10 == 0:
-                    print(f"    Created {post_idx-1} replies...")
-
-                time.sleep(RATE_LIMIT)
+                    print(f"    Created {post_idx} replies...")
 
         # Progress indicator
         if idx % 10 == 0:
-            print(f"Progress: {idx}/{len(df_topics)} topics imported")
-
-        time.sleep(RATE_LIMIT)
+            print(f"===== Progress: {idx}/{len(df_topics)} topics imported")
 
     print(f"\n✅ Successfully imported {success_count}/{len(df_topics)} topics")
 

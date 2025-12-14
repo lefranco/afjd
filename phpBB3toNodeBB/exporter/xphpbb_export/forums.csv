@@ -1,0 +1,87 @@
+cid,name,description,parentCid,display_order
+78,A lire en priorité,,0,1
+98,Règles et chartes,,78,2
+99,Les différents responsables,,78,4
+14,Recherche de joueurs,,0,7
+15,Recherche de joueurs pour une partie Diplomania,,14,8
+36,Recherche de joueurs pour une équipe Diplomania,,14,10
+22,Recherche de joueurs pour ailleurs,,14,12
+1,Améliorer le site,,0,15
+2,Améliorer la brique jeu,,1,16
+21,Améliorer la brique sociale,,1,18
+49,Incidents sur le site,,1,20
+55,Interventions spéciales,,1,22
+60,Suspicions sur le site,,1,24
+56,Application Android,,0,27
+57,Téléchargement de l'appli,,56,28
+59,Discussions sur l'appli,,56,30
+95,Problèmes avec l'appli,,56,32
+16,Tournois et ligues blitz,,0,35
+67,Tournoi du boucher,,16,36
+41,T Blitz individuel,,16,38
+77,T Blitz par équipe,,16,40
+71,Ligue des champions,,16,42
+40,Diplo-Ligue,,16,44
+39,Astrocup,,16,46
+104,Iliade,,16,48
+113,Tour des variantes (en blitz),,16,50
+68,Divers,,16,52
+83,Tournois et ligues négo,,0,55
+82,Stabs dans la brume,,83,56
+70,Coupe Négo,,83,58
+52,Championnat de France en Ligne,,83,60
+72,Coupe de France Web,,83,62
+80,Masters,,83,64
+108,T-négo,,83,66
+112,Tour des variantes (en négo),,83,68
+86,Divers,,83,70
+84,"Parties en live, tournois et ligues faf virtuel",,0,73
+115,Parties en live,,84,74
+43,Ligue Francophone Virtuelle,,84,76
+69,Championnat du monde Francophone Virtuel,,84,78
+85,Divers,,84,80
+61,Le coin des débutants,,0,83
+65,Organisation de parties,,61,84
+54,Questions de règles,,61,86
+12,Le monde du face à face,,0,89
+13,Le championnat de France,,12,90
+87,En France,,12,92
+37,Dans le reste de la communauté francophone,,12,94
+25,Dans le reste de l'Europe,,12,96
+24,Dans le reste du Monde,,12,98
+32,Diplomatie le jeu,,0,101
+33,Stratégies,,32,102
+34,Tactiques,,32,104
+47,Analyses,,32,106
+102,Scorages,,32,108
+107,Encyclopædia Diplomatica,,32,110
+88,Variantes,,0,113
+93,En général,,88,114
+89,Brouillard,,88,116
+106,Variantes à 11 joueurs,,88,118
+91,Variantes à 10 joueurs,,88,120
+103,Variantes à 9 joueurs,,88,122
+111,Variantes à 8 joueurs,,88,124
+110,Variantes à 7 joueurs,,88,126
+94,Variantes à 6 joueurs,,88,128
+97,Variantes à 5 joueurs,,88,130
+109,Variantes à 4 joueurs,,88,132
+90,Variantes à 3 joueurs,,88,134
+105,Variantes à 2 joueurs (duel),,88,136
+116,Autres Plateformes de Jeu,,0,139
+119,Francophones,,116,140
+120,Non Francophones,,116,142
+18,Association AFJD,,0,145
+19,Le conseil vous parle !,,18,146
+28,Assemblée générale,,18,148
+81,Les groupes de travail,,18,150
+101,Le monde du Wiki,,18,152
+100,Annonces des modérateurs,,18,154
+96,Commentaires de modérations,,18,156
+5,Pas que diplo dans la vie,,0,159
+11,Les sports physiques,,5,160
+38,Les sports cérébraux,,5,162
+45,La politique,,5,164
+66,Divers,,5,166
+29,Pour tester,,0,169
+30,Forum de test,,29,170
