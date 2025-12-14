@@ -59,10 +59,6 @@ def restore(args):
             print("⛔ Abort")
             sys.exit(0)
 
-    expected_dir = "/nodebb"
-    if not args.input.endswith(expected_dir):
-        print(f"⚠️  Warning: directory should end with {expected_dir}")
-
     cmd = [
         "mongorestore",
         "--host", args.host,
@@ -71,7 +67,7 @@ def restore(args):
         "--drop",
         "--gzip",
         "--authenticationMechanism", "SCRAM-SHA-256",
-        args.input
+        args.input + "/" + args.db
     ]
 
     if args.user:
