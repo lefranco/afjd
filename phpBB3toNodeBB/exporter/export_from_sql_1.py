@@ -130,7 +130,7 @@ def main():
     connection.close()
 
     # 5. ADD CUSTOM USER
-    add_custom_user_to_csv_files(export_dir)  # The Libertor issue
+    add_custom_user_to_csv_files(export_dir)  # The Libertor issue : we need him so we add him
 
     print("🎉 Export complete! Check the 'phpbb_export' directory.")
     print("Next steps:")

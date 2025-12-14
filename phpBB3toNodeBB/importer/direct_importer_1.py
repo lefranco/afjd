@@ -102,6 +102,10 @@ class NodeBBImporter:
 
         for _, row in users_df.iterrows():
 
+            user_id = int(row['user_id'])
+            if user_id == 2:   # No need for Palpatine we already have an admin
+                continue
+
             # Generate random password for this user
             plain_password = self._generate_random_password()
 
