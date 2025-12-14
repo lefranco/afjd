@@ -522,9 +522,8 @@ def main():
     print("   Passwords will be saved to user_passwords.csv")
 
     # Safety confirmation
-    response = input("\nContinue (all data will be deleted)? (y/N)")
-
-    if response.lower() != 'y':
+    confirm = input("\nContinue (all data will be deleted)? (y/N)")
+    if confirm.lower() != 'y':
         print("\n❌ Import cancelled. No changes were made.")
         return
 
