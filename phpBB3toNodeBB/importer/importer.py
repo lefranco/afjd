@@ -12,8 +12,10 @@ import sys
 import secrets
 import string
 
-import requests
-import pandas as pd
+import requests  # pip3 install requests --break-system-packages
+import pandas as pd  # pip3 install pandas --break-system-packages
+import bbcode  # pip3 install bbcode  --break-system-package
+import markdownify  # pip3 install markdownify  --break-system-package
 
 # -------------------------
 # CONFIGURATION
@@ -64,69 +66,18 @@ def save_passwords_to_file(password_list: list[dict]):
     print("   Secure or delete it immediately after distributing passwords.")
 
 
+PARSER = bbcode.Parser()
+
+
 def convert_bbcode_to_nodebb(content: str) -> str:
     """Convert phpBB BBCode to NodeBB format."""
 
     if not isinstance(content, str):
         return str(content) if content else ""
 
-    # Preserve line breaks
-    content = content.replace('\n', '<br>')
-
-    # Bold: [b]text[/b] → **text**
-    content = re.sub(r'\[b\](.*?)\[/b\]', r'**\1**', content, flags=re.IGNORECASE)
-
-    # Italic: [i]text[/i] → *text*
-    content = re.sub(r'\[i\](.*?)\[/i\]', r'*\1*', content, flags=re.IGNORECASE)
-
-    # Underline: [u]text[/u] → <u>text</u>
-    content = re.sub(r'\[u\](.*?)\[/u\]', r'<u>\1</u>', content, flags=re.IGNORECASE)
-
-    # Strikethrough: [s]text[/s] → ~~text~~
-    content = re.sub(r'\[s\](.*?)\[/s\]', r'~~\1~~', content, flags=re.IGNORECASE)
-
-    # Code blocks: [code]text[/code] → ```text```
-    content = re.sub(r'\[code\](.*?)\[/code\]', r'```\1```', content, flags=re.IGNORECASE)
-
-    # Inline code: [inline]text[/inline] → `text`
-    content = re.sub(r'\[inline\](.*?)\[/inline\]', r'`\1`', content, flags=re.IGNORECASE)
-
-    # Quotes: [quote]text[/quote] → > text
-    # Multi-line quote handling
-    def replace_quote(match):
-        quote_text = match.group(1).strip()
-        # Add > to each line
-        lines = quote_text.split('<br>')
-        quoted_lines = [f'> {line}' if line.strip() else '>' for line in lines]
-        return '<br>'.join(quoted_lines)
-
-    content = re.sub(r'\[quote\](.*?)\[/quote\]', replace_quote, content, flags=re.IGNORECASE | re.DOTALL)
-
-    # URLs: [url]http://...[/url] → http://...
-    content = re.sub(r'\[url\](.*?)\[/url\]', r'\1', content, flags=re.IGNORECASE)
-
-    # URLs with text: [url=http://...]text[/url] → [text](http://...)
-    content = re.sub(r'\[url=(.*?)\](.*?)\[/url\]', r'[\2](\1)', content, flags=re.IGNORECASE)
-
-    # Images: [img]http://...[/img] → ![](http://...)
-    content = re.sub(r'\[img\](.*?)\[/img\]', r'![](\1)', content, flags=re.IGNORECASE)
-
-    # Lists: [list][*]item[/list] → * item
-    content = re.sub(r'\[list\](.*?)\[/list\]', r'\1', content, flags=re.IGNORECASE | re.DOTALL)
-    content = re.sub(r'\[\*\](.*?)(?=\[\*\]|\[/list\]|$)', r'* \1<br>', content, flags=re.IGNORECASE)
-
-    # Size (simplify): [size=85]text[/size] → text
-    content = re.sub(r'\[size=.*?\](.*?)\[/size\]', r'\1', content, flags=re.IGNORECASE)
-
-    # Color (remove): [color=red]text[/color] → text
-    content = re.sub(r'\[color=.*?\](.*?)\[/color\]', r'\1', content, flags=re.IGNORECASE)
-
-    # Clean up any remaining BBCode tags
-    content = re.sub(r'\[/\w+\]', '', content)
-    content = re.sub(r'\[\w+[^\]]*\]', '', content)
-
-    return content
-
+    html_text = PARSER.format(content)
+    new_content = markdownify.markdownify(html_text)
+    return new_content
 
 # -------------------------
 # API Client
@@ -255,7 +206,7 @@ class NodeBBImporter:
             return result['response']['cid']
         return None
 
-    def create_topic(self, cid: int, title: str, content: str, uid: int, timestamp: int | None = None) -> dict | None:
+    def create_topic(self, cid: int, title: str, content: str, uid: int, timestamp: int) -> dict | None:
         """Create a new topic"""
 
         # convert
@@ -265,12 +216,9 @@ class NodeBBImporter:
             "cid": cid,
             "title": title,
             "content": content2,
-            "uid": uid
+            "uid": uid,
+            "timestamp": timestamp,
         }
-        if timestamp:
-            # NodeBB might not accept custom timestamps via API
-            # You might need to adjust this based on your NodeBB version
-            pass
         result = self._make_request("POST", "/api/v3/topics", data=topic_data)
         if result and 'response' in result:
             return result['response']
@@ -278,6 +226,7 @@ class NodeBBImporter:
 
     def create_post(self, tid: int, content: str, uid: int) -> int | None:
         """Create a reply post"""
+        # TODO : timestamp
 
         # convert
         content2 = convert_bbcode_to_nodebb(content)
@@ -516,9 +465,14 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
         old_cid = int(row['cid'])
         old_uid = int(row['uid'])
 
-        # Skip if category or user doesn't exist in our maps
-        if old_cid not in category_map or old_uid not in user_map:
-            print(f"⚠️  Skipping topic {old_tid}: category or user not found")
+        # Skip if category doesn't exist in our maps
+        if old_cid not in category_map:
+            print(f"⚠️  Skipping topic {old_tid}: category {old_cid} not found")
+            continue
+
+        # Skip if user doesn't exist in our maps
+        if old_uid not in user_map:
+            print(f"⚠️  Skipping topic {old_tid}: user {old_uid} not found")
             continue
 
         new_cid = category_map[old_cid]
@@ -534,13 +488,14 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
         # Process first post (topic content)
         first_post = posts_by_topic[old_tid][0]
         content = str(first_post['content'])
+        timestamp = int(first_post['timestamp'])
 
         # Handle attachments in first post
         content = process_attachments(content, data_path, new_uid, api, uploaded_files)
 
         # Create topic
         title = str(row['title']).strip()
-        topic_data = api.create_topic(new_cid, title, content, new_uid)
+        topic_data = api.create_topic(new_cid, title, content, new_uid, timestamp)
 
         if not topic_data:
             print(f"❌ Failed to create topic {old_tid}")
@@ -554,7 +509,13 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
             print(f"  Creating {len(posts_by_topic[old_tid]) - 1} replies...")
 
             for post_idx, post_row in enumerate(posts_by_topic[old_tid][1:], 2):
-                post_uid = user_map.get(int(post_row['uid']), new_uid)
+
+                old_post_uid = int(post_row['uid'])
+                if old_post_uid not in user_map:
+                    print(f"❌ Failed to find post author {old_post_uid} in user_map")
+                    continue
+
+                post_uid = user_map[old_post_uid]
                 post_content = str(post_row['content'])
 
                 # Handle attachments in reply
@@ -562,6 +523,8 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
 
                 # Create reply
                 api.create_post(new_tid, post_content, post_uid)
+
+                # TODO : timestamp
 
                 if post_idx % 10 == 0:
                     print(f"    Created {post_idx} replies...")
