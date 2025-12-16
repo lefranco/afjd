@@ -1,16 +1,10 @@
 #!/usr/bin/env python3
 
-"""
-Check converter
-"""
+"""Unitary tests on the delicate software converter is."""
 
-import html
 import pathlib
-import re
-import secrets
-import string
 import sys
-import time
+import typing
 
 import pandas as pd  # pip3 install pandas --break-system-packages
 
@@ -20,8 +14,11 @@ DATA_DIR = "./phpbb_export"
 CSV_ENCODING = "utf-8"
 
 
-def check_topics_and_posts(data_path: pathlib.Path, my_converter) -> None:
+def check_topics_and_posts(data_path: pathlib.Path) -> None:
     """Check topics and posts from CSV files."""
+
+    topic_count = 0
+    post_count = 0
 
     # Load topics
     topics_csv = data_path / "topics.csv"
@@ -41,22 +38,17 @@ def check_topics_and_posts(data_path: pathlib.Path, my_converter) -> None:
     df_posts = df_posts.sort_values('timestamp', ascending=True)
 
     # Group posts by topic
-    posts_by_topic = {}
+    posts_by_topic: dict[int, list[pd.Series[typing.Any]]] = {}  # pylint: disable=unsubscriptable-object
     for _, row in df_posts.iterrows():
         tid = int(row['tid'])
         if tid not in posts_by_topic:
             posts_by_topic[tid] = []
         posts_by_topic[tid].append(row)
 
-    # Cache for uploaded files
-    uploaded_files = {}
-
     # Import each topic
-    success_count = 0
-    for idx, topic_row in enumerate(df_topics.iterrows(), 1):
+    for _, topic_row in df_topics.iterrows():
 
-        _, row = topic_row
-        old_tid = int(row['tid'])
+        old_tid = int(topic_row['tid'])
 
         # Check if this topic has posts
         if old_tid not in posts_by_topic or not posts_by_topic[old_tid]:
@@ -65,30 +57,38 @@ def check_topics_and_posts(data_path: pathlib.Path, my_converter) -> None:
 
         # Process first post (topic content)
         first_post = posts_by_topic[old_tid][0]
+        old_pid_first_post = first_post['pid']
         content = str(first_post['content'])
 
         # conversion phpbb3 -> nodebb
         print("<<<<<<<<<<<<<<<<<<<<<<<<<")
         print(content)
-        content = my_converter.convert(content)
-        print("++++++++++++++++++++++++")
+        content = converter.convert(content)
+        print(f"++++t{old_tid} p{old_pid_first_post}++++++++++")
         print(content)
         print(">>>>>>>>>>>>>>>>>>>>>>>>>")
+
+        topic_count += 1
 
         # Create replies (remaining posts)
         if len(posts_by_topic[old_tid]) > 1:
 
-            for post_idx, post_row in enumerate(posts_by_topic[old_tid][1:], 2):
+            for post_row in posts_by_topic[old_tid][1:]:
 
+                old_post_pid = post_row['pid']
                 post_content = str(post_row['content'])
 
                 # conversion phpbb3 -> nodebb
                 print("<<<<<<<<<<<<<<<<<<<<<<<<<")
                 print(post_content)
-                post_content =  my_converter.convert(post_content)
-                print("++++++++++++++++++++++++")
+                post_content = converter.convert(post_content)
+                print(f"++++++++++p{old_post_pid}++++++++++")
                 print(post_content)
                 print(">>>>>>>>>>>>>>>>>>>>>>>>>")
+
+                post_count += 1
+
+    print(f"We have {topic_count} topic and {post_count} posts.")
 
 
 # -------------------------
@@ -97,17 +97,14 @@ def check_topics_and_posts(data_path: pathlib.Path, my_converter) -> None:
 def main() -> None:
     """Main."""
 
-    # Check data directory
+    # 1. Check data directory
     data_path = pathlib.Path(DATA_DIR)
     if not data_path.exists():
         print(f"❌ Data directory not found: {data_path}")
         sys.exit(1)
 
-    # 1. Make a converter
-    my_converter = converter.PhpBBToNodeBBConverter()
-
     # 2. Import topics and posts
-    check_topics_and_posts(data_path, my_converter)
+    check_topics_and_posts(data_path)
 
 
 if __name__ == "__main__":

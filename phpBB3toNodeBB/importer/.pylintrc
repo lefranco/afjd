@@ -9,6 +9,9 @@ disable=global-statement,
         too-many-ancestors,
         too-many-locals,
         too-many-positional-arguments,
-        too-many-arguments
+        too-many-arguments,
+	too-many-function-args,
+	too-many-branches,
+	duplicate-code
 
 
