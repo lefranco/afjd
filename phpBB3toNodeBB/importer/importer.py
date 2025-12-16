@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 
 """
-Complete NodeBB Importer using API v3
+Complete NodeBB Importer using API v3.
+
 Clears existing data and imports from phpBB CSV files
 """
 
-import time
 import pathlib
 import re
-import sys
 import secrets
 import string
+import sys
+import time
 
-import requests  # pip3 install requests --break-system-packages
 import pandas as pd  # pip3 install pandas --break-system-packages
-import bbcode  # pip3 install bbcode  --break-system-package
-import markdownify  # pip3 install markdownify  --break-system-package
+import requests  # pip3 install requests --break-system-packages
+
+import converter
 
 # -------------------------
 # CONFIGURATION
@@ -31,7 +32,7 @@ CSV_ENCODING = "utf-8"
 RATE_LIMIT = 0.1
 
 # Get from admin interface
-TOKEN = '8d72634b-fded-471d-95a7-adf26a38d2cf'
+ADMIN_TOKEN = '8d72634b-fded-471d-95a7-adf26a38d2cf'
 
 # Identify admin
 ADMIN_UID = 1
@@ -66,19 +67,6 @@ def save_passwords_to_file(password_list: list[dict]):
     print("   Secure or delete it immediately after distributing passwords.")
 
 
-PARSER = bbcode.Parser()
-
-
-def convert_bbcode_to_nodebb(content: str) -> str:
-    """Convert phpBB BBCode to NodeBB format."""
-
-    if not isinstance(content, str):
-        return str(content) if content else ""
-
-    html_text = PARSER.format(content)
-    new_content = markdownify.markdownify(html_text)
-    return new_content
-
 # -------------------------
 # API Client
 # -------------------------
@@ -86,26 +74,28 @@ class NodeBBImporter:
     """Importer."""
 
     def __init__(self, base_url: str):
+        """Constructor."""
+
         self.base_url = base_url.rstrip('/')
         self.session = requests.Session()
-        self.token = TOKEN
+        self.token = ADMIN_TOKEN
 
-    def _make_request(self, method: str, endpoint: str, data=None, params=None) -> dict:
-        """Make authenticated API request"""
+    def _make_request(self, method: str, endpoint: str, data=None, specific_token=None) -> dict:
+        """Make authenticated API request."""
 
         url = f"{self.base_url}{endpoint}"
         headers = {
-            "Authorization": f"Bearer {self.token}",
+            "Authorization": f"Bearer {specific_token if specific_token else self.token}",
             "Content-Type": "application/json"
         }
 
         try:
             if method == "GET":
-                response = self.session.get(url, headers=headers, params=params, timeout=TIMEOUT)
+                response = self.session.get(url, headers=headers, timeout=TIMEOUT)
             elif method == "POST":
                 response = self.session.post(url, headers=headers, json=data, timeout=TIMEOUT)
             elif method == "DELETE":
-                response = self.session.delete(url, headers=headers, params=params, timeout=TIMEOUT)
+                response = self.session.delete(url, headers=headers, timeout=TIMEOUT)
             elif method == "PUT":
                 response = self.session.put(url, headers=headers, json=data, timeout=TIMEOUT)
             else:
@@ -128,22 +118,22 @@ class NodeBBImporter:
     # -----------
 
     def get_all_users(self) -> list[dict]:
-        """Get all users"""
+        """Get all users (a page actually)."""
         result = self._make_request("GET", "/api/users")
         return result['users'] if result else []
 
     def get_all_categories(self) -> list[dict]:
-        """Get all categories"""
+        """Get all categories (a page actually)."""
         result = self._make_request("GET", "/api/categories")
         return result['categories'] if result else []
 
     def get_all_topics(self) -> list[dict]:
-        """Get all topics"""
+        """Get all topics (a page actually)."""
         result = self._make_request("GET", "/api/recent")
         return result['topics'] if result else []
 
     def get_all_posts_in_topics(self, pid: int) -> list[dict]:
-        """Get all posts in topic"""
+        """Get all posts in topic (a page actually)."""
         result = self._make_request("GET", f"/api/posts/{pid}/replies")
         return result['replies'] if result else []
 
@@ -152,27 +142,33 @@ class NodeBBImporter:
     # -----------
 
     def delete_user(self, uid: int) -> bool:
-        """Delete a user (except admin)"""
+        """Delete a user (except admin)."""
         print(f"🗑️  Deleting user {uid}...")
         result = self._make_request("DELETE", f"/api/v3/users/{uid}")
         return result is not None
 
     def delete_category(self, cid: int) -> bool:
-        """Delete a category"""
+        """Delete a category."""
         print(f"🗑️  Deleting category {cid}...")
         result = self._make_request("DELETE", f"/api/v3/categories/{cid}")
         return result is not None
 
     def delete_topic(self, tid: int) -> bool:
-        """Delete a topic"""
+        """Delete a topic."""
         print(f"🗑️  Deleting topic {tid}...")
         result = self._make_request("DELETE", f"/api/v3/topics/{tid}")
         return result is not None
 
     def delete_post(self, pid: int) -> bool:
-        """Delete a post"""
+        """Delete a post."""
         print(f"🗑️  Deleting post {pid}...")
         result = self._make_request("DELETE", f"/api/v3/posts/{pid}")
+        return result is not None
+
+    def revoke_token(self, uid: int, token: str) -> bool:
+        """Revoke token of a user."""
+        print(f"🗑️  Revoking user token {uid}...")
+        result = self._make_request("DELETE", f"/api/v3/admin/tokens/{token}")
         return result is not None
 
     # -----------
@@ -180,7 +176,7 @@ class NodeBBImporter:
     # -----------
 
     def create_user(self, username: str, email: str, password: str) -> dict | None:
-        """Create a new user"""
+        """Create a new user."""
 
         user_data = {
             "username": username,
@@ -193,7 +189,7 @@ class NodeBBImporter:
         return None
 
     def create_category(self, name: str, description: str = "", parent_cid: int = 0, order: int = 0) -> int | None:
-        """Create a new category"""
+        """Create a new category."""
 
         category_data = {
             "name": name,
@@ -206,37 +202,39 @@ class NodeBBImporter:
             return result['response']['cid']
         return None
 
-    def create_topic(self, cid: int, title: str, content: str, uid: int, timestamp: int) -> dict | None:
-        """Create a new topic"""
-
-        # convert
-        content2 = convert_bbcode_to_nodebb(content)
+    def create_topic(self, cid: int, title: str, content: str, timestamp: int, uid: int, users_tokens_map: dict[int, int]) -> dict | None:
+        """Create a new topic."""
 
         topic_data = {
             "cid": cid,
             "title": title,
-            "content": content2,
-            "uid": uid,
-            "timestamp": timestamp,
+            "content": content,
+            "timestamp": timestamp,    # TODO : will not work as is => must comment data.timestamp = Date.now(); in api/helpers.js ?
+            "tags": "TAG_TO_DEFINE"
         }
-        result = self._make_request("POST", "/api/v3/topics", data=topic_data)
+
+        # To force author need tu use token
+        specific_token = users_tokens_map[uid]
+
+        result = self._make_request("POST", "/api/v3/topics", data=topic_data, specific_token=specific_token)
         if result and 'response' in result:
             return result['response']
         return None
 
-    def create_post(self, tid: int, content: str, uid: int) -> int | None:
-        """Create a reply post"""
+    def create_post(self, tid: int, content: str, timestamp: int, uid: int, users_tokens_map: dict[int, int]) -> int | None:
+        """Create a reply post."""
+
         # TODO : timestamp
 
-        # convert
-        content2 = convert_bbcode_to_nodebb(content)
-
         post_data = {
-            "tid": tid,
-            "content": content2,
-            "uid": uid
+            "content": content,
+            "timestamp": timestamp,  # TODO : will not work as is
         }
-        result = self._make_request("POST", f"/api/v3/topics/{tid}", data=post_data)
+
+        # To force author need tu use token
+        specific_token = users_tokens_map[uid]
+
+        result = self._make_request("POST", f"/api/v3/topics/{tid}", data=post_data, specific_token=specific_token)
         if result and 'response' in result:
             return result['response']['pid']
         return None
@@ -246,7 +244,7 @@ class NodeBBImporter:
     # -----------
 
     def upload_file(self, file_path: pathlib.Path, uid: int) -> str | None:
-        """Upload a file and return its URL"""
+        """Upload a file and return its URL."""
 
         if not file_path.exists():
             return None
@@ -273,7 +271,7 @@ class NodeBBImporter:
 # Main Import Functions
 # -------------------------
 def clear_existing_data(api: NodeBBImporter) -> None:
-    """Clear all existing posts, topics, categories, and users (except admin)"""
+    """Clear all existing posts, topics, categories, and users (except admin)."""
 
     print("\n" + "=" * 50)
     print("🧹 CLEARING EXISTING DATA")
@@ -313,7 +311,8 @@ def clear_existing_data(api: NodeBBImporter) -> None:
 
 
 def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int, int]:
-    """Import users from CSV and return mapping old_uid -> new_uid"""
+    """Import users from CSV and return mapping old_uid -> new_uid and new_uid -> temporary token."""
+
     print("\n" + "=" * 50)
     print("👤 IMPORTING USERS")
     print("=" * 50)
@@ -329,6 +328,7 @@ def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int, int]
     print(f"Found {len(df_users)} users to import")
 
     password_list = []
+    user_tokens_map = {}
 
     for _, row in df_users.iterrows():
         old_uid = int(row['user_id'])
@@ -349,6 +349,10 @@ def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int, int]
         user_map[old_uid] = new_uid
         print(f"    ✅ Created (UID: {new_uid})")
 
+        # create a token for user and store it
+        token_uid = api.create_token(new_uid)
+        user_tokens_map[new_uid] = token_uid
+
         # Store password for admin reference
         password_list.append({
             "user_id": new_uid,
@@ -360,11 +364,12 @@ def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int, int]
     save_passwords_to_file(password_list)
 
     print(f"\n✅ Imported {len(user_map)} users with random passwords")
-    return user_map
+    return user_map, user_tokens_map
 
 
 def import_categories(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int, int]:
-    """Import categories from CSV and return mapping old_cid -> new_cid"""
+    """Import categories from CSV and return mapping old_cid -> new_cid."""
+
     print("\n" + "=" * 50)
     print("📂 IMPORTING CATEGORIES")
     print("=" * 50)
@@ -420,8 +425,8 @@ def import_categories(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int,
     return category_map
 
 
-def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_map: dict[int, int], category_map: dict[int, int]) -> None:
-    """Import topics and posts from CSV files"""
+def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_map: dict[int, int], user_tokens_map: dict[int, int], category_map: dict[int, int], my_converter) -> None:
+    """Import topics and posts from CSV files."""
 
     print("\n" + "=" * 50)
     print("📝 IMPORTING TOPICS & POSTS")
@@ -465,6 +470,9 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
         old_cid = int(row['cid'])
         old_uid = int(row['uid'])
 
+        if old_uid == 1:  # the Libertor issue
+            old_uid = 300
+
         # Skip if category doesn't exist in our maps
         if old_cid not in category_map:
             print(f"⚠️  Skipping topic {old_tid}: category {old_cid} not found")
@@ -490,12 +498,15 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
         content = str(first_post['content'])
         timestamp = int(first_post['timestamp'])
 
+        # conversion phpbb3 -> nodebb
+        content = my_converter.convert(content)
+
         # Handle attachments in first post
         content = process_attachments(content, data_path, new_uid, api, uploaded_files)
 
         # Create topic
         title = str(row['title']).strip()
-        topic_data = api.create_topic(new_cid, title, content, new_uid, timestamp)
+        topic_data = api.create_topic(new_cid, title, content, timestamp, new_uid, user_tokens_map)
 
         if not topic_data:
             print(f"❌ Failed to create topic {old_tid}")
@@ -511,20 +522,26 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
             for post_idx, post_row in enumerate(posts_by_topic[old_tid][1:], 2):
 
                 old_post_uid = int(post_row['uid'])
+
+                if old_post_uid == 1:  # the Libertor issue
+                    old_post_uid = 300
+
                 if old_post_uid not in user_map:
                     print(f"❌ Failed to find post author {old_post_uid} in user_map")
                     continue
 
                 post_uid = user_map[old_post_uid]
                 post_content = str(post_row['content'])
+                post_timestamp = int(post_row['timestamp'])
+
+                # conversion phpbb3 -> nodebb
+                post_content = my_converter.convert(post_content)
 
                 # Handle attachments in reply
                 post_content = process_attachments(post_content, data_path, post_uid, api, uploaded_files)
 
                 # Create reply
-                api.create_post(new_tid, post_content, post_uid)
-
-                # TODO : timestamp
+                api.create_post(new_tid, post_content, post_timestamp, post_uid, user_tokens_map)
 
                 if post_idx % 10 == 0:
                     print(f"    Created {post_idx} replies...")
@@ -537,7 +554,7 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
 
 
 def process_attachments(content: str, data_path: pathlib.Path, uid: int, api: NodeBBImporter, uploaded_files: dict) -> str:
-    """Process [attachment=ID] tags and replace with uploaded file URLs"""
+    """Process [attachment=ID] tags and replace with uploaded file URLs."""
 
     uploads_dir = data_path / "uploads"
 
@@ -566,7 +583,8 @@ def process_attachments(content: str, data_path: pathlib.Path, uid: int, api: No
 
 
 def import_avatars(api: NodeBBImporter, data_path: pathlib.Path, user_map: dict[int, int]) -> None:
-    """Import user avatars"""
+    """Import user avatars."""
+
     print("\n" + "=" * 50)
     print("🖼️  IMPORTING AVATARS")
     print("=" * 50)
@@ -592,6 +610,17 @@ def import_avatars(api: NodeBBImporter, data_path: pathlib.Path, user_map: dict[
                 break
 
     print("\n✅ Uploaded {success_count} avatars")
+
+
+def revoke_users_tokens(api: NodeBBImporter, user_tokens_map: dict[int, int]) -> None:
+    """Revoke users tokens that were necessary."""
+
+    print("\n" + "=" * 50)
+    print("👤 REVOKING USERS TOKENS")
+    print("=" * 50)
+
+    for uid, token in user_tokens_map:
+        api.revoke_token(uid, token)
 
 
 # -------------------------
@@ -621,20 +650,26 @@ def main() -> None:
         print("❌ Import cancelled")
         sys.exit(0)
 
+    # 0. Make a converter
+    my_converter = converter.PhpBBToNodeBBConverter()
+
     # 1. Clear existing data
     clear_existing_data(api)
 
     # 2. Import users and create map
-    user_map = import_users(api, data_path)
+    user_map, user_tokens_map = import_users(api, data_path)
 
     # 3. Import categories
     category_map = import_categories(api, data_path)
 
     # 4. Import topics and posts
-    import_topics_and_posts(api, data_path, user_map, category_map)
+    import_topics_and_posts(api, data_path, user_map, user_tokens_map, category_map, my_converter)
 
-    # 5. Import avatars (optional)
+    # 5. Import avatars
     import_avatars(api, data_path, user_map)
+
+    # 6. Revoke tokens
+    revoke_users_tokens(api, user_map)
 
     print("\n" + "=" * 50)
     print("🎉 IMPORT COMPLETE!")

@@ -2,16 +2,16 @@
 
 """
 Utility to backup restore database.
-Mandatory for a try and trial approach.
 
+Mandatory for a try and trial approach.
 Needed:
 sudo apt install -y mongodb-database-tools
 """
 
-import subprocess
 import argparse
 import datetime
 import os
+import subprocess
 import sys
 
 
