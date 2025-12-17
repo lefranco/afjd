@@ -64,6 +64,9 @@ SMILIES_MAP = {
     ':|)': '😴',
 }
 
+# Otherwise rejected
+MIN_POST_SIZE = 8
+
 
 def convert(text: str) -> str:
     """Convert phpBB3 content (BBCode + HTML) to NodeBB3 markdown format."""
@@ -105,8 +108,8 @@ def convert(text: str) -> str:
         # html things like &gt;
         txt = html.unescape(txt)
 
-        # Size (ignored)
-        txt = re.sub(r'\[size=[^\]]*\](.*?)\[/size\]', r'\1', txt, flags=re.DOTALL | re.IGNORECASE)  # convert (ignore) BB
+        # Size (simplified to bold)
+        txt = re.sub(r'\[size=[^\]]*\](.*?)\[/size\]', r'**\1**', txt, flags=re.DOTALL | re.IGNORECASE)  # convert  BB
         txt = re.sub(r'<size [^>]*>(.*?)</size>', r'\1', txt, flags=re.DOTALL | re.IGNORECASE)  # remove HTML
 
         # Bold
@@ -116,6 +119,10 @@ def convert(text: str) -> str:
         # Italic
         txt = re.sub(r'\[i\](.*?)\[/i\]', r'*\1*', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
         txt = re.sub(r'</?i\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
+
+        # Underscore (simplified to bold)
+        txt = re.sub(r'\[u\](.*?)\[/u\]', r'**\1**', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
+        txt = re.sub(r'</?u\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
 
         # Barred
         txt = re.sub(r'\[barre\](.*?)\[/barre\]', r'~~\1~~', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
@@ -167,6 +174,9 @@ def convert(text: str) -> str:
         txt = re.sub(r'</?th\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
         txt = re.sub(r'</?td\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
 
+        # emojis
+        txt = re.sub(r'<EMOJI[^>]*>(.*?)</EMOJI>', r'\1', txt, flags=re.DOTALL | re.IGNORECASE)  # simplify HTML
+
         # Youtube
         pattern = r'<YOUTUBE content="([^"]+)">.*?\[/youtube\]</YOUTUBE>'
         txt = re.sub(pattern, lambda m: f'[Voir la vidéo YouTube](https://www.youtube.com/watch?v={m.group(1)})', txt, flags=re.IGNORECASE | re.DOTALL)
@@ -185,11 +195,11 @@ def convert(text: str) -> str:
     # smileys
     text = re.sub(r'<e>(.*?)</e>', replace_smiley, text, flags=re.DOTALL | re.IGNORECASE)
 
-    # emojis TODO : check
-    text = re.sub(r'<emoji[^>]*>(.*?)</emoji>', lambda m: m.group(1), text, flags=re.DOTALL | re.IGNORECASE)
-
     # bbcode
     text = replace_bb_code(text)
+
+    # occurence of link to site
+    text = re.sub(r'diplomania-gen.fr', 'diplomania2.fr', text, flags=re.IGNORECASE)
 
     # remove all <br>
     text = re.sub(r'<br\s*/?>', '', text, flags=re.IGNORECASE)
@@ -199,6 +209,9 @@ def convert(text: str) -> str:
 
     # remove empty lines
     text = re.sub(r'\n\s*\n+', '\n\n', text)
+
+    # make it long enough so not to be rejected
+    text = text.ljust(MIN_POST_SIZE)
 
     return text
 

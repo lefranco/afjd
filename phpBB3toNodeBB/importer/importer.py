@@ -7,9 +7,12 @@ Clears existing data and imports from phpBB CSV files
 Need to have :
     avatars from phpBB3/images/avatars/upload/
     uploads from phpBB3/files/
+Need also : 
+  got to admin console
+  set 'Number of seconds between posts' = 0 (and save) (instead of 10)
 """
 
-import base64
+import html
 import os
 import pathlib
 import re
@@ -21,6 +24,7 @@ import typing
 
 import pandas as pd  # pip3 install pandas --break-system-packages
 import requests  # pip3 install requests --break-system-packages
+import pymongo  # pip3 install pymongo --break-system-packages
 
 import converter
 
@@ -30,6 +34,9 @@ import converter
 NODEBB_URL = "https://forum.diplomania2.fr"
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "admin123"
+
+MONGO_URI = "mongodb://nodebb:nodebb123@37.59.100.228:27017/nodebb"  # Your NodeBB MongoDB
+NODEBB_DB = "nodebb"  # Your NodeBB database name
 
 DATA_DIR = "./phpbb_export"
 CSV_ENCODING = "utf-8"
@@ -74,20 +81,78 @@ def save_passwords_to_file(password_list: list[dict[str, typing.Any]]) -> None:
 
 
 # -------------------------
+# DATABASE Client
+# -------------------------
+class NodeBBMongoDB:
+    """For access direcir to MongoDb database (tweaking)."""
+
+    def __init__(self, mongo_uri: str, db_name: str) -> None:
+        """Connect to NodeBB's MongoDB."""
+
+        self.client: pymongo.MongoClient[typing.Any] = pymongo.MongoClient(mongo_uri)
+        self.db = self.client[db_name]
+        print(f"✅ Connected to NodeBB database: {db_name}")
+
+    def set_account_creation_date(self, uid: int, joined_timestamp: int) -> bool:
+        """Set account creation."""
+
+        result = self.db.objects.update_one(
+            {"_key": f"user:{uid}"},
+            {"$set": {"joined": joined_timestamp}}
+        )
+        return result.acknowledged
+
+    def give_enough_reputation(self, uid: int) -> bool:
+        """Give enough reputation (need 3 to post faster than every 120 seconds)."""
+
+        reputation_value = 3
+        result = self.db.objects.update_one(
+            {"_key": f"user:{uid}"},
+            {"$set": {"reputation": reputation_value}}
+        )
+        return result.acknowledged
+
+    def set_post_creation_date(self, pid: int, timestamp: int) -> bool:
+        """Set post creation date."""
+
+        timestamp_ms = timestamp * 1000
+        result = self.db.objects.update_one(
+            {"_key": f"post:{pid}"},
+            {"$set": {"timestamp": timestamp_ms}}
+        )
+        return result.acknowledged
+
+    def set_topic_creation_date(self, tid: int, timestamp: int) -> bool:
+        """Set topic creation date."""
+
+        result = self.db.objects.update_one(
+            {"_key": f"topic:{tid}"},
+            {"$set": {"timestamp": timestamp}}
+        )
+        return result.acknowledged
+
+
+# -------------------------
 # API Client
 # -------------------------
-class NodeBBImporter:
+class NodeBBApi:
     """Importer."""
 
     def __init__(self, base_url: str) -> None:
-        """Constructor."""
+        """Connect to NodeBB's API."""
 
         self.base_url = base_url.rstrip('/')
         self.session = requests.Session()
         self.token = ADMIN_TOKEN
 
+    # -----------
+    # Low level API access
+    # -----------
+
     def _make_request(self, method: str, endpoint: str, data: dict[str, typing.Any] | None = None, specific_token: str | None = None) -> typing.Any:
         """Make authenticated API request."""
+
+        time.sleep(RATE_LIMIT)
 
         url = f"{self.base_url}{endpoint}"
         headers = {
@@ -108,8 +173,6 @@ class NodeBBImporter:
                     response = self.session.put(url, headers=headers, json=data, timeout=TIMEOUT)
                 case _:
                     raise ValueError(f"Unsupported method: {method}")
-
-            time.sleep(RATE_LIMIT)
 
         except Exception as e:   # pylint: disable=broad-exception-caught
             print(f"❌ Request error: {e} ({url=} {method=} {endpoint=} {data=})")
@@ -210,20 +273,14 @@ class NodeBBImporter:
             return int(result['response']['cid'])
         return None
 
-    def create_topic(self, cid: int, title: str, content: str, timestamp: int, uid: int, user_tokens_map: dict[int, str]) -> int | None:
+    def create_topic(self, cid: int, title: str, content: str, uid: int, user_tokens_map: dict[int, str]) -> int | None:
         """Create a new topic."""
-
-        # TODO : for timestamp : will not work as is
-        # must either
-        #  - comment data.timestamp = Date.now(); in api/helpers.js
-        #  - tweak the database directly
 
         topic_data = {
             "cid": cid,
             "title": title,
             "content": content,
-            "timestamp": timestamp,
-            "tags": ["TAG_TO_DEFINE1", "TAG_TO_DEFINE2"]
+            "tags": []  # no tag for the moment, we be done manually after forum is operational
         }
 
         # To force author need to use token
@@ -234,14 +291,11 @@ class NodeBBImporter:
             return int(result['response']['tid'])
         return None
 
-    def create_post(self, tid: int, content: str, timestamp: int, uid: int, user_tokens_map: dict[int, str]) -> int | None:
+    def create_post(self, tid: int, content: str, uid: int, user_tokens_map: dict[int, str]) -> int | None:
         """Create a reply post."""
-
-        # TODO : see comment on previous function
 
         post_data = {
             "content": content,
-            "timestamp": timestamp
         }
 
         # To force author need to use token
@@ -270,42 +324,39 @@ class NodeBBImporter:
         return None
 
     # -----------
-    # Reputation
-    # -----------
-
-    def give_reputation(self, uid: int) -> str | None:
-        """Create a new user."""
-
-        token_data = {
-            "uid": uid,
-            "settings": {"reputation": 3}
-        }
-
-        result = self._make_request("PUT", "/api/v3/users/{uid}/settings", data=token_data)
-        if result and 'response' in result:
-            return str(result['response'])
-        return None
-
-    # -----------
     # Avatar
     # -----------
 
-    def add_avatar_user(self, uid: int, image_path: pathlib.Path, user_tokens_map: dict[int, str]) -> bool:
+    def add_avatar_user(self, uid: int, url_used: str, user_tokens_map: dict[int, str]) -> bool:
         """Add avatar to user."""
 
-        with open(image_path, 'rb') as f:
-            image_data = base64.b64encode(f.read()).decode('utf-8')
-
         avatar_data = {
-            "type": "uploaded",
-            "url": f"data:image/png;base64,{image_data}",
-            "bgColor": "#ff0000"
+            "type": "external",
+            "url": url_used,
+            "bgColor": "#111111"
         }
 
         # To force owner need to use token
         specific_token = user_tokens_map.get(uid, ADMIN_TOKEN)
 
         result = self._make_request("PUT", f"/api/v3/users/{uid}/picture", data=avatar_data, specific_token=specific_token)
+        return result is not None
+
+    # -----------
+    # Signature
+    # -----------
+
+    def add_signature_user(self, uid: int, signature: str, user_tokens_map: dict[int, str]) -> bool:
+        """Add signature to user."""
+
+        user_data = {
+            "signature": signature,
+        }
+
+        # To force owner need to use token
+        specific_token = user_tokens_map.get(uid, ADMIN_TOKEN)
+
+        result = self._make_request("PUT", f"/api/v3/users/{uid}", data=user_data, specific_token=specific_token)
         return result is not None
 
     # -----------
@@ -316,31 +367,37 @@ class NodeBBImporter:
         """Upload a file and return its URL."""
 
         if not file_path.exists():
+            print(f"❌ Upload error: File does not exist {file_path=}")
             return None
 
-        url = f"{self.base_url}/api/v3/users/{uid}/uploads"
-        try:
-            with open(file_path, 'rb') as f:
-                files = {'files[]': (file_path.name, f, 'application/octet-stream')}
-                headers = {'Authorization': f'Bearer {self.token}'}
-
+        url = f"{self.base_url}/api/v3/files"
+        #url = f"{self.base_url}/api/v3/users/{uid}/uploads"
+        
+        headers = {'Authorization': f'Bearer {self.token}'}
+        with open(file_path, 'rb') as f:
+            files = {'files[]': (file_path.name, f, 'application/octet-stream')}
+            try:
                 response = self.session.post(url, files=files, headers=headers, timeout=TIMEOUT)
+            except Exception as e:   # pylint: disable=broad-exception-caught
+                print(f"❌ Upload error: {e} {file_path=} {uid=}")
+                return None
 
-                if response.status_code == 200:
-                    data = response.json()
-                    if data.get('response') and len(data['response']) > 0:
-                        return str(data['response'][0]['url'])
+        if response.status_code not in [200, 201]:
+            print(f"❌ Upload bad return code : {response.status_code=} {file_path=} {uid=}")
+            return None
 
-        except Exception as e:   # pylint: disable=broad-exception-caught
-            print(f"❌ Upload error: {e} {file_path=} {uid=}")
+        data = response.json()
+        if not (data.get('response') and len(data['response']) > 0):
+            print(f"❌ Upload bad return data : {data=} {file_path=} {uid=}")
+            return None
 
-        return None
+        return str(data['response'][0]['url'])
 
 
 # -------------------------
 # Main Import Functions
 # -------------------------
-def clear_existing_data(api: NodeBBImporter) -> None:
+def clear_existing_data(api: NodeBBApi) -> None:
     """Clear all existing posts, topics, categories, and users (except admin)."""
 
     print("\n" + "=" * 50)
@@ -380,7 +437,7 @@ def clear_existing_data(api: NodeBBImporter) -> None:
     print("✅ Data cleared successfully")
 
 
-def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> tuple[dict[int, int], dict[int, str]]:
+def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> tuple[dict[int, int], dict[int, str]]:
     """Import users from CSV and return mapping old_uid -> new_uid and new_uid -> temporary token."""
 
     print("\n" + "=" * 50)
@@ -402,9 +459,14 @@ def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> tuple[dict[int
 
     for _, row in df_users.iterrows():
 
+        # directly
         old_uid = int(row['user_id'])
         username = str(row['username']).strip()
         email = str(row['email']).strip()
+
+        # indirectly
+        timestamp = int(row['joindate'])
+        signature = str(row['signature']).strip()
 
         print(f"  Creating user: {username}")
 
@@ -434,14 +496,23 @@ def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> tuple[dict[int
             print(f"    ❌ Failed to create token for {username}")
             continue
         user_tokens_map[new_uid] = token_uid
-        print(f"    ✅ Created token too (UID: {new_uid})")
+        print(f"    ✅ Created token too!")
+
+        # set creation date to user
+        if not db.set_account_creation_date(new_uid, timestamp):
+            print(f"    ❌ Failed to set creation date for {username}")
+        print(f"    ✅ Set account creation date too!")
 
         # give some reputation to user (otherwise cannot post)
-        reputation_uid = api.give_reputation(new_uid)
-        if not reputation_uid:
+        if not db.give_enough_reputation(new_uid):
             print(f"    ❌ Failed to give reputation for {username}")
-            continue
-        print(f"    ✅ Given reputation too (UID: {new_uid})")
+        print(f"    ✅ Given some reputation too!")
+
+        # put signature to user
+        signature = converter.convert(signature)
+        if not api.add_signature_user(new_uid, signature, user_tokens_map):
+            print(f"    ❌ Failed to add signature for {username}")
+        print(f"    ✅ Added signature too!")
 
     save_passwords_to_file(password_list)
 
@@ -449,7 +520,7 @@ def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> tuple[dict[int
     return user_map, user_tokens_map
 
 
-def import_categories(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int, int]:
+def import_categories(api: NodeBBApi, data_path: pathlib.Path) -> dict[int, int]:
     """Import categories from CSV and return mapping old_cid -> new_cid."""
 
     print("\n" + "=" * 50)
@@ -507,7 +578,7 @@ def import_categories(api: NodeBBImporter, data_path: pathlib.Path) -> dict[int,
     return category_map
 
 
-def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_map: dict[int, int], user_tokens_map: dict[int, str], category_map: dict[int, int]) -> None:
+def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path, user_map: dict[int, int], user_tokens_map: dict[int, str], category_map: dict[int, int]) -> None:
     """Import topics and posts from CSV files."""
 
     print("\n" + "=" * 50)
@@ -590,7 +661,7 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
             print(f"⚠️  Skipping topic {old_tid}: no posts")
             continue
 
-        print(f"\n📄 Topic {idx}/{len(df_topics)}: {row['title'][:50]}...")
+        print(f"\n📄 Topic {idx}/{len(df_topics)}: {row['title']}")
 
         # Process first post (topic content)
         first_post = posts_by_topic[old_tid][0]
@@ -602,15 +673,20 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
         content = converter.convert(content)
 
         # Handle attachments in first post
-        content = process_attachments_in_post(content, data_path, old_pid_first_post, new_uid, attachments_by_post_file, api)
+        content = process_attachments_in_post(api, content, data_path, old_pid_first_post, new_uid, attachments_by_post_file)
 
         # Create topic
         title = str(row['title']).strip()
-        new_tid = api.create_topic(new_cid, title, content, timestamp, new_uid, user_tokens_map)
+        title = html.unescape(title)
+
+        new_tid = api.create_topic(new_cid, title, content, new_uid, user_tokens_map)
 
         if not new_tid:
-            print(f"❌ Failed to create topic {old_tid}")
+            print(f"❌ Failed to create topic for {old_tid}")
             continue
+
+        if not db.set_topic_creation_date(new_tid, timestamp):
+            print(f"❌ Failed to set topic creation date {new_tid}")
 
         success_count += 1
 
@@ -638,10 +714,17 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
                 post_content = converter.convert(post_content)
 
                 # Handle attachments in reply
-                post_content = process_attachments_in_post(post_content, data_path, old_post_pid, post_uid, attachments_by_post_file, api)
+                post_content = process_attachments_in_post(api, post_content, data_path, old_post_pid, post_uid, attachments_by_post_file)
 
                 # Create reply
-                api.create_post(new_tid, post_content, post_timestamp, post_uid, user_tokens_map)
+                new_pid = api.create_post(new_tid, post_content, post_uid, user_tokens_map)
+
+                if not new_pid:
+                    print(f"❌ Failed to create post for {old_post_pid}")
+                    continue
+
+                if not db.set_post_creation_date(new_pid, post_timestamp):
+                    print(f"❌ Failed to set post creation date {new_pid}")
 
                 if post_idx % 10 == 0:
                     print(f"    Created {post_idx} replies...")
@@ -653,7 +736,7 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
     print(f"\n✅ Successfully imported {success_count}/{len(df_topics)} topics")
 
 
-def import_avatars(api: NodeBBImporter, data_path: pathlib.Path, user_map: dict[int, int], user_tokens_map: dict[int, str]) -> None:
+def import_avatars(api: NodeBBApi, data_path: pathlib.Path, user_map: dict[int, int], user_tokens_map: dict[int, str]) -> None:
     """Import user avatars."""
 
     def find_avatar_file(uid: int, avatars_dir: pathlib.Path) -> pathlib.Path | None:
@@ -680,16 +763,26 @@ def import_avatars(api: NodeBBImporter, data_path: pathlib.Path, user_map: dict[
         avatar_file = find_avatar_file(old_uid, avatars_dir)
         if avatar_file:
             print(f"  Uploading avatar for UID {new_uid}...")
-            if api.add_avatar_user(new_uid, avatar_file, user_tokens_map):
-                print("    ✅ Avatar uploaded")
-                success_count += 1
-            else:
-                print("    ⚠️  Failed to load avatar")
+
+            # 1 upload file
+            complete_path = avatars_dir / avatar_file
+            file_url = api.upload_file(complete_path, new_uid)
+            if not file_url:
+                print("    ⚠️  Failed to upload avatar file")
+                continue
+
+            # 2 put as avatar
+            if not api.add_avatar_user(new_uid, file_url, user_tokens_map):
+                print("    ⚠️  Failed to put avatar")
+                continue
+
+            print("    ✅ Avatar uploaded")
+            success_count += 1
 
     print(f"\n✅ Uploaded {success_count} avatars")
 
 
-def process_attachments_in_post(content: str, data_path: pathlib.Path, pid: int, uid: int, attachments_by_post_file: dict[tuple[int, str], str], api: NodeBBImporter) -> str:
+def process_attachments_in_post(api: NodeBBApi, content: str, data_path: pathlib.Path, pid: int, uid: int, attachments_by_post_file: dict[tuple[int, str], str]) -> str:
     """Process [attachment=ID] tags and replace with uploaded file URLs."""
 
     def replace_attachment(match: re.Match[str]) -> str:
@@ -723,7 +816,7 @@ def process_attachments_in_post(content: str, data_path: pathlib.Path, pid: int,
     return content
 
 
-def revoke_user_tokens(api: NodeBBImporter, user_tokens_map: dict[int, str]) -> None:
+def revoke_user_tokens(api: NodeBBApi, user_tokens_map: dict[int, str]) -> None:
     """Revoke users tokens that were necessary."""
 
     print("\n" + "=" * 50)
@@ -749,8 +842,11 @@ def main() -> None:
         print(f"❌ Data directory not found: {data_path}")
         sys.exit(1)
 
+    # Initialize DB client
+    db = NodeBBMongoDB(MONGO_URI, NODEBB_DB)
+
     # Initialize API client
-    api = NodeBBImporter(NODEBB_URL)
+    api = NodeBBApi(NODEBB_URL)
 
     # Ask for confirmation
     print("\n⚠️  WARNING: This will DELETE ALL EXISTING DATA!")
@@ -762,21 +858,27 @@ def main() -> None:
         sys.exit(0)
 
     # 1. Clear existing data
+    print("1️⃣ Clearing existing data")
     clear_existing_data(api)
 
-    # 2. Import users, create temporary tokens and create map
-    user_map, user_tokens_map = import_users(api, data_path)
+    # 2. Import users, signautures, create temporary tokens and create map
+    print("2️⃣ Import users,")
+    user_map, user_tokens_map = import_users(db, api, data_path)
 
     # 3. Import avatars
+    print("3️⃣ Import avatars")
     import_avatars(api, data_path, user_map, user_tokens_map)
 
     # 4. Import categories
+    print("4️⃣ Import categories")
     category_map = import_categories(api, data_path)
 
     # 5. Import topics and posts (and attachments)
-    import_topics_and_posts(api, data_path, user_map, user_tokens_map, category_map)
+    print("5️⃣ Import topics and posts")
+    import_topics_and_posts(db, api, data_path, user_map, user_tokens_map, category_map)
 
     # 6. Revoke temporary tokens
+    print("6️⃣ Revoking temporary tokens")
     revoke_user_tokens(api, user_tokens_map)
 
     print("\n" + "=" * 50)
