@@ -110,6 +110,11 @@ def main():
             FROM {prefix}posts
             WHERE post_visibility = 1 -- Only visible posts
             ORDER BY post_id
+        """,
+        'attachments': f"""
+            SELECT  attach_id,  physical_filename,  real_filename,  attach_comment, post_msg_id as pid
+            FROM {prefix}attachments
+            ORDER BY attach_id;
         """
     }
 
