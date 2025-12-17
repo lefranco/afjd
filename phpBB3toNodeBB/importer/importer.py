@@ -4,6 +4,9 @@
 Complete NodeBB Importer using API v3.
 
 Clears existing data and imports from phpBB CSV files
+Need to have :
+    avatars from phpBB3/images/avatars/upload/
+    uploads from phpBB3/files/
 """
 
 import base64
@@ -94,25 +97,26 @@ class NodeBBImporter:
 
         try:
 
-            if method == "GET":
-                response = self.session.get(url, headers=headers, timeout=TIMEOUT)
-            elif method == "POST":
-                response = self.session.post(url, headers=headers, json=data, timeout=TIMEOUT)
-            elif method == "DELETE":
-                response = self.session.delete(url, headers=headers, timeout=TIMEOUT)
-            elif method == "PUT":
-                response = self.session.put(url, headers=headers, json=data, timeout=TIMEOUT)
-            else:
-                raise ValueError(f"Unsupported method: {method}")
+            match method:
+                case "GET":
+                    response = self.session.get(url, headers=headers, timeout=TIMEOUT)
+                case "POST":
+                    response = self.session.post(url, headers=headers, json=data, timeout=TIMEOUT)
+                case "DELETE":
+                    response = self.session.delete(url, headers=headers, timeout=TIMEOUT)
+                case "PUT":
+                    response = self.session.put(url, headers=headers, json=data, timeout=TIMEOUT)
+                case _:
+                    raise ValueError(f"Unsupported method: {method}")
 
             time.sleep(RATE_LIMIT)
 
         except Exception as e:   # pylint: disable=broad-exception-caught
-            print(f"❌ Request error: {e} ({method=} {url=} {endpoint=})")
+            print(f"❌ Request error: {e} ({url=} {method=} {endpoint=} {data=})")
             return None
 
         if response.status_code not in [200, 201]:
-            print(f"❌ API Error ({response.status_code}): {response.text} ({method=} {url=})")
+            print(f"❌ API Error ({response.status_code}): {response.text} ({url=} {method=} {endpoint=} {data=})")
             return None
 
         return response.json()
@@ -219,7 +223,7 @@ class NodeBBImporter:
             "title": title,
             "content": content,
             "timestamp": timestamp,
-            "tags": "TAG_TO_DEFINE"
+            "tags": ["TAG_TO_DEFINE1", "TAG_TO_DEFINE2"]
         }
 
         # To force author need to use token
@@ -257,12 +261,29 @@ class NodeBBImporter:
 
         token_data = {
             "uid": uid,
-            "description": ""
+            "description": "temporary token"
         }
 
-        result = self._make_request("POST", "/api/v3/users", data=token_data)
+        result = self._make_request("POST", "/api/v3/admin/tokens", data=token_data)
         if result and 'response' in result:
             return str(result['response']['token'])
+        return None
+
+    # -----------
+    # Reputation
+    # -----------
+
+    def give_reputation(self, uid: int) -> str | None:
+        """Create a new user."""
+
+        token_data = {
+            "uid": uid,
+            "settings": {"reputation": 3}
+        }
+
+        result = self._make_request("PUT", "/api/v3/users/{uid}/settings", data=token_data)
+        if result and 'response' in result:
+            return str(result['response'])
         return None
 
     # -----------
@@ -276,14 +297,15 @@ class NodeBBImporter:
             image_data = base64.b64encode(f.read()).decode('utf-8')
 
         avatar_data = {
-            "type": "upload",
-            "url": f"data:image/png;base64,{image_data}"
+            "type": "uploaded",
+            "url": f"data:image/png;base64,{image_data}",
+            "bgColor": "#ff0000"
         }
 
         # To force owner need to use token
         specific_token = user_tokens_map.get(uid, ADMIN_TOKEN)
 
-        result = self._make_request("POST", "/api/v3/users/{uid}/picture", data=avatar_data, specific_token=specific_token)
+        result = self._make_request("PUT", f"/api/v3/users/{uid}/picture", data=avatar_data, specific_token=specific_token)
         return result is not None
 
     # -----------
@@ -412,6 +434,14 @@ def import_users(api: NodeBBImporter, data_path: pathlib.Path) -> tuple[dict[int
             print(f"    ❌ Failed to create token for {username}")
             continue
         user_tokens_map[new_uid] = token_uid
+        print(f"    ✅ Created token too (UID: {new_uid})")
+
+        # give some reputation to user (otherwise cannot post)
+        reputation_uid = api.give_reputation(new_uid)
+        if not reputation_uid:
+            print(f"    ❌ Failed to give reputation for {username}")
+            continue
+        print(f"    ✅ Given reputation too (UID: {new_uid})")
 
     save_passwords_to_file(password_list)
 
@@ -503,6 +533,14 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
     df_posts = df_posts.sort_values('timestamp', ascending=True)
     print(f"Found {len(df_posts)} posts to import")
 
+    # Group posts by topic
+    posts_by_topic: dict[int, list[pd.Series[typing.Any]]] = {}  # pylint: disable=unsubscriptable-object
+    for _, row in df_posts.iterrows():
+        tid = int(row['tid'])
+        if tid not in posts_by_topic:
+            posts_by_topic[tid] = []
+        posts_by_topic[tid].append(row)
+
     # Load attachments
     attachments_csv = data_path / "attachments.csv"
     if not posts_csv.exists():
@@ -512,20 +550,12 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
     df_attachments = pd.read_csv(attachments_csv, encoding=CSV_ENCODING)
     print(f"Found {len(df_attachments)} attachments to insert")
 
-    # Group posts by topic
-    posts_by_topic: dict[int, list[pd.Series[typing.Any]]] = {}  # pylint: disable=unsubscriptable-object
-    for _, row in df_posts.iterrows():
-        tid = int(row['tid'])
-        if tid not in posts_by_topic:
-            posts_by_topic[tid] = []
-        posts_by_topic[tid].append(row)
-
     # Group attachments by post/topic + real filename
     attachments_by_post_file: dict[tuple[int, str], str] = {}
-    for _, row in df_posts.iterrows():
+    for _, row in df_attachments.iterrows():
         pid = int(row['pid'])
-        real_filename = row['real_filename']
-        physical_filename = row['physical_filename']
+        real_filename = str(row['real_filename'])
+        physical_filename = str(row['physical_filename'])
         if (pid, real_filename) in attachments_by_post_file:
             print(f"❌ Attachments conflict {pid=} {real_filename}")
             continue
@@ -564,7 +594,7 @@ def import_topics_and_posts(api: NodeBBImporter, data_path: pathlib.Path, user_m
 
         # Process first post (topic content)
         first_post = posts_by_topic[old_tid][0]
-        old_pid_first_post = first_post['pid']
+        old_pid_first_post = int(first_post['pid'])
         content = str(first_post['content'])
         timestamp = int(first_post['timestamp'])
 
@@ -632,15 +662,12 @@ def import_avatars(api: NodeBBImporter, data_path: pathlib.Path, user_map: dict[
         for file_name in os.listdir(avatars_dir):
             base, _ = os.path.splitext(file_name)
             if base.endswith(f"_{uid}"):
-                return data_path / file_name
+                return avatars_dir / file_name
         return None
 
     print("\n" + "=" * 50)
     print("🖼️  IMPORTING AVATARS")
     print("=" * 50)
-
-    # Note : avatars files are in 'data/phpBB3/images/avatars/upload'
-    # Make a link to it for successful from phpbb_export
 
     avatars_dir = data_path / "avatars"
     if not avatars_dir.exists():
@@ -758,7 +785,6 @@ def main() -> None:
     print(f"   Users imported: {len(user_map)}")
     print(f"   Categories imported: {len(category_map)}")
     print(f"\n   Forum URL: {NODEBB_URL}")
-    print("   Default password for imported users: password123")
     print("\n⚠️  IMPORTANT: Users should change their passwords!")
 
 
