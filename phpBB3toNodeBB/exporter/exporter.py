@@ -84,7 +84,7 @@ def main():
         # Core tables for NodeBB import
         'users': f"""
             SELECT user_id, username, user_email as email, user_regdate as joindate,
-                user_posts as postcount
+                user_sig as signature, user_posts as postcount
             FROM {prefix}users
             WHERE user_type != 2 -- Exclude bots (INACTIVE)
             ORDER BY user_id

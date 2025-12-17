@@ -15,13 +15,13 @@ import subprocess
 import sys
 
 
-def run(cmd):
+def run(cmd: list[str]) -> None:
     """Run."""
     print(">>>", " ".join(cmd))
     subprocess.check_call(cmd)
 
 
-def backup(args):
+def backup(args: argparse.Namespace) -> None:
     """Backup database."""
 
     ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -45,7 +45,7 @@ def backup(args):
     print(f"\n✅ Backup finished : {backup_dir}")
 
 
-def restore(args):
+def restore(args: argparse.Namespace) -> None:
     """Restore database."""
 
     if not os.path.exists(args.input):
@@ -76,7 +76,7 @@ def restore(args):
     print(f"\n✅ Restore done from : {args.input}")
 
 
-def main():
+def main() -> None:
     """Main."""
 
     parser = argparse.ArgumentParser(description="Backup / Restore MongoDB")
