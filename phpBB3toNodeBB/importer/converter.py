@@ -65,7 +65,7 @@ SMILIES_MAP = {
 }
 
 # Otherwise rejected
-MIN_POST_SIZE = 8
+MIN_POST_SIZE = 10
 
 
 def convert(text: str) -> str:
@@ -211,7 +211,7 @@ def convert(text: str) -> str:
     text = re.sub(r'\n\s*\n+', '\n\n', text)
 
     # make it long enough so not to be rejected
-    text = text.ljust(MIN_POST_SIZE)
+    text = text.ljust(MIN_POST_SIZE, '.')
 
     return text
 

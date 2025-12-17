@@ -42,7 +42,7 @@ DATA_DIR = "./phpbb_export"
 CSV_ENCODING = "utf-8"
 
 # Rate limiting (seconds between API calls)
-RATE_LIMIT = 0.1
+RATE_LIMIT = 0.2
 
 # Get from admin interface
 ADMIN_TOKEN = '8d72634b-fded-471d-95a7-adf26a38d2cf'
@@ -92,14 +92,17 @@ class NodeBBMongoDB:
         self.client: pymongo.MongoClient[typing.Any] = pymongo.MongoClient(mongo_uri)
         self.db = self.client[db_name]
         print(f"✅ Connected to NodeBB database: {db_name}")
+        self.tweaked = False
 
-    def set_account_creation_date(self, uid: int, joined_timestamp: int) -> bool:
+    def set_account_creation_date(self, uid: int, timestamp: int) -> bool:
         """Set account creation."""
 
+        timestamp_ms = timestamp * 1000
         result = self.db.objects.update_one(
             {"_key": f"user:{uid}"},
-            {"$set": {"joined": joined_timestamp}}
+            {"$set": {"joined": timestamp_ms}}
         )
+        self.tweaked = True
         return result.acknowledged
 
     def give_enough_reputation(self, uid: int) -> bool:
@@ -120,15 +123,18 @@ class NodeBBMongoDB:
             {"_key": f"post:{pid}"},
             {"$set": {"timestamp": timestamp_ms}}
         )
+        self.tweaked = True
         return result.acknowledged
 
     def set_topic_creation_date(self, tid: int, timestamp: int) -> bool:
         """Set topic creation date."""
 
+        timestamp_ms = timestamp * 1000
         result = self.db.objects.update_one(
             {"_key": f"topic:{tid}"},
-            {"$set": {"timestamp": timestamp}}
+            {"$set": {"timestamp": timestamp_ms}}
         )
+        self.tweaked = True
         return result.acknowledged
 
 
@@ -861,7 +867,7 @@ def main() -> None:
     print("1️⃣ Clearing existing data")
     clear_existing_data(api)
 
-    # 2. Import users, signautures, create temporary tokens and create map
+    # 2. Import users, signatures, create temporary tokens and create map
     print("2️⃣ Import users,")
     user_map, user_tokens_map = import_users(db, api, data_path)
 
@@ -886,7 +892,11 @@ def main() -> None:
     print("=" * 50)
     print(f"   Users imported: {len(user_map)}")
     print(f"   Categories imported: {len(category_map)}")
-    print(f"\n   Forum URL: {NODEBB_URL}")
+    print(f"   Forum URL: {NODEBB_URL}")
+
+    if db.tweaked:
+        print("🚀 Some direct operations on Mongo database were performed.")
+        print("   TODO : ./nodebb stop + ./nodebb build + ./nodebb start.")
     print("\n⚠️  IMPORTANT: Users should change their passwords!")
 
 
