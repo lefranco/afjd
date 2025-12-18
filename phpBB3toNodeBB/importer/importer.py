@@ -5,11 +5,8 @@ Complete NodeBB Importer using API v3.
 
 Clears existing data and imports from phpBB CSV files
 Need to have :
-    avatars from phpBB3/images/avatars/upload/
-    uploads from phpBB3/files/
-Need also : 
-  got to admin console
-  set 'Number of seconds between posts' = 0 (and save) (instead of 10)
+    phpbbexport/avatars = phpBB3/images/avatars/upload
+    phpbbexport/uploads = phpBB3/files/
 """
 
 import html
@@ -181,11 +178,11 @@ class NodeBBApi:
                     raise ValueError(f"Unsupported method: {method}")
 
         except Exception as e:   # pylint: disable=broad-exception-caught
-            print(f"❌ Request error: {e} ({url=} {method=} {endpoint=} {data=})")
+            print(f"❌ Request error: {e} ({url=} {method=} {data=})")
             return None
 
         if response.status_code not in [200, 201]:
-            print(f"❌ API Error ({response.status_code}): {response.text} ({url=} {method=} {endpoint=} {data=})")
+            print(f"❌ API Error ({response.status_code}): {response.text} ({url=} {method=} {data=})")
             return None
 
         return response.json()
@@ -366,6 +363,19 @@ class NodeBBApi:
         return result is not None
 
     # -----------
+    # Tweak
+    # -----------
+    def tweak(self, fast: bool) -> bool:
+        """Tweak delay between posts."""
+
+        config_data = {
+            "value": 0 if fast else 10
+        }
+
+        result = self._make_request("PUT", f"/api/v3/admin/settings/postDelay", data=config_data)
+        return result is not None
+
+    # -----------
     # Uploaders
     # -----------
 
@@ -376,20 +386,32 @@ class NodeBBApi:
             print(f"❌ Upload error: File does not exist {file_path=}")
             return None
 
+
+        # get csrf
+        url = f"{self.base_url}/api/config"
+        req = self.session.get(url)
+        csrf = req.json()["csrf_token"]
+
+        # login
+        url = f"{self.base_url}/login"
+        data = {
+            "username": ADMIN_USERNAME,
+            "password": ADMIN_PASSWORD,
+            "_csrf": csrf,
+        }
+
+        # upload
         url = f"{self.base_url}/api/v3/files"
-        #url = f"{self.base_url}/api/v3/users/{uid}/uploads"
-        
-        headers = {'Authorization': f'Bearer {self.token}'}
         with open(file_path, 'rb') as f:
             files = {'files[]': (file_path.name, f, 'application/octet-stream')}
             try:
-                response = self.session.post(url, files=files, headers=headers, timeout=TIMEOUT)
+                response = self.session.post(url, files=files, timeout=TIMEOUT)
             except Exception as e:   # pylint: disable=broad-exception-caught
-                print(f"❌ Upload error: {e} {file_path=} {uid=}")
+                print(f"❌ Upload error: {e} {url=} {file_path=} {uid=}")
                 return None
 
         if response.status_code not in [200, 201]:
-            print(f"❌ Upload bad return code : {response.status_code=} {file_path=} {uid=}")
+            print(f"❌ Upload bad return code : {response.status_code=} {url=} {file_path=} {uid=}")
             return None
 
         data = response.json()
@@ -399,6 +421,10 @@ class NodeBBApi:
 
         return str(data['response'][0]['url'])
 
+
+def tweak_configuration(api: NodeBBApi, fast: bool) -> None:
+    """Need some tweaking beforehand."""
+    api.tweak(fast)
 
 # -------------------------
 # Main Import Functions
@@ -768,11 +794,9 @@ def import_avatars(api: NodeBBApi, data_path: pathlib.Path, user_map: dict[int, 
         # Look for avatar
         avatar_file = find_avatar_file(old_uid, avatars_dir)
         if avatar_file:
-            print(f"  Uploading avatar for UID {new_uid}...")
 
             # 1 upload file
-            complete_path = avatars_dir / avatar_file
-            file_url = api.upload_file(complete_path, new_uid)
+            file_url = api.upload_file(avatar_file, new_uid)
             if not file_url:
                 print("    ⚠️  Failed to upload avatar file")
                 continue
@@ -863,29 +887,44 @@ def main() -> None:
         print("❌ Import cancelled")
         sys.exit(0)
 
-    # 1. Clear existing data
-    print("1️⃣ Clearing existing data")
-    clear_existing_data(api)
+    # 1. Set tweak
+    print("1️⃣ Tweak config")
+    tweak_configuration(api, True)
+
+    # 2. Clear existing data
+    print("2️⃣ Clearing existing data")
+    ### clear_existing_data(api)
 
     # 2. Import users, signatures, create temporary tokens and create map
-    print("2️⃣ Import users,")
-    user_map, user_tokens_map = import_users(db, api, data_path)
+    print("3️⃣ Import users,")
+    ### user_map, user_tokens_map = import_users(db, api, data_path)
+    old_uid = 59
+    new_uid = 2892
+    user_map = {old_uid: new_uid}
+    token_uid = api.create_token(new_uid)
+    user_tokens_map = {old_uid : token_uid}
 
     # 3. Import avatars
-    print("3️⃣ Import avatars")
+    print("4️⃣ Import avatars")
     import_avatars(api, data_path, user_map, user_tokens_map)
 
+    return
+
     # 4. Import categories
-    print("4️⃣ Import categories")
+    print("5️⃣ Import categories")
     category_map = import_categories(api, data_path)
 
     # 5. Import topics and posts (and attachments)
-    print("5️⃣ Import topics and posts")
+    print("6️⃣ Import topics and posts")
     import_topics_and_posts(db, api, data_path, user_map, user_tokens_map, category_map)
 
     # 6. Revoke temporary tokens
-    print("6️⃣ Revoking temporary tokens")
+    print("7️⃣ Revoking temporary tokens")
     revoke_user_tokens(api, user_tokens_map)
+
+    # 7. Set tweak
+    print("1️⃣ Tweak config")
+    tweak_configuration(api, False)
 
     print("\n" + "=" * 50)
     print("🎉 IMPORT COMPLETE!")
