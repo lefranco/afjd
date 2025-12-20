@@ -19,6 +19,7 @@ SMILIES_MAP = {
     ':-p': '😛',
     ':o': '😮',
     ':-o': '😮',
+    ':?:': '🤔',
     ':?': '🤔',
     ':-?': '🤔',
     '8)': '😎',
@@ -71,17 +72,39 @@ MIN_POST_SIZE = 10
 def convert(text: str) -> str:
     """Convert phpBB3 content (BBCode + HTML) to NodeBB3 markdown format."""
 
+    def handle_site_links(txt: str) -> str:
+        """Links inside site."""
+
+        txt = re.sub(r'diplomania-gen.fr', "diplomania2.fr", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/forum', "https://forum/diplomania2.fr/", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/frequentation', "https://frequentation/diplomania2.fr/", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/dokuwiki', "https://dokuwiki/diplomania2.fr/", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/dokuwiki2', "https://dokuwiki2/diplomania2.fr/", txt, flags=re.IGNORECASE)
+        txt = re.sub(r"\[viewtopic\.php\?t=\d+\]", "[viewtopic]", txt, flags=re.IGNORECASE)
+        txt = re.sub(r"\[viewtopic\.php\?p=\d+#p\d+\]", "[viewpost]", txt, flags=re.IGNORECASE)
+
+        # TODO
+        # https://forum/diplomania2.fr//phpBB3/viewtopic.php?t=<old_numtopic> -> https://forum/diplomania2.fr/topic/<new_numtopic>
+        # https://forum/diplomania2.fr//phpBB3/viewtopic.php?p=<old_numtopic>#p<old_numtopic> -> https://forum/diplomania2.fr/topic/<new_numtopic>/<num_post>
+
+        return txt
+
     def replace_smiley(match: re.Match[str]) -> str:
         """Smiley."""
 
         smiley = match.group(1)
-        # Retourne l'emoji correspondant ou garde le smiley si non trouvé
-        return SMILIES_MAP.get(smiley, smiley)
+        if smiley in SMILIES_MAP:
+            return SMILIES_MAP[smiley]
+
+        print(f"Warning : unknown smiley >[{smiley}]<")
+        return "???"
 
     def handle_quotes_recursive(txt: str) -> str:
         """Should work both with and without author."""
 
-        match = re.search(r'<QUOTE(?:[^>]*author="([^"]+)")?[^>]*>(.*?)</QUOTE>', txt, flags=re.DOTALL | re.IGNORECASE)
+        # TODO : probably must be done differetly, witout RE
+
+        match = re.search(r'<QUOTE(?:[^>]*author="([^"]+)")?[^>]*>(.*)</QUOTE>', txt, flags=re.DOTALL | re.IGNORECASE)
         if not match:
             return txt
 
@@ -114,7 +137,7 @@ def convert(text: str) -> str:
 
         # Bold
         txt = re.sub(r'\[b\](.*?)\[/b\]', r'**\1**', txt, flags=re.DOTALL | re.IGNORECASE)   # convert BB
-        txt = re.sub(r'</?b\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove html
+        txt = re.sub(r'</?b\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
 
         # Italic
         txt = re.sub(r'\[i\](.*?)\[/i\]', r'*\1*', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
@@ -174,32 +197,34 @@ def convert(text: str) -> str:
         txt = re.sub(r'</?th\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
         txt = re.sub(r'</?td\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
 
-        # emojis
+        # Emojis
         txt = re.sub(r'<EMOJI[^>]*>(.*?)</EMOJI>', r'\1', txt, flags=re.DOTALL | re.IGNORECASE)  # simplify HTML
 
         # Youtube
         pattern = r'<YOUTUBE content="([^"]+)">.*?\[/youtube\]</YOUTUBE>'
         txt = re.sub(pattern, lambda m: f'[Voir la vidéo YouTube](https://www.youtube.com/watch?v={m.group(1)})', txt, flags=re.IGNORECASE | re.DOTALL)
 
-        # Attachment
+        # Attachments
         txt = re.sub(r'\[(?:\/)?attachment(?:=\d+)?\]', '', txt, flags=re.IGNORECASE)  # remove bbcode (will use HTML)
         # we leave <ATTACHEMENT www >yyy</ATTACHMENT> for later processing
 
         return txt
 
-    # remove r, s, t tags
-    text = re.sub(r'</?r\b[^>]*>', '', text, flags=re.IGNORECASE)
-    text = re.sub(r'</?t\b[^>]*>', '', text, flags=re.IGNORECASE)
-    text = re.sub(r'</?s\b[^>]*>', '', text, flags=re.IGNORECASE)
+    # remove useless e, r, s, t tags
+    text = re.sub(r'</?e\b[^>]*>', '', text)
+    text = re.sub(r'</?r\b[^>]*>', '', text)
+    text = re.sub(r'</?s\b[^>]*>', '', text)
+    text = re.sub(r'</?t\b[^>]*>', '', text)
+    text = re.sub(r'</?t\b[^>]*>', '', text)
 
     # smileys
-    text = re.sub(r'<e>(.*?)</e>', replace_smiley, text, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r'<E>(.*?)</E>', replace_smiley, text, flags=re.DOTALL)
 
     # bbcode
     text = replace_bb_code(text)
 
-    # occurence of link to site
-    text = re.sub(r'diplomania-gen.fr', 'diplomania2.fr', text, flags=re.IGNORECASE)
+    # occurence of link to site (after bb_code which changes URL)
+    text = handle_site_links(text)
 
     # remove all <br>
     text = re.sub(r'<br\s*/?>', '', text, flags=re.IGNORECASE)
@@ -220,9 +245,14 @@ def main() -> None:
     """Main for a sigle test."""
 
     sample = """
-<r>En attendant plus de détails sur le wiki, voila le classement final.<br/>
-<br/>
-<URL url="https://imgbb.com/"><s>[url=https://imgbb.com/]</s><IMG src="https://i.ibb.co/n7wD1BT/CdF24.png"><s>[img]</s>https://i.ibb.co/n7wD1BT/CdF24.png<e>[/img]</e></IMG><e>[/url]</e></URL></r>
+<r><QUOTE author="OrangeCar" post_id="3284" time="1702653292" user_id="59"><s>[quote=OrangeCar post_id=3284 time=1702653292 user_id=59]</s>
+Après avoir lu la description du scorage sur le wiki, je voudrais comprendre le mécanisme d'attribution des points de survie.<br/>
+
+<QUOTE><s>[quote]</s>"35 points par jusqu'à un maximum de 210 points"<e>[/quote]</e></QUOTE>
+
+=&gt; Ne manque-t-il pas un mot entre "par" et "jusqu'à" ?
+<e>[/quote]</e></QUOTE>
+par année de survie</r>
 """
 
     print(sample)
