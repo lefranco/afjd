@@ -102,7 +102,7 @@ def convert(text: str) -> str:
     def handle_quotes_recursive(txt: str) -> str:
         """Should work both with and without author."""
 
-        # TODO : probably must be done differetly, witout RE
+        # TODO : probably must be done differently, witout RE
 
         match = re.search(r'<QUOTE(?:[^>]*author="([^"]+)")?[^>]*>(.*)</QUOTE>', txt, flags=re.DOTALL | re.IGNORECASE)
         if not match:

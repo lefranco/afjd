@@ -9,6 +9,7 @@ Need to have :
     phpbbexport/uploads = phpBB3/files/
 """
 
+import contextlib
 import html
 import os
 import pathlib
@@ -16,10 +17,11 @@ import re
 import secrets
 import string
 import sys
-import time
+import signal
 import typing
+import types
 
-import urllib3  # pip3 install urllib3 --break-system-packages
+import magic  # sudo apt install libmagic1 + pip3 install python-magic --break-system-packages
 import pandas as pd  # pip3 install pandas --break-system-packages
 import requests  # pip3 install requests --break-system-packages
 import pymongo  # pip3 install pymongo --break-system-packages
@@ -39,11 +41,8 @@ NODEBB_DB = "nodebb"  # Your NodeBB database name
 DATA_DIR = "./phpbb_export"
 CSV_ENCODING = "utf-8"
 
-# Rate limiting (seconds between API calls)
-RATE_LIMIT = 0.2
-
 # Get from admin interface
-ADMIN_TOKEN = '8d72634b-fded-471d-95a7-adf26a38d2cf'
+ADMIN_TOKEN = '3662f92a-4474-4928-8e96-cd80b3e3ed1f'
 
 # Identify admin
 ADMIN_UID = 1
@@ -51,8 +50,37 @@ ADMIN_UID = 1
 # Be patient if server is busy
 TIMEOUT = 30
 
-# Suppress the warning messages in the console
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  # at company only
+# Need this type
+SignalHandler = typing.Callable[[int, types.FrameType | None], None]
+
+
+# -------------------------
+# Low level tools
+# -------------------------
+@contextlib.contextmanager
+def delayed_ctrl_c() -> typing.Iterator[None]:
+    """Ctrl-C will be triggered at exit of critical uninterruptable section."""
+
+    received: dict[str, typing.Any] = {
+        "sig": None,
+        "frame": None,
+    }
+
+    def handler(sig: int, frame: types.FrameType | None) -> None:
+        received["sig"] = sig
+        received["frame"] = frame
+        print("Ctrl+C received, interruption postponed...")
+
+    old_handler_raw = signal.getsignal(signal.SIGINT)
+    signal.signal(signal.SIGINT, handler)
+
+    try:
+        yield
+    finally:
+        signal.signal(signal.SIGINT, old_handler_raw)
+
+        if received["sig"] is not None and callable(old_handler_raw):
+            old_handler_raw(received["sig"], received["frame"])
 
 
 # -------------------------
@@ -138,16 +166,9 @@ class NodeBBMongoDB:
         self.tweaked = True
         return result.acknowledged
 
-    def clean_stuck_delete_users(self) -> None:
-        """ Because previously Ctrl-C caused damage """
-
-        result = self.db.objects.update_many(
-           {"deleting": {"$in": [True, "true"]}},
-           {"$unset": {"deleting": ""}}
-        )
-
-        if result.modified_count:
-            print(f"🧹 Cleaned: {result.modified_count} document(s)")
+    def close(self) -> None:
+        """Close."""
+        self.client.close()
 
 
 # -------------------------
@@ -162,71 +183,53 @@ class NodeBBApi:
         self.base_url = base_url.rstrip('/')
         self.session = requests.Session()
 
-        # only in company
-        self.session.verify = False   # at company only
-
-        # Very important: at company only : Many company filters block the default 'python-requests' agent
+        # Very important
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         })
 
-        # generate csrf and keep it for later
-        self.api_csrf = self._generate_csrf()
-        self.token = ADMIN_TOKEN
+        # check admin token
+        print("🔍 Check admin token...")
+        if not self._check_admin_token(ADMIN_TOKEN):
+            print("❌ Admin token is not working")
+            sys.exit(0)
+        print("✅ Admin token seems to work...")
+        self.admin_token = ADMIN_TOKEN
+
+        print("🔍 Generate admin CSRF...")
+        csrf = self.generate_csrf(ADMIN_USERNAME, ADMIN_PASSWORD)
+        if not csrf:
+            print("❌ Failed to generate CSRF for Admin")
+            sys.exit(0)
+        self.admin_api_csrf = csrf
 
     # -----------
     # Low level API access
     # -----------
 
-    def _generate_csrf(self) -> str:
-        """Fetching Initial CSRF."""
-
-        # Get config
-        r_config = self.session.get(f"{self.base_url}/api/config")
-        init_data = r_config.json()
-        csrf = init_data.get('csrf_token')
-        if not csrf:
-            print("❌ Upload error: Failed to get initial CSRF token.")
-            return ''
-
-        # Log In
-        login_payload = {
-            "username": ADMIN_USERNAME,
-            "password": ADMIN_PASSWORD,
-            "_csrf": csrf
-        }
-        r_login = self.session.post(f"{self.base_url}/login", data=login_payload)
-        if r_login.status_code != 200:
-            print("❌ Upload error: Failed to log in.")
-            return ''
-
-        # Checkig login ok
-        r_api_config = self.session.get(f"{self.base_url}/api/config")
-        config_data = r_api_config.json()
-        is_logged_in = config_data.get('loggedIn', False)
-        if not is_logged_in:
-            print("❌ Upload error: Login failed: Check credentials or CSRF handling.")
-            return ''
-
-        # Return it : so precious
-        return str(config_data.get('csrf_token'))
-
-    def _make_request(self, method: str, endpoint: str, data: dict[str, typing.Any] | None = None, specific_token: str | None = None) -> typing.Any:
+    def _make_request(self, method: str, endpoint: str, data: dict[str, typing.Any] | None = None, use_csrf: str = '', use_token: str | None = None) -> typing.Any:
         """Make authenticated API request."""
 
-        time.sleep(RATE_LIMIT)
-
         url = f"{self.base_url}{endpoint}"
+
         headers = {
-            "Authorization": f"Bearer {specific_token if specific_token else self.token}",
-            "Content-Type": "application/json",
-            "x-csrf-token": self.api_csrf
+            "Content-Type": "application/json"
         }
 
-        # Add precious csrf
+        # Need data
         if data is None:
             data = {}
-        data["_csrf"] = self.api_csrf
+
+        # Add precious token
+        if use_token:
+            headers["Authorization"] = f"Bearer {use_token}"
+
+        # Add precious csrf
+        if use_csrf:
+            headers["x-csrf-token"] = use_csrf
+            data["_csrf"] = use_csrf
+
+        #  print(f"{url=} {headers=} {data=}")
 
         try:
 
@@ -253,27 +256,73 @@ class NodeBBApi:
         return response.json()
 
     # -----------
+    # Check admin token
+    # -----------
+    def _check_admin_token(self, token: str) -> bool:
+        """Reinstall database from scratch need new toke ;-)."""
+
+        result = self._make_request("GET", f"/api/v3/users/{ADMIN_UID}", use_token=token)
+        #  print(f"{result=}")
+        return result is not None
+
+    # -----------
+    # CSRF
+    # -----------
+    def generate_csrf(self, username: str, password: str) -> str:
+        """Fetching Initial CSRF."""
+
+        # Get config
+        r_config = self.session.get(f"{self.base_url}/api/config")
+        init_data = r_config.json()
+        csrf = init_data.get('csrf_token')
+        if not csrf:
+            print("❌ Upload error: Failed to get initial CSRF token.")
+            return ''
+
+        # Log In
+        login_payload = {
+            "username": username,
+            "password": password,
+            "_csrf": csrf
+        }
+        r_login = self.session.post(f"{self.base_url}/login", data=login_payload)
+        if r_login.status_code != 200:
+            print("❌ Upload error: Failed to log in.")
+            return ''
+
+        # Checkig login ok
+        r_api_config = self.session.get(f"{self.base_url}/api/config")
+        config_data = r_api_config.json()
+        is_logged_in = config_data.get('loggedIn', False)
+        if not is_logged_in:
+            print("❌ Upload error: Login failed: Check credentials or CSRF handling.")
+            return ''
+
+        # Return it : so precious
+        return str(config_data.get('csrf_token'))
+
+    # -----------
     # Getters all
     # -----------
 
     def get_all_users(self) -> list[dict[str, typing.Any]]:
         """Get all users (a page actually)."""
-        result = self._make_request("GET", "/api/users")
+        result = self._make_request("GET", "/api/users", use_csrf=self.admin_api_csrf)
         return list(result['users']) if result else []
 
     def get_all_categories(self) -> list[dict[str, typing.Any]]:
         """Get all categories (a page actually)."""
-        result = self._make_request("GET", "/api/categories")
+        result = self._make_request("GET", "/api/categories", use_csrf=self.admin_api_csrf)
         return list(result['categories']) if result else []
 
     def get_all_topics(self) -> list[dict[str, typing.Any]]:
         """Get all topics (a page actually)."""
-        result = self._make_request("GET", "/api/recent")
+        result = self._make_request("GET", "/api/recent", use_csrf=self.admin_api_csrf)
         return list(result['topics']) if result else []
 
     def get_all_posts_in_topics(self, pid: int) -> list[dict[str, typing.Any]]:
         """Get all posts in topic (a page actually)."""
-        result = self._make_request("GET", f"/api/posts/{pid}/replies")
+        result = self._make_request("GET", f"/api/posts/{pid}/replies", use_csrf=self.admin_api_csrf)
         return list(result['replies']) if result else []
 
     # -----------
@@ -283,31 +332,31 @@ class NodeBBApi:
     def delete_user(self, uid: int) -> bool:
         """Delete a user (except admin)."""
         print(f"🗑️  Deleting user {uid}...")
-        result = self._make_request("DELETE", f"/api/v3/users/{uid}")
+        result = self._make_request("DELETE", f"/api/v3/users/{uid}", use_csrf=self.admin_api_csrf)
         return result is not None
 
     def delete_category(self, cid: int) -> bool:
         """Delete a category."""
         print(f"🗑️  Deleting category {cid}...")
-        result = self._make_request("DELETE", f"/api/v3/categories/{cid}")
+        result = self._make_request("DELETE", f"/api/v3/categories/{cid}", use_csrf=self.admin_api_csrf)
         return result is not None
 
     def delete_topic(self, tid: int) -> bool:
         """Delete a topic."""
         print(f"🗑️  Deleting topic {tid}...")
-        result = self._make_request("DELETE", f"/api/v3/topics/{tid}")
+        result = self._make_request("DELETE", f"/api/v3/topics/{tid}", use_csrf=self.admin_api_csrf)
         return result is not None
 
     def delete_post(self, pid: int) -> bool:
         """Delete a post."""
         print(f"🗑️  Deleting post {pid}...")
-        result = self._make_request("DELETE", f"/api/v3/posts/{pid}")
+        result = self._make_request("DELETE", f"/api/v3/posts/{pid}", use_csrf=self.admin_api_csrf)
         return result is not None
 
     def revoke_token(self, uid: int, token: str) -> bool:
         """Revoke token of a user."""
         print(f"🗑️  Revoking user token {uid}...")
-        result = self._make_request("DELETE", f"/api/v3/admin/tokens/{token}")
+        result = self._make_request("DELETE", f"/api/v3/admin/tokens/{token}", use_csrf=self.admin_api_csrf)
         return result is not None
 
     # -----------
@@ -320,9 +369,9 @@ class NodeBBApi:
         user_data = {
             "username": username,
             "password": password,
-            "email": email
+            "email": email,
         }
-        result = self._make_request("POST", "/api/v3/users", data=user_data)
+        result = self._make_request("POST", "/api/v3/users", data=user_data, use_token=self.admin_token, use_csrf=self.admin_api_csrf)
         if result and 'response' in result:
             return int(result['response']['uid'])
         return None
@@ -336,7 +385,7 @@ class NodeBBApi:
             "parentCid": parent_cid,
             "order": order
         }
-        result = self._make_request("POST", "/api/v3/categories", data=category_data)
+        result = self._make_request("POST", "/api/v3/categories", data=category_data, use_csrf=self.admin_api_csrf)
         if result and 'response' in result:
             return int(result['response']['cid'])
         return None
@@ -352,9 +401,9 @@ class NodeBBApi:
         }
 
         # To force author need to use token
-        specific_token = user_tokens_map.get(uid, ADMIN_TOKEN)
+        use_token = user_tokens_map[uid]
 
-        result = self._make_request("POST", "/api/v3/topics", data=topic_data, specific_token=specific_token)
+        result = self._make_request("POST", "/api/v3/topics", data=topic_data, use_token=use_token, use_csrf=self.admin_api_csrf)
         if result and 'response' in result:
             return int(result['response']['tid'])
         return None
@@ -367,9 +416,9 @@ class NodeBBApi:
         }
 
         # To force author need to use token
-        specific_token = user_tokens_map.get(uid, ADMIN_TOKEN)
+        use_token = user_tokens_map[uid]
 
-        result = self._make_request("POST", f"/api/v3/topics/{tid}", data=post_data, specific_token=specific_token)
+        result = self._make_request("POST", f"/api/v3/topics/{tid}", data=post_data, use_token=use_token, use_csrf=self.admin_api_csrf)
         if result and 'response' in result:
             return int(result['response']['pid'])
         return None
@@ -386,7 +435,7 @@ class NodeBBApi:
             "description": "temporary token"
         }
 
-        result = self._make_request("POST", "/api/v3/admin/tokens", data=token_data)
+        result = self._make_request("POST", "/api/v3/admin/tokens", data=token_data, use_csrf=self.admin_api_csrf)
         if result and 'response' in result:
             return str(result['response']['token'])
         return None
@@ -402,7 +451,8 @@ class NodeBBApi:
             "picture": url_used,
         }
 
-        result = self._make_request("PUT", f"/api/v3/users/{uid}", data=avatar_data)
+        # user token / csrf ?
+        result = self._make_request("PUT", f"/api/v3/users/{uid}", data=avatar_data, use_csrf=self.admin_api_csrf)
         return result is not None
 
     # -----------
@@ -416,7 +466,8 @@ class NodeBBApi:
             "signature": signature,
         }
 
-        result = self._make_request("PUT", f"/api/v3/users/{uid}", data=user_data)
+        # user token / csrf ?
+        result = self._make_request("PUT", f"/api/v3/users/{uid}", data=user_data, use_csrf=self.admin_api_csrf)
         return result is not None
 
     # -----------
@@ -430,7 +481,7 @@ class NodeBBApi:
             "emailConfirmed": True,
         }
 
-        result = self._make_request("PUT", f"/api/v3/users/{uid}", data=user_data)
+        result = self._make_request("PUT", f"/api/v3/users/{uid}", data=user_data, use_csrf=self.admin_api_csrf)
         return result is not None
 
     # -----------
@@ -443,7 +494,7 @@ class NodeBBApi:
             "value": 0 if fast else 10
         }
 
-        result = self._make_request("PUT", "/api/v3/admin/settings/postDelay", data=config_data)
+        result = self._make_request("PUT", "/api/v3/admin/settings/postDelay", data=config_data, use_csrf=self.admin_api_csrf)
         return result is not None
 
     # -----------
@@ -457,10 +508,22 @@ class NodeBBApi:
             print(f"❌ Upload error: File does not exist {file_path=}")
             return None
 
+        # If file does not have extension
+        if file_path.suffix:
+            file_path_used = file_path
+        else:
+            try:
+                mime = magic.from_file(file_path, mime=True)  # type: ignore[no-untyped-call]
+            except:  # noqa: E722 pylint: disable=bare-except
+                print(f"❌ Upload error: Could not find file extension of {file_path=}")
+                return None
+            _, ext = mime.split('/')
+            file_path_used = file_path.with_suffix(ext)
+
         # Upload the file
         with open(file_path, "rb") as file_ptr:
-            files: dict[str, tuple[str, typing.BinaryIO, str]] = {"files[]": (str(file_path), file_ptr, "text/plain")}
-            data = {"_csrf": self.api_csrf}
+            files: dict[str, tuple[str, typing.BinaryIO, str]] = {"files[]": (str(file_path_used), file_ptr, "text/plain")}
+            data = {"_csrf": self.admin_api_csrf}
             r_upload = self.session.post(f"{self.base_url}/api/post/upload", files=files, data=data)
 
         if r_upload.status_code not in [200, 201]:
@@ -479,15 +542,12 @@ def tweak_configuration(api: NodeBBApi, fast: bool) -> None:
 # -------------------------
 # Main Import Functions
 # -------------------------
-def clear_existing_data(db: NodeBBMongoDB, api: NodeBBApi) -> None:
+def clear_existing_data(api: NodeBBApi) -> None:
     """Clear all existing posts, topics, categories, and users (except admin)."""
 
     print("\n" + "=" * 50)
     print("🧹 CLEARING EXISTING DATA")
     print("=" * 50)
-
-    # 1. Clean stuk
-    db.clean_stuck_delete_users()
 
     # 2. Delete all topics and posts
     print("\n🗑️  Deleting topics (and posts)...")
@@ -496,7 +556,8 @@ def clear_existing_data(db: NodeBBMongoDB, api: NodeBBApi) -> None:
         if not topics:
             break
         for topic in topics:
-            api.delete_topic(topic['tid'])
+            with delayed_ctrl_c():
+                api.delete_topic(topic['tid'])
 
     # 2. Delete all categories (except default ones)
     print("\n🗑️  Deleting categories...")
@@ -505,7 +566,8 @@ def clear_existing_data(db: NodeBBMongoDB, api: NodeBBApi) -> None:
         if not categories:
             break
         for category in categories:
-            api.delete_category(int(category['cid']))
+            with delayed_ctrl_c():
+                api.delete_category(int(category['cid']))
 
     # 3. Delete all users (except admin)
     print("\n🗑️  Deleting users...")
@@ -517,12 +579,13 @@ def clear_existing_data(db: NodeBBMongoDB, api: NodeBBApi) -> None:
             if user['uid'] == ADMIN_UID:
                 print(f"⚠️  Skipping admin user {user['uid']}")
                 continue
-            api.delete_user(user['uid'])
+            with delayed_ctrl_c():
+                api.delete_user(user['uid'])
 
     print("✅ Data cleared successfully")
 
 
-def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> tuple[dict[int, int], dict[int, str]]:
+def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> tuple[dict[int, int], dict[int, str], dict[int, str]]:
     """Import users from CSV and return mapping old_uid -> new_uid and new_uid -> temporary token."""
 
     print("\n" + "=" * 50)
@@ -532,7 +595,7 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
     users_csv = data_path / "users.csv"
     if not users_csv.exists():
         print(f"❌ Users CSV not found: {users_csv}")
-        return {}, {}
+        return {}, {}, {}
 
     df_users = pd.read_csv(users_csv, encoding=CSV_ENCODING)
     user_map: dict[int, int] = {}  # old_uid -> new_uid
@@ -594,10 +657,12 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
         print("    ✅ Given some reputation too!")
 
         # put signature to user
-        signature = converter.convert(signature)
-        if not api.add_signature_user(new_uid, signature):
-            print(f"    ❌ Failed to add signature for {username}")
-        print("    ✅ Added signature too!")
+        if signature != 'nan':
+            # For some reason no signature comes out as 'nan' (probably declared as integer)
+            signature = converter.convert(signature)
+            if not api.add_signature_user(new_uid, signature):
+                print(f"    ❌ Failed to add signature for {username}")
+            print("    ✅ Added signature too!")
 
         # set user as verify
         if not api.set_user_verified(new_uid):
@@ -951,9 +1016,7 @@ def main() -> None:
 
     # 2. Clear existing data
     print("2️⃣ Clearing existing data")
-    clear_existing_data(db, api)
-
-    return
+    clear_existing_data(api)
 
     # 2. Import users, signatures, create temporary tokens and create map
     print("3️⃣ Import users")
@@ -961,7 +1024,7 @@ def main() -> None:
 
     # 3. Import avatars
     print("4️⃣ Import avatars")
-    import_avatars(api, data_path, user_map, user_tokens_map)
+    import_avatars(api, data_path, user_map)
 
     # 4. Import categories
     print("5️⃣ Import categories")
@@ -976,8 +1039,12 @@ def main() -> None:
     revoke_user_tokens(api, user_tokens_map)
 
     # 7. Set tweak
-    print("1️⃣ Tweak config")
+    print("1️⃣ Tweak config back")
     tweak_configuration(api, False)
+
+    # 8. Close db
+    print("1️⃣ Close db")
+    db.close()
 
     print("\n" + "=" * 50)
     print("🎉 IMPORT COMPLETE!")
