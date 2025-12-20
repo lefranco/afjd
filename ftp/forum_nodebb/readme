@@ -26,6 +26,7 @@ quit()
 ============================
 docker compose exec nodebb ./nodebb setup
 (ignore ENOENT error)
+(takes some time)
 
 ============================
 docker compose exec nodebb nano /app/nodebb/config.json
@@ -41,7 +42,8 @@ insert after "port": 4567:
 ============================
 docker compose exec nodebb ./nodebb start
 docker compose exec nodebb ./nodebb status
-docker compose exec nodebb ./nodebb logs + CtrlC
+(must be running)
+docker compose exec nodebb ./nodebb log + CtrlC
 
 ============================
 aller sur https://forum.diplomania2.fr/admin
