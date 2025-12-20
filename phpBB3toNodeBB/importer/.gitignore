@@ -2,3 +2,5 @@
 /user_passwords.csv
 /backups/
 /phpbb_export
+/.mypy_cache/
+/__pycache__/
