@@ -11,6 +11,7 @@ Need to have :
 
 import contextlib
 import html
+import mimetypes
 import os
 import pathlib
 import re
@@ -320,10 +321,10 @@ class NodeBBApi:
         result = self._make_request("GET", "/api/recent", use_csrf=self.admin_api_csrf)
         return list(result['topics']) if result else []
 
-    def get_all_posts_in_topics(self, pid: int) -> list[dict[str, typing.Any]]:
-        """Get all posts in topic (a page actually)."""
-        result = self._make_request("GET", f"/api/posts/{pid}/replies", use_csrf=self.admin_api_csrf)
-        return list(result['replies']) if result else []
+    def get_all_posts(self) -> list[dict[str, typing.Any]]:
+        """Get all posts (a page actually)."""
+        result = self._make_request("GET", "/api/recent/posts", use_csrf=self.admin_api_csrf)
+        return list(result) if result else []
 
     # -----------
     # Deleters
@@ -513,11 +514,15 @@ class NodeBBApi:
             file_path_used = file_path
         else:
             try:
-                mime = magic.from_file(file_path, mime=True)  # type: ignore[no-untyped-call]
+                mime = magic.from_file(str(file_path), mime=True)  # type: ignore[no-untyped-call]
             except:  # noqa: E722 pylint: disable=bare-except
                 print(f"❌ Upload error: Could not find file extension of {file_path=}")
                 return None
-            _, ext = mime.split('/')
+
+            ext = mimetypes.guess_extension(mime)
+            if not ext:
+                print(f"❌ Upload error: Unknown file extension of {file_path=}")
+                return None
             file_path_used = file_path.with_suffix(ext)
 
         # Upload the file
@@ -527,10 +532,9 @@ class NodeBBApi:
             r_upload = self.session.post(f"{self.base_url}/api/post/upload", files=files, data=data)
 
         if r_upload.status_code not in [200, 201]:
-            print(f"❌ Upload failed: {r_upload.json()=} {file_path=} {uid=} {data=}")
+            print(f"❌ Upload failed: {r_upload.json()=} {ext=} {file_path=} {uid=} {data=}")
             return None
 
-        print("✅ File upload successful!")
         return str(r_upload.json()['response']['images'][0]['url'])
 
 
@@ -549,8 +553,18 @@ def clear_existing_data(api: NodeBBApi) -> None:
     print("🧹 CLEARING EXISTING DATA")
     print("=" * 50)
 
-    # 2. Delete all topics and posts
-    print("\n🗑️  Deleting topics (and posts)...")
+    # 1. Delete all posts
+    print("\n🗑️  Deleting posts...")
+    while True:
+        posts = api.get_all_posts()
+        if not posts:
+            break
+        for post in posts:
+            with delayed_ctrl_c():
+                api.delete_post(post['pid'])
+
+    # 2. Delete all topics 
+    print("\n🗑️  Deleting topics...")
     while True:
         topics = api.get_all_topics()
         if not topics:
@@ -559,7 +573,7 @@ def clear_existing_data(api: NodeBBApi) -> None:
             with delayed_ctrl_c():
                 api.delete_topic(topic['tid'])
 
-    # 2. Delete all categories (except default ones)
+    # 3. Delete all categories
     print("\n🗑️  Deleting categories...")
     while True:
         categories = api.get_all_categories()
@@ -569,7 +583,7 @@ def clear_existing_data(api: NodeBBApi) -> None:
             with delayed_ctrl_c():
                 api.delete_category(int(category['cid']))
 
-    # 3. Delete all users (except admin)
+    # 4. Delete all users (except admin)
     print("\n🗑️  Deleting users...")
     while True:
         users = api.get_all_users()
@@ -585,7 +599,7 @@ def clear_existing_data(api: NodeBBApi) -> None:
     print("✅ Data cleared successfully")
 
 
-def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> tuple[dict[int, int], dict[int, str], dict[int, str]]:
+def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> tuple[dict[int, int], dict[int, str]]:
     """Import users from CSV and return mapping old_uid -> new_uid and new_uid -> temporary token."""
 
     print("\n" + "=" * 50)
@@ -595,7 +609,7 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
     users_csv = data_path / "users.csv"
     if not users_csv.exists():
         print(f"❌ Users CSV not found: {users_csv}")
-        return {}, {}, {}
+        return {}, {}
 
     df_users = pd.read_csv(users_csv, encoding=CSV_ENCODING)
     user_map: dict[int, int] = {}  # old_uid -> new_uid
@@ -803,20 +817,19 @@ def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathli
             print(f"⚠️  Skipping topic {old_tid}: category {old_cid} not found")
             continue
 
+        new_cid = category_map[old_cid]
+
         # Skip if user doesn't exist in our maps
         if old_uid not in user_map:
             print(f"⚠️  Skipping topic {old_tid}: user {old_uid} not found")
             continue
 
-        new_cid = category_map[old_cid]
         new_uid = user_map[old_uid]
 
         # Check if this topic has posts
         if old_tid not in posts_by_topic or not posts_by_topic[old_tid]:
-            print(f"⚠️  Skipping topic {old_tid}: no posts")
+            print(f"⚠️  Skipping topic {old_tid}: no posts (should not happen)")
             continue
-
-        print(f"\n📄 Topic {idx}/{len(df_topics)}: {row['title']}")
 
         # Process first post (topic content)
         first_post = posts_by_topic[old_tid][0]
@@ -835,6 +848,8 @@ def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathli
         title = html.unescape(title)
 
         new_tid = api.create_topic(new_cid, title, content, new_uid, user_tokens_map)
+
+        print(f"\n📄 Topic {idx}/{len(df_topics)}: {old_tid=} {new_tid=}: {row['title']}")
 
         if not new_tid:
             print(f"❌ Failed to create topic for {old_tid}")
@@ -880,6 +895,8 @@ def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathli
 
                 if not db.set_post_creation_date(new_pid, post_timestamp):
                     print(f"❌ Failed to set post creation date {new_pid}")
+
+                print(f"post {old_post_pid=} {new_pid=} added")
 
                 if post_idx % 10 == 0:
                     print(f"    Created {post_idx} replies...")
@@ -946,7 +963,7 @@ def process_attachments_in_post(api: NodeBBApi, content: str, data_path: pathlib
         # Find and upload file
         if (pid, real_file) not in attachments_by_post_file:
             # File not found
-            print("⚠️  Attachment file not found, skipping...")
+            print(f"⚠️  Attachment file {real_file} not found, skipping...")
             return f'[attachment {real_file} missing]'
         physical_filename = attachments_by_post_file[(pid, real_file)]
         complete_path = uploads_dir / physical_filename
