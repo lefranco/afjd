@@ -12,6 +12,7 @@ disable=global-statement,
         too-many-arguments,
 	too-many-function-args,
 	too-many-branches,
+	too-many-lines,
 	duplicate-code
 
 
