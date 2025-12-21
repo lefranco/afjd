@@ -175,7 +175,7 @@ class NodeBBMongoDB:
 # -------------------------
 # API Client
 # -------------------------
-class NodeBBApi(requests.Session):
+class NodeBBApiSession(requests.Session):
     """Importer."""
 
     def __init__(self, username: str, password: str) -> None:
@@ -403,7 +403,7 @@ class NodeBBApi(requests.Session):
             "picture": url_used,
         }
 
-        # user csrf
+        # use csrf
         result = self._make_request("PUT", f"/api/v3/users/{uid}", data=avatar_data)
         return result is not None
 
@@ -418,7 +418,7 @@ class NodeBBApi(requests.Session):
             "signature": signature,
         }
 
-        # user csrf ?
+        # use csrf
         result = self._make_request("PUT", f"/api/v3/users/{uid}", data=user_data)
         return result is not None
 
@@ -489,15 +489,15 @@ class NodeBBApi(requests.Session):
         return str(r_upload.json()['response']['images'][0]['url'])
 
 
-def tweak_configuration(api: NodeBBApi, fast: bool) -> None:
+def tweak_configuration(session: NodeBBApiSession, fast: bool) -> None:
     """Need some tweaking beforehand."""
-    api.tweak(fast)
+    session.tweak(fast)
 
 
 # -------------------------
 # Main Import Functions
 # -------------------------
-def clear_existing_data(api: NodeBBApi) -> None:
+def clear_existing_data(session: NodeBBApiSession) -> None:
     """Clear all existing posts, topics, categories, and users (except admin)."""
 
     print("\n" + "=" * 50)
@@ -507,37 +507,37 @@ def clear_existing_data(api: NodeBBApi) -> None:
     # 1. Delete all posts
     print("\n🗑️  Deleting posts...")
     while True:
-        posts = api.get_all_posts()
+        posts = session.get_all_posts()
         if not posts:
             break
         for post in posts:
             with delayed_ctrl_c():
-                api.delete_post(post['pid'])
+                session.delete_post(post['pid'])
 
     # 2. Delete all topics
     print("\n🗑️  Deleting topics...")
     while True:
-        topics = api.get_all_topics()
+        topics = session.get_all_topics()
         if not topics:
             break
         for topic in topics:
             with delayed_ctrl_c():
-                api.delete_topic(topic['tid'])
+                session.delete_topic(topic['tid'])
 
     # 3. Delete all categories
     print("\n🗑️  Deleting categories...")
     while True:
-        categories = api.get_all_categories()
+        categories = session.get_all_categories()
         if not categories:
             break
         for category in categories:
             with delayed_ctrl_c():
-                api.delete_category(int(category['cid']))
+                session.delete_category(int(category['cid']))
 
     # 4. Delete all users (except admin)
     print("\n🗑️  Deleting users...")
     while True:
-        users = api.get_all_users()
+        users = session.get_all_users()
         if len(users) <= 1:
             break
         for user in users:
@@ -545,12 +545,12 @@ def clear_existing_data(api: NodeBBApi) -> None:
                 print(f"⚠️  Skipping admin user {user['uid']}")
                 continue
             with delayed_ctrl_c():
-                api.delete_user(user['uid'])
+                session.delete_user(user['uid'])
 
     print("✅ Data cleared successfully")
 
 
-def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> dict[int, int]:
+def import_users(db: NodeBBMongoDB, session: NodeBBApiSession, data_path: pathlib.Path) -> tuple[dict[int, int], dict[int, tuple[str, str]]]:
     """Import users from CSV and return mapping old_uid -> new_uid and new_uid."""
 
     print("\n" + "=" * 50)
@@ -560,7 +560,7 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
     users_csv = data_path / "users.csv"
     if not users_csv.exists():
         print(f"❌ Users CSV not found: {users_csv}")
-        return {}
+        return {}, {}
 
     df_users = pd.read_csv(users_csv, encoding=CSV_ENCODING)
     user_map: dict[int, int] = {}  # old_uid -> new_uid
@@ -568,6 +568,7 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
     print(f"Found {len(df_users)} users to import")
 
     password_list: list[dict[str, typing.Any]] = []
+    credential_map: dict[int, tuple[str, str]] = {}
 
     for _, row in df_users.iterrows():
 
@@ -585,7 +586,7 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
         # Create user via API
         plain_password = generate_random_password()
 
-        new_uid = api.create_user(username, email, plain_password)
+        new_uid = session.create_user(username, email, plain_password)
 
         if not new_uid:
             print(f"    ❌ Failed to create {username}")
@@ -616,22 +617,24 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
         if signature != 'nan':
             # For some reason no signature comes out as 'nan' (probably declared as integer)
             signature = converter.convert(signature)
-            if not api.add_signature_user(new_uid, signature):
+            if not session.add_signature_user(new_uid, signature):
                 print(f"    ❌ Failed to add signature for {username}")
             print("    ✅ Added signature too!")
 
         # set user as verify
-        if not api.set_user_verified(new_uid):
+        if not session.set_user_verified(new_uid):
             print(f"    ❌ Failed to set user as verified for {username}")
         print("    ✅ Set as verified too!")
+
+        credential_map[new_uid] = (username, plain_password)
 
     save_passwords_to_file(password_list)
 
     print(f"\n✅ Imported {len(user_map)} users with random passwords")
-    return user_map
+    return user_map, credential_map
 
 
-def import_categories(api: NodeBBApi, data_path: pathlib.Path) -> dict[int, int]:
+def import_categories(session: NodeBBApiSession, data_path: pathlib.Path) -> dict[int, int]:
     """Import categories from CSV and return mapping old_cid -> new_cid."""
 
     print("\n" + "=" * 50)
@@ -659,7 +662,7 @@ def import_categories(api: NodeBBApi, data_path: pathlib.Path) -> dict[int, int]
 
             print(f"  Creating parent category: {name}")
 
-            new_cid = api.create_category(name, description, 0, order)
+            new_cid = session.create_category(name, description, 0, order)
             if new_cid:
                 category_map[old_cid] = new_cid
                 parent_categories[old_cid] = new_cid
@@ -678,7 +681,7 @@ def import_categories(api: NodeBBApi, data_path: pathlib.Path) -> dict[int, int]
 
             print(f"  Creating child category: {name}")
 
-            new_cid = api.create_category(name, description, parent_categories[parent_cid], order)
+            new_cid = session.create_category(name, description, parent_categories[parent_cid], order)
             if new_cid:
                 category_map[old_cid] = new_cid
                 print(f"    ✅ Created (CID: {new_cid})")
@@ -689,7 +692,7 @@ def import_categories(api: NodeBBApi, data_path: pathlib.Path) -> dict[int, int]
     return category_map
 
 
-def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path, user_map: dict[int, int], category_map: dict[int, int]) -> None:
+def import_topics_and_posts(db: NodeBBMongoDB, data_path: pathlib.Path, user_map: dict[int, int], category_map: dict[int, int], credential_map: dict[int, tuple[str, str]], session_map: dict[int, NodeBBApiSession]) -> None:
     """Import topics and posts from CSV files."""
 
     print("\n" + "=" * 50)
@@ -773,6 +776,14 @@ def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathli
             print(f"⚠️  Skipping topic {old_tid}: no posts (should not happen)")
             continue
 
+        # Create session if necessary
+        if new_uid not in session_map:
+            username, password = credential_map[new_uid]
+            user_session = NodeBBApiSession(username, password)
+            session_map[new_uid] = user_session
+        else:
+            user_session = session_map[new_uid]
+
         # Process first post (topic content)
         first_post = posts_by_topic[old_tid][0]
         old_pid_first_post = int(first_post['pid'])
@@ -783,13 +794,13 @@ def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathli
         content = converter.convert(content)
 
         # Handle attachments in first post
-        content = process_attachments_in_post(api, content, data_path, old_pid_first_post, new_uid, attachments_by_post_file)
+        content = process_attachments_in_post(user_session, content, data_path, old_pid_first_post, new_uid, attachments_by_post_file)
 
         # Create topic
         title = str(row['title']).strip()
         title = html.unescape(title)
 
-        new_tid = api.create_topic(new_cid, title, content)
+        new_tid = user_session.create_topic(new_cid, title, content)
 
         print(f"\n📄 Topic {idx}/{len(df_topics)}: {old_tid=} {new_tid=}: {row['title']}")
 
@@ -822,14 +833,22 @@ def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathli
                 post_content = str(post_row['content'])
                 post_timestamp = int(post_row['timestamp'])
 
+                # Create session if necessary
+                if post_uid not in session_map:
+                    username, password = credential_map[post_uid]
+                    user_session2 = NodeBBApiSession(username, password)
+                    session_map[post_uid] = user_session2
+                else:
+                    user_session2 = session_map[post_uid]
+
                 # conversion phpbb3 -> nodebb
                 post_content = converter.convert(post_content)
 
                 # Handle attachments in reply
-                post_content = process_attachments_in_post(api, post_content, data_path, old_post_pid, post_uid, attachments_by_post_file)
+                post_content = process_attachments_in_post(user_session2, post_content, data_path, old_post_pid, post_uid, attachments_by_post_file)
 
                 # Create reply
-                new_pid = api.create_post(new_tid, post_content)
+                new_pid = user_session2.create_post(new_tid, post_content)
 
                 if not new_pid:
                     print(f"❌ Failed to create post for {old_post_pid}")
@@ -850,7 +869,7 @@ def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathli
     print(f"\n✅ Successfully imported {success_count}/{len(df_topics)} topics")
 
 
-def import_avatars(api: NodeBBApi, data_path: pathlib.Path, user_map: dict[int, int]) -> None:
+def import_avatars(data_path: pathlib.Path, user_map: dict[int, int], credential_map: dict[int, tuple[str, str]], session_map: dict[int, NodeBBApiSession]) -> None:
     """Import user avatars."""
 
     def find_avatar_file(uid: int, avatars_dir: pathlib.Path) -> pathlib.Path | None:
@@ -873,18 +892,27 @@ def import_avatars(api: NodeBBApi, data_path: pathlib.Path, user_map: dict[int, 
 
     success_count = 0
     for old_uid, new_uid in user_map.items():
+
+        # Create session if necessary
+        if new_uid not in session_map:
+            username, password = credential_map[new_uid]
+            user_session = NodeBBApiSession(username, password)
+            session_map[new_uid] = user_session
+        else:
+            user_session = session_map[new_uid]
+
         # Look for avatar
         avatar_file = find_avatar_file(old_uid, avatars_dir)
         if avatar_file:
 
             # 1 upload file
-            file_url = api.upload_file(avatar_file, new_uid)
+            file_url = user_session.upload_file(avatar_file, new_uid)
             if not file_url:
                 print("    ⚠️  Failed to upload avatar file")
                 continue
 
             # 2 put as avatar
-            if not api.add_avatar_user(new_uid, file_url):
+            if not user_session.add_avatar_user(new_uid, file_url):
                 print("    ⚠️  Failed to put avatar")
                 continue
 
@@ -894,7 +922,7 @@ def import_avatars(api: NodeBBApi, data_path: pathlib.Path, user_map: dict[int, 
     print(f"\n✅ Uploaded {success_count} avatars")
 
 
-def process_attachments_in_post(api: NodeBBApi, content: str, data_path: pathlib.Path, pid: int, uid: int, attachments_by_post_file: dict[tuple[int, str], str]) -> str:
+def process_attachments_in_post(api: NodeBBApiSession, content: str, data_path: pathlib.Path, pid: int, uid: int, attachments_by_post_file: dict[tuple[int, str], str]) -> str:
     """Process [attachment=ID] tags and replace with uploaded file URLs."""
 
     def replace_attachment(match: re.Match[str]) -> str:
@@ -947,7 +975,7 @@ def main() -> None:
     db = NodeBBMongoDB(MONGO_URI, NODEBB_DB)
 
     # Initialize API client
-    api = NodeBBApi(ADMIN_USERNAME, ADMIN_PASSWORD)
+    admin_session = NodeBBApiSession(ADMIN_USERNAME, ADMIN_PASSWORD)
 
     # Ask for confirmation
     print("\n⚠️  WARNING: This will DELETE ALL EXISTING DATA!")
@@ -958,33 +986,36 @@ def main() -> None:
         print("❌ Import cancelled")
         sys.exit(0)
 
-    # 1. Set tweak
+    # 1. Set tweak (as admin)
     print("1️⃣ Tweak config")
-    tweak_configuration(api, True)
+    tweak_configuration(admin_session, True)
 
-    # 2. Clear existing data
+    # 2. Clear existing data (as admin)
     print("2️⃣ Clearing existing data")
-    clear_existing_data(api)
+    clear_existing_data(admin_session)
 
-    # 3. Import users, signatures, create map
+    # 3. Import users, signatures, create map old -> new and map new -> user/pass (as admin)
     print("3️⃣ Import users")
-    user_map = import_users(db, api, data_path)
+    user_map, credential_map = import_users(db, admin_session, data_path)
 
-    # 4. Import categories
+    # 4. Import categories (as admin)
     print("4️⃣ Import categories")
-    category_map = import_categories(api, data_path)
+    category_map = import_categories(admin_session, data_path)
+
+    # We make sessions for users on the fly and memorize them for reuse
+    session_map: dict[int, NodeBBApiSession] = {}
 
     # 5. Import topics and posts (and attachments)
     print("5️⃣ Import topics and posts")
-    import_topics_and_posts(db, api, data_path, user_map, category_map)
+    import_topics_and_posts(db, data_path, user_map, category_map, credential_map, session_map)
 
     # 6. Import avatars
     print("6️⃣ Import avatars")
-    import_avatars(api, data_path, user_map)
+    import_avatars(data_path, user_map, credential_map, session_map)
 
-    # 7. Set tweak
+    # 7. Unset tweak (as admin)
     print("1️⃣ Tweak config back")
-    tweak_configuration(api, False)
+    tweak_configuration(admin_session, False)
 
     # 8. Close db
     print("1️⃣ Close db")
