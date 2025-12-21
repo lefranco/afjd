@@ -43,7 +43,7 @@ DATA_DIR = "./phpbb_export"
 CSV_ENCODING = "utf-8"
 
 # Get from admin interface
-ADMIN_TOKEN = '3662f92a-4474-4928-8e96-cd80b3e3ed1f'
+ADMIN_TOKEN = '7abaf72c-c895-4c12-af6d-71103995ae31'
 
 # Identify admin
 ADMIN_UID = 1
@@ -208,7 +208,7 @@ class NodeBBApi:
     # Low level API access
     # -----------
 
-    def _make_request(self, method: str, endpoint: str, data: dict[str, typing.Any] | None = None, use_csrf: str = '', use_token: str | None = None) -> typing.Any:
+    def _make_request(self, method: str, endpoint: str, data: dict[str, typing.Any] | None = None, use_csrf: str = '', use_token: str | None = None, additional_header: dict[str, typing.Any] | None = None) -> typing.Any:
         """Make authenticated API request."""
 
         url = f"{self.base_url}{endpoint}"
@@ -216,6 +216,9 @@ class NodeBBApi:
         headers = {
             "Content-Type": "application/json"
         }
+
+        if additional_header:
+            headers |= additional_header
 
         # Need data
         if data is None:
@@ -394,6 +397,10 @@ class NodeBBApi:
     def create_topic(self, cid: int, title: str, content: str, uid: int, user_tokens_map: dict[int, str]) -> int | None:
         """Create a new topic."""
 
+        additional_header = {
+            'x-nodebb-uid': str(uid)
+        }
+
         topic_data = {
             "cid": cid,
             "title": title,
@@ -411,6 +418,10 @@ class NodeBBApi:
 
     def create_post(self, tid: int, content: str, uid: int, user_tokens_map: dict[int, str]) -> int | None:
         """Create a reply post."""
+
+        additional_header = {
+            'x-nodebb-uid': str(uid)
+        }
 
         post_data = {
             "content": content,
@@ -681,7 +692,7 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
         # set user as verify
         if not api.set_user_verified(new_uid):
             print(f"    ❌ Failed to set user as verified for {username}")
-        print("    ✅ Added to registered group too!")
+        print("    ✅ Set as verified too!")
 
     save_passwords_to_file(password_list)
 
