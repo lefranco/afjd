@@ -217,6 +217,7 @@ class NodeBBApi:
             "Content-Type": "application/json"
         }
 
+        # Add header (TODO REMOVE)
         if additional_header:
             headers |= additional_header
 
@@ -224,7 +225,7 @@ class NodeBBApi:
         if data is None:
             data = {}
 
-        # Add precious token
+        # Add precious token (TODO REMOVE)
         if use_token:
             headers["Authorization"] = f"Bearer {use_token}"
 
@@ -394,12 +395,8 @@ class NodeBBApi:
             return int(result['response']['cid'])
         return None
 
-    def create_topic(self, cid: int, title: str, content: str, uid: int, user_tokens_map: dict[int, str]) -> int | None:
+    def create_topic(self, cid: int, title: str, content: str) -> int | None:
         """Create a new topic."""
-
-        additional_header = {
-            'x-nodebb-uid': str(uid)
-        }
 
         topic_data = {
             "cid": cid,
@@ -408,29 +405,19 @@ class NodeBBApi:
             "tags": []  # no tag for the moment, we be done manually after forum is operational
         }
 
-        # To force author need to use token
-        use_token = user_tokens_map[uid]
-
-        result = self._make_request("POST", "/api/v3/topics", data=topic_data, use_token=use_token, use_csrf=self.admin_api_csrf)
+        result = self._make_request("POST", "/api/v3/topics", data=topic_data, use_csrf=self.admin_api_csrf)
         if result and 'response' in result:
             return int(result['response']['tid'])
         return None
 
-    def create_post(self, tid: int, content: str, uid: int, user_tokens_map: dict[int, str]) -> int | None:
+    def create_post(self, tid: int, content: str) -> int | None:
         """Create a reply post."""
-
-        additional_header = {
-            'x-nodebb-uid': str(uid)
-        }
 
         post_data = {
             "content": content,
         }
 
-        # To force author need to use token
-        use_token = user_tokens_map[uid]
-
-        result = self._make_request("POST", f"/api/v3/topics/{tid}", data=post_data, use_token=use_token, use_csrf=self.admin_api_csrf)
+        result = self._make_request("POST", f"/api/v3/topics/{tid}", data=post_data, use_csrf=self.admin_api_csrf)
         if result and 'response' in result:
             return int(result['response']['pid'])
         return None
@@ -574,7 +561,7 @@ def clear_existing_data(api: NodeBBApi) -> None:
             with delayed_ctrl_c():
                 api.delete_post(post['pid'])
 
-    # 2. Delete all topics 
+    # 2. Delete all topics
     print("\n🗑️  Deleting topics...")
     while True:
         topics = api.get_all_topics()
@@ -610,7 +597,7 @@ def clear_existing_data(api: NodeBBApi) -> None:
     print("✅ Data cleared successfully")
 
 
-def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> tuple[dict[int, int], dict[int, str]]:
+def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> dict[int, int]:
     """Import users from CSV and return mapping old_uid -> new_uid and new_uid -> temporary token."""
 
     print("\n" + "=" * 50)
@@ -620,7 +607,7 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
     users_csv = data_path / "users.csv"
     if not users_csv.exists():
         print(f"❌ Users CSV not found: {users_csv}")
-        return {}, {}
+        return {}
 
     df_users = pd.read_csv(users_csv, encoding=CSV_ENCODING)
     user_map: dict[int, int] = {}  # old_uid -> new_uid
@@ -628,7 +615,6 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
     print(f"Found {len(df_users)} users to import")
 
     password_list: list[dict[str, typing.Any]] = []
-    user_tokens_map: dict[int, str] = {}
 
     for _, row in df_users.iterrows():
 
@@ -663,14 +649,6 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
             "password": plain_password,
         })
 
-        # create a token for user and store it
-        token_uid = api.create_token(new_uid)
-        if not token_uid:
-            print(f"    ❌ Failed to create token for {username}")
-            continue
-        user_tokens_map[new_uid] = token_uid
-        print("    ✅ Created token too!")
-
         # set creation date to user
         if not db.set_account_creation_date(new_uid, timestamp):
             print(f"    ❌ Failed to set creation date for {username}")
@@ -697,7 +675,7 @@ def import_users(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path) -> 
     save_passwords_to_file(password_list)
 
     print(f"\n✅ Imported {len(user_map)} users with random passwords")
-    return user_map, user_tokens_map
+    return user_map
 
 
 def import_categories(api: NodeBBApi, data_path: pathlib.Path) -> dict[int, int]:
@@ -758,7 +736,7 @@ def import_categories(api: NodeBBApi, data_path: pathlib.Path) -> dict[int, int]
     return category_map
 
 
-def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path, user_map: dict[int, int], user_tokens_map: dict[int, str], category_map: dict[int, int]) -> None:
+def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathlib.Path, user_map: dict[int, int], category_map: dict[int, int]) -> None:
     """Import topics and posts from CSV files."""
 
     print("\n" + "=" * 50)
@@ -858,7 +836,7 @@ def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathli
         title = str(row['title']).strip()
         title = html.unescape(title)
 
-        new_tid = api.create_topic(new_cid, title, content, new_uid, user_tokens_map)
+        new_tid = api.create_topic(new_cid, title, content)
 
         print(f"\n📄 Topic {idx}/{len(df_topics)}: {old_tid=} {new_tid=}: {row['title']}")
 
@@ -898,7 +876,7 @@ def import_topics_and_posts(db: NodeBBMongoDB, api: NodeBBApi, data_path: pathli
                 post_content = process_attachments_in_post(api, post_content, data_path, old_post_pid, post_uid, attachments_by_post_file)
 
                 # Create reply
-                new_pid = api.create_post(new_tid, post_content, post_uid, user_tokens_map)
+                new_pid = api.create_post(new_tid, post_content)
 
                 if not new_pid:
                     print(f"❌ Failed to create post for {old_post_pid}")
@@ -997,17 +975,6 @@ def process_attachments_in_post(api: NodeBBApi, content: str, data_path: pathlib
     return content
 
 
-def revoke_user_tokens(api: NodeBBApi, user_tokens_map: dict[int, str]) -> None:
-    """Revoke users tokens that were necessary."""
-
-    print("\n" + "=" * 50)
-    print("👤 REVOKING TEMPORARY USERS TOKENS")
-    print("=" * 50)
-
-    for uid, token in user_tokens_map.items():
-        api.revoke_token(uid, token)
-
-
 # -------------------------
 # Main
 # -------------------------
@@ -1046,25 +1013,21 @@ def main() -> None:
     print("2️⃣ Clearing existing data")
     clear_existing_data(api)
 
-    # 2. Import users, signatures, create temporary tokens and create map
+    # 3. Import users, signatures, create temporary tokens and create map
     print("3️⃣ Import users")
-    user_map, user_tokens_map = import_users(db, api, data_path)
-
-    # 3. Import avatars
-    print("4️⃣ Import avatars")
-    import_avatars(api, data_path, user_map)
+    user_map = import_users(db, api, data_path)
 
     # 4. Import categories
-    print("5️⃣ Import categories")
+    print("4️⃣ Import categories")
     category_map = import_categories(api, data_path)
 
     # 5. Import topics and posts (and attachments)
-    print("6️⃣ Import topics and posts")
-    import_topics_and_posts(db, api, data_path, user_map, user_tokens_map, category_map)
+    print("5️⃣ Import topics and posts")
+    import_topics_and_posts(db, api, data_path, user_map, category_map)
 
-    # 6. Revoke temporary tokens
-    print("7️⃣ Revoking temporary tokens")
-    revoke_user_tokens(api, user_tokens_map)
+    # 6. Import avatars
+    print("6️⃣ Import avatars")
+    import_avatars(api, data_path, user_map)
 
     # 7. Set tweak
     print("1️⃣ Tweak config back")
