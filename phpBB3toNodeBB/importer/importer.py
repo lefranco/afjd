@@ -188,7 +188,7 @@ class NodeBBApiSession(requests.Session):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         })
 
-        print("🔍 Generate admin CSRF...")
+        print(f"🔍 Generate CSRF for {username}...")
         csrf = self.generate_csrf(username, password)
         if not csrf:
             print("❌ Failed to generate CSRF for Admin")
@@ -400,11 +400,13 @@ class NodeBBApiSession(requests.Session):
         """Add avatar to user."""
 
         avatar_data = {
-            "picture": url_used,
+            "type": "external",
+            "url": url_used,
+            "bgColor": "0xFFAAFF",  # TODO : does not seem to work
         }
 
         # use csrf
-        result = self._make_request("PUT", f"/api/v3/users/{uid}", data=avatar_data)
+        result = self._make_request("PUT", f"/api/v3/users/{uid}/picture", data=avatar_data)
         return result is not None
 
     # -----------
@@ -437,9 +439,9 @@ class NodeBBApiSession(requests.Session):
         return result is not None
 
     # -----------
-    # Tweak
+    # Tweaks
     # -----------
-    def tweak(self, fast: bool) -> bool:
+    def tweak_inter_post_delay(self, fast: bool) -> bool:
         """Tweak delay between posts."""
 
         config_data = {
@@ -448,6 +450,11 @@ class NodeBBApiSession(requests.Session):
 
         result = self._make_request("PUT", "/api/v3/admin/settings/postDelay", data=config_data)
         return result is not None
+
+    def increase_extensions(self) -> bool:
+        """Add some extensions."""
+
+        pass  # TODO : getting original config not easy
 
     # -----------
     # Uploaders
@@ -460,38 +467,53 @@ class NodeBBApiSession(requests.Session):
             print(f"❌ Upload error: File does not exist {file_path=}")
             return None
 
-        # If file does not have extension
+        # If file does not have extension, find it to add to file name
         if file_path.suffix:
             file_path_used = file_path
+            ext = file_path.suffix
         else:
             try:
                 mime = magic.from_file(str(file_path), mime=True)  # type: ignore[no-untyped-call]
             except:  # noqa: E722 pylint: disable=bare-except
-                print(f"❌ Upload error: Could not find file extension of {file_path=}")
+                print(f"❌ Upload error: Could not find file extension of {file_path=} (Exception)")
                 return None
 
+            if mime is None:
+                print(f"❌ Upload error: Could not find file extension of {file_path=} (None)")
+                return None
             ext = mimetypes.guess_extension(mime)
             if not ext:
                 print(f"❌ Upload error: Unknown file extension of {file_path=}")
                 return None
             file_path_used = file_path.with_suffix(ext)
 
+        # Build url
+        url = f"{NODEBB_URL}/api/post/upload"
+
         # Upload the file
         with open(file_path, "rb") as file_ptr:
             files: dict[str, tuple[str, typing.BinaryIO, str]] = {"files[]": (str(file_path_used), file_ptr, "text/plain")}
             data = {"_csrf": self.api_csrf}
-            r_upload = self.post(f"{NODEBB_URL}/api/post/upload", files=files, data=data)
+            r_upload = self.post(url, files=files, data=data)
 
         if r_upload.status_code not in [200, 201]:
-            print(f"❌ Upload failed: {r_upload.json()=} {ext=} {file_path=} {uid=} {data=}")
+            print(f"❌ Upload failed: {r_upload.json()=} {ext=} {file_path=} {url=} {uid=} {data=}")
             return None
 
         return str(r_upload.json()['response']['images'][0]['url'])
 
 
-def tweak_configuration(session: NodeBBApiSession, fast: bool) -> None:
+def set_import_configuration(session: NodeBBApiSession) -> None:
     """Need some tweaking beforehand."""
-    session.tweak(fast)
+
+    session.tweak_inter_post_delay(fast=True)
+    session.increase_extensions()
+
+
+def set_operational_configuration(session: NodeBBApiSession) -> None:
+    """Cancel tweaking beforehand."""
+
+    session.tweak_inter_post_delay(fast=False)
 
 
 # -------------------------
@@ -692,7 +714,7 @@ def import_categories(session: NodeBBApiSession, data_path: pathlib.Path) -> dic
     return category_map
 
 
-def import_topics_and_posts(db: NodeBBMongoDB, data_path: pathlib.Path, user_map: dict[int, int], category_map: dict[int, int], credential_map: dict[int, tuple[str, str]], session_map: dict[int, NodeBBApiSession]) -> None:
+def import_topics_and_posts(admin_session: NodeBBApiSession, db: NodeBBMongoDB, data_path: pathlib.Path, user_map: dict[int, int], category_map: dict[int, int], credential_map: dict[int, tuple[str, str]], session_map: dict[int, NodeBBApiSession]) -> None:
     """Import topics and posts from CSV files."""
 
     print("\n" + "=" * 50)
@@ -794,7 +816,7 @@ def import_topics_and_posts(db: NodeBBMongoDB, data_path: pathlib.Path, user_map
         content = converter.convert(content)
 
         # Handle attachments in first post
-        content = process_attachments_in_post(user_session, content, data_path, old_pid_first_post, new_uid, attachments_by_post_file)
+        content = process_attachments_in_post(admin_session, content, data_path, old_pid_first_post, new_uid, attachments_by_post_file)
 
         # Create topic
         title = str(row['title']).strip()
@@ -845,7 +867,7 @@ def import_topics_and_posts(db: NodeBBMongoDB, data_path: pathlib.Path, user_map
                 post_content = converter.convert(post_content)
 
                 # Handle attachments in reply
-                post_content = process_attachments_in_post(user_session2, post_content, data_path, old_post_pid, post_uid, attachments_by_post_file)
+                post_content = process_attachments_in_post(admin_session, post_content, data_path, old_post_pid, post_uid, attachments_by_post_file)
 
                 # Create reply
                 new_pid = user_session2.create_post(new_tid, post_content)
@@ -857,7 +879,7 @@ def import_topics_and_posts(db: NodeBBMongoDB, data_path: pathlib.Path, user_map
                 if not db.set_post_creation_date(new_pid, post_timestamp):
                     print(f"❌ Failed to set post creation date {new_pid}")
 
-                print(f"post {old_post_pid=} {new_pid=} added")
+                #  print(f"post {old_post_pid=} {new_pid=} added")
 
                 if post_idx % 10 == 0:
                     print(f"    Created {post_idx} replies...")
@@ -869,7 +891,7 @@ def import_topics_and_posts(db: NodeBBMongoDB, data_path: pathlib.Path, user_map
     print(f"\n✅ Successfully imported {success_count}/{len(df_topics)} topics")
 
 
-def import_avatars(data_path: pathlib.Path, user_map: dict[int, int], credential_map: dict[int, tuple[str, str]], session_map: dict[int, NodeBBApiSession]) -> None:
+def import_avatars(admin_session: NodeBBApiSession, data_path: pathlib.Path, user_map: dict[int, int], credential_map: dict[int, tuple[str, str]], session_map: dict[int, NodeBBApiSession]) -> None:
     """Import user avatars."""
 
     def find_avatar_file(uid: int, avatars_dir: pathlib.Path) -> pathlib.Path | None:
@@ -906,7 +928,7 @@ def import_avatars(data_path: pathlib.Path, user_map: dict[int, int], credential
         if avatar_file:
 
             # 1 upload file
-            file_url = user_session.upload_file(avatar_file, new_uid)
+            file_url = admin_session.upload_file(avatar_file, new_uid)  # strange: need to be admin for this !
             if not file_url:
                 print("    ⚠️  Failed to upload avatar file")
                 continue
@@ -922,7 +944,7 @@ def import_avatars(data_path: pathlib.Path, user_map: dict[int, int], credential
     print(f"\n✅ Uploaded {success_count} avatars")
 
 
-def process_attachments_in_post(api: NodeBBApiSession, content: str, data_path: pathlib.Path, pid: int, uid: int, attachments_by_post_file: dict[tuple[int, str], str]) -> str:
+def process_attachments_in_post(admin_session: NodeBBApiSession, content: str, data_path: pathlib.Path, pid: int, uid: int, attachments_by_post_file: dict[tuple[int, str], str]) -> str:
     """Process [attachment=ID] tags and replace with uploaded file URLs."""
 
     def replace_attachment(match: re.Match[str]) -> str:
@@ -937,7 +959,7 @@ def process_attachments_in_post(api: NodeBBApiSession, content: str, data_path: 
             return f'[attachment {real_file} missing]'
         physical_filename = attachments_by_post_file[(pid, real_file)]
         complete_path = uploads_dir / physical_filename
-        file_url = api.upload_file(complete_path, uid)
+        file_url = admin_session.upload_file(complete_path, uid)  # strange: need to be admin for this !
         if not file_url:
             # Failed to upload
             print("⚠️  Failed to upload attachment, skipping...")
@@ -988,7 +1010,7 @@ def main() -> None:
 
     # 1. Set tweak (as admin)
     print("1️⃣ Tweak config")
-    tweak_configuration(admin_session, True)
+    set_import_configuration(admin_session)
 
     # 2. Clear existing data (as admin)
     print("2️⃣ Clearing existing data")
@@ -1007,15 +1029,15 @@ def main() -> None:
 
     # 5. Import topics and posts (and attachments)
     print("5️⃣ Import topics and posts")
-    import_topics_and_posts(db, data_path, user_map, category_map, credential_map, session_map)
+    import_topics_and_posts(admin_session, db, data_path, user_map, category_map, credential_map, session_map)
 
     # 6. Import avatars
     print("6️⃣ Import avatars")
-    import_avatars(data_path, user_map, credential_map, session_map)
+    import_avatars(admin_session, data_path, user_map, credential_map, session_map)
 
     # 7. Unset tweak (as admin)
     print("1️⃣ Tweak config back")
-    tweak_configuration(admin_session, False)
+    set_operational_configuration(admin_session)
 
     # 8. Close db
     print("1️⃣ Close db")
