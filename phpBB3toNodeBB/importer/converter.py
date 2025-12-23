@@ -69,23 +69,97 @@ SMILIES_MAP = {
 MIN_POST_SIZE = 10
 
 
-def convert(text: str) -> str:
+class Node:
+    """ For imbricated quotes."""
+
+    def __init__(self, type_: str, author: str | None = None) -> None:
+        self.type = type_
+        self.author = author
+        self.children: list[Node | str] = []
+
+
+def parse_bbcode(text: str) -> Node:
+    """BBcode -> ast."""
+
+    root = Node("root")
+    stack = [root]
+    pos = 0
+
+    for m in re.finditer(r'\[quote(?:=([^\]]+))?\]|\[/quote\]', text, re.DOTALL | re.IGNORECASE):
+
+        if m.start() > pos:
+            stack[-1].children.append(text[pos:m.start()])
+
+        if m.group(0).lower().startswith("[quote"):
+            node = Node("quote", m.group(1))
+            stack[-1].children.append(node)
+            stack.append(node)
+        else:  # [/quote]
+            if len(stack) > 1:
+                stack.pop()
+
+        pos = m.end()
+
+    if pos < len(text):
+        stack[-1].children.append(text[pos:])
+
+    return root
+
+
+def render_markdown(depth: int, node: Node) -> str:
+    """Ast -> markdown."""
+
+    lines = []
+    prefix = "> " * depth
+
+    for child in node.children:
+        if isinstance(child, str):
+            for line in child.splitlines():
+                if prefix and not line:
+                    continue
+                lines.append(f"{prefix}{line}")
+        else:  # quote
+            if child.author:
+                header = f"**{child.author}** a écrit :"
+            else:
+                header = "**Citation** :"
+            lines.append(f"{prefix}{header}")
+            lines.extend(
+                render_markdown(depth + 1, child).splitlines()
+            )
+
+    return '\n'.join(lines)
+
+
+def convert(text: str) -> tuple[str, bool]:
     """Convert phpBB3 content (BBCode + HTML) to NodeBB3 markdown format."""
+
+    reference_present = False
 
     def handle_site_links(txt: str) -> str:
         """Links inside site."""
 
         txt = re.sub(r'diplomania-gen.fr', "diplomania2.fr", txt, flags=re.IGNORECASE)
-        txt = re.sub(r'https://diplomania2.fr/forum', "https://forum/diplomania2.fr/", txt, flags=re.IGNORECASE)
-        txt = re.sub(r'https://diplomania2.fr/frequentation', "https://frequentation/diplomania2.fr/", txt, flags=re.IGNORECASE)
-        txt = re.sub(r'https://diplomania2.fr/dokuwiki', "https://dokuwiki/diplomania2.fr/", txt, flags=re.IGNORECASE)
-        txt = re.sub(r'https://diplomania2.fr/dokuwiki2', "https://dokuwiki2/diplomania2.fr/", txt, flags=re.IGNORECASE)
-        txt = re.sub(r"\[viewtopic\.php\?t=\d+\]", "[viewtopic]", txt, flags=re.IGNORECASE)
-        txt = re.sub(r"\[viewtopic\.php\?p=\d+#p\d+\]", "[viewpost]", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/frequentation', "https://frequentation/diplomania2.fr", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/dokuwiki', "https://dokuwiki/diplomania2.fr", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/dokuwiki2', "https://dokuwiki2/diplomania2.fr", txt, flags=re.IGNORECASE)
 
-        # TODO
-        # https://forum/diplomania2.fr//phpBB3/viewtopic.php?t=<old_numtopic> -> https://forum/diplomania2.fr/topic/<new_numtopic>
-        # https://forum/diplomania2.fr//phpBB3/viewtopic.php?p=<old_numtopic>#p<old_numtopic> -> https://forum/diplomania2.fr/topic/<new_numtopic>/<num_post>
+        # link to forum : a bit more complicated
+        # generic
+        txt = re.sub(r'https://diplomania2.fr/forum/phpBB3', "https://forum/diplomania2.fr", txt, flags=re.IGNORECASE)
+        # displayed part of link
+        txt = re.sub(r'\[viewtopic\.php\?t=\d+\]', '[aller voir le topic]', txt, flags=re.IGNORECASE)
+        txt = re.sub(r'\[viewtopic\.php\?p=\d+#p\d+\]', '[aller voir le post]', txt, flags=re.IGNORECASE)
+        # actual link
+        nonlocal reference_present
+        # will convert topic num old -> new somewhere else
+        txt, changed = re.subn(r'/viewtopic\.php\?t=(\d+)', r'/topic/[old_tid_ref=\1]', txt, flags=re.IGNORECASE)
+        if changed:
+            reference_present = True
+        # will convert post num old -> new somewhere else
+        txt, changed = re.subn(r'/viewtopic\.php\?p=(\d+)#p(\d+)', r'/topic/[old_tid_ref=\1]/[old_pid_ref=\2]', txt, flags=re.IGNORECASE)
+        if changed:
+            reference_present = True
 
         return txt
 
@@ -100,30 +174,18 @@ def convert(text: str) -> str:
         return "???"
 
     def handle_quotes_recursive(txt: str) -> str:
-        """Should work both with and without author."""
+        """Should work both with and without author. Cannot just use a regex here."""
 
-        # TODO : probably must be done differently, witout RE
+        # First we remove quote html
+        txt = re.sub(r'</?quote\b[^>]*>', '', txt, flags=re.DOTALL | re.IGNORECASE)  # remove HTML
 
-        match = re.search(r'<QUOTE(?:[^>]*author="([^"]+)")?[^>]*>(.*)</QUOTE>', txt, flags=re.DOTALL | re.IGNORECASE)
-        if not match:
-            return txt
+        # Then we simplify bbcode
+        txt = re.sub(r'\[quote=([^\]\s]+)(?:\s+(?:post_id|time|user_id)=\d+)*\]', r'[quote=\1]', txt, flags=re.DOTALL | re.IGNORECASE)
 
-        author = match.group(1) if match.group(1) else "Quelqu'un"
-        content = match.group(2)
-
-        content = re.sub(r'<s>.*?</s>', '', content, flags=re.DOTALL | re.IGNORECASE)
-        content = re.sub(r'\[/?quote[^\]]*\]', '', content, flags=re.IGNORECASE)
-
-        # yes : recursive !
-        content = handle_quotes_recursive(content)
-
-        content = re.sub(r'<br\s*/?>', '\n', content, flags=re.IGNORECASE)
-
-        quoted = '\n'.join(f'> {line}' for line in content.splitlines() if line.strip())
-        replacement = f'**{author}** a écrit :\n{quoted}'
-
-        new_txt = txt[:match.start()] + replacement + txt[match.end():]
-        return new_txt
+        # Finally we translate BB code to markdown
+        ast = parse_bbcode(txt)
+        markdown_text = render_markdown(0, ast)
+        return markdown_text
 
     def replace_bb_code(txt: str) -> str:
         """Replace all BB code (or tries to)."""
@@ -151,13 +213,14 @@ def convert(text: str) -> str:
         txt = re.sub(r'\[barre\](.*?)\[/barre\]', r'~~\1~~', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
         txt = re.sub(r'</?barre\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
 
-        # URL + img (must be before next one)
-        txt = re.sub(r'<URL[^>]*>\[url=[^\]]*\].*?<IMG[^>]*src="([^"]+)".*?</URL>', r'[img](\1)', txt, flags=re.IGNORECASE | re.DOTALL)
+        # Img (handled differently)
+        txt = re.sub(r'\[/?img\]', '', txt, flags=re.IGNORECASE)  # remove BB
+        txt = re.sub(r'\<img src="(.*?)"\>(.*?)\</img\>', r'![\2](\1)', txt, flags=re.DOTALL | re.IGNORECASE)  # convert HTML
 
-        # URL + link text
+        # URL + link text  # TODO A REVOIR TRAITER TOUS LES CAS lien, image etc...
         def convert_url(match: re.Match[str]) -> str:
             url = match.group(1)
-            text = match.group(2) if match.group(2) else url
+            text = match.group(2) if match.group(2) else match.group(3) if match.group(3) else url
             return f'[{text}]({url})'
         pattern = r'<URL url="([^"]+)">\s*(?:<LINK_TEXT text="([^"]+)">.*?</LINK_TEXT>|(.*?))\s*</URL>'
         txt = re.sub(pattern, convert_url, txt, flags=re.IGNORECASE | re.DOTALL)
@@ -238,25 +301,24 @@ def convert(text: str) -> str:
     # make it long enough so not to be rejected
     text = text.ljust(MIN_POST_SIZE, '.')
 
-    return text
+    return text, reference_present
 
 
 def main() -> None:
-    """Main for a sigle test."""
+    """Main for a single test."""
 
-    sample = """
-<r><QUOTE author="OrangeCar" post_id="3284" time="1702653292" user_id="59"><s>[quote=OrangeCar post_id=3284 time=1702653292 user_id=59]</s>
-Après avoir lu la description du scorage sur le wiki, je voudrais comprendre le mécanisme d'attribution des points de survie.<br/>
+    sample = """<r>super sympa le graph !<br/>
 
-<QUOTE><s>[quote]</s>"35 points par jusqu'à un maximum de 210 points"<e>[/quote]</e></QUOTE>
-
-=&gt; Ne manque-t-il pas un mot entre "par" et "jusqu'à" ?
-<e>[/quote]</e></QUOTE>
-par année de survie</r>
-"""
+<QUOTE author="Kakitaievitch" post_id="2166" time="1686076102" user_id="61"><s>[quote=Kakitaievitch post_id=2166 time=1686076102 user_id=61]</s>
+<URL url="https://zupimages.net/viewer.php?id=23/23/fokq.png"><s>[url=https://zupimages.net/viewer.php?id=23/23/fokq.png]</s><IMG src="https://zupimages.net/up/23/23/fokq.png"><s>[img]</s>https://zupimages.net/up/23/23/fokq.png<e>[/img]</e></IMG><e>[/url]</e></URL><br/>
+<br/>
+Félicitations essaime !<br/>
+<br/>
+(j'ai eu chaud)
+<e>[/quote]</e></QUOTE></r>"""
 
     print(sample)
-    result = convert(sample)
+    result, _ = convert(sample)
     print("===========")
     print(result)
 

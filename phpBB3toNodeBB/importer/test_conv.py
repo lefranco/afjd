@@ -63,7 +63,7 @@ def check_topics_and_posts(data_path: pathlib.Path) -> None:
         # conversion phpbb3 -> nodebb
         print("<<<<<<<<<<<<<<<<<<<<<<<<<")
         print(content)
-        content = converter.convert(content)
+        content, _ = converter.convert(content)
         print(f"++++t{old_tid} p{old_pid_first_post}++++++++++")
         print(content)
         print(">>>>>>>>>>>>>>>>>>>>>>>>>")
@@ -81,7 +81,7 @@ def check_topics_and_posts(data_path: pathlib.Path) -> None:
                 # conversion phpbb3 -> nodebb
                 print("<<<<<<<<<<<<<<<<<<<<<<<<<")
                 print(post_content)
-                post_content = converter.convert(post_content)
+                post_content, _ = converter.convert(post_content)
                 print(f"++++++++++p{old_post_pid}++++++++++")
                 print(post_content)
                 print(">>>>>>>>>>>>>>>>>>>>>>>>>")
