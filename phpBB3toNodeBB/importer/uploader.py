@@ -7,13 +7,11 @@ At last a file importer that works
 import requests
 #  import urllib3
 
-### pip3 install pip-system-certs --break-system-packages  # at company only ?
-
 # Suppress the warning messages in the console
 #  urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  # at company only ?
 
 
-def main():
+def main() -> None:
     """Main."""
 
     session = requests.Session()

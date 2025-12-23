@@ -13,6 +13,8 @@ disable=global-statement,
 	too-many-function-args,
 	too-many-branches,
 	too-many-lines,
+	too-few-public-methods,
+	too-many-public-methods,
 	duplicate-code
 
 
