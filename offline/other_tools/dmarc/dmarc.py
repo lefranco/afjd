@@ -76,8 +76,6 @@ def parse_xml(xml_file: str) -> tuple[str, bool, dict[str, bool]]:
             raise ValueError(f"Missing or empty <{tag}> element in {xml_file}")
         return elem.text.strip()
 
-    print(f"Parsing {xml_file=}...", end='')
-
     tree = xml.etree.ElementTree.parse(xml_file)
     root = tree.getroot()
 
@@ -112,7 +110,6 @@ def parse_xml(xml_file: str) -> tuple[str, bool, dict[str, bool]]:
         content_map[line] = attention
 
     description = f"{org_name}/{report_id}"
-    print("done!")
     return description, overall_attention, content_map
 
 
@@ -196,6 +193,8 @@ def load_mails() -> None:
 
     for uid in data[0].split():
 
+        print(".", flush=True, end='')
+
         status, msg_data = imap.uid("fetch", uid, '(BODY.PEEK[])')
         assert status == "OK", f"Fetch failed {data}"
 
@@ -235,7 +234,6 @@ def load_mails() -> None:
                 filename = filename1
 
             if filename.lower().endswith('zip'):
-                print("Found zip file!")
                 zip_path = os.path.join(WORK_DIR, filename)
                 payload = part.get_payload(decode=True)
                 assert payload, "No payload"
@@ -253,7 +251,6 @@ def load_mails() -> None:
                     ITEMS_DICT[description] = (message_uid, attention, content_map)
 
             elif filename.lower().endswith(".gz"):
-                print("Found gz file!")
                 gz_path = os.path.join(WORK_DIR, filename)
                 payload = part.get_payload(decode=True)
                 assert payload, "No payload"
@@ -273,6 +270,7 @@ def load_mails() -> None:
                 print(f"Unknown attachment type {filename=}")
 
     imap.logout()
+    print("")
 
 
 def position(root: typing.Any) -> None:
