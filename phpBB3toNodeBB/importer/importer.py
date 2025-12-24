@@ -971,12 +971,20 @@ def patch_topics_and_posts(admin_session: NodeBBApiSession, topics_patch_list: l
 
     def replace_tid(match: re.Match[str]) -> str:
         """Replace."""
-        topic = topic_map[int(match.group(1))]
+        old_topic = int(match.group(1))
+        if old_topic not in topic_map:
+            print(f"ERROR {old_topic=} not in topic_map")
+            return f"{old_topic=}"
+        topic = topic_map[old_topic]
         return f"{topic}"
 
     def replace_pid(match: re.Match[str]) -> str:
         """Replace."""
-        post = post_map[int(match.group(1))]
+        old_post = int(match.group(1))
+        if old_post not in post_map:
+            print(f"ERROR {old_post=} not in post_map")
+            return f"{old_post=}"
+        post = post_map[old_post]
         return f"{post}"
 
     for topic_id in topics_patch_list:
