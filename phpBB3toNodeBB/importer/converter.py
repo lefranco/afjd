@@ -115,8 +115,6 @@ def render_markdown(depth: int, node: Node) -> str:
     for child in node.children:
         if isinstance(child, str):
             for line in child.splitlines():
-                if prefix and not line:
-                    continue
                 lines.append(f"{prefix}{line}")
         else:  # quote
             if child.author:
@@ -139,10 +137,16 @@ def convert(text: str) -> tuple[str, bool]:
     def handle_site_links(txt: str) -> str:
         """Links inside site."""
 
+        # main replacement
         txt = re.sub(r'diplomania-gen.fr', "diplomania2.fr", txt, flags=re.IGNORECASE)
+
+        # safety since nothing becomes http
+        txt = re.sub(r'(?<!https://)(?<!http://)\s*diplomania2\.fr', " https://diplomania2.fr", txt, flags=re.IGNORECASE)
+
+        # link to components inside
         txt = re.sub(r'https://diplomania2.fr/frequentation', "https://frequentation/diplomania2.fr", txt, flags=re.IGNORECASE)
-        txt = re.sub(r'https://diplomania2.fr/dokuwiki', "https://dokuwiki/diplomania2.fr", txt, flags=re.IGNORECASE)
-        txt = re.sub(r'https://diplomania2.fr/dokuwiki2', "https://dokuwiki2/diplomania2.fr", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/dokuwiki', "https://dokuwiki.diplomania2.fr", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/dokuwiki2', "https://dokuwiki2.diplomania2.fr", txt, flags=re.IGNORECASE)
 
         # link to forum : a bit more complicated
         # generic
@@ -157,7 +161,7 @@ def convert(text: str) -> tuple[str, bool]:
         if changed:
             reference_present = True
         # will convert post num old -> new somewhere else
-        txt, changed = re.subn(r'/viewtopic\.php\?p=(\d+)#p(\d+)', r'/topic/[old_tid_ref=\1]/[old_pid_ref=\2]', txt, flags=re.IGNORECASE)
+        txt, changed = re.subn(r'/viewtopic\.php\?p=(\d+)#p\d+', r'/topic/[old_pid_ref=\1]', txt, flags=re.IGNORECASE)
         if changed:
             reference_present = True
 
@@ -213,11 +217,20 @@ def convert(text: str) -> tuple[str, bool]:
         txt = re.sub(r'\[barre\](.*?)\[/barre\]', r'~~\1~~', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
         txt = re.sub(r'</?barre\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
 
-        # Img (handled differently)
-        txt = re.sub(r'\[/?img\]', '', txt, flags=re.IGNORECASE)  # remove BB
-        txt = re.sub(r'\<img src="(.*?)"\>(.*?)\</img\>', r'![\2](\1)', txt, flags=re.DOTALL | re.IGNORECASE)  # convert HTML
+        # Color (simplified to bold)
+        txt = re.sub(r'\[color=.*?\](.*?)\[/color\]', r'**\1**', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
+        txt = re.sub(r'</?color\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
 
-        # URL + link text  # TODO A REVOIR TRAITER TOUS LES CAS lien, image etc...
+        # As result of previous you may have more thant 3 *
+        txt = re.sub(r'\*{4,}', '***', txt)
+
+        # Img (handled differently)
+        txt = re.sub(r'\[img.*?\[/img\]', '', txt, flags=re.DOTALL | re.IGNORECASE)  # remove BB
+        txt = re.sub(r'\<img src="(.*?)"\>.*?\</img\>', r'![image](\1)', txt, flags=re.DOTALL | re.IGNORECASE)  # convert HTML
+
+        # URL + link text  (must be after img) (handled differently too)
+        txt = re.sub(r'\[url.*?\[/url\]', '', txt, flags=re.DOTALL | re.IGNORECASE)  # remove BB
+
         def convert_url(match: re.Match[str]) -> str:
             url = match.group(1)
             text = match.group(2) if match.group(2) else match.group(3) if match.group(3) else url
@@ -261,10 +274,10 @@ def convert(text: str) -> tuple[str, bool]:
         txt = re.sub(r'</?td\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
 
         # Emojis
-        txt = re.sub(r'<EMOJI[^>]*>(.*?)</EMOJI>', r'\1', txt, flags=re.DOTALL | re.IGNORECASE)  # simplify HTML
+        txt = re.sub(r'<emoji[^>]*>(.*?)</emoji>', r'\1', txt, flags=re.DOTALL | re.IGNORECASE)  # simplify HTML
 
         # Youtube
-        pattern = r'<YOUTUBE content="([^"]+)">.*?\[/youtube\]</YOUTUBE>'
+        pattern = r'<youtube content="([^"]+)">.*?</youtube>'
         txt = re.sub(pattern, lambda m: f'[Voir la vidéo YouTube](https://www.youtube.com/watch?v={m.group(1)})', txt, flags=re.IGNORECASE | re.DOTALL)
 
         # Attachments
@@ -302,26 +315,3 @@ def convert(text: str) -> tuple[str, bool]:
     text = text.ljust(MIN_POST_SIZE, '.')
 
     return text, reference_present
-
-
-def main() -> None:
-    """Main for a single test."""
-
-    sample = """<r>super sympa le graph !<br/>
-
-<QUOTE author="Kakitaievitch" post_id="2166" time="1686076102" user_id="61"><s>[quote=Kakitaievitch post_id=2166 time=1686076102 user_id=61]</s>
-<URL url="https://zupimages.net/viewer.php?id=23/23/fokq.png"><s>[url=https://zupimages.net/viewer.php?id=23/23/fokq.png]</s><IMG src="https://zupimages.net/up/23/23/fokq.png"><s>[img]</s>https://zupimages.net/up/23/23/fokq.png<e>[/img]</e></IMG><e>[/url]</e></URL><br/>
-<br/>
-Félicitations essaime !<br/>
-<br/>
-(j'ai eu chaud)
-<e>[/quote]</e></QUOTE></r>"""
-
-    print(sample)
-    result, _ = convert(sample)
-    print("===========")
-    print(result)
-
-
-if __name__ == "__main__":
-    main()
