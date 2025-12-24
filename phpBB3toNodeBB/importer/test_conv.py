@@ -94,7 +94,7 @@ def check_topics_and_posts(data_path: pathlib.Path) -> None:
 # -------------------------
 # Main
 # -------------------------
-def main() -> None:
+def main1() -> None:
     """Main."""
 
     # 1. Check data directory
@@ -107,5 +107,20 @@ def main() -> None:
     check_topics_and_posts(data_path)
 
 
+def main2() -> None:
+    """Main."""
+
+    content = """
+On m’a recommandé cette formation : <URL url="https://www.apprendre-a-dessiner.org/nos-formations/"><s>[url=https://www.apprendre-a-dessiner.org/nos-formations/]</s><COLOR color="#000000"><s>[color=#000000]</s>Apprendre à dessiner<e>[/color]</e></COLOR><e>[/url]</e></URL>. Qu’en pensez-vous ? Est-ce que ça pourrait m’aider ?<br/>
+<br/>
+    """
+    print("<<<<<<<<<<<<<<<<<<<<<<<<<")
+    print(content)
+    content, _ = converter.convert(content)
+    print("++++++++++++++++++++")
+    print(content)
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>")
+
+
 if __name__ == "__main__":
-    main()
+    main2()

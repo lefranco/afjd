@@ -7,9 +7,13 @@ Clears existing data and imports from phpBB CSV files
 Need to have :
     phpbbexport/avatars = phpBB3/images/avatars/upload
     phpbbexport/uploads = phpBB3/files/
+
+IMPORTANT: Need to manually add pdf and zip in authorized extensions (admin console)
 """
 
 import contextlib
+import collections
+import datetime
 import html
 import mimetypes
 import os
@@ -19,13 +23,16 @@ import secrets
 import string
 import sys
 import signal
+import time
 import typing
 import types
+#  import urllib3   # COMPANY
 
 import magic  # sudo apt install libmagic1 + pip3 install python-magic --break-system-packages
 import pandas as pd  # pip3 install pandas --break-system-packages
 import requests  # pip3 install requests --break-system-packages
 import pymongo  # pip3 install pymongo --break-system-packages
+import spacy  # pip3 install spacy --break-system-packages + pip3 install https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.7.0/fr_core_news_sm-3.7.0-py3-none-any.whl --break-system-packages)
 
 import converter
 
@@ -49,10 +56,13 @@ ADMIN_TOKEN = '7abaf72c-c895-4c12-af6d-71103995ae31'
 ADMIN_UID = 1
 
 # Be patient if server is busy
-TIMEOUT = 30
+TIMEOUT = 60
 
 # Need this type
 SignalHandler = typing.Callable[[int, types.FrameType | None], None]
+
+# Cancels warnings
+#  urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  # COMPANY
 
 
 # -------------------------
@@ -122,64 +132,13 @@ class NodeBBMongoDB:
         self.client: pymongo.MongoClient[typing.Any] = pymongo.MongoClient(mongo_uri)
         self.db = self.client[db_name]
         print(f"✅ Connected to NodeBB database: {db_name}")
-        self.tweaked = False
-
-    def increase_allowed_extensions(self) -> bool:
-        """Set allowed upload extensions for NodeBB (MongoDB)."""
-
-        extensions = [
-            "png", "jpg", "jpeg", "bmp", "txt",
-            "webp", "webm", "mp4", "gif",
-            "pdf", "zip"
-        ]
-
-        value = ",".join(extensions)
-
-        result = self.db.objects.update_one(
-            {"_key": "settings:fileUpload.allowedExtensions"},
-            {"$set": {"value": value}},
-            upsert=True
-        )
-
-        return result.acknowledged
-
-
-    def set_account_creation_date(self, uid: int, timestamp: int) -> bool:
-        """Set account creation."""
-
-        timestamp_ms = timestamp * 1000
-
-        # 1) Update user document
-        user_result = self.db.objects.update_one(
-            {"_key": f"user:{uid}"},
-            {"$set": {"joined": timestamp_ms}}
-        )
-
-        # 2) Ensure users:joindate exists and value is a dict
-        key = "users:joindate"
-        doc = self.db.objects.find_one({"_key": key})
-        if not doc or not isinstance(doc.get("value"), dict):
-            # Initialize value as empty dict if missing or invalid type
-            self.db.objects.update_one(
-                {"_key": key},
-                {"$set": {"value": {}}},
-                upsert=True
-            )
-
-        # 3) Safely update the user join timestamp
-        joindate_result = self.db.objects.update_one(
-            {"_key": key},
-            {"$set": {f"value.{uid}": timestamp_ms}}
-        )
-
-        self.tweaked = True
-
-        return user_result.acknowledged and joindate_result.acknowledged
 
     def give_enough_reputation(self, uid: int) -> bool:
         """Give enough reputation (need 3 to post faster than every 120 seconds)."""
 
-        reputation_value = 3
+        return True  # Will not work at company TODO PUT BACK
+
+        reputation_value = 3    # pylint: disable=unreachable
 
         result = self.db.objects.update_one(
             {"_key": f"user:{uid}"},
@@ -187,86 +146,6 @@ class NodeBBMongoDB:
         )
 
         return result.acknowledged
-
-    def set_post_creation_date(self, pid: int, timestamp: int) -> bool:
-        """Set post creation date."""
-
-        timestamp_ms = timestamp * 1000
-
-        # 1) Update post document
-        post_result = self.db.objects.update_one(
-            {"_key": f"post:{pid}"},
-            {"$set": {"timestamp": timestamp_ms}}
-        )
-
-        # Get topic id
-        post_doc = self.db.objects.find_one(
-            {"_key": f"post:{pid}"},
-            {"tid": 1}
-        )
-
-        if not post_doc or "tid" not in post_doc:
-            return False
-
-        tid = post_doc["tid"]
-
-        # 2) Global index posts:pid
-        posts_pid_result = self.db.objects.update_one(
-            {"_key": "posts:pid"},
-            {"$set": {f"value.{pid}": timestamp_ms}},
-            upsert=True
-        )
-
-        # 3) Index of topic
-        topic_posts_result = self.db.objects.update_one(
-            {"_key": f"topic:{tid}:posts"},
-            {"$set": {f"value.{pid}": timestamp_ms}},
-            upsert=True
-        )
-
-        self.tweaked = True
-
-        return post_result.acknowledged and posts_pid_result.acknowledged and topic_posts_result.acknowledged
-
-    def set_topic_creation_date(self, tid: int, timestamp: int) -> bool:
-        """Set topic creation date."""
-
-        timestamp_ms = timestamp * 1000
-
-        # 1) Update topic document
-        topic_result = self.db.objects.update_one(
-            {"_key": f"topic:{tid}"},
-            {"$set": {"timestamp": timestamp_ms}}
-        )
-
-        # Get cid
-        topic_doc = self.db.objects.find_one(
-            {"_key": f"topic:{tid}"},
-            {"cid": 1}
-        )
-
-        if not topic_doc or "cid" not in topic_doc:
-            return False
-
-        cid = topic_doc["cid"]
-
-        # 2) Global index  topics:tid
-        topics_tid_result = self.db.objects.update_one(
-            {"_key": "topics:tid"},
-            {"$set": {f"value.{tid}": timestamp_ms}},
-            upsert=True
-        )
-
-        # 3) Index of category
-        cid_tids_result = self.db.objects.update_one(
-            {"_key": f"cid:{cid}:tids"},
-            {"$set": {f"value.{tid}": timestamp_ms}},
-            upsert=True
-        )
-
-        self.tweaked = True
-
-        return topic_result.acknowledged and topics_tid_result.acknowledged and cid_tids_result.acknowledged
 
     def close(self) -> None:
         """Close."""
@@ -283,6 +162,8 @@ class NodeBBApiSession(requests.Session):
         """Connect to NodeBB's API."""
 
         super().__init__()
+
+        #  self.verify = False  # COMPANY
 
         # Very important
         self.headers.update({
@@ -350,6 +231,7 @@ class NodeBBApiSession(requests.Session):
     # -----------
     # CSRF
     # -----------
+
     def generate_csrf(self, username: str, password: str) -> str:
         """Fetching Initial CSRF."""
 
@@ -466,19 +348,19 @@ class NodeBBApiSession(requests.Session):
             return int(result['response']['cid'])
         return None
 
-    def create_topic(self, cid: int, title: str, content: str) -> int | None:
+    def create_topic(self, cid: int, title: str, content: str, tags: list[str]) -> tuple[int, int] | None:
         """Create a new topic."""
 
         topic_data = {
             "cid": cid,
             "title": title,
             "content": content,
-            "tags": []  # no tag for the moment, we be done manually after forum is operational
+            "tags": tags
         }
 
         result = self._make_request("POST", "/api/v3/topics", data=topic_data)
         if result and 'response' in result:
-            return int(result['response']['tid'])
+            return int(result['response']['tid']), int(result['response']['mainPid'])
         return None
 
     def create_post(self, tid: int, content: str) -> int | None:
@@ -497,12 +379,12 @@ class NodeBBApiSession(requests.Session):
     # Editers (readers / writers)
     # -----------
 
-    def get_topic_content(self, tid: int) -> str | None:
-        """Extract a topic."""
+    def get_topic_first_post(self, tid: int) -> int | None:
+        """Extract first post of a topic."""
 
         result = self._make_request("GET", f"/api/v3/topics/{tid}")
         if result and 'response' in result:
-            return str(result['response']['content'])  # TODO : no content, find why
+            return int(result['response']['mainPid'])
         return None
 
     def get_post_content(self, pid: int) -> str | None:
@@ -512,16 +394,6 @@ class NodeBBApiSession(requests.Session):
         if result and 'response' in result:
             return str(result['response']['content'])
         return None
-
-    def put_topic_content(self, tid: int, new_content: str) -> bool:
-        """Update/patch a topic."""
-
-        edit_data = {
-            "content": new_content
-        }
-
-        result = self._make_request("PUT", f"/api/v3/topics/{tid}", data=edit_data)
-        return result is not None
 
     def put_post_content(self, pid: int, new_content: str) -> bool:
         """Update/patch a post."""
@@ -543,7 +415,7 @@ class NodeBBApiSession(requests.Session):
         avatar_data = {
             "type": "external",
             "url": url_used,
-            "bgColor": "0xFFAAFF",  # TODO : does not seem to work
+            "bgColor": "0xAAAAAA",  # does not seem to work
         }
 
         # use csrf
@@ -582,8 +454,8 @@ class NodeBBApiSession(requests.Session):
     # -----------
     # Tweaks
     # -----------
-    def tweak_inter_post_delay(self, fast: bool) -> bool:
-        """Tweak delay between posts."""
+    def set_inter_post_delay(self, fast: bool) -> bool:
+        """Set delay between posts."""
 
         config_data = {
             "value": 0 if fast else 10
@@ -622,7 +494,7 @@ class NodeBBApiSession(requests.Session):
             ext = file_path.suffix
         else:
             try:
-                mime = magic.from_file(str(file_path), mime=True)  # type: ignore[no-untyped-call]
+                mime = magic.from_file(str(file_path), mime=True)
             except:  # noqa: E722 pylint: disable=bare-except
                 print(f"❌ Upload error: Could not find file extension of {file_path=} (Exception)")
                 return None
@@ -653,21 +525,41 @@ class NodeBBApiSession(requests.Session):
         return str(r_upload.json()['response']['images'][0]['url'])
 
 
-def set_import_configuration(session: NodeBBApiSession, db) -> None:
+def set_import_configuration(session: NodeBBApiSession) -> None:
     """Need some tweaking beforehand."""
 
-    session.tweak_inter_post_delay(fast=True)
-
+    session.set_inter_post_delay(fast=True)
     session.increase_allowed_extensions()  # does not work
-    result = db.increase_allowed_extensions()  # does not work
-    if not result:
-        print("Failed from db")
 
 
 def set_operational_configuration(session: NodeBBApiSession) -> None:
     """Cancel tweaking beforehand."""
 
-    session.tweak_inter_post_delay(fast=False)
+    session.set_inter_post_delay(fast=False)
+
+
+# Charger le modèle français (le modèle 'sm' est léger et rapide)
+NATURAL_LANGUAGE_PARSER = spacy.load("fr_core_news_sm")
+TEXT_SIZE_LIMIT_TAG = 30
+TAG_LIMIT = 1
+
+
+def get_tags_from_content(text: str) -> list[str]:
+    """Calculate automatic tags. Not used."""
+
+    if not text or len(text) < TEXT_SIZE_LIMIT_TAG:  # Ignore too short posts
+        return []
+
+    doc = NATURAL_LANGUAGE_PARSER(text)
+
+    # Intelligent extraction  :
+    # Take second names(PROPN) and common names (NOUN)
+    # Exclude "stop words" (le, de, alors...)
+    keywords = [token.lemma_.lower() for token in doc if token.pos_ in ("NOUN", "PROPN") and not token.is_stop and len(token.text) > 2]
+
+    # Récupérer les mots les plus fréquents
+    most_common = [tag for tag, count in collections.Counter(keywords).most_common(TAG_LIMIT)]
+    return most_common
 
 
 # -------------------------
@@ -754,7 +646,6 @@ def import_users(db: NodeBBMongoDB, session: NodeBBApiSession, data_path: pathli
         email = str(row['email']).strip()
 
         # indirectly
-        timestamp = int(row['joindate'])
         signature = str(row['signature']).strip()
 
         print(f"  Creating user: {username}")
@@ -797,13 +688,6 @@ def import_users(db: NodeBBMongoDB, session: NodeBBApiSession, data_path: pathli
             print(f"    ❌ Failed to set user as verified for {username}")
         print("    ✅ Set as verified too!")
 
-        # set creation date of user TO DO FIX
-        """
-        if not db.set_account_creation_date(new_uid, timestamp):
-            print(f"    ❌ Failed to set creation date for {username}")
-        print("    ✅ Set account creation date too!")
-        """
-
         credential_map[new_uid] = (username, plain_password)
 
     save_passwords_to_file(password_list)
@@ -835,16 +719,19 @@ def import_categories(session: NodeBBApiSession, data_path: pathlib.Path) -> dic
         if int(row['parentCid']) == 0:
             old_cid = int(row['cid'])
             name = str(row['name']).strip()
-            description = str(row['description']).strip() if pd.notna(row['description']) else ""
+            description: str = str(row['description']).strip() if pd.notna(row['description']) else ""
             order = int(row.get('display_order', 0))
 
             print(f"  Creating parent category: {name}")
-
             new_cid = session.create_category(name, description, 0, order)
             if new_cid:
                 category_map[old_cid] = new_cid
                 parent_categories[old_cid] = new_cid
                 print(f"    ✅ Created (CID: {new_cid})")
+
+                # DEBUG
+                print(f"CATEGORY (parent)-----------> {old_cid=} {new_cid=}", file=sys.stderr)
+
             else:
                 print(f"    ❌ Failed to create {name}")
 
@@ -863,6 +750,10 @@ def import_categories(session: NodeBBApiSession, data_path: pathlib.Path) -> dic
             if new_cid:
                 category_map[old_cid] = new_cid
                 print(f"    ✅ Created (CID: {new_cid})")
+
+                # DEBUG
+                print(f"CATEGORY (child)-----------> {old_cid=} {new_cid=}", file=sys.stderr)
+
             else:
                 print(f"    ❌ Failed to create {name}")
 
@@ -870,7 +761,7 @@ def import_categories(session: NodeBBApiSession, data_path: pathlib.Path) -> dic
     return category_map
 
 
-def import_topics_and_posts(admin_session: NodeBBApiSession, db: NodeBBMongoDB, data_path: pathlib.Path, user_map: dict[int, int], category_map: dict[int, int], credential_map: dict[int, tuple[str, str]], session_map: dict[int, NodeBBApiSession]) -> tuple[list[int], list[int], dict[int, int], dict[int, int]]:
+def import_topics_and_posts(admin_session: NodeBBApiSession, data_path: pathlib.Path, user_map: dict[int, int], category_map: dict[int, int], credential_map: dict[int, tuple[str, str]], session_map: dict[int, NodeBBApiSession]) -> tuple[list[int], list[int], dict[int, int], dict[int, int]]:
     """Import topics and posts from CSV files."""
 
     print("\n" + "=" * 50)
@@ -907,8 +798,8 @@ def import_topics_and_posts(admin_session: NodeBBApiSession, db: NodeBBMongoDB, 
 
     # Load attachments
     attachments_csv = data_path / "attachments.csv"
-    if not posts_csv.exists():
-        print(f"❌ Attachments CSV not found: {posts_csv}")
+    if not attachments_csv.exists():
+        print(f"❌ Attachments CSV not found: {attachments_csv}")
         return [], [], {}, {}
 
     df_attachments = pd.read_csv(attachments_csv, encoding=CSV_ENCODING)
@@ -985,20 +876,29 @@ def import_topics_and_posts(admin_session: NodeBBApiSession, db: NodeBBMongoDB, 
         title = str(row['title']).strip()
         title = html.unescape(title)
 
-        new_tid = user_session.create_topic(new_cid, title, content)
+        # Tags
+        date_tag = [f"{datetime.datetime.fromtimestamp(timestamp).strftime('%d-%m-%Y')})"]
+        generated_tag = get_tags_from_content(content)
 
-        print(f"\n📄 Topic {idx}/{len(df_topics)}: {old_tid=} {new_tid=}: {row['title']}")
+        result = user_session.create_topic(new_cid, title, content, date_tag + generated_tag)
 
-        if not new_tid:
+        if not result:
             print(f"❌ Failed to create topic for {old_tid}")
             continue
 
-        """ TODO FIX
-        if not db.set_topic_creation_date(new_tid, timestamp):
-            print(f"❌ Failed to set topic creation date {new_tid}")
-        """
+        new_tid, main_pid = result
+
+        print(f"\n📄 Topic {idx}/{len(df_topics)}: {row['title']}")
+
+        # DEBUG
+        print(f"TOPIC -----------> {old_tid=} {new_tid=} ({old_pid_first_post=} {main_pid=})", file=sys.stderr)
 
         topic_map[old_tid] = new_tid
+
+        post_map[old_pid_first_post] = main_pid
+
+        # DEBUG
+        print(f"POST (main)-----------> {old_pid_first_post=} {main_pid=} added (topic {old_tid=} {new_tid=})", file=sys.stderr)
 
         # note topics to path later
         if reference_present:
@@ -1024,7 +924,6 @@ def import_topics_and_posts(admin_session: NodeBBApiSession, db: NodeBBMongoDB, 
 
                 post_uid = user_map[old_post_uid]
                 post_content = str(post_row['content'])
-                post_timestamp = int(post_row['timestamp'])
 
                 # Create session if necessary
                 if post_uid not in session_map:
@@ -1047,17 +946,14 @@ def import_topics_and_posts(admin_session: NodeBBApiSession, db: NodeBBMongoDB, 
                     print(f"❌ Failed to create post for {old_post_pid}")
                     continue
 
-                """ TODO FIX
-                if not db.set_post_creation_date(new_pid, post_timestamp):
-                    print(f"❌ Failed to set post creation date {new_pid}")
-                """
-
                 post_map[old_post_pid] = new_pid
-                #  print(f"post {old_post_pid=} {new_pid=} added")
+
+                # DEBUG
+                print(f"POST (reply)-----------> {old_post_pid=} {new_pid=} added (follows)", file=sys.stderr)
 
                 # note topics to path later
                 if reference_present:
-                    posts_patch_list.append(new_tid)
+                    posts_patch_list.append(new_pid)
 
                 if post_idx % 10 == 0:
                     print(f"    Created {post_idx} replies...")
@@ -1073,19 +969,36 @@ def import_topics_and_posts(admin_session: NodeBBApiSession, db: NodeBBMongoDB, 
 def patch_topics_and_posts(admin_session: NodeBBApiSession, topics_patch_list: list[int], posts_patch_list: list[int], topic_map: dict[int, int], post_map: dict[int, int]) -> None:
     """Patch references from old forum to new forum."""
 
+    def replace_tid(match: re.Match[str]) -> str:
+        """Replace."""
+        topic = topic_map[int(match.group(1))]
+        return f"{topic}"
+
+    def replace_pid(match: re.Match[str]) -> str:
+        """Replace."""
+        post = post_map[int(match.group(1))]
+        return f"{post}"
+
     for topic_id in topics_patch_list:
-        content = admin_session.get_topic_content(topic_id)
+        print(f"patching {topic_id=}")
+        first_post_id = admin_session.get_topic_first_post(topic_id)
+        if not first_post_id:
+            continue
+        print(f"patching {first_post_id=}")
+        content = admin_session.get_post_content(first_post_id)
         if not content:
             continue
-        content = re.sub(r'\[old_tid_ref=(\d+)\]', str(topic_map[int(r'\1')]), content, flags=re.IGNORECASE)
-        admin_session.put_topic_content(topic_id, content)
+        content = re.sub(r'\[old_tid_ref=(\d+)\]', replace_tid, content, flags=re.IGNORECASE)
+        content = re.sub(r'\[old_pid_ref=(\d+)\]', replace_pid, content, flags=re.IGNORECASE)
+        admin_session.put_post_content(first_post_id, content)
 
     for post_id in posts_patch_list:
+        print(f"patching {post_id=}")
         content = admin_session.get_post_content(post_id)
         if not content:
             continue
-        content = re.sub(r'\[old_tid_ref=(\d+)\]', str(topic_map[int(r'\1')]), content, flags=re.IGNORECASE)
-        content = re.sub(r'\[old_pid_ref=(\d+)\]', str(post_map[int(r'\1')]), content, flags=re.IGNORECASE)
+        content = re.sub(r'\[old_tid_ref=(\d+)\]', replace_tid, content, flags=re.IGNORECASE)
+        content = re.sub(r'\[old_pid_ref=(\d+)\]', replace_pid, content, flags=re.IGNORECASE)
         admin_session.put_post_content(post_id, content)
 
 
@@ -1113,25 +1026,25 @@ def import_avatars(admin_session: NodeBBApiSession, data_path: pathlib.Path, use
     success_count = 0
     for old_uid, new_uid in user_map.items():
 
-        # Create session if necessary
-        if new_uid not in session_map:
-            username, password = credential_map[new_uid]
-            user_session = NodeBBApiSession(username, password)
-            session_map[new_uid] = user_session
-        else:
-            user_session = session_map[new_uid]
-
         # Look for avatar
         avatar_file = find_avatar_file(old_uid, avatars_dir)
         if avatar_file:
 
-            # 1 upload file
+            # 1 Create session if necessary
+            if new_uid not in session_map:
+                username, password = credential_map[new_uid]
+                user_session = NodeBBApiSession(username, password)
+                session_map[new_uid] = user_session
+            else:
+                user_session = session_map[new_uid]
+
+            # 2 upload file
             file_url = admin_session.upload_file(avatar_file, new_uid)  # strange: need to be admin for this !
             if not file_url:
                 print("    ⚠️  Failed to upload avatar file")
                 continue
 
-            # 2 put as avatar
+            # 3 put as avatar
             if not user_session.add_avatar_user(new_uid, file_url):
                 print("    ⚠️  Failed to put avatar")
                 continue
@@ -1163,7 +1076,7 @@ def process_attachments_in_post(admin_session: NodeBBApiSession, content: str, d
             print("⚠️  Failed to upload attachment, skipping...")
             return f'[attachment {real_file} failed to load]'
         # Create a clickable link
-        link = f'[{real_file}]({file_url})'
+        link = f'![{real_file}]({file_url})'
         return link
 
     uploads_dir = data_path / "uploads"
@@ -1182,6 +1095,8 @@ def process_attachments_in_post(admin_session: NodeBBApiSession, content: str, d
 def main() -> None:
     """Main."""
 
+    start = time.time()
+
     print("🚀 NodeBB PHPBB Import Script")
     print("=" * 50)
 
@@ -1199,8 +1114,7 @@ def main() -> None:
 
     # 1. Set tweak (as admin)
     print("1️⃣ Tweak config")
-    set_import_configuration(admin_session, db)
-    return
+    set_import_configuration(admin_session)
 
     # 2. Clear existing data (as admin)
     print("2️⃣ Clearing existing data")
@@ -1220,12 +1134,9 @@ def main() -> None:
     # 5. Import topics and posts (and attachments)
     print("5️⃣ Import topics and posts")
     # First: do actual conversion
-    topics_patch_list, posts_patch_list, topic_map, post_map = import_topics_and_posts(admin_session, db, data_path, user_map, category_map, credential_map, session_map)
-
-    """ NOT WORKING
+    topics_patch_list, posts_patch_list, topic_map, post_map = import_topics_and_posts(admin_session, data_path, user_map, category_map, credential_map, session_map)
     # Second: patch references (as admin : simpler)
     patch_topics_and_posts(admin_session, topics_patch_list, posts_patch_list, topic_map, post_map)
-    """
 
     # 6. Import avatars
     print("6️⃣ Import avatars")
@@ -1246,10 +1157,11 @@ def main() -> None:
     print(f"   Categories imported: {len(category_map)}")
     print(f"   Forum URL: {NODEBB_URL}")
 
-    if db.tweaked:
-        print("🚀 Some direct operations on Mongo database were performed.")
-        print("   TODO : ./nodebb stop + ./nodebb build + ./nodebb start.")
     print("\n⚠️  IMPORTANT: Users should change their passwords!")
+
+    end = time.time()
+    elapsed = int(end - start)
+    print(f"Time elapsed : {elapsed // 60} min {elapsed % 60} secs")
 
 
 if __name__ == "__main__":
