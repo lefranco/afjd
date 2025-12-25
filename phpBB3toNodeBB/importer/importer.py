@@ -703,19 +703,19 @@ def import_categories(session: NodeBBApiSession, data_path: pathlib.Path) -> dic
     print("📂 IMPORTING CATEGORIES")
     print("=" * 50)
 
-    forums_csv = data_path / "forums.csv"
-    if not forums_csv.exists():
-        print(f"❌ Forums CSV not found: {forums_csv}")
+    categories_csv = data_path / "forums.csv"  # In exported database these are called 'forums'
+    if not categories_csv.exists():
+        print(f"❌ Forums CSV not found: {categories_csv}")
         return {}
 
-    df_forums = pd.read_csv(forums_csv, encoding=CSV_ENCODING)
+    df_categories = pd.read_csv(categories_csv, encoding=CSV_ENCODING)
     category_map: dict[int, int] = {}  # old_cid -> new_cid
 
-    print(f"Found {len(df_forums)} categories to import")
+    print(f"Found {len(df_categories)} categories to import")
 
     # First import parent categories
     parent_categories = {}
-    for _, row in df_forums.iterrows():
+    for _, row in df_categories.iterrows():
         if int(row['parentCid']) == 0:
             old_cid = int(row['cid'])
             name = str(row['name']).strip()
@@ -736,7 +736,7 @@ def import_categories(session: NodeBBApiSession, data_path: pathlib.Path) -> dic
                 print(f"    ❌ Failed to create {name}")
 
     # Then import child categories
-    for _, row in df_forums.iterrows():
+    for _, row in df_categories.iterrows():
         parent_cid = int(row['parentCid'])
         if parent_cid != 0 and parent_cid in parent_categories:
             old_cid = int(row['cid'])
