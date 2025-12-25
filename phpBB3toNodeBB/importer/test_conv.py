@@ -123,4 +123,4 @@ On m’a recommandé cette formation : <URL url="https://www.apprendre-a-dessine
 
 
 if __name__ == "__main__":
-    main2()
+    main1()
