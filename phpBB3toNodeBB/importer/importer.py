@@ -880,10 +880,10 @@ def import_topics_and_posts(admin_session: NodeBBApiSession, data_path: pathlib.
         title = str(row['title']).strip()
         title = html.unescape(title)
 
-        # Tag
+        # Tags
         generated_tags = get_tags_from_title_and_content(title + "\n" + content)
 
-        result = user_session.create_topic(new_cid, title, content, timestamp, generated_tag)
+        result = user_session.create_topic(new_cid, title, content, timestamp, generated_tags)
 
         if not result:
             print(f"❌ Failed to create topic for {old_tid}")
