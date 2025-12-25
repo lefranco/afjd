@@ -144,13 +144,13 @@ def convert(text: str) -> tuple[str, bool]:
         txt = re.sub(r'(?<!https://)(?<!http://)\s*diplomania2\.fr', " https://diplomania2.fr", txt, flags=re.IGNORECASE)
 
         # link to components inside
-        txt = re.sub(r'https://diplomania2.fr/frequentation', "https://frequentation/diplomania2.fr", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/frequentation', "https://frequentation.diplomania2.fr", txt, flags=re.IGNORECASE)
         txt = re.sub(r'https://diplomania2.fr/dokuwiki', "https://dokuwiki.diplomania2.fr", txt, flags=re.IGNORECASE)
         txt = re.sub(r'https://diplomania2.fr/dokuwiki2', "https://dokuwiki2.diplomania2.fr", txt, flags=re.IGNORECASE)
 
         # link to forum : a bit more complicated
         # generic
-        txt = re.sub(r'https://diplomania2.fr/forum/phpBB3', "https://forum/diplomania2.fr", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'https://diplomania2.fr/forum/phpBB3', "https://forum.diplomania2.fr", txt, flags=re.IGNORECASE)
         # displayed part of link
         txt = re.sub(r'\[viewtopic\.php\?t=\d+\]', '[aller voir le topic]', txt, flags=re.IGNORECASE)
         txt = re.sub(r'\[viewtopic\.php\?p=\d+#p\d+\]', '[aller voir le post]', txt, flags=re.IGNORECASE)
@@ -161,7 +161,7 @@ def convert(text: str) -> tuple[str, bool]:
         if changed:
             reference_present = True
         # will convert post num old -> new somewhere else
-        txt, changed = re.subn(r'/viewtopic\.php\?p=(\d+)#p\d+', r'/topic/[old_pid_ref=\1]', txt, flags=re.IGNORECASE)
+        txt, changed = re.subn(r'/viewtopic\.php\?p=(\d+)#p\d+', r'/post/[old_pid_ref=\1]', txt, flags=re.IGNORECASE)
         if changed:
             reference_present = True
 

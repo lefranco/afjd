@@ -8,12 +8,14 @@ Need to have :
     phpbbexport/avatars = phpBB3/images/avatars/upload
     phpbbexport/uploads = phpBB3/files/
 
-IMPORTANT: Need to manually add pdf and zip in authorized extensions (admin console)
+IMPORTANT:
+  Need to:
+    - manually add pdf and zip in authorized extensions (admin console)
+    - comment out line 16 "data.timestamp = Date.now()" in src/api/helpers.js + stop + build + start
 """
 
 import contextlib
 import collections
-import datetime
 import html
 import mimetypes
 import os
@@ -348,12 +350,13 @@ class NodeBBApiSession(requests.Session):
             return int(result['response']['cid'])
         return None
 
-    def create_topic(self, cid: int, title: str, content: str, tags: list[str]) -> tuple[int, int] | None:
+    def create_topic(self, cid: int, title: str, content: str, timestamp: int, tags: list[str]) -> tuple[int, int] | None:
         """Create a new topic."""
 
         topic_data = {
             "cid": cid,
             "title": title,
+            "timestamp": timestamp * 1000,
             "content": content,
             "tags": tags
         }
@@ -363,11 +366,12 @@ class NodeBBApiSession(requests.Session):
             return int(result['response']['tid']), int(result['response']['mainPid'])
         return None
 
-    def create_post(self, tid: int, content: str) -> int | None:
+    def create_post(self, tid: int, content: str, timestamp: int) -> int | None:
         """Create a reply post."""
 
         post_data = {
             "content": content,
+            "timestamp": timestamp * 1000
         }
 
         result = self._make_request("POST", f"/api/v3/topics/{tid}", data=post_data)
@@ -541,11 +545,11 @@ def set_operational_configuration(session: NodeBBApiSession) -> None:
 # Charger le modèle français (le modèle 'sm' est léger et rapide)
 NATURAL_LANGUAGE_PARSER = spacy.load("fr_core_news_sm")
 TEXT_SIZE_LIMIT_TAG = 30
-TAG_LIMIT = 1
+TAG_LIMIT = 3
 
 
-def get_tags_from_content(text: str) -> list[str]:
-    """Calculate automatic tags. Not used."""
+def get_tags_from_title_and_content(text: str) -> list[str]:
+    """Calculate automatic tags."""
 
     if not text or len(text) < TEXT_SIZE_LIMIT_TAG:  # Ignore too short posts
         return []
@@ -876,11 +880,10 @@ def import_topics_and_posts(admin_session: NodeBBApiSession, data_path: pathlib.
         title = str(row['title']).strip()
         title = html.unescape(title)
 
-        # Tags
-        date_tag = [f"{datetime.datetime.fromtimestamp(timestamp).strftime('%d-%m-%Y')})"]
-        generated_tag = get_tags_from_content(content)
+        # Tag
+        generated_tags = get_tags_from_title_and_content(title + "\n" + content)
 
-        result = user_session.create_topic(new_cid, title, content, date_tag + generated_tag)
+        result = user_session.create_topic(new_cid, title, content, timestamp, generated_tag)
 
         if not result:
             print(f"❌ Failed to create topic for {old_tid}")
@@ -924,6 +927,7 @@ def import_topics_and_posts(admin_session: NodeBBApiSession, data_path: pathlib.
 
                 post_uid = user_map[old_post_uid]
                 post_content = str(post_row['content'])
+                post_timestamp = int(post_row['timestamp'])
 
                 # Create session if necessary
                 if post_uid not in session_map:
@@ -940,7 +944,7 @@ def import_topics_and_posts(admin_session: NodeBBApiSession, data_path: pathlib.
                 post_content = process_attachments_in_post(admin_session, post_content, data_path, old_post_pid, post_uid, attachments_by_post_file)
 
                 # Create reply
-                new_pid = user_session2.create_post(new_tid, post_content)
+                new_pid = user_session2.create_post(new_tid, post_content, post_timestamp)
 
                 if not new_pid:
                     print(f"❌ Failed to create post for {old_post_pid}")
@@ -973,7 +977,7 @@ def patch_topics_and_posts(admin_session: NodeBBApiSession, topics_patch_list: l
         """Replace."""
         old_topic = int(match.group(1))
         if old_topic not in topic_map:
-            print(f"ERROR {old_topic=} not in topic_map")
+            print(f"❌ ERROR {old_topic=} not in topic_map")
             return f"{old_topic=}"
         topic = topic_map[old_topic]
         return f"{topic}"
@@ -982,32 +986,38 @@ def patch_topics_and_posts(admin_session: NodeBBApiSession, topics_patch_list: l
         """Replace."""
         old_post = int(match.group(1))
         if old_post not in post_map:
-            print(f"ERROR {old_post=} not in post_map")
+            print(f"❌ ERROR {old_post=} not in post_map")
             return f"{old_post=}"
         post = post_map[old_post]
         return f"{post}"
 
+    patched_topics = 0
     for topic_id in topics_patch_list:
-        print(f"patching {topic_id=}")
+        #  print(f"patching {topic_id=}")
         first_post_id = admin_session.get_topic_first_post(topic_id)
         if not first_post_id:
             continue
-        print(f"patching {first_post_id=}")
+        #  print(f"patching {first_post_id=}")
         content = admin_session.get_post_content(first_post_id)
         if not content:
             continue
         content = re.sub(r'\[old_tid_ref=(\d+)\]', replace_tid, content, flags=re.IGNORECASE)
         content = re.sub(r'\[old_pid_ref=(\d+)\]', replace_pid, content, flags=re.IGNORECASE)
         admin_session.put_post_content(first_post_id, content)
+        patched_topics += 1
+    print(f"\n✅ Successfully patched {patched_topics} topics")
 
+    patched_posts = 0
     for post_id in posts_patch_list:
-        print(f"patching {post_id=}")
+        #  print(f"patching {post_id=}")
         content = admin_session.get_post_content(post_id)
         if not content:
             continue
         content = re.sub(r'\[old_tid_ref=(\d+)\]', replace_tid, content, flags=re.IGNORECASE)
         content = re.sub(r'\[old_pid_ref=(\d+)\]', replace_pid, content, flags=re.IGNORECASE)
         admin_session.put_post_content(post_id, content)
+        patched_posts += 1
+    print(f"\n✅ Successfully patched {patched_posts} posts")
 
 
 def import_avatars(admin_session: NodeBBApiSession, data_path: pathlib.Path, user_map: dict[int, int], credential_map: dict[int, tuple[str, str]], session_map: dict[int, NodeBBApiSession]) -> None:
@@ -1028,7 +1038,7 @@ def import_avatars(admin_session: NodeBBApiSession, data_path: pathlib.Path, use
 
     avatars_dir = data_path / "avatars"
     if not avatars_dir.exists():
-        print("⚠️  Avatars directory not found, skipping...")
+        print(f"❌ Avatars directory not found: {avatars_dir}")
         return
 
     success_count = 0
@@ -1074,14 +1084,14 @@ def process_attachments_in_post(admin_session: NodeBBApiSession, content: str, d
         # Find and upload file
         if (pid, real_file) not in attachments_by_post_file:
             # File not found
-            print(f"⚠️  Attachment file {real_file} not found, skipping...")
+            print(f"⚠️  Attachment file {real_file} not found {pid=}, skipping...")
             return f'[attachment {real_file} missing]'
         physical_filename = attachments_by_post_file[(pid, real_file)]
         complete_path = uploads_dir / physical_filename
         file_url = admin_session.upload_file(complete_path, uid)  # strange: need to be admin for this !
         if not file_url:
             # Failed to upload
-            print("⚠️  Failed to upload attachment, skipping...")
+            print(f"⚠️  Failed to upload attachment {pid=}, skipping...")
             return f'[attachment {real_file} failed to load]'
         # Create a clickable link
         link = f'![{real_file}]({file_url})'
@@ -1089,7 +1099,7 @@ def process_attachments_in_post(admin_session: NodeBBApiSession, content: str, d
 
     uploads_dir = data_path / "uploads"
     if not uploads_dir.exists():
-        print("⚠️  Uploads directory not found, skipping...")
+        print(f"⚠️  Uploads directory {uploads_dir} not found, skipping...")
         return content
 
     pattern = r'<ATTACHMENT\s+filename="([^"]+)"[^>]*>([^<]+)</ATTACHMENT>'
