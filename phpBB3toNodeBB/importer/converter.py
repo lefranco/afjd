@@ -278,7 +278,7 @@ def convert(text: str) -> tuple[str, bool]:
 
         # Youtube
         pattern = r'<youtube content="([^"]+)">.*?</youtube>'
-        txt = re.sub(pattern, lambda m: f'[Voir la vidéo YouTube](https://www.youtube.com/watch?v={m.group(1)})', txt, flags=re.IGNORECASE | re.DOTALL)
+        txt = re.sub(pattern, lambda m: f'[![Voir la vidéo YouTube](https://img.youtube.com/vi/{m.group(1)}/0.jpg)](https://www.youtube.com/watch?v={m.group(1)})', txt, flags=re.IGNORECASE | re.DOTALL)
 
         # Attachments
         txt = re.sub(r'\[(?:\/)?attachment(?:=\d+)?\]', '', txt, flags=re.IGNORECASE)  # remove bbcode (will use HTML)
