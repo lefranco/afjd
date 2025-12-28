@@ -17,6 +17,18 @@ CSV_ENCODING = "utf-8"
 def check_topics_and_posts(data_path: pathlib.Path) -> None:
     """Check topics and posts from CSV files."""
 
+    def check_one(content: str, old_tid: int | None, old_pid: int) -> None:
+
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<")
+        print(content)
+        if old_tid:
+            print(f"++++t{old_tid} p{old_pid}++++++++++")
+        else:
+            print(f"++++++++++p{old_pid}++++++++++")
+        content_after, _ = converter.convert(content)
+        print(content_after)
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>")
+
     topic_count = 0
     post_count = 0
 
@@ -57,17 +69,11 @@ def check_topics_and_posts(data_path: pathlib.Path) -> None:
 
         # Process first post (topic content)
         first_post = posts_by_topic[old_tid][0]
-        old_pid_first_post = first_post['pid']
+        old_pid_first_post = int(first_post['pid'])
         content = str(first_post['content'])
 
         # conversion phpbb3 -> nodebb
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<")
-        print(content)
-        content, _ = converter.convert(content)
-        print(f"++++t{old_tid} p{old_pid_first_post}++++++++++")
-        print(content)
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>")
-
+        check_one(content, old_tid, old_pid_first_post)
         topic_count += 1
 
         # Create replies (remaining posts)
@@ -75,17 +81,11 @@ def check_topics_and_posts(data_path: pathlib.Path) -> None:
 
             for post_row in posts_by_topic[old_tid][1:]:
 
-                old_post_pid = post_row['pid']
+                old_post_pid = int(post_row['pid'])
                 post_content = str(post_row['content'])
 
                 # conversion phpbb3 -> nodebb
-                print("<<<<<<<<<<<<<<<<<<<<<<<<<")
-                print(post_content)
-                post_content, _ = converter.convert(post_content)
-                print(f"++++++++++p{old_post_pid}++++++++++")
-                print(post_content)
-                print(">>>>>>>>>>>>>>>>>>>>>>>>>")
-
+                check_one(post_content, None, old_post_pid)
                 post_count += 1
 
     print(f"We have {topic_count} topic and {post_count} posts.")
@@ -111,8 +111,7 @@ def main2() -> None:
     """Main."""
 
     content = """
-On m’a recommandé cette formation : <URL url="https://www.apprendre-a-dessiner.org/nos-formations/"><s>[url=https://www.apprendre-a-dessiner.org/nos-formations/]</s><COLOR color="#000000"><s>[color=#000000]</s>Apprendre à dessiner<e>[/color]</e></COLOR><e>[/url]</e></URL>. Qu’en pensez-vous ? Est-ce que ça pourrait m’aider ?<br/>
-<br/>
+<r><YOUTUBE content="-dZgZkrsvVE"><s>[youtube]</s>-dZgZkrsvVE<e>[/youtube]</e></YOUTUBE></r>
     """
     print("<<<<<<<<<<<<<<<<<<<<<<<<<")
     print(content)
