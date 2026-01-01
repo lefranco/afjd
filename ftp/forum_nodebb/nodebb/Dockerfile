@@ -39,6 +39,6 @@ WORKDIR /app/nodebb
 # Expose NodeBB port
 EXPOSE 4567
 
-# keep it alive"
+# keep it alive
 CMD ["tail", "-f", "/dev/null"]
 

@@ -138,11 +138,6 @@ def main():
     add_custom_user_to_csv_files(export_dir)  # The Libertor issue : we need him so we add him
 
     print("🎉 Export complete! Check the 'phpbb_export' directory.")
-    print("Next steps:")
-    print("1. Convert the posts")
-    print("2. Prepare File System Assets")
-    print("3. Set Up NodeBB for Import")
-    print("4. Execute the Import")
 
 if __name__ == "__main__":
     main()
