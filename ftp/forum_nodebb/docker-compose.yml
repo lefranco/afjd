@@ -42,7 +42,7 @@ services:
       - "traefik.http.routers.nodebb-https.entrypoints=websecure"
       - "traefik.http.routers.nodebb-https.rule=Host(`forum.diplomania2.fr`)"
       - "traefik.http.routers.nodebb-https.tls=true"
-      - "traefik.http.routers.nodebb-https.tls.certresolver=myle"  # Use your cert resolver name
+      - "traefik.http.routers.nodebb-https.tls.certresolver=myle"
     
       # Service - Use full URL format
       - "traefik.http.services.nodebb.loadbalancer.server.url=http://nodebb:4567"
