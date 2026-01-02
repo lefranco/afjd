@@ -140,8 +140,11 @@ def convert(text: str) -> tuple[str, bool]:
         # main replacement
         txt = re.sub(r'diplomania-gen.fr', "diplomania2.fr", txt, flags=re.IGNORECASE)
 
-        # safety since nothing becomes http
-        txt = re.sub(r'(?<!https://)(?<!http://)\s*diplomania2\.fr', " https://diplomania2.fr", txt, flags=re.IGNORECASE)
+        # remove www if present
+        txt = re.sub(r'www.diplomania2.fr', "diplomania2.fr", txt, flags=re.IGNORECASE)
+
+        # add https if absent (BUGGY)
+        txt = re.sub(r'(?<!https://)(?<!http://)diplomania2\.fr\b', 'https://diplomania2.fr', txt, flags=re.IGNORECASE)
 
         # link to components inside
         txt = re.sub(r'https://diplomania2.fr/frequentation', "https://frequentation.diplomania2.fr", txt, flags=re.IGNORECASE)
