@@ -110,9 +110,9 @@ def main1() -> None:
 def main2() -> None:
     """Main."""
 
-    content = """
-<r><YOUTUBE content="-dZgZkrsvVE"><s>[youtube]</s>-dZgZkrsvVE<e>[/youtube]</e></YOUTUBE></r>
-    """
+    with open("sample.txt", "r", encoding="utf-8") as f:
+        content = f.read()
+    
     print("<<<<<<<<<<<<<<<<<<<<<<<<<")
     print(content)
     content, _ = converter.convert(content)
@@ -122,4 +122,4 @@ def main2() -> None:
 
 
 if __name__ == "__main__":
-    main1()
+    main2()
