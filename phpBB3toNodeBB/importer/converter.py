@@ -138,13 +138,13 @@ def convert(text: str) -> tuple[str, bool]:
         """Links inside site."""
 
         # main replacement
-        txt = re.sub(r'diplomania-gen.fr', "diplomania2.fr", txt, flags=re.IGNORECASE)
+        txt = re.sub(r'(?<!@)diplomania-gen.fr', "diplomania2.fr", txt, flags=re.IGNORECASE)
 
         # remove www if present
         txt = re.sub(r'www.diplomania2.fr', "diplomania2.fr", txt, flags=re.IGNORECASE)
 
-        # add https if absent (BUGGY)
-        txt = re.sub(r'(?<!https://)(?<!http://)diplomania2\.fr\b', 'https://diplomania2.fr', txt, flags=re.IGNORECASE)
+        # add https if absent 
+        txt = re.sub(r'(?<!https://)(?<!http://)(?<![\w.])diplomania2\.fr\b', 'https://diplomania2.fr', txt, flags=re.IGNORECASE)
 
         # link to components inside
         txt = re.sub(r'https://diplomania2.fr/frequentation', "https://frequentation.diplomania2.fr", txt, flags=re.IGNORECASE)
@@ -155,8 +155,7 @@ def convert(text: str) -> tuple[str, bool]:
         # generic
         txt = re.sub(r'https://diplomania2.fr/forum/phpBB3', "https://forum.diplomania2.fr", txt, flags=re.IGNORECASE)
         # displayed part of link
-        txt = re.sub(r'\[viewtopic\.php\?t=\d+\]', '[aller voir le topic]', txt, flags=re.IGNORECASE)
-        txt = re.sub(r'\[viewtopic\.php\?p=\d+#p\d+\]', '[aller voir le post]', txt, flags=re.IGNORECASE)
+        txt = re.sub(r'(viewtopic\.php\?p=\d+).*?(?=#p\d+)', r'\1', txt, flags=re.IGNORECASE) # need litlle simplification
         # actual link
         nonlocal reference_present
         # will convert topic num old -> new somewhere else
@@ -226,20 +225,28 @@ def convert(text: str) -> tuple[str, bool]:
 
         # As result of previous you may have more thant 3 *
         txt = re.sub(r'\*{4,}', '***', txt)
+        print(f"start\n{txt=}"); print()
 
-        # Img (handled differently)
-        txt = re.sub(r'\[img.*?\[/img\]', '', txt, flags=re.DOTALL | re.IGNORECASE)  # remove BB
-        txt = re.sub(r'\<img src="(.*?)"\>.*?\</img\>', r'![image](\1)', txt, flags=re.DOTALL | re.IGNORECASE)  # convert HTML
+        # Now can do url
+        txt = re.sub(r'\[url(?:=[^\]]*)?\](.*?)\[/url\]', r'![\1](\1)', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
+        print(f"after convert URL BB\n{txt=}"); print()
+        
+        txt = re.sub(r'</?url\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
+        print(f"after remove URL html\n{txt=}"); print()
 
-        # URL + link text  (must be after img) (handled differently too)
-        txt = re.sub(r'\[url.*?\[/url\]', '', txt, flags=re.DOTALL | re.IGNORECASE)  # remove BB
+        txt = re.sub(r'</?link_text\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove LINK TEXT
+        print(f"after remove link text html\n{txt=}"); print()
 
-        def convert_url(match: re.Match[str]) -> str:
-            url = match.group(1)
-            text = match.group(2) if match.group(2) else match.group(3) if match.group(3) else url
-            return f'[{text}]({url})'
-        pattern = r'<URL url="([^"]+)">\s*(?:<LINK_TEXT text="([^"]+)">.*?</LINK_TEXT>|(.*?))\s*</URL>'
-        txt = re.sub(pattern, convert_url, txt, flags=re.IGNORECASE | re.DOTALL)
+        # safety : if there was a html url and no bbcode url put a proper link
+        txt = re.sub(r'(?<![\(\[\"\)\]])(https?://\S+)', r'[\1](\1)', txt)
+        print(f"after put proper link\n{txt=}"); print()
+
+        # Now can do Img 
+        txt = re.sub(r'\[img\](.*?)\[/img\]', r'![](\1)', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
+        print(f"after convert IMG BB\n{txt=}"); print()
+
+        txt = re.sub(r'</?img\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
+        print(f"after remove IMG html\n{txt=}"); print()
 
         # Code
         txt = re.sub(r'\[code\](.*?)\[/code\]', r'``\1```', txt, flags=re.DOTALL | re.IGNORECASE)   # convert BB
