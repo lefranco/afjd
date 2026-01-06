@@ -224,29 +224,31 @@ def convert(text: str) -> tuple[str, bool]:
         txt = re.sub(r'</?color\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
 
         # As result of previous you may have more thant 3 *
-        txt = re.sub(r'\*{4,}', '***', txt)
-        print(f"start\n{txt=}"); print()
+        txt = re.sub(r'\*{3,}', '**', txt)
+
+        # Some can be broken repair inside
+        txt = re.sub(r'\*\*[ \t]*(.*?)[ \t]*\*\*', r'**\1**', txt)
+
+        # Some can be broken repair before
+        txt = re.sub(r'(?=<[^ \t])(\*\*.*?\*\*)', r' \1', txt)
+
+        # Some can be broken repair after
+        txt = re.sub(r'(\*\*.*?\*\*)(?=[^ \t])', r'\1 ', txt)
 
         # Now can do url
-        txt = re.sub(r'\[url(?:=[^\]]*)?\](.*?)\[/url\]', r'![\1](\1)', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
-        print(f"after convert URL BB\n{txt=}"); print()
+        txt = re.sub(r'\[url(?:=[^\]]*)?\](.*?)\[/url\]', r'[\1](\1)', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
         
         txt = re.sub(r'</?url\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
-        print(f"after remove URL html\n{txt=}"); print()
 
         txt = re.sub(r'</?link_text\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove LINK TEXT
-        print(f"after remove link text html\n{txt=}"); print()
 
         # safety : if there was a html url and no bbcode url put a proper link
         txt = re.sub(r'(?<![\(\[\"\)\]])(https?://\S+)', r'[\1](\1)', txt)
-        print(f"after put proper link\n{txt=}"); print()
 
         # Now can do Img 
         txt = re.sub(r'\[img\](.*?)\[/img\]', r'![](\1)', txt, flags=re.DOTALL | re.IGNORECASE)  # convert BB
-        print(f"after convert IMG BB\n{txt=}"); print()
 
         txt = re.sub(r'</?img\b[^>]*>', '', txt, flags=re.IGNORECASE)  # remove HTML
-        print(f"after remove IMG html\n{txt=}"); print()
 
         # Code
         txt = re.sub(r'\[code\](.*?)\[/code\]', r'``\1```', txt, flags=re.DOTALL | re.IGNORECASE)   # convert BB
