@@ -13,14 +13,14 @@ sudo chown 999 data/nodebb
 ============================
 docker compose exec mongodb bash
 
-mongosh -u admin -p admin123
+mongosh -u admin -p <admin mongodb password>
 
 use nodebb
 => switched...
 
 db.createUser({
   user: "nodebb",
-  pwd: "nodebb123",
+  pwd: "<nodebb database password>",
   roles: [
     { role: "readWrite", db: "nodebb" }
   ]
@@ -28,7 +28,7 @@ db.createUser({
 
 => { ok: 1 }
 
-db.auth("nodebb", "nodebb123")
+db.auth("nodebb", "<nodebb database password>")
 
 => { ok: 1 }
 
