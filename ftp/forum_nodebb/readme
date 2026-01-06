@@ -60,9 +60,11 @@ navigator goto https://forum.diplomania2.fr/admin
 
 for importation :
     - settings/uploads "Allowed File Extensions" : add pdf and zip + save changes
-    - docker compose exec -it nodebb  bash
-        nano src/api/helpers.js
-        comment out line 16 "data.timestamp = Date.now();"
+
+============================
+docker compose exec -it nodebb  bash
+    nano src/api/helpers.js
+        comment out line ~ 16 "data.timestamp = Date.now();" with //
         docker compose exec nodebb ./nodebb stop
         docker compose exec nodebb ./nodebb build
         docker compose exec nodebb ./nodebb start
