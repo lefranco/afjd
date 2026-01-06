@@ -9,8 +9,6 @@ services:
     restart: unless-stopped
     env_file:
       - ./mongodb.env
-    ports:
-      - "27017:27017"
     volumes:
       - ./data/mongodb:/data/db
     networks:
@@ -54,10 +52,10 @@ services:
     depends_on: 
       - mongodb
     networks:
+      nodebb_internal:
       proxy:
         aliases:
           - nodebb
-      nodebb_internal:
 
 networks:
   proxy:
