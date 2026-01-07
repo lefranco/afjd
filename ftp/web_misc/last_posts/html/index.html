@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang=fr>
+
+<head>
+<meta charset="utf-8">
+
+<script src="https://cdn.jsdelivr.net/npm/brython@3.12.0/brython.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/brython@3.12.0/brython_stdlib.js"></script>
+
+<style>
+.post_element {
+  font-size: 12px;
+  border: 1px solid #333;
+  box-shadow: 8px 8px 5px #444;
+  padding: 8px 12px;
+  background-image: linear-gradient(180deg, #989898, #838383 40%, #EDEDED);
+}
+</style>
+
+</head>
+
+<body onload="brython()">
+
+<script type="text/python">
+
+import json
+
+from browser import html, ajax, document, alert
+
+
+MAX_TOPICS = 20
+MAX_POSTS = 100
+
+
+def get_last_posts_data():
+    """ get_last_posts_data """
+
+    latest_posts = []
+
+    def noreply_callback(_):
+        """ noreply_callback """
+        alert("Problème (pas de réponse de la part du serveur)")
+
+    def reply_callback(req):
+        nonlocal latest_posts
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement derniers posts forum : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement derniers posts forum : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        latest_posts = req_result['posts']
+        return
+
+    host = "https://forum.diplomania2.fr"
+    port = 443
+    url = f"{host}:{port}/api/recent/posts"
+    TIMEOUT_SERVER = 5
+
+    # get latest posts : no need for token
+    print(f"{url=}")
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=TIMEOUT_SERVER, oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    # Make a selection
+    topics = set()
+    shown_posts = []
+    for nb_posts, post in enumerate(latest_posts):
+        topic_id = post['tid']
+        if topic_id in topics:
+            continue
+        selected = {}
+        selected['topic_id'] = topic_id
+        selected['category'] = post['category']['name']
+        selected['title'] = post['topic']['name']
+        selected['author'] = post['user']['username']
+        selected['date'] = post['timestamp']
+        shown_posts.append(selected)
+        if len(shown_posts) > MAX_TOPICS:
+            break
+        if nb_posts > MAX_POSTS:
+            break
+    return shown_posts
+
+
+last_posts_data = get_last_posts_data()
+for post_dict in last_posts_data:
+    div_post_box = html.DIV(Class='post_element')
+
+    topic_id = post_dict['topic_id']  # TODO direct to post not topic
+    category = post_dict['category']
+    title = post_dict['title']
+    author = post_dict['author']
+    date = post_dict['date']
+
+    link = html.A(href=f"https://forum.diplomania2.fr?topic={topic_id}", target="_blank")
+    div_event_box <= link
+
+    div_post_box <= html.BR()
+    div_post_box <= f"Catégorie : {category}"
+    div_post_box <= html.BR()
+    div_post_box <= f"Auteur : {author}"
+    div_post_box <= html.BR()
+    div_post_box <= f"Date : {date}"
+    div_post_box <= html.BR()
+    for line in post_dict['title'].split('\n'):
+        div_post_box <= line
+        div_post_box <= html.BR()
+
+    document <= div_post_box
+    document <= html.HR()
+
+</script>
+</body>
+</html>

@@ -29,6 +29,19 @@ services:
     networks:
       - proxy
 
+  last_posts:
+    build: ./last_posts
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.last_posts.rule=Host(`lastposts.diplomania2.fr`)"
+      - "traefik.http.routers.last_posts.entrypoints=websecure"
+      - "traefik.http.routers.last_posts.tls=true"
+      - "traefik.http.routers.last_posts.tls.certresolver=myle"
+      - "traefik.http.services.last_posts.loadbalancer.server.port=80"
+    networks:
+      - proxy
+
 networks:
   proxy:
     external: true
