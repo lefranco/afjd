@@ -81,7 +81,6 @@ def get_last_posts_data():
             continue
         selected = {}
         selected['post_id'] = post['pid']
-        selected['topic_id'] = topic_id
         selected['category'] = post['category']['name']
         selected['title'] = post['topic']['title']
         selected['author'] = post['user']['username']
@@ -96,7 +95,6 @@ last_posts_data = get_last_posts_data()
 for post_dict in last_posts_data:
     div_post_box = html.DIV(Class='post_element')
 
-    topic_id = post_dict['topic_id'] 
     post_id = post_dict['post_id'] 
     category = post_dict['category']
     title = post_dict['title']
