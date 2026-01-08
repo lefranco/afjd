@@ -37,10 +37,8 @@ import pymongo  # pip3 install pymongo --break-system-packages
 import spacy  # pip3 install spacy --break-system-packages + pip3 install https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.7.0/fr_core_news_sm-3.7.0-py3-none-any.whl --break-system-packages)
 
 import converter
+import importer_pass
 
-# TODO fill these
-DATABASE_PASSWORD = ""
-ADMIN_PASSWORD = ""
 
 # -------------------------
 # CONFIGURATION
@@ -48,7 +46,7 @@ ADMIN_PASSWORD = ""
 NODEBB_URL = "https://forum.diplomania2.fr"
 ADMIN_USERNAME = "admin"
 
-MONGO_URI = f"mongodb://nodebb:{DATABASE_PASSWORD}@37.59.100.228:27017/nodebb"
+MONGO_URI = f"mongodb://nodebb:{importer_pass.DATABASE_PASSWORD}@37.59.100.228:27017/nodebb"
 NODEBB_DB = "nodebb"
 
 DATA_DIR = "./phpbb_export"
@@ -1131,7 +1129,7 @@ def main() -> None:
     db = NodeBBMongoDB(MONGO_URI, NODEBB_DB)
 
     # Initialize API client
-    admin_session = NodeBBApiSession(ADMIN_USERNAME, ADMIN_PASSWORD)
+    admin_session = NodeBBApiSession(ADMIN_USERNAME, importer_pass.ADMIN_PASSWORD)
 
     # 1. Set tweak (as admin)
     print("1️⃣ Tweak config")
