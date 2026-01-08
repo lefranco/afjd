@@ -58,7 +58,10 @@ def get_last_posts_data():
 
     host = "https://forum.diplomania2.fr"
     port = 443
-    url = f"{host}:{port}/nodebb-api/recent/posts"
+
+    url = "/nodebb-api/recent/posts"
+    #url = f"{host}:{port}/nodebb-api/recent/posts"
+
     TIMEOUT_SERVER = 5
 
     # get latest posts : no need for token
