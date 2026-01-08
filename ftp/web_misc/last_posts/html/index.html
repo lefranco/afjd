@@ -13,7 +13,7 @@
   border: 1px solid #333;
   box-shadow: 8px 8px 5px #444;
   padding: 8px 12px;
-  background-image: linear-gradient(180deg, #989898, #838383 40%, #EDEDED);
+  background-image: linear-gradient(180deg, #fff, #ddd 40%, #ccc);
 }
 </style>
 
@@ -23,6 +23,7 @@
 
 <script type="text/python">
 
+import datetime
 import json
 
 from browser import html, ajax, document, alert
@@ -31,6 +32,10 @@ from browser import html, ajax, document, alert
 MAX_TOPICS = 20
 MAX_POSTS = 100
 
+DAY_TABLE = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
+
+MONTH_TABLE = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
+            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
 
 def get_last_posts_data():
     """ get_last_posts_data """
@@ -82,7 +87,6 @@ def get_last_posts_data():
             break
     return shown_posts
 
-
 last_posts_data = get_last_posts_data()
 for post_dict in last_posts_data:
     div_post_box = html.DIV(Class='post_element')
@@ -91,21 +95,26 @@ for post_dict in last_posts_data:
     category = post_dict['category']
     title = post_dict['title']
     author = post_dict['author']
-    date = post_dict['date']
+
+    date = post_dict['date'] / 1000
+    dt = datetime.datetime.fromtimestamp(date)    
+    dtstr = f"{DAY_TABLE[dt.weekday()]} {dt.day} {MONTH_TABLE[dt.month-1]} {dt.year} à {dt.hour:02}h{dt.minute:02}"
 
     link = html.A(href=f"https://forum.diplomania2.fr?topic={topic_id}", target="_blank")
     div_post_box <= link
 
-    div_post_box <= html.BR()
-    div_post_box <= f"Catégorie : {category}"
+    div_post_box <= f"Date : {dtstr}"
     div_post_box <= html.BR()
     div_post_box <= f"Auteur : {author}"
     div_post_box <= html.BR()
-    div_post_box <= f"Date : {date}"
-    div_post_box <= html.BR()
+    div_post_box <= f"Titre : "
+    first_line = True
     for line in post_dict['title'].split('\n'):
+        if not first_line:
+            div_post_box <= html.BR()
+            first_line = False
         div_post_box <= line
-        div_post_box <= html.BR()
+    div_post_box <= f" [Catégorie : {category}]"
 
     document <= div_post_box
     document <= html.HR()
