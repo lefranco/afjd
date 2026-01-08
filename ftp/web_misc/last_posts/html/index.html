@@ -80,6 +80,7 @@ def get_last_posts_data():
         if topic_id in topics:
             continue
         selected = {}
+        selected['post_id'] = post['pid']
         selected['topic_id'] = topic_id
         selected['category'] = post['category']['name']
         selected['title'] = post['topic']['title']
@@ -95,7 +96,8 @@ last_posts_data = get_last_posts_data()
 for post_dict in last_posts_data:
     div_post_box = html.DIV(Class='post_element')
 
-    topic_id = post_dict['topic_id']  # TODO direct to post not topic
+    topic_id = post_dict['topic_id'] 
+    post_id = post_dict['post_id'] 
     category = post_dict['category']
     title = post_dict['title']
     author = post_dict['author']
@@ -104,21 +106,25 @@ for post_dict in last_posts_data:
     dt = datetime.datetime.fromtimestamp(date)    
     dtstr = f"{DAY_TABLE[dt.weekday()]} {dt.day} {MONTH_TABLE[dt.month-1]} {dt.year} à {dt.hour:02}h{dt.minute:02}"
 
-    link = html.A(href=f"https://forum.diplomania2.fr?topic={topic_id}", target="_blank")
-    div_post_box <= link
-
     div_post_box <= f"Date : {dtstr}"
     div_post_box <= html.BR()
     div_post_box <= f"Auteur : {author}"
     div_post_box <= html.BR()
+    
     div_post_box <= f"Titre : "
+    
     first_line = True
     for line in post_dict['title'].split('\n'):
-        if not first_line:
+        line2 = unescape_html(line)
+        if first_line:
+            link = html.A(line2, href=f"https://forum.diplomania2.fr/post/{post_id}", target="_blank")
+            div_post_box <= link
+        else:
             div_post_box <= html.BR()
+            div_post_box <= line2
             first_line = False
-        div_post_box <= unescape_html(line)
     div_post_box <= f" [{category}]"
+
 
     document <= div_post_box
     document <= html.HR()
