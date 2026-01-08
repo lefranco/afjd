@@ -38,15 +38,18 @@ import spacy  # pip3 install spacy --break-system-packages + pip3 install https:
 
 import converter
 
+# TODO fill these
+DATABASE_PASSWORD = ""
+ADMIN_PASSWORD = ""
+
 # -------------------------
 # CONFIGURATION
 # -------------------------
 NODEBB_URL = "https://forum.diplomania2.fr"
 ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "admin123"
 
-MONGO_URI = "mongodb://nodebb:nodebb123@37.59.100.228:27017/nodebb"  # Your NodeBB MongoDB
-NODEBB_DB = "nodebb"  # Your NodeBB database name
+MONGO_URI = f"mongodb://nodebb:{DATABASE_PASSWORD}@37.59.100.228:27017/nodebb"
+NODEBB_DB = "nodebb"
 
 DATA_DIR = "./phpbb_export"
 CSV_ENCODING = "utf-8"
