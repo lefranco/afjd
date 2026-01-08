@@ -87,7 +87,7 @@ def main() -> None:
     common.add_argument("--port", default=27017, type=int)
     common.add_argument("--db", default="nodebb")
     common.add_argument("--user", default="nodebb")
-    common.add_argument("--password", default="nodebb123")
+    common.add_argument("--password")   # must be entered manually
 
     b = sub.add_parser("backup", parents=[common])
     b.add_argument("--output", default="./backups")
