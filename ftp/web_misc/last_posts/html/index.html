@@ -53,19 +53,13 @@ def get_last_posts_data():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        latest_posts = req_result['posts']
+        latest_posts = req_result
         return
 
-    host = "https://forum.diplomania2.fr"
-    port = 443
-
     url = "/nodebb-api/recent/posts"
-    #url = f"{host}:{port}/nodebb-api/recent/posts"
-
     TIMEOUT_SERVER = 5
 
     # get latest posts : no need for token
-    print(f"{url=}")
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=TIMEOUT_SERVER, oncomplete=reply_callback, ontimeout=noreply_callback)
 
     # Make a selection
@@ -78,7 +72,7 @@ def get_last_posts_data():
         selected = {}
         selected['topic_id'] = topic_id
         selected['category'] = post['category']['name']
-        selected['title'] = post['topic']['name']
+        selected['title'] = post['topic']['title']
         selected['author'] = post['user']['username']
         selected['date'] = post['timestamp']
         shown_posts.append(selected)
@@ -100,7 +94,7 @@ for post_dict in last_posts_data:
     date = post_dict['date']
 
     link = html.A(href=f"https://forum.diplomania2.fr?topic={topic_id}", target="_blank")
-    div_event_box <= link
+    div_post_box <= link
 
     div_post_box <= html.BR()
     div_post_box <= f"Catégorie : {category}"
