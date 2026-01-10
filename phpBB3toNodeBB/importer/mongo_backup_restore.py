@@ -14,10 +14,12 @@ import os
 import subprocess
 import sys
 
+import mongo_backup_restore_pass
+
 
 def run(cmd: list[str]) -> None:
     """Run."""
-    print(">>>", " ".join(cmd))
+    # print(">>>", " ".join(cmd))
     subprocess.check_call(cmd)
 
 
@@ -87,7 +89,7 @@ def main() -> None:
     common.add_argument("--port", default=27017, type=int)
     common.add_argument("--db", default="nodebb")
     common.add_argument("--user", default="nodebb")
-    common.add_argument("--password")   # must be entered manually
+    common.add_argument("--password", default=mongo_backup_restore_pass.DATABASE_PASSWORD)  
 
     b = sub.add_parser("backup", parents=[common])
     b.add_argument("--output", default="./backups")
