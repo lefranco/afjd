@@ -6,6 +6,19 @@ Utility to backup restore database.
 Mandatory for a try and trial approach.
 Needed:
 sudo apt install -y mongodb-database-tools
+
+IMPORTANT NOTE :
+If that fails with :
+  Failed: can't create session: failed to connect to mongodb://37.59.100.228:27017/: server selection error: server selection timeout, current topology: { Type: Single, Servers: [{ Addr: 37.59.100.228:27017, Type: Unknown, Last error: dial tcp 37.59.100.228:27017: connect: connection refused }, ] }
+Then: 
+  on server:
+    Edit docker-compose.yml :
+      Add this paragraph to mongodb:
+        ports:
+          - "27017:27017"
+    docker compose up -d mongodb
+
+IMPORTANT: After backup/restore operation(s) do not forget to reverse
 """
 
 import argparse
@@ -85,7 +98,7 @@ def main() -> None:
     sub = parser.add_subparsers(dest="action", required=True)
 
     common = argparse.ArgumentParser(add_help=False)
-    common.add_argument("--host", default="localhost")
+    common.add_argument("--host", default="37.59.100.228")
     common.add_argument("--port", default=27017, type=int)
     common.add_argument("--db", default="nodebb")
     common.add_argument("--user", default="nodebb")
