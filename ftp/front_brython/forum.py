@@ -21,7 +21,7 @@ def render(panel_middle):
     # load forum directly
 
     # use button
-    button = html.BUTTON("Lancement du forum (phpbb3 forum)", id='forum_link', Class='btn-inside')
+    button = html.BUTTON("Lancement du forum (nodeBB forum)", id='forum_link', Class='btn-inside')
     MY_SUB_PANEL <= button
-    button.bind("click", lambda e: window.open(f"{config.SITE_ADDRESS}/forum/phpBB3"))
+    button.bind("click", lambda e: window.open(f"{config.FORUM_ADDRESS}"))
     document['forum_link'].click()
