@@ -6,3 +6,4 @@
 /__pycache__/
 /log
 /importer_pass.py
+/mongo_backup_restore_pass.py
