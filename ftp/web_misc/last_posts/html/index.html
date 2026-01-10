@@ -30,10 +30,8 @@ from browser import html, ajax, document, alert, window
 
 
 MAX_TOPICS = 20
-MAX_POSTS = 100
 
 DAY_TABLE = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
-
 MONTH_TABLE = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
             "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
 
@@ -66,31 +64,47 @@ def get_last_posts_data():
         latest_posts = req_result
         return
 
-    url = "/nodebb-api/recent/posts"
     TIMEOUT_SERVER = 5
+    num_page = 1
 
-    # get latest posts : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=TIMEOUT_SERVER, oncomplete=reply_callback, ontimeout=noreply_callback)
-
-    # Make a selection
     topics = set()
     shown_posts = []
-    for post in latest_posts[: MAX_POSTS]:
-        topic_id = post['tid']
-        if topic_id in topics:
-            continue
-        selected = {}
-        selected['post_id'] = post['pid']
-        selected['category'] = post['category']['name']
-        selected['title'] = post['topic']['title']
-        selected['author'] = post['user']['username']
-        selected['date'] = post['timestamp']
-        topics.add(topic_id)
-        shown_posts.append(selected)
-        if len(topics) > MAX_TOPICS:
-            break
-    return shown_posts
 
+    while True:
+
+        url = f"/nodebb-api/recent/posts?page={num_page}"
+
+        # get latest posts : no need for token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=TIMEOUT_SERVER, oncomplete=reply_callback, ontimeout=noreply_callback)
+
+        # quit because not more posts
+        if not latest_posts:
+            return shown_posts
+
+        # Make a selection
+        for post in latest_posts:
+
+            topic_id = post['tid']
+        
+            if topic_id in topics:
+                continue
+        
+            selected = {}
+            selected['post_id'] = post['pid']
+            selected['category'] = post['category']['name']
+            selected['title'] = post['topic']['title']
+            selected['author'] = post['user']['username']
+            selected['date'] = post['timestamp']
+        
+            topics.add(topic_id)
+            shown_posts.append(selected)
+
+            # quit because have enough posts
+            if len(shown_posts) >= MAX_TOPICS:
+                return shown_posts
+
+        num_page += 1
+            
 last_posts_data = get_last_posts_data()
 for post_dict in last_posts_data:
     div_post_box = html.DIV(Class='post_element')
