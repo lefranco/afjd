@@ -5,11 +5,12 @@ sudo apt install mysql-server
 sudo systemctl status mysql => must be active
 sudo apt install default-mysql-client
 
-sudo mysql -u root -e "CREATE DATABASE IF NOT EXISTS forum_afjd CHARACTER SET utf8mb4;"
+sudo mysql -u root -e "DROP DATABASE forum_afjd;"
+sudo mysql -u root -e "CREATE DATABASE forum_afjd CHARACTER SET utf8mb4;"
 sudo mysql -u root forum_afjd < ../data/forum_afjd.sql  # a bit long
 
 sudo mysql -u root <<EOF
-CREATE USER 'exporter'@'localhost' IDENTIFIED BY 'safe_password_123';
+CREATE USER 'exporter@localhost' IDENTIFIED BY 'safe_password_123';
 GRANT ALL PRIVILEGES ON forum_afjd.* TO 'exporter'@'localhost';
 FLUSH PRIVILEGES;
 EOF
