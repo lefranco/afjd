@@ -1,1 +1,0 @@
-Ficher à placer dans <site>/forum/phpBB3/styles/prosilver/template
