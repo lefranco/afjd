@@ -1,9 +1,7 @@
 /user_password_reset_info.json
 /user_passwords.csv
-/backups/
 /phpbb_export
 /.mypy_cache/
-/__pycache__/
 /log
 /importer_pass.py
-/mongo_backup_restore_pass.py
+
