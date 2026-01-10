@@ -53,7 +53,6 @@ insert after "port": 4567:
 docker compose exec nodebb ./nodebb start
 docker compose exec nodebb ./nodebb status
 (must be running)
-docker compose exec nodebb ./nodebb log + CtrlC
 
 ============================
 navigator goto https://forum.diplomania2.fr/admin
@@ -65,7 +64,7 @@ for importation :
 docker compose exec -it nodebb  bash
     nano src/api/helpers.js
         comment out line ~ 16 "data.timestamp = Date.now();" with //
-        docker compose exec nodebb ./nodebb stop
-        docker compose exec nodebb ./nodebb build
-        docker compose exec nodebb ./nodebb start
+docker compose exec nodebb ./nodebb stop
+docker compose exec nodebb ./nodebb build
+docker compose exec nodebb ./nodebb start
 
