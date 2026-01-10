@@ -19,7 +19,7 @@ import mongo_backup_restore_pass
 
 def run(cmd: list[str]) -> None:
     """Run."""
-    # print(">>>", " ".join(cmd))
+    print(">>>", " ".join(cmd))
     subprocess.check_call(cmd)
 
 
@@ -85,7 +85,7 @@ def main() -> None:
     sub = parser.add_subparsers(dest="action", required=True)
 
     common = argparse.ArgumentParser(add_help=False)
-    common.add_argument("--host", default="37.59.100.228")
+    common.add_argument("--host", default="localhost")
     common.add_argument("--port", default=27017, type=int)
     common.add_argument("--db", default="nodebb")
     common.add_argument("--user", default="nodebb")
