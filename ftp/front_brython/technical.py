@@ -25,6 +25,7 @@ OPTIONS = {
     'Documents': "Lien vers différents documents techniques sur le jeu",
     'Pourquoi yapa': "Complément à la Foire Aux Questions du site",
     'Choix d\'interface': "Choisir une interface différente de celle par défaut pour voir les parties",
+    'Choix d\'implémentation': "Détail des choix d'implémentations réalisés pour le moteur de résolution",
     'Calcul du ELO': "Détail de la méthode de calcul du E.L.O. utilisé sur le site",
     'Le brouillard de guerre': "Spécifications du  brouillard de guerre pour une partie",
     'Ordres de com\'': "Explications sur les ordres de communication",
@@ -99,24 +100,6 @@ def show_technical():
     link2 = html.A(href="./docs/DATC.html", target="_blank")
     link2 <= "Lien vers une description technique de l'algorithme de résolution utilisé"
     MY_SUB_PANEL <= link2
-
-    # --
-
-    title3 = html.H3("Choix d'implémentation")
-    MY_SUB_PANEL <= title3
-
-    link3 = html.A(href="./docs/Compl_en.pdf", target="_blank")
-    link3 <= "Lien vers les choix de comportement pour le moteur de résolution"
-    MY_SUB_PANEL <= link3
-
-    # --
-
-    title4 = html.H3("Création de variante")
-    MY_SUB_PANEL <= title4
-
-    link41 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
-    link41 <= "Comment créer les fichiers nécessaire pour une variante"
-    MY_SUB_PANEL <= link41
 
     # --
 
@@ -258,6 +241,19 @@ def select_interface():
         select_table <= row
 
     MY_SUB_PANEL <= select_table
+
+
+def show_choices_implementation():
+    """ show_choices_implementation """
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    ezml_file = "./docs/choix_implementation.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
 
 
 def show_elo_calculation():
@@ -543,6 +539,8 @@ def load_option(_, item_name):
         show_whynot()
     if item_name == 'Choix d\'interface':
         select_interface()
+    if item_name == 'Choix d\'implémentation':
+        show_choices_implementation()
     if item_name == 'Calcul du ELO':
         show_elo_calculation()
     if item_name == 'Le brouillard de guerre':

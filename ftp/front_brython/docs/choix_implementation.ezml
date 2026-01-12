@@ -1,0 +1,108 @@
+Complements to official rules
+
+$ Differences between DATC recommendation and the adjudicator implementation
+
+$$ Listed below, with explanations when different.
+
+= CONVOY ISSUES
+|CHAP|NAME OF ISSUE|DATC|IMPLEMENTED|EXPLANATION|
+|4.A.1|MULTI-ROUTE CONVOY DISRUPTION|b|b|Compliant|
+|4.A.2|CONVOY DISRUPTION PARADOX|d|d|Compliant|
+|4.A.3|CONVOYING TO ADJACENT PLACE|d|None|Not compliant since the adjudicator uses the land route first if unopposed, otherwise any successful convoy route.|
+|4.A.4|SUPPORT CUT ON ATTACK ON ITSELF VIA CONVOY|a|a|Compliant. (Not relevant since 4.A.3 is not d)|
+|4.A.5|RETREAT WHEN DISLODGED BY CONVOY|b|a|Not compliant since the adjudicator considers a move by convoy to be not different from a move by land on this matter. (Not relevant since 4.A.3=c)|
+|4.A.6|CONVOY PATH SPECIFICATION|a|a|Compliant. Convoy path routes are rejected by the adjudicator which intends to find the route itself, not trying to find out the intent of the player in any way. Any road of convoy specified for an order of displacement of army from coast to coast will cause the refusal of the order by the system Any notation “by convoy” or related will be ignored|
+|4.A.7|AVOIDING A HEAD TO HEAD BATTLE TO BOUNCE A UNIT|b|b|Compliant.|
+=
+
+= COASTAL ISSUES
+|CHAP|NAME OF ISSUE|DATC|IMPLEMENTED|EXPLANATION|
+|4.B.1|OMITTED COAST SPECIFICATION IN MOVE ORDER WHEN TWO COASTS ARE POSSIBLE|a|a|Compliant.|
+|4.B.2|OMITTED COAST SPECIFICATION IN MOVE ORDER WHEN ONE COAST IS POSSIBLE|a|a|Compliant.|
+|4.B.3|MOVE ORDER TO IMPOSSIBLE COAST|b|b|Compliant.|
+|4.B.4|COAST SPECIFICATION IN SUPPORT ORDER|None|None|Not compliant since the adjudicator requires to specify coast in supported move when two coasts are possible. The movement (or support of a movement) towards an area with several coast, without the coast being specified, but for which only one is accessible for the unit (or the constant unit) is accepted, the system guesses the coast |
+|4.B.5|WRONG COAST OF ORDERED UNIT|b|a|Not compliant since the adjudicator rejects any wrong coast specification. Not applicable in REST context|
+|4.B.6|UNKNOWN COASTS OR IRRELEVANT COASTS|b|a|Not compliant since the adjudicator rejects any coast specification if none is requested. Not applicable in REST context|
+|4.B.7|COAST SPECIFICATION IN BUILD ORDER|None|None|Compliant.|
+=
+
+= UNIT DESIGNATION AND NATIONALITY ISSUES
+|CHAP|NAME OF ISSUE|DATC|IMPLEMENTED|EXPLANATION|
+|4.C.1|MISSING UNIT DESIGNATION|b|a/b|Half compliant. On the adjudicator, unit designation is only mandatory for an active unit (the one ordered.) The type of unit may be omitted in all other cases, I.e.: active unit or passive unit of a movement (supported or convoyed / active unit of a retreat / construction, where only one type of unit is possible / construction, where a coast is specified (a fleet is built)  suppression. Not applicable in REST context|
+|4.C.2|WRONG UNIT DESIGNATION|b|a|Not compliant since the adjudicator rejects any order with any extra information that is inaccurate. Not applicable in REST context|
+|4.C.3|MISSING UNIT DESIGNATION IN BUILD ORDER|c|c|Compliant.|
+|4.C.4|BUILDING A FLEET IN A LAND AREA|a|a|Compliant.|
+|4.C.5|MISSING NATIONALITY IN SUPPORT ORDER|b|b|Compliant.|
+|4.C.6|WRONG NATIONALITY IN SUPPORT ORDER|b|a|Not compliant since the adjudicator rejects any order with any extra information that is inaccurate. Not applicable in REST context|
+=
+
+= TOO MANY AND TOO FEW ORDERS
+|CHAP|NAME OF ISSUE|DATC|IMPLEMENTED|EXPLANATION|
+|4.D.1|MULTIPLE ORDER SETS WITH DEFINED ORDER|c|None|Not compliant since the adjudicator rejects any set of orders with any orders extra than that is requested. Not applicable in REST context|
+|4.D.2|MULTIPLE ORDER SETS WITH UNDEFINED ORDER|b|None|This may not happen with the adjudicator since there may not be several sets of orders.Not applicable in REST context|
+|4.D.3|MULTIPLE ORDERS TO THE SAME UNIT|c|None|Not compliant since the adjudicator rejects any set of order with any order extra than that is requested. Not applicable in REST context|
+|4.D.4|TOO MANY BUILD ORDERS|b|a|Not compliant since the adjudicator rejects any set of orders with any order extra than that is requested. Not applicable in REST context|
+|4.D.5|MULTIPLE BUILD ORDERS FOR ONE AREA|b|a|Not compliant since the adjudicator rejects any set of orders with any order extra than that is requested.|
+|4.D.6|TOO MANY DISBAND ORDERS|b|a|Not compliant since the adjudicator rejects any set of orders with any order extra than that is requested.|
+|4.D.7|WAIVING BUILDS|a|a|Compliant.|
+|4.D.8|REMOVING A UNIT IN CIVIL DISORDER|2023 English|None|Not compliant since the adjudicator has a slightly simplified view of the distance (described in alternative e from DATC).|
+|4.D.9|RECEIVING HOLD SUPPORT IN CIVIL DISORDER||b|Compliant.|
+=
+
+= MISCELLANEOUS ISSUES
+|CHAP|NAME OF ISSUE|DATC|IMPLEMENTED|EXPLANATION|
+|4.E.1|ILLEGAL ORDERS|None|None|Compliant. A whimsical order of movement is refused by the system, therefore the problem to know if a defensive support holds or not on such a unit is not posed.|
+|4.E.2|POORLY WRITTEN ORDERS|d|None|Not compliant since the adjudicator rejects any typing mistake. Not applicable in REST context|
+|4.E.3|IMPLICIT ORDERS|b|b|Compliant.|
+|4.E.4|PERPETUAL ORDERS|b|b|Compliant. Orders are erased after every adjudication.|
+|4.E.5|PROXY ORDERS|c|c|Compliant. May not happen unless some password is given out.|
+|4.E.6|FLYING DUTCHMAN|None|None|Almost completely compliant. Only the last adjudication result may be fixed. May not happen unless bugs are involved.|
+=
+
+$ Refereeing conventions
+
+- A player is still part of a game as long as he controls a center and/or a unit.
+- The victory amounts in centers and not in units
+- One can contribute to dislodge a unit of one’s unit by convoying another unit.
+- An area of retreat forbidden by the fact of units of a player and only this player is also, to him, prohibited to retreat.
+- Say that a defensively supported unit is trying to move by a not valid convoy (because one (or several) fleet(s) was (were)  dislodged or did not provide the convoy.) Displacement is tried thus the support is not valid.
+- The measurement of winning of a game based on the majority of centers does not amount in the majority of the possessed centers, but in the majority of the existing centers.
+
+$ Expedited removal of players
+
+$$ In order to avoid waiting for players whose orders have no impact in the game, at autumn move adjudication, are adjudicated as destroyed the dislodged units of a player that :
+
+- do not occupy any center,
+- has all his centers occupied,
+- may not retreat on any center,
+- may not retreat to any region that would collide with the retreat of another player.
+
+$$ In order to avoid waiting for players whose orders have no impact in the game, at autumn retreat adjudication, are removed units of a player that :
+
+- do not own any center.
+
+$ Conventions of notation for the results
+
+$$    Instead of being underlined, unsuccessful orders are changed to lowercase.
+
+Example for original order *A par s a mar - bur*
+
+- Success : A par S a mar - bur
+- Failure : A par s a mar - bur
+
+$$ Following conventions for the automatic reports of the orders are indicative and not compulsory:
+
+= Convention
+|NOTATION|EXPLANATION|
+|A PAR s A BUR; (cut)|The support was *cut*.|
+|F ENG c LON - BEL|The convoy was broken.|
+|A PAR H; (destroyed)|The unit was forced to retreat, then *destroyed* (no possible retreat).|
+|A PAR H; (dislodged)|The unit was forced to retreat (*dislodged*).|
+|A PAR S A BUR ;(invalid)|[with A BUR - MUN] The support is not *valid* because it is provided to a unit which did not request it.|
+|F ENG C A BRE - LON ;(invalid)|[with A BRE - PAR] The convoy is not *valid* because it is provided to a unit which did not request it.|
+|A PAR - BUR; (failed)|Displacement could not take place. It *failed*.|
+|A PAR S BUR; (paradox)|The support for or against a convoying fleet is the target of a convoyed attack that may lead to a paradox...|
+|A PAR - BUR|Displacement was carried out.|
+|A PAR r BUR; (failed)|The retreat could not take place. It *failed* (collision with another retreat).|
+|A PAR R BUR|The retreat was carried out.|
+=
