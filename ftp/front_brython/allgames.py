@@ -1112,7 +1112,7 @@ def rectify_parameters_game():
 
     form <= html.BR()
 
-    input_change_endgame_vote_allowed_game = html.INPUT(type="submit", value="Changer le droit au vote d'anonymat", Class='btn-inside')
+    input_change_endgame_vote_allowed_game = html.INPUT(type="submit", value="Changer le droit au vote de fin de partie", Class='btn-inside')
     input_change_endgame_vote_allowed_game.bind("click", change_endgame_vote_allowed_game_callback)
     form <= input_change_endgame_vote_allowed_game
 
