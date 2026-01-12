@@ -1321,6 +1321,9 @@ def negotiate(default_dest_set, def_focus_role_id):
     # we make sure game master goes first in sorting
     roles_left = sorted(range(play_low.VARIANT_CONTENT_LOADED['roles']['number'] + 1), key=lambda r: (int(r != 0), play_low.VARIANT_DATA.role_name_table[play_low.VARIANT_DATA.roles[r]]))
 
+    position_data = play_low.POSITION_DATA
+    colours = position_data.role_colours()
+
     while roles_left:
 
         roles_todo = roles_left[:SLICE_SIZE]
@@ -1349,6 +1352,20 @@ def negotiate(default_dest_set, def_focus_role_id):
 
             # necessary to link flag with button
             label_dest = html.LABEL(role_icon_img, for_=str(role_id_dest))
+
+            # little square : so convenient for unusual variants
+            canvas2 = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
+            ctx2 = canvas2.getContext("2d")
+            colour = colours[role_name]
+            outline_colour = colour.outline_colour()
+            ctx2.strokeStyle = outline_colour.str_value()
+            ctx2.lineWidth = 2
+            ctx2.beginPath()
+            ctx2.rect(0, 0, 14, 14)
+            ctx2.stroke()
+            ctx2.closePath()  # no fill
+            ctx2.fillStyle = colour.str_value()
+            ctx2.fillRect(1, 1, 13, 13)
 
             # player
             pseudo_there = ""
@@ -1398,6 +1415,7 @@ def negotiate(default_dest_set, def_focus_role_id):
             col <= html.BR()
             col <= html.CENTER(label_dest)
             col <= html.CENTER(html.B(role_name))
+            col <= html.CENTER(canvas2)
             if pseudo_there:
                 col <= html.CENTER(pseudo_there)
             col <= html.CENTER(input_dest)
