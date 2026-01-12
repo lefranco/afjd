@@ -1117,12 +1117,6 @@ def get_submission_data_table():
     return dict(sub_data_list)
 
 
-def verification_code(pseudo):
-    """ verification_code """
-    code = int(sum(map(lambda c: ord(c) ** 3.5, pseudo))) % 1000000
-    return code
-
-
 def get_priviledged():
     """ get_priviledged : returns empty list if problem """
 

@@ -18,7 +18,6 @@ OPTIONS = {
     'Editer': "Modifier une information personnelle",
     'Valider mon courriel': "Valider mon adresse courriel",
     'Mot de passe': "Changer mon mot de passe",
-    'Mon code forum': "Visualiser mon code de vérification pour le forum",
     'Supprimer': "Supprimer mon compte sur le site",
 }
 
@@ -152,7 +151,7 @@ def information_about_confirm():
     information <= html.BR()
     return information
 
-   
+
 def check_correct_email(email):
     """  check_correct_email """
 
@@ -178,11 +177,11 @@ def check_correct_email(email):
     # ===========
     # local part
     # ===========
-    
+
     if not local_part:
         alert("La partie locale ne doit pas être vide")
         return False
-            
+
     labels = local_part.split(".")
     for label in labels:
         if not label:
@@ -191,7 +190,7 @@ def check_correct_email(email):
         if not all(c in allowed_local_labels for c in label):
             alert("La partie locale ne doit pas contenir de caractère interdit")
             return False
-        
+
     # ===========
     # domain
     # ===========
@@ -223,13 +222,13 @@ def check_correct_email(email):
         if not all(c in allowed_domain_labels for c in label):
             alert("Le domaine ne doit pas contenir de label contenant un caractère interdit")
             return False
-            
+
     # TLD
     tld = labels[-1]
     if len(tld) < 2 or not tld.isalpha():
         alert("Le label de premier niveau du domaine (tld) est incorrect")
         return False
-        
+
     return True
 
 
@@ -1014,29 +1013,6 @@ def change_password():
     MY_SUB_PANEL <= form
 
 
-def forum_code():
-    """ forum_code """
-
-    MY_SUB_PANEL <= html.H3("Code pour le forum")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    legende_code_forum = html.DIV(Class='note')
-    legende_code_forum <= "Votre code à utiliser sur le forum est : "
-    MY_SUB_PANEL <= legende_code_forum
-
-    MY_SUB_PANEL <= html.BR()
-
-    code_forum = html.DIV(Class='important')
-    code_value = common.verification_code(pseudo)
-    code_forum <= code_value
-    MY_SUB_PANEL <= code_forum
-
-
 def delete_account():
     """ delete_account """
 
@@ -1140,8 +1116,6 @@ def load_option(_, item_name):
         validate_email()
     if item_name == 'Mot de passe':
         change_password()
-    if item_name == 'Mon code forum':
-        forum_code()
     if item_name == 'Supprimer':
         delete_account()
 

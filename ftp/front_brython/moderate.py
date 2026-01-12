@@ -38,7 +38,6 @@ OPTIONS = {
     'Affichage fuseaux horaires': "Afficher les fuseaux horaires utilisateurs du site",
     'Vérification adresses IP': "Détecter les doubons d'adresses IP des utilisateurs du site",
     'Vérification courriels': "Détecter les doubons de courriels des utilisateurs du site",
-    'Codes de vérification': "Codes de vérification pour le forum",
     # management
     'Destituer arbitre partie': "Destituer l'arbitre de la partie sélectionnée",
     'Changer responsable tournoi': "Changer le responsable tournoi de la partie sélectionnée",
@@ -2022,46 +2021,6 @@ def show_all_emails():
     MY_SUB_PANEL <= emails_table
 
 
-def show_verif_codes():
-    """ show_verif_codes """
-
-    MY_SUB_PANEL <= html.H3("Les codes de vérification pour le forum")
-
-    if not common.check_modo():
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    players_dict = common.get_players()
-    if not players_dict:
-        return
-
-    players_table = html.TABLE()
-
-    fields = ['pseudo', 'code']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'code': 'code'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    players_table <= thead
-
-    for pseudo in sorted(players_dict, key=lambda p: p.upper()):
-        row = html.TR()
-
-        col = html.TD(pseudo)
-        row <= col
-
-        code = common.verification_code(pseudo)
-        col = html.TD(code)
-        row <= col
-
-        players_table <= row
-
-    MY_SUB_PANEL <= players_table
-
-
 def revoke_master():
     """ revoke_master """
 
@@ -2381,8 +2340,6 @@ def load_option(_, item_name):
         show_ip_addresses()
     if item_name == 'Vérification courriels':
         show_all_emails()
-    if item_name == 'Codes de vérification':
-        show_verif_codes()
     # management
     if item_name == 'Destituer arbitre partie':
         revoke_master()
