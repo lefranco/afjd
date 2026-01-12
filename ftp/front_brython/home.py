@@ -619,7 +619,7 @@ def show_news():
 
     # ----
 
-    div_a2_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu “Accueil“ sous menu “Déclarer un incident“ et le modérateur par un MP sur le forum", Class='tooltiptext')
+    div_a2_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu “Accueil“ sous menu “Déclarer un incident“ et un modérateur par un message privé", Class='tooltiptext')
     div_a2 <= div_a2_tip
     div_homepage <= div_a2
 
