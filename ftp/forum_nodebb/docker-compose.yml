@@ -9,6 +9,8 @@ services:
     restart: unless-stopped
     env_file:
       - ./mongodb.env
+    ports:               # should be removed for safety but needed for backup
+      - "27017:27017"    # ----
     volumes:
       - ./data/mongodb:/data/db
     networks:
