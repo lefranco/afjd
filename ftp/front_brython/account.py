@@ -284,7 +284,8 @@ def create_account(json_dict):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.info_go(f"Votre compte a été créé : {messages}")
-            alert(f"Félicition, votre compte a été crée.\n\nUn code de vérification vous a été envoyé pour vérifier votre adresse courriel.\n\n Attention : votre compte sera supprimé après {config.IDLE_DAY_TIMEOUT / 30.5} mois d'inactivité")
+            alert("Un code de vérification vous a été envoyé pour vérifier votre adresse courriel. Pensez à regarder dans les spams !")
+            alert(f"Félicitation, votre compte a été crée.\n\nAttention : votre compte sera supprimé après {config.IDLE_DAY_TIMEOUT / 30.5} mois d'inactivité")
             alert(welcome.MESSAGE)
 
         ev.preventDefault()
@@ -809,7 +810,8 @@ def validate_email():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.info_go(f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}")
+            mydialog.info_go(f"Le nouveau code a été envoyé : {messages}")
+            alert("Un nouveau code de vérification vous a été envoyé pour vérifier votre adresse courriel. Pensez à regarder dans les spams !")
 
         ev.preventDefault()
 
