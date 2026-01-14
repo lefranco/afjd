@@ -1061,9 +1061,10 @@ class Variant(Renderable):
     def render(self, ctx) -> None:
         """ put me on screen """
 
-        # distinguish start centers
-        for center in self._centers.values():
-            center.render_start(ctx)
+        # distinguish start centers (if not expansionist)
+        if not self._build_everywhere:
+            for center in self._centers.values():
+                center.render_start(ctx)
 
         # put legends actually
         for zone in self._zones.values():
