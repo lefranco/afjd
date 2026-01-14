@@ -10,6 +10,15 @@ import sqlite3
 import typing
 import pathlib
 import unicodedata
+import os
+import pwd
+import grp
+
+
+# Easier than root
+USERNAME = 'ubuntu'
+GROUPNAME = 'ubuntu'
+
 
 # File holding the SQLITE database
 FILE = "./db/users.db"
@@ -61,6 +70,22 @@ def db_present() -> bool:
 
     db_file = pathlib.Path(FILE)
     return db_file.is_file()
+
+
+def db_create() -> None:
+    """ Create database (once for all)"""
+
+    # Path object
+    db_file = pathlib.Path(FILE)
+
+    # Actual creation of db (file)
+    conn = sqlite3.connect(db_file)
+    conn.close()
+
+    # Change rights of file (better not be root)
+    uid = pwd.getpwnam(USERNAME).pw_uid
+    gid = grp.getgrnam(GROUPNAME).gr_gid
+    os.chown(db_file, uid, gid)
 
 
 class SqlExecutor:

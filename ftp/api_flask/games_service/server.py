@@ -7947,7 +7947,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
 
         if active_masters.most_common(1):
             most_active_master_id = active_masters.most_common(1)[0][0]
-        else: 
+        else:
             most_active_master_id = -1
 
         if active_players.most_common(1):
@@ -9311,6 +9311,7 @@ def main() -> None:
 
         mylogger.LOGGER.info("Emergency populate procedure")
 
+        database.db_create()
         sql_executor = database.SqlExecutor()
         populate.populate(sql_executor)
         sql_executor.commit()

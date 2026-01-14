@@ -571,6 +571,7 @@ def main() -> None:
 
         mylogger.LOGGER.info("Emergency populate procedure")
 
+        database.db_create()
         sql_executor = database.SqlExecutor()
         populate.populate(sql_executor)
         sql_executor.commit()

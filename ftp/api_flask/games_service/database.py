@@ -15,8 +15,14 @@ import base64
 import time
 import datetime
 import traceback
-# import sys
-# import uuid
+import os
+import pwd
+import grp
+
+
+# Easier than root
+USERNAME = 'ubuntu'
+GROUPNAME = 'ubuntu'
 
 # File holding the SQLITE database
 FILE = "./db/games.db"
@@ -133,6 +139,22 @@ def log_stack(create: bool, uuid_str: str) -> None:
         if not create:
             if ONGOING_TRANSACTIONS:
                 write_file.write(f"Now : {' '.join(map(lambda u: u.split('-')[0], ONGOING_TRANSACTIONS))}\n")
+
+
+def db_create() -> None:
+    """ Create database (once for all)"""
+
+    # Path object
+    db_file = pathlib.Path(FILE)
+
+    # Actual creation of db (file)
+    conn = sqlite3.connect(db_file)
+    conn.close()
+
+    # Change rights of file (better not be root)
+    uid = pwd.getpwnam(USERNAME).pw_uid
+    gid = grp.getgrnam(GROUPNAME).gr_gid
+    os.chown(db_file, uid, gid)
 
 
 class SqlExecutor:
