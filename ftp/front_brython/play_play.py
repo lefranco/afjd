@@ -1630,7 +1630,7 @@ def submit_orders():
 
     nb_builds = 0
 
-    if play_low.ROLE_ID in submitted_data['needed'] and not game_over:
+    if (play_low.ROLE_ID in submitted_data['needed'] or (play_low.GAME_PARAMETERS_LOADED['exposition'] and play_low.ROLE_ID == 0 and submitted_data['needed'])) and not game_over:
 
         # information retreats/builds
         play_low.stack_possibilities(buttons_right, advancement_season)
