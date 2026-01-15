@@ -10,6 +10,10 @@ MONGODB_PORT=27017
 MONGODB_DATABASE_NAME=nodebb
 MONGODB_DATABASE_USER=nodebb
 
+if [ ! "$1" == "-f" ]; then
+    echo "Use -f parameter for fast mode (only Flasks APIs)"
+fi
+
 if [ -z "${SERVER_PASSWORD}" ]; then
     echo "Please define SERVER_PASSWORD !"
     exit 1
@@ -61,6 +65,11 @@ for service in users players games; do
     echo
 
 done
+
+if [ "$1" == "-f" ]; then
+    echo "Fast mode selected. Exiting"
+    exit 0
+fi
 
 echo "================"
 echo "Backuping Forum ..."
