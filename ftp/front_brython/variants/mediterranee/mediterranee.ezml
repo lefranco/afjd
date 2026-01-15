@@ -15,65 +15,68 @@ $ Particularités de la carte
 
 (La mer Atlantique)
 La mer Atlantique est hors-jeu et inaccessible. Du fait de la mise hors-jeu de la Mer Atlantique, les deux régions suivantes sont en fait des terres :
-- Gaul (Gau)
-- Lusitania (Lus)
+- Gaule (Gau)
+- Lusitanie (Lus)
 
 
 (Les îles)
 Ce sont des côtes qui peuvent être occupées par des armées ou des flottes :
-- Sardinia (Sad)
-- Corsica (Cor)
-- Sicilia (Sic)
-- Crete (Cre)
-- Cyprus (Cyp)
+- Sardaigne (Sad)
+- Corse (Cor)
+- Sicile (Sic)
+- Crète (Cre)
+- Chypre (Cyp)
 
 
-(Lien fléchés - détroits)
+(Liens fléchés - détroits)
 L'accès est possible, pour une flotte ou une armée entre :
-- Saguntum (Sag) et Mauretania (Mau)
-- Neapolis (Nea) et Sicilia (Sic)
-- Corsica (Cor) et Sardinia (Sad)
+- Saguntum (Sag) et Maurétanie (Mau)
+- Néapolis (Nea) et Sicile (Sic)
+- Corse (Cor) et Sardaigne (Sad)
 
 
 (Byzance)
-La côte Byzantium (Byz) fonctionne de la même manière que Constantinople sur la carte standard.
+La côte Byzance (Byz) fonctionne de la même manière que Constantinople sur la carte standard.
+
 
 (Baléares)
-Dans la version officielle, les Baléares dévient de la règle en étant à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Ici, les Baléares sont une mer et sont donc inaccessibles aux armées. 
+Dans la version officielle, les Baléares dévient de la règle en étant une île, c'est à dire à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Ici, les Baléares sont une mer et sont donc inaccessibles aux armées. 
 .
 *C'est la seule différence avec la version officielle*
 
+
 (Intersection dans les hautes mers)
 L'accès est possible, pour une flotte, de n'importe quelle des mers suivantes vers une autre :
-- Ausonian Sea (Aus)
-- Messenian Sea (Mes)
-- Gulf of Tacape (GoT)
-- Libyan Sea (Lyb)
+- Mer Ausanienne (Aus)
+- Mer Messénienne (Mes)
+- Golfe de Tacape (GoT)
+- Mer Libyenne (Lyb)
 
 
 (Les Diokos)
-Une flotte peut passer de  Aegean Sea (Aeg) à Athens (Ath) et ensuite en Ionian Sea (Ion), et réciproquement.
+Une flotte peut passer de Mer Égée (Aeg) à Athènes (Ath) et ensuite en Mer Ionienne (Ion), et réciproquement.
+
 
 (Le Delta du Nil)
 L'accès est possible, pour une unité, de n'importe quelle des régions suivantes vers une autre :
-- Alexandria (Ale)
-- Thebes (The)
-- Sinai (Sii)
-- Gulf of Pelusium (GoP) - flotte seulement
+- Alexandrie (Ale)
+- Thèbes (The)
+- Sinaï (Sii)
+- Golfe de Péluse (GoP) - flotte seulement
 
 
 (Le cas particulier de Memphis)
 Memphis (Mem) est une côte. Pour Memphis, le Nil joue le rôle d'une mer. Une unité à Memphis donc peut aller ou venir de :
-- Alexandria (Ale)
-- Thebes (The)
-- Cyrene (Cyr) - armée seulement
-- Marmarica (Mar) - armée seulement
+- Alexandrie (Ale)
+- Thèbes (The)
+- Cyrène (Cyr) - armée seulement
+- Marmarique (Mar) - armée seulement
 - Bayuda (Bay) - armée seulement
 
 
 (Le canal de Suez)
 L'accès est possible, pour une flotte  entre :
-- Red Sea (Red) et Gulf of Pelusimu (GoP)
+- Mer Rouge (Red) et Golfe de Péluse (GoP)
 
 
 _
@@ -96,11 +99,11 @@ Il y a cinq puissances dont les unités de départ sont les suivantes :
 .
 = Position de départ
 |Puissance | Centres | Armées | Flottes| Centres inoccupés|
-|Rome     | 3 |Roma, Ravenna | Neapolis | |
-|Carthage | 3 |Cirta, Carthage | Thapsus | |
-|Grèce    | 3 |Athens, Macedonia | Sparta | |
-|Perse    | 3 |Antioch, Damascus | Sidon | |
-|Egyte    | 3 |Memphis, Thebes | Alexandria | |
+|Rome     | 3 | Rome, Ravenne | Néapolis | |
+|Carthage | 3 | Cirta, Carthage | Thapsus | |
+|Grèce    | 3 | Athens, Macedonia | Sparta | |
+|Perse    | 3 | Antioche, Damas | Sidon | |
+|Egyte    | 3 | Memphis, Thèbes | Alexandrie | |
 =
 
 _
@@ -113,86 +116,87 @@ $ Nomenclature
 
 = Régions et abréviations de la variante
 | Abréviation | Nom complet | type | centre |
-| Adr | Adriatic Sea  | mer |  |
-| Aeg | Aegaen Sea | mer |  |
-| Ale | Alexandria | côte | \* |
-| Ant | Antioch | côte | \* |
-| Apu | Apulia | côte |  |
-| Ara | Arabia | terre |  |
-| Arm | Armenia | terre |  |
-| Ath | Athena | côte | \* |
-| Aus | Ausanian Sea | mer |  |
-| Bal | Baleares | mer | \* |
-| Bar | Barber Sea | mer |  |
+| Adr | Mer Adriatique | mer |  |
+| Aeg | Mer Égée | mer |  |
+| Ale | Alexandrie | côte | \* |
+| Ant | Antioche | côte | \* |
+| Apu | Apulie | côte |  |
+| Ara | Arabie | terre |  |
+| Arm | Arménie | terre |  |
+| Ath | Athènes | côte | \* |
+| Aus | Mer Ausanienne | mer |  |
+| Bal | Baléares | mer | \* |
+| Bar | Mer de Barber | mer |  |
 | Bay | Bayuda | terre |  |
-| Bit | Bithynia | côte |  |
-| Bla | Black Sea | mer |  |
-| Byz | Byzantinum | côte | \* |
-| Cap | Capadocia | côte |  |
+| Bit | Bithynie | côte |  |
+| Bla | Mer Noire | mer |  |
+| Byz | Byzance | côte | \* |
+| Cap | Cappadoce | côte |  |
 | Car | Carthage | côte | \* |
-| Che | Chersonesus | côte | \* |
-| Cil | Cilician Strait | mer |  |
+| Che | Chersonèse | côte | \* |
+| Cil | Détroit Cilicien | mer |  |
 | Cir | Cirta | terre | \* |
-| Cor | Corsica | côte |  |
-| Cre | Crete | côte | \* |
-| Cyp | Cyprus | côte | \* |
-| Cyr | Cyrene | côte | \* |
-| Dac | Dacia | côte |  |
-| Dal | Dalmatia | côte | \* |
-| Dam | Damascus | terre | \* |
-| Egy | Egyptian Sea  | mer |  |
-| Epi | Epirus | côte |  |
-| Etr | Etruria | côte |  |
-| Gal | Galatia | terre |  |
-| Gau | Gaul | terre |  |
-| GoP | Gulf of Pelusium | mer |  |
-| GoS | Gulf of Syrtis | mer |  |
-| GoT | Gulf of Tacape | mer |  |
-| Ibe | Iberian Sea | mer |  |
-| Ill | Illyria | terre |  |
-| Ion | Ionian Sea | mer |  |
-| Isa | Isauria | côte |  |
-| Jer | Jerusalem | côte | \* |
+| Cor | Corse | côte |  |
+| Cre | Crète | côte | \* |
+| Cyp | Chypre | côte | \* |
+| Cyr | Cyrène | côte | \* |
+| Dac | Dacie | côte |  |
+| Dal | Dalmatie | côte | \* |
+| Dam | Damas | terre | \* |
+| Egy | Mer Égyptienne | mer |  |
+| Epi | Épire | côte |  |
+| Etr | Étrurie | côte |  |
+| Gal | Galatie | terre |  |
+| Gau | Gaule | terre |  |
+| GoP | Golfe de Péluse | mer |  |
+| GoS | Golfe de Syrte | mer |  |
+| GoT | Golfe de Tacape | mer |  |
+| Ibe | Mer Ibérique | mer |  |
+| Ill | Illyrie | terre |  |
+| Ion | Mer Ionienne | mer |  |
+| Isa | Isaurie | côte |  |
+| Jer | Jérusalem | côte | \* |
 | Lep | Leptis | côte | \* |
-| Lig | Ligurian Sea | mer |  |
-| Lus | Lusitania | terre |  |
-| Lyb | Lybian Sea | mer |  |
-| Mab | Mabatea | côte |  |
-| Mac | Macedonia | côte | \* |
-| Mar | Marmarica | terre |  |
+| Lig | Mer Ligurienne | mer |  |
+| Lus | Lusitanie | terre |  |
+| Lyb | Mer Libyenne | mer |  |
+| Mab | Mabathée | côte |  |
+| Mac | Macédoine | côte | \* |
+| Mar | Marmarique | terre |  |
 | Mas | Massilia | côte | \* |
-| Mau | Mauretania | côte |  |
+| Mau | Maurétanie | côte |  |
 | Mem | Memphis | côte | \* |
-| Mes | Messenian Sea | mer |  |
-| Mil | Miletus | côte | \* |
-| Min | Minoan Sea | mer |  |
-| Nea | Neapolis | côte | \* |
-| Num | Numidia | côte | \* |
+| Mes | Mer Messénienne | mer |  |
+| Mil | Milet | côte | \* |
+| Min | Mer Crétoise | mer |  |
+| Nea | Néapolis | côte | \* |
+| Num | Numidie | côte | \* |
 | Pet | Petia | côte | \* |
-| Pha | Phazania | terre |  |
-| Pun | Punic Sea | mer |  |
-| Rav | Ravenna | côte | \* |
-| Red | Red Sea | mer |  |
-| Rha | Rhaetia | terre |  |
-| Rom | Roma | côte | \* |
-| Sad | Sardinia | côte | \* |
+| Pha | Phazanie | terre |  |
+| Pun | Mer Punique | mer |  |
+| Rav | Ravenne | côte | \* |
+| Red | Mer Rouge | mer |  |
+| Rha | Rhétie | terre |  |
+| Rom | Rome | côte | \* |
+| Sad | Sardaigne | côte | \* |
 | Sag | Saguntum | côte | \* |
 | Sah | Sahara | terre |  |
-| Sam | Sarmatia | terre |  |
-| Sic | Sicilia | côte | \* |
+| Sam | Sarmatie | terre |  |
+| Sic | Sicile | côte | \* |
 | Sid | Sidon | côte | \* |
-| Sii | Sinai | côte |  |
+| Sii | Sinaï | côte |  |
 | Sip | Sinope | côte | \* |
-| Spa | Sparta | côte | \* |
-| Syr | Syrian Sea | mer |  |
-| Tar | Tarraconensis | côte |  |
+| Spa | Sparte | côte | \* |
+| Syr | Mer Syrienne | mer |  |
+| Tar | Tarraconaise | côte |  |
 | Tha | Thapsus | côte | \* |
-| The | Thebes | côte | \* |
-| Tye | Tyre | côte | \* |
-| Tyn | Thyrrhenean Sea | mer |  |
-| Ven | Venetia | côte |  |
+| The | Thèbes | côte | \* |
+| Tye | Tyr | côte | \* |
+| Tyn | Mer Tyrrhénienne | mer |  |
+| Ven | Vénétie | côte |  |
 | Vin | Vindobona | terre | \* |
 =
+
 
 _
 $ Expansionnisme (non)

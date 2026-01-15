@@ -7,15 +7,23 @@ Spice Islands (Les îles des épices) est une variante à 7 joueurs.
 _
 $ Côtes spéciales
 
-(Chaiya)
+(Chaiya \(Cha\))
    Elle a 2 côtes, Est et Ouest.
-(Dawei)
+
+
+(Dawei \(Daw\))
    Elle a 2 côtes, Est et Ouest.
-(Javadvipa)
+
+
+(Javadvipa \(Jav\))
    Elle a 2 côtes, Sud et Nord.
-(Namayan)
+
+
+(Namayan \(Nam\))
    Elle a 2 côtes, Est et Sud.
-(Sukadana)
+
+
+(Sukadana \(Suk\))
    Elle a 2 côtes, Nord et Ouest.
 
 _
@@ -50,7 +58,7 @@ Il y a sept puissances dont les unités de départ sont les suivantes :
 |Malacca (Sultanat) | 3 | | Malacca, Riau, Pahang | |
 |Ayutthaya (Royaume) | 3 | Ayutthaya, Roi Et | Daiwei (co) | |
 |Ternate (Sultanat) | 3 | | Halmahera, Buru, Seram | |
-|Dai Viet (Royaume) | 3 | Hanoi, Haiphong | Faifo | |
+|Dai Viet (Royaume) | 3 | Hanoï, Haiphong | Faifo | |
 =
 
 _
@@ -69,7 +77,7 @@ $ Nomenclature
 | Ace | Aceh | côte | \* |
 | Ava | Ava | côte | \* |
 | Ayu | Ayutthaya | côte | \* |
-| BaS | Banda Sea | mer |  |
+| BaS | Mer de Banda | mer |  |
 | Bik | Bikol | côte |  |
 | Bru | Brunei | côte | \* |
 | Bun | Butuan | côte | \* |
@@ -79,38 +87,38 @@ $ Nomenclature
 | Chi | Chiangmai | terre |  |
 | Chk | Champassak | terre |  |
 | Chp | Champa | côte |  |
-| ChS | Champa Sea | mer |  |
+| ChS | Mer de Champa | mer |  |
 | Daw | Daiwei | côte | \* |
-| EaO | Eastern Ocean | mer |  |
-| ECS | East China Sea | mer |  |
+| EaO | Océan Oriental | mer |  |
+| ECS | Mer de Chine orientale | mer |  |
 | Fai | Faifo | côte | \* |
-| GDV | Gulf of Dai Viet | mer |  |
-| GuS | Gulf of Siam | mer |  |
-| GuT | Gulf of Tomini | mer |  |
+| GDV | Golfe de Dai Viet | mer |  |
+| GuS | Golfe de Siam | mer |  |
+| GuT | Golfe de Tomini | mer |  |
 | Hai | Haiphong | côte | \* |
 | Hal | Halmahera | côte | \* |
-| Han | Hanoi | terre | \* |
+| Han | Hanoï | terre | \* |
 | Jam | Jambi | côte |  |
-| JaS | Java Sea | mer |  |
+| JaS | Mer de Java | mer |  |
 | Jav | Javadvipa | côte | \* |
 | Kan | Kasiguran | côte | \* |
-| KaS | Karimata Sea | mer |  |
+| KaS | Mer de Karimata | mer |  |
 | Kel | Kelatan | côte |  |
 | Khm | Khmer | côte |  |
 | Kut | Kutai | côte |  |
 | LaX | Lan Xang | terre | \* |
-| LnS | Luson Sea | mer |  |
+| LnS | Mer de Luçon | mer |  |
 | Lum | Lumajang | côte |  |
-| Lus | Luson | côte |  |
+| Lus | Luçon | côte |  |
 | Luw | Luwuk | côte |  |
-| Mai | Mait Sea | mer |  |
+| Mai | Mer de Mait | mer |  |
 | Mak | Makassar | côte | \* |
 | Mal | Malacca | côte | \* |
-| MaS | Makassar Strait | mer |  |
+| MaS | Détroit de Makassar | mer |  |
 | Min | Minahassa | côte | \* |
 | Mio | Mindanao | côte |  |
 | Miu | Minangkabau | côte |  |
-| MoS | Moluccan Sea | mer |  |
+| MoS | Mer des Moluques | mer |  |
 | Nam | Namayan | côte | \* |
 | NeD | Negara Daha | terre | \* |
 | OcE | Oc Eo | côte | \* |
@@ -124,36 +132,37 @@ $ Nomenclature
 | RoE | Roi Et | terre | \* |
 | Sam | Sambas | côte | \* |
 | Sat | Sampit | côte | \* |
-| SCS | South China Sea | mer |  |
+| SCS | Mer de Chine méridionale | mer |  |
 | Ser | Seram | côte | \* |
 | Sha | Shan | terre |  |
-| SiS | Sibuyan Sea | mer |  |
-| SlS | Sulu Sea | mer |  |
-| SoI | Sea of India | mer |  |
-| SoM | Straits of Malacca | mer |  |
-| SoO | Southern Ocean | mer |  |
-| SoT | Straits of Taiwan | mer |  |
+| SiS | Mer de Sibuyan | mer |  |
+| SlS | Mer de Sulu | mer |  |
+| SoI | Mer d'Inde | mer |  |
+| SoM | Détroit de Malacca | mer |  |
+| SoO | Océan Austral | mer |  |
+| SoT | Détroit de Taïwan | mer |  |
 | Suk | Sukadana | côte |  |
 | Sun | Sunda | côte |  |
-| SuS | Sulawesi Sea | mer |  |
-| Tai | Taiwan | côte | \* |
-| TiS | Timor Sea | mer |  |
+| SuS | Mer de Sulawesi | mer |  |
+| Tai | Taïwan | côte | \* |
+| TiS | Mer de Timor | mer |  |
 | Ton | Tondo | côte | \* |
 | Tro | Trowulan | côte | \* |
 | Tun | Tunku | côte | \* |
-| ViS | Visayas Sea | mer |  |
+| ViS | Mer des Visayas | mer |  |
 | Weh | Wehali | côte | \* |
-| WeO | Western Ocean | mer |  |
+| WeO | Océan Occidental | mer |  |
 | Wia | Wiangium | terre |  |
 | Zam | Zamboanga | côte | \* |
 =
+
 
 _
 $ Expansionnisme (oui)
 
 Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. 
 .
-Par exemple, Brunei peut construire à Ava si ce centre est vacant et qu'elle en est propriétaire
+Par exemple, Brunei peut construire à Ava (Ava) si ce centre est vacant et qu'elle en est propriétaire
 
 _
 $ Ecart avec la version théorique

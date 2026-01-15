@@ -203,7 +203,7 @@
         },
         "3": {
             "name": "AMU",
-            "full_name": "Amur",
+            "full_name": "Amour",
             "x_pos": 723,
             "y_pos": 81,
             "x_legend_pos": 723,
@@ -212,7 +212,7 @@
         },
         "4": {
             "name": "ARA",
-            "full_name": "Arabia",
+            "full_name": "Arabie",
             "x_pos": 126,
             "y_pos": 368,
             "x_legend_pos": 126,
@@ -221,7 +221,7 @@
         },
         "5": {
             "name": "ARM",
-            "full_name": "Armenia",
+            "full_name": "Arménie",
             "x_pos": 185,
             "y_pos": 145,
             "x_legend_pos": 185,
@@ -229,7 +229,7 @@
         },
         "6": {
             "name": "ASE",
-            "full_name": "Arabian Sea",
+            "full_name": "Mer d’Arabie",
             "x_pos": 274,
             "y_pos": 472,
             "x_legend_pos": 274,
@@ -246,7 +246,7 @@
         },
         "8": {
             "name": "BAG",
-            "full_name": "Baghdad",
+            "full_name": "Bagdad",
             "x_pos": 142,
             "y_pos": 203,
             "x_legend_pos": 142,
@@ -255,7 +255,7 @@
         },
         "9": {
             "name": "BAL",
-            "full_name": "Baluchistan",
+            "full_name": "Baloutchistan",
             "x_pos": 290,
             "y_pos": 342,
             "x_legend_pos": 290,
@@ -263,7 +263,7 @@
         },
         "10": {
             "name": "BAN",
-            "full_name": "Banda Sea",
+            "full_name": "Mer de Banda",
             "x_pos": 898,
             "y_pos": 677,
             "x_legend_pos": 898,
@@ -271,7 +271,7 @@
         },
         "11": {
             "name": "BLA",
-            "full_name": "Black Sea",
+            "full_name": "Mer Noire",
             "x_pos": 105,
             "y_pos": 92,
             "x_legend_pos": 105,
@@ -279,7 +279,7 @@
         },
         "12": {
             "name": "BOB",
-            "full_name": "Bay of Bengal",
+            "full_name": "Golfe du Bengale",
             "x_pos": 475,
             "y_pos": 531,
             "x_legend_pos": 475,
@@ -296,7 +296,7 @@
         },
         "14": {
             "name": "BOR",
-            "full_name": "Borneo",
+            "full_name": "Bornéo",
             "x_pos": 730,
             "y_pos": 642,
             "x_legend_pos": 756,
@@ -305,7 +305,7 @@
         },
         "15": {
             "name": "BUL",
-            "full_name": "Bulgaria",
+            "full_name": "Bulgarie",
             "x_pos": 56,
             "y_pos": 71,
             "x_legend_pos": 57,
@@ -313,7 +313,7 @@
         },
         "16": {
             "name": "BUR",
-            "full_name": "Burma",
+            "full_name": "Birmanie",
             "x_pos": 566,
             "y_pos": 438,
             "x_legend_pos": 566,
@@ -330,7 +330,7 @@
         },
         "18": {
             "name": "CAM",
-            "full_name": "Cambodia",
+            "full_name": "Cambodge",
             "x_pos": 649,
             "y_pos": 532,
             "x_legend_pos": 633,
@@ -347,7 +347,7 @@
         },
         "20": {
             "name": "CHU",
-            "full_name": "Chungking",
+            "full_name": "Tchoungking",
             "x_pos": 628,
             "y_pos": 327,
             "x_legend_pos": 628,
@@ -365,7 +365,7 @@
         },
         "22": {
             "name": "CPO",
-            "full_name": " Central Pacific Ocean",
+            "full_name": "Océan Pacifique central",
             "x_pos": 928,
             "y_pos": 410,
             "x_legend_pos": 928,
@@ -373,7 +373,7 @@
         },
         "23": {
             "name": "CSE",
-            "full_name": "Celebes Sea",
+            "full_name": "Mer des Célèbes",
             "x_pos": 924,
             "y_pos": 544,
             "x_legend_pos": 924,
@@ -381,7 +381,7 @@
         },
         "24": {
             "name": "DAM",
-            "full_name": "Damascus",
+            "full_name": "Damas",
             "x_pos": 104,
             "y_pos": 192,
             "x_legend_pos": 113,
@@ -399,7 +399,7 @@
         },
         "26": {
             "name": "ECS",
-            "full_name": "East China Sea",
+            "full_name": "Mer de Chine orientale",
             "x_pos": 826,
             "y_pos": 286,
             "x_legend_pos": 826,
@@ -407,7 +407,7 @@
         },
         "27": {
             "name": "EGY",
-            "full_name": "Egypt",
+            "full_name": "Égypte",
             "x_pos": 17,
             "y_pos": 292,
             "x_legend_pos": 17,
@@ -416,7 +416,7 @@
         },
         "28": {
             "name": "EIO",
-            "full_name": "East Indian Ocean",
+            "full_name": "Océan Indien oriental",
             "x_pos": 494,
             "y_pos": 633,
             "x_legend_pos": 494,
@@ -424,7 +424,7 @@
         },
         "29": {
             "name": "FOR",
-            "full_name": "Formosa",
+            "full_name": "Formose",
             "x_pos": 795,
             "y_pos": 366,
             "x_legend_pos": 804,
@@ -432,7 +432,7 @@
         },
         "30": {
             "name": "GOM",
-            "full_name": "Gulf of Martaban",
+            "full_name": "Golfe de Martaban",
             "x_pos": 562,
             "y_pos": 536,
             "x_legend_pos": 562,
@@ -440,7 +440,7 @@
         },
         "31": {
             "name": "GOS",
-            "full_name": "Gulf of Siam",
+            "full_name": "Golfe de Siam",
             "x_pos": 631,
             "y_pos": 578,
             "x_legend_pos": 632,
@@ -448,7 +448,7 @@
         },
         "32": {
             "name": "HAN",
-            "full_name": "Hanoi",
+            "full_name": "Hanoï",
             "x_pos": 656,
             "y_pos": 427,
             "x_legend_pos": 678,
@@ -457,7 +457,7 @@
         },
         "33": {
             "name": "HKO",
-            "full_name": " Hong Kong",
+            "full_name": "Hong Kong",
             "x_pos": 742,
             "y_pos": 375,
             "x_legend_pos": 763,
@@ -465,7 +465,7 @@
         },
         "34": {
             "name": "HUE",
-            "full_name": "Hue",
+            "full_name": "Hué",
             "x_pos": 687,
             "y_pos": 502,
             "x_legend_pos": 700,
@@ -474,7 +474,7 @@
         },
         "35": {
             "name": "IRK",
-            "full_name": "Irkutsk",
+            "full_name": "Irkoutsk",
             "x_pos": 636,
             "y_pos": 39,
             "x_legend_pos": 636,
@@ -492,7 +492,7 @@
         },
         "37": {
             "name": "JSE",
-            "full_name": "Java Sea",
+            "full_name": "Mer de Java",
             "x_pos": 664,
             "y_pos": 658,
             "x_legend_pos": 664,
@@ -500,7 +500,7 @@
         },
         "38": {
             "name": "KAN",
-            "full_name": "Kansu",
+            "full_name": "Kansou",
             "x_pos": 558,
             "y_pos": 244,
             "x_legend_pos": 558,
@@ -509,7 +509,7 @@
         },
         "39": {
             "name": "KAR",
-            "full_name": "Karimata Strait",
+            "full_name": "Détroit de Karimata",
             "x_pos": 691,
             "y_pos": 589,
             "x_legend_pos": 691,
@@ -517,7 +517,7 @@
         },
         "40": {
             "name": "KAS",
-            "full_name": "Kashmir",
+            "full_name": "Cachemire",
             "x_pos": 388,
             "y_pos": 314,
             "x_legend_pos": 388,
@@ -535,7 +535,7 @@
         },
         "42": {
             "name": "KIR",
-            "full_name": "Kirghiz",
+            "full_name": "Kirghizistan",
             "x_pos": 290,
             "y_pos": 107,
             "x_legend_pos": 290,
@@ -544,7 +544,7 @@
         },
         "43": {
             "name": "KOR",
-            "full_name": "Korea",
+            "full_name": "Corée",
             "x_pos": 812,
             "y_pos": 225,
             "x_legend_pos": 786,
@@ -579,7 +579,7 @@
         },
         "47": {
             "name": "MAL",
-            "full_name": "Malaya",
+            "full_name": "Malaisie",
             "x_pos": 626,
             "y_pos": 631,
             "x_legend_pos": 625,
@@ -587,7 +587,7 @@
         },
         "48": {
             "name": "MAN",
-            "full_name": "Manchuria",
+            "full_name": "Mandchourie",
             "x_pos": 759,
             "y_pos": 128,
             "x_legend_pos": 759,
@@ -595,7 +595,7 @@
         },
         "49": {
             "name": "MAR",
-            "full_name": "Maritime Province",
+            "full_name": "Province maritime",
             "x_pos": 822,
             "y_pos": 129,
             "x_legend_pos": 822,
@@ -604,7 +604,7 @@
         },
         "50": {
             "name": "MED",
-            "full_name": "Mediterranean Sea",
+            "full_name": "Mer Méditerranée",
             "x_pos": 28,
             "y_pos": 159,
             "x_legend_pos": 28,
@@ -612,7 +612,7 @@
         },
         "51": {
             "name": "MON",
-            "full_name": "Mongolia",
+            "full_name": "Mongolie",
             "x_pos": 581,
             "y_pos": 165,
             "x_legend_pos": 581,
@@ -621,7 +621,7 @@
         },
         "52": {
             "name": "MOS",
-            "full_name": "Moscow",
+            "full_name": "Moscou",
             "x_pos": 265,
             "y_pos": 37,
             "x_legend_pos": 265,
@@ -630,7 +630,7 @@
         },
         "53": {
             "name": "PEK",
-            "full_name": "Peking",
+            "full_name": "Pékin",
             "x_pos": 659,
             "y_pos": 238,
             "x_legend_pos": 659,
@@ -639,7 +639,7 @@
         },
         "54": {
             "name": "PER",
-            "full_name": "Persia",
+            "full_name": "Perse",
             "x_pos": 222,
             "y_pos": 263,
             "x_legend_pos": 222,
@@ -647,7 +647,7 @@
         },
         "55": {
             "name": "PGU",
-            "full_name": "Persian Gulf",
+            "full_name": "Golfe Persique",
             "x_pos": 259,
             "y_pos": 392,
             "x_legend_pos": 259,
@@ -663,7 +663,7 @@
         },
         "57": {
             "name": "PSE",
-            "full_name": "Philippine Sea",
+            "full_name": "Mer des Philippines",
             "x_pos": 847,
             "y_pos": 386,
             "x_legend_pos": 847,
@@ -671,7 +671,7 @@
         },
         "58": {
             "name": "RED",
-            "full_name": "Red Sea",
+            "full_name": "Mer Rouge",
             "x_pos": 146,
             "y_pos": 453,
             "x_legend_pos": 146,
@@ -679,7 +679,7 @@
         },
         "59": {
             "name": "RUM",
-            "full_name": "Rumania",
+            "full_name": "Roumanie",
             "x_pos": 76,
             "y_pos": 29,
             "x_legend_pos": 76,
@@ -687,7 +687,7 @@
         },
         "60": {
             "name": "SAI",
-            "full_name": "Saigon",
+            "full_name": "Saïgon",
             "x_pos": 678,
             "y_pos": 539,
             "x_legend_pos": 691,
@@ -713,7 +713,7 @@
         },
         "63": {
             "name": "SCS",
-            "full_name": "South China Sea",
+            "full_name": "Mer de Chine méridionale",
             "x_pos": 743,
             "y_pos": 458,
             "x_legend_pos": 743,
@@ -721,7 +721,7 @@
         },
         "64": {
             "name": "SEV",
-            "full_name": "Sevastopol",
+            "full_name": "Sébastopol",
             "x_pos": 134,
             "y_pos": 27,
             "x_legend_pos": 134,
@@ -756,7 +756,7 @@
         },
         "68": {
             "name": "SIB",
-            "full_name": "Siberia",
+            "full_name": "Sibérie",
             "x_pos": 369,
             "y_pos": 43,
             "x_legend_pos": 369,
@@ -774,7 +774,7 @@
         },
         "70": {
             "name": "SIO",
-            "full_name": "South Indian Ocean",
+            "full_name": "Océan Indien sud",
             "x_pos": 433,
             "y_pos": 697,
             "x_legend_pos": 433,
@@ -782,7 +782,7 @@
         },
         "71": {
             "name": "SOJ",
-            "full_name": "Sea of Japan",
+            "full_name": "Mer du Japon",
             "x_pos": 838,
             "y_pos": 178,
             "x_legend_pos": 838,
@@ -790,7 +790,7 @@
         },
         "72": {
             "name": "SOO",
-            "full_name": "Sea of Okhotsk",
+            "full_name": "Mer d’Okhotsk",
             "x_pos": 888,
             "y_pos": 30,
             "x_legend_pos": 888,
@@ -843,7 +843,7 @@
         },
         "78": {
             "name": "WIO",
-            "full_name": "West Indian Ocean",
+            "full_name": "Océan Indien occidental",
             "x_pos": 171,
             "y_pos": 620,
             "x_legend_pos": 171,
@@ -851,7 +851,7 @@
         },
         "79": {
             "name": "YEL",
-            "full_name": "Yellow Sea",
+            "full_name": "Mer Jaune",
             "x_pos": 780,
             "y_pos": 248,
             "x_legend_pos": 780,
