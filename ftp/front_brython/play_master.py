@@ -310,6 +310,9 @@ def game_master():
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.info_go(f"L'état de la partie a été modifié : {messages}")
 
+            if play_low.GAME_PARAMETERS_LOADED['exposition'] and expected_state == 1:
+                alert("Partie d'exposition : il faut recharger la partie pour obtenir le menu des ordres")
+
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
