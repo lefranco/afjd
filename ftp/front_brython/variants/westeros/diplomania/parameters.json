@@ -186,7 +186,7 @@
     "zones": {
         "1": {
             "name": "Arb",
-            "full_name": "The Arbor",
+            "full_name": "L'Arbor",
             "x_pos": 75,
             "y_pos": 1101,
             "x_legend_pos": 54,
@@ -195,7 +195,7 @@
         },
         "2": {
             "name": "Bar",
-            "full_name": "Barrowlands",
+            "full_name": "Terres des Tumulus",
             "x_pos": 202,
             "y_pos": 385,
             "x_legend_pos": 202,
@@ -204,7 +204,7 @@
         },
         "3": {
             "name": "Bit",
-            "full_name": "The Bite",
+            "full_name": "La Bouchée",
             "x_pos": 434,
             "y_pos": 443,
             "x_legend_pos": 434,
@@ -212,7 +212,7 @@
         },
         "4": {
             "name": "BlB",
-            "full_name": "Blazewater Bay",
+            "full_name": "Baie de Flamme-eau",
             "x_pos": 71,
             "y_pos": 435,
             "x_legend_pos": 71,
@@ -220,7 +220,7 @@
         },
         "5": {
             "name": "Bmt",
-            "full_name": "Blackmont",
+            "full_name": "Montnoir",
             "x_pos": 198,
             "y_pos": 994,
             "x_legend_pos": 198,
@@ -229,7 +229,7 @@
         },
         "6": {
             "name": "BoC",
-            "full_name": "Bay of Crabs",
+            "full_name": "Baie des Crabes",
             "x_pos": 501,
             "y_pos": 644,
             "x_legend_pos": 501,
@@ -237,7 +237,7 @@
         },
         "7": {
             "name": "BoI",
-            "full_name": "Bay of Ice",
+            "full_name": "Baie de Glace",
             "x_pos": 210,
             "y_pos": 143,
             "x_legend_pos": 210,
@@ -245,7 +245,7 @@
         },
         "8": {
             "name": "BoS",
-            "full_name": "Bay of Seals",
+            "full_name": "Baie des Phoques",
             "x_pos": 499,
             "y_pos": 46,
             "x_legend_pos": 499,
@@ -261,7 +261,7 @@
         },
         "10": {
             "name": "BtW",
-            "full_name": "Beyond the Wall",
+            "full_name": "Au-delà du Mur",
             "x_pos": 158,
             "y_pos": 56,
             "x_legend_pos": 158,
@@ -269,7 +269,7 @@
         },
         "11": {
             "name": "BwB",
-            "full_name": "Blackwater Bay",
+            "full_name": "Baie de l’Eau Noire",
             "x_pos": 431,
             "y_pos": 737,
             "x_legend_pos": 431,
@@ -277,7 +277,7 @@
         },
         "12": {
             "name": "BwR",
-            "full_name": "Blackwater Rush",
+            "full_name": "Ruisseau de l’Eau Noire",
             "x_pos": 443,
             "y_pos": 764,
             "x_legend_pos": 422,
@@ -285,7 +285,7 @@
         },
         "13": {
             "name": "CaB",
-            "full_name": "Castle Black ",
+            "full_name": "Château Noir",
             "x_pos": 327,
             "y_pos": 142,
             "x_legend_pos": 352,
@@ -293,7 +293,7 @@
         },
         "14": {
             "name": "Cai",
-            "full_name": "Moat Cailin",
+            "full_name": "Fosse de Cailin",
             "x_pos": 286,
             "y_pos": 400,
             "x_legend_pos": 286,
@@ -301,7 +301,7 @@
         },
         "15": {
             "name": "Cas",
-            "full_name": "Casterly Rock",
+            "full_name": "Roccastel",
             "x_pos": 158,
             "y_pos": 662,
             "x_legend_pos": 158,
@@ -310,7 +310,7 @@
         },
         "16": {
             "name": "Coa",
-            "full_name": "Braavosi Coastlands",
+            "full_name": "Littoral de Braavos",
             "x_pos": 671,
             "y_pos": 666,
             "x_legend_pos": 671,
@@ -318,7 +318,7 @@
         },
         "17": {
             "name": "Cro",
-            "full_name": "Crownlands",
+            "full_name": "Terres de la Couronne",
             "x_pos": 351,
             "y_pos": 725,
             "x_legend_pos": 351,
@@ -326,7 +326,7 @@
         },
         "18": {
             "name": "Dra",
-            "full_name": "Dragonstone",
+            "full_name": "Pierre-du-Dragon",
             "x_pos": 492,
             "y_pos": 725,
             "x_legend_pos": 491,
@@ -335,7 +335,7 @@
         },
         "19": {
             "name": "Dre",
-            "full_name": "The Dreadfort",
+            "full_name": "Fort Terreur",
             "x_pos": 367,
             "y_pos": 309,
             "x_legend_pos": 367,
@@ -344,7 +344,7 @@
         },
         "20": {
             "name": "End",
-            "full_name": "Storm's End",
+            "full_name": "Fin d’Orage",
             "x_pos": 413,
             "y_pos": 870,
             "x_legend_pos": 413,
@@ -353,7 +353,7 @@
         },
         "21": {
             "name": "ESS",
-            "full_name": "East Summer Sea",
+            "full_name": "Mer d’Été Orientale",
             "x_pos": 570,
             "y_pos": 1078,
             "x_legend_pos": 570,
@@ -361,7 +361,7 @@
         },
         "22": {
             "name": "Eye",
-            "full_name": "God's Eye",
+            "full_name": "L’Œil Divin",
             "x_pos": 315,
             "y_pos": 714,
             "x_legend_pos": 310,
@@ -369,7 +369,7 @@
         },
         "23": {
             "name": "Eyr",
-            "full_name": "The Eyrie",
+            "full_name": "L’Aiglerie",
             "x_pos": 441,
             "y_pos": 572,
             "x_legend_pos": 441,
@@ -377,7 +377,7 @@
         },
         "24": {
             "name": "Fin",
-            "full_name": "The Fingers",
+            "full_name": "Les Doigts",
             "x_pos": 373,
             "y_pos": 534,
             "x_legend_pos": 373,
@@ -385,7 +385,7 @@
         },
         "25": {
             "name": "Fli",
-            "full_name": "Flint's Finger",
+            "full_name": "Doigt de Flint",
             "x_pos": 142,
             "y_pos": 479,
             "x_legend_pos": 142,
@@ -393,7 +393,7 @@
         },
         "26": {
             "name": "God",
-            "full_name": "Godsgrace",
+            "full_name": "Grâce-des-Dieux",
             "x_pos": 388,
             "y_pos": 1038,
             "x_legend_pos": 369,
@@ -402,7 +402,7 @@
         },
         "27": {
             "name": "Har",
-            "full_name": "Harlaw",
+            "full_name": "Harlau",
             "x_pos": 122,
             "y_pos": 591,
             "x_legend_pos": 135,
@@ -419,7 +419,7 @@
         },
         "29": {
             "name": "Hig",
-            "full_name": "Highgarden",
+            "full_name": "Hautjardin",
             "x_pos": 224,
             "y_pos": 928,
             "x_legend_pos": 224,
@@ -428,7 +428,7 @@
         },
         "30": {
             "name": "Hor",
-            "full_name": "Horn Hill",
+            "full_name": "Cornecolline",
             "x_pos": 122,
             "y_pos": 965,
             "x_legend_pos": 122,
@@ -437,7 +437,7 @@
         },
         "31": {
             "name": "IrB",
-            "full_name": "Ironman's Bay",
+            "full_name": "Baie de l’Homme de Fer",
             "x_pos": 146,
             "y_pos": 546,
             "x_legend_pos": 146,
@@ -445,7 +445,7 @@
         },
         "32": {
             "name": "Kar",
-            "full_name": "Karhold",
+            "full_name": "Karbourg",
             "x_pos": 440,
             "y_pos": 219,
             "x_legend_pos": 440,
@@ -454,7 +454,7 @@
         },
         "33": {
             "name": "KLW",
-            "full_name": "King's Landing West",
+            "full_name": "Port-Réal West",
             "x_pos": 354,
             "y_pos": 770,
             "x_legend_pos": 332,
@@ -462,7 +462,7 @@
         },
         "34": {
             "name": "KLE",
-            "full_name": "King's Landing East",
+            "full_name": "Port-Réal East",
             "x_pos": 397,
             "y_pos": 749,
             "x_legend_pos": 383,
@@ -470,7 +470,7 @@
         },
         "35": {
             "name": "Krd",
-            "full_name": "Kingsroad",
+            "full_name": "Route Royale",
             "x_pos": 272,
             "y_pos": 563,
             "x_legend_pos": 272,
@@ -478,7 +478,7 @@
         },
         "36": {
             "name": "Kwd",
-            "full_name": "Kingswood",
+            "full_name": "Bois du Roi",
             "x_pos": 406,
             "y_pos": 817,
             "x_legend_pos": 406,
@@ -495,7 +495,7 @@
         },
         "38": {
             "name": "Mar",
-            "full_name": "Dornish Marches",
+            "full_name": "Marches Dorliennes",
             "x_pos": 340,
             "y_pos": 942,
             "x_legend_pos": 340,
@@ -503,7 +503,7 @@
         },
         "39": {
             "name": "Moo",
-            "full_name": "Mountains of the Moon",
+            "full_name": "Montagnes de la Lune",
             "x_pos": 363,
             "y_pos": 635,
             "x_legend_pos": 363,
@@ -511,7 +511,7 @@
         },
         "40": {
             "name": "Mot",
-            "full_name": "Deepwood Motte",
+            "full_name": "Motte Boisprofond",
             "x_pos": 219,
             "y_pos": 461,
             "x_legend_pos": 219,
@@ -527,7 +527,7 @@
         },
         "42": {
             "name": "Nec",
-            "full_name": "The Neck",
+            "full_name": "Le Cou",
             "x_pos": 277,
             "y_pos": 454,
             "x_legend_pos": 277,
@@ -535,7 +535,7 @@
         },
         "43": {
             "name": "NNS",
-            "full_name": "North Narrow Sea",
+            "full_name": "Mer Étroite Nord",
             "x_pos": 553,
             "y_pos": 517,
             "x_legend_pos": 553,
@@ -543,7 +543,7 @@
         },
         "44": {
             "name": "NSS",
-            "full_name": "North Sunset Sea",
+            "full_name": "Mer du Couchant Nord",
             "x_pos": 59,
             "y_pos": 140,
             "x_legend_pos": 59,
@@ -551,7 +551,7 @@
         },
         "45": {
             "name": "Old",
-            "full_name": "Oldtown",
+            "full_name": "Vieilleville",
             "x_pos": 134,
             "y_pos": 1022,
             "x_legend_pos": 134,
@@ -560,7 +560,7 @@
         },
         "46": {
             "name": "Pas",
-            "full_name": "Prince's Pass",
+            "full_name": "Passe du Prince",
             "x_pos": 274,
             "y_pos": 995,
             "x_legend_pos": 274,
@@ -576,7 +576,7 @@
         },
         "48": {
             "name": "Pyk",
-            "full_name": "Pyke",
+            "full_name": "Pyk",
             "x_pos": 118,
             "y_pos": 626,
             "x_legend_pos": 108,
@@ -585,7 +585,7 @@
         },
         "49": {
             "name": "Rea",
-            "full_name": "The Reach",
+            "full_name": "Le Bief",
             "x_pos": 221,
             "y_pos": 831,
             "x_legend_pos": 221,
@@ -593,7 +593,7 @@
         },
         "50": {
             "name": "ReS",
-            "full_name": "Redwyne Straits ",
+            "full_name": "Détroits Rougevigne",
             "x_pos": 79,
             "y_pos": 1060,
             "x_legend_pos": 79,
@@ -601,7 +601,7 @@
         },
         "51": {
             "name": "Riv",
-            "full_name": "Riverlands",
+            "full_name": "Terres des Rivières",
             "x_pos": 252,
             "y_pos": 617,
             "x_legend_pos": 252,
@@ -609,7 +609,7 @@
         },
         "52": {
             "name": "Roo",
-            "full_name": "Griffin's Roost",
+            "full_name": "Perchoir du Griffon",
             "x_pos": 424,
             "y_pos": 935,
             "x_legend_pos": 424,
@@ -618,7 +618,7 @@
         },
         "53": {
             "name": "Run",
-            "full_name": "Riverrun",
+            "full_name": "Vivesaigues",
             "x_pos": 250,
             "y_pos": 677,
             "x_legend_pos": 250,
@@ -626,7 +626,7 @@
         },
         "54": {
             "name": "Sal",
-            "full_name": "Salt Shore",
+            "full_name": "Rivage Salé",
             "x_pos": 327,
             "y_pos": 1066,
             "x_legend_pos": 327,
@@ -635,7 +635,7 @@
         },
         "55": {
             "name": "San",
-            "full_name": "Sandstone",
+            "full_name": "Pierre de Sable",
             "x_pos": 266,
             "y_pos": 1069,
             "x_legend_pos": 266,
@@ -643,7 +643,7 @@
         },
         "56": {
             "name": "Sep",
-            "full_name": "Stoney Sept",
+            "full_name": "Septier Rocheux",
             "x_pos": 278,
             "y_pos": 725,
             "x_legend_pos": 278,
@@ -652,7 +652,7 @@
         },
         "57": {
             "name": "ShB",
-            "full_name": "Shipbreaker Bay",
+            "full_name": "Baie Brise-navire",
             "x_pos": 470,
             "y_pos": 895,
             "x_legend_pos": 470,
@@ -660,7 +660,7 @@
         },
         "58": {
             "name": "Shi",
-            "full_name": "Shield Islands",
+            "full_name": "Îles Bouclier",
             "x_pos": 71,
             "y_pos": 924,
             "x_legend_pos": 71,
@@ -668,7 +668,7 @@
         },
         "59": {
             "name": "SNS",
-            "full_name": "South Narrow Sea",
+            "full_name": "Mer Étroite Sud",
             "x_pos": 551,
             "y_pos": 842,
             "x_legend_pos": 551,
@@ -676,7 +676,7 @@
         },
         "60": {
             "name": "SoD",
-            "full_name": "Sea of Dorne",
+            "full_name": "Mer de Dorne",
             "x_pos": 403,
             "y_pos": 991,
             "x_legend_pos": 403,
@@ -684,7 +684,7 @@
         },
         "61": {
             "name": "SoM",
-            "full_name": "Sea of Myrth",
+            "full_name": "Mer de Myrth",
             "x_pos": 604,
             "y_pos": 910,
             "x_legend_pos": 604,
@@ -692,7 +692,7 @@
         },
         "62": {
             "name": "Srd",
-            "full_name": "Searoad",
+            "full_name": "Route des Mers",
             "x_pos": 146,
             "y_pos": 863,
             "x_legend_pos": 146,
@@ -700,7 +700,7 @@
         },
         "63": {
             "name": "SSS",
-            "full_name": "South Sunset Sea",
+            "full_name": "Mer du Couchant Sud",
             "x_pos": 40,
             "y_pos": 808,
             "x_legend_pos": 40,
@@ -708,7 +708,7 @@
         },
         "64": {
             "name": "Sta",
-            "full_name": "Starfall",
+            "full_name": "Chute d’Étoile",
             "x_pos": 198,
             "y_pos": 1077,
             "x_legend_pos": 198,
@@ -716,7 +716,7 @@
         },
         "65": {
             "name": "Ste",
-            "full_name": "The Stepstones",
+            "full_name": "Les Pierres de l’Étape",
             "x_pos": 521,
             "y_pos": 1006,
             "x_legend_pos": 520,
@@ -724,7 +724,7 @@
         },
         "66": {
             "name": "Sto",
-            "full_name": "Stony Shore",
+            "full_name": "Rivage Rocheux",
             "x_pos": 116,
             "y_pos": 348,
             "x_legend_pos": 116,
@@ -733,7 +733,7 @@
         },
         "67": {
             "name": "Str",
-            "full_name": "Stormlands",
+            "full_name": "Terres de l’Orage",
             "x_pos": 317,
             "y_pos": 861,
             "x_legend_pos": 317,
@@ -741,7 +741,7 @@
         },
         "68": {
             "name": "Sun",
-            "full_name": "Sunspear",
+            "full_name": "Lance-soleil",
             "x_pos": 472,
             "y_pos": 1039,
             "x_legend_pos": 472,
@@ -750,7 +750,7 @@
         },
         "69": {
             "name": "TGS",
-            "full_name": "The Golden Sound",
+            "full_name": "Sonorité Dorée",
             "x_pos": 84,
             "y_pos": 692,
             "x_legend_pos": 84,
@@ -758,7 +758,7 @@
         },
         "70": {
             "name": "TNS",
-            "full_name": "The Narrow Sea",
+            "full_name": "Mer Étroite",
             "x_pos": 513,
             "y_pos": 772,
             "x_legend_pos": 513,
@@ -766,7 +766,7 @@
         },
         "71": {
             "name": "TSS",
-            "full_name": "The Shivering Sea",
+            "full_name": "Mer Frissonnante",
             "x_pos": 600,
             "y_pos": 332,
             "x_legend_pos": 600,
@@ -774,7 +774,7 @@
         },
         "72": {
             "name": "Twi",
-            "full_name": "The Twins",
+            "full_name": "Les Jumeaux",
             "x_pos": 224,
             "y_pos": 527,
             "x_legend_pos": 224,
@@ -782,7 +782,7 @@
         },
         "73": {
             "name": "Tyr",
-            "full_name": "Tyrosh",
+            "full_name": "Tyroshe",
             "x_pos": 550,
             "y_pos": 924,
             "x_legend_pos": 548,
@@ -790,7 +790,7 @@
         },
         "74": {
             "name": "Wes",
-            "full_name": "Westerlands",
+            "full_name": "Terres de l’Ouest",
             "x_pos": 208,
             "y_pos": 754,
             "x_legend_pos": 208,
@@ -799,7 +799,7 @@
         },
         "75": {
             "name": "Whi",
-            "full_name": "White Harbor",
+            "full_name": "Port-Blanc",
             "x_pos": 363,
             "y_pos": 399,
             "x_legend_pos": 363,
@@ -808,7 +808,7 @@
         },
         "76": {
             "name": "Win",
-            "full_name": "Winterfell",
+            "full_name": "Hiverfort",
             "x_pos": 249,
             "y_pos": 276,
             "x_legend_pos": 249,
@@ -817,7 +817,7 @@
         },
         "77": {
             "name": "WSS",
-            "full_name": "West Summer Sea",
+            "full_name": "Mer d’Été Ouest",
             "x_pos": 153,
             "y_pos": 1115,
             "x_legend_pos": 153,
@@ -825,7 +825,7 @@
         },
         "78": {
             "name": "Wyk",
-            "full_name": "Great Wyk",
+            "full_name": "Grande Wyk",
             "x_pos": 70,
             "y_pos": 597,
             "x_legend_pos": 70,
@@ -834,7 +834,7 @@
         },
         "79": {
             "name": "Yro",
-            "full_name": "Yronwood",
+            "full_name": "Yronbois",
             "x_pos": 333,
             "y_pos": 1023,
             "x_legend_pos": 308,
@@ -843,7 +843,7 @@
         },
         "80": {
             "name": "Ash",
-            "full_name": "Ashford",
+            "full_name": "Ashbourg",
             "x_pos": 286,
             "y_pos": 934,
             "x_legend_pos": 286,
@@ -852,7 +852,7 @@
         },
         "81": {
             "name": "Dis",
-            "full_name": "The Disputed Lands",
+            "full_name": "Terres Contestées",
             "x_pos": 640,
             "y_pos": 977,
             "x_legend_pos": 640,
@@ -860,7 +860,7 @@
         },
         "82": {
             "name": "Cra",
-            "full_name": "Craclaw Point",
+            "full_name": "Pointe Griffecroc",
             "x_pos": 408,
             "y_pos": 708,
             "x_legend_pos": 408,

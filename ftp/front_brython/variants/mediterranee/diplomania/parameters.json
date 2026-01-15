@@ -135,7 +135,7 @@
     "zones": {
         "1": {
             "name": "Adr",
-            "full_name": "Adriatic Sea ",
+            "full_name": "Mer Adriatique",
             "x_pos": 453,
             "y_pos": 192,
             "x_legend_pos": 453,
@@ -143,7 +143,7 @@
         },
         "2": {
             "name": "Aeg",
-            "full_name": "Aegaen Sea",
+            "full_name": "Mer Égée",
             "x_pos": 673,
             "y_pos": 354,
             "x_legend_pos": 673,
@@ -151,7 +151,7 @@
         },
         "3": {
             "name": "Ale",
-            "full_name": "Alexandria",
+            "full_name": "Alexandrie",
             "x_pos": 718,
             "y_pos": 516,
             "x_legend_pos": 718,
@@ -160,7 +160,7 @@
         },
         "4": {
             "name": "Ant",
-            "full_name": "Antioch",
+            "full_name": "Antioche",
             "x_pos": 926,
             "y_pos": 317,
             "x_legend_pos": 926,
@@ -169,7 +169,7 @@
         },
         "5": {
             "name": "Apu",
-            "full_name": "Apulia",
+            "full_name": "Apulie",
             "x_pos": 454,
             "y_pos": 229,
             "x_legend_pos": 424,
@@ -178,7 +178,7 @@
         },
         "6": {
             "name": "Ara",
-            "full_name": "Arabia",
+            "full_name": "Arabie",
             "x_pos": 993,
             "y_pos": 422,
             "x_legend_pos": 993,
@@ -187,7 +187,7 @@
         },
         "7": {
             "name": "Arm",
-            "full_name": "Armenia",
+            "full_name": "Arménie",
             "x_pos": 1000,
             "y_pos": 213,
             "x_legend_pos": 1000,
@@ -196,7 +196,7 @@
         },
         "8": {
             "name": "Ath",
-            "full_name": "Athena",
+            "full_name": "Athènes",
             "x_pos": 589,
             "y_pos": 304,
             "x_legend_pos": 603,
@@ -205,7 +205,7 @@
         },
         "9": {
             "name": "Aus",
-            "full_name": "Ausanian Sea",
+            "full_name": "Mer Ausanienne",
             "x_pos": 489,
             "y_pos": 375,
             "x_legend_pos": 489,
@@ -213,7 +213,7 @@
         },
         "10": {
             "name": "Bal",
-            "full_name": "Baleares",
+            "full_name": "Baléares",
             "x_pos": 208,
             "y_pos": 240,
             "x_legend_pos": 208,
@@ -221,7 +221,7 @@
         },
         "11": {
             "name": "Bar",
-            "full_name": "Barber Sea",
+            "full_name": "Mer de Barber",
             "x_pos": 242,
             "y_pos": 313,
             "x_legend_pos": 242,
@@ -238,7 +238,7 @@
         },
         "13": {
             "name": "Bit",
-            "full_name": "Bithynia",
+            "full_name": "Bithynie",
             "x_pos": 801,
             "y_pos": 206,
             "x_legend_pos": 801,
@@ -246,7 +246,7 @@
         },
         "14": {
             "name": "Bla",
-            "full_name": "Black Sea",
+            "full_name": "Mer Noire",
             "x_pos": 755,
             "y_pos": 150,
             "x_legend_pos": 755,
@@ -254,7 +254,7 @@
         },
         "15": {
             "name": "Byz",
-            "full_name": "Byzantinum",
+            "full_name": "Byzance",
             "x_pos": 713,
             "y_pos": 247,
             "x_legend_pos": 713,
@@ -262,7 +262,7 @@
         },
         "16": {
             "name": "Cap",
-            "full_name": "Capadocia",
+            "full_name": "Cappadoce",
             "x_pos": 887,
             "y_pos": 267,
             "x_legend_pos": 887,
@@ -280,7 +280,7 @@
         },
         "18": {
             "name": "Che",
-            "full_name": "Chersonesus",
+            "full_name": "Chersonèse",
             "x_pos": 974,
             "y_pos": 66,
             "x_legend_pos": 974,
@@ -288,7 +288,7 @@
         },
         "19": {
             "name": "Cil",
-            "full_name": "Cilician Strait",
+            "full_name": "Détroit Cilicien",
             "x_pos": 800,
             "y_pos": 362,
             "x_legend_pos": 800,
@@ -305,7 +305,7 @@
         },
         "21": {
             "name": "Cor",
-            "full_name": "Corsica",
+            "full_name": "Corse",
             "x_pos": 322,
             "y_pos": 224,
             "x_legend_pos": 326,
@@ -313,7 +313,7 @@
         },
         "22": {
             "name": "Cre",
-            "full_name": "Crete",
+            "full_name": "Crète",
             "x_pos": 667,
             "y_pos": 394,
             "x_legend_pos": 701,
@@ -321,7 +321,7 @@
         },
         "23": {
             "name": "Cyp",
-            "full_name": "Cyprus",
+            "full_name": "Chypre",
             "x_pos": 850,
             "y_pos": 380,
             "x_legend_pos": 825,
@@ -329,7 +329,7 @@
         },
         "24": {
             "name": "Cyr",
-            "full_name": "Cyrene",
+            "full_name": "Cyrène",
             "x_pos": 612,
             "y_pos": 502,
             "x_legend_pos": 612,
@@ -337,7 +337,7 @@
         },
         "25": {
             "name": "Dac",
-            "full_name": "Dacia",
+            "full_name": "Dacie",
             "x_pos": 641,
             "y_pos": 132,
             "x_legend_pos": 641,
@@ -346,7 +346,7 @@
         },
         "26": {
             "name": "Dal",
-            "full_name": "Dalmatia",
+            "full_name": "Dalmatie",
             "x_pos": 470,
             "y_pos": 152,
             "x_legend_pos": 470,
@@ -354,7 +354,7 @@
         },
         "27": {
             "name": "Dam",
-            "full_name": "Damascus",
+            "full_name": "Damas",
             "x_pos": 993,
             "y_pos": 298,
             "x_legend_pos": 993,
@@ -363,7 +363,7 @@
         },
         "28": {
             "name": "Egy",
-            "full_name": "Egyptian Sea ",
+            "full_name": "Mer Égyptienne",
             "x_pos": 754,
             "y_pos": 446,
             "x_legend_pos": 754,
@@ -371,7 +371,7 @@
         },
         "29": {
             "name": "Epi",
-            "full_name": "Epirus",
+            "full_name": "Épire",
             "x_pos": 562,
             "y_pos": 276,
             "x_legend_pos": 562,
@@ -380,7 +380,7 @@
         },
         "30": {
             "name": "Etr",
-            "full_name": "Etruria",
+            "full_name": "Étrurie",
             "x_pos": 327,
             "y_pos": 128,
             "x_legend_pos": 327,
@@ -388,7 +388,7 @@
         },
         "31": {
             "name": "Gal",
-            "full_name": "Galatia",
+            "full_name": "Galatie",
             "x_pos": 814,
             "y_pos": 258,
             "x_legend_pos": 814,
@@ -396,7 +396,7 @@
         },
         "32": {
             "name": "Gau",
-            "full_name": "Gaul",
+            "full_name": "Gaule",
             "x_pos": 215,
             "y_pos": 66,
             "x_legend_pos": 215,
@@ -404,7 +404,7 @@
         },
         "33": {
             "name": "GoS",
-            "full_name": "Gulf of Syrtis",
+            "full_name": "Golfe de Syrte",
             "x_pos": 537,
             "y_pos": 503,
             "x_legend_pos": 537,
@@ -412,7 +412,7 @@
         },
         "34": {
             "name": "GoT",
-            "full_name": "Gulf of Tacape",
+            "full_name": "Golfe de Tacape",
             "x_pos": 418,
             "y_pos": 446,
             "x_legend_pos": 418,
@@ -420,7 +420,7 @@
         },
         "35": {
             "name": "GoP",
-            "full_name": "Gulf of Pelusium",
+            "full_name": "Golfe de Péluse",
             "x_pos": 865,
             "y_pos": 454,
             "x_legend_pos": 865,
@@ -428,7 +428,7 @@
         },
         "36": {
             "name": "Ibe",
-            "full_name": "Iberian Sea",
+            "full_name": "Mer Ibérique",
             "x_pos": 122,
             "y_pos": 351,
             "x_legend_pos": 122,
@@ -436,7 +436,7 @@
         },
         "37": {
             "name": "Ill",
-            "full_name": "Illyria",
+            "full_name": "Illyrie",
             "x_pos": 573,
             "y_pos": 189,
             "x_legend_pos": 573,
@@ -445,7 +445,7 @@
         },
         "38": {
             "name": "Ion",
-            "full_name": "Ionian Sea",
+            "full_name": "Mer Ionienne",
             "x_pos": 521,
             "y_pos": 311,
             "x_legend_pos": 521,
@@ -453,7 +453,7 @@
         },
         "39": {
             "name": "Isa",
-            "full_name": "Isauria",
+            "full_name": "Isaurie",
             "x_pos": 822,
             "y_pos": 315,
             "x_legend_pos": 822,
@@ -461,7 +461,7 @@
         },
         "40": {
             "name": "Jer",
-            "full_name": "Jerusalem",
+            "full_name": "Jérusalem",
             "x_pos": 913,
             "y_pos": 442,
             "x_legend_pos": 910,
@@ -477,7 +477,7 @@
         },
         "42": {
             "name": "Lig",
-            "full_name": "Ligurian Sea",
+            "full_name": "Mer Ligurienne",
             "x_pos": 272,
             "y_pos": 217,
             "x_legend_pos": 272,
@@ -485,7 +485,7 @@
         },
         "43": {
             "name": "Lus",
-            "full_name": "Lusitania",
+            "full_name": "Lusitanie",
             "x_pos": 41,
             "y_pos": 207,
             "x_legend_pos": 41,
@@ -493,7 +493,7 @@
         },
         "44": {
             "name": "Lyb",
-            "full_name": "Lybian Sea",
+            "full_name": "Mer Libyenne",
             "x_pos": 656,
             "y_pos": 438,
             "x_legend_pos": 656,
@@ -501,7 +501,7 @@
         },
         "45": {
             "name": "Mab",
-            "full_name": "Mabatea",
+            "full_name": "Mabathée",
             "x_pos": 997,
             "y_pos": 546,
             "x_legend_pos": 997,
@@ -509,7 +509,7 @@
         },
         "46": {
             "name": "Mac",
-            "full_name": "Macedonia",
+            "full_name": "Macédoine",
             "x_pos": 614,
             "y_pos": 234,
             "x_legend_pos": 614,
@@ -518,7 +518,7 @@
         },
         "47": {
             "name": "Mar",
-            "full_name": "Marmarica",
+            "full_name": "Marmarique",
             "x_pos": 621,
             "y_pos": 581,
             "x_legend_pos": 621,
@@ -535,7 +535,7 @@
         },
         "49": {
             "name": "Mau",
-            "full_name": "Mauretania",
+            "full_name": "Maurétanie",
             "x_pos": 129,
             "y_pos": 438,
             "x_legend_pos": 129,
@@ -553,7 +553,7 @@
         },
         "51": {
             "name": "Mes",
-            "full_name": "Messenian Sea",
+            "full_name": "Mer Messénienne",
             "x_pos": 563,
             "y_pos": 382,
             "x_legend_pos": 563,
@@ -561,7 +561,7 @@
         },
         "52": {
             "name": "Mil",
-            "full_name": "Miletus",
+            "full_name": "Milet",
             "x_pos": 734,
             "y_pos": 310,
             "x_legend_pos": 734,
@@ -569,7 +569,7 @@
         },
         "53": {
             "name": "Min",
-            "full_name": "Minoan Sea",
+            "full_name": "Mer Crétoise",
             "x_pos": 731,
             "y_pos": 373,
             "x_legend_pos": 731,
@@ -577,7 +577,7 @@
         },
         "54": {
             "name": "Nea",
-            "full_name": "Neapolis",
+            "full_name": "Néapolis",
             "x_pos": 463,
             "y_pos": 265,
             "x_legend_pos": 447,
@@ -586,7 +586,7 @@
         },
         "55": {
             "name": "Num",
-            "full_name": "Numidia",
+            "full_name": "Numidie",
             "x_pos": 337,
             "y_pos": 470,
             "x_legend_pos": 337,
@@ -602,7 +602,7 @@
         },
         "57": {
             "name": "Pha",
-            "full_name": "Phazania",
+            "full_name": "Phazanie",
             "x_pos": 406,
             "y_pos": 558,
             "x_legend_pos": 406,
@@ -611,7 +611,7 @@
         },
         "58": {
             "name": "Pun",
-            "full_name": "Punic Sea",
+            "full_name": "Mer Punique",
             "x_pos": 352,
             "y_pos": 322,
             "x_legend_pos": 352,
@@ -619,7 +619,7 @@
         },
         "59": {
             "name": "Rav",
-            "full_name": "Ravenna",
+            "full_name": "Ravenne",
             "x_pos": 390,
             "y_pos": 164,
             "x_legend_pos": 375,
@@ -628,7 +628,7 @@
         },
         "60": {
             "name": "Red",
-            "full_name": "Red Sea",
+            "full_name": "Mer Rouge",
             "x_pos": 969,
             "y_pos": 605,
             "x_legend_pos": 969,
@@ -636,7 +636,7 @@
         },
         "61": {
             "name": "Rha",
-            "full_name": "Rhaetia",
+            "full_name": "Rhétie",
             "x_pos": 357,
             "y_pos": 39,
             "x_legend_pos": 357,
@@ -644,7 +644,7 @@
         },
         "62": {
             "name": "Rom",
-            "full_name": "Roma",
+            "full_name": "Rome",
             "x_pos": 379,
             "y_pos": 199,
             "x_legend_pos": 379,
@@ -670,7 +670,7 @@
         },
         "65": {
             "name": "Sad",
-            "full_name": "Sardinia",
+            "full_name": "Sardaigne",
             "x_pos": 319,
             "y_pos": 278,
             "x_legend_pos": 319,
@@ -678,7 +678,7 @@
         },
         "66": {
             "name": "Sam",
-            "full_name": "Sarmatia",
+            "full_name": "Sarmatie",
             "x_pos": 529,
             "y_pos": 53,
             "x_legend_pos": 529,
@@ -686,7 +686,7 @@
         },
         "67": {
             "name": "Sic",
-            "full_name": "Sicilia",
+            "full_name": "Sicile",
             "x_pos": 432,
             "y_pos": 348,
             "x_legend_pos": 407,
@@ -703,7 +703,7 @@
         },
         "69": {
             "name": "Sii",
-            "full_name": "Sinai",
+            "full_name": "Sinaï",
             "x_pos": 886,
             "y_pos": 490,
             "x_legend_pos": 886,
@@ -720,7 +720,7 @@
         },
         "71": {
             "name": "Spa",
-            "full_name": "Sparta",
+            "full_name": "Sparte",
             "x_pos": 608,
             "y_pos": 343,
             "x_legend_pos": 608,
@@ -729,7 +729,7 @@
         },
         "72": {
             "name": "Syr",
-            "full_name": "Syrian Sea",
+            "full_name": "Mer Syrienne",
             "x_pos": 874,
             "y_pos": 406,
             "x_legend_pos": 874,
@@ -737,7 +737,7 @@
         },
         "73": {
             "name": "Tar",
-            "full_name": "Tarraconensis",
+            "full_name": "Tarraconaise",
             "x_pos": 124,
             "y_pos": 234,
             "x_legend_pos": 124,
@@ -754,7 +754,7 @@
         },
         "75": {
             "name": "The",
-            "full_name": "Thebes",
+            "full_name": "Thèbes",
             "x_pos": 902,
             "y_pos": 627,
             "x_legend_pos": 902,
@@ -763,7 +763,7 @@
         },
         "76": {
             "name": "Tyn",
-            "full_name": "Thyrrhenean Sea",
+            "full_name": "Mer Tyrrhénienne",
             "x_pos": 372,
             "y_pos": 258,
             "x_legend_pos": 372,
@@ -771,7 +771,7 @@
         },
         "77": {
             "name": "Tye",
-            "full_name": "Tyre",
+            "full_name": "Tyr",
             "x_pos": 925,
             "y_pos": 401,
             "x_legend_pos": 925,
@@ -779,7 +779,7 @@
         },
         "78": {
             "name": "Ven",
-            "full_name": "Venetia",
+            "full_name": "Vénétie",
             "x_pos": 379,
             "y_pos": 105,
             "x_legend_pos": 390,

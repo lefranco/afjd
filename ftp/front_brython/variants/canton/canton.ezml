@@ -7,14 +7,22 @@ C'est une transposition du Diplomacy classique en Asie, sur fond de guerre colon
 _
 $ Côtes spéciales
 
-(Bulgarie)
+
+(Bulgarie \(BUL\))
    Elle a 2 côtes, Est et Sud.
-(Canton)
+
+
+(Canton \(CAN\))
    Elle a 2 côtes, Est et Sud.
-(Damascus)
+
+
+(Damas \(DAM\))
    Elle a 2 côtes, Ouest et Sud.
-(Siam)
+
+
+(Siam \(SIA\))
    Elle a 2 côtes, Ouest et Est.
+
 
 _
 $ Particularités de la carte
@@ -23,6 +31,8 @@ La carte possède la particularité d’avoir des canaux permettant aux flottes 
 
 (Canal en Egypte)
 De Mer Rouge (RED) à Mer Méditerrannée (MED) en passant par Egypte (EGY) (et réciproquement)
+
+
 (Canal à Constantinople)
 De Mer Méditerranée (MED) à Mer Noire (BLA) en passant par Constantinople (CON) (et réciproquement)
 
@@ -48,11 +58,11 @@ Il y a sept puissances dont les unités de départ sont les suivantes :
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés|
 |Grande-Bretagne | 3 | Calcutta, Delhi | Madras| |
-|Chine | 4 | Chungking, Shanghai, Tibet | Peking | |
-|France | 3 | Hanoi, Hue | Saigon | |
-|Pays-Bas | 3 | | Borneo, Java, Sumatra | |
+|Chine | 4 | Tchoungking, Shanghai, Tibet | Pékin | |
+|France | 3 | Hanoï, Hué | Saïgon | |
+|Pays-Bas | 3 | | Bornéo, Java, Sumatra | |
 |Japon | 3 | Kyoto | Sasebo, Tokyo | |
-|Russie | 4 |Irkutsk, Moscow | Khabarovsk, Sevastopol | |
+|Russie | 4 | Irkoutsk, Moscou | Khabarovsk, Sébastopol | |
 |Turquie | 3 | Bagdad, Damas | Constantinople | |
 =
 
@@ -68,83 +78,83 @@ $ Nomenclature
 | Abréviation | Nom complet | type | centre |
 | AFG | Afghanistan | terre | \* |
 | AKI | Akita | côte |  |
-| AMU | Amur | terre |  |
-| ARA | Arabia | côte |  |
-| ARM | Armenia | côte |  |
-| ASE | Arabian Sea | mer |  |
+| AMU | Amour | terre |  |
+| ARA | Arabie | côte |  |
+| ARM | Arménie | côte |  |
+| ASE | Mer d’Arabie | mer |  |
 | ASM | Assam | terre |  |
-| BAG | Baghdad | côte | \* |
-| BAL | Baluchistan | côte | \* |
-| BAN | Banda Sea | mer |  |
-| BLA | Black Sea | mer |  |
-| BOB | Bay of Bengal | mer |  |
+| BAG | Bagdad | côte | \* |
+| BAL | Baloutchistan | côte | \* |
+| BAN | Mer de Banda | mer |  |
+| BLA | Mer Noire | mer |  |
+| BOB | Golfe du Bengale | mer |  |
 | BOM | Bombay | côte |  |
-| BOR | Borneo | côte | \* |
-| BUL | Bulgaria | côte |  |
-| BUR | Burma | côte | \* |
+| BOR | Bornéo | côte | \* |
+| BUL | Bulgarie | côte |  |
+| BUR | Birmanie | côte | \* |
 | CAL | Calcutta | côte | \* |
-| CAM | Cambodia | côte | \* |
+| CAM | Cambodge | côte | \* |
 | CAN | Canton | côte |  |
-| CHU | Chungking | terre | \* |
+| CHU | Tchoungking | terre | \* |
 | CON | Constantinople | côte | \* |
-| CPO |  Central Pacific Ocean | mer |  |
-| CSE | Celebes Sea | mer |  |
-| DAM | Damascus | côte | \* |
+| CPO | Océan Pacifique central | mer |  |
+| CSE | Mer des Célèbes | mer |  |
+| DAM | Damas | côte | \* |
 | DEL | Delhi | terre | \* |
-| ECS | East China Sea | mer |  |
-| EGY | Egypt | côte |  |
-| EIO | East Indian Ocean | mer |  |
-| FOR | Formosa | côte | \* |
-| GOM | Gulf of Martaban | mer |  |
-| GOS | Gulf of Siam | mer |  |
-| HAN | Hanoi | côte | \* |
-| HKO |  Hong Kong | côte | \* |
-| HUE | Hue | côte | \* |
-| IRK | Irkutsk | terre | \* |
+| ECS | Mer de Chine orientale | mer |  |
+| EGY | Égypte | côte |  |
+| EIO | Océan Indien oriental | mer |  |
+| FOR | Formose | côte | \* |
+| GOM | Golfe de Martaban | mer |  |
+| GOS | Golfe de Siam | mer |  |
+| HAN | Hanoï | côte | \* |
+| HKO | Hong Kong | côte | \* |
+| HUE | Hué | côte | \* |
+| IRK | Irkoutsk | terre | \* |
 | JAV | Java | côte | \* |
-| JSE | Java Sea | mer |  |
-| KAN | Kansu | terre |  |
-| KAR | Karimata Strait | mer |  |
-| KAS | Kashmir | terre |  |
+| JSE | Mer de Java | mer |  |
+| KAN | Kansou | terre |  |
+| KAR | Détroit de Karimata | mer |  |
+| KAS | Cachemire | terre |  |
 | KHA | Khabarovsk | côte | \* |
-| KIR | Kirghiz | côte |  |
-| KOR | Korea | côte | \* |
+| KIR | Kirghizistan | côte |  |
+| KOR | Corée | côte | \* |
 | KYO | Kyoto | côte | \* |
 | LAO | Laos | terre |  |
 | MAD | Madras | côte | \* |
-| MAL | Malaya | côte | \* |
-| MAN | Manchuria | côte | \* |
-| MAR | Maritime Province | côte |  |
-| MED | Mediterranean Sea | mer |  |
-| MON | Mongolia | terre |  |
-| MOS | Moscow | terre | \* |
-| PEK | Peking | côte | \* |
-| PER | Persia | côte | \* |
-| PGU | Persian Gulf | mer |  |
+| MAL | Malaisie | côte | \* |
+| MAN | Mandchourie | côte | \* |
+| MAR | Province maritime | côte |  |
+| MED | Mer Méditerranée | mer |  |
+| MON | Mongolie | terre |  |
+| MOS | Moscou | terre | \* |
+| PEK | Pékin | côte | \* |
+| PER | Perse | côte | \* |
+| PGU | Golfe Persique | mer |  |
 | PHI | Philippines | côte | \* |
-| PSE | Philippine Sea | mer |  |
-| RED | Red Sea | mer |  |
-| RUM | Rumania | côte | \* |
-| SAI | Saigon | côte | \* |
+| PSE | Mer des Philippines | mer |  |
+| RED | Mer Rouge | mer |  |
+| RUM | Roumanie | côte | \* |
+| SAI | Saïgon | côte | \* |
 | SAR | Sarawak | côte |  |
 | SAS | Sasebo | côte | \* |
-| SCS | South China Sea | mer |  |
-| SEV | Sevastopol | côte | \* |
+| SCS | Mer de Chine méridionale | mer |  |
+| SEV | Sébastopol | côte | \* |
 | SHA | Shanghai | côte | \* |
 | SHI | Shikoku | côte |  |
 | SIA | Siam | côte | \* |
-| SIB | Siberia | terre |  |
+| SIB | Sibérie | terre |  |
 | SIN | Sinkiang | terre |  |
-| SIO | South Indian Ocean | mer |  |
-| SOJ | Sea of Japan | mer |  |
-| SOO | Sea of Okhotsk | mer |  |
+| SIO | Océan Indien sud | mer |  |
+| SOJ | Mer du Japon | mer |  |
+| SOO | Mer d’Okhotsk | mer |  |
 | SUM | Sumatra | côte | \* |
 | TIB | Tibet | terre | \* |
 | TOK | Tokyo | côte | \* |
 | TOM | Tomsk | terre |  |
 | TUR | Turkestan | terre |  |
-| WIO | West Indian Ocean | mer |  |
-| YEL | Yellow Sea | mer |  |
+| WIO | Océan Indien occidental | mer |  |
+| YEL | Mer Jaune | mer |  |
 | YES | Yesso | côte |  |
 | YUN | Yunnan | terre |  |
 =
