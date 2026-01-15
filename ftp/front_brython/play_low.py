@@ -446,11 +446,11 @@ def stack_last_moves_button(button_container, content_container, insert_before, 
         buttons = []
 
         # more buttons
-        if first_advancement <= advancement_selected - 1 < last_advancement:
+        if advancement_selected - 1 >= first_advancement:
             prev_button = html.INPUT(type="submit", value="<", Class='btn-inside')
             prev_button.bind('click', lambda e, a=advancement_selected - 1: last_moves_callback(ev, a))
             buttons.append(prev_button)
-        if first_advancement <= advancement_selected + 1 < last_advancement:
+        if advancement_selected + 1 < last_advancement:
             next_button = html.INPUT(type="submit", value=">", Class='btn-inside')
             next_button.bind('click', lambda e, a=advancement_selected + 1: last_moves_callback(ev, a))
             buttons.append(next_button)
@@ -474,7 +474,7 @@ def stack_last_moves_button(button_container, content_container, insert_before, 
             "width": "fit-content",
             "backgroundColor": "#ffeecc"
         }
-        additional_content <= html.H3("Derniers mouvements (et navigation dans les ordres)")
+        additional_content <= html.H3("Derniers mouvements ou ajustements (et navigation dans les ordres)")
         additional_content <= canvas
         additional_content <= content
         additional_content <= html.BR()
@@ -504,10 +504,10 @@ def stack_last_moves_button(button_container, content_container, insert_before, 
     adv_last_moves = last_advancement
     while True:
         adv_last_moves -= 1
-        if adv_last_moves % 5 in [0, 2]:
+        if adv_last_moves % 5 in [0, 2, 4]:
             break
 
-    input_last_moves = html.INPUT(type="submit", value="Afficher en dessous les derniers mouvements", Class='btn-inside')
+    input_last_moves = html.INPUT(type="submit", value="Afficher en dessous les derniers mouvements ou ajustements", Class='btn-inside')
     input_last_moves.bind("click", lambda e, ll=adv_last_moves: last_moves_callback(e, ll))
 
     if disabled:
