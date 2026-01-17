@@ -100,7 +100,7 @@ DEST_SELECTED = 'LightGrey'
 
 FORCED_VARIANT_NAME = "standard"
 
-SITE_ADDRESS = "https://diplomania-gen.fr"
+SITE_ADDRESS = "https://diplomania2.fr"
 
 FORUM_ADDRESS = "https://forum.diplomania2.fr"
 FORUM_LAST_POSTS_ADDRESS = "https://lastposts.diplomania2.fr"
