@@ -69,7 +69,7 @@ for event_id, event_dict in sorted(events_data.items(), key=lambda t:t[0], rever
     nb_registered = event_dict['nb_registered']
 
     # slow access
-    link = html.A(href=f"https://diplomania-gen.fr?event={name}", target="_blank")
+    link = html.A(href=f"https://diplomania2.fr?event={name}", target="_blank")
     link <= f"{name} ({nb_registered} inscrits)"
     div_event_box <= link
 
