@@ -1,9 +1,10 @@
 [mail]
 
-MAIL_SERVER = mail.gandi.net
-MAIL_PORT = 465
-MAIL_USE_TLS = 0
-MAIL_USE_SSL = 1
+MAIL_SERVER =  pro3.mail.ovh.net
+MAIL_PORT = 587
+MAIL_USE_TLS = 1
+MAIL_USE_SSL = 0
 MAIL_SENDER = "Notifications du serveur de jeu de l'A.F.J.D. (Diplomania)"
-MAIL_USERNAME = afjd_serveur_jeu@diplomania-gen.fr
+MAIL_USERNAME = afjdiplo_server_noreply@diplomania2.fr
 MAIL_PASSWORD = xxxx
+
