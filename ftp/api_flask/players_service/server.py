@@ -167,6 +167,9 @@ IDLE_DAY_TIMEOUT = 18 * 30.5
 # admin id
 ADDRESS_ADMIN = 1
 
+# front end
+SITE_ADDRESS = "https://diplomania2.fr/"
+
 
 class RepeatPreventer(typing.Dict[int, float]):
     """ Table """
@@ -196,7 +199,7 @@ class RepeatPreventer(typing.Dict[int, float]):
 def email_rescue_message(pseudo: str, access_token: str) -> typing.Tuple[str, str]:
     """ email_rescue_message """
 
-    url = f"https://diplomania-gen.fr?rescue=1&pseudo={pseudo}&token={access_token}"
+    url = f"{SITE_ADDRESS}?rescue=1&pseudo={pseudo}&token={access_token}"
 
     subject = "Ceci est un courriel pour récupérer l'accès à votre compte dont vous avez oublié le mot de passe !"
     body = "Bonjour !\n"
@@ -245,7 +248,7 @@ def email_checker_message(code: int) -> typing.Tuple[str, str]:
 def suppress_account_message(pseudo: str) -> typing.Tuple[str, str]:
     """ suppress_account_message """
 
-    subject = f"Message de suppression de compte {pseudo} sur le site https://diplomania-gen.fr (AFJD)"
+    subject = f"Message de suppression du compte {pseudo} sur le site {SITE_ADDRESS} (AFJD)"
     body = "Bonjour !\n"
     body += "\n"
     body += "Ton compte sur le site a été supprimé !"
@@ -290,7 +293,7 @@ def event_registration_message(event_name: str, value: int) -> typing.Tuple[str,
     body += "Vous pouvez contacter l'organisateur depuis le site\n"
     body += "\n"
     body += "Pour se rendre directement sur l'événement :\n"
-    body += f"https://diplomania-gen.fr?event={event_name}"
+    body += f"{SITE_ADDRESS}?event={event_name}"
     return subject, body
 
 

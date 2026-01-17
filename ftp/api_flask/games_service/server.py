@@ -227,7 +227,6 @@ TRAINING_PARSER.add_argument('situation', type=str, required=True)
 TRAINING_PARSER.add_argument('advancement', type=int, required=True)
 TRAINING_PARSER.add_argument('names', type=str, required=True)
 
-
 # admin id
 ADDRESS_ADMIN = 1
 
@@ -250,6 +249,9 @@ CRITICAL_DELAY_DAY = 7
 
 # initial deadline (in days) - how long before considering game has problems getting complete
 DELAY_FOR_COMPLETING_GAME_DAYS = 21
+
+# front end
+SITE_ADDRESS = "https://diplomania2.fr/"
 
 
 def apply_supported(complete_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], orders_list: typing.List[typing.List[int]]) -> None:
@@ -700,7 +702,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     body += "En effet, cela est susceptible d'entraîner votre éviction de la partie ;-(...\n"
                     body += "\n"
                     body += "Pour se rendre directement sur la partie :\n"
-                    body += f"https://diplomania-gen.fr?game={game.name}"
+                    body += f"{SITE_ADDRESS}?game={game.name}"
 
                     json_dict = {
                         'addressees': " ".join([str(a) for a in addressees]),
@@ -754,7 +756,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     body += "Vous ne pouvez plus jouer dans cette partie !\n"
                     body += "\n"
                     body += "Pour se rendre directement sur la partie :\n"
-                    body += f"https://diplomania-gen.fr?game={game.name}"
+                    body += f"{SITE_ADDRESS}?game={game.name}"
 
                     json_dict = {
                         'addressees': " ".join([str(a) for a in addressees]),
@@ -1789,7 +1791,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
                         body += "Vous pouvez donc donner un rôle au remplaçant !\n"
                     body += "\n"
                     body += "Pour se rendre directement sur la partie :\n"
-                    body += f"https://diplomania-gen.fr?game={game.name}"
+                    body += f"{SITE_ADDRESS}?game={game.name}"
 
                     json_dict = {
                         'addressees': " ".join([str(a) for a in addressees]),
@@ -3342,7 +3344,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 body += "Conclusion : vous avez un retard sur cette partie...\n"
                 body += "\n"
                 body += "Pour se rendre directement sur la partie :\n"
-                body += f"https://diplomania-gen.fr?game={game.name}"
+                body += f"{SITE_ADDRESS}?game={game.name}"
 
                 json_dict = {
                     'addressees': " ".join([str(a) for a in addressees]),
@@ -3392,7 +3394,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                     body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
                     body += "\n"
                     body += "Pour se rendre directement sur la partie :\n"
-                    body += f"https://diplomania-gen.fr?game={game.name}"
+                    body += f"{SITE_ADDRESS}?game={game.name}"
 
                     json_dict = {
                         'addressees': " ".join([str(a) for a in addressees]),
@@ -3550,7 +3552,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
                 body += "\n"
                 body += "Pour se rendre directement sur la partie :\n"
-                body += f"https://diplomania-gen.fr?game={game.name}"
+                body += f"{SITE_ADDRESS}?game={game.name}"
 
                 json_dict = {
                     'addressees': " ".join([str(a) for a in addressees]),
@@ -3958,7 +3960,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
                     body += "\n"
                     body += "Pour se rendre directement sur la partie :\n"
-                    body += f"https://diplomania-gen.fr?game={game.name}"
+                    body += f"{SITE_ADDRESS}?game={game.name}"
 
                     json_dict = {
                         'addressees': " ".join([str(a) for a in addressees]),
@@ -5091,7 +5093,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
-        body += f"https://diplomania-gen.fr?game={game.name}"
+        body += f"{SITE_ADDRESS}?game={game.name}"
 
         json_dict = {
             'addressees': " ".join([str(a) for a in addressees]),
@@ -5365,7 +5367,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
-        body += f"https://diplomania-gen.fr?game={game.name}"
+        body += f"{SITE_ADDRESS}?game={game.name}"
 
         json_dict = {
             'addressees': " ".join([str(a) for a in addressees]),
@@ -7715,7 +7717,7 @@ class ArchiveFinishedGamesRessource(flask_restful.Resource):  # type: ignore
             body += "Vous ne pouvez plus jouer dans cette partie !\n"
             body += "\n"
             body += "Pour se rendre directement sur la partie :\n"
-            body += f"https://diplomania-gen.fr?game={game.name}"
+            body += f"{SITE_ADDRESS}?game={game.name}"
 
             json_dict = {
                 'addressees': " ".join([str(a) for a in addressees]),
@@ -8662,7 +8664,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
             body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
             body += "\n"
             body += "Pour se rendre directement sur la partie :\n"
-            body += f"https://diplomania-gen.fr?game={game.name}"
+            body += f"{SITE_ADDRESS}?game={game.name}"
 
             json_dict = {
                 'addressees': " ".join([str(a) for a in addressees]),
@@ -9026,7 +9028,7 @@ class WarnDeadlinePlayersGameRessource(flask_restful.Resource):  # type: ignore
         body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
-        body += f"https://diplomania-gen.fr?game={game.name}"
+        body += f"{SITE_ADDRESS}?game={game.name}"
 
         json_dict = {
             'addressees': " ".join([str(a) for a in addressees]),
@@ -9136,7 +9138,7 @@ class ScoldLatePlayersGameRessource(flask_restful.Resource):  # type: ignore
         body += "Conseil : allez très rapidement dans la partie pour valider vos ordres.\n"
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
-        body += f"https://diplomania-gen.fr?game={game.name}"
+        body += f"{SITE_ADDRESS}?game={game.name}"
 
         json_dict = {
             'addressees': " ".join([str(a) for a in addressees]),

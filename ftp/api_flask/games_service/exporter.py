@@ -131,7 +131,7 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
     result['GameLabel'] = f"{game.name} ({game_id})"
 
     # url
-    result['URL'] = f'https://diplomania-gen.fr?game={game.name}'
+    result['URL'] = f'https://diplomania2.fr?game={game.name}'
 
     # date begin
     # will be filled in later

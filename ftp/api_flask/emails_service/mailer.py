@@ -16,7 +16,8 @@ import lowdata
 SENDER = None
 MAILER = None
 
-SITE_ADDRESS = "https://diplomania-gen.fr/"
+# front end
+SITE_ADDRESS = "https://diplomania2.fr/"
 
 
 def load_mail_config(app: typing.Any) -> None:
