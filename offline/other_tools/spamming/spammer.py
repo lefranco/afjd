@@ -113,7 +113,7 @@ Possibilité de s'inscrire sur place jusqu'au dernier moment, les inscriptions �
 
 Jérémie
 Administrateur du site
-https://diplomania-gen.fr
+https://diplomania2.fr
 """
 
 # mailing official sender
