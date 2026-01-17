@@ -23,3 +23,6 @@ chmod 600 acme.json
 # creation reseau
 docker network create proxy
 
+
+# access dahboard
+https://traefik.diplomania2.fr/dashboard/
