@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Script will stop if a command returns an error code
+set -e 
+
 # sshpass needs to be installed on backup machine
 # sqlite3 needs to be installed on server
 # mongodb needs to be installed on backup machine
@@ -102,7 +105,7 @@ if [ -d ${backup_local_dir} ]; then
     rm -fr ${backup_local_dir}
 fi
 mkdir ${backup_local_dir}
-mongodump --host ${SERVER_ADDRESS} --port ${MONGODB_PORT} --db ${MONGODB_DATABASE_NAME} --out ${backup_local_dir} --gzip --authenticationMechanism SCRAM-SHA-256 --username ${MONGODB_DATABASE_USER} --password ${MONGODB_DATABASE_PASSWORD} 2>&1 >/dev/null
+mongodump --host ${SERVER_ADDRESS} --port ${MONGODB_PORT} --db ${MONGODB_DATABASE_NAME} --out ${backup_local_dir} --gzip --authenticationMechanism SCRAM-SHA-256 --username ${MONGODB_DATABASE_USER} --password ${MONGODB_DATABASE_PASSWORD} --quiet
 
 # tar dir to single file
 tar cf ${backup_local_file} ${backup_local_dir}
