@@ -150,7 +150,7 @@ for wiki in dokuwiki-data dokuwiki-data2; do
         rm -fr ${backup_local_directory}
     fi
 
-    for item in data/pages data/media data/meta conf ; do
+    for item in data/pages data/media data/meta data/attic conf ; do
 
         echo "Bringing locally ${wiki} ${item} files"
         backup_local_item_directory=./${backup_local_directory}/${item}
