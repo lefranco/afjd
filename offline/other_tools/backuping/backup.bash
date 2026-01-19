@@ -36,11 +36,16 @@ if [ -z "${SERVER_PASSWORD}" ]; then
     exit 1
 fi
 
-# Create a fresh backup dir
-if [ -d ./backups ]; then
-    rm -fr ./backups
+if [ ! -d ./backups ]; then
+    mkdir ./backups
 fi
-mkdir ./backups
+
+# Create a fresh backup dir
+backup_dir=./backups/${now}
+if [ -d ${backup_dir} ]; then
+    rm -fr ${backup_dir}
+fi
+mkdir ${backup_dir}
 
 echo "================"
 echo "Backuping Flask APIs ..."
@@ -75,8 +80,8 @@ for service in users players games; do
 
     # move to backup dir
     echo "Moving to backup dir ${service} file"
-    mv ${backup_local_file} ./backups/
-    mv ${dump_local_file} ./backups/
+    mv ${backup_local_file} ${backup_dir}/
+    mv ${dump_local_file} ${backup_dir}/
 
     echo
 
@@ -113,7 +118,7 @@ rm -fr ${backup_local_dir}
 
 # move to backup dir
 echo "Moving to backup mongodb file"
-mv ${backup_local_file} ./backups/
+mv ${backup_local_file} ${backup_dir}/
 
 echo
 
@@ -131,7 +136,7 @@ tar -czf ${backup_local_file} ${backup_local_directory}
 rm -fr ${backup_local_directory}
 
 echo "Moving to backup dir uploads file"
-mv ${backup_local_file} ./backups/
+mv ${backup_local_file} ${backup_dir}/
 
 echo
 
@@ -142,7 +147,7 @@ echo
 
 for wiki in dokuwiki-data dokuwiki-data2; do
 
-    echo "Backuping ${wiki}"
+    echo "Backuping ${wiki}..."
     echo
 
     backup_local_directory=./${wiki}-${now}
@@ -153,7 +158,7 @@ for wiki in dokuwiki-data dokuwiki-data2; do
     for item in data/pages data/media data/meta data/attic conf ; do
 
         echo "Bringing locally ${wiki} ${item} files"
-        backup_local_item_directory=./${backup_local_directory}/${item}
+        backup_local_item_directory=./${backup_local_directory}/${item//\//_}
         mkdir -p ${backup_local_item_directory}
         backup_distant_item_directory=/home/ubuntu/wiki_doku/${wiki}/${item}
         sshpass -p "${SERVER_PASSWORD}" scp -r ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_item_directory} ${backup_local_item_directory}
@@ -166,9 +171,13 @@ for wiki in dokuwiki-data dokuwiki-data2; do
     rm -fr ${backup_local_directory}
 
     echo "Moving to backup dir ${wiki} file"
-    mv ${backup_local_file} ./backups/
+    mv ${backup_local_file} ${backup_dir}/
+
+    echo
 
 done
+
+if false ; then  # TO DO PUT BACK
 
 echo
 
@@ -177,19 +186,19 @@ echo "Exporting to drive ..."
 echo "================"
 echo
 
-rclone mkdir ${GOOGLE_DRIVE}:${now}
+# Taring to one artefact file
+echo "Making single artefact file..."
+archive_file=backup-${now}
+tar cf ${archive_file} ${backup_dir}
+rm -fr ${backup_dir}
 
-# Copying artefacts to drive
-for artefact in $(ls ./backups) ; do
-    echo "Moving ${artefact} to google drive..."
-    rclone copy ./backups/${artefact} ${GOOGLE_DRIVE}:${now}/
-done
+echo "Moving artefact to google drive..."
+rclone copy ${archive_file} ${GOOGLE_DRIVE}:  --bwlimit 2M
 
 # Removing artefacts from here
-for artefact in $(ls ./backups) ; do
-    echo "Deleting local ${artefact}..."
-    rm ./backups/${artefact}
-done
+rm -fr ${archive_file}
+
+fi  # TO DO PUT BACK
 
 end_time=$(date +%s)
 duration=$((end_time - start_time))
