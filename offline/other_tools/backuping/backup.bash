@@ -43,7 +43,7 @@ fi
 # Create a fresh backup dir
 backup_dir=./backups/${now}
 if [ -d ${backup_dir} ]; then
-    rm -fr ${backup_dir}
+     rm -fr ${backup_dir}
 fi
 mkdir ${backup_dir}
 
@@ -55,31 +55,48 @@ echo
 for service in users players games; do
 
     # do backup 
-    echo "Backuping ${service}..."
-    backup_distant_file=/tmp/backup_db_${service}_${now}.db
-    cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db '.backup ${backup_distant_file}'"
+    echo "Backuping db ${service}..."
+    backup_distant_db_file=/tmp/backup_db_${service}_${now}.db
+    cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db '.backup ${backup_distant_db_file}'"
     sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
 
     # do dump
-    echo "Dumping ${service}..."
-    dump_distant_file=/tmp/dump_db_${service}_${now}.sql.gz
-    cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db .dump | gzip > ${dump_distant_file}"
+    echo "Dumping sql ${service}..."
+    dump_sql_distant_file=/tmp/dump_db_${service}_${now}.sql.gz
+    cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db .dump > ${dump_sql_distant_file}"
     sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
 
-    # bring backup and dump here on backup machine
-    echo "Bringing locally ${service} file"
-    backup_local_file=backup_db_${service}_${now}.db
-    sshpass -p "${SERVER_PASSWORD}" scp ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_file} ${backup_local_file}
-    dump_local_file=dump_db_${service}_${now}.sql.gz
-    sshpass -p "${SERVER_PASSWORD}" scp ${SERVER_USERNAME}@${SERVER_ADDRESS}:${dump_distant_file} ${dump_local_file}
+    # bring backup db here on backup machine
+    echo "Bringing locally ${service} backup db file"
+    backup_local_db_file=backup_db_${service}_${now}.db
+    sshpass -p "${SERVER_PASSWORD}" scp ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_db_file} ${backup_local_db_file}
 
-    # delete backup and dump from server
-    echo "Deleting from server ${service} file"
-    cmd="rm ${backup_distant_file} && rm ${dump_distant_file}"
+    # bring sql dump here on backup machine
+    echo "Bringing locally ${service} sql dump file"
+    dump_local_sql_file=dump_db_${service}_${now}.sql.gz
+    sshpass -p "${SERVER_PASSWORD}" scp ${SERVER_USERNAME}@${SERVER_ADDRESS}:${dump_sql_distant_file} ${dump_local_sql_file}
+
+    # compress backup
+    echo "Compress ${service} backup db file"
+    backup_local_file=${backup_local_db_file}.tar.gz
+    tar czf ${backup_local_file} ${backup_local_db_file}
+    echo "Delete ${service} dump file"
+    rm ${backup_local_db_file}
+
+    # compress sql dump
+    echo "Compress ${service} dump sql file"
+    dump_local_file=${dump_local_sql_file}.tar.gz
+    tar czf ${dump_local_file} ${dump_local_sql_file}
+    echo "Delete ${service} dump file"
+    rm ${dump_local_sql_file}
+
+    # delete backup sql and dump db from server
+    echo "Deleting from server ${service} files"
+    cmd="rm ${backup_distant_db_file} && rm ${dump_sql_distant_file}"
     sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
 
     # move to backup dir
-    echo "Moving to backup dir ${service} file"
+    echo "Moving to backup dir ${service} files"
     mv ${backup_local_file} ${backup_dir}/
     mv ${dump_local_file} ${backup_dir}/
 
@@ -177,8 +194,6 @@ for wiki in dokuwiki-data dokuwiki-data2; do
 
 done
 
-if false ; then  # TO DO PUT BACK
-
 echo
 
 echo "================"
@@ -186,24 +201,24 @@ echo "Exporting to drive ..."
 echo "================"
 echo
 
-# Taring to one artefact file
-echo "Making single artefact file..."
-archive_file=backup-${now}
-tar cf ${archive_file} ${backup_dir}
-rm -fr ${backup_dir}
-
-echo "Moving artefact to google drive..."
-rclone copy ${archive_file} ${GOOGLE_DRIVE}:  --bwlimit 2M
+echo "Moving artefacts to google drive..."
+archive_dir=${now}
+rclone mkdir ${GOOGLE_DRIVE}:${archive_dir}
+for file in $(ls ${backup_dir}) ; do 
+    echo
+    echo "Moving ${file} to google drive..."
+    rclone copy ${backup_dir}/${file} ${GOOGLE_DRIVE}:${archive_dir}/ --bwlimit 2M --transfers 1 --checkers 1 --progress
+    sleep 10
+done
 
 # Removing artefacts from here
-rm -fr ${archive_file}
-
-fi  # TO DO PUT BACK
+rm -fr ${backup_dir}
 
 end_time=$(date +%s)
 duration=$((end_time - start_time))
 
-echo "Script took $duration seconds."
+echo
+echo "Script took $((duration / 60)) minutes $((duration % 60)) seconds."
 
 # TODO run endlessly
 ### now=$(date +%s)
