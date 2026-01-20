@@ -2,44 +2,40 @@
 <html lang="fr">
 
 <head>
-<meta charset="utf-8">
+  <meta charset="utf-8">
+  <meta name="description" content="Pour jouer à Diplomatie en ligne sur le moteur de l'AFJD">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- perhaps will help google to find us ?  -->
-<meta name="description" content="Pour jouer à Diplomatie en ligne sur le moteur de l'Association Francophone des Joueurs de Diplomacy - successeur de www.18centres.com et www.Diplomatie-online.net">
+  <title>Jeu Diplomatie en ligne</title>
 
-<!-- google more or less asked to put this  -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Brython -->
+  <script src="brython.js"></script>
+  <script src="brython_modules.js"></script>
 
-<title> Jeu Diplomatie en ligne </title>
-
-<script src="brython.js"></script>
-<script src="brython_modules.js"></script>
-
-<link rel="stylesheet" type="text/css" href="css/style.css">
-<link rel="stylesheet" type="text/css" href="css/spinner.css">
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/spinner.css">
 </head>
 
 <body onload="brython()">
 
-<div id='spinner'>
-<span class=pyspinner>
-Chargement en cours... merci de patienter un peu...
-</span>
-</div>
+  <!-- Spinner -->
+  <div id="spinner">
+    <span class="pyspinner">Chargement en cours... merci de patienter un peu...</span>
+  </div>
 
-<!-- just calling python  -->
-<script type="text/python">
-import index
-</script>
+  <!-- just calling python  -->
+  <script type="text/python">
+    import index
+  </script>
 
-<!-- version  -->
-<script>
-var xhReq = new XMLHttpRequest();
-xhReq.open("HEAD", "brython_modules.js", false);
-xhReq.send(null);
-var lastModified = xhReq.getResponseHeader("Last-Modified");
-localStorage.setItem('VERSION', lastModified);
-</script>
+  <!-- store VERSION with fetch (asynchrone, not blocking) -->
+  <script>
+    fetch('brython_modules.js', { method: 'HEAD' })
+      .then(response => response.headers.get('Last-Modified'))
+      .then(date => localStorage.setItem('VERSION', date))
+      .catch(err => console.warn('Impossible de récupérer VERSION', err));
+  </script>
 
 </body>
 </html>
