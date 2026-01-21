@@ -63,7 +63,7 @@ class MyDialog(Dialog, Relocatable):
     def __init__(self, title, **kargs):
 
         # parent classes
-        Dialog.__init__(self, title, **kargs, can_close=False)
+        Dialog.__init__(self, title, **kargs, default_css=False, can_close=False)
         Relocatable.__init__(self)
 
     def close(self, *args):
