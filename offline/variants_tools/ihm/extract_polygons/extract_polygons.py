@@ -7,19 +7,19 @@ Uses opencv version is 4.6.0
 """
 
 import argparse
-import typing
-import os
 import configparser
-import sys
 import itertools
 import json
+import os
+import sys
+import typing
 
 import tkinter
-import tkinter.messagebox
 import tkinter.filedialog
+import tkinter.messagebox
 import tkinter.scrolledtext
 
-import cv2  # type: ignore
+import cv2  # pip3 install opencv-python
 
 import geometry
 import polylabel
@@ -119,8 +119,10 @@ class MyText(tkinter.Text):
         self._root.clipboard_clear()
         self._root.clipboard_append(self._content)
 
+
 DELTA_LEGEND_EXPECTED_X = 0
 DELTA_LEGEND_EXPECTED_Y = -14
+
 
 class Application(tkinter.Frame):
     """ Tkinter application """
@@ -133,7 +135,7 @@ class Application(tkinter.Frame):
         self.grid()
 
         # data to export
-        self.export_data: typing.Dict[str, typing.Any] = {}
+        self.export_data: dict[str, typing.Any] = {}
 
         # actual creation of widgets
         self.create_widgets(self, map_file, variant_file, parameters_file)
@@ -154,7 +156,7 @@ class Application(tkinter.Frame):
             # canvas
             self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.image_map)
 
-            # clicking
+            # click in canvas
             self.canvas.bind("<Button-1>", click_callback)
 
         def click_callback(event: typing.Any) -> None:
@@ -190,7 +192,7 @@ class Application(tkinter.Frame):
                     continue
 
                 # display on map
-                flat_points = itertools.chain.from_iterable(poly)  # type: ignore
+                flat_points = itertools.chain.from_iterable(poly)
                 self.canvas.create_polygon(*flat_points, fill='red', outline='blue', stipple='gray25')
 
                 # display as text
@@ -349,7 +351,7 @@ class Application(tkinter.Frame):
         self.mouse_pos_label = tkinter.Label(frame_buttons_information, text="Position of click :")
         self.mouse_pos_label.grid(row=1, column=1, sticky='we')
 
-        self.mouse_pos = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
+        self.mouse_pos: MyText = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
         self.mouse_pos.grid(row=2, column=1, sticky='we')
 
         self.mouse_pos_button = tkinter.Button(frame_buttons_information, text="copy click position", command=copy_position_callback)
@@ -358,7 +360,7 @@ class Application(tkinter.Frame):
         self.polygon_label = tkinter.Label(frame_buttons_information, text="Polygon around click :")
         self.polygon_label.grid(row=4, column=1, sticky='we')
 
-        self.polygon = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT2, width=INFO_WIDTH2)
+        self.polygon: MyText = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT2, width=INFO_WIDTH2)
         self.polygon.grid(row=5, column=1, sticky='we')
 
         self.polygon_button = tkinter.Button(frame_buttons_information, text="copy area", command=copy_area_callback)
@@ -367,7 +369,7 @@ class Application(tkinter.Frame):
         self.middle_pos_label = tkinter.Label(frame_buttons_information, text="Position of middle of polygon :")
         self.middle_pos_label.grid(row=7, column=1, sticky='we')
 
-        self.middle_pos = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
+        self.middle_pos: MyText = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
         self.middle_pos.grid(row=8, column=1, sticky='we')
 
         self.middle_pos_button = tkinter.Button(frame_buttons_information, text="copy middle position", command=copy_position2_callback)
@@ -377,7 +379,7 @@ class Application(tkinter.Frame):
         # -----------
         self.export_data = {}
         self.variant_file = variant_file
-        self.parameters_file = parameters_file
+        self.parameters_file: str = parameters_file
 
         # load variant data from json data file
         with open(self.variant_file, "r", encoding='utf-8') as read_file:
@@ -395,7 +397,7 @@ class Application(tkinter.Frame):
                 print(f"Failed to load {parameters_file} : {exception}")
                 sys.exit(-1)
 
-        names: typing.Set[str] = set()
+        names: set[str] = set()
         for zone_data in json_parameters_data['zones'].values():
             name = zone_data['name']
             if name and name in names:
@@ -406,9 +408,9 @@ class Application(tkinter.Frame):
         frame_export_zones = tkinter.LabelFrame(main_frame, text="Export zones (polygon + middle)")
         frame_export_zones.grid(row=2, column=3, sticky='nw')
 
-        self._export_zone_button_table = {}
+        self._export_zone_button_table: dict[int, tkinter.Button] = {}
 
-        export_buttons_table = {}
+        export_buttons_table: dict[str, tkinter.Button] = {}
         for number, zone in json_parameters_data['zones'].items():
 
             if zone['name']:
@@ -428,15 +430,15 @@ class Application(tkinter.Frame):
             export_buttons_table[legend] = export_button
 
         # display sorted (easier)
-        for num, (_, export_button) in enumerate(sorted(export_buttons_table.items(), key = lambda t: t[0].upper())):
+        for num, (_, export_button) in enumerate(sorted(export_buttons_table.items(), key=lambda t: t[0].upper())):
             export_button.grid(row=num % BUTTONS_PER_COLUMN + 1, column=num // BUTTONS_PER_COLUMN + 1, sticky='we')
 
         frame_export_centers = tkinter.LabelFrame(main_frame, text="Export centers (click)")
         frame_export_centers.grid(row=2, column=4, sticky='nw')
 
-        self._export_center_button_table = {}
+        self._export_center_button_table: dict[int, tkinter.Button] = {}
 
-        export_buttons_table = {}
+        export_buttons_table.clear()
         for number in map(str, range(1, 1 + len(json_variant_data['centers']))):
 
             num_zone = json_variant_data['centers'][int(number) - 1]
@@ -448,7 +450,7 @@ class Application(tkinter.Frame):
             export_buttons_table[legend] = export_button
 
         # display sorted (easier)
-        for num, (_, export_button) in enumerate(sorted(export_buttons_table.items(), key = lambda t: t[0])):
+        for num, (_, export_button) in enumerate(sorted(export_buttons_table.items(), key=lambda t: t[0])):
             export_button.grid(row=num % BUTTONS_PER_COLUMN + 1, column=num // BUTTONS_PER_COLUMN + 1, sticky='we')
 
     def menu_complete_quit(self) -> None:
@@ -460,6 +462,8 @@ class Application(tkinter.Frame):
         self.master.quit()
 
 
+CONTOUR_TABLE: dict[tuple[int, int, int, int], list[tuple[int]]] = {}
+
 def study_image(map_file: str, debug: bool) -> None:
     """ study_image """
 
@@ -467,34 +471,35 @@ def study_image(map_file: str, debug: bool) -> None:
 
     CONTOUR_TABLE = {}
 
-    image = cv2.imread(map_file)  # pylint: disable=c-extension-no-member
+    image = cv2.imread(map_file)  # pylint: disable=no-member
 
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # pylint: disable=c-extension-no-member
+    assert image is not None
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # pylint: disable=no-member
 
-    _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)  # pylint: disable=c-extension-no-member
+    # Note : cv2.THRESH_OTSU : 'otsu' parameter is not used
+    otsu = 127
+    otsu_calculated, thresh = cv2.threshold(gray, otsu, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)  # pylint: disable=no-member
+
+    # TO be more specific : remove cv2.THRESH_OTSU and passe 'otsu' value 
+    print(f"OTSU calculated = {otsu_calculated}")
 
     # Filter using contour h
-    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # pylint: disable=c-extension-no-member
+    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # pylint: disable=no-member
 
     for current_contour in contours:
 
-        x_pos, y_pos, w_val, h_val = cv2.boundingRect(current_contour)  # pylint: disable=c-extension-no-member
-
-        current_contour2 = cv2.approxPolyDP(current_contour, 1, True)  # pylint: disable=c-extension-no-member
-
-        CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)] = list(map(lambda p: p[0], current_contour2.tolist()))  # type: ignore
+        x_pos, y_pos, w_val, h_val = cv2.boundingRect(current_contour)  # pylint: disable=no-member
+        approx = cv2.approxPolyDP(current_contour, 1, True)  # pylint: disable=no-member
+        CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)] = list(map(lambda p: p[0], approx.tolist()))  # type: ignore
 
     # sort to put smaller first bounding rect first
     CONTOUR_TABLE = {k: CONTOUR_TABLE[k] for k in sorted(CONTOUR_TABLE, key=lambda b: b[2] * b[3])}
 
     if debug:
-        cv2.imshow('image', thresh)  # pylint: disable=c-extension-no-member
+        cv2.imshow('image', thresh)  # pylint: disable=no-member
         print("Appuyer sur une touche dans la fenêtre graphique")
-        cv2.waitKey()  # pylint: disable=c-extension-no-member
+        cv2.waitKey()  # pylint: disable=no-member
         sys.exit()
-
-
-CONTOUR_TABLE: typing.Dict[typing.Tuple[int, int, int, int], typing.List[int]] = {}
 
 
 def main_loop(debug: bool, map_file: str, variant_file: str, parameters_file: str) -> None:
