@@ -143,6 +143,7 @@ h1 {
     transform: translateX(-50%);
     opacity: 0;
     transition: opacity 0.3s;
+    border: 1px solid #eee;
 }
 
 .tooltip:hover .tooltiptext {
@@ -164,11 +165,16 @@ th, td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #eee;
+    border: 1px solid #eee;
 }
 
 thead {
     background-color: var(--england);
     color: white;
+}
+
+thead th {
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 tr:hover {
