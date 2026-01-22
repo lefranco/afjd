@@ -434,7 +434,7 @@ def show_news():
 
     # ----
 
-    news_forum = html.OBJECT(data=f"{config.FORUM_LAST_POSTS_ADDRESS}", width="100%", height="800", title="Forums", alt="Forums")
+    news_forum = html.OBJECT(data=f"{config.FORUM_LAST_POSTS_ADDRESS}", width="100%", height="1200", title="Forums", alt="Forums")
     div_b4 <= news_forum
 
     # ----
@@ -589,7 +589,7 @@ def show_news():
 
     # ----
 
-    div_a3_tip = html.SPAN("Plus de détail sur le site http://www.diplomania.fr", Class='tooltiptext')
+    div_a3_tip = html.SPAN("Plus de détail sur le forum https://forum.diplomania2.fr", Class='tooltiptext')
     div_a3 <= div_a3_tip
     div_homepage <= div_a3
 
@@ -642,7 +642,7 @@ def show_news():
     port = config.SERVER_CONFIG['DOKUWIKI']['PORT']
     url = f"{host}:{port}/"
 
-    news_wiki = html.IFRAME(src=f"{url}/doku.php?id=start&do=export_xhtml", width="100%", height="350", title="Wiki", alt="Wiki", allow="fullscreen")
+    news_wiki = html.IFRAME(src=f"{url}/doku.php?id=start&do=export_xhtml", width="100%", height="400", title="Wiki", alt="Wiki", allow="fullscreen")
     div_b2 <= news_wiki
 
     # ----
