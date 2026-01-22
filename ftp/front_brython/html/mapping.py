@@ -460,17 +460,25 @@ class Zone(Highliteable, Renderable):
 
         # Filling the zone because it geographically belongs to a role (priority rank = 3)
 
-        path = self._variant.path_table[self]
         background_fill_color = self._variant.background_colour_table[role]
-        fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
+        if self in self._variant.paths_table:
+            paths = self._variant.paths_table[self]
+        else:
+            paths = [self._variant.path_table[self]]
+        for path in paths:
+            fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
 
     def render_foggy(self, ctx):
         """ put me on screen - fill me because foggy """
 
         # Filling the zone because foggy here
 
-        path = self._variant.path_table[self]
-        fill_zone(ctx, path, FOG_COLOUR, TRANSPARENCY_FOG)
+        if self._variant.paths_table[self]:
+            paths = self._variant.paths_table[self]
+        else:
+            paths = [self._variant.path_table[self]]
+        for path in paths:
+            fill_zone(ctx, path, FOG_COLOUR, TRANSPARENCY_FOG)
 
     def render_legend(self, ctx):
         """ render_legend """
@@ -870,6 +878,7 @@ class Variant(Renderable):
         self._legend_position_table = {}
         self._role_add_table = {}
         self._path_table = {}
+        self._paths_table = {}
         self._geographic_owner_table = {}
 
         # load the map size
@@ -984,6 +993,17 @@ class Variant(Renderable):
             # get area
             area = data_dict['area']
             self._path_table[zone] = geometry.Polygon([geometry.PositionRecord(*t) for t in area])
+
+        # zone areas alternative (polygons)
+        if 'alternative_zone_areas' in raw_parameters_content:
+            for zone_num_str, areas in raw_parameters_content['alternative_zone_areas'].items():
+                zone_num = int(zone_num_str)
+                zone = self._zones[zone_num]
+                # get areas
+                self._paths_table[zone] = []
+                for area in areas:
+                    path = geometry.Polygon([geometry.PositionRecord(*t) for t in area])
+                    self._paths_table[zone].append(path)
 
         # load the centers localisations
         assert len(raw_parameters_content['centers']) == len(self._centers)
@@ -1206,6 +1226,11 @@ class Variant(Renderable):
         return self._path_table
 
     @property
+    def paths_table(self):
+        """ property """
+        return self._paths_table
+
+    @property
     def legend_position_table(self):
         """ property """
         return self._legend_position_table
@@ -1320,9 +1345,13 @@ class Unit(Highliteable, Renderable):
 
                     # must not be at sea
                     if zone.region.region_type is not RegionTypeEnum.SEA_REGION:
-                        path = self._position.variant.path_table[zone]
                         background_fill_color = self._position.variant.background_colour_table[self._role]
-                        fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
+                        if zone in self._position.variant.paths_table:
+                            paths = self._position.variant.paths_table[zone]
+                        else:
+                            paths = [self._position.variant.path_table[zone]]
+                        for path in paths:
+                            fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
                         self._zone.render_legend(ctx)
 
         fill_color = self._position.variant.item_colour_table[self._role]
@@ -1522,9 +1551,13 @@ class Ownership(Highliteable, Renderable):
 
         if self._center:
             zone = self._center.region.zone
-            path = self._position.variant.path_table[zone]
             background_fill_color = self._position.variant.background_colour_table[self._role]
-            fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
+            if zone in self._position.variant.paths_table:
+                paths = self._position.variant.paths_table[zone]
+            else:
+                paths = [self._position.variant.path_table[zone]]
+            for path in paths:
+                fill_zone(ctx, path, background_fill_color, TRANSPARENCY_OWNER)
 
         item_fill_color = self._position.variant.item_colour_table[self._role]
         ctx.fillStyle = item_fill_color.str_value()  # for an ownership
