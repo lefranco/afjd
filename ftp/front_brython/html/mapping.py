@@ -1,5 +1,6 @@
 """ mapping """
 
+
 # pylint: disable=pointless-statement, expression-not-assigned, multiple-statements, wrong-import-order, wrong-import-position
 
 
@@ -473,7 +474,7 @@ class Zone(Highliteable, Renderable):
 
         # Filling the zone because foggy here
 
-        if self._variant.paths_table[self]:
+        if self in self._variant.paths_table:
             paths = self._variant.paths_table[self]
         else:
             paths = [self._variant.path_table[self]]
