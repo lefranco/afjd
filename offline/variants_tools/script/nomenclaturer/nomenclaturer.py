@@ -82,11 +82,11 @@ def main() -> None:
         if not name:
             continue
 
-        if name in names_set:
+        if name.upper() in names_set:
             print(f"Name '{name}' is duplicated", file=sys.stderr)
             sys.exit(-1)
 
-        names_set.add(name)
+        names_set.add(name.upper())
 
         full_name = zone_data["full_name"]
         abbr2name[name] = full_name
