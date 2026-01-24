@@ -7,15 +7,15 @@ Diplomacy dans l'univers de "Game of Throne" (Throne de Fer)
 _
 $ Côtes spéciales
 
-(Au-delà du Mur \(BtW\))
+(Au-delà du Mur \(AdM\))
    Elle a 2 côtes, Ouest et Est.
 
 
-(Château Noir \(CaB\))
+(Château Noir \(ChN\))
    Elle a 2 côtes, Ouest et Est.
 
 
-(Littoral de Braavos \(Coa\))
+(Littoral de Braavos \(LBr\))
    Elle a 2 côtes, Ouest et Est.
 
 
@@ -28,32 +28,32 @@ $ Particularités de la carte
 La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question.
 
 (Eau-Noire - non documenté)
-Ce canal relie la mer Baie de l’Eau Noire (BwB) à la mer L’Œil Divin (Eye) en passant par les régions adjacentes.
+Ce canal relie la mer Baie de l’Eau Noire (BEN) à la mer L’Œil Divin (OeD) en passant par les régions adjacentes.
 .
 Les regions touchant le canal sont des côtes et accessibles à une flotte qui emprunte le canal.
 .
 Ce canal peut être traversé latéralement par une armée ou une flotte.
 
 (Mander - non documenté)
-Ce canal relie la mer Îles Bouclier (Shi) à Hautjardin (Hig) en passant par les régions adjacentes.
+Ce canal relie la mer Îles Bouclier (IBo) à Hautjardin (HJa) en passant par les régions adjacentes.
 .
 Les regions touchant le canal sont des côtes et accessibles à une flotte qui emprunte le canal.
 .
 Ce canal peut être traversé latéralement par une armée ou une flotte.
 
 (Le "Trident" - non documenté - qui n'est pas un canal)
-Vivesaigues (Run) et Route Royale (Krd) sont des terres, donc inaccessibles aux flottes. 
+Vivesaigues (VAi) et Route Royale (RRo) sont des terres, donc inaccessibles aux flottes. 
 .
-Terres des Rivières (Riv) est une côte accessible uniquement par l'ouest - la mer Baie de l’Homme de Fer (IrB) par exemple.
+Terres des Rivières (TdR) est une côte accessible uniquement par l'ouest - la mer Baie de l’Homme de Fer (BHF) par exemple.
 .
-Sont adjacents : Route Royale (Krd) et Terres des Rivières (Riv); Terres des Rivières (Riv) et Vivesaigues (Run); Route Royale (Krd) et Harrenhal (Hhl).
+Sont adjacents : Route Royale (RRo) et Terres des Rivières (Riv); Terres des Rivières (TdR) et Vivesaigues (VAi); Route Royale (RRo) et Harrenhal (Hhl).
 .
-L'embouchure du Trident - au Nord de Harrenhal (Hhl) bloque l'accés entre Terres des Rivières (Riv) et Harrenhal (Hhl) et entre Vivesaigues (Run) et Route Royale (Krd).
+L'embouchure du Trident - au Nord de Harrenhal (Hhl) bloque l'accés entre Terres des Rivières (TdR) et Harrenhal (Hhl) et entre Vivesaigues (VAi) et Route Royale (RRo).
 .
-Harrenhal (Hhl) et Montagnes de la Lune (Moo) sont également adjacents.
+Harrenhal (Hhl) et Montagnes de la Lune (MLU) sont également adjacents.
 
 (Montagne - non documenté)
-La montagne au sud de Montnoir (Bmt) est impassable.
+La montagne au sud de Montnoir (MNo) est impassable.
 
 _
 $ Datation
@@ -75,13 +75,13 @@ Il y a sept puissances dont les unités de départ sont les suivantes :
 .
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés |
-|Baratheon | 3 | Bois du Roi, Fin d’Orage | Perchoir du Griffon| Port-Réal Ouest |
-|Greyjoy | 3 | | Harlau, Grande Wyk, Pyk | |
-|Lannister | 3 | Roccastel, Terres de la Couronne | Lannisport | Port-Réal Est |
-|Martell | 3 | Passe du Prince, Grâce-des-Dieux | Lance-soleil | |
-|Stark | 3 | Hiverfort, Karbourg | Port-Blanc | |
-|Targaryen | 2 | Pentos | Pierre-du-Dragon | |
-|Tyrell | 3 | Hautjardin, Vieilleville | L'Arbor | |
+|Baratheon | 3 | Bois du Roi (BRo), Fin d’Orage (FOr) | Perchoir du Griffon (PGr) | Port-Réal Ouest (PRO) |
+|Greyjoy | 3 | | Harlau (Har), Grande Wyk (Wyk), Pyk (Pyk) | |
+|Lannister | 3 | Roccastel (Roc), Terres de la Couronne (TCo) | Lannisport (Lan) | Port-Réal Est (PRE) |
+|Martell | 3 | Passe du Prince (PPr), Grâce-des-Dieux (GdD) | Lance-soleil (LSo) | |
+|Stark | 3 | Hiverfort (Hiv), Karbourg (Kar) | Port-Blanc (PBl) | |
+|Targaryen | 2 | Pentos (Pen) | Pierre-du-Dragon (PdD) | |
+|Tyrell | 3 | Hautjardin (HJa), Vieilleville (VVi) | L'Arbor | (Arb) |
 =
 
 _
@@ -94,90 +94,89 @@ $ Nomenclature
 
 = Régions et abréviations de la variante
 | Abréviation | Nom complet | type | centre |
+| AdM | Au-delà du Mur | côte | \* |
+| Aig | L’Aiglerie | côte | \* |
 | Arb | L'Arbor | côte | \* |
 | Ash | Ashbourg | terre |  |
-| Bar | Terres des Tumulus | côte |  |
-| Bit | La Bouchée | mer |  |
-| BlB | Baie de Flamme-eau | mer |  |
-| Bmt | Montnoir | terre |  |
-| BoC | Baie des Crabes | mer |  |
-| BoI | Baie de Glace | mer |  |
-| BoS | Baie des Phoques | mer |  |
+| BBN | Baie Brise-navire | mer |  |
+| BCr | Baie des Crabes | mer |  |
+| BEN | Baie de l’Eau Noire | mer |  |
+| BGl | Baie de Glace | mer |  |
+| BHF | Baie de l’Homme de Fer | mer |  |
+| Bie | Le Bief | côte |  |
+| Bou | La Bouchée | mer |  |
+| BPh | Baie des Phoques | mer |  |
 | Bra | Braavos | côte | \* |
-| BtW | Au-delà du Mur | côte | \* |
-| BwB | Baie de l’Eau Noire | mer |  |
-| BwR | Ruisseau de l’Eau Noire | mer |  |
-| CaB | Château Noir | côte |  |
+| BRo | Bois du Roi | côte |  |
 | Cai | Fosse de Cailin | côte | \* |
-| Cas | Roccastel | côte | \* |
-| Coa | Littoral de Braavos | côte |  |
-| Cra | Pointe Griffecroc | côte |  |
-| Cro | Terres de la Couronne | côte |  |
-| Dis | Terres Contestées | côte |  |
-| Dra | Pierre-du-Dragon | mer | \* |
-| Dre | Fort Terreur | côte |  |
-| End | Fin d’Orage | côte | \* |
-| ESS | Mer d’Été Orientale | mer |  |
-| Eye | L’Œil Divin | mer |  |
-| Eyr | L’Aiglerie | côte | \* |
-| Fin | Les Doigts | côte |  |
-| Fli | Doigt de Flint | côte | \* |
-| God | Grâce-des-Dieux | côte | \* |
+| CCo | Cornecolline | côte |  |
+| CEt | Chute d’Étoile | côte | \* |
+| ChN | Château Noir | côte |  |
+| Cou | Le Cou | côte |  |
+| DFl | Doigt de Flint | côte | \* |
+| Doi | Les Doigts | côte |  |
+| DRo | Détroits Rougevigne | mer |  |
+| FFe | Baie de Flamme-eau | mer |  |
+| FOr | Fin d’Orage | côte | \* |
+| FTe | Fort Terreur | côte |  |
+| GdD | Grâce-des-Dieux | côte | \* |
 | Har | Harlau | mer | \* |
 | Hhl | Harrenhal | côte | \* |
-| Hig | Hautjardin | côte | \* |
-| Hor | Cornecolline | côte |  |
-| IrB | Baie de l’Homme de Fer | mer |  |
+| Hiv | Hiverfort | côte | \* |
+| HJa | Hautjardin | côte | \* |
+| IBo | Îles Bouclier | mer | \* |
+| Jum | Les Jumeaux | côte | \* |
 | Kar | Karbourg | côte | \* |
-| KLE | Port-Réal East | côte | \* |
-| KLW | Port-Réal West | côte | \* |
-| Krd | Route Royale | terre |  |
-| Kwd | Bois du Roi | côte |  |
 | Lan | Lannisport | côte | \* |
-| Mar | Marches Dorliennes | côte | \* |
-| Moo | Montagnes de la Lune | côte |  |
-| Mot | Motte Boisprofond | côte |  |
+| LBr | Littoral de Braavos | côte |  |
+| LSo | Lance-soleil | côte | \* |
+| MaD | Marches Dorliennes | côte | \* |
+| MBP | Motte Boisprofond | côte |  |
+| MCS | Mer du Couchant Sud | mer |  |
+| MDo | Mer de Dorne | mer |  |
+| MES | Mer Étroite Sud | mer |  |
+| MET | Mer Étroite | mer |  |
+| MFR | Mer Frissonnante | mer |  |
+| MLU | Montagnes de la Lune | côte |  |
+| MMy | Mer de Myrth | mer |  |
+| MNo | Montnoir | terre |  |
+| MOc | Mer d’Été Occidentale | mer |  |
+| MOR | Mer d’Été Orientale | mer |  |
 | Myr | Myr | côte | \* |
-| Nec | Le Cou | côte |  |
-| NNS | Mer Étroite Nord | mer |  |
-| NSS | Mer du Couchant Nord | mer |  |
-| Old | Vieilleville | côte | \* |
-| Pas | Passe du Prince | côte |  |
+| NCN | Mer du Couchant Nord | mer |  |
+| NEN | Mer Étroite Nord | mer |  |
+| OeD | L’Œil Divin | mer |  |
+| PBl | Port-Blanc | côte | \* |
+| PdD | Pierre-du-Dragon | mer | \* |
+| PdS | Pierre de Sable | côte | \* |
 | Pen | Pentos | côte | \* |
+| PEt | Les Pierres de l’Étape | mer |  |
+| PGi | Pointe Griffecroc | côte |  |
+| PGr | Perchoir du Griffon | côte | \* |
+| PPr | Passe du Prince | côte |  |
+| PRE | Port-Réal Est | côte | \* |
+| PRO | Port-Réal Ouest | côte | \* |
 | Pyk | Pyk | mer | \* |
-| Rea | Le Bief | côte |  |
-| ReS | Détroits Rougevigne | mer |  |
-| Riv | Terres des Rivières | côte |  |
-| Roo | Perchoir du Griffon | côte | \* |
-| Run | Vivesaigues | terre | \* |
-| Sal | Rivage Salé | côte |  |
-| San | Pierre de Sable | côte | \* |
-| Sep | Septier Rocheux | côte |  |
-| ShB | Baie Brise-navire | mer |  |
-| Shi | Îles Bouclier | mer | \* |
-| SNS | Mer Étroite Sud | mer |  |
-| SoD | Mer de Dorne | mer |  |
-| SoM | Mer de Myrth | mer |  |
-| Srd | Route des Mers | côte |  |
-| SSS | Mer du Couchant Sud | mer |  |
-| Sta | Chute d’Étoile | côte | \* |
-| Ste | Les Pierres de l’Étape | mer |  |
-| Sto | Rivage Rocheux | côte |  |
-| Str | Terres de l’Orage | côte |  |
-| Sun | Lance-soleil | côte | \* |
-| TGS | Sonorité Dorée | mer |  |
-| TNS | Mer Étroite | mer |  |
-| TSS | Mer Frissonnante | mer |  |
-| Twi | Les Jumeaux | côte | \* |
+| REN | Ruisseau de l’Eau Noire | mer |  |
+| RiR | Rivage Rocheux | côte |  |
+| RMe | Route des Mers | côte |  |
+| Roc | Roccastel | côte | \* |
+| RRo | Route Royale | terre |  |
+| RSa | Rivage Salé | côte |  |
+| SDo | Sonorité Dorée | mer |  |
+| SRo | Septier Rocheux | côte |  |
+| TCo | Terres de la Couronne | côte |  |
+| TdR | Terres des Rivières | côte |  |
+| TeC | Terres Contestées | côte |  |
+| TOr | Terres de l’Orage | côte |  |
+| TOu | Terres de l’Ouest | terre |  |
+| TTu | Terres des Tumulus | côte |  |
 | Tyr | Tyroshe | mer | \* |
-| Wes | Terres de l’Ouest | terre |  |
-| Whi | Port-Blanc | côte | \* |
-| Win | Hiverfort | côte | \* |
-| WSS | Mer d’Été Ouest | mer |  |
+| VAi | Vivesaigues | terre | \* |
+| VVi | Vieilleville | côte | \* |
 | Wyk | Grande Wyk | mer | \* |
-| Yro | Yronbois | côte | \* |
+| YBo | Yronbois | côte | \* |
 =
-
 
 _
 $ Expansionnisme (oui)
@@ -186,7 +185,7 @@ Une puissance peut construire dans n'importe quel centre de ravitaillement vacan
 .
 Par exemple, Targaryen peut construire à Lannisport (Lan) si ce centre est vacant et qu'il en est propriétaire.
 .
-Exception : Port-Réal Ouest et Port-Réal Est ne sont pas des centres de construction.
+Exception : Port-Réal Ouest (PRO) et Port-Réal Est (PRE) ne sont pas des centres de construction.
 
 _
 $ Ecart avec la version théorique
@@ -207,5 +206,3 @@ $ Notes
 Certaines petites adaptation ont du êtres réalisées par rapport à la source de la variante (UK Diplomacy Archive / DipWiki) :
 - Au sujet des îles/centres (notamment le fait que Kraken commence avec une flotte à Harlaw parce qu'une armée ne peut être en mer)
 - Au sujet de King's Landing (puisqu'un centre ne peut pas être dédoublé).
-
-
