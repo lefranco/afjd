@@ -48,6 +48,7 @@ import visits
 import votes
 import notes
 import definitives
+import updates
 import incidents
 import incidents2
 import lowdata
@@ -152,6 +153,9 @@ SUBMISSION_PARSER3.add_argument('orders', type=str, required=True)
 
 SUBMISSION_PARSER4 = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER4.add_argument('role_id', type=int, required=True)
+
+GAME_KNOWN_PARSER = flask_restful.reqparse.RequestParser()
+GAME_KNOWN_PARSER.add_argument('role_id', type=int, required=True)
 
 AGREE_PARSER = flask_restful.reqparse.RequestParser()
 AGREE_PARSER.add_argument('role_id', type=int, required=True)
@@ -913,6 +917,11 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         for (_, role_num, _) in definitives.Definitive.list_by_game_id(sql_executor, int(game_id)):
             definitive = definitives.Definitive(int(game_id), role_num, 0)
             definitive.delete_database(sql_executor)
+
+        # delete updates
+        for (_, role_num, _, _) in updates.Update.list_by_game_id(sql_executor, int(game_id)):
+            update = updates.Update(int(game_id), role_num, 0, 0)
+            update.delete_database(sql_executor)
 
         # delete votes
         for (_, role_num, _) in votes.Vote.list_by_game_id(sql_executor, int(game_id)):
@@ -2118,6 +2127,61 @@ class GameRoleRessource(flask_restful.Resource):  # type: ignore
                 role_id = role_found
 
         return (role_id, in_game), 200
+
+
+@API.resource('/player-games-changed/<player_id>')
+class PlayerGamesChangedRessource(flask_restful.Resource):  # type: ignore
+    """ PlayerGamesChangedRessource """
+
+    def get(self, player_id: int) -> typing.Tuple[typing.Optional[typing.List[int]], int]:
+        """
+        Get all games I play in that have changed and that I do not know about
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/all-games-updated GETTING - getting all updates all games")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        if user_id != int(player_id):
+            flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this identifier")
+
+        # get list of games in which player is involved
+        sql_executor = database.SqlExecutor()
+        updates_list = updates.Update.list_by_player_id(sql_executor, int(player_id))
+        del sql_executor
+
+        list_games_id: typing.List[int] = []
+        for game_id, _, _, value in updates_list:
+            if value != 1:
+                continue
+            list_games_id.append(game_id)
+
+        return list_games_id, 200
 
 
 @API.resource('/all-games-roles')
@@ -3582,6 +3646,89 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             # end of protected section
 
         return None, 201
+
+
+@API.resource('/game-seen/<game_id>')
+class GameSeenRessource(flask_restful.Resource):  # type: ignore
+    """ GameSeenRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[str, int]:
+        """
+        Tell server that now player knows about the game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-seen/<game_id> - POST - now player knows about game id=%s", game_id)
+
+        args = GAME_KNOWN_PARSER.parse_args(strict=True)
+
+        role_id = args['role_id']
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+        assert game is not None
+
+        # Now we have full information for game logger
+
+        # who is player for role ?
+        player_id = game.get_role(sql_executor, role_id)
+
+        # must be player
+        if user_id != player_id:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
+
+        # not allowed for game master
+        if role_id == 0:
+            del sql_executor
+            flask_restful.abort(403, msg="Setting the position is known is not possible for game master")
+
+        assert player_id is not None
+
+        # begin of protected section
+        with MOVE_GAME_LOCK_TABLE[game.name]:
+
+            update = updates.Update(int(game_id), role_id, int(player_id), 0)
+            update.update_database(sql_executor)
+
+            sql_executor.commit()  # noqa: F821
+            del sql_executor  # noqa: F821
+            # end of protected section
+
+        data = f"Server now know role {role_id} knows about game {game_id}"
+
+        return data, 201
 
 
 @API.resource('/game-orders/<game_id>')
@@ -6255,7 +6402,7 @@ class GameReplacementsRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-v/<game_id> - GET - getting which replacements occured for game id=%s", game_id)
+        mylogger.LOGGER.info("/game-replacements/<game_id> - GET - getting which replacements occured for game id=%s", game_id)
 
         sql_executor = database.SqlExecutor()
 

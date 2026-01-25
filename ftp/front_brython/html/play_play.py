@@ -59,6 +59,31 @@ def restore_context(ctx):
     ctx.drawImage(BACKUP_CANVAS, 0, 0)
 
 
+def notify_server_game_seen(game_id):
+    """ notify_server_game_seen """
+
+    def reply_callback(req):
+        req_result = loads(req.text)
+        if req.status != 201:
+            if 'message' in req_result:
+                alert(f"Erreur a l'installation de prise de connaissance de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème l'installation de la prise de connaissance de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+
+    json_dict = {
+        'role_id': play_low.ROLE_ID
+    }
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-seen/{game_id}"
+
+    # settting game is seen : need a token
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
 def submit_orders():
     """ submit_orders """
 
@@ -1771,6 +1796,10 @@ def submit_orders():
     my_sub_panel3 <= form
 
     play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
+
+    # Notify server that player now is aware
+    if play_low.ROLE_ID != 0:
+        notify_server_game_seen(play_low.GAME_ID)
 
     return True
 

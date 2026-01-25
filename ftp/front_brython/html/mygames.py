@@ -28,6 +28,37 @@ MY_PANEL <= MY_SUB_PANEL
 DELTA_WARNING_THRESHOLD_SEC = 10
 
 
+def get_player_games_changed(player_id):
+    """ get_player_games_changed """
+
+    player_games_changed = None
+
+    def reply_callback(req):
+        nonlocal player_games_changed
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récuperation de la liste des parties changées pour le joueur : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récuperation de la liste des parties changées pour le joueur : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        player_games_changed = list(req_result)
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/player-games-changed/{player_id}"
+
+    # getting player games playing in list : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return player_games_changed
+
+
 def get_complete_or_ready_games(player_id):
     """ get_complete_or_ready_games """
 
@@ -841,6 +872,11 @@ def my_games(state_name):
         alert("Erreur chargement liste parties joueés")
         return
 
+    changed_games = get_player_games_changed(player_id)
+    if changed_games is None:
+        alert("Erreur chargement liste parties qui ont changé")
+        return
+
     # if state is current (arrival) we add the awaiting games
     if state == 1:
         games_dict = common.get_games_data(0, 1)  # awaiting or ongoing
@@ -1138,10 +1174,14 @@ def my_games(state_name):
 
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+                    if game_id in changed_games:
+                        button.style.color = "red"
                     button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     value = button
                 else:
                     link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
+                    if game_id in changed_games:
+                        button.style.color = "red"
                     value = link
 
             if field == 'deadline':
