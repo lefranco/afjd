@@ -28,7 +28,9 @@ import games
 import variants
 import database
 import definitives
+import updates
 import incidents
+import allocations
 import lowdata
 
 
@@ -457,6 +459,11 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
         definitive = definitives.Definitive(int(game_id), role_num, 0)
         definitive.delete_database(sql_executor)
 
+    # clear updates for everyone
+    for (_, role_num, _, _) in updates.Update.list_by_game_id(sql_executor, int(game_id)):
+        update = updates.Update(int(game_id), role_num, 0, 0)
+        update.delete_database(sql_executor)
+
     # insert
 
     # insert new ownerships
@@ -784,6 +791,22 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
         game.push_deadline(now)
         game.update_database(sql_executor)
         debug_messages.append("Deadline adjusted!")
+
+    # situation: get ownerships
+    game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
+
+    # situation: get units
+    game_units = units.Unit.list_by_game_id(sql_executor, game_id)
+
+    # who is still playing (rolve having a center or having a unit)
+    still_playing = set(o[2] for o in game_ownerships) | set(u[3] for u in game_units)
+
+    # set updates for those still playing
+    allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+    for _, player_id, role_num in allocations_list:
+        if role_num in still_playing:
+            update = updates.Update(int(game_id), role_num, int(player_id), 1)
+            update.update_database(sql_executor)
 
     # note : commit will be done by caller
 
