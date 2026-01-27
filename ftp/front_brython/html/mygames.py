@@ -45,7 +45,7 @@ def get_player_games_changed(player_id):
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        player_games_changed = list(req_result)
+        player_games_changed = req_result
 
     json_dict = {}
 
@@ -1174,14 +1174,14 @@ def my_games(state_name):
 
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
-                    if game_id in changed_games:
+                    if game_id in changed_games:  # pylint: disable=unsupported-membership-test
                         button.style.color = "red"
                     button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     value = button
                 else:
                     link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
-                    if game_id in changed_games:
-                        button.style.color = "red"
+                    if game_id in changed_games:  # pylint: disable=unsupported-membership-test
+                        link.style.color = "red"
                     value = link
 
             if field == 'deadline':
