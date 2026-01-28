@@ -11,7 +11,7 @@ $ Côtes spéciales
    Elle a 2 côtes, Ouest et Est.
 
 
-(Château Noir \(ChN\))
+(Châteaunoir \(ChN\))
    Elle a 2 côtes, Ouest et Est.
 
 
@@ -28,14 +28,14 @@ $ Particularités de la carte
 La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question.
 
 (Eau-Noire - non documenté)
-Ce canal relie la mer Baie de l’Eau Noire (BEN) à la mer L’Œil Divin (OeD) en passant par les régions adjacentes.
+Ce canal relie la mer Baie de la Néra (BNe) à la mer Œildieu (Oei) en passant par les régions adjacentes.
 .
 Les regions touchant le canal sont des côtes et accessibles à une flotte qui emprunte le canal.
 .
 Ce canal peut être traversé latéralement par une armée ou une flotte.
 
 (Mander - non documenté)
-Ce canal relie la mer Îles Bouclier (IBo) à Hautjardin (HJa) en passant par les régions adjacentes.
+Ce canal relie la mer Îles Bouclier (IBo) à Hautjardiniens (Hau) en passant par les régions adjacentes.
 .
 Les regions touchant le canal sont des côtes et accessibles à une flotte qui emprunte le canal.
 .
@@ -44,16 +44,16 @@ Ce canal peut être traversé latéralement par une armée ou une flotte.
 (Le "Trident" - non documenté - qui n'est pas un canal)
 Vivesaigues (VAi) et Route Royale (RRo) sont des terres, donc inaccessibles aux flottes. 
 .
-Terres des Rivières (TdR) est une côte accessible uniquement par l'ouest - la mer Baie de l’Homme de Fer (BHF) par exemple.
+Conflans (Con) est une côte accessible uniquement par l'ouest - la mer Baie du Fer-né (BFN) par exemple.
 .
-Sont adjacents : Route Royale (RRo) et Terres des Rivières (Riv); Terres des Rivières (TdR) et Vivesaigues (VAi); Route Royale (RRo) et Harrenhal (Hhl).
+Sont adjacents : Route Royale (RRo) et Conflans (Con); Conflans (Con) et Vivesaigues (VAi); Route Royale (RRo) et Harrenhal (Hhl).
 .
-L'embouchure du Trident - au Nord de Harrenhal (Hhl) bloque l'accés entre Terres des Rivières (TdR) et Harrenhal (Hhl) et entre Vivesaigues (VAi) et Route Royale (RRo).
+L'embouchure du Trident - au Nord de Harrenhal (Hhl) bloque l'accés entre Conflans (Con) et Harrenhal (Hhl) et entre Vivesaigues (VAi) et Route Royale (RRo).
 .
 Harrenhal (Hhl) et Montagnes de la Lune (MLU) sont également adjacents.
 
 (Montagne - non documenté)
-La montagne au sud de Montnoir (MNo) est impassable.
+La montagne au sud de Noirmont (Nmo) est impassable.
 
 _
 $ Datation
@@ -75,13 +75,13 @@ Il y a sept puissances dont les unités de départ sont les suivantes :
 .
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés |
-|Baratheon | 3 | Bois du Roi (BRo), Fin d’Orage (FOr) | Perchoir du Griffon (PGr) | Port-Réal Ouest (PRO) |
-|Greyjoy | 3 | | Harlau (Har), Grande Wyk (Wyk), Pyk (Pyk) | |
-|Lannister | 3 | Roccastel (Roc), Terres de la Couronne (TCo) | Lannisport (Lan) | Port-Réal Est (PRE) |
-|Martell | 3 | Passe du Prince (PPr), Grâce-des-Dieux (GdD) | Lance-soleil (LSo) | |
-|Stark | 3 | Hiverfort (Hiv), Karbourg (Kar) | Port-Blanc (PBl) | |
-|Targaryen | 2 | Pentos (Pen) | Pierre-du-Dragon (PdD) | |
-|Tyrell | 3 | Hautjardin (HJa), Vieilleville (VVi) | L'Arbor | (Arb) |
+|Baratheon | 3 | Bois-du-Roi (BdR), Accalmie (Acc) | Le Griffonnière (Gri) | Port-Réal Ouest (PRO) |
+|Greyjoy | 3 | | Harloi (Har), Grand-Wyk (GWy), Pyk (Pyk) | |
+|Lannister | 3 | Castral Rock (CaR), Terres de la Couronne (TCo) | Port-Lannis (PLa) | Port-Réal Est (PRE) |
+|Martell | 3 | Passe-du-Prince (PPr), La Gracedieu (LGd) | Lancehélion (Lah) | |
+|Stark | 3 | Winterfell (Win), Karbourg (Kar) | Blancport (BlP) | |
+|Targaryen | 2 | Pentos (Pen) | Peyredragon (Pey) | |
+|Tyrell | 3 | Hautjardiniens (Hau), Villevieille (ViV) | La Treille (Tre) | |
 =
 
 _
@@ -94,88 +94,88 @@ $ Nomenclature
 
 = Régions et abréviations de la variante
 | Abréviation | Nom complet | type | centre |
+| Acc | Accalmie | côte | \* |
 | AdM | Au-delà du Mur | côte | \* |
-| Aig | L’Aiglerie | côte | \* |
-| Arb | L'Arbor | côte | \* |
-| Ash | Ashbourg | terre |  |
-| BBN | Baie Brise-navire | mer |  |
 | BCr | Baie des Crabes | mer |  |
-| BEN | Baie de l’Eau Noire | mer |  |
-| BGl | Baie de Glace | mer |  |
-| BHF | Baie de l’Homme de Fer | mer |  |
+| BdR | Bois-du-Roi | côte |  |
+| BEn | La baie d'Enfer | mer |  |
+| BFN | Baie du Fer-né | mer |  |
+| BGl | Baie des Glaces | mer |  |
 | Bie | Le Bief | côte |  |
-| Bou | La Bouchée | mer |  |
+| BlP | Blancport | côte | \* |
+| BNa | La baie des Naufrageurs | mer |  |
+| BNe | Baie de la Néra | mer |  |
 | BPh | Baie des Phoques | mer |  |
 | Bra | Braavos | côte | \* |
-| BRo | Bois du Roi | côte |  |
 | Cai | Fosse de Cailin | côte | \* |
-| CCo | Cornecolline | côte |  |
-| CEt | Chute d’Étoile | côte | \* |
-| ChN | Château Noir | côte |  |
-| Cou | Le Cou | côte |  |
-| DFl | Doigt de Flint | côte | \* |
+| CaR | Castral Rock | côte | \* |
+| Cen | Cendregué  | terre |  |
+| ChN | Châteaunoir | côte |  |
+| Con | Conflans | côte |  |
+| Cor | Corcolline | côte |  |
+| DdP | Degrés de Pierre | mer |  |
 | Doi | Les Doigts | côte |  |
-| DRo | Détroits Rougevigne | mer |  |
-| FFe | Baie de Flamme-eau | mer |  |
-| FOr | Fin d’Orage | côte | \* |
-| FTe | Fort Terreur | côte |  |
-| GdD | Grâce-des-Dieux | côte | \* |
-| Har | Harlau | mer | \* |
+| DRe | Détroits Redwyne | mer |  |
+| Eyr | Les Eyrié | côte | \* |
+| FBo | Ferboys | côte | \* |
+| FTe | Fort-Terreur | côte |  |
+| Gre | Le Grès | côte | \* |
+| Gri | La Griffonnière | côte | \* |
+| GWy | Grand-Wyk | mer | \* |
+| Har | Harloi | mer | \* |
+| Hau | Hautjardiniens | côte | \* |
 | Hhl | Harrenhal | côte | \* |
-| Hiv | Hiverfort | côte | \* |
-| HJa | Hautjardin | côte | \* |
 | IBo | Îles Bouclier | mer | \* |
-| Jum | Les Jumeaux | côte | \* |
+| Jum | Les jumeaux | côte | \* |
 | Kar | Karbourg | côte | \* |
-| Lan | Lannisport | côte | \* |
+| Lah | Lancehélion | côte | \* |
 | LBr | Littoral de Braavos | côte |  |
-| LSo | Lance-soleil | côte | \* |
-| MaD | Marches Dorliennes | côte | \* |
-| MBP | Motte Boisprofond | côte |  |
-| MCS | Mer du Couchant Sud | mer |  |
+| LGd | La Gracedieu | côte | \* |
+| MdD | Marches de Dorne | côte | \* |
 | MDo | Mer de Dorne | mer |  |
 | MES | Mer Étroite Sud | mer |  |
 | MET | Mer Étroite | mer |  |
-| MFR | Mer Frissonnante | mer |  |
+| MGR | Mer Grelotte | mer |  |
+| MlF | Motte-la-Forêt | côte |  |
 | MLU | Montagnes de la Lune | côte |  |
 | MMy | Mer de Myrth | mer |  |
-| MNo | Montnoir | terre |  |
 | MOc | Mer d’Été Occidentale | mer |  |
 | MOR | Mer d’Été Orientale | mer |  |
+| Mrs | La Morsure | mer |  |
+| Mte | Les Météores | côte | \* |
+| MTS | Mer d'Été Sud | mer |  |
 | Myr | Myr | côte | \* |
-| NCN | Mer du Couchant Nord | mer |  |
+| NCN | Mer d'Été Nord | mer |  |
+| Nec | Le Neck | côte |  |
 | NEN | Mer Étroite Nord | mer |  |
-| OeD | L’Œil Divin | mer |  |
-| PBl | Port-Blanc | côte | \* |
-| PdD | Pierre-du-Dragon | mer | \* |
-| PdS | Pierre de Sable | côte | \* |
+| Nmo | Noirmont | terre |  |
+| Oei | Œildieu | mer |  |
 | Pen | Pentos | côte | \* |
-| PEt | Les Pierres de l’Étape | mer |  |
+| Pey | Peyredragon | mer | \* |
 | PGi | Pointe Griffecroc | côte |  |
-| PGr | Perchoir du Griffon | côte | \* |
-| PPr | Passe du Prince | côte |  |
+| PLa | Port-Lannis | côte | \* |
+| Pmo | Pierremoûtier | côte |  |
+| PoF | Pouce-Flint | côte | \* |
+| PPr | Passe-du-Prince | côte |  |
 | PRE | Port-Réal Est | côte | \* |
 | PRO | Port-Réal Ouest | côte | \* |
 | Pyk | Pyk | mer | \* |
-| REN | Ruisseau de l’Eau Noire | mer |  |
-| RiR | Rivage Rocheux | côte |  |
-| RMe | Route des Mers | côte |  |
-| Roc | Roccastel | côte | \* |
+| RdO | Route de l'Océan | côte |  |
+| RNe | Ruisseau Néra | mer |  |
+| Roc | Roches | côte |  |
 | RRo | Route Royale | terre |  |
-| RSa | Rivage Salé | côte |  |
+| SaR | Salrivage | côte |  |
 | SDo | Sonorité Dorée | mer |  |
-| SRo | Septier Rocheux | côte |  |
 | TCo | Terres de la Couronne | côte |  |
-| TdR | Terres des Rivières | côte |  |
 | TeC | Terres Contestées | côte |  |
+| Ter | Tertres | côte |  |
 | TOr | Terres de l’Orage | côte |  |
 | TOu | Terres de l’Ouest | terre |  |
-| TTu | Terres des Tumulus | côte |  |
-| Tyr | Tyroshe | mer | \* |
+| Tre | La Treille | côte | \* |
+| Tyr | Tyroshis | mer | \* |
 | VAi | Vivesaigues | terre | \* |
-| VVi | Vieilleville | côte | \* |
-| Wyk | Grande Wyk | mer | \* |
-| YBo | Yronbois | côte | \* |
+| ViV | Villevieille | côte | \* |
+| Win | Winterfell | côte | \* |
 =
 
 _
@@ -183,7 +183,7 @@ $ Expansionnisme (oui)
 
 Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. 
 .
-Par exemple, Targaryen peut construire à Lannisport (Lan) si ce centre est vacant et qu'il en est propriétaire.
+Par exemple, Targaryen peut construire à Port-Lannis (PLa) si ce centre est vacant et qu'il en est propriétaire.
 .
 Exception : Port-Réal Ouest (PRO) et Port-Réal Est (PRE) ne sont pas des centres de construction.
 
