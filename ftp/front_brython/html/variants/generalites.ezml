@@ -13,7 +13,7 @@ $ Particularités de carte
 
 - Côte Ouest
 (Une région peut avoir "Côte Ouest" comme côte spéciale)
-_Canton_ : Damascus possède une côte orientée Ouest.
+_Canton_ : Damas possède une côte orientée Ouest.
 
 # Plus de deux côtes
 (Une région peut avoir plus de deux côtes spéciales.)
@@ -21,18 +21,18 @@ _v1900_ : Espagne possède trois côtes : Ouest, Est et Nord.
 
 - Archipel
 (Un centre peut se trouver en Mer. On parle dans ce cas d'"Archipel".)
-_Egéemonie_ : Thera est un archîpel.
+_Egéemonie_ : Thera est un archipel.
 
 - Iles
 (Une région peut être une île. Comme une côte mais une flotte peut y convoyer)
-_Médireranée_ : Les Iles baléares sont une île.
+_Méditeranée_ : Les Iles baléares sont une île.
 
 - Canaux
 (Il peut y avoir des canaux, c'est à dire un voisinage entre flotte en dehors d'une mer)
 _Moderne_ : Un canal permet d'aller de Héligoland à Bornholm en passant par Danemark.
 
 - Ponts
-(Il peut y avoir des ponts, c'est à dire un voisinage entre deux côte non "naturel" sur la carte.)
+(Il peut y avoir des ponts, c'est à dire un voisinage entre deux côtes non "naturel" sur la carte.)
 _Hundred_ : Un pont existe  entre Londres et Calais
 
 - Région décorative
@@ -79,7 +79,7 @@ _v1900_ : Le français ne peut pas construire en Algérie mais commence avec une
 
 - Constructions interdites
 (Certains centres peuvent être interdits à la construction dans une  variante expansioniste.)
-_Westeros_ : Personne ne peut construire en Kings' Landing East et West
+_Westeros_ : Personne ne peut construire en Port Réal Est et Ouest
 
 - Construction de secours
 (Un pays peut avoir un centre de constrution de secours.)
@@ -99,6 +99,6 @@ _Westeros_ : La première année est 1.
 
 - Incrément
 (L'incrément année de datation est susceptible de changer)
-_Hundred_ : L'incrément en année par tour année est de 5
+_Hundred_ : L'incrément en année par tour est de 5
 
 
