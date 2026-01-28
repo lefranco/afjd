@@ -1799,7 +1799,7 @@ class Position(Renderable):
     def erase_centers(self) -> None:
         """ erase all centers """
         self._ownerships = []
-        self._owner_table = []
+        self._owner_table = {}
 
     def erase_units(self) -> None:
         """ erase all units """
