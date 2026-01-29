@@ -480,7 +480,7 @@ def study_image(map_file: str, debug: bool) -> None:
     otsu = 127
     otsu_calculated, thresh = cv2.threshold(gray, otsu, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)  # pylint: disable=no-member
 
-    # TO be more specific : remove cv2.THRESH_OTSU and passe 'otsu' value 
+    # TO be more specific : remove cv2.THRESH_OTSU and pass custom 'otsu' value 
     print(f"OTSU calculated = {otsu_calculated}")
 
     # Filter using contour h
