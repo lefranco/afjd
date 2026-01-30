@@ -1189,6 +1189,7 @@ def my_games(state_name):
                     button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
                     if game_id in changed_games:
                         button.style.color = "red"
+                        button.style.backgroundColor = "white"
                     button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     value = button
                 else:
