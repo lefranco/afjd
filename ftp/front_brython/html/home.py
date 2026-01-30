@@ -24,8 +24,7 @@ import allgames
 MAX_DISPLAYED_CHAT = 3
 
 # for funding site hosting
-# detail cost : 579€ Back-end + 259€ Front-End
-NEEDED_VALUE = 838
+NEEDED_VALUE = 1000
  
 PAY_LINK = "https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-2026"
 
