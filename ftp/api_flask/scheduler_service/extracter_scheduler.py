@@ -21,7 +21,7 @@ TIMEOUT_SERVER = 5
 # root
 SERVER = "https://api.helloasso.com"
 
-# for gettiong token
+# for getting token
 TOKEN_DOMAIN = "oauth2/token"
 
 # for getting data
@@ -41,7 +41,7 @@ def run(jwt_token: str, client_id: str, client_secret: str) -> None:
         'grant_type': 'client_credentials',
     }
 
-    req_result = SESSION.post(f"{SERVER}/{TOKEN_DOMAIN}", json=json_dict)
+    req_result = SESSION.post(f"{SERVER}/{TOKEN_DOMAIN}", data=json_dict)
     if req_result.status_code != 200:
         mylogger.LOGGER.error("ERROR = %s", req_result.text)
         return
