@@ -26,7 +26,8 @@ MAX_DISPLAYED_CHAT = 3
 # for funding site hosting
 # detail cost : 579€ Back-end + 259€ Front-End
 NEEDED_VALUE = 838
-
+ 
+PAY_LINK = "https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-2026"
 
 OPTIONS = {
     'Vue d\'ensemble': "Vue d'ensemble du site",
@@ -364,7 +365,7 @@ def show_news():
     gauge = html.METER(id='raised', value=current_collected_value, min=0, max=NEEDED_VALUE)
     current_payers_list_value = news_content_table_loaded['members']
     span_members = html.SPAN(f"Membres donateurs : {current_payers_list_value}")
-    link_pay = html.A("moi aussi !", href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/formulaires/3", target="_blank")
+    link_pay = html.A("moi aussi !", href=PAY_LINK, target="_blank")
 
     div_a5 <= label1
     div_a5 <= gauge
@@ -491,7 +492,7 @@ def show_news():
     note_bene_content_table <= row
 
     col = html.TD()
-    link4 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/formulaires/3", target="_blank")
+    link4 = html.A(href=PAY_LINK, target="_blank")
     link4 <= "Je souhaite contribuer au financement de l'association qui gère le site !"
     col <= link4
     row <= col

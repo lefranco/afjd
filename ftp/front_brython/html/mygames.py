@@ -1032,6 +1032,7 @@ def my_games(state_name):
                 # button for sorting by changed
                 button = html.BUTTON("&lt;Changée&gt;", Class='btn-inside')
                 button.bind("click", lambda e, f='changed': sort_by_callback(e, f))
+
                 button.style.color = "red"
                 buttons <= button
 
