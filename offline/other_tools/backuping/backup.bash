@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Note replacing scp by rsync would speed up scp parts
+# But most time is spent int uploading on google drive
+
 # Script will stop if a command returns an error code
 set -e 
 
@@ -52,7 +55,7 @@ echo "Backuping Flask APIs ..."
 echo "================"
 echo
 
-for service in users players games; do
+for service in users players games ; do
 
     # do backup 
     echo "Backuping db ${service}..."
@@ -101,6 +104,7 @@ for service in users players games; do
     mv ${dump_local_file} ${backup_dir}/
 
     echo
+    sleep 2
 
 done
 
@@ -162,7 +166,7 @@ echo "Backuping Wikis ..."
 echo "================"
 echo
 
-for wiki in dokuwiki-data dokuwiki-data2; do
+for wiki in dokuwiki-data dokuwiki-data2 ; do
 
     echo "Backuping ${wiki}..."
     echo
@@ -172,13 +176,17 @@ for wiki in dokuwiki-data dokuwiki-data2; do
         rm -fr ${backup_local_directory}
     fi
 
-    for item in data/pages data/media data/meta data/attic conf ; do
+    # data/attic is too big and causes "broken pipe"
+    for item in data/pages data/media data/meta lib/plugins lib/tpl conf ; do
 
         echo "Bringing locally ${wiki} ${item} files"
         backup_local_item_directory=./${backup_local_directory}/${item//\//_}
         mkdir -p ${backup_local_item_directory}
         backup_distant_item_directory=/home/ubuntu/wiki_doku/${wiki}/${item}
         sshpass -p "${SERVER_PASSWORD}" scp -r ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_item_directory} ${backup_local_item_directory}
+
+        echo
+        sleep 2
 
     done
 
