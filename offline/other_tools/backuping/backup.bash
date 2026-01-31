@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Note replacing scp by rsync would speed up scp parts
-# But most time is spent int uploading on google drive
+# But most time is spent in uploading on google drive
+# And deliberate choice is made to lower load on server (therefore no compression)
 
 # Script will stop if a command returns an error code
 set -e 
