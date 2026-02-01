@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# Note replacing scp by rsync would speed up scp parts
-# But most time is spent in uploading on google drive
-# And deliberate choice is made to lower load on server (therefore no compression)
+# Deliberate choice is made to lower load on server (therefore no compression)
 
 # Script will stop if a command returns an error code
 set -e 
@@ -73,24 +71,32 @@ for service in users players games ; do
     # bring backup db here on backup machine
     echo "Bringing locally ${service} backup db file"
     backup_local_db_file=backup_db_${service}_${now}.db
-    sshpass -p "${SERVER_PASSWORD}" scp ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_db_file} ${backup_local_db_file}
+    SECONDS=0
+    sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_db_file} ${backup_local_db_file}
+    echo "Took $SECONDS seconds"
 
     # bring sql dump here on backup machine
     echo "Bringing locally ${service} sql dump file"
     dump_local_sql_file=dump_db_${service}_${now}.sql.gz
-    sshpass -p "${SERVER_PASSWORD}" scp ${SERVER_USERNAME}@${SERVER_ADDRESS}:${dump_sql_distant_file} ${dump_local_sql_file}
+    SECONDS=0
+    sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${dump_sql_distant_file} ${dump_local_sql_file}
+    echo "Took $SECONDS seconds"
 
     # compress backup
     echo "Compress ${service} backup db file"
     backup_local_file=${backup_local_db_file}.tar.gz
+    SECONDS=0
     tar czf ${backup_local_file} ${backup_local_db_file}
+    echo "Took $SECONDS seconds"
     echo "Delete ${service} dump file"
     rm ${backup_local_db_file}
 
     # compress sql dump
     echo "Compress ${service} dump sql file"
     dump_local_file=${dump_local_sql_file}.tar.gz
+    SECONDS=0
     tar czf ${dump_local_file} ${dump_local_sql_file}
+    echo "Took $SECONDS seconds"
     echo "Delete ${service} dump file"
     rm ${dump_local_sql_file}
 
@@ -132,10 +138,16 @@ if [ -d ${backup_local_dir} ]; then
     rm -fr ${backup_local_dir}
 fi
 mkdir ${backup_local_dir}
+SECONDS=0
+echo "Mongodump command"
 mongodump --host ${SERVER_ADDRESS} --port ${MONGODB_PORT} --db ${MONGODB_DATABASE_NAME} --out ${backup_local_dir} --gzip --authenticationMechanism SCRAM-SHA-256 --username ${MONGODB_DATABASE_USER} --password ${MONGODB_DATABASE_PASSWORD} --quiet
+echo "Took $SECONDS seconds"
 
 # tar dir to single file
+SECONDS=0
+echo "tar to single file"
 tar cf ${backup_local_file} ${backup_local_dir}
+echo "Took $SECONDS seconds"
 rm -fr ${backup_local_dir}
 
 # move to backup dir
@@ -150,11 +162,15 @@ if [ -d ${backup_local_directory} ]; then
     rm -fr ${backup_local_directory}
 fi
 backup_distant_directory=/home/ubuntu/forum_nodebb/data/nodebb/uploads
-sshpass -p "${SERVER_PASSWORD}" scp -r ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_directory} ${backup_local_directory}
+SECONDS=0
+sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_directory} ${backup_local_directory}
+echo "Took $SECONDS seconds"
 
 echo "Compressing uploads dir"
 backup_local_file=uploads-${now}.tar.gz
+SECONDS=0
 tar -czf ${backup_local_file} ${backup_local_directory}
+echo "Took $SECONDS seconds"
 rm -fr ${backup_local_directory}
 
 echo "Moving to backup dir uploads file"
@@ -184,7 +200,9 @@ for wiki in dokuwiki-data dokuwiki-data2 ; do
         backup_local_item_directory=./${backup_local_directory}/${item//\//_}
         mkdir -p ${backup_local_item_directory}
         backup_distant_item_directory=/home/ubuntu/wiki_doku/${wiki}/${item}
-        sshpass -p "${SERVER_PASSWORD}" scp -r ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_item_directory} ${backup_local_item_directory}
+        SECONDS=0
+        sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_item_directory} ${backup_local_item_directory}
+        echo "Took $SECONDS seconds"
 
         echo
         sleep 2
@@ -193,7 +211,9 @@ for wiki in dokuwiki-data dokuwiki-data2 ; do
 
     echo "Compressing ${wiki}  dir"
     backup_local_file=${wiki}-${now}.tar.gz
+    SECONDS=0
     tar -czf ${backup_local_file} ${backup_local_directory}
+    echo "Took $SECONDS seconds"
     rm -fr ${backup_local_directory}
 
     echo "Moving to backup dir ${wiki} file"
@@ -217,7 +237,7 @@ for file in $(ls ${backup_dir}) ; do
     echo
     echo "Moving ${file} to google drive..."
     rclone copy ${backup_dir}/${file} ${GOOGLE_DRIVE}:${archive_dir}/ --bwlimit 2M --transfers 1 --checkers 1 --progress
-    sleep 10
+    sleep 2
 done
 
 # Removing artefacts from here
