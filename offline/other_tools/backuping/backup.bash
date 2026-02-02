@@ -5,11 +5,13 @@
 # Script will stop if a command returns an error code
 set -e 
 
-# Disable screen saver
-xset s off
+# Disable screen saver etc for one hour (script should take less than that)
+systemd-inhibit --why="Backup in progress" --mode=block bash -c "
+  echo 'Start of screen saver inihibit'
+  sleep 3600
+  echo 'End of screen saver inihibit'
+" &
 
-# Disable energy watcher
-xset -dpms
 
 # sshpass needs to be installed on backup machine
 # sqlite3 needs to be installed on server
@@ -265,8 +267,4 @@ echo "Script took $((duration / 60)) minutes $((duration % 60)) seconds."
 # echo "content" | mail -s "subject" <dest>
 
 # Re-enable screen saver
-xset s on
-
-# Re-enable energy watcher
-xset +dpms
 
