@@ -8067,6 +8067,9 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         # a list of games
         games_list = games.Game.inventory(sql_executor)
 
+        # games waiting, waiting to be started (no deadline involved)
+        waiting_games = [g.name for g in games_list if g.current_state == 0 and g.identifier not in recruiting_games]
+
         # games very late
         limit = int(time.time()) - CRITICAL_DELAY_DAY * 24 * 3600
         dying_games = [g.name for g in games_list if g.current_state == 1 and not g.soloed and not g.end_voted and not g.finished and g.deadline < limit]
@@ -8104,7 +8107,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         else:
             most_active_player_id = -1
 
-        data = {'dying_games': dying_games, 'stalled_games': stalled_games, 'suffering_games': suffering_games, 'ongoing_games': len(ongoing_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set), 'most_active_master': most_active_master_id, 'most_active_player': most_active_player_id}
+        data = {'dying_games': dying_games, 'stalled_games': stalled_games, 'waiting_games': waiting_games, 'suffering_games': suffering_games, 'ongoing_games': len(ongoing_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set), 'most_active_master': most_active_master_id, 'most_active_player': most_active_player_id}
         return data, 200
 
 

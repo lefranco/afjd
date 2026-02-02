@@ -343,6 +343,13 @@ def show_news():
         div_a5 <= html.BR()
         div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, stalled_games_loaded)
 
+    waiting_games_loaded = stats_content['waiting_games']
+    if waiting_games_loaded:
+        div_a5 <= html.H5("Démarrage possible :")
+        div_a5 <= "Les parties ci-dessous sont complètes et en attente d'être démarrées."
+        div_a5 <= html.BR()
+        div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, waiting_games_loaded)
+
     chat_content_loaded = news_content_table_loaded['chats']
     if chat_content_loaded:
         div_a5 <= html.BR()
