@@ -5,6 +5,12 @@
 # Script will stop if a command returns an error code
 set -e 
 
+# Disable screen saver
+xset s off
+
+# Disable energy watcher
+xset -dpms
+
 # sshpass needs to be installed on backup machine
 # sqlite3 needs to be installed on server
 # mongodb needs to be installed on backup machine
@@ -258,4 +264,9 @@ echo "Script took $((duration / 60)) minutes $((duration % 60)) seconds."
 # mailutils msmtp msmtp-mta etc
 # echo "content" | mail -s "subject" <dest>
 
+# Re-enable screen saver
+xset s on
+
+# Re-enable energy watcher
+xset +dpms
 
