@@ -1034,6 +1034,7 @@ def my_games(state_name):
                 button.bind("click", lambda e, f='changed': sort_by_callback(e, f))
 
                 button.style.color = "red"
+                button.style.backgroundColor = "white"
                 buttons <= button
 
             else:
