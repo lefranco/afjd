@@ -22,98 +22,37 @@ import flask_mail  # type: ignore
 INTERVAL = 5
 
 # mailing suject
-SUBJECT = "Diplomania : la résurrection"
+SUBJECT = "Convocation pour l'Assemblée Générale de l'Association des Joueurs Francophones de Diplomacy"
 
 # mailing body
 BODY = """
 Cher joueur de Diplomacy,
 
-** Interruption de service **
+Bonjour, nous vous proposons de vous retrouver le samedi 21 février pour notre assemblée générale annuelle à 15h sur Discord.
 
-Le site qui nous permet de jouer accumulant les frais d'hébergement (un composant back end et un composant front end) il a été envisagé de tout déplacer sur des ordinateurs de la société d'un membre de l'association.
-Au cours de la copie une mauvaise manipulation a entrainé le blocage de tous les serveurs back end. Identifier le problème a pris du temps, et il n'a jamais été possible de rétablir la situation malgré les efforts de plusieurs personnes.
-Le problème a donc été résolu en réalisant une nouvelle installation, à partir de rien, plus simple, sur un nouveau back end.
-Ce, avec une formule d'hébergement beaucoup moins chère mais équivalente en terme de performances.
+L'ordre du jour est le suivant :
 
-=> Le site est rétabli hier Mercredi 5 Novembre.
+    1) Présentation des actions menées et soutenues par l'AFJD en 2025,
+    2) Présentation des comptes,
+    3) Autres questions posées par les participants,
+    4) Election du nouveau conseil d'administration.
 
-A noter : à ce jour le front end reste à migrer également, cela sera fait dans le jours qui suivent.
-En attendant le service est rétabli et nous présentons nos excuses pour la gène occasionnée.
+La réunion se tiendra dans le salon vocal de Discord.
 
-Nous pouvons reprendre nos parties !
+Lien pour assister à cette Assemblée Générale :
+    https://discord.gg/mUWes7yEqR
 
-** Invitations **
+C'est aussi le moment de l'adhésion annuelle pour 2026 qui nous permet notamment de financer les serveurs et soutenir des tournois.
+Le montant minimum est de 10€ mais si vous pouvez mettre plus cela nous aiderait !
 
-Sur le face à face, nous en profitons pour vous inviter à deux événements dans un futur immédiat :
+Lien pour cotiser pour 2026:
+    https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-2026
 
-========== OPEN DE PARIS ================
+Venez nombreux!
 
-Open international de Paris / Championnat d'Île-de-France 2025
-Tournoi principal de la région Île-de-France pour 2025. Il s'agit d'un tournoi mixte de négociation/blitz (speedboat).
-L'Open de Paris est une étape du Grand Prix européen 2025 et du Tour de France 2024/2025.
-
-Organisation
-  Organisateur : Lei Saarlainen
-  Assistant organisateur : Olivier Prigent
-  Directeur du tournoi : Olivier Prigent
-  Assistant directeur du tournoi : Emmanuel du Pontavice
-
-Lieu
-  France Île-de-France Paris
-  Hôtel La Louisianne, 60 rue de Seine
-
-Structure du tournoi
-  6 rondes : 3 négociation, 3 speedboat
-  Fin de l'année : 1907 (négociation) 1906 (speedboat)
-  Système de scorage : C-Diplo Namur
-  Agrégation des résultats : 3 meilleurs résultats (Speedboat à 70 %)
-
-Programme :
-  Vendredi 5 décembre 20 h / Speedboat 1
-  Vendredi 5 décembre 22 h / Speedboat 2
-  Samedi 6 décembre 10 h / Négociation 1
-  Samedi 6 décembre 15H / Négociation 2
-  Samedi 6 décembre 20H Repas communautaire
-  Dimanche 7 décembre 10H / Speedboat 3
-  Dimanche 7 décembre 12H30 / Négociation 3
-  Dimanche 7 décembre 16H30 / Remise des prix
-
-Championnat de France Speedboat / Blitz Live
-  Les 3 rondes Speedboat font partie du Championnat de France Speedboat.
-  Les autres rondes seront jouées sur le serveur Diplomania au cours de l'année à venir jusqu'au prochain CDF à Paris
-
-Les résultats seront agrégés comme suit : addition de tous les scores/parties + 3
-
-Ligue d'Ile de France
-  Les 3 manches de négociation feront partie de la Ligue d'Ile de France
-  Les autres manches se dérouleront en Ile de France au cours de l'année à venir jusqu'au prochain CDF à Paris
-
-Les résultats seront agrégés comme suit : addition de tous les scores/parties+3
-
-Contact pour question ou préinscription : lei saarlainen sur Discord ou par mail leisaarlainen@gmail.com
-
-(Lei)
-
-===  CHAMPIONNAT DE BRETAGNE  ==================
-
-Ô diplomates, les vendredi 21 et samedi 22 novembre (donc dans moins de 3 semaines), j'organise des parties de ***Diplomatie*** à Rennes au resto-bar culturel La Reine de Cœur.
-
-C'est le 4e championnat de Bretagne. C'est ouvert à tous, à vous joueurs expérimentés, à vous joueurs intermédiaires, à vous joueurs novices, y compris complets débutants. Toutes les parties (au nombre de trois) précédées d'une initiation de 30 à 45 minutes une heure avant le lancement du jeu. Suivre une initiation n'engage à rien, ni à jouer la partie qui suit ni les deux autres parties du week-end.
-
-Lieu : La Reine de Cœur, 48 rue de Saint-Brieuc (près de l'Agro) dans l'ouest de Rennes.
-Prix : une consommation obligatoire minimum par partie.
-
-Horaires : vendredi soir de 20h à minuit (initiation à 19h), samedi après-midi de 14 à 18h (initiation à 13h) et samedi soir de 20h à minuit (initiation à 19h). Remise des prix à minuit et demi.
-
-Possibilité de s'inscrire sur place jusqu'au dernier moment, les inscriptions à chaque partie sont indépendantes les unes des autres. + d'infos ou pré-inscription en me contactant par messagerie privée Discord ou par texto (06 89 14 64 06) ou https://tdfdiplo.fandom.com/fr/wiki/Règlement_du_championnat_de_Bretagne.
-
-(Gabriel)
-
-=============================================
-
+Ludiquement
 Jérémie
-Administrateur du site
-https://diplomania2.fr
+Secrétaire de l'Association
 """
 
 # mailing official sender
