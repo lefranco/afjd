@@ -791,7 +791,7 @@
             "y_legend_pos": 360
         },
         "77": {
-            "name": "SPO",
+            "name": "aSPO",
             "full_name": "Sporades",
             "x_pos": 458,
             "y_pos": 356,
@@ -839,7 +839,7 @@
             "y_legend_pos": 464
         },
         "83": {
-            "name": "DOD",
+            "name": "aDOD",
             "full_name": "Dodecanese",
             "x_pos": 693,
             "y_pos": 590,

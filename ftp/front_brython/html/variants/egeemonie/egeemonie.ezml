@@ -64,11 +64,13 @@ $ Nomenclature
 | Abréviation | Nom complet | type | centre |
 | ACH | Achaia | côte |  |
 | aDEL | Delos | mer | \* |
+| aDOD | Dodecanese | mer |  |
 | AGS | Argos | côte | \* |
 | aLIM | Limnos | mer | \* |
 | AMB | Ambragia | côte | \* |
 | aNAX | Naxos | mer | \* |
 | ARC | Arkadia | terre |  |
+| aSPO | Sporades | mer |  |
 | aTER | Thera | mer | \* |
 | ATH | Athinai | côte | \* |
 | BEO | Beotia | côte |  |
@@ -79,7 +81,6 @@ $ Nomenclature
 | CHK | Chalkis | côte |  |
 | CYD | Cydonia | côte | \* |
 | DIO | Dion | côte | \* |
-| DOD | Dodecanese | mer |  |
 | DOL | Dolopia | terre | \* |
 | DPH | Delphoi | côte | \* |
 | ELY | Elymaia | terre |  |
@@ -141,7 +142,6 @@ $ Nomenclature
 | sMIT | Steno Mitilinis | mer |  |
 | SMY | Smyrna | côte |  |
 | SPA | Sparta | terre | \* |
-| SPO | Sporades | mer |  |
 | STR | Stratos | côte |  |
 | sZAK | Steno Zakynthos | mer |  |
 | TEB | Thebai | côte | \* |
