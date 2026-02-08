@@ -22,7 +22,7 @@ import tkinter.scrolledtext
 
 import yaml
 
-WINDOW_WIDTH = 600
+WINDOW_WIDTH = 700
 WINDOW_HEIGHT = 900
 
 IMAP_SERVER = ''
@@ -65,7 +65,7 @@ ITEMS_DICT: dict[str, tuple[str, bool, list[str]]] = {}
 IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
-def parse_xml(xml_file: str) -> tuple[str, bool, dict[str, bool]]:
+def parse_xml(xml_file: str) -> tuple[str, bool, list[str]]:
     """Parse an XML file."""
 
     def get_text(parent: xml.etree.ElementTree.Element, tag: str) -> str:
@@ -96,7 +96,7 @@ def parse_xml(xml_file: str) -> tuple[str, bool, dict[str, bool]]:
 
     # Scan records
     overall_attention = False
-    content_map = {}
+    content_list = []
     for record in root.findall(f"{tag_prefix}record", ns):
         source_ip = get_text(record, "row/source_ip")
         count = get_text(record, "row/count")
@@ -106,14 +106,14 @@ def parse_xml(xml_file: str) -> tuple[str, bool, dict[str, bool]]:
         attention = (disposition != 'none' or dkim != 'pass' or spf != 'pass')
         if attention:
             overall_attention = True
-        line = f"  IP: {source_ip}, Count: {count}, Disposition: {disposition}, DKIM: {dkim}, SPF: {spf}"
-        content_map[line] = attention
+            line = f"  IP: {source_ip}, Count: {count}, Disposition: {disposition}, DKIM: {dkim}, SPF: {spf}"
+            content_list.append(line)
 
     description = f"{org_name}/{report_id}"
-    return description, overall_attention, content_map
+    return description, overall_attention, content_list
 
 
-def display_callback(description: str, content_map: dict[str, bool]) -> None:
+def display_callback(description: str, content_list: list[str]) -> None:
     """Display information about content in email."""
     win = tkinter.Toplevel()
     win.title(description)
@@ -122,12 +122,11 @@ def display_callback(description: str, content_map: dict[str, bool]) -> None:
 
     txt.tag_config('red_highlight', foreground='red')
 
-    for line_text, should_be_red in content_map.items():
+    for line_text in sorted(content_list):
         start_index = txt.index("end-1c")
         txt.insert(tkinter.END, line_text)
         end_index = f"{start_index} + {len(line_text)}c"
-        if should_be_red:
-            txt.tag_add('red_highlight', start_index, end_index)
+        txt.tag_add('red_highlight', start_index, end_index)
         txt.insert(tkinter.END, '\n')
     txt.config(state=tkinter.DISABLED)
 
@@ -207,11 +206,9 @@ def load_mails() -> None:
             assert False, f"Unexpected fetch result: {item}"
 
         msg = email.message_from_bytes(raw_email, policy=email.policy.default)
+        date_message = msg['date']
 
         message_uid = uid.decode()
-        description = str(message_uid)
-        attention = False
-        content_map: dict[str, bool] = {}
 
         # Go through email parts
         num_part = 0
@@ -246,9 +243,9 @@ def load_mails() -> None:
                 extracted_files = [os.path.join(WORK_DIR, f) for f in files_in_zip]
                 for xml_file in extracted_files:
                     #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
-                    description, attention, content_map = parse_xml(xml_file)
+                    description, attention, content_list = parse_xml(xml_file)
                     os.remove(xml_file)
-                    ITEMS_DICT[description] = (message_uid, attention, content_map)
+                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, attention, content_list)
 
             elif filename.lower().endswith(".gz"):
                 gz_path = os.path.join(WORK_DIR, filename)
@@ -262,9 +259,9 @@ def load_mails() -> None:
                 os.remove(gz_path)
                 for xml_file in [extracted_file]:
                     #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
-                    description, attention, content_map = parse_xml(xml_file)
+                    description, attention, content_list = parse_xml(xml_file)
                     os.remove(xml_file)
-                    ITEMS_DICT[description] = (message_uid, attention, content_map)
+                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, attention, content_list)
 
             else:
                 print(f"Unknown attachment type {filename=}")
@@ -348,12 +345,12 @@ def main() -> None:
     buttons_frame.bind("<Configure>", on_frame_configure)
 
     # all buttons inside
-    for i, (description, (message_id, attention, content_map)) in enumerate(ITEMS_DICT.items()):
+    for i, (description, (message_id, attention, content_list)) in enumerate(ITEMS_DICT.items()):
 
         fg = 'Red' if attention else 'Black'
 
         # to display
-        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, cm=content_map: display_callback(d, cm))  # type: ignore[misc]
+        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, cl=content_list: display_callback(d, cl))  # type: ignore[misc]
         display_button.grid(row=i + 1, column=0)
 
         # to delete
