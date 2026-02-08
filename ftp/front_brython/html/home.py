@@ -25,7 +25,7 @@ MAX_DISPLAYED_CHAT = 3
 
 # for funding site hosting
 NEEDED_VALUE = 1000
- 
+
 PAY_LINK = "https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-2026"
 
 OPTIONS = {

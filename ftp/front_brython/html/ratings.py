@@ -27,6 +27,7 @@ OPTIONS = {
     'Classement performance': "Classement selon la performance, c'est à dire le E.L.O.",
     'Classement fiabilité': "Classement selon la fiabilité, c'est à dire pas de retard ni d'abandon",
     'Classement régularité': "Classement selon la régularité, c'est à dire jouer souvent et sans interruption",
+    'Classement priorité intégration': "Les joueurs à intégrer en premier dans les parties",
     'Les glorieux': "Les joueurs du site qui ont un titre en face à face",
     'Liste globale': "Les joueurs et arbitres sur le site",
     'Les scorages': "Les systèmes de scorage disponibles  sur le site"
@@ -777,6 +778,110 @@ def show_rating_regularity():
     sort_by_callback(None, None)
 
 
+def show_rating_integration():
+    """ show_rating_integration """
+
+    def rating_heuristic(tuple_):
+
+        identifier_str, data = tuple_
+
+        has_ongoing_games = identifier_str in players_alloc_ongoing
+        has_other_waiting_games = identifier_str in players_alloc_waiting and players_alloc_waiting[identifier_str] > 1
+
+        player = data['pseudo']
+        nb_quitted_games = player_quits_dict.get(player, 0)
+
+        identifier = int(identifier_str)
+        return has_ongoing_games, has_other_waiting_games, nb_quitted_games, - identifier
+
+    # get the players
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    # get the link (allocations) of players for ongoing games
+    state = 1
+    allocations_data_ongoing = common.get_allocations_data(state, state)  # expected state
+    if not allocations_data_ongoing:
+        alert("Erreur chargement allocations en cours")
+        return
+
+    # get the link (allocations) of players for waiting games
+    state = 0
+    allocations_data_waiting = common.get_allocations_data(state, state)  # expected state
+    if not allocations_data_waiting:
+        alert("Erreur chargement allocations en attente")
+        return
+
+    # gather games to players ongoing
+    players_alloc_ongoing = allocations_data_ongoing['active_dict']
+
+    # gather games to players waiting
+    players_alloc_waiting = allocations_data_waiting['active_dict']
+
+    quitters_data = common.get_quitters_data()
+    player_quits_dict = {}
+    for _, _, player_id, _ in quitters_data:
+        player = players_dict[str(player_id)]['pseudo']
+        if player not in player_quits_dict:
+            player_quits_dict[player] = 0
+        player_quits_dict[player] += 1
+
+    players_table = html.TABLE()
+
+    fields = ['pseudo', 'ongoing_games', 'other_waiting_games', 'quitted_games', 'creation']
+
+    # header
+
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'ongoing_games': 'partie(s) en cours', 'other_waiting_games': 'autre(s) partie(s) en attente', 'quitted_games': 'parties abandonnées', 'creation': 'rang de création'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for identifier, data in sorted(players_dict.items(), key=rating_heuristic):
+        row = html.TR()
+
+        data['ongoing_games'] = None
+        data['other_waiting_games'] = None
+        data['quitted_games'] = None
+        data['creation'] = identifier
+
+        for field in fields:
+
+            value = data[field]
+
+            if field == 'ongoing_games':
+                value = 'Oui' if identifier in players_alloc_ongoing else 'Non'
+
+            if field == 'other_waiting_games':
+                value = 'Oui' if (identifier in players_alloc_waiting and players_alloc_waiting[identifier] > 1) else 'Non'
+
+            if field == 'quitted_games':
+                player = data['pseudo']
+                nb_games = player_quits_dict.get(player, 0)
+                value = nb_games
+
+            col = html.TD(value)
+            row <= col
+
+        players_table <= row
+
+    explanations = """
+        Ce classement sert à décider qui prendre en priorité sur une partie amicale.
+        Premier critère : intégrer d'abord les joueurs qui ne jouent pas déjà une partie.
+        Deuxième critère : intégrer d'abord les joueurs qui ne sont pas en attente sur une autre partie (donc plus d'une inscription).
+        Troisième critère : éviter d'intégrer des joueurs qui ont des abandons.
+        Quatrième et dernier critère : privilégier les joueurs qui ont crée leur compte récemment.
+    """
+    MY_SUB_PANEL <= html.H3("Les joueurs a intégrer en priorité (et les critères)")
+    MY_SUB_PANEL <= html.DIV(explanations, Class='important')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= players_table
+
+
 def show_glorious_data():
     """ show_glorious_data """
 
@@ -1140,6 +1245,8 @@ def load_option(_, item_name):
         show_rating_reliability()
     if item_name == 'Classement régularité':
         show_rating_regularity()
+    if item_name == 'Classement priorité intégration':
+        show_rating_integration()
     if item_name == 'Les glorieux':
         show_glorious_data()
     if item_name == 'Liste globale':
