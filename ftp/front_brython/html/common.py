@@ -1483,5 +1483,37 @@ def get_blacklisted_ones():
     return blacklisted_ones_list
 
 
+def get_quitters_data():
+    """ get_quitters_data : returns empty dict on error """
+
+    quitters_data = {}
+
+    def reply_callback(req):
+        nonlocal quitters_data
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des abandons : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des abandons : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        quitters_data = req_result['dropouts']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-game-dropouts"
+
+    # we do not really care if a hacker manages to get this information without being a creator
+    # getting allocations : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return quitters_data
+
+
 # stored for usage
 PRIVILEDGED = get_priviledged()

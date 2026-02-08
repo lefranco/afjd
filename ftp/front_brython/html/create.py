@@ -33,38 +33,6 @@ MAX_NUMBER_GAMES = 200
 MAX_LEN_GAME_NAME = 50
 
 
-def get_quitters_data():
-    """ get_quitters_data : returns empty dict on error """
-
-    quitters_data = {}
-
-    def reply_callback(req):
-        nonlocal quitters_data
-        req_result = loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des abandons : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des abandons : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        quitters_data = req_result['dropouts']
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/all-game-dropouts"
-
-    # we do not really care if a hacker manages to get this information without being a creator
-    # getting allocations : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return quitters_data
-
-
 def get_tournament_players_data(tournament_id):
     """ get_tournament_players_data : can return empty dict  (all games anonymous) """
 
@@ -959,7 +927,7 @@ def show_game_quitters():
         return
 
     # get the quitters
-    quitters_data = get_quitters_data()
+    quitters_data = common.get_quitters_data()
     # there can be no quitters
 
     # get the blacklisted
