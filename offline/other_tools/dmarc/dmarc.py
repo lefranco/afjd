@@ -22,6 +22,8 @@ import tkinter.scrolledtext
 
 import yaml
 
+DUMP_FILE = False
+
 WINDOW_WIDTH = 700
 WINDOW_HEIGHT = 900
 
@@ -75,6 +77,13 @@ def parse_xml(xml_file: str) -> tuple[str, bool, list[str]]:
         if elem is None or elem.text is None:
             raise ValueError(f"Missing or empty <{tag}> element in {xml_file}")
         return elem.text.strip()
+
+    if DUMP_FILE:
+        with open(xml_file, 'r', encoding='utf-8') as fic:
+            content = fic.read()
+        print("====")
+        print(content)
+        print("====")
 
     tree = xml.etree.ElementTree.parse(xml_file)
     root = tree.getroot()
