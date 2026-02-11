@@ -21,42 +21,34 @@ import flask_mail  # type: ignore
 
 INTERVAL = 5
 
+BATCH = 10
+
 # mailing suject
-SUBJECT = "Convocation pour l'Assemblée Générale de l'Association des Joueurs Francophones de Diplomacy"
+SUBJECT = "Les cartes sont distribuées... où es-tu ?..."
 
 # mailing body
 BODY = """
-Cher joueur de Diplomacy,
+Tu as rejoint les rangs de diplomania, mais ton état-major est désespérément vide. Pendant que tu hésites, d'autres sont déjà en train de redessiner les frontières et de sceller des pactes secrets.
 
-Bonjour, nous vous proposons de vous retrouver le samedi 21 février pour notre assemblée générale annuelle à 15h sur Discord.
+Le monde ne va pas s'emparer tout seul, et tes futurs alliés (ou tes futurs rivaux) n'attendent que toi pour lancer les hostilités.
 
-L'ordre du jour est le suivant :
+Ton plan de campagne pour aujourd'hui :
+- Choisis ton terrain : Parcours la liste des parties en attente de joueurs. Voire des tournois, en variante ou en standard.
+- Prends place : Inscris-toi dans une partie qui te botte.
+- Négocie : Envoie ton premier message et fais comprendre aux autres que tu n'es pas là pour faire de la figuration.
 
-    1) Présentation des actions menées et soutenues par l'AFJD en 2025,
-    2) Présentation des comptes,
-    3) Autres questions posées par les participants,
-    4) Election du nouveau conseil d'administration.
+Les parties avec de la place sont visbles depuis la page d'accueil.
 
-La réunion se tiendra dans le salon vocal de Discord.
+Ne reste pas spectateur de l'Histoire alors que tu pourrais en être l'acteur principal. On se retrouve sur une partie ?
 
-Lien pour assister à cette Assemblée Générale :
-    https://discord.gg/mUWes7yEqR
+Bons plans et trahisons,
 
-C'est aussi le moment de l'adhésion annuelle pour 2026 qui nous permet notamment de financer les serveurs et soutenir des tournois.
-Le montant minimum est de 10€ mais si vous pouvez mettre plus cela nous aiderait !
-
-Lien pour cotiser pour 2026:
-    https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-2026
-
-Venez nombreux!
-
-Ludiquement
-Jérémie
-Secrétaire de l'Association
+L'équipe de diplomania
+Le Haut Commandement de https://diplomania2.fr
 """
 
 # mailing official sender
-NAME_SENDER = "Lettre d'information de la part de l'A.f.J.D. (Diplomania)'"
+NAME_SENDER = "Lettre d'information de la part de l'A.f.J.D. (Diplomania)"
 MAIL_SENDER = "afjdiplo_server_noreply@diplomania2.fr"
 
 SENDER = f"{NAME_SENDER} <{MAIL_SENDER}>"
@@ -158,7 +150,6 @@ def main() -> None:
 
         already_spammed = set()
         failed_to_spam = set()
-        start_time = datetime.datetime.now()
 
         with open(victim_list_file, encoding='utf-8') as filepointer:
 
@@ -166,16 +157,18 @@ def main() -> None:
             nb_victims = len(victims)
             print(f"We have {nb_victims} victims... ")
 
-            for rank, victim in enumerate(victims):
+            start_batch_time = datetime.datetime.now()
+            
+            for rank, victim in enumerate(victims, start=1):
 
-                print(f"{rank+1:4} spamming '{victim}'... ", end='')
+                print(f"{rank:4} spamming '{victim}'... ", end='')
 
                 # check we do not send twice to same
                 if victim in already_spammed:
                     print("=================== ALREADY SPAMMED!")
                     continue
 
-                percent = round((rank + 1) / nb_victims * 100)
+                percent = round(rank / nb_victims * 100)
 
                 try:
                     send_mail(victim)
@@ -187,10 +180,11 @@ def main() -> None:
 
                 already_spammed.add(victim)
 
-                if (rank + 1) % 10 == 0:
-                    elapsed = (datetime.datetime.now() - start_time).total_seconds()
-                    speed = elapsed / (rank + 1)
-                    still = len(victims) - (rank + 1)
+                if rank % BATCH == 0:
+                    elapsed = (datetime.datetime.now() - start_batch_time).total_seconds()
+                    start_batch_time = datetime.datetime.now()
+                    speed = elapsed / BATCH
+                    still = len(victims) - rank
                     rest_time = datetime.timedelta(seconds=(still * speed))
                     eta = datetime.datetime.now() + rest_time
                     print(f"Estimated ETA : {eta.strftime('%Y-%m-%d %H:%M:%S')}")
