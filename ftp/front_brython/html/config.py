@@ -36,25 +36,26 @@ with open("./data/game_type_list.json", "r", encoding="utf-8") as read_file:
     GAME_TYPES_CODE_TABLE = load(read_file)
 
 # default is first one
+# values are : number of players, default duration in years
 VARIANT_NAMES_DICT = {
-    'standard': 7,
-    'coldwar': 2,
-    'grandeguerre': 2,
-    'franceautriche': 2,
-    'hundred': 3,
-    'coldwar_redux': 4,
-    'mediterranee': 5,
-    'egeemonie': 6,
-    'standard_pds': 7,
-    'canton': 7,
-    'v1900': 7,
-    'westeros': 7,
-    'spiceislands': 7,
-    'crepusculerome': 8,
-    'successionautriche': 9,
-    'moderne': 10,
-    'crowded': 11,
-    'chaos': 34,
+    'standard': (7, 7),
+    'coldwar': (2, 15),
+    'grandeguerre': (2, 15),
+    'franceautriche': (2, 15),
+    'hundred': (3, 6),
+    'coldwar_redux': (4, 6),
+    'mediterranee': (5, 6),
+    'egeemonie': (6, 7),
+    'standard_pds': (7, 7),
+    'canton': (7, 7),
+    'v1900': (7, 7),
+    'westeros': (7, 7),
+    'spiceislands': (7, 7),
+    'crepusculerome': (8, 10),
+    'successionautriche': (9, 10),
+    'moderne': (10, 15),
+    'crowded': (11, 10),
+    'chaos': (34, 10)
 }
 
 
