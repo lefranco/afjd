@@ -560,10 +560,6 @@ def show_informations():
     # pseudo from number
     num2pseudo = {v: k for k, v in players_dict.items()}
 
-    tournament_players_dict = common.get_tournament_players_data(tournament_id)
-
-    gamerole2pseudo = {(int(g), r): num2pseudo[int(p)] for g, d in tournament_players_dict.items() for p, r in d.items()}
-
     players_table = html.TABLE()
 
     fields = ['pseudo', 'times']
@@ -920,6 +916,24 @@ def show_informations():
 
         tournament_powers_results_table <= row
 
+    # title
+    MY_SUB_PANEL <= html.H4(f"Les résultats par puissance ({nb_games} parties(s))")
+
+    MY_SUB_PANEL <= tournament_powers_results_table
+    MY_SUB_PANEL <= html.BR()
+
+    information = html.DIV(Class='note')
+    information <= "Attention : les parties sont considérées toutes comme terminées en l'état - à prendre en compte pour un tournoi en cours..."
+    MY_SUB_PANEL <= information
+
+    # restrict access to following information to creators
+    if not common.check_creator():
+        return
+
+    tournament_players_dict = common.get_tournament_players_data(tournament_id)
+
+    gamerole2pseudo = {(int(g), r): num2pseudo[int(p)] for g, d in tournament_players_dict.items() for p, r in d.items()}
+
     tournament_best_result_per_power = html.TABLE()
 
     fields = ['flag', 'power', 'champion', 'game', 'performance']
@@ -987,23 +1001,13 @@ def show_informations():
 
         tournament_best_result_per_power <= row
 
-    # title
-    MY_SUB_PANEL <= html.H4(f"Les résultats par puissance ({nb_games} parties(s))")
-
-    MY_SUB_PANEL <= tournament_powers_results_table
-    MY_SUB_PANEL <= html.BR()
-
-    information = html.DIV(Class='note')
-    information <= "Attention : les parties sont considérées toutes comme terminées en l'état - à prendre en compte pour un tournoi en cours..."
-    MY_SUB_PANEL <= information
-
     MY_SUB_PANEL <= html.H4("Les meilleures performances individuelles du tournoi")
 
     MY_SUB_PANEL <= tournament_best_result_per_power
     MY_SUB_PANEL <= html.BR()
 
     information2 = html.DIV(Class='note')
-    information2 <= "Pour le classement le crière est la place, puis le partage de la place, puis le nombre de centre. En cas d'égalité (même avec soi-même) ce n'est pas attribué. Les pseudo des parties anonymes sont cachés."
+    information2 <= "Pour le classement le crière est la place, puis le partage de la place, puis le nombre de centres. En cas d'égalité (même avec soi-même) ce n'est pas attribué. Les pseudo des parties anonymes sont cachés."
     MY_SUB_PANEL <= information2
 
 
