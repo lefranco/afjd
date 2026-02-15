@@ -560,6 +560,10 @@ def show_informations():
     # pseudo from number
     num2pseudo = {v: k for k, v in players_dict.items()}
 
+    tournament_players_dict = common.get_tournament_players_data(tournament_id)
+
+    gamerole2pseudo = {(int(g), r): num2pseudo[int(p)] for g, d in tournament_players_dict.items() for p, r in d.items()}
+
     players_table = html.TABLE()
 
     fields = ['pseudo', 'times']
@@ -811,7 +815,8 @@ def show_informations():
     elimination_table = {r: 0 for r in variant_data.roles if r}
     worst_centers_table = {r: 100000 for r in variant_data.roles if r}
     best_centers_table = {r: 0 for r in variant_data.roles if r}
-    for data in positions_dict_loaded.values():
+    best_performance_table = {r: ((-100000, -100000, 0), None) for r in variant_data.roles if r}
+    for game_id_str, data in positions_dict_loaded.items():
         game_score_table = {}
         for power in sc_table:
             game_score_table[power] = len([p for p in data['ownerships'].values() if int(p) == power])
@@ -828,6 +833,17 @@ def show_informations():
                 solo_table[power] += 1
             if game_score_table[power] == 0:
                 elimination_table[power] += 1
+            # performance is (- nb powers with more centers, - nb powers with same number of centers, nb centers)
+            performance = (
+                - len([p for p, c in game_score_table.items() if c > nb_centers]),
+                - len([p for p, c in game_score_table.items() if c == nb_centers]),
+                game_score_table[power])
+            if performance > best_performance_table[power][0]:
+                # we have better, we take slot
+                best_performance_table[power] = (performance, int(game_id_str))
+            elif performance == best_performance_table[power][0]:
+                # we have same we cancel
+                best_performance_table[power] = (best_performance_table[power][0], None)
 
     tournament_powers_results_table = html.TABLE()
 
@@ -904,6 +920,73 @@ def show_informations():
 
         tournament_powers_results_table <= row
 
+    tournament_best_result_per_power = html.TABLE()
+
+    fields = ['flag', 'power', 'champion', 'game', 'performance']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'flag': 'drapeau', 'power': 'puissance', 'champion': 'champion', 'game': 'partie', 'performance': 'performance'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+
+    tournament_best_result_per_power <= thead
+
+    rolename2num = {variant_data.role_name_table[r]: n for n, r in variant_data.roles.items()}
+
+    for role_id in sorted(variant_data.roles, key=lambda r: variant_data.role_name_table[variant_data.roles[r]]):
+
+        # discard game master
+        if role_id == 0:
+            continue
+
+        row = html.TR()
+
+        role = variant_data.roles[role_id]
+        role_name = variant_data.role_name_table[role]
+
+        # flag
+        col = html.TD()
+        role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
+        col <= role_icon_img
+        row <= col
+
+        # role name
+        col = html.TD()
+        col <= role_name
+        row <= col
+        tournament_best_result_per_power
+
+        # best
+        performance, game_id = best_performance_table[role_id]
+
+        col = html.TD()
+        if game_id is not None:
+            role_num = rolename2num[role_name]
+            pseudo = gamerole2pseudo.get((game_id, role_num), None)
+            if pseudo:
+                col <= pseudo
+        row <= col
+
+        col = html.TD()
+        if game_id is not None:
+            data = games_dict[str(game_id)]
+            game_name = data['name']
+            col <= game_name
+        row <= col
+
+        col = html.TD()
+        if game_id is not None:
+            op_nb_better, op_nb_same, nb_centers = performance
+            rank = 1 - op_nb_better
+            shared = - op_nb_same
+            shared_text = f"(patagée {shared - 1} fois)" if shared > 1 else ""
+            col <= f"{rank}{'er' if rank == 1 else 'ème'} {shared_text} ({nb_centers} centres)"
+        row <= col
+
+        tournament_best_result_per_power <= row
+
     # title
     MY_SUB_PANEL <= html.H4(f"Les résultats par puissance ({nb_games} parties(s))")
 
@@ -913,7 +996,15 @@ def show_informations():
     information = html.DIV(Class='note')
     information <= "Attention : les parties sont considérées toutes comme terminées en l'état - à prendre en compte pour un tournoi en cours..."
     MY_SUB_PANEL <= information
+
+    MY_SUB_PANEL <= html.H4("Les meilleures performances individuelles du tournoi")
+
+    MY_SUB_PANEL <= tournament_best_result_per_power
     MY_SUB_PANEL <= html.BR()
+
+    information2 = html.DIV(Class='note')
+    information2 <= "Pour le classement le crière est la place, puis le partage de la place, puis le nombre de centre. En cas d'égalité (même avec soi-même) ce n'est pas attribué. Les pseudo des parties anonymes sont cachés."
+    MY_SUB_PANEL <= information2
 
 
 def create_tournament():
