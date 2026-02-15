@@ -39,9 +39,9 @@ with open("./data/game_type_list.json", "r", encoding="utf-8") as read_file:
 # values are : number of players, default duration in years
 VARIANT_NAMES_DICT = {
     'standard': (7, 7),
-    'coldwar': (2, 15),
-    'grandeguerre': (2, 15),
-    'franceautriche': (2, 15),
+    'coldwar': (2, 7),
+    'grandeguerre': (2, 7),
+    'franceautriche': (2, 7),
     'hundred': (3, 6),
     'coldwar_redux': (4, 6),
     'mediterranee': (5, 6),
