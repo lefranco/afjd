@@ -36,7 +36,6 @@ DEFAULT_DEADLINE_TIME = 23
 DEFAULT_GRACE_DURATION = 24
 DEFAULT_SPEED_MOVES = 72
 DEFAULT_SPEED_OTHERS = 24
-DEFAULT_NB_CYCLES = 7
 
 # initial deadline (in days) - how long before considering game has problems getting complete
 DELAY_FOR_COMPLETING_GAME_DAYS = 21
@@ -101,6 +100,8 @@ def create_game(json_dict):
     information_displayed_just_play = False
     information_displayed_deadline_time = False
     information_displayed_vote_allowed = False
+
+    default_nb_max_cycles_to_play = 0
 
     def display_disorder_callback(_):
         """ display_disorder_callback """
@@ -173,6 +174,19 @@ def create_game(json_dict):
             alert("Si vous cochez vous serez mis dans les joueurs de la partie et le site trouvera un arbitre.\nSi vous ne cochez pas (par défaut) vous serez arbitre de la partie et ne pourrez pas la jouer.\n\nCeci est modifiable par la suite !")
             information_displayed_just_play = True
 
+    def update_default_nb_max_cycles_to_play_callback(ev):
+        """ display_just_play_callback """
+
+        nonlocal default_nb_max_cycles_to_play
+
+        selected_variant = ev.target.value
+        default_nb_max_cycles_to_play = config.VARIANT_NAMES_DICT[selected_variant][1]
+
+        nb_players = config.VARIANT_NAMES_DICT[selected_variant][0]
+        alert(f"Variante à {nb_players} joueurs. Durée par defaut à {default_nb_max_cycles_to_play} années")
+
+        document["nb_cycles_input"].value = default_nb_max_cycles_to_play
+
     def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
 
@@ -202,6 +216,8 @@ def create_game(json_dict):
         nonlocal nb_max_cycles_to_play
         nonlocal endgame_vote_allowed
 
+        nonlocal default_nb_max_cycles_to_play
+
         def reply_callback(req):
             req_result = loads(req.text)
             if req.status != 201:
@@ -225,7 +241,7 @@ def create_game(json_dict):
             mydialog.info_go(f"La partie a été créé : {messages}.")
 
             if input_just_play_game.checked:
-                alert("Félicitation, vous avez créer une partie pour la jouer ! Nous espérons très fort compter sur votre engagement jusqu'à la fin...")
+                alert("Félicitation, vous avez créé une partie pour la jouer ! Nous espérons très fort compter sur votre engagement jusqu'à la fin...")
 
             # we do not want stalled games
             alert(f"Attention : la partie devra être démarrée sous {DELAY_FOR_COMPLETING_GAME_DAYS} jours sous peine d'être probablement annulée.")
@@ -398,6 +414,8 @@ def create_game(json_dict):
 
     pseudo = storage['PSEUDO']
 
+    default_nb_max_cycles_to_play = list(config.VARIANT_NAMES_DICT.values())[0][1]
+
     MY_SUB_PANEL <= information_about_input()
 
     form = html.FORM()
@@ -420,11 +438,13 @@ def create_game(json_dict):
     fieldset <= legend_variant
     input_variant = html.SELECT(type="select-one", value="", Class='btn-inside')
 
-    for variant_name, nb_players in config.VARIANT_NAMES_DICT.items():
-        option = html.OPTION(f"{variant_name} ({nb_players}j.)")
+    for variant_name in config.VARIANT_NAMES_DICT:
+        option = html.OPTION(variant_name)
         if variant_name == variant:
             option.selected = True
         input_variant <= option
+
+    input_variant.bind("change", update_default_nb_max_cycles_to_play_callback)
 
     fieldset <= input_variant
     form <= fieldset
@@ -614,7 +634,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_nb_max_cycles_to_play = html.LEGEND("maximum de cycles (années)", title="Combien d'années à jouer au plus ?")
     fieldset <= legend_nb_max_cycles_to_play
-    input_nb_max_cycles_to_play = html.INPUT(type="number", value=nb_max_cycles_to_play if nb_max_cycles_to_play is not None else DEFAULT_NB_CYCLES, Class='btn-inside')
+    input_nb_max_cycles_to_play = html.INPUT(type="number", id="nb_cycles_input", value=nb_max_cycles_to_play if nb_max_cycles_to_play is not None else default_nb_max_cycles_to_play, Class='btn-inside')
     fieldset <= input_nb_max_cycles_to_play
     form <= fieldset
 
