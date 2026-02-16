@@ -795,6 +795,18 @@ def show_informations():
 
     games_in = TOURNAMENT_DICT['games']
 
+    # if two different variants we stop here
+    variant_names = set()
+    for game_id in games_in:
+        data = games_dict[str(game_id)]
+        variant_name_loaded = data['variant']
+        variant_names.add(variant_name_loaded)
+    
+    if len(variant_names) >= 2:
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("Tournoi hérétoclite : pas toutes les parties utilisent la même variante", Class='important')
+        return
+
     # build dict of positions
     positions_dict_loaded = common.tournament_position_reload(tournament_id)
     if not positions_dict_loaded:
