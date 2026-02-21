@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 
-"""BOUNCE."""
+"""BOUNCE.
+Consider going to this page :
+https://sender.office.com/
+to request un banning
+and to this page : 
+https://mxtoolbox.com/ReverseLookup.aspx
+to check IP seind is really OVH
+"""
 
 from __future__ import annotations
 
@@ -149,6 +156,7 @@ def display_callback(description: str, body_text: list[str]) -> None:
     txt.config(state=tkinter.DISABLED)
     txt.focus()
 
+
 def delete_mail(message_uid: str) -> None:
     """Delete an identified email."""
 
@@ -195,7 +203,7 @@ def delete_callback(message_id: str, description: str) -> None:
     del IHM_TABLE[description]
 
 
-def load_mails() -> None:
+def load_mails(dump: bool) -> None:
     """ main """
 
     print(f"Connecting to {IMAP_SERVER}:{IMAP_PORT} ...")
@@ -241,6 +249,13 @@ def load_mails() -> None:
             raw_email = item
         else:
             assert False, f"Unexpected fetch result: {item}"
+
+        if dump:
+            print("========")
+            assert isinstance(raw_email, bytes), "Bad raw_email not bytes"
+            full_content_str = raw_email.decode('utf-8', errors='ignore')
+            print(full_content_str) 
+            print("========")
 
         msg = email.message_from_bytes(raw_email, policy=email.policy.default)
 
@@ -318,13 +333,14 @@ def main() -> None:
         canvas.configure(scrollregion=canvas.bbox("all"))
 
     parser = argparse.ArgumentParser(description="IMAP parameters to read emails")
-    parser.add_argument("-c", "--config", required=True, help="Path to YAML file")
+    parser.add_argument('-c', '--config', required=True, help="Path to YAML file")
+    parser.add_argument('-d', '--dump', action='store_true', help="Dump email content")
     args = parser.parse_args()
     config_file = pathlib.Path(args.config)
     read_config(config_file)
 
     # from server
-    load_mails()
+    load_mails(args.dump)
 
     if not ITEMS_DICT:
         print("Nothing in mailbox!")
@@ -373,8 +389,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-
-#    content = """ """
-#    parse_content(content)
-
     main()

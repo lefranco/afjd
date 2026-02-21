@@ -22,8 +22,6 @@ import tkinter.scrolledtext
 
 import yaml
 
-DUMP_FILE = False
-
 WINDOW_WIDTH = 700
 WINDOW_HEIGHT = 900
 
@@ -67,7 +65,7 @@ ITEMS_DICT: dict[str, tuple[str, bool, list[str]]] = {}
 IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
-def parse_xml(xml_file: str) -> tuple[str, bool, list[str]]:
+def parse_xml(xml_file: str, dump: bool) -> tuple[str, bool, list[str]]:
     """Parse an XML file."""
 
     def get_text(parent: xml.etree.ElementTree.Element, tag: str) -> str:
@@ -78,12 +76,12 @@ def parse_xml(xml_file: str) -> tuple[str, bool, list[str]]:
             raise ValueError(f"Missing or empty <{tag}> element in {xml_file}")
         return elem.text.strip()
 
-    if DUMP_FILE:
+    if dump:
         with open(xml_file, 'r', encoding='utf-8') as fic:
             content = fic.read()
-        print("====")
+        print("..............")
         print(content)
-        print("====")
+        print("..............")
 
     tree = xml.etree.ElementTree.parse(xml_file)
     root = tree.getroot()
@@ -187,7 +185,7 @@ def delete_callback(message_id: str, description: str) -> None:
     del IHM_TABLE[description]
 
 
-def load_mails() -> None:
+def load_mails(dump: bool) -> None:
     """ main """
 
     print(f"Connecting to {IMAP_SERVER}:{IMAP_PORT} ...")
@@ -213,6 +211,13 @@ def load_mails() -> None:
             raw_email = item
         else:
             assert False, f"Unexpected fetch result: {item}"
+
+        if dump:
+            print("========")
+            assert isinstance(raw_email, bytes), "Bad raw_email not bytes"
+            full_content_str = raw_email.decode('utf-8', errors='ignore')
+            print(full_content_str) 
+            print("========")
 
         msg = email.message_from_bytes(raw_email, policy=email.policy.default)
         date_message = msg['date']
@@ -252,7 +257,7 @@ def load_mails() -> None:
                 extracted_files = [os.path.join(WORK_DIR, f) for f in files_in_zip]
                 for xml_file in extracted_files:
                     #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
-                    description, attention, content_list = parse_xml(xml_file)
+                    description, attention, content_list = parse_xml(xml_file, dump)
                     os.remove(xml_file)
                     ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, attention, content_list)
 
@@ -268,7 +273,7 @@ def load_mails() -> None:
                 os.remove(gz_path)
                 for xml_file in [extracted_file]:
                     #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
-                    description, attention, content_list = parse_xml(xml_file)
+                    description, attention, content_list = parse_xml(xml_file, dump)
                     os.remove(xml_file)
                     ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, attention, content_list)
 
@@ -323,12 +328,13 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="IMAP parameters to read emails")
     parser.add_argument("-c", "--config", required=True, help="Path to YAML file")
+    parser.add_argument('-d', '--dump', action='store_true', help="Dump report content")
     args = parser.parse_args()
     config_file = pathlib.Path(args.config)
     read_config(config_file)
 
     # from server
-    load_mails()
+    load_mails(args.dump)
 
     if not ITEMS_DICT:
         print("Nothing in mailbox!")
