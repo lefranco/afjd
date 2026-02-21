@@ -224,14 +224,23 @@ def load_mails(dump: bool) -> None:
 
         message_uid = uid.decode()
 
+        print(f"handling {message_uid}")
+        added = False
+        body = None
+
         # Go through email parts
         num_part = 0
         for part in msg.walk():
-
+           
             disposition = part.get_content_disposition()
 
             # Attachment
             if disposition != "attachment":
+                content_type = part.get_content_type()
+                if content_type == "text/plain":
+                    payload = part.get_payload(decode=True)
+                    if not body:
+                        body = payload.decode(part.get_content_charset() or 'utf-8', errors='ignore')                
                 continue
 
             num_part += 1
@@ -260,6 +269,7 @@ def load_mails(dump: bool) -> None:
                     description, attention, content_list = parse_xml(xml_file, dump)
                     os.remove(xml_file)
                     ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, attention, content_list)
+                    added = True
 
             elif filename.lower().endswith(".gz"):
                 gz_path = os.path.join(WORK_DIR, filename)
@@ -276,9 +286,16 @@ def load_mails(dump: bool) -> None:
                     description, attention, content_list = parse_xml(xml_file, dump)
                     os.remove(xml_file)
                     ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, attention, content_list)
+                    added = True
 
             else:
                 print(f"Unknown attachment type {filename=}")
+
+        # This will add a line for non dmarc emails
+        if not added:
+            description = msg['subject']
+            ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, False, [body])
+
 
     imap.logout()
     print("")
