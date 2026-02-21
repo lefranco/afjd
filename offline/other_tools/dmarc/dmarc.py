@@ -61,7 +61,7 @@ def read_config(config_file: pathlib.Path) -> None:
     WORK_DIR = config["work_dir"]
 
 
-ITEMS_DICT: dict[str, tuple[str, bool, list[str]]] = {}
+ITEMS_DICT: dict[str, tuple[str, bool, bool, list[str]]] = {}
 IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
@@ -120,7 +120,7 @@ def parse_xml(xml_file: str, dump: bool) -> tuple[str, bool, list[str]]:
     return description, overall_attention, content_list
 
 
-def display_callback(description: str, content_list: list[str]) -> None:
+def display_callback(description: str, nomarc: bool, content_list: list[str]) -> None:
     """Display information about content in email."""
     win = tkinter.Toplevel()
     win.title(description)
@@ -130,11 +130,14 @@ def display_callback(description: str, content_list: list[str]) -> None:
     txt.tag_config('red_highlight', foreground='red')
 
     for line_text in sorted(content_list):
-        start_index = txt.index("end-1c")
+        if not nomarc:
+            start_index = txt.index("end-1c")
         txt.insert(tkinter.END, line_text)
-        end_index = f"{start_index} + {len(line_text)}c"
-        txt.tag_add('red_highlight', start_index, end_index)
+        if not nomarc:
+            end_index = f"{start_index} + {len(line_text)}c"
+            txt.tag_add('red_highlight', start_index, end_index)
         txt.insert(tkinter.END, '\n')
+
     txt.config(state=tkinter.DISABLED)
 
 
@@ -268,7 +271,7 @@ def load_mails(dump: bool) -> None:
                     #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, content_list = parse_xml(xml_file, dump)
                     os.remove(xml_file)
-                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, attention, content_list)
+                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, False, attention, content_list)
                     added = True
 
             elif filename.lower().endswith(".gz"):
@@ -285,7 +288,7 @@ def load_mails(dump: bool) -> None:
                     #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, content_list = parse_xml(xml_file, dump)
                     os.remove(xml_file)
-                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, attention, content_list)
+                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, False, attention, content_list)
                     added = True
 
             else:
@@ -294,7 +297,7 @@ def load_mails(dump: bool) -> None:
         # This will add a line for non dmarc emails
         if not added:
             description = msg['subject']
-            ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, False, [body])
+            ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, True, False, [body])
 
 
     imap.logout()
@@ -377,12 +380,12 @@ def main() -> None:
     buttons_frame.bind("<Configure>", on_frame_configure)
 
     # all buttons inside
-    for i, (description, (message_id, attention, content_list)) in enumerate(ITEMS_DICT.items()):
+    for i, (description, (message_id, nomarc, attention, content_list)) in enumerate(ITEMS_DICT.items()):
 
-        fg = 'Red' if attention else 'Black'
+        fg = 'Blue' if nomarc else 'Red' if attention else 'Black' 
 
         # to display
-        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, cl=content_list: display_callback(d, cl))  # type: ignore[misc]
+        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, nm=nomarc, cl=content_list: display_callback(d, nm, cl))  # type: ignore[misc]
         display_button.grid(row=i + 1, column=0)
 
         # to delete
