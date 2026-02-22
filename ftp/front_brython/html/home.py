@@ -24,7 +24,8 @@ import allgames
 MAX_DISPLAYED_CHAT = 3
 
 # for funding site hosting
-NEEDED_VALUE = 1000
+BALANCE_NEEDED_VALUE = 460
+COMFORT_NEEDED_VALUE = 1000
 
 PAY_LINK = "https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-2026"
 
@@ -363,18 +364,28 @@ def show_news():
             if num_chats >= MAX_DISPLAYED_CHAT:
                 break
 
-    div_a5 <= html.H5("Financement du site et de l'association :")
+    div_a5 <= html.H5("Financement de l'association (qui gère le site) :")
 
     current_collected_value = news_content_table_loaded['raised']
 
-    label1 = html.LABEL(html.B(f"Collecté à ce jour (mis à jour à 6h00 GMT) : {current_collected_value}€ / {NEEDED_VALUE}€: "), for_='raised')
-    gauge = html.METER(id='raised', value=current_collected_value, min=0, max=NEEDED_VALUE)
+    label_overall = html.LABEL(f"Collecté à ce jour (selon la mise à jour à 6h00 GMT depuis le site HelloAsso) : {current_collected_value}€")
+    label_balance = html.LABEL(html.B(f"Jauge d'équilibre : {current_collected_value}€ / {BALANCE_NEEDED_VALUE}€: "), for_='balance_raised')
+    gauge_balance = html.METER(id='balance_raised', value=current_collected_value, min=0, max=BALANCE_NEEDED_VALUE)
+    label_comfort = html.LABEL(html.B(f"Jauge de confort : {current_collected_value}€ / {COMFORT_NEEDED_VALUE}€: "), for_='comfort_raised')
+    gauge_comfort = html.METER(id='comfort_raised', value=current_collected_value, min=0, max=COMFORT_NEEDED_VALUE)
     current_payers_list_value = news_content_table_loaded['members']
     span_members = html.SPAN(f"Membres donateurs : {current_payers_list_value}")
     link_pay = html.A("moi aussi !", href=PAY_LINK, target="_blank")
 
-    div_a5 <= label1
-    div_a5 <= gauge
+    div_a5 <= label_overall
+    div_a5 <= html.BR()
+    div_a5 <= label_balance
+    div_a5 <= " "
+    div_a5 <= gauge_balance
+    div_a5 <= " "
+    div_a5 <= label_comfort
+    div_a5 <= " "
+    div_a5 <= gauge_comfort
     div_a5 <= html.BR()
     div_a5 <= span_members
     div_a5 <= " "
