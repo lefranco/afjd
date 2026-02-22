@@ -801,7 +801,7 @@ def show_informations():
         data = games_dict[str(game_id)]
         variant_name_loaded = data['variant']
         variant_names.add(variant_name_loaded)
-    
+
     if len(variant_names) >= 2:
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("Tournoi hérétoclite : pas toutes les parties utilisent la même variante", Class='important')
