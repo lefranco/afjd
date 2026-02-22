@@ -17,7 +17,7 @@ import allgames
 
 
 OPTIONS = {
-    'Editer les glorieux': "Changer nouvelles du site pour le createur (les glorieux)",
+    'Editer les informations face à face': "Changer nouvelles du site pour les informations du face à face",
     'Créer plusieurs parties': "Créer des parties à partir d'un fichier CSV",
     'Explications': "Explications sur la création de parties à partir d'un fichier CSV",
     'Mur de la honte': "Les joueurs qui ont abandonné une partie",
@@ -71,7 +71,7 @@ def change_glorious():
         MY_SUB_PANEL.clear()
         change_glorious()
 
-    MY_SUB_PANEL <= html.H3("Editer les glorieux")
+    MY_SUB_PANEL <= html.H3("Editer les informations du face à face")
 
     if not common.check_creator():
         alert("Pas le bon compte (pas créateur)")
@@ -718,7 +718,7 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Editer les glorieux':
+    if item_name == 'Editer les informations face à face':
         change_glorious()
     if item_name == 'Créer plusieurs parties':
         create_many_games()

@@ -28,7 +28,6 @@ OPTIONS = {
     'Classement fiabilité': "Classement selon la fiabilité, c'est à dire pas de retard ni d'abandon",
     'Classement régularité': "Classement selon la régularité, c'est à dire jouer souvent et sans interruption",
     'Classement priorité intégration': "Les joueurs à intégrer en premier dans les parties",
-    'Les glorieux': "Les joueurs du site qui ont un titre en face à face",
     'Liste globale': "Les joueurs et arbitres sur le site",
     'Les scorages': "Les systèmes de scorage disponibles  sur le site"
 }
@@ -882,17 +881,6 @@ def show_rating_integration():
     MY_SUB_PANEL <= players_table
 
 
-def show_glorious_data():
-    """ show_glorious_data """
-
-    news_content_table_loaded = common.get_news_content()
-    hall_content_loaded = news_content_table_loaded['glory']
-    hall_content = common.formatted_news(hall_content_loaded, None, 'glory_news')
-
-    MY_SUB_PANEL <= html.H3("Les glorieux")
-    MY_SUB_PANEL <= hall_content
-
-
 def show_players_masters_data():
     """ show_players_masters_data """
 
@@ -1247,8 +1235,6 @@ def load_option(_, item_name):
         show_rating_regularity()
     if item_name == 'Classement priorité intégration':
         show_rating_integration()
-    if item_name == 'Les glorieux':
-        show_glorious_data()
     if item_name == 'Liste globale':
         show_players_masters_data()
     if item_name == 'Les scorages':

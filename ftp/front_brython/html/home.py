@@ -452,7 +452,7 @@ def show_news():
 
     # ----
 
-    news_forum = html.OBJECT(data=f"{config.FORUM_LAST_POSTS_ADDRESS}", width="100%", height="1200", title="Forums", alt="Forums")
+    news_forum = html.OBJECT(data=f"{config.FORUM_LAST_POSTS_ADDRESS}", width="100%", height="1000", title="Forums", alt="Forums")
     div_b4 <= news_forum
 
     # ----
@@ -618,19 +618,28 @@ def show_news():
     # ==A2==============================
 
     div_a2 = html.DIV(Class='tooltip')
-    title5 = html.H4("Dernières nouvelles !")
-    div_a2 <= title5
+    title6 = html.H4("Dernières nouvelles...")
+    div_a2 <= title6
+
+    title61 = html.H5("... du monde du face à face")
+    div_a2 <= title61
+
+    hall_content_loaded = news_content_table_loaded['glory']
+    hall_content = common.formatted_news(hall_content_loaded, None, 'glory_news')
+    div_a2 <= hall_content
 
     # ----
 
-    title51 = html.H5("Administrateur")
-    div_a2 <= title51
+    title62 = html.H5("... de l'administrateur")
+    div_a2 <= title62
     news_content_loaded = news_content_table_loaded['admin']
     news_content = common.formatted_news(news_content_loaded, 'ADMIN', 'admin_news')
     div_a2 <= news_content
 
-    title52 = html.H5("Moderateur")
-    div_a2 <= title52
+    # ----
+
+    title63 = html.H5("... des modérateurs")
+    div_a2 <= title63
     news_content_loaded = news_content_table_loaded['modo']
     news_content = common.formatted_news(news_content_loaded, 'MODO', 'modo_news')
     div_a2 <= news_content
