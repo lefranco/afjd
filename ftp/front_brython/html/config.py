@@ -53,7 +53,7 @@ VARIANT_NAMES_DICT = {
     'spiceislands': (7, 7),
     'crepusculerome': (8, 10),
     'successionautriche': (9, 10),
-    'moderne': (10, 15),
+    'moderne': (10, 12),
     'crowded': (11, 10),
     'chaos': (34, 10)
 }
