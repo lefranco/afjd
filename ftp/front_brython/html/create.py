@@ -102,6 +102,9 @@ def change_glorious():
 
     MY_SUB_PANEL <= form
 
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= common.help_popups()
+
 
 def check_batch(current_pseudo, games_to_create, number_players_expected):
     """ check_batch """

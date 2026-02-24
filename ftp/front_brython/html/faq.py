@@ -163,18 +163,6 @@ FAQ_CONTENT_TABLE = {
     "Ce sont soit des parties modèles de tournoi que l'on veut retrouver plus rapidement, soit des parties exposition sur lesquelles on veut attirer l'attention du badaud.",
 
     "Ce site est-il le site de jeu officiel de l'Association Francophone des Joueurs de Diplomacy ?":
-    "Oui.",
-
-    "(Pour les modérateurs) Quels sont les codes pour écrire sur le mur ?":
-    """
-    .ANNONCE_1 pour une popup (sur la même ligne) - admin et modo seulement  !<br>
-    .ANNONCE_2 idem ANNONCE_1<br>
-    .ANNONCE_3 idem ANNONCE_1<br>
-    .HR pour un trait horizontal <br>
-    .STRONG pour écrire en gras <br>
-    .KBD pour écrire ce que l'on doit taper au clavier <br>
-    .LINK pour mettre un lien <br>
-    .BR pour aller à la ligne
-    """
+    "Oui."
 
 }
