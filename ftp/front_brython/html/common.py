@@ -1520,13 +1520,13 @@ PRIVILEDGED = get_priviledged()
 
 
 HELP_POPUPS = """
-    .ANNONCE_1 pour une popup (sur la même ligne) - admin et modo seulement  !<br>
-    .ANNONCE_2 idem ANNONCE_1<br>
-    .ANNONCE_3 idem ANNONCE_1<br>
-    .HR pour un trait horizontal <br>
-    .STRONG pour écrire en gras <br>
-    .KBD pour écrire ce que l'on doit taper au clavier <br>
-    .LINK pour mettre un lien <br>
+    .ANNONCE_1 pour une popup (sur la même ligne)
+    .ANNONCE_2 idem ANNONCE_1
+    .ANNONCE_3 idem ANNONCE_1
+    .HR pour un trait horizontal
+    .STRONG pour écrire en gras
+    .KBD pour écrire ce que l'on doit taper au clavier
+    .LINK pour mettre un lien
     .BR pour aller à la ligne
 """
 
