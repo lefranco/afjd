@@ -121,9 +121,6 @@ def formatted_news(news_content_loaded, origin, class_):
             found_announce[num] = False
         for line in news_content_loaded.split("\n"):
             if line.startswith(".ANNONCE"):
-                if not origin:
-                    # only admin or modo
-                    continue
                 number = None
                 for num in range(1, 4):
                     if line.startswith(f".ANNONCE_{num}"):

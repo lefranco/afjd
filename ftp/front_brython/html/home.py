@@ -48,6 +48,10 @@ for num in range(1, 4):
         storage[f'ANNOUNCEMENT_{num}_MODO'] = ""
     if f'ANNOUNCEMENT_{num}_DISPLAYED_MODO' not in storage:
         storage[f'ANNOUNCEMENT_{num}_DISPLAYED_MODO'] = 'no'
+    if f'ANNOUNCEMENT_{num}_CREATOR' not in storage:
+        storage[f'ANNOUNCEMENT_{num}_CREATOR'] = ""
+    if f'ANNOUNCEMENT_{num}_DISPLAYED_CREATOR' not in storage:
+        storage[f'ANNOUNCEMENT_{num}_DISPLAYED_CREATOR'] = 'no'
 
 
 ARRIVAL = None
@@ -83,7 +87,7 @@ def get_stats_content():
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/statistics"
 
-    # get news : do not need token
+    # get statistics : do not need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return stats_content
@@ -625,7 +629,7 @@ def show_news():
     div_a2 <= title61
 
     hall_content_loaded = news_content_table_loaded['glory']
-    hall_content = common.formatted_news(hall_content_loaded, None, 'glory_news')
+    hall_content = common.formatted_news(hall_content_loaded, 'CREATOR', 'glory_news')
     div_a2 <= hall_content
 
     # ----
@@ -729,7 +733,7 @@ def show_news():
     MY_SUB_PANEL <= div_homepage
 
     # announce
-    for origin in ('ADMIN', 'MODO'):
+    for origin in ('ADMIN', 'MODO', 'CREATOR'):
         for number in range(1, 4):
             if storage[f'ANNOUNCEMENT_{number}_DISPLAYED_{origin}'] == 'no':
                 if storage[f'ANNOUNCEMENT_{number}_{origin}']:
