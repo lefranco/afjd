@@ -625,28 +625,33 @@ def show_news():
     title6 = html.H4("Dernières nouvelles...")
     div_a2 <= title6
 
-    title61 = html.H5("... du monde du face à face")
-    div_a2 <= title61
-
     hall_content_loaded = news_content_table_loaded['glory']
-    hall_content = common.formatted_news(hall_content_loaded, 'CREATOR', 'glory_news')
-    div_a2 <= hall_content
+    useful_lines = [ll for ll in hall_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
+    if useful_lines:
+        title61 = html.H5("... du monde du face à face")
+        div_a2 <= title61
+        hall_content = common.formatted_news(hall_content_loaded, 'CREATOR', 'glory_news')
+        div_a2 <= hall_content
 
     # ----
 
-    title62 = html.H5("... de l'administrateur")
-    div_a2 <= title62
-    news_content_loaded = news_content_table_loaded['admin']
-    news_content = common.formatted_news(news_content_loaded, 'ADMIN', 'admin_news')
-    div_a2 <= news_content
+    news_admin_content_loaded = news_content_table_loaded['admin']
+    useful_lines = [ll for ll in news_admin_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
+    if useful_lines:
+        title62 = html.H5("... de l'administrateur")
+        div_a2 <= title62
+        news_content = common.formatted_news(news_admin_content_loaded, 'ADMIN', 'admin_news')
+        div_a2 <= news_content
 
     # ----
 
-    title63 = html.H5("... des modérateurs")
-    div_a2 <= title63
-    news_content_loaded = news_content_table_loaded['modo']
-    news_content = common.formatted_news(news_content_loaded, 'MODO', 'modo_news')
-    div_a2 <= news_content
+    news_modo_content_loaded = news_content_table_loaded['modo']
+    useful_lines = [ll for ll in news_modo_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
+    if useful_lines:
+        title63 = html.H5("... des modérateurs")
+        div_a2 <= title63
+        news_content = common.formatted_news(news_modo_content_loaded, 'MODO', 'modo_news')
+        div_a2 <= news_content
 
     # ----
 
