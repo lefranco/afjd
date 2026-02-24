@@ -313,6 +313,9 @@ def change_news_admin():
 
     MY_SUB_PANEL <= form
 
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= common.help_popups()
+
 
 INPUT_FILE = None
 

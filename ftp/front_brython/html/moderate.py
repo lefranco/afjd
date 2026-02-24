@@ -208,6 +208,9 @@ def change_news_modo():
 
     MY_SUB_PANEL <= form
 
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= common.help_popups()
+
 
 def erase_chat_content():
     """ erase_chat_content """

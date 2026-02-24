@@ -1517,3 +1517,25 @@ def get_quitters_data():
 
 # stored for usage
 PRIVILEDGED = get_priviledged()
+
+
+HELP_POPUPS = """
+    .ANNONCE_1 pour une popup (sur la même ligne) - admin et modo seulement  !<br>
+    .ANNONCE_2 idem ANNONCE_1<br>
+    .ANNONCE_3 idem ANNONCE_1<br>
+    .HR pour un trait horizontal <br>
+    .STRONG pour écrire en gras <br>
+    .KBD pour écrire ce que l'on doit taper au clavier <br>
+    .LINK pour mettre un lien <br>
+    .BR pour aller à la ligne
+"""
+
+
+def help_popups():
+    """ help_popups """
+    information = html.DIV(Class='note')
+    for line in HELP_POPUPS.split('\n'):
+        information <= line
+        information <= html.BR()
+    return information
+
