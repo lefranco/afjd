@@ -188,8 +188,8 @@ def delete_callback(message_id: str, description: str) -> None:
     del IHM_TABLE[description]
 
 
-def load_mails(dump: bool) -> None:
-    """ main """
+def load_mails(dump: bool, headers: bool) -> None:
+    """ load_mails """
 
     print(f"Connecting to {IMAP_SERVER}:{IMAP_PORT} ...")
     imap = imaplib.IMAP4(IMAP_SERVER, IMAP_PORT)
@@ -203,6 +203,16 @@ def load_mails(dump: bool) -> None:
     for uid in data[0].split():
 
         print(".", flush=True, end='')
+
+        if headers:
+            status, msg_data = imap.uid("fetch", uid, "(BODY.PEEK[HEADER])")
+            assert status, "Failed to get email header"
+            with open(f"header_{uid.decode()}.eml", "a", encoding="utf-8") as file:
+                for response_part in msg_data:
+                    if isinstance(response_part, tuple):
+                        raw_header = response_part[1].decode('utf-8', errors='ignore')
+                        file.write(raw_header)
+                        file.write("-------------")            
 
         status, msg_data = imap.uid("fetch", uid, '(BODY.PEEK[])')
         assert status == "OK", f"Fetch failed {data}"
@@ -348,12 +358,13 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="IMAP parameters to read emails")
     parser.add_argument("-c", "--config", required=True, help="Path to YAML file")
     parser.add_argument('-d', '--dump', action='store_true', help="Dump report content")
+    parser.add_argument('-H', '--header', action='store_true', help="Dump emails headers")
     args = parser.parse_args()
     config_file = pathlib.Path(args.config)
     read_config(config_file)
 
     # from server
-    load_mails(args.dump)
+    load_mails(args.dump, args.header)
 
     if not ITEMS_DICT:
         print("Nothing in mailbox!")
