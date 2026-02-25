@@ -227,7 +227,6 @@ def load_mails(dump: bool) -> None:
 
         message_uid = uid.decode()
 
-        print(f"handling {message_uid}")
         added = False
         body = None
 
