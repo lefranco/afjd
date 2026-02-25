@@ -24,7 +24,7 @@ import allgames
 MAX_DISPLAYED_CHAT = 3
 
 # for funding site hosting
-BALANCE_NEEDED_VALUE = 460
+BALANCE_NEEDED_VALUE = 850
 COMFORT_NEEDED_VALUE = 1000
 
 PAY_LINK = "https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-2026"
@@ -404,18 +404,40 @@ def show_news():
     # ==B5==============================
 
     div_b5 = html.DIV(Class='tooltip')
-    title2 = html.H4("Les meilleurs joueurs du site (d'après le classement ELO sur les parties 'standard')")
-    div_b5 <= title2
+    title6 = html.H4("Dernières nouvelles...")
+    div_b5 <= title6
+
+    hall_content_loaded = news_content_table_loaded['glory']
+    useful_lines = [ll for ll in hall_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
+    if useful_lines:
+        title61 = html.H5("... du monde du face à face", style={"marginTop": "2px", "marginBottom": "0px"})
+        div_b5 <= title61
+        hall_content = common.formatted_news(hall_content_loaded, 'CREATOR', 'glory_news')
+        div_b5 <= hall_content
 
     # ----
 
-    teaser_loaded = get_teaser_content()
-    teaser = formatted_teaser(teaser_loaded) if teaser_loaded else "Aucun pour le moment."
-    div_b5 <= teaser
+    news_admin_content_loaded = news_content_table_loaded['admin']
+    useful_lines = [ll for ll in news_admin_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
+    if useful_lines:
+        title62 = html.H5("... de l'administrateur", style={"marginTop": "2px", "marginBottom": "0px"})
+        div_b5 <= title62
+        news_content = common.formatted_news(news_admin_content_loaded, 'ADMIN', 'admin_news')
+        div_b5 <= news_content
 
     # ----
 
-    div_b5_tip = html.SPAN("Plus de détail dans le menu 'Classements' sous menu 'Classement performance'", Class='tooltiptext')
+    news_modo_content_loaded = news_content_table_loaded['modo']
+    useful_lines = [ll for ll in news_modo_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
+    if useful_lines:
+        title63 = html.H5("... des modérateurs", style={"marginTop": "2px", "marginBottom": "0px"})
+        div_b5 <= title63
+        news_content = common.formatted_news(news_modo_content_loaded, 'MODO', 'modo_news')
+        div_b5 <= news_content
+
+    # ----
+
+    div_b5_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu “Accueil“ sous menu “Déclarer un incident“ et un modérateur par un message privé", Class='tooltiptext')
     div_b5 <= div_b5_tip
     div_homepage <= div_b5
 
@@ -456,7 +478,7 @@ def show_news():
 
     # ----
 
-    news_forum = html.OBJECT(data=f"{config.FORUM_LAST_POSTS_ADDRESS}", width="100%", height="1000", title="Forums", alt="Forums")
+    news_forum = html.OBJECT(data=f"{config.FORUM_LAST_POSTS_ADDRESS}", width="100%", height="800", title="Forums", alt="Forums")
     div_b4 <= news_forum
 
     # ----
@@ -470,8 +492,30 @@ def show_news():
     # ==A3==============================
 
     div_a3 = html.DIV(Class='tooltip')
+    title2 = html.H4("Les meilleurs joueurs du site (d'après le classement ELO sur les parties 'standard')")
+    div_a3 <= title2
+
+    # ----
+
+    teaser_loaded = get_teaser_content()
+    teaser = formatted_teaser(teaser_loaded) if teaser_loaded else "Aucun pour le moment."
+    div_a3 <= teaser
+
+    # ----
+
+    div_a3_tip = html.SPAN("Plus de détail dans le menu 'Classements' sous menu 'Classement performance'", Class='tooltiptext')
+    div_a3 <= div_a3_tip
+    div_homepage <= div_a3
+
+    # ==B3==============================
+
+    # Merged with B4
+
+    # ==A2==============================
+
+    div_a2 = html.DIV(Class='tooltip')
     title9 = html.H4("Liens très importants")
-    div_a3 <= title9
+    div_a2 <= title9
 
     # ----
 
@@ -603,59 +647,15 @@ def show_news():
     row <= col
 
     note_bene_content <= note_bene_content_table
-    div_a3 <= note_bene_content
-    div_homepage <= div_a3
+    div_a2 <= note_bene_content
+    div_homepage <= div_a2
 
     col = html.TD()
     row <= col
 
     # ----
 
-    div_a3_tip = html.SPAN("Plus de détail sur le forum https://forum.diplomania2.fr", Class='tooltiptext')
-    div_a3 <= div_a3_tip
-    div_homepage <= div_a3
-
-    # ==B3==============================
-
-    # Merged with B4
-
-    # ==A2==============================
-
-    div_a2 = html.DIV(Class='tooltip')
-    title6 = html.H4("Dernières nouvelles...")
-    div_a2 <= title6
-
-    hall_content_loaded = news_content_table_loaded['glory']
-    useful_lines = [ll for ll in hall_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
-    if useful_lines:
-        title61 = html.H5("... du monde du face à face")
-        div_a2 <= title61
-        hall_content = common.formatted_news(hall_content_loaded, 'CREATOR', 'glory_news')
-        div_a2 <= hall_content
-
-    # ----
-
-    news_admin_content_loaded = news_content_table_loaded['admin']
-    useful_lines = [ll for ll in news_admin_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
-    if useful_lines:
-        title62 = html.H5("... de l'administrateur")
-        div_a2 <= title62
-        news_content = common.formatted_news(news_admin_content_loaded, 'ADMIN', 'admin_news')
-        div_a2 <= news_content
-
-    # ----
-
-    news_modo_content_loaded = news_content_table_loaded['modo']
-    useful_lines = [ll for ll in news_modo_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
-    if useful_lines:
-        title63 = html.H5("... des modérateurs")
-        div_a2 <= title63
-        news_content = common.formatted_news(news_modo_content_loaded, 'MODO', 'modo_news')
-        div_a2 <= news_content
-
-    # ----
-
-    div_a2_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu “Accueil“ sous menu “Déclarer un incident“ et un modérateur par un message privé", Class='tooltiptext')
+    div_a2_tip = html.SPAN("Plus de détail sur le forum https://forum.diplomania2.fr", Class='tooltiptext')
     div_a2 <= div_a2_tip
     div_homepage <= div_a2
 
@@ -709,8 +709,8 @@ def show_news():
 
     # ----
 
-    div_b1_tip = html.SPAN("Plus de détail dans le menu 'Classement' sous menu 'Joueurs'", Class='tooltiptext')
-    div_a1 <= div_b1_tip
+    div_a1_tip = html.SPAN("Plus de détail dans le menu 'Classement' sous menu 'Joueurs'", Class='tooltiptext')
+    div_a1 <= div_a1_tip
     div_homepage <= div_a1
 
     # ==B1==============================
