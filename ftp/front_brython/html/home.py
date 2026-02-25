@@ -1021,17 +1021,7 @@ def declare_incident(json_dict_params):
 
         # start checking data
 
-        if not email:
-            alert("Il faut obligatoirement un courriel (pour répondre)")
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            declare_incident(json_dict_params)
-            return
-
-        if email.find('@') == -1:
-            alert("@ dans courriel manquant")
-
+        if not common.check_correct_email(email):
             # back to where we started
             MY_SUB_PANEL.clear()
             declare_incident(json_dict_params)
