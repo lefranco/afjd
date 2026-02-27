@@ -332,28 +332,28 @@ def show_news():
 
     dying_games_loaded = stats_content['dying_games']
     if dying_games_loaded:
-        div_a5 <= html.H5("Grands retards :")
+        div_a5 <= html.H5("Grands retards :", style={"marginTop": "2px", "marginBottom": "0px"})
         div_a5 <= "Les parties ci-dessous sont en grand retard."
         div_a5 <= html.BR()
         div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, dying_games_loaded)
 
     suffering_games_loaded = stats_content['suffering_games']
     if suffering_games_loaded:
-        div_a5 <= html.H5("Remplacements urgents :")
+        div_a5 <= html.H5("Remplacements urgents :", style={"marginTop": "2px", "marginBottom": "0px"})
         div_a5 <= "Les parties ci-dessous sont en cours et ont besoin de remplaçant(s) - arbitre ou joueur."
         div_a5 <= html.BR()
         div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, suffering_games_loaded)
 
     stalled_games_loaded = stats_content['stalled_games']
     if stalled_games_loaded:
-        div_a5 <= html.H5("Démarrages difficiles :")
+        div_a5 <= html.H5("Démarrages difficiles :", style={"marginTop": "2px", "marginBottom": "0px"})
         div_a5 <= "Les parties ci-dessous sont en en attente d'être complète pour démarrer depuis trop longtemps."
         div_a5 <= html.BR()
         div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, stalled_games_loaded)
 
     waiting_games_loaded = stats_content['waiting_games']
     if waiting_games_loaded:
-        div_a5 <= html.H5("Démarrage possible :")
+        div_a5 <= html.H5("Démarrage possible :", style={"marginTop": "2px", "marginBottom": "0px"})
         div_a5 <= "Les parties ci-dessous sont complètes et en attente d'être démarrées."
         div_a5 <= html.BR()
         div_a5 <= formatted_games(games_dict, game_data_sel, conversion_table, waiting_games_loaded)
@@ -361,7 +361,7 @@ def show_news():
     chat_content_loaded = news_content_table_loaded['chats']
     if chat_content_loaded:
         div_a5 <= html.BR()
-        div_a5 <= html.H5("Dernier(s) message(s) :")
+        div_a5 <= html.H5("Dernier(s) message(s) :", style={"marginTop": "2px", "marginBottom": "0px"})
         num_chats = 0
         for last_chat in reversed(chat_content_loaded):
             last_chat_author = last_chat[1]
@@ -371,7 +371,7 @@ def show_news():
             if num_chats >= MAX_DISPLAYED_CHAT:
                 break
 
-    div_a5 <= html.H5("Financement de l'association (qui gère le site) :")
+    div_a5 <= html.H5("Financement de l'association (qui gère le site) :", style={"marginTop": "2px", "marginBottom": "0px"})
 
     current_collected_value = news_content_table_loaded['raised']
 
