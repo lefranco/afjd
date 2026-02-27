@@ -2433,23 +2433,35 @@ class GamesCompleteOrReadyRessource(flask_restful.Resource):  # type: ignore
             need_result=True)
         assert relevant_games_data is not None
 
-        relevant_games = {tr[0] for tr in relevant_games_data}
-
-        no_role_data = sql_executor.execute(
-            "select games.identifier,  count(*) as no_role, capacities.value as capacity  from games  join allocations on allocations.game_id=games.identifier join capacities on capacities.game_id=games.identifier  where allocations.role_id = -1  group by identifier",
-            need_result=True)
-        assert no_role_data is not None
-        # tr[0] id of game
-        # tr[1] number of players allocated to game (with no role)
-        # tr[2] capacity of game (including GM)
-
-        have_role_data = sql_executor.execute(
-            "select games.identifier,  count(*) as with_role, capacities.value as capacity  from games  join allocations on allocations.game_id=games.identifier  join capacities on capacities.game_id=games.identifier  where allocations.role_id <> -1  group by identifier",
-            need_result=True)
-        assert have_role_data is not None
         # tr[0] id of game
         # tr[1] number of players allocated to game (with role)
         # tr[2] capacity of game (including GM)
+
+        relevant_games = {tr[0] for tr in relevant_games_data}
+
+        # for these game we store the number of disorder (through variant)
+        disorder_dict: typing.Dict[int, int] = {}
+        for game_id in relevant_games:
+
+            # get game
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+
+            variant_name = game.variant
+            variant = variants.Variant.get_by_name(variant_name)
+            assert variant is not None
+            nb_disorder = len(variant['disorder'])
+            disorder_dict[int(game_id)] = nb_disorder
+
+        no_role_data = sql_executor.execute(
+            "select games.identifier, count(*) as no_role, capacities.value as capacity from games join allocations on allocations.game_id=games.identifier join capacities on capacities.game_id=games.identifier  where allocations.role_id = -1  group by identifier",
+            need_result=True)
+        assert no_role_data is not None
+
+        have_role_data = sql_executor.execute(
+            "select games.identifier, count(*) as with_role, capacities.value as capacity from games join allocations on allocations.game_id=games.identifier  join capacities on capacities.game_id=games.identifier  where allocations.role_id <> -1  group by identifier",
+            need_result=True)
+        assert have_role_data is not None
 
         del sql_executor
 
@@ -2460,10 +2472,12 @@ class GamesCompleteOrReadyRessource(flask_restful.Resource):  # type: ignore
         role_dict = {tr[0]: tr[1] for tr in have_role_data}
 
         # game is complete if there are at least as many people allocated to the game (without a role) than the capacity (-1 : remove GM) and nobody has a role (except GM)
-        complete_games = [tr[0] for tr in no_role_data if tr[0] in relevant_games and tr[1] >= tr[2] - 1 and role_dict[tr[0]] == 1]
+        # if game has disorder we need less people allocated
+        complete_games = [tr[0] for tr in no_role_data if tr[0] in relevant_games and tr[1] >= tr[2] - 1 - disorder_dict[tr[0]]]
 
         # game is ready if fewer people with role than capacity but with these with no role capacity is reached
-        ready_games = [tr[0] for tr in have_role_data if tr[0] in relevant_games and tr[1] - 1 < tr[2] - 1 and tr[0] in norole_dict and tr[1] - 1 + norole_dict[tr[0]] >= tr[2] - 1]
+        # if game has disorder we need less people allocated
+        ready_games = [tr[0] for tr in have_role_data if tr[0] in relevant_games and tr[1] - 1 < tr[2] - 1 - disorder_dict[tr[0]] and tr[0] in norole_dict and tr[1] - 1 + norole_dict[tr[0]] >= tr[2] - 1 - disorder_dict[tr[0]]]
 
         data = {'complete': complete_games, 'ready': ready_games}
 
