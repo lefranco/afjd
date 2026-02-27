@@ -460,7 +460,7 @@ def show_news():
     port = config.SERVER_CONFIG['EVENTS']['PORT']
     url = f"{host}:{port}/"
 
-    news_events = html.OBJECT(data=url, width="100%", height="450", title="Evénements", alt="Evénements")
+    news_events = html.IFRAME(src=url, width="100%", height="450", style={"border": "none"}, title="Evénements", alt="Evénements")
     div_a4 <= news_events
 
     # ----
@@ -484,7 +484,7 @@ def show_news():
 
     # ----
 
-    news_forum = html.OBJECT(data=f"{config.FORUM_LAST_POSTS_ADDRESS}", width="100%", height="800", title="Forums", alt="Forums")
+    news_forum = html.IFRAME(src=f"{config.FORUM_LAST_POSTS_ADDRESS}", width="100%", height="800", style={"border": "none"}, title="Forums", alt="Forums")
     div_b4 <= news_forum
 
     # ----
@@ -684,7 +684,7 @@ def show_news():
     port = config.SERVER_CONFIG['DOKUWIKI']['PORT']
     url = f"{host}:{port}/"
 
-    news_wiki = html.IFRAME(src=f"{url}/doku.php?id=start&do=export_xhtml", width="100%", height="400", title="Wiki", alt="Wiki", allow="fullscreen")
+    news_wiki = html.IFRAME(src=f"{url}/doku.php?id=start&do=export_xhtml", width="100%", height="400", style={"border": "none"}, title="Wiki", alt="Wiki", allow="fullscreen")
     div_b2 <= news_wiki
 
     # ----
