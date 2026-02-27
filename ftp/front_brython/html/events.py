@@ -487,7 +487,7 @@ def registrations():
     start_hour = event_dict['start_hour']
     end_date = event_dict['end_date']
     location = event_dict['location']
-    external = event_dict['external']
+    priority = event_dict['priority']
     description = event_dict['description']
 
     manager_id = event_dict['manager_id']
@@ -514,8 +514,8 @@ def registrations():
     event_information <= f" : {location}"
     event_information <= html.BR()
 
-    event_information <= html.B("Externe")
-    event_information <= f" : {'Oui' if external else 'Non'}"
+    event_information <= html.B("Priorité")
+    event_information <= f" : {priority}"
     event_information <= html.BR()
 
     event_information <= html.B("Description complète")
@@ -545,28 +545,23 @@ def registrations():
     MY_SUB_PANEL <= html.BR()
 
     # provide the link
-    if not external:
-
-        url = f"{config.SITE_ADDRESS}?event={name}"
-        input_copy_url_register = html.INPUT(type="text", value=url)
-        button_copy_url_register = html.BUTTON("Copier le lien pour inviter un joueur à s'inscrire à cet événement.", Class='btn-inside')
-        button_copy_url_register.bind("click", copy_url_register_callback)
-        MY_SUB_PANEL <= button_copy_url_register
+    url = f"{config.SITE_ADDRESS}?event={name}"
+    input_copy_url_register = html.INPUT(type="text", value=url)
+    button_copy_url_register = html.BUTTON("Copier le lien pour inviter un joueur à s'inscrire à cet événement.", Class='btn-inside')
+    button_copy_url_register.bind("click", copy_url_register_callback)
+    MY_SUB_PANEL <= button_copy_url_register
 
     MY_SUB_PANEL <= html.H4("Votre inscription")
 
     # put button to register/un register
-    if external:
-        MY_SUB_PANEL <= html.EM("Attention : l'inscription est externe, c'est à dire qu'elle n'est pas gérée sur le site.")
-    else:
-        # tell the guy his situation
-        MY_SUB_PANEL <= html.DIV(player_status_str, Class='important')
-        MY_SUB_PANEL <= html.BR()
+    # tell the guy his situation
+    MY_SUB_PANEL <= html.DIV(player_status_str, Class='important')
+    MY_SUB_PANEL <= html.BR()
 
-        if 'PSEUDO' in storage:
-            MY_SUB_PANEL <= register_form
-        else:
-            MY_SUB_PANEL <= account_button
+    if 'PSEUDO' in storage:
+        MY_SUB_PANEL <= register_form
+    else:
+        MY_SUB_PANEL <= account_button
 
     # provide more data about registration
     if 'PSEUDO' in storage:
@@ -582,13 +577,12 @@ def registrations():
         MY_SUB_PANEL <= contact_form
 
     # provide people already in
-    if not external:
-        MY_SUB_PANEL <= html.H4("Ils/elles vous attendent :")
-        MY_SUB_PANEL <= joiners_table
-        MY_SUB_PANEL <= html.BR()
-        input_export_players = html.INPUT(type="submit", value="Télécharger la liste des inscrits", Class='btn-inside')
-        input_export_players.bind("click", download_players_callback)
-        MY_SUB_PANEL <= input_export_players
+    MY_SUB_PANEL <= html.H4("Ils/elles vous attendent :")
+    MY_SUB_PANEL <= joiners_table
+    MY_SUB_PANEL <= html.BR()
+    input_export_players = html.INPUT(type="submit", value="Télécharger la liste des inscrits", Class='btn-inside')
+    input_export_players.bind("click", download_players_callback)
+    MY_SUB_PANEL <= input_export_players
 
 
 def create_event(json_dict):
@@ -600,7 +594,7 @@ def create_event(json_dict):
     start_hour = json_dict['start_hour'] if json_dict and 'start_hour' in json_dict else None
     end_date = json_dict['end_date'] if json_dict and 'end_date' in json_dict else None
     location = json_dict['location'] if json_dict and 'location' in json_dict else None
-    external = json_dict['external'] if json_dict and 'external' in json_dict else None
+    priority = json_dict['priority'] if json_dict and 'priority' in json_dict else None
     description = json_dict['description'] if json_dict and 'description' in json_dict else None
     summary = json_dict['summary'] if json_dict and 'summary' in json_dict else None
 
@@ -612,7 +606,7 @@ def create_event(json_dict):
         nonlocal start_hour
         nonlocal end_date
         nonlocal location
-        nonlocal external
+        nonlocal priority
         nonlocal description
         nonlocal summary
 
@@ -642,7 +636,7 @@ def create_event(json_dict):
         start_hour = input_start_hour.value
         end_date = input_end_date.value
         location = input_location.value
-        external = int(input_external.checked)
+        priority = input_priority.value
         description = input_description.value
         summary = input_summary.value
 
@@ -653,7 +647,7 @@ def create_event(json_dict):
             'start_hour': start_hour,
             'end_date': end_date,
             'location': location,
-            'external': external,
+            'priority': priority,
             'description': description,
             'summary': summary,
         }
@@ -741,10 +735,10 @@ def create_event(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_external = html.LEGEND("externe", title="L'événement est-il externe au site")
-    fieldset <= legend_external
-    input_external = html.INPUT(type="checkbox", checked=False, Class='btn-inside')
-    fieldset <= input_external
+    legend_priority = html.LEGEND("priorité", title="Quelle est la priorité de l'événement ?")
+    fieldset <= legend_priority
+    input_priority = html.INPUT(type="text", value=priority if priority is not None else 0, Class='btn-inside')
+    fieldset <= input_priority
     form <= fieldset
 
     form <= html.BR()
@@ -959,6 +953,7 @@ def handle_event():
         start_hour = input_start_hour.value
         end_date = input_end_date.value
         location = input_location.value
+        priority = input_priority.value
         description = input_description.value
         summary = input_summary.value
 
@@ -969,6 +964,7 @@ def handle_event():
             'start_hour': start_hour,
             'end_date': end_date,
             'location': location,
+            'priority': priority,
             'description': description,
             'summary': summary,
         }
@@ -1166,6 +1162,7 @@ def handle_event():
     start_hour = event_dict['start_hour']
     end_date = event_dict['end_date']
     location = event_dict['location']
+    priority = event_dict['priority']
     description = event_dict['description']
     summary = event_dict['summary']
 
@@ -1210,6 +1207,13 @@ def handle_event():
     fieldset <= legend_location
     input_location = html.INPUT(type="text", value=location, size=MAX_LEN_EVENT_LOCATION, Class='btn-inside')
     fieldset <= input_location
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_priority = html.LEGEND("priorité", title="Quelle est la priorité de l'événement ?")
+    fieldset <= legend_priority
+    input_priority = html.INPUT(type="text", value=priority if priority is not None else 0, Class='btn-inside')
+    fieldset <= input_priority
     form <= fieldset
 
     form <= html.BR()

@@ -454,6 +454,8 @@ def show_news():
     port = config.SERVER_CONFIG['EVENTS']['PORT']
     url = f"{host}:{port}/"
 
+    print(f"{url=}")
+
     news_events = html.OBJECT(data=url, width="100%", height="450", title="Evénements", alt="Evénements")
     div_a4 <= news_events
 
