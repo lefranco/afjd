@@ -40,14 +40,17 @@ OPTIONS = {
 
 # for safety
 for num in range(1, 4):
+
     if f'ANNOUNCEMENT_{num}_ADMIN' not in storage:
         storage[f'ANNOUNCEMENT_{num}_ADMIN'] = ""
     if f'ANNOUNCEMENT_{num}_DISPLAYED_ADMIN' not in storage:
         storage[f'ANNOUNCEMENT_{num}_DISPLAYED_ADMIN'] = 'no'
+
     if f'ANNOUNCEMENT_{num}_MODO' not in storage:
         storage[f'ANNOUNCEMENT_{num}_MODO'] = ""
     if f'ANNOUNCEMENT_{num}_DISPLAYED_MODO' not in storage:
         storage[f'ANNOUNCEMENT_{num}_DISPLAYED_MODO'] = 'no'
+
     if f'ANNOUNCEMENT_{num}_CREATOR' not in storage:
         storage[f'ANNOUNCEMENT_{num}_CREATOR'] = ""
     if f'ANNOUNCEMENT_{num}_DISPLAYED_CREATOR' not in storage:
@@ -409,31 +412,34 @@ def show_news():
 
     hall_content_loaded = news_content_table_loaded['glory']
     useful_lines = [ll for ll in hall_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
+    # need to be called to store popups
+    hall_content = common.formatted_news(hall_content_loaded, 'CREATOR', 'glory_news')
     if useful_lines:
         title61 = html.H5("... du monde du face à face", style={"marginTop": "2px", "marginBottom": "0px"})
         div_b5 <= title61
-        hall_content = common.formatted_news(hall_content_loaded, 'CREATOR', 'glory_news')
         div_b5 <= hall_content
 
     # ----
 
     news_admin_content_loaded = news_content_table_loaded['admin']
     useful_lines = [ll for ll in news_admin_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
+    # need to be called to store popups
+    news_admin_content = common.formatted_news(news_admin_content_loaded, 'ADMIN', 'admin_news')
     if useful_lines:
         title62 = html.H5("... de l'administrateur", style={"marginTop": "2px", "marginBottom": "0px"})
         div_b5 <= title62
-        news_content = common.formatted_news(news_admin_content_loaded, 'ADMIN', 'admin_news')
-        div_b5 <= news_content
+        div_b5 <= news_admin_content
 
     # ----
 
     news_modo_content_loaded = news_content_table_loaded['modo']
     useful_lines = [ll for ll in news_modo_content_loaded.split('\n') if ll and not ll.startswith('.ANNONCE_')]
+    # need to be called to store popups
+    news_modo_content = common.formatted_news(news_modo_content_loaded, 'MODO', 'modo_news')
     if useful_lines:
         title63 = html.H5("... des modérateurs", style={"marginTop": "2px", "marginBottom": "0px"})
         div_b5 <= title63
-        news_content = common.formatted_news(news_modo_content_loaded, 'MODO', 'modo_news')
-        div_b5 <= news_content
+        div_b5 <= news_modo_content
 
     # ----
 
@@ -737,7 +743,7 @@ def show_news():
 
     MY_SUB_PANEL <= div_homepage
 
-    # announce
+    # show announces
     for origin in ('ADMIN', 'MODO', 'CREATOR'):
         for number in range(1, 4):
             if storage[f'ANNOUNCEMENT_{number}_DISPLAYED_{origin}'] == 'no':
