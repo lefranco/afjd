@@ -18,8 +18,21 @@
 
     <h1>WebRTC Test</h1>
     
-    <video id="localVideo" autoplay playsinline muted width="350"></video>
-    <video id="remoteVideo" autoplay playsinline muted width="350" style="background:black"></video>
+    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    
+        <div style="text-align: center;">
+            <div style="font-weight: bold; color: #00c851; margin-bottom: 5px;">Moi (Local)</div>
+            <video id="localVideo" autoplay playsinline muted width="160" height="120" 
+                   style="background: black; object-fit: cover; border: 2px solid #00c851;"></video>
+        </div>
+    
+        <div style="text-align: center;">
+            <div style="font-weight: bold; color: #33b5e5; margin-bottom: 5px;">L'autre (Distant)</div>
+            <video id="remoteVideo" autoplay playsinline width="320" height="240" 
+                   style="background: black; object-fit: cover; border: 2px solid #33b5e5;"></video>
+        </div>
+    
+    </div>
 
     <div id="controls">
         <button id="startBtn">Démarrer l'Appel</button>
@@ -118,18 +131,33 @@ def start_call(ev):
         local_stream = stream
         document["localVideo"].srcObject = stream
         
+        # Force la lecture locale pour iOS
+        document["localVideo"].play()
+
         # On prépare la connexion
         create_peer_connection()
         
-        # On crée l'offre pour appeler l'autre
-        pc.createOffer().then(lambda offer:
-            pc.setLocalDescription(offer).then(lambda _:
-                socket.emit("signal", {"room": room, "offer": offer})
+        # On ajoute un petit délai pour laisser à iOS le temps d'initialiser la caméra
+        def send_offer():
+            # On crée l'offre pour appeler l'autre
+            pc.createOffer().then(lambda offer:
+                pc.setLocalDescription(offer).then(lambda _:
+                    socket.emit("signal", {"room": room, "offer": offer})
+                )
             )
-        )
+        window.setTimeout(send_offer, 500)            
+
+    # On demande du 640x480 maximum pour garantir la fluidité
+    options = {
+        "video": {
+            "width": {"ideal": 640},
+            "height": {"ideal": 480}
+        },
+        "audio": True
+    }
 
     # Demande caméra + micro
-    window.navigator.mediaDevices.getUserMedia({"video": True, "audio": True}).then(success)
+    window.navigator.mediaDevices.getUserMedia(options).then(success)
 
 # Liaison des boutons
 document["startBtn"].bind("click", start_call)
