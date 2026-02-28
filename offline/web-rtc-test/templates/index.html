@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>WebRTC 1v1 Brython</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #222; color: white; }
+        video { background: #000; border: 2px solid #555; margin: 10px; border-radius: 8px; }
+        #controls { margin-top: 20px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body onload="brython()">
+
+<h2>WebRTC 1v1 (Python in Browser)</h2>
+
+<div>
+    <video id="localVideo" autoplay playsinline muted width="350"></video>
+    <video id="remoteVideo" autoplay playsinline width="350"></video>
+</div>
+
+<div id="controls">
+    <button id="startBtn">Démarrer l'Appel</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/brython@3.12.0/brython.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/brython@3.12.0/brython_stdlib.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
+
+<script type="text/python">
+from browser import document, window, console
+
+# Initialisation Socket.io
+socket = window.io()
+room = "testroom"
+pc = None
+local_stream = None
+
+# Configuration STUN (Google) pour traverser les NAT
+rtc_config = {"iceServers": [{"urls": "stun:stun.l.google.com:19302"}]}
+
+def create_peer_connection():
+    global pc
+    pc = window.RTCPeerConnection.new(rtc_config)
+    
+    # Gestion des candidats ICE
+    def on_ice(event):
+        if event.candidate:
+            console.log("Envoi ICE candidate")
+            socket.emit("signal", {"room": room, "candidate": event.candidate})
+    
+    pc.onicecandidate = on_ice
+
+    # Réception du flux distant
+    def on_track(event):
+        console.log("Flux distant reçu !")
+        if event.streams:
+            document["remoteVideo"].srcObject = event.streams[0]
+    
+    pc.ontrack = on_track
+
+    # Ajout du flux local
+    if local_stream:
+        for track in local_stream.getTracks():
+            pc.addTrack(track, local_stream)
+
+def on_signal(data):
+    global pc
+    if "candidate" in data:
+        print("Candidat ICE reçu !") # Regarde si ça s'affiche en boucle
+        if pc:
+            cand = window.RTCIceCandidate.new(data["candidate"])
+            pc.addIceCandidate(cand)
+    
+    console.log("Signal reçu type:", "offer" if "offer" in data else "answer" if "answer" in data else "candidate")
+
+    # 1. On reçoit une OFFRE
+    if "offer" in data:
+        if not pc: create_peer_connection()
+        
+        offer = window.RTCSessionDescription.new(data["offer"])
+        pc.setRemoteDescription(offer).then(lambda _: 
+            pc.createAnswer().then(lambda answer:
+                pc.setLocalDescription(answer).then(lambda _:
+                    socket.emit("signal", {"room": room, "answer": answer})
+                )
+            )
+        )
+
+    # 2. On reçoit une RÉPONSE
+    elif "answer" in data:
+        answer = window.RTCSessionDescription.new(data["answer"])
+        pc.setRemoteDescription(answer)
+
+    # 3. On reçoit un candidat ICE
+    elif "candidate" in data:
+        if pc:
+            candidate = window.RTCIceCandidate.new(data["candidate"])
+            pc.addIceCandidate(candidate)
+
+socket.on("signal", on_signal)
+
+def start_call(ev):
+    global local_stream
+    document["startBtn"].disabled = True
+    
+    # Rejoindre la room Socket.io
+    socket.emit("join", {"room": room})
+
+    # Accès Caméra/Micro
+    window.navigator.mediaDevices.getUserMedia({"video": True, "audio": True}).then(setup_local_video)
+
+def setup_local_video(stream):
+    global local_stream, pc
+    local_stream = stream
+    document["localVideo"].srcObject = stream
+    
+    # On crée la connexion
+    create_peer_connection()
+    
+    # On crée l'offre initiale
+    pc.createOffer().then(lambda offer:
+        pc.setLocalDescription(offer).then(lambda _:
+            socket.emit("signal", {"room": room, "offer": offer})
+        )
+    )
+
+document["startBtn"].bind("click", start_call)
+console.log("Brython prêt.")
+</script>
+
+</body>
+</html>
