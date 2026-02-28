@@ -1,83 +1,90 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
     <meta charset="utf-8">
-    <title>WebRTC 1v1 Brython</title>
+    <title>WebRTC 1v1 - VERSION 3.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/brython@3.12.0/brython.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/brython@3.12.0/brython_stdlib.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
     <style>
         body { font-family: sans-serif; text-align: center; background: #222; color: white; }
-        video { background: #000; border: 2px solid #555; margin: 10px; border-radius: 8px; }
-        #controls { margin-top: 20px; }
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        video { background: black; border: 2px solid #555; margin: 10px; border-radius: 8px; }
+        #stopBtn { background-color: #ff4444; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 5px; }
+        #startBtn { background-color: #00c851; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 5px; }
+        button:disabled { background-color: #555 !important; cursor: not-allowed; }
     </style>
 </head>
 <body onload="brython()">
 
-<h2>WebRTC 1v1 (Python in Browser)</h2>
-
-<div>
+    <h1>WebRTC Test</h1>
+    
     <video id="localVideo" autoplay playsinline muted width="350"></video>
-    <video id="remoteVideo" autoplay playsinline width="350"></video>
-</div>
+    <video id="remoteVideo" autoplay playsinline muted width="350" style="background:black"></video>
 
-<div id="controls">
-    <button id="startBtn">Démarrer l'Appel</button>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/brython@3.12.0/brython.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/brython@3.12.0/brython_stdlib.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
+    <div id="controls">
+        <button id="startBtn">Démarrer l'Appel</button>
+        <button id="stopBtn" style="display: none;">Raccrocher</button>
+    </div>
 
 <script type="text/python">
 from browser import document, window, console
 
-# Initialisation Socket.io
-socket = window.io()
+# Configuration obligatoire pour passer les routeurs (STUN de Google)
+rtc_config = {"iceServers": [{"urls": "stun:stun.l.google.com:19302"}]}
+socket = window.io.connect(window.location.origin)
 room = "testroom"
 pc = None
 local_stream = None
 
-# Configuration STUN (Google) pour traverser les NAT
-rtc_config = {"iceServers": [{"urls": "stun:stun.l.google.com:19302"}]}
-
 def create_peer_connection():
     global pc
     pc = window.RTCPeerConnection.new(rtc_config)
-    
-    # Gestion des candidats ICE
+    console.log("PeerConnection créée")
+
+    # Quand on reçoit un candidat ICE (adresse réseau)
     def on_ice(event):
         if event.candidate:
-            console.log("Envoi ICE candidate")
             socket.emit("signal", {"room": room, "candidate": event.candidate})
-    
     pc.onicecandidate = on_ice
 
-    # Réception du flux distant
+    # Quand le flux vidéo de l'autre arrive
     def on_track(event):
         console.log("Flux distant reçu !")
-        if event.streams:
-            document["remoteVideo"].srcObject = event.streams[0]
-    
+        remote_v = document["remoteVideo"]
+        
+        # On récupère le flux JS natif
+        streams = event.streams
+        
+        if streams and len(streams) > 0:
+            # On assigne directement sans faire de test 'if x != y'
+            new_stream = streams[0]
+            remote_v.srcObject = new_stream
+            
+            # On utilise une fonction simple pour le play
+            def force_play():
+                remote_v.play()
+                console.log("Vidéo en lecture.")
+                
+            window.setTimeout(force_play, 200)
+
     pc.ontrack = on_track
 
-    # Ajout du flux local
+    # On ajoute nos pistes locales à la connexion
     if local_stream:
         for track in local_stream.getTracks():
             pc.addTrack(track, local_stream)
 
 def on_signal(data):
     global pc
-    if "candidate" in data:
-        print("Candidat ICE reçu !") # Regarde si ça s'affiche en boucle
-        if pc:
-            cand = window.RTCIceCandidate.new(data["candidate"])
-            pc.addIceCandidate(cand)
     
-    console.log("Signal reçu type:", "offer" if "offer" in data else "answer" if "answer" in data else "candidate")
+    if "close" in data:
+        console.log("L'autre a raccroché")
+        window.location.reload()
+        return
 
-    # 1. On reçoit une OFFRE
     if "offer" in data:
+        console.log("Offre reçue")
         if not pc: create_peer_connection()
-        
         offer = window.RTCSessionDescription.new(data["offer"])
         pc.setRemoteDescription(offer).then(lambda _: 
             pc.createAnswer().then(lambda answer:
@@ -86,48 +93,47 @@ def on_signal(data):
                 )
             )
         )
-
-    # 2. On reçoit une RÉPONSE
     elif "answer" in data:
-        answer = window.RTCSessionDescription.new(data["answer"])
-        pc.setRemoteDescription(answer)
-
-    # 3. On reçoit un candidat ICE
+        console.log("Réponse reçue")
+        pc.setRemoteDescription(window.RTCSessionDescription.new(data["answer"]))
     elif "candidate" in data:
         if pc:
-            candidate = window.RTCIceCandidate.new(data["candidate"])
-            pc.addIceCandidate(candidate)
+            pc.addIceCandidate(window.RTCIceCandidate.new(data["candidate"]))
 
 socket.on("signal", on_signal)
 
+def stop_call(ev=None):
+    socket.emit("signal", {"room": room, "close": True})
+    window.location.reload()
+
 def start_call(ev):
-    global local_stream
+    console.log("Clic Start")
+    document["stopBtn"].style.display = "inline-block"
     document["startBtn"].disabled = True
     
-    # Rejoindre la room Socket.io
     socket.emit("join", {"room": room})
 
-    # Accès Caméra/Micro
-    window.navigator.mediaDevices.getUserMedia({"video": True, "audio": True}).then(setup_local_video)
-
-def setup_local_video(stream):
-    global local_stream, pc
-    local_stream = stream
-    document["localVideo"].srcObject = stream
-    
-    # On crée la connexion
-    create_peer_connection()
-    
-    # On crée l'offre initiale
-    pc.createOffer().then(lambda offer:
-        pc.setLocalDescription(offer).then(lambda _:
-            socket.emit("signal", {"room": room, "offer": offer})
+    def success(stream):
+        global local_stream
+        local_stream = stream
+        document["localVideo"].srcObject = stream
+        
+        # On prépare la connexion
+        create_peer_connection()
+        
+        # On crée l'offre pour appeler l'autre
+        pc.createOffer().then(lambda offer:
+            pc.setLocalDescription(offer).then(lambda _:
+                socket.emit("signal", {"room": room, "offer": offer})
+            )
         )
-    )
 
+    # Demande caméra + micro
+    window.navigator.mediaDevices.getUserMedia({"video": True, "audio": True}).then(success)
+
+# Liaison des boutons
 document["startBtn"].bind("click", start_call)
-console.log("Brython prêt.")
+document["stopBtn"].bind("click", stop_call)
 </script>
-
 </body>
 </html>
