@@ -42,15 +42,30 @@
 <script type="text/python">
 from browser import document, window, console
 
-# Configuration obligatoire pour passer les routeurs (STUN de Google)
-rtc_config = {"iceServers": [{"urls": "stun:stun.l.google.com:19302"}]}
+import config
+
+# Configuration "Blindée" pour la 4G/5G
+rtc_config = {
+    "iceServers": [
+        {"urls": "stun:stun.l.google.com:19302"},
+        {"urls": "stun:stun1.l.google.com:19302"},
+        # On ajoute un serveur de secours STUN supplémentaire
+        {"urls": "stun:stun.relay.metered.ca:80"},
+        {
+            "urls": "turn:global.relay.metered.ca:443",
+            "username": config.USERNAME,
+            "credential": config.PASSWORD
+        }
+    ]
+}
+
 socket = window.io.connect(window.location.origin)
 room = "testroom"
 pc = None
 local_stream = None
 
 def create_peer_connection():
-    global pc
+    global pc, rtc_config
     pc = window.RTCPeerConnection.new(rtc_config)
     console.log("PeerConnection créée")
 
@@ -87,6 +102,8 @@ def create_peer_connection():
         for track in local_stream.getTracks():
             pc.addTrack(track, local_stream)
 
+ice_candidates_queue = []
+
 def on_signal(data):
     global pc
     
@@ -95,11 +112,19 @@ def on_signal(data):
         window.location.reload()
         return
 
+    # FONCTION POUR VIDER LA QUEUE
+    def process_queue():
+        while len(ice_candidates_queue) > 0:
+            cand = ice_candidates_queue.pop(0)
+            pc.addIceCandidate(cand)
+
     if "offer" in data:
         console.log("Offre reçue")
         if not pc: create_peer_connection()
         offer = window.RTCSessionDescription.new(data["offer"])
+        # On accepte l'offre
         pc.setRemoteDescription(offer).then(lambda _: 
+            process_queue() or # On traite les candidats en attente
             pc.createAnswer().then(lambda answer:
                 pc.setLocalDescription(answer).then(lambda _:
                     socket.emit("signal", {"room": room, "answer": answer})
@@ -108,10 +133,16 @@ def on_signal(data):
         )
     elif "answer" in data:
         console.log("Réponse reçue")
-        pc.setRemoteDescription(window.RTCSessionDescription.new(data["answer"]))
+        pc.setRemoteDescription(window.RTCSessionDescription.new(data["answer"])).then(lambda _:
+            process_queue()
+        )
     elif "candidate" in data:
-        if pc:
-            pc.addIceCandidate(window.RTCIceCandidate.new(data["candidate"]))
+        candidate = window.RTCIceCandidate.new(data["candidate"])
+        # Si la description distante n'est pas encore là, on stocke
+        if pc and pc.remoteDescription and pc.remoteDescription.type:
+            pc.addIceCandidate(candidate)
+        else:
+            ice_candidates_queue.append(candidate)
 
 socket.on("signal", on_signal)
 

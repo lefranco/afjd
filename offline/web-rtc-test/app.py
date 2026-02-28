@@ -1,9 +1,13 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, emit, join_room
 
 app = Flask(__name__)
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
+
+@app.route('/config.py')
+def send_config():
+    return send_from_directory('.', 'config.py')
 
 @app.after_request
 def add_header(response):
@@ -26,4 +30,5 @@ def on_signal(data):
 
 
 if __name__ == "__main__":
+    print(">>> JE SUIS LE BON SERVEUR : VERSION 2.0 <<<")
     socketio.run(app, host="0.0.0.0", port=5000, debug=True)
