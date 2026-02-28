@@ -1,0 +1,5 @@
+# once
+ngrok config add-authtoken $TOKEN 
+# start
+ngrok http 5000
+
