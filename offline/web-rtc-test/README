@@ -1,5 +1,13 @@
 # once
 ngrok config add-authtoken $TOKEN 
-# start
+
+# start reverse proxy
 ngrok http 5000
+
+# start server
+python3 app.py
+
+# start client
+firefox 
+  open http://localhost:5000/
 
