@@ -383,7 +383,7 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
 
     # make teaser (just an abstract)
     teaser_text = ""
-    for classic1 in (True, False):
+    for classic1 in (False, True):
         for role_id1 in effective_roles:
             elo_sub_raw_list = [e for e in elo_raw_list if e[0] == classic1 and e[1] == role_id1]
             best_one = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0]  # type: ignore
