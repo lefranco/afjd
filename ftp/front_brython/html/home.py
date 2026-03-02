@@ -236,11 +236,10 @@ def formatted_teaser(teasers):
         row = html.TR()
         row <= html.TD(html.B(role))
         for mode in modes:
-            pseud, score = data[(role, mode)]
+            # ignore score to save room
+            pseud, _ = data[(role, mode)]
             elem = html.DIV()
             elem <= pseud
-            elem <= " "
-            elem <= score
             row <= html.TD(elem)
         teaser_content_table <= row
 
