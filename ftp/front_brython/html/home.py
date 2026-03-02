@@ -223,9 +223,6 @@ def formatted_teaser(teasers):
     roles = sorted({d[0] for d in data})
     modes = sorted({d[1] for d in data})
 
-    # init
-    teaser_content = html.DIV()
-
     # data in table
     teaser_content_table = html.TABLE(width="100%")
     title = html.TR()
@@ -243,11 +240,7 @@ def formatted_teaser(teasers):
             row <= html.TD(elem)
         teaser_content_table <= row
 
-    teaser_content <= teaser_content_table
-    teaser_content <= html.BR()
-    teaser_content <= html.EM(f"En date de {datation}")
-
-    return teaser_content
+    return teaser_content_table, datation
 
 
 def important_links_table():
@@ -655,8 +648,17 @@ def show_news():
     # ----
 
     teaser_loaded = get_teaser_content()
-    teaser = formatted_teaser(teaser_loaded) if teaser_loaded else "Aucun pour le moment."
-    div_a3 <= teaser
+    teaser_table, datation = formatted_teaser(teaser_loaded)
+    # create a box that alllow scrolling table inside
+    scroll_box = html.DIV(style={
+        "width": "100%", 
+        "overflow-x": "auto", 
+        "display": "block"
+    })
+    scroll_box <= teaser_table
+    div_a3 <= scroll_box
+    div_a3 <= html.BR()
+    div_a3 <= html.EM(f"En date de {datation}")
 
     # ----
 
@@ -676,8 +678,15 @@ def show_news():
 
     # ----
 
-    note_bene_content_table = important_links_table()
-    div_a2 <= note_bene_content_table
+    note_bene_content = important_links_table()
+    # create a box that alllow scrolling table inside
+    scroll_box = html.DIV(style={
+        "width": "100%", 
+        "overflow-x": "auto", 
+        "display": "block"
+    })
+    scroll_box <= note_bene_content
+    div_a2 <= scroll_box
 
     # ----
 
