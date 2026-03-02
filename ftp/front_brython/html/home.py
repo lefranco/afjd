@@ -299,12 +299,6 @@ def important_links_table():
     col <= img
     row <= col
 
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/chart.png", alt="La charte")
-    col <= img
-    row <= col
-
     # ............
 
     row = html.TR()
@@ -332,16 +326,6 @@ def important_links_table():
     col <= "Tutoriel intertactif pour les règles et le site !"
     row <= col
 
-    col = html.TD()
-    form = html.FORM()
-    input_show_chart = html.INPUT(type="submit", value="La charte", Class='btn-inside')
-    input_show_chart.attrs['style'] = 'font-size: 10px'
-    input_show_chart.bind("click", show_chart_callback)
-    form <= input_show_chart
-    col <= form
-    col <= "La charte du bon diplomate - à lire absolument !"
-    row <= col
-
     # -------------
 
     row = html.TR()
@@ -365,11 +349,6 @@ def important_links_table():
     col <= img
     row <= col
 
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/database.png", alt="Database")
-    col <= img
-    row <= col
 
     # ............
 
@@ -394,11 +373,54 @@ def important_links_table():
     col <= link52
     row <= col
 
+
+    # ............
+
+    row = html.TR()
+    note_bene_content_table <= row
+
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/chart.png", alt="La charte")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/database.png", alt="Database")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    row <= col
+
+    # ............
+
+    row = html.TR()
+    note_bene_content_table <= row
+
+
+    col = html.TD()
+    form = html.FORM()
+    input_show_chart = html.INPUT(type="submit", value="La charte", Class='btn-inside')
+    input_show_chart.attrs['style'] = 'font-size: 10px'
+    input_show_chart.bind("click", show_chart_callback)
+    form <= input_show_chart
+    col <= form
+    col <= "La charte du bon diplomate - à lire absolument !"
+    row <= col
+
+
     col = html.TD()
     link53 = html.A(href="https://www.world-diplomacy-reference.com", target="_blank")
     link53 <= "La fameuse \"World Diplomacy Reference\", base de données des résultats de tournois en face à face et en ligne !"
     col <= link53
     row <= col
+
+    col = html.TD()
+    row <= col
+
 
     return note_bene_content_table
 
