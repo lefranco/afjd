@@ -250,6 +250,159 @@ def formatted_teaser(teasers):
     return teaser_content
 
 
+def important_links_table():
+    """important_links_table"""
+
+    def show_chart_callback(ev):  # pylint: disable=invalid-name
+        """ show_chart_callback """
+
+        ev.preventDefault()
+
+        arrival = 'charte'
+
+        # so that will go to proper page
+        helping.set_arrival(arrival)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        helping.render(PANEL_MIDDLE)
+
+    def show_tutorial_callback(ev):  # pylint: disable=invalid-name
+        """ show_chart_callback """
+
+        ev.preventDefault()
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        training.render(PANEL_MIDDLE)
+
+    note_bene_content_table = html.TABLE(width="100%")
+
+    row = html.TR()
+    note_bene_content_table <= row
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/pay.png", alt="Contribuer")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/support.png", alt="Support")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/tuto.jpg", alt="Tutoriels")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/chart.png", alt="La charte")
+    col <= img
+    row <= col
+
+    # ............
+
+    row = html.TR()
+    note_bene_content_table <= row
+
+    col = html.TD()
+    link4 = html.A(href=PAY_LINK, target="_blank")
+    link4 <= "Je souhaite contribuer au financement de l'association qui gère le site !"
+    col <= link4
+    row <= col
+
+    col = html.TD()
+    link5 = html.A(href="https://discord.com/invite/wAHgMWQG4Z", target="_blank")
+    link5 <= "Feedback et support du site diplomania sur Discord !"
+    col <= link5
+    row <= col
+
+    col = html.TD()
+    form = html.FORM()
+    input_show_tutorial = html.INPUT(type="submit", value="Le tutoriel", Class='btn-inside')
+    input_show_tutorial.attrs['style'] = 'font-size: 10px'
+    input_show_tutorial.bind("click", show_tutorial_callback)
+    form <= input_show_tutorial
+    col <= form
+    col <= "Tutoriel intertactif pour les règles et le site !"
+    row <= col
+
+    col = html.TD()
+    form = html.FORM()
+    input_show_chart = html.INPUT(type="submit", value="La charte", Class='btn-inside')
+    input_show_chart.attrs['style'] = 'font-size: 10px'
+    input_show_chart.bind("click", show_chart_callback)
+    form <= input_show_chart
+    col <= form
+    col <= "La charte du bon diplomate - à lire absolument !"
+    row <= col
+
+    # -------------
+
+    row = html.TR()
+    note_bene_content_table <= row
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/facebook.png", alt="Cul-de-chèvre")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/abydos.jpeg", alt="Copinage")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/chat.png", alt="Discord")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/database.png", alt="Database")
+    col <= img
+    row <= col
+
+    # ............
+
+    row = html.TR()
+    note_bene_content_table <= row
+
+    col = html.TD()
+    link5 = html.A(href="https://www.facebook.com/groups/104700706277433", target="_blank")
+    link5 <= "La page Facebook de l'association"
+    col <= link5
+    row <= col
+
+    col = html.TD()
+    link51 = html.A(href="https://sites.google.com/view/abydosfr/accueil", target="_blank")
+    link51 <= "Le site dédié à Diplomacy de notre ami Abydos !"
+    col <= link51
+    row <= col
+
+    col = html.TD()
+    link52 = html.A(href="https://discord.gg/mUWes7yEqR", target="_blank")
+    link52 <= "Causer sur le Discord de l'Association avec d'autres joueurs !"
+    col <= link52
+    row <= col
+
+    col = html.TD()
+    link53 = html.A(href="https://www.world-diplomacy-reference.com", target="_blank")
+    link53 <= "La fameuse \"World Diplomacy Reference\", base de données des résultats de tournois en face à face et en ligne !"
+    col <= link53
+    row <= col
+
+    return note_bene_content_table
+
+
 def email_address_status():
     """ email_address_is_confirmed """
 
@@ -284,29 +437,6 @@ def email_address_status():
 
 def show_news():
     """ show_home """
-
-    def show_chart_callback(ev):  # pylint: disable=invalid-name
-        """ show_chart_callback """
-
-        ev.preventDefault()
-
-        arrival = 'charte'
-
-        # so that will go to proper page
-        helping.set_arrival(arrival)
-
-        # action of going to game page
-        PANEL_MIDDLE.clear()
-        helping.render(PANEL_MIDDLE)
-
-    def show_tutorial_callback(ev):  # pylint: disable=invalid-name
-        """ show_chart_callback """
-
-        ev.preventDefault()
-
-        # action of going to game page
-        PANEL_MIDDLE.clear()
-        training.render(PANEL_MIDDLE)
 
     games_dict = common.get_games_data(0, 1)  # awaiting or ongoing
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
@@ -524,136 +654,8 @@ def show_news():
 
     # ----
 
-    note_bene_content = html.DIV(Class='note')
-    note_bene_content_table = html.TABLE(width="100%")
-
-    # -------------
-
-    row = html.TR()
-    note_bene_content_table <= row
-
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/pay.png", alt="Contribuer")
-    col <= img
-    row <= col
-
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/support.png", alt="Support")
-    col <= img
-    row <= col
-
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/tuto.jpg", alt="Tutoriels")
-    col <= img
-    row <= col
-
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/chart.png", alt="La charte")
-    col <= img
-    row <= col
-
-    # ............
-
-    row = html.TR()
-    note_bene_content_table <= row
-
-    col = html.TD()
-    link4 = html.A(href=PAY_LINK, target="_blank")
-    link4 <= "Je souhaite contribuer au financement de l'association qui gère le site !"
-    col <= link4
-    row <= col
-
-    col = html.TD()
-    link5 = html.A(href="https://discord.com/invite/wAHgMWQG4Z", target="_blank")
-    link5 <= "Feedback et support du site diplomania sur Discord !"
-    col <= link5
-    row <= col
-
-    col = html.TD()
-    form = html.FORM()
-    input_show_tutorial = html.INPUT(type="submit", value="Le tutoriel", Class='btn-inside')
-    input_show_tutorial.attrs['style'] = 'font-size: 10px'
-    input_show_tutorial.bind("click", show_tutorial_callback)
-    form <= input_show_tutorial
-    col <= form
-    col <= "Tutoriel intertactif pour les règles et le site !"
-    row <= col
-
-    col = html.TD()
-    form = html.FORM()
-    input_show_chart = html.INPUT(type="submit", value="La charte", Class='btn-inside')
-    input_show_chart.attrs['style'] = 'font-size: 10px'
-    input_show_chart.bind("click", show_chart_callback)
-    form <= input_show_chart
-    col <= form
-    col <= "La charte du bon diplomate - à lire absolument !"
-    row <= col
-
-    # -------------
-
-    row = html.TR()
-    note_bene_content_table <= row
-
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/facebook.png", alt="Cul-de-chèvre")
-    col <= img
-    row <= col
-
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/abydos.jpeg", alt="Copinage")
-    col <= img
-    row <= col
-
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/chat.png", alt="Discord")
-    col <= img
-    row <= col
-
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/database.png", alt="Database")
-    col <= img
-    row <= col
-
-    # ............
-
-    row = html.TR()
-    note_bene_content_table <= row
-
-    col = html.TD()
-    link5 = html.A(href="https://www.facebook.com/groups/104700706277433", target="_blank")
-    link5 <= "La page Facebook de l'association"
-    col <= link5
-    row <= col
-
-    col = html.TD()
-    link51 = html.A(href="https://sites.google.com/view/abydosfr/accueil", target="_blank")
-    link51 <= "Le site dédié à Diplomacy de notre ami Abydos !"
-    col <= link51
-    row <= col
-
-    col = html.TD()
-    link52 = html.A(href="https://discord.gg/mUWes7yEqR", target="_blank")
-    link52 <= "Causer sur le Discord de l'Association avec d'autres joueurs !"
-    col <= link52
-    row <= col
-
-    col = html.TD()
-    link53 = html.A(href="https://www.world-diplomacy-reference.com", target="_blank")
-    link53 <= "La fameuse \"World Diplomacy Reference\", base de données des résultats de tournois en face à face et en ligne !"
-    col <= link53
-    row <= col
-
-    note_bene_content <= note_bene_content_table
-    div_a2 <= note_bene_content
-    div_homepage <= div_a2
+    note_bene_content_table = important_links_table()
+    div_a2 <= note_bene_content_table
 
     # ----
 
