@@ -227,7 +227,7 @@ def formatted_teaser(teasers):
     teaser_content = html.DIV()
 
     # data in table
-    teaser_content_table = html.TABLE()
+    teaser_content_table = html.TABLE(width="100%")
     title = html.TR()
     for header in [' '] + modes:
         title <= html.TD(html.B(header))
@@ -526,7 +526,7 @@ def show_news():
     # ----
 
     note_bene_content = html.DIV(Class='note')
-    note_bene_content_table = html.TABLE()
+    note_bene_content_table = html.TABLE(width="100%")
 
     # -------------
 
@@ -655,9 +655,6 @@ def show_news():
     note_bene_content <= note_bene_content_table
     div_a2 <= note_bene_content
     div_homepage <= div_a2
-
-    col = html.TD()
-    row <= col
 
     # ----
 
