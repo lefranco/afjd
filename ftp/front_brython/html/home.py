@@ -220,8 +220,10 @@ def formatted_teaser(teasers):
         else:
             done = True
 
+    # roles sorted alphabetically
     roles = sorted({d[0] for d in data})
-    modes = sorted({d[1] for d in data})
+    # mode sorted with classical (nego) first
+    modes = sorted({d[1] for d in data}, key=lambda m: {'classique': 1, 'blitz': 0}[m], reverse=True)
 
     # data in table
     teaser_content_table = html.TABLE(width="100%")
@@ -229,7 +231,7 @@ def formatted_teaser(teasers):
     for header in [' '] + modes:
         title <= html.TD(html.B(header))
     teaser_content_table <= title
-    for role in sorted(roles):
+    for role in roles:
         row = html.TR()
         row <= html.TD(html.B(role))
         for mode in modes:
