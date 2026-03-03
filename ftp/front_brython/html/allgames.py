@@ -507,7 +507,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
     fieldset <= legend_anonymous
-    input_anonymous = html.INPUT(type="checkbox", checked=bool(anonymous) if anonymous is not None else False, Class='btn-inside')
+    input_anonymous = html.INPUT(type="checkbox", checked=bool(anonymous) if anonymous is not None else True, Class='btn-inside')
     fieldset <= input_anonymous
     form <= fieldset
 
