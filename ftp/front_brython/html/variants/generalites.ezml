@@ -24,7 +24,7 @@ _v1900_ : Espagne possède trois côtes : Ouest, Est et Nord.
 _Egéemonie_ : Thera est un archipel.
 
 - Iles
-(Une région peut être une île. Comme une côte mais une flotte peut y convoyer)
+(Une région peut être une "île". Comme une mer mais accessible à une armée - ou comme une côte mais une flotte peut y convoyer. En théorie une armée ne peut atteindre ou quitter une île sans convoi.)
 _Méditeranée_ : Les Iles baléares sont une île.
 
 - Canaux
@@ -33,11 +33,11 @@ _Moderne_ : Un canal permet d'aller de Héligoland à Bornholm en passant par Da
 
 - Ponts
 (Il peut y avoir des ponts, c'est à dire un voisinage entre deux côtes non "naturel" sur la carte.)
-_Hundred_ : Un pont existe  entre Londres et Calais
+_Hundred_ : Un pont existe  entre Londres et Calais.
 
 - Région décorative
 (Une région peut être inaccessible \(elle est "décorative".\))
-_Cold War Redux_ : L'Albanie est inaccessible..
+_Cold War Redux_ : L'Albanie est inaccessible.
 
 $ Condition de victoire
 
@@ -47,7 +47,7 @@ _Standard pds_ : on continue après le solo.
 
 - Solo ajusté
 (Il peut arriver que le solo ne soit pas à la majorité absolue des centres.)
-_Cold War_ : le solo requiert 17 centres au lieu des 14 "logiques"
+_Cold War_ : le solo requiert 17 centres au lieu des 14 "logiques".
 
 
 _
@@ -55,11 +55,11 @@ $ Position de départ
 
 - Dette en centres
 (Certaines puissances peuvent avoir plus d'unité que de centres au départ.)
-_Hundred_ : La France a une armée en plus en Provence
+_Hundred_ : La France a une armée en plus en Provence que son nombre de centres.
 
 - Avoir en centres
-(Certaines puissances peuvent avoir un centre de départ innocupé.)
-_Hundred_ : L'Angleterre a une centre inocupé en Devon
+(Certaines puissances peuvent avoir un centre de départ inoccupé.)
+_Hundred_ : L'Angleterre a une centre inoccupé en Devon.
 
 
 _
@@ -73,13 +73,9 @@ _Chaos_ : Chaque joueur possède un centre et commence par construire.
 (La variante peut être expansioniste, c'est à dire que l'on peut constuire sur tout centre possédé.)
 _Spice Island_ : cette variante est expansioniste
 
-- Constructions et Départ
-(Les centres de construction peuvent être différents des centres de départ.)
-_v1900_ : Le français ne peut pas construire en Algérie mais commence avec une armée à cet endroit.
-
 - Constructions interdites
-(Certains centres peuvent être interdits à la construction dans une  variante expansioniste.)
-_Westeros_ : Personne ne peut construire en Port Réal Est et Ouest
+(Certains centres peuvent être interdits à la construction)
+_Westeros_ : Personne ne peut construire en Port Réal Est et Ouest, même si une unité s'y trouve au départ.
 
 - Construction de secours
 (Un pays peut avoir un centre de constrution de secours.)
@@ -87,7 +83,7 @@ _v1900_ : La Russie peut constuire en Sibérie sous certaines conditions.
 
 - Pays neutralisé
 (Un pays peut être "neutralisé". Il est et reste en désordre civil.)
-_Grande Guerre_ : L'Italie est neutre.
+_Grande Guerre_ : L'Italie est neutralisée.
 
 
 _
