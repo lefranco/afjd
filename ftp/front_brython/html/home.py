@@ -344,7 +344,6 @@ def important_links_table():
     col <= img
     row <= col
 
-
     # ............
 
     row = html.TR()
@@ -368,12 +367,10 @@ def important_links_table():
     col <= link52
     row <= col
 
-
     # ............
 
     row = html.TR()
     note_bene_content_table <= row
-
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
@@ -395,7 +392,6 @@ def important_links_table():
     row = html.TR()
     note_bene_content_table <= row
 
-
     col = html.TD()
     form = html.FORM()
     input_show_chart = html.INPUT(type="submit", value="La charte", Class='btn-inside')
@@ -406,7 +402,6 @@ def important_links_table():
     col <= "La charte du bon diplomate - à lire absolument !"
     row <= col
 
-
     col = html.TD()
     link53 = html.A(href="https://www.world-diplomacy-reference.com", target="_blank")
     link53 <= "La fameuse \"World Diplomacy Reference\", base de données des résultats de tournois en face à face et en ligne !"
@@ -415,7 +410,6 @@ def important_links_table():
 
     col = html.TD()
     row <= col
-
 
     return note_bene_content_table
 
@@ -653,8 +647,8 @@ def show_news():
     teaser_table, datation = formatted_teaser(teaser_loaded)
     # create a box that alllow scrolling table inside
     scroll_box = html.DIV(style={
-        "width": "100%", 
-        "overflow-x": "auto", 
+        "width": "100%",
+        "overflow-x": "auto",
         "display": "block"
     })
     scroll_box <= teaser_table
@@ -683,8 +677,8 @@ def show_news():
     note_bene_content = important_links_table()
     # create a box that alllow scrolling table inside
     scroll_box = html.DIV(style={
-        "width": "100%", 
-        "overflow-x": "auto", 
+        "width": "100%",
+        "overflow-x": "auto",
         "display": "block"
     })
     scroll_box <= note_bene_content
