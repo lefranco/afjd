@@ -235,8 +235,8 @@ parse.c#144#Le pays précisé n'est pas celui de l'unité soutenue ou convoyee
 parse.c#145#Elements superflus dans un ordre de mouvement
 parse.c#146#Seules les flottes peuvent convoyer, utiliser un déplacement normal '-' pour une armée devant être convoyée
 parse.c#147#Seules les armées peuvent être convoyées
-parse.c#148#Seules les flottes en mer peuvent convoyer
-parse.c#149#Seules les armées en côte peuvent être convoyées
+parse.c#148#Seules les flottes en mer ou sur une ile peuvent convoyer
+parse.c#149#Seules les armées en côte ou sur une ile peuvent être convoyées
 parse.c#150#Pas de convoi possible de l'unité passive à la province (ou zone dans une province) destination
 parse.c#151#Attention : si la province a des côtes, il vaut mieux la spécifier pour la destination d'une flotte lors d'un soutien pour attaquer
 parse.c#152#L'unité passive du soutien ou du convoi n'est pas du type de celles qui peuvent acceder à la province (ou zone dans une province) destination du soutien
@@ -280,7 +280,6 @@ parse.c#189#L'armée n'a pas accès à la province (ou zone dans une province)  
 parse.c#190#Interdit de retraiter dans la province d'où vient l'unité qui déloge (l'attaque)
 parse.c#191#Retraite dans une province occupée
 parse.c#192#Interdit de retraiter dans une province bloquée parce qu'il y a eu un stand-off lors de la résolution précédente
-parse.c#193#On ne peut pas construire en mer
 parse.c#194#Retirer le spécification de côte pour une armée
 parse.c#195#Impossible de lire les ordres d'ajustements : %1
 parse.c#196#Ajustements : fichier sans ordres

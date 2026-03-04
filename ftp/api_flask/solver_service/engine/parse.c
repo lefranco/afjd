@@ -90,6 +90,12 @@ void readtoken(char *word, TOKEN *tok) {
 			return;
 		}
 		break;
+	case CODE('I','L'):
+		if (!strcmp(word, "ILE")) {
+			tok->id = UNEILE;
+			return;
+		}
+		break;
 	case CODE('T','E'):
 		if (!strcmp(word, "TERRE")) {
 			tok->id = UNETERRE;
@@ -685,6 +691,9 @@ static void parsezone(FILE *fd) {
 		break;
 	case UNEMER:
 		ZONE.t[ZONE.n].typezone = MER;
+		break;
+	case UNEILE:
+		ZONE.t[ZONE.n].typezone = ILE;
 		break;
 	case UNETERRE:
 		ZONE.t[ZONE.n].typezone = TERRE;
@@ -2295,12 +2304,12 @@ void parsemouvements(char *nomfic) {
 					cherchechaine(__FILE__, 147, buf, 0); /*"Seules les armees sont convoyees"*/
 					erreurparse(pays, LESREGLES, FALSE, buf);
 				}
-				if (unite->zone->typezone != MER) {
-					cherchechaine(__FILE__, 148, buf, 0); /*"Seules les flottes en mer convoient"*/
+				if (!(unite->zone->typezone == MER || unite->zone->typezone == ILE)) {
+					cherchechaine(__FILE__, 148, buf, 0); /*"Seules les flottes en mer ou sur une ile convoient"*/
 					erreurparse(pays, LESREGLES, FALSE, buf);
 				}
-				if (unitepass->zone->typezone != COTE) {
-					cherchechaine(__FILE__, 149, buf, 0); /*"Seules les armees en cote sont convoyees"*/
+				if (!(unitepass->zone->typezone == COTE || unitepass->zone->typezone == ILE)) {
+					cherchechaine(__FILE__, 149, buf, 0); /*"Seules les armees en cote ou sur une ile sont convoyees"*/
 					erreurparse(pays, LESREGLES, FALSE, buf);
 				}
 				if (strcmp(zonedest->specificite, "")) {
@@ -3244,7 +3253,7 @@ void parseajustements(char *nomfic) {
 					/* Pas de message d'erreur � ce niveau, on verra plus tard,
 					 on se contente de trouver le type d'unite le plus plausible */
 					switch (zonedest->typezone) {
-					case TERRE:
+					case TERRE: case ILE:  /* pour une ile on va dire arbitrairement armee */
 						typeunite = ARMEE;
 						break;
 					case MER:
@@ -3287,12 +3296,11 @@ void parseajustements(char *nomfic) {
 					cherchechaine(__FILE__, 245, buf, 0); /*"Attention : il faut pr�ciser le type de l'unit� � construire"*/
 					avertir(buf);
 					switch (zonedest->typezone) {
-					case TERRE:
+					case TERRE: case ILE:  /* pour une ile on va dire arbitrairement armee */
 						typeunite = ARMEE;
 						break;
 					case MER:
-						cherchechaine(__FILE__, 193, buf, 0); /*"On ne peut pas construire en mer"*/
-					erreurparse(pays, SYNTAXIQUE, FALSE, buf);
+						typeunite = FLOTTE;
 						break;
 					case COTE: /* cote */
 						if (strcmp(zonedest->specificite, ""))

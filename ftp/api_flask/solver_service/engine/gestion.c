@@ -5,7 +5,7 @@
 #include "protos.h"
 #include "datas.h"
 
-extern int noligne; /* Ligne dans fichier ou synonyme à déconseilller */
+extern int noligne; /* Ligne dans fichier ou synonyme ï¿½ dï¿½conseilller */
 
 /* Pour accelerer la recherche des voisinages, on stoque dans une table */
 BOOL TABLEVOISINAGEFLOTTE[NZONES][NZONES];
@@ -24,9 +24,9 @@ BOOL compatibles(TYPEUNITE typeunite, _ZONE *zone)
 		for (q = ZONE.t; q < ZONE.t + ZONE.n; q++)
 			if (q->region == zone->region && strcmp(q->specificite, ""))
 				return FALSE;
-	return (typeunite == FLOTTE && (zone->typezone == MER || zone->typezone
-			== COTE)) || (typeunite == ARMEE && (zone->typezone == TERRE
-			|| (zone->typezone == COTE && zone->specificite[0] == EOS)));
+	return 
+		(typeunite == FLOTTE && (zone->typezone == MER  || zone->typezone == ILE || zone->typezone == COTE)) || 
+		(typeunite == ARMEE && (zone->typezone == TERRE || zone->typezone == ILE || (zone->typezone == COTE && zone->specificite[0] == EOS)));
 }
 
 void lesajustements(_PAYS *pays, int *possessions, int *unites, int *possibles) {

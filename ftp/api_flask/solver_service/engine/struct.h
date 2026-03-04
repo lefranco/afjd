@@ -40,6 +40,7 @@ typedef enum {
 	UNARMEEVOISIN,
 	UNEZONE,
 	UNEMER,
+	UNEILE,
 	UNECOTE,
 	UNETERRE,
 	UNEUNITE,
@@ -100,7 +101,7 @@ typedef enum {
 } TYPEUNITE;
 
 typedef enum {
-	COTE, TERRE, MER
+	COTE, TERRE, MER, ILE
 } TYPEZONE;
 
 typedef enum {

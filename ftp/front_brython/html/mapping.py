@@ -139,11 +139,12 @@ class RegionTypeEnum:
     COAST_REGION = 1
     LAND_REGION = 2
     SEA_REGION = 3
+    ISLAND_REGION = 4
 
     @staticmethod
     def inventory():
         """ inventory """
-        return (RegionTypeEnum.COAST_REGION, RegionTypeEnum.LAND_REGION, RegionTypeEnum.SEA_REGION)
+        return (RegionTypeEnum.COAST_REGION, RegionTypeEnum.LAND_REGION, RegionTypeEnum.SEA_REGION, RegionTypeEnum.ISLAND_REGION)
 
     @staticmethod
     def from_code(code: int):
@@ -890,7 +891,8 @@ class Variant(Renderable):
         self._map_size = map_size
 
         # load the regions type names
-        assert len(raw_parameters_content['regions']) == len(RegionTypeEnum.inventory())
+
+        assert len(raw_parameters_content['regions']) <= len(RegionTypeEnum.inventory())
         for region_type_code_str, data_dict in raw_parameters_content['regions'].items():
             region_type_code = int(region_type_code_str)
             region_type = RegionTypeEnum.from_code(region_type_code)
@@ -898,7 +900,7 @@ class Variant(Renderable):
             name = data_dict['name']
             self._region_name_table[region_type] = name
 
-        # load the units type names
+        # load the units type names (islands may not be present)
         assert len(raw_parameters_content['units']) == len(UnitTypeEnum.inventory())
         for unit_type_code_str, data_dict in raw_parameters_content['units'].items():
             unit_type_code = int(unit_type_code_str)
@@ -1344,8 +1346,8 @@ class Unit(Highliteable, Renderable):
                     # special coasts : we get the big one
                     zone = self._zone.parent_zone if self._zone.parent_zone else self._zone
 
-                    # must not be at sea
-                    if zone.region.region_type is not RegionTypeEnum.SEA_REGION:
+                    # must not be at sea or island
+                    if zone.region.region_type not in [RegionTypeEnum.SEA_REGION, RegionTypeEnum.ISLAND_REGION]:
                         background_fill_color = self._position.variant.background_colour_table[self._role]
                         if zone in self._position.variant.paths_table:
                             paths = self._position.variant.paths_table[zone]
