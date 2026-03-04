@@ -40,9 +40,8 @@ La côte Byzance (Byz) fonctionne de la même manière que Constantinople sur la
 
 
 (Baléares)
-Dans la version officielle, les Baléares dévient de la règle en étant une île, c'est à dire à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Ici, les Baléares sont une mer et sont donc inaccessibles aux armées. 
-.
-*C'est la seule différence avec la version officielle*
+Les Baléares sont une île, c'est à dire à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Une armée ne peut y accéder (entrer et quitter) que par le convoi d'une flotte.
+
 
 
 (Intersection dans les hautes mers)
@@ -125,7 +124,7 @@ $ Nomenclature
 | Arm | Arménie | terre |  |
 | Ath | Athènes | côte | \* |
 | Aus | Mer Ausanienne | mer |  |
-| Bal | Baléares | mer | \* |
+| Bal | Baléares | île | \* |
 | Bar | Mer de Barber | mer |  |
 | Bay | Bayuda | terre |  |
 | Bit | Bithynie | côte |  |

@@ -54,11 +54,12 @@ BOOL contactconvoi(_ZONE *zone1, _ZONE *zone2)
 BOOL convoinecessaire(_MOUVEMENT *mouvement)
 /* Vrai si une armee sur une cote se rendant dans une autre ne peut le faire a pied */
 {
-	return mouvement->typemouvement == ATTAQUE
-			&& mouvement->unite->zone->typezone == COTE
-			&& mouvement->zonedest->typezone == COTE
-			&& mouvement->unite->typeunite == ARMEE && !armeevoisin(
-			mouvement->unite->zone, mouvement->zonedest);
+	return 
+		mouvement->unite->typeunite == ARMEE && 
+		mouvement->typemouvement == ATTAQUE && 
+		(mouvement->unite->zone->typezone == COTE || mouvement->unite->zone->typezone == ILE) && 
+		(mouvement->zonedest->typezone == COTE || mouvement->zonedest->typezone == ILE)	&& 
+		!armeevoisin(mouvement->unite->zone, mouvement->zonedest);
 }
 
 BOOL convoipossible(_UNITE *unite, _ZONE *zone1, _ZONE *zone2)
@@ -82,7 +83,7 @@ BOOL convoipossible(_UNITE *unite, _ZONE *zone1, _ZONE *zone2)
 				p++;
 				continue;
 			}
-			if (p->zone->typezone != MER) {
+			if (!(p->zone->typezone == MER || p->zone->typezone == ILE)) {
 				p++;
 				continue;
 			}
@@ -128,7 +129,7 @@ BOOL convoipossible(_UNITE *unite, _ZONE *zone1, _ZONE *zone2)
 			LACHAINE2.t[LACHAINE2.n++] = LACHAINE.t[LACHAINE.n - 1];
 			assert(LACHAINE2.n != NUNITES);
 
-			/* Retiré de la chaîne */
+			/* Retirï¿½ de la chaï¿½ne */
 			LACHAINE.n--;
 			assert(LACHAINE.n >= 0);
 
@@ -208,7 +209,7 @@ BOOL convoiexiste(_ZONE *zone1, _ZONE *zone2)
 			LACHAINE2.t[LACHAINE2.n++] = LACHAINE.t[LACHAINE.n - 1];
 			assert(LACHAINE2.n != NUNITES);
 
-			/* Retiré de la chaîne */
+			/* Retirï¿½ de la chaï¿½ne */
 			LACHAINE.n--;
 			assert(LACHAINE.n >= 0);
 
@@ -296,7 +297,7 @@ BOOL convoivalide(_ZONE *zone1, _ZONE *zone2)
 			LACHAINE2.t[LACHAINE2.n++] = LACHAINE.t[LACHAINE.n - 1];
 			assert(LACHAINE2.n != NUNITES);
 
-			/* Retiré de la chaîne */
+			/* Retirï¿½ de la chaï¿½ne */
 			LACHAINE.n--;
 			assert(LACHAINE.n >= 0);
 
@@ -331,7 +332,7 @@ _UNITE *unitedupaysempechantconvoi(_PAYS *pays, _ZONE *zone1, _ZONE *zone2)
 		if (p->typeunite != FLOTTE)
 			continue;
 
-		if (p->zone->typezone != MER)
+		if (!(p->zone->typezone == MER || p->zone->typezone == ILE))
 			continue;
 
 		if (p->pays != pays)
@@ -357,94 +358,8 @@ _UNITE *unitedupaysempechantconvoi(_PAYS *pays, _ZONE *zone1, _ZONE *zone2)
 	return NULL;
 }
 
-#if 0
-BOOL peutconvoyer(_UNITE *flotte, _UNITE *armee)
-/* Vrai si la flotte peut convoyer l'armée (chaine de flotte de la flotte à l'armée) */
-{
-	_UNITE *p, **s;
-	_ZONE *zone;
-	_CHAINEUNITES LACHAINE, LACHAINE2;
-
-	LACHAINE.n = 0;
-	LACHAINE2.n = 0;
-	p = UNITE.t;
-	zone = flotte->zone;
-
-	/* Le bazar ci dessous ne detecte pas si acce direct flotte a armee */
-	if(flottevoisin(flotte->zone,armee->zone) || contactconvoi(flotte->zone,armee->zone))
-	return TRUE;
-
-	for(;;) {
-		while(p < UNITE.t + UNITE.n) {
-
-			if(p->typeunite != FLOTTE) {
-				p++;
-				continue;
-			}
-			if(p->zone->typezone != MER) {
-				p++;
-				continue;
-			}
-			for(s = LACHAINE2.t; s < LACHAINE2.t + LACHAINE2.n; s++)
-			if(*s == p)
-			break;
-			if(s < LACHAINE2.t + LACHAINE2.n) { /* dans les exclus */
-				p++;
-				continue;
-			}
-
-			if(!(flottevoisin(zone,p->zone) || contactconvoi(zone,p->zone))) {
-				p++;
-				continue;
-			}
-
-			for(s = LACHAINE.t; s < LACHAINE.t + LACHAINE.n; s++)
-			if(*s == p)
-			break;
-			if(s < LACHAINE.t + LACHAINE.n) { /* deja dans la chaine de convoi */
-				p++;
-				continue;
-			}
-
-			if(!flottevoisin(p->zone,armee->zone) && !contactconvoi(p->zone,armee->zone)) {
-
-				LACHAINE.t[LACHAINE.n++] = p;
-				assert(LACHAINE.n != NUNITES);
-				zone = p->zone;
-				p = UNITE.t;
-				continue;
-			}
-			/* On arrive ici c'est que le convoi est possible */
-			return TRUE;
-		}
-
-		if(LACHAINE.n != 0) {
-
-			/* Pour le dernier, en impasse : */
-			/* Mis dans les exclus */
-			LACHAINE2.t[LACHAINE2.n++] = LACHAINE.t[LACHAINE.n-1];
-			assert(LACHAINE2.n != NUNITES);
-
-			/* Retiré de la chaîne */
-			LACHAINE.n--;
-			assert(LACHAINE.n >= 0);
-
-			if(LACHAINE.n == 0)
-			zone = flotte->zone;
-			else
-			zone = (LACHAINE.t[LACHAINE.n-1])->zone;
-
-			p = UNITE.t;
-			continue;
-		}
-
-		return FALSE;
-	}
-}
-#endif
-
 BOOL peutconvoyer(_UNITE *flotte, _UNITE *armee, _ZONE *zonedest)
-/* Vrai si la flotte peut convoyer l'armée (chaine de flotte de la flotte à l'armée)
+/* Vrai si la flotte peut convoyer l'armï¿½e (chaine de flotte de la flotte ï¿½ l'armï¿½e)
  si zonedest /= NULL on verifie meme que la flotte est utile au convoi vers la 'zonedest' */
 {
 	_UNITE *p;
@@ -461,8 +376,8 @@ BOOL peutconvoyer(_UNITE *flotte, _UNITE *armee, _ZONE *zonedest)
 		if (p->typeunite != FLOTTE)
 			continue;
 
-		/* En mer */
-		if (p->zone->typezone != MER)
+		/* En mer ou sur une ile */
+		if (!(p->zone->typezone == MER || p->zone->typezone == ILE))
 			continue;
 
 		LACHAINE.t[LACHAINE.n].unite = p;

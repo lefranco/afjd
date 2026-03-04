@@ -16,6 +16,7 @@ TYPE_TABLE = {
     1: "côte",
     2: "terre",
     3: "mer",
+    4: "ile"
 }
 
 
@@ -51,16 +52,6 @@ def main() -> None:
         except Exception as exception:  # pylint: disable=broad-except
             print(f"Failed to load {variant_file} : {exception}")
             sys.exit(-1)
-
-
-    regions_ = json_variant_data['regions']
-    #  print(f"{regions=}")
-
-    centers = json_variant_data['centers']
-    #  print(f"{centers=}")
-
-    coastal_zones = json_variant_data['coastal_zones']
-    #  print(f"{coastal_zones=}")
 
     # load parameters from json data file
     with open(parameters_file, "r", encoding='utf-8') as read_file:

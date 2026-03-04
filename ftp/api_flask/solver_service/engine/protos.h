@@ -101,11 +101,6 @@ void verifiecarte(void);
 
 /* DECRIT.C *********************************************************/
 
-/* pour la mise au point */
-#ifdef DEBUG
-void decritcarte(void);
-#endif
-
 /* operationnel */
 /* pour le ploteur aussi */
 void classementpays(void);

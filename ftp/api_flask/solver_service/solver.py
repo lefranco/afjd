@@ -60,6 +60,10 @@ def build_variant_file(variant: typing.Dict[str, typing.Any], names: typing.Dict
     for num_region, region in enumerate(region_names):
         if variant['regions'][num_region] == 3:
             result.append(f"REGION {region}")
+    result.append("; iles")
+    for num_region, region in enumerate(region_names):
+        if variant['regions'][num_region] == 4:
+            result.append(f"REGION {region}")
 
     result.append("; -------")
     result.append("; CENTRES")
@@ -97,6 +101,9 @@ def build_variant_file(variant: typing.Dict[str, typing.Any], names: typing.Dict
     for num_region, region in enumerate(region_names):
         if variant['regions'][num_region] == 3:
             result.append(f"ZONE MER {region}")
+    for num_region, region in enumerate(region_names):
+        if variant['regions'][num_region] == 4:
+            result.append(f"ZONE ILE {region}")
 
     assert len(names['zones']) == len(variant['regions']) + len(variant['coastal_zones'])
     zone_names = [r for r in names['zones'].values() if r]

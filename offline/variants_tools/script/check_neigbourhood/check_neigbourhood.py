@@ -5,8 +5,6 @@
 Check neighbourhood (symetry)
 """
 
-import typing
-import collections
 import json
 import argparse
 
@@ -31,9 +29,9 @@ def main() -> None:
         for zone1, neighbours in neighbouring.items():
 
             # check compatibility
-            # 1 = coast 2 = land 3 = sea
+            # 1 = coast 2 = land 3 = sea 4 = island
             if int(zone1) - 1 in range(len(regions)):
-                if (neighbouring == army_neighbouring and regions[int(zone1) - 1] not in [1, 2]) or (neighbouring == fleet_neighbouring and regions[int(zone1) - 1] not in [1, 3]):
+                if (neighbouring == army_neighbouring and regions[int(zone1) - 1] not in [1, 2, 4]) or (neighbouring == fleet_neighbouring and regions[int(zone1) - 1] not in [1, 3, 4]):
                     print(f"By {'army' if neighbouring == army_neighbouring else 'fleet'} {zone1} is not expected since zone type not compatible with unit concerned with neighbourhood")
             else:
                 if neighbouring == army_neighbouring:
@@ -46,6 +44,10 @@ def main() -> None:
                     continue
                 if int(zone1) not in neighbouring[str(zone2)]:
                     print(f"By {'army' if neighbouring == army_neighbouring else 'fleet'} {zone2} is in {zone1}' neighbours list but not the other way round")
+
+            # special check : island should be isolated
+            if neighbouring == army_neighbouring and regions[int(zone1) - 1] == 4:
+                print(f"By army {zone2} is in {zone1}' neighbours list : an island has a neighbour")
 
 
 if __name__ == '__main__':

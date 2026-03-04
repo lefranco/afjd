@@ -23,45 +23,6 @@ static void decritretraites(FILE *, _PAYS *, BOOL);
 static void decritajustements(FILE *, _PAYS *, BOOL);
 static void infospreajustements(FILE *);
 
-#ifdef DEBUG
-void decritcarte(void)
-{
-	_PAYS *p;
-	_REGION *q;
-	_CENTRE *r;
-	_CENTREDEPART *s;
-	_ZONE *t;
-	SPECIFICITE specif;
-
-	(void) printf("; LA CARTE : \n\n");
-
-	(void) printf("PAYS\n");
-	for(p = PAYS.t; p < PAYS.t + PAYS.n; p++)
-	(void) printf("%s\n",p->nom);
-
-	(void) printf("\nREGIONS\n");
-	for(q = REGION.t; q < REGION.t + REGION.n; q++)
-	(void) printf("%s\n",q->nom);
-
-	(void) printf("\nCENTRES\n");
-	for(r = CENTRE.t; r < CENTRE.t + CENTRE.n; r++)
-	(void) printf("%s\n",r->region->nom);
-
-	(void) printf("\nCENTREDEPARTS\n");
-	for(s = CENTREDEPART.t; s < CENTREDEPART.t + CENTREDEPART.n; s++)
-	(void) printf("%s %s\n",s->pays->nom,s->centre->region->nom);
-
-	(void) printf("\nZONES\n");
-	for(t = ZONE.t; t < ZONE.t + ZONE.n; t++) {
-		(void) strcpy(specif, t->specificite);
-		Strlwr(specif);
-		(void) printf("%s %s%s\n",
-				(t->typezone == MER ? "mer" : (t->typezone == TERRE ? "terre" : "cote")),
-				t->region->nom, specif);
-	}
-	(void) printf("\n");
-}
-#endif
 
 void decritsituation(char *nomfic)
 /* Dump la situation pour le prochain appel a "diplo" */
