@@ -763,9 +763,11 @@ class Variant(Renderable):
 
         # load the regions
         self._regions = {}
+        self._regions_types = set()
         for num, code in enumerate(raw_variant_content['regions']):
             number = num + 1
             region_type = RegionTypeEnum.from_code(code)
+            self._regions_types.add(region_type)
             assert region_type is not None
             region = Region(number, region_type)
             self._regions[number] = region
@@ -890,9 +892,8 @@ class Variant(Renderable):
         map_size = geometry.PositionRecord(x_pos=width, y_pos=height)
         self._map_size = map_size
 
-        # load the regions type names
-
-        assert len(raw_parameters_content['regions']) <= len(RegionTypeEnum.inventory())
+        # load the regions type names (islands may not be present)
+        assert len(raw_parameters_content['regions']) == len(self._regions_types)
         for region_type_code_str, data_dict in raw_parameters_content['regions'].items():
             region_type_code = int(region_type_code_str)
             region_type = RegionTypeEnum.from_code(region_type_code)
@@ -900,7 +901,7 @@ class Variant(Renderable):
             name = data_dict['name']
             self._region_name_table[region_type] = name
 
-        # load the units type names (islands may not be present)
+        # load the units type names        
         assert len(raw_parameters_content['units']) == len(UnitTypeEnum.inventory())
         for unit_type_code_str, data_dict in raw_parameters_content['units'].items():
             unit_type_code = int(unit_type_code_str)
