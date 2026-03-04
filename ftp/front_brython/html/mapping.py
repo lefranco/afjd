@@ -2611,6 +2611,10 @@ class Orders(Renderable):
         """" how many (builds) """
         return len(self._orders)
 
+    def has_disbands(self):
+        """" are there disbands """
+        return any(o for o in self._orders if o.order_type is OrderTypeEnum.DISBAND_ORDER)
+
     def text_version(self) -> str:
         """" nice to read """
 

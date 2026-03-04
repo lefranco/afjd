@@ -724,6 +724,16 @@ def slide_submit_orders(table_of_contents):
             else:
                 mydialog.info_stay("Hélas non, ce ne sont pas les ordres attendus :-(")
 
+        # Disbands : need a confirmation (safer)
+        if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+            if orders_data.has_disbands():
+                if not warned:
+                    dialog = mydialog.MyDialog("Vous dispersez au moins une unité. Vous êtes sûr ?", ok_cancel=True)
+                    dialog.ok_button.bind("click", lambda e, w=True, d=dialog: submit_orders_callback(e, w, d))
+                    dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_submit_orders_callback(e, d))
+                    return
+
+        # Waive : need a confirmation (safer)
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             role = VARIANT_DATA.roles[ROLE_ID]
             nb_builds, _, _, _ = POSITION_DATA.role_builds(role)
