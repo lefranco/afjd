@@ -25,23 +25,24 @@ $ Côtes spéciales
 _
 $ Particularités de la carte
 
-La carte possède la particularité d’avoir des canaux permettant aux flottes de les emprunter pour traverser la région en question.
+(Les îles : Grand-Wyk \(Gwy\), Harloi \(Har\), Îles Bouclier \(IBo\), Peydragon \(Pey\), Pyk \(Pyk\), Tyroshis \(Tyr\))
+Ces régions sont des îles, c'est à dire à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Une armée ne peut y accéder (entrer et quitter) que par le convoi d'une flotte.
 
-(Eau-Noire - non documenté)
+(Canal Eau-Noire - non documenté)
 Ce canal relie la mer Baie de la Néra (BNe) à la mer Œildieu (Oei) en passant par les régions adjacentes.
 .
 Les regions touchant le canal sont des côtes et accessibles à une flotte qui emprunte le canal.
 .
 Ce canal peut être traversé latéralement par une armée ou une flotte.
 
-(Mander - non documenté)
+(Canal Mander - non documenté)
 Ce canal relie la mer Îles Bouclier (IBo) à Hautjardiniens (Hau) en passant par les régions adjacentes.
 .
 Les regions touchant le canal sont des côtes et accessibles à une flotte qui emprunte le canal.
 .
 Ce canal peut être traversé latéralement par une armée ou une flotte.
 
-(Le "Trident" - non documenté - qui n'est pas un canal)
+(Canal Le "Trident" - non documenté - qui n'est pas un canal)
 Vivesaigues (VAi) et Route Royale (RRo) sont des terres, donc inaccessibles aux flottes. 
 .
 Conflans (Con) est une côte accessible uniquement par l'ouest - la mer Baie du Fer-né (BFN) par exemple.
@@ -52,7 +53,7 @@ L'embouchure du Trident - au Nord de Harrenhal (Hhl) bloque l'accés entre Confl
 .
 Harrenhal (Hhl) et Montagnes de la Lune (MLU) sont également adjacents.
 
-(Montagne - non documenté)
+(Zone impassable : Montagne - non documenté)
 La montagne au sud de Noirmont (Nmo) est impassable.
 
 _
@@ -121,11 +122,11 @@ $ Nomenclature
 | FTe | Fort-Terreur | côte |  |
 | Gre | Le Grès | côte | \* |
 | Gri | La Griffonnière | côte | \* |
-| GWy | Grand-Wyk | mer | \* |
-| Har | Harloi | mer | \* |
+| GWy | Grand-Wyk | île | \* |
+| Har | Harloi | île | \* |
 | Hau | Hautjardiniens | côte | \* |
 | Hhl | Harrenhal | côte | \* |
-| IBo | Îles Bouclier | mer | \* |
+| IBo | Îles Bouclier | île | \* |
 | Jum | Les jumeaux | côte | \* |
 | Kar | Karbourg | côte | \* |
 | Lah | Lancehélion | côte | \* |
@@ -151,7 +152,7 @@ $ Nomenclature
 | Nmo | Noirmont | terre |  |
 | Oei | Œildieu | mer |  |
 | Pen | Pentos | côte | \* |
-| Pey | Peyredragon | mer | \* |
+| Pey | Peyredragon | île | \* |
 | PGi | Pointe Griffecroc | côte |  |
 | PLa | Port-Lannis | côte | \* |
 | Pmo | Pierremoûtier | côte |  |
@@ -159,7 +160,7 @@ $ Nomenclature
 | PPr | Passe-du-Prince | côte |  |
 | PRE | Port-Réal Est | côte | \* |
 | PRO | Port-Réal Ouest | côte | \* |
-| Pyk | Pyk | mer | \* |
+| Pyk | Pyk | île | \* |
 | RdO | Route de l'Océan | côte |  |
 | RNe | Ruisseau Néra | mer |  |
 | Roc | Roches | côte |  |
@@ -172,7 +173,7 @@ $ Nomenclature
 | TOr | Terres de l’Orage | côte |  |
 | TOu | Terres de l’Ouest | terre |  |
 | Tre | La Treille | côte | \* |
-| Tyr | Tyroshis | mer | \* |
+| Tyr | Tyroshis | île | \* |
 | VAi | Vivesaigues | terre | \* |
 | ViV | Villevieille | côte | \* |
 | Win | Winterfell | côte | \* |
@@ -191,10 +192,6 @@ _
 $ Ecart avec la version théorique
 
 Dans la version théorique Port-Réal est un seul centre qui compte double et doit être occupé en deux fois.
-.
-Aussi  (certaines îles => à revoir)
-.
-Aussi delta entre centres construction et centres de départ
 
 _
 $ Sur le wiki
@@ -204,5 +201,5 @@ Sans objet.
 _
 $ Notes
 Certaines petites adaptation ont du êtres réalisées par rapport à la source de la variante (UK Diplomacy Archive / DipWiki) :
-- Au sujet des îles/centres (notamment le fait que Kraken commence avec une flotte à Harlaw parce qu'une armée ne peut être en mer)
 - Au sujet de King's Landing (puisqu'un centre ne peut pas être dédoublé).
+
