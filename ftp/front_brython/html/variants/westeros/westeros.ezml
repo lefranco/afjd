@@ -68,6 +68,9 @@ Il y a *34* centres de ravitaillement sur le plateau.
 .
 Le gagnant est donc la puissance qui détient *18* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
+(Centres "libres" - non constructibles)
+Personne ne peut construire à Port-Real, Est (PRE) et Ouest (PRO)
+
 _
 $ Puissances en présence
 
@@ -158,8 +161,8 @@ $ Nomenclature
 | Pmo | Pierremoûtier | côte |  |
 | PoF | Pouce-Flint | côte | \* |
 | PPr | Passe-du-Prince | côte |  |
-| PRE | Port-Réal Est | côte | \* |
-| PRO | Port-Réal Ouest | côte | \* |
+| PRE | Port-Réal Est | côte | \* (non constructible) |
+| PRO | Port-Réal Ouest | côte | \* (non constructible) |
 | Pyk | Pyk | île | \* |
 | RdO | Route de l'Océan | côte |  |
 | RNe | Ruisseau Néra | mer |  |
@@ -185,8 +188,6 @@ $ Expansionnisme (oui)
 Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. 
 .
 Par exemple, Targaryen peut construire à Port-Lannis (PLa) si ce centre est vacant et qu'il en est propriétaire.
-.
-Exception : Port-Réal Ouest (PRO) et Port-Réal Est (PRE) ne sont pas des centres de construction.
 
 _
 $ Ecart avec la version théorique
@@ -198,8 +199,4 @@ $ Sur le wiki
 
 Sans objet.
 
-_
-$ Notes
-Certaines petites adaptation ont du êtres réalisées par rapport à la source de la variante (UK Diplomacy Archive / DipWiki) :
-- Au sujet de King's Landing (puisqu'un centre ne peut pas être dédoublé).
 

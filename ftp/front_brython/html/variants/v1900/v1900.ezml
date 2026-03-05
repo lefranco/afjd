@@ -23,10 +23,10 @@ Gibraltar est une (fausse) île, c'est à dire à la fois mer (une flotte peut y
 (ATTENTION)
 La carte possède la particularité d’avoir une sorte de fusion entre la Mer Rouge et l'Océan Atlantique (Cf. dernier paragraphe.)
 
-(Cly - Ire)
+(Clyde - Irlande)
 Les unités (armées et flottes) peuvent se déplacer ou apporter leur soutien de Irlande à Clyde ou vice versa indépendamment de la présence d'une flotte dans l'Atlantique Nord.
 
-(Hed - Egy)
+(Hedjaz - Egypte)
 Les flottes peuvent se déplacer ou apporter leur soutien de Egypte à Hedjaz ou vice versa indépendamment de la présence d'une flotte dans l'Océan Atlantique (Mer Rouge). (Cf. dernier paragraphe.)
 
 (Palestine)
@@ -45,6 +45,9 @@ Il y a *39* centres de ravitaillement sur le plateau.
 Le gagnant est donc la puissance qui détient *20* centres de ravitaillement ou plus pendant une phase d'ajustement, sauf spécificité (Cf. dernier paragraphe.)
 .
 
+(Centres "libres" - non constructibles)
+Le joueur britannique ne peut pas construire en Égypte et le joueur français ne peut pas construire en Algérie.
+
 _
 $ Puissances en présence
 
@@ -54,7 +57,7 @@ Il y a sept puissances dont les unités de départ sont les suivantes :
 = Position de départ
 |Puissance | Centres |  Armées | Flottes | Centres inoccupés|
 |Autriche-Hongrie | 3 | Budapest, Trieste, Vienne |  | |
-|Royaune-Uni | 4 | | Égypte, Edimbourg, Londres, Gibraltar | Liverpool |
+|Royaune-Uni | 4 | | Égypte, Edimbourg, Londres, Gibraltar (hors centre) | Liverpool |
 |France | 4 | Algérie, Paris, Marseille | Brest | |
 |Allemagne | 4 | Berlin, Cologne, Munich | Kiel | |
 |Italie | 3 | Milan, Rome| Naples | |
@@ -73,7 +76,7 @@ $ Nomenclature
 = Régions et abréviations de la variante
 | Abréviation | Nom complet | type | centre |
 | ADR | Mer Adriatique | mer |  |
-| Alg | Algérie | côte | \* |
+| Alg | Algérie | côte | \* (non constructible) |
 | Als | Alsace | terre |  |
 | AMe | Algérie Méridionale | terre |  |
 | Ank | Ankara | côte | \* |
@@ -100,7 +103,7 @@ $ Nomenclature
 | Dan | Danemark | côte | \* |
 | Edi | Édimbourg | côte | \* |
 | EGE | Mer Égée | mer |  |
-| Egy | Égypte | côte | \* |
+| Egy | Égypte | côte | \* (non constructible) |
 | Esp | Espagne | côte | \* |
 | Fin | Finlande | côte |  |
 | Gal | Galicie | terre |  |
@@ -173,12 +176,6 @@ $ Règles spéciales
 (Solo à 18 centres seul)
 Selon les règles de la variante, le gagnant est le premier joueur à attendre 18 centres et être seul à le faire. Il faut continuer la partie en cas d'égalité à 18 centres. L'arrêt à 20 centres (majorité absolue) reste appliqué par le système.
 
-(Egypte)
-Le joueur britannique ne peut pas construire en Égypte.
-
-(Algérie)
-Le joueur français ne peut pas construire en Algérie.
-
 (Construction en Sibérie)
 Lorsque la Russie possède au moins un, MAIS PAS LES QUATRE, de ses centres de ravitaillement d'origine, elle maintient une unité supplémentaire sur la carte (c'est-à-dire une de plus que le nombre de centres de ravitaillement qu'elle contrôle actuellement). De plus, tant que la Russie est dans cette situation, le joueur russe peut utiliser la Sibérie comme site de construction pendant la phase d'ajustement, si elle est inoccupée. 
 .
@@ -209,7 +206,7 @@ Si deux unités se replient vers l'Égypte, le Hedjaz ou l'Océan Atlantique, et
 _
 $ Ecart avec la version théorique
 
-Les règles spéciales ne sont pas implémentées (à revoir)
+Les règles spéciales ci-dessus ne sont pas implémentées.
 
 _
 $ Sur le wiki

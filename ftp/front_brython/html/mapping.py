@@ -799,6 +799,12 @@ class Variant(Renderable):
                 start_center.owner_start = role
                 role.start_centers.append(start_center)
 
+        # load free centers
+        self._free_centers = []
+        for number_center in raw_variant_content['free_centers']:
+            free_center = self._centers[number_center]
+            self._free_centers.append(free_center)
+
         # load the coast types
         self._coast_types = {}
         for num in range(raw_variant_content['type_coasts']['number']):
@@ -1283,6 +1289,11 @@ class Variant(Renderable):
     def extra_requirement_solo(self) -> bool:
         """ property """
         return self._extra_requirement_solo
+
+    @property
+    def free_centers(self) -> list:
+        """ property """
+        return self._free_centers
 
 
 # imagined units
@@ -2023,14 +2034,14 @@ class Position(Renderable):
         return informations
 
     def role_builds(self, role: Role):
-        """ how many builds allowed (positive or negative) for the role """
+        """ how many builds allowed (positive or negative) for the role taking account free centers (where one cannot build) """
 
         nb_ownerships = len([o for o in self._ownerships if o.role == role])
         nb_units = len([u for u in self._units if u.role == role])
         if self.variant.build_everywhere:
-            nb_free_centers = len([c for c in self.variant.centers.values() if c in self._owner_table and self._owner_table[c].role == role and c.region not in self._occupant_table])
+            nb_free_centers = len([c for c in self.variant.centers.values() if c not in self._variant.free_centers and c in self._owner_table and self._owner_table[c].role == role and c.region not in self._occupant_table])
         else:
-            nb_free_centers = len([c for c in role.start_centers if c in self._owner_table and self._owner_table[c].role == role and c.region not in self._occupant_table])
+            nb_free_centers = len([c for c in role.start_centers if c not in self._variant.free_centers and c in self._owner_table and self._owner_table[c].role == role and c.region not in self._occupant_table])
 
         nb_builds = min(nb_ownerships - nb_units, nb_free_centers)
         return nb_builds, nb_ownerships, nb_units, nb_free_centers
