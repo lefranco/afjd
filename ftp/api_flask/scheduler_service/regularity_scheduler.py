@@ -52,7 +52,7 @@ def process_regularity(players_dict: typing.Dict[str, typing.Any], games_results
     # 1 Parse all games
     # ------------------
 
-    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):  # type: ignore
+    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):
 
         # extract information
         game_start_time = game_data['start_time_stamp']

@@ -5,6 +5,8 @@
 Try to guess neighbourhood
 """
 
+from __future__ import annotations
+
 import typing
 import multiprocessing
 import argparse
@@ -48,7 +50,7 @@ class Zone:
 
     nomenclature: typing.Dict[int, 'Zone'] = {}
 
-    def __init__(self, number: int, name: str, num_coast: typing.Optional[int] = None, zone_orig: 'Zone' = None):
+    def __init__(self, number: int, name: str, num_coast: int | None = None, zone_orig: Zone | None = None):
         self._number = number
         self._name = name
         self._num_coast = num_coast
@@ -72,12 +74,12 @@ class Zone:
         return self._number
 
     @property
-    def num_coast(self) -> int:
+    def num_coast(self) -> int | None:
         """ num_coast """
         return self._num_coast
 
     @property
-    def zone_orig(self) -> 'Zone':
+    def zone_orig(self) -> Zone | None:
         """ zone_orig """
         return self._zone_orig
 
@@ -286,6 +288,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
         num_zone = int(num_zone_str)
         zone = Zone.nomenclature[num_zone]
         if zone.num_coast:
+            assert zone.zone_orig is not None
             zone_area_data2 = json_parameters_data['zone_areas'][str(zone.zone_orig.number)]
             polygon = zone_area_data2['area']
         else:

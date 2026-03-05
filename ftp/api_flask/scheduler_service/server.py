@@ -339,7 +339,7 @@ def acting_threaded_procedure() -> None:
             mylogger.LOGGER.error("ERROR: Failed to get token")
             return ""
         req_result = json.loads(req_result.text)
-        jwt_token = req_result['AccessToken']  # type: ignore
+        jwt_token = req_result['AccessToken']
         return str(jwt_token)
 
     with APP.app_context():
