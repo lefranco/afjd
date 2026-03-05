@@ -177,7 +177,7 @@
             10
         ]
     ],
-    "free_centers":  [],
+    "free_centers":  [1, 13],
     "type_coasts": {
         "number": 4
     },

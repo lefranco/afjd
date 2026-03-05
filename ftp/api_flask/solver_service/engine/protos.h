@@ -41,6 +41,7 @@ _PAYS *cherchepays(char *);
 _PAYS *chercheadjectifpays(char *);
 _REGION *chercheregion(char *);
 _CENTRE *cherchecentre(char *);
+_CENTRELIBRE *cherchecentrelibre(_CENTRE *);
 _CENTREDEPART *cherchecentredepart(char *);
 _ZONE *cherchezone(char *);
 BOOL cotesexistent(_ZONE *zone);

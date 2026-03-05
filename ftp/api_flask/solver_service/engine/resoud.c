@@ -277,6 +277,7 @@ static void creeconstructions(_PAYS *pays, int souhaites) {
 	_CENTREDEPART *p, *centredepart;
 	_UNITE *q, *unite;
 	_CENTRE *r, *centre;
+	_CENTRELIBRE *s, *centrelibre;
 
 	/* on va se limiter a des armees */
 	typeajustement = AJOUTE;
@@ -286,6 +287,18 @@ static void creeconstructions(_PAYS *pays, int souhaites) {
 	while (ajustements < souhaites) {
 
 		for (zonedest = ZONE.t; zonedest < ZONE.t + ZONE.n; zonedest++) {
+
+			/* la zone ne doit pas etre un centre libre*/
+			centrelibre = NULL;
+			for (s = CENTRELIBRE.t; s < CENTRELIBRE.t + CENTRELIBRE.n; s++) {
+				if(s->centre->region == zonedest->region) {
+					centrelibre = s;
+					break;
+				}
+			}
+			if(centrelibre != NULL) {
+				continue;
+			}
 
 			/* la zone doit etre un centre de depart*/
 			centre = NULL;
@@ -780,7 +793,7 @@ void verifajustements(void) {
 				(void) sprintf(bufn5, "%d", souhaites);
 				if (souhaites > 0) {
 					cherchechaine(__FILE__, 18, buf, 5, bufn1, bufn2, bufn3,
-							bufn4, bufn5); /*"Ajustements : %1 mauvais chiffre : (%2 unite(s), %3 centre(s), %4 centre(s) libre(s) => %5 ajustement(s))"*/
+							bufn4, bufn5); /*"Ajustements : %1 mauvais chiffre : (%2 unite(s), %3 centre(s), %4 centre(s) possible(s) => %5 ajustement(s))"*/
 					informer(buf);
 				}
 				if (souhaites < 0) {

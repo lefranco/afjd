@@ -28,6 +28,7 @@ static void parsepays(FILE *);
 static void parseregion(FILE *);
 static void parsecentre(FILE *);
 static void parsecentredepart(FILE *);
+static void parsecentrelibre(FILE *);
 static void parsezone(FILE *);
 static void parsearmeevoisin(FILE *);
 static void parseflottevoisin(FILE *);
@@ -371,6 +372,10 @@ void readtoken(char *word, TOKEN *tok) {
 			tok->id = UNCENTREDEPART;
 			return;
 		}
+		if (!strcmp(word, "CENTRELIBRE")) {
+			tok->id = UNCENTRELIBRE;
+			return;
+		}
 		if (!strcmp(word, "CE")) {
 			tok->id = UNECOTEEST;
 			(void) strcpy(tok->val, "CE");
@@ -677,6 +682,30 @@ static void parsecentredepart(FILE *fd) {
 	}
 
 	assert(++CENTREDEPART.n != NCENTREDEPARTS);
+}
+
+static void parsecentrelibre(FILE *fd) {
+	TOKEN tok;
+	char buf[TAILLEMESSAGE];
+
+	gettoken(fd, &tok);
+	if (tok.id != CHAINE) {
+		cherchechaine(__FILE__, 22, buf, 0); /*"Probleme definition d'un centrelibre sur le centre"*/
+		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
+	}
+	if ((CENTRELIBRE.t[CENTRELIBRE.n].centre = cherchecentre(tok.val))
+			== NULL) {
+		cherchechaine(__FILE__, 23, buf, 1, tok.val); /*"Centre %1 non declare sur un centrelibre"*/
+		erreurparse(NULL, LACARTE, FALSE, buf);
+	}
+
+	gettoken(fd, &tok);
+	if (tok.id != FINLIGNE) {
+		cherchechaine(__FILE__, 24, buf, 0); /*"Manque fin de ligne apres centrelibre"*/
+		erreurparse(NULL, SYNTAXIQUE, FALSE, buf);
+	}
+
+	assert(++CENTRELIBRE.n != NCENTRELIBRES);
 }
 
 static void parsezone(FILE *fd) {
@@ -1525,6 +1554,9 @@ void parsecarte(char *nomfic) {
 			break;
 		case UNCENTREDEPART:
 			parsecentredepart(fd);
+			break;
+		case UNCENTRELIBRE:
+			parsecentrelibre(fd);
 			break;
 		case UNEZONE:
 			parsezone(fd);
@@ -2982,6 +3014,7 @@ void parseajustements(char *nomfic) {
 	TYPEAJUSTEMENT typeajustement;
 	_CENTREDEPART *centredepart;
 	_CENTRE *centre;
+	_CENTRELIBRE *centrelibre;
 	_ZONE *zonedest;
 	_UNITE *unite;
 	_PAYS *pays, *paysprec;
@@ -3373,6 +3406,10 @@ void parseajustements(char *nomfic) {
 			case AJOUTE:
 				if ((centre = cherchecentre(zonedest->region->nom)) == NULL) {
 					cherchechaine(__FILE__, 251, buf, 1, zonedest->region->nom); /*"R�gion %1 pas centre "*/
+					erreurparse(pays, LACARTE, FALSE, buf);
+				}
+				if ((centrelibre = cherchecentrelibre(centre)) != NULL) {
+					cherchechaine(__FILE__, 275, buf, 1, zonedest->region->nom); /*"La région %1 est un centre libre donc non constructible "*/
 					erreurparse(pays, LACARTE, FALSE, buf);
 				}
 				if(!OPTIONE) {

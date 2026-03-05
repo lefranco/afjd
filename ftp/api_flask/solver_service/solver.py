@@ -86,6 +86,15 @@ def build_variant_file(variant: typing.Dict[str, typing.Any], names: typing.Dict
         result.append("")
 
     result.append("; -------")
+    result.append("; centres libres (non constructibles)")
+    result.append("; -------")
+    for free_center_num in variant['free_centers']:
+        center_num = variant['centers'][free_center_num - 1]
+        region_name = region_names[center_num - 1]
+        result.append(f"CENTRELIBRE {region_name}")
+    result.append("")
+
+    result.append("; -------")
     result.append("; ZONES")
     result.append("; -------")
     for num_region, region in enumerate(region_names):
