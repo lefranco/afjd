@@ -112,7 +112,7 @@ parse.c#18#Missing end of line after centre
 parse.c#19#Problem definition of distance type of unit
 parse.c#20#Problem definition of a starting centre on the country
 parse.c#21#Country %1 not declared for a starting centre
-parse.c#22#Problem definition of a  starting centre on the centre
+parse.c#22#Problem definition of a starting centre on the centre
 parse.c#23#Centre %1 not declared on a  startingcentre
 parse.c#24#Missing end of line after startingcentre
 parse.c#25#It is preferable not to use slash '/' for coasts
@@ -358,6 +358,10 @@ parse.c#268#Country %1 without any centre but not dissapeared (rectified)
 parse.c#269#Do not use the 'R -' construction (remove the '-')
 parse.c#270#Missing anneezero
 parse.c#271#Missing end of line after anneezero
+parse.c#272#Problem definition of a free centre on the centre
+parse.c#273#Centre %1 not declared on a  freecentre
+parse.c#274#Missing end of line after freecentre
+parse.c#275#Region %1 is a free centre therfore not buildable
 resoud.c#1#Missing move order of %1
 resoud.c#2#Dublin in move orders on %1
 resoud.c#3#Unit %1 is supporting a compatriot unit to attack which does not perform the move (=> void)
@@ -375,7 +379,7 @@ resoud.c#14#Removal whereas one or several builds are expected
 resoud.c#15#Build whereas nothing is expected
 resoud.c#16#Removal whereas nothing is expected
 resoud.c#17#Adjustments %1 : another %2 build(s) allowed
-resoud.c#18#Adjustments : builds : %1 : bad number : (%2 unit(s), %3 centre(s), %4 free centre(s) => %5 ajustment(s))
+resoud.c#18#Adjustments : builds : %1 : bad number : (%2 unit(s), %3 centre(s), %4 available centre(s) => %5 ajustment(s))
 resoud.c#19#Adjustments : removals : %1 : bad number : (%2 unit(s), %3 centre(s) => %4 ajustment(s))
 resoud.c#20#Unit %1 is supporting a unit to attack which requires its own convoying
 resoud.c#21#Centre %1 has a new owner : %2 -> %3

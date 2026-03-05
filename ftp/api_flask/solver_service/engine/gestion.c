@@ -297,6 +297,16 @@ _CENTRE *cherchecentre(char *s) {
 	return NULL;
 }
 
+_CENTRELIBRE *cherchecentrelibre(_CENTRE *centre) {
+	_CENTRELIBRE *p;
+
+	for (p = CENTRELIBRE.t; p < CENTRELIBRE.t + CENTRELIBRE.n; p++)
+		if(p->centre == centre)
+			return p;
+
+	return NULL;
+}
+
 _CENTREDEPART *cherchecentredepart(char *s) {
 	_CENTREDEPART *p;
 	char c = *s;

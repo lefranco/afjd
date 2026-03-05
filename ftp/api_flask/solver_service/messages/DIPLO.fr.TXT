@@ -358,6 +358,10 @@ parse.c#268#Pays %1 sans centre mais pas disparu (rectifié)
 parse.c#269#Ne pas utiliser la construction 'R -' (enlever le ('-')
 parse.c#270#Manque l'anneezero
 parse.c#271#Manque fin de ligne après anneezero
+parse.c#272#Problème définition d'un centrelibre sur le centre
+parse.c#273#Centre %1 non déclaré sur un centrelibre
+parse.c#274#Manque fin de ligne après centrelibre
+parse.c#275#La région %1 est un centre libre donc non constructible
 resoud.c#1#Manque l'ordre de mouvement de %1
 resoud.c#2#Doublon dans les ordres de mouvement sur %1
 resoud.c#3#L'unité %1 soutient une unité compatriote pour attaquer qui n'effectue pas le déplacement (=> annulé)
@@ -375,7 +379,7 @@ resoud.c#14#Suppression alors qu'une ou des constructions sont attendues
 resoud.c#15#Construction alors que rien n'est attendu
 resoud.c#16#Suppression alors que rien n'est attendu
 resoud.c#17#Ajustements %1 : encore %2 construction(s) autorisee(s)
-resoud.c#18#Ajustements : constructions : %1 : mauvais chiffre : (%2 unité(s), %3 centre(s), %4 centre(s) libre(s) => %5 ajustement(s))
+resoud.c#18#Ajustements : constructions : %1 : mauvais chiffre : (%2 unité(s), %3 centre(s), %4 centre(s) disponible(s) => %5 ajustement(s))
 resoud.c#19#Ajustements : suppressions : %1 : mauvais chiffre : (%2 unité(s), %3 centre(s) => %4 ajustement(s))
 resoud.c#20#L'unité %1 soutient une unité pour attaquer qui requiert son propre convoi
 resoud.c#21#Le centre %1 change de proprietaire : %2 -> %3
