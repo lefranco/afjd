@@ -127,7 +127,7 @@ DELTA_LEGEND_EXPECTED_Y = -14
 class Application(tkinter.Frame):
     """ Tkinter application """
 
-    def __init__(self, map_file: str, variant_file: str, parameters_file: str, master: tkinter.Tk):
+    def __init__(self, map_file: str, variant_file: str, parameters_file: str, otsu_value: int | None, master: tkinter.Tk):
 
         # standard stuff
         tkinter.Frame.__init__(self, master)
@@ -139,6 +139,10 @@ class Application(tkinter.Frame):
 
         # actual creation of widgets
         self.create_widgets(self, map_file, variant_file, parameters_file)
+
+        self.otsu_value = otsu_value
+
+        print(f"{self.otsu_value=}")
 
     def create_widgets(self, main_frame: tkinter.Frame, map_file: str, variant_file: str, parameters_file: str) -> None:
         """ create all widgets for application """
@@ -296,7 +300,7 @@ class Application(tkinter.Frame):
         def reload_callback() -> None:
 
             # redo study
-            study_image(self.map_file, False)
+            study_image(self.map_file, self.otsu_value, False)
 
             put_image()
 
@@ -464,7 +468,8 @@ class Application(tkinter.Frame):
 
 CONTOUR_TABLE: dict[tuple[int, int, int, int], list[tuple[int]]] = {}
 
-def study_image(map_file: str, debug: bool) -> None:
+
+def study_image(map_file: str, otsu_value: int | None, debug: bool) -> None:
     """ study_image """
 
     global CONTOUR_TABLE
@@ -477,11 +482,11 @@ def study_image(map_file: str, debug: bool) -> None:
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # pylint: disable=no-member
 
     # Note : cv2.THRESH_OTSU : 'otsu' parameter is not used
-    otsu = 127
-    otsu_calculated, thresh = cv2.threshold(gray, otsu, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)  # pylint: disable=no-member
-
-    # TO be more specific : remove cv2.THRESH_OTSU and pass custom 'otsu' value 
-    print(f"OTSU calculated = {otsu_calculated}")
+    if otsu_value is None:
+        otsu_calculated, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)  # pylint: disable=no-member
+        print(f"OTSU calculated = {otsu_calculated}")
+    else:
+        _, thresh = cv2.threshold(gray, otsu_value, 255, cv2.THRESH_BINARY_INV)  # pylint: disable=no-member
 
     # Filter using contour h
     contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # pylint: disable=no-member
@@ -490,7 +495,7 @@ def study_image(map_file: str, debug: bool) -> None:
 
         x_pos, y_pos, w_val, h_val = cv2.boundingRect(current_contour)  # pylint: disable=no-member
         approx = cv2.approxPolyDP(current_contour, 1, True)  # pylint: disable=no-member
-        CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)] = list(map(lambda p: p[0], approx.tolist()))  # type: ignore
+        CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)] = list(map(lambda p: p[0], approx.tolist()))
 
     # sort to put smaller first bounding rect first
     CONTOUR_TABLE = {k: CONTOUR_TABLE[k] for k in sorted(CONTOUR_TABLE, key=lambda b: b[2] * b[3])}
@@ -502,7 +507,7 @@ def study_image(map_file: str, debug: bool) -> None:
         sys.exit()
 
 
-def main_loop(debug: bool, map_file: str, variant_file: str, parameters_file: str) -> None:
+def main_loop(debug: bool, map_file: str, variant_file: str, parameters_file: str, otsu_value: int | None) -> None:
     """ main_loop """
 
     root = tkinter.Tk()
@@ -519,11 +524,11 @@ def main_loop(debug: bool, map_file: str, variant_file: str, parameters_file: st
     # create app
     root.title(window_name)
 
-    app = Application(map_file, variant_file, parameters_file, master=root)
+    app = Application(map_file, variant_file, parameters_file, otsu_value, master=root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
 
     # for polygons : use opencv
-    study_image(map_file, debug)
+    study_image(map_file, otsu_value, debug)
 
     # tkinter main loop
     app.mainloop()
@@ -541,6 +546,7 @@ def main() -> None:
     parser.add_argument('-m', '--map_file', required=True, help='Load a map file at start')
     parser.add_argument('-v', '--variant_file', required=True, help='Load variant json file')
     parser.add_argument('-p', '--parameters_file', required=True, help='Load a parameters file at start')
+    parser.add_argument('-o', '--otsu_value', required=False, type=int, help='Load an otsu value improve to detect small bits')
     args = parser.parse_args()
 
     #  load files at start
@@ -548,6 +554,7 @@ def main() -> None:
     variant_file = args.variant_file
     map_file = args.map_file
     parameters_file = args.parameters_file
+    otsu_value = args.otsu_value
 
     if not os.path.exists(map_file):
         print(f"File '{map_file}' does not seem to exist, please advise !", file=sys.stderr)
@@ -561,7 +568,7 @@ def main() -> None:
         print(f"File '{map_file}' does not seem to exist, please advise !", file=sys.stderr)
         sys.exit(-1)
 
-    main_loop(debug, map_file, variant_file, parameters_file)
+    main_loop(debug, map_file, variant_file, parameters_file, otsu_value)
 
     print("The End")
 
