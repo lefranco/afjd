@@ -30,6 +30,8 @@
     	[18, 22, 32]
     	],
     
+    "free_centers":  [],
+
 	"type_coasts": {
 		"number" : 3
 	},
