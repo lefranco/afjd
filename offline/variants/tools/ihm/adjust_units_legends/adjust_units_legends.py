@@ -339,10 +339,10 @@ class Application(tkinter.Frame):
             x_pos_read = zone_data['x_pos']
             y_pos_read = zone_data['y_pos']
 
-            if self.zone2type[num_zone] in (1, 2):
+            if self.zone2type[num_zone] in (1, 2, 4):
                 items = stabbeur_army(x_pos_read, y_pos_read, self.canvas, outline=outline)
                 self.item_table[num_zone].extend(items)
-            if self.zone2type[num_zone] in (1, 3):
+            if self.zone2type[num_zone] in (1, 3, 4):
                 items = stabbeur_fleet(x_pos_read, y_pos_read, self.canvas, outline=outline)
                 self.item_table[num_zone].extend(items)
 
