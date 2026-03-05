@@ -2860,7 +2860,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         orders_list = orders.Order.list_by_game_id(sql_executor, game_id)
         if orders_list:
             del sql_executor
-            flask_restful.abort(400, msg="Unsafe to rectify a position when some orders are alreay submitted!")
+            flask_restful.abort(400, msg="Unsafe to rectify a position when some orders are already submitted!")
 
         # store position
 
@@ -7329,7 +7329,7 @@ class TournamentListRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg=f"Tournament {name} already exists")
 
-        # check the game is not alreay in a tournament (because we will put the game in the tournament)
+        # check the game is not already in a tournament (because we will put the game in the tournament)
         game_tournaments = groupings.Grouping.list_by_game_id(sql_executor, game_id)
         if game_tournaments:
             del sql_executor
