@@ -23,7 +23,7 @@ import tkinter.scrolledtext
 
 import numpy as np
 
-import cv2  # type: ignore
+import cv2
 
 
 # Important : name of file with version information
@@ -223,11 +223,13 @@ class Application(tkinter.Frame):
                                for i_val in range(COAST_MARKER_DIVISIONS)], np.int32)
 
             # draw
+            assert self.cv_image is not None
             cv2.polylines(self.cv_image, [points], True, color_tuple, COAST_MARKER_THICKNESS)  # pylint: disable=c-extension-no-member
 
         def circle(x_pos: int, y_pos: int, color_tuple: typing.Tuple[int,...]) -> None:
 
             # draw
+            assert self.cv_image is not None
             cv2.circle(self.cv_image, (x_pos, y_pos), CENTER_RADIUS, color_tuple, COAST_MARKER_THICKNESS)  # pylint: disable=c-extension-no-member
 
         def put_image() -> None:
@@ -277,6 +279,7 @@ class Application(tkinter.Frame):
 
             # Pass image cv -> tkinter
             _, tmp_file = tempfile.mkstemp(suffix='.png')
+            assert self.cv_image is not None
             cv2.imwrite(tmp_file, self.cv_image)  # pylint: disable=c-extension-no-member
             self.image_map = tkinter.PhotoImage(file=tmp_file)
             os.remove(tmp_file)
@@ -317,6 +320,7 @@ class Application(tkinter.Frame):
 
             # Pass image cv -> tkinter
             _, tmp_file = tempfile.mkstemp(suffix='.png')
+            assert self.cv_image is not None
             cv2.imwrite(tmp_file, self.cv_image)  # pylint: disable=c-extension-no-member
             self.image_map = tkinter.PhotoImage(file=tmp_file)
             os.remove(tmp_file)
@@ -346,6 +350,7 @@ class Application(tkinter.Frame):
                 return
 
             # Put copy of image in stack
+            assert self.cv_image is not None
             cv_image_copy = self.cv_image.copy()
             self.images_stack.append(cv_image_copy)
 
@@ -356,6 +361,7 @@ class Application(tkinter.Frame):
                 assert self.fill_type_selected is not None
                 color = COLORS_TABLE[self.fill_type_selected]
                 color_tuple = tuple(reversed(color.values()))
+                assert self.cv_image is not None
                 cv2.floodFill(self.cv_image, None, (x_mouse, y_mouse), color_tuple)  # pylint: disable=c-extension-no-member
 
             if self.fill_mode_selected is FillMode.PAINT:
@@ -368,6 +374,7 @@ class Application(tkinter.Frame):
                 assert self.fill_type_selected is not None
                 color = COLORS_TABLE[self.fill_type_selected]
                 color_tuple = tuple(reversed(color.values()))
+                assert self.cv_image is not None
                 cv2.fillPoly(self.cv_image, [poly], color_tuple)  # pylint: disable=c-extension-no-member
 
             if self.fill_mode_selected is FillMode.SPECIAL_COAST:
@@ -376,6 +383,7 @@ class Application(tkinter.Frame):
 
             # Pass image cv -> tkinter
             _, tmp_file = tempfile.mkstemp(suffix='.png')
+            assert self.cv_image is not None
             cv2.imwrite(tmp_file, self.cv_image)  # pylint: disable=c-extension-no-member
             self.image_map = tkinter.PhotoImage(file=tmp_file)
             os.remove(tmp_file)
@@ -406,6 +414,7 @@ class Application(tkinter.Frame):
             """ Save to file """
 
             # Save to file
+            assert self.cv_image is not None
             cv2.imwrite(self.map_file, self.cv_image)  # pylint: disable=c-extension-no-member
 
         def select_fill_type_callback(fill_type: FillType) -> None:

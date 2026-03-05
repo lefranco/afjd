@@ -95,7 +95,7 @@ class Point:
         self.y = 0  # pylint: disable=invalid-name
 
 
-def stabbeur_center(x: int, y: int, canvas: typing.Any, outline: str, fill: str) -> None:  # pylint: disable=invalid-name
+def stabbeur_center(x: int, y: int, canvas: typing.Any, outline: str, fill: str) -> typing.Any:  # pylint: disable=invalid-name
     """ display a center the stabbeur way """
 
     item = canvas.create_oval(x - 5, y - 5, x + 5, y + 5, outline=outline, fill=fill)

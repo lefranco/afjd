@@ -8756,7 +8756,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
             iterations += 1
 
             # list remaining players
-            players = map(int, set.union(*(map(set, table.values()))))  # type: ignore
+            players = map(int, set.union(*(map(set, table.values()))))
 
             # count games per player
             nb_games = {p: len([g for g in table if p in table[g]]) for p in players}
