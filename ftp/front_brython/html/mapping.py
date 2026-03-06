@@ -1626,14 +1626,15 @@ class Ownership(Highliteable, Renderable):
         # role
         adjective = variant.role_adjective(self._role)
 
-        # zone
         if not self._center:
             return f"Un centre appartenant au joueur {adjective}."
 
+        # zone
         zone = self._center.region.zone
         zone_full_name = variant.full_zone_name_table[zone]
 
-        return f"Un centre appartenant au joueur {adjective} positionné dans la région {zone_full_name}."
+        buildable = self._center not in self._position.variant.free_centers
+        return f"Un centre {'constructible' if buildable else 'libre, non constructible'} appartenant au joueur {adjective} positionné dans la région {zone_full_name}."
 
     def save_json(self):
         """ Save to  dict """
