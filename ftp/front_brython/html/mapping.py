@@ -275,6 +275,24 @@ class Center(Highliteable, Renderable):
         ctx.arc(x, y, center_design.CENTER_RAY, 0, 2 * pi, False)
         ctx.stroke(); ctx.closePath()
 
+    def render_free(self, ctx):
+        """ render_free """
+
+        ctx.lineWidth = 1
+
+        outline_colour = OUTLINE_COLOUR
+        ctx.strokeStyle = outline_colour.str_value()
+
+        position = self._region.zone.variant.position_table[self]
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        ctx.beginPath()
+        ctx.moveTo(x + 2, y + 2)
+        ctx.lineTo(x - 2, y - 2)
+        ctx.moveTo(x + 2, y - 2)
+        ctx.lineTo(x - 2, y + 2)
+        ctx.stroke(); ctx.closePath()
+
     def render_start(self, ctx):
         """ render_start """
 
@@ -1090,6 +1108,10 @@ class Variant(Renderable):
 
     def render(self, ctx) -> None:
         """ put me on screen """
+
+        # free centers
+        for center in self._free_centers:
+            center.render_free(ctx)
 
         # distinguish start centers (if not expansionist)
         if not self._build_everywhere:
