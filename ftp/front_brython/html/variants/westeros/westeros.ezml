@@ -56,6 +56,9 @@ Harrenhal (Hhl) et Montagnes de la Lune (MLU) sont également adjacents.
 (Zone impassable : Montagne - non documenté)
 La montagne au sud de Noirmont (Nmo) est impassable.
 
+(Centres "politiquement libres" - non constructibles)
+Personne ne peut construire à Port-Real, Est (PRE) et Ouest (PRO)
+
 _
 $ Datation
 
@@ -67,9 +70,6 @@ $ Conditions de victoire
 Il y a *34* centres de ravitaillement sur le plateau. 
 .
 Le gagnant est donc la puissance qui détient *18* centres de ravitaillement ou plus pendant une phase d'ajustement.
-
-(Centres "politiquement libres" - non constructibles)
-Personne ne peut construire à Port-Real, Est (PRE) et Ouest (PRO)
 
 _
 $ Puissances en présence
