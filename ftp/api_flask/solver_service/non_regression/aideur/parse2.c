@@ -117,13 +117,13 @@ void verifglobale(IDSAISON saison) {
 				break;
 			}
 		}
-		/* Avertisement si plus  de centres que d'unites et un centre national libre*/
+		/* Avertisement si plus  de centres que d'unites et un centre national inoccupé*/
 		if (ncentres > nunites) {
 			for (q = CENTREDEPART.t; q < CENTREDEPART.t + CENTREDEPART.n; q++)
 				if (q->pays == p && chercheoccupant(q->centre->region) == NULL)
 					break;
 			if (q < CENTREDEPART.t + CENTREDEPART.n) {
-				cherchechaine(__FILE__, 53, buf, 1, p->nom); /*"Pays %1 : plus de centres que d'unités au printemps (et au moins un centre national libre)"*/
+				cherchechaine(__FILE__, 53, buf, 1, p->nom); /*"Pays %1 : plus de centres que d'unités au printemps (et au moins un centre national inoccupé)"*/
 				avertir(buf);
 			}
 		}

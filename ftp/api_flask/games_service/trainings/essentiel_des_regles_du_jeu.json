@@ -352,7 +352,7 @@
 {
     "title": "Refus de construction", 
     "type": "submit",
-    "introduction" : "Si vous n'avez pas de centre de départ de libre, vous ne pouvez pas construire, même si vous avez gagné des centres. Idem si vous ne possédez plus aucun centre - auquel cas la partie est mal engagé pourt vous.<br><br>Par ailleurs, il est possible de refuser une construction (en général pour des raisons diplomatiques).<br>Dans cette situation, le français a pris trois centres dès le débvut de la partie, ce qui effraie ses voisins. Il décide donc de ne construire  que deux fois : flotte à Brest et armée à Paris (en étant allié avec l'italien)<br><br><b>Pouvez vous réaliser ses constructions ? Le système va produire des avertissement et vous demander confirmation.</b>",
+    "introduction" : "Si vous n'avez pas de centre de départ inoccupé, vous ne pouvez pas construire, même si vous avez gagné des centres. Idem si vous ne possédez plus aucun centre - auquel cas la partie est mal engagé pourt vous.<br><br>Par ailleurs, il est possible de refuser une construction (en général pour des raisons diplomatiques).<br>Dans cette situation, le français a pris trois centres dès le débvut de la partie, ce qui effraie ses voisins. Il décide donc de ne construire  que deux fois : flotte à Brest et armée à Paris (en étant allié avec l'italien)<br><br><b>Pouvez vous réaliser ses constructions ? Le système va produire des avertissement et vous demander confirmation.</b>",
     "role_id" : 2,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 4, 
