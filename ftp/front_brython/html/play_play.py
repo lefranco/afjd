@@ -968,6 +968,8 @@ def submit_orders():
                     alert("Bien essayé, mais il y a déjà une unité à cet endroit !")
                 elif center not in play_low.POSITION_DATA.owner_table:
                     alert("Bien essayé, mais ce centre n'appartient à personne !")
+                elif center.free:
+                    alert("Bien essayé, mais ce centre est libre donc non constructible !")
                 else:
                     # becomes tricky
                     accepted = True
