@@ -262,6 +262,9 @@ class Center(Highliteable, Renderable):
         # the owner at start of the game
         self._owner_start = None
 
+        # free = no build
+        self._free = False
+
     def actual_draw(self, ctx):
         """ actual_draw """
 
@@ -277,6 +280,9 @@ class Center(Highliteable, Renderable):
 
     def render_free(self, ctx):
         """ render_free """
+
+        if not self._free:
+            return
 
         ctx.lineWidth = 1
 
@@ -368,6 +374,16 @@ class Center(Highliteable, Renderable):
     def owner_start(self, owner_start: 'Role') -> None:
         """ setter """
         self._owner_start = owner_start
+
+    @property
+    def free(self):
+        """ property """
+        return self._free
+
+    @free.setter
+    def free(self, free: bool) -> None:
+        """ setter """
+        self._free = free
 
     @property
     def identifier(self) -> int:
@@ -821,6 +837,7 @@ class Variant(Renderable):
         self._free_centers = []
         for number_center in raw_variant_content['free_centers']:
             free_center = self._centers[number_center]
+            free_center.free = True
             self._free_centers.append(free_center)
 
         # load the coast types
@@ -1110,7 +1127,7 @@ class Variant(Renderable):
         """ put me on screen """
 
         # free centers
-        for center in self._free_centers:
+        for center in self._centers.values():
             center.render_free(ctx)
 
         # distinguish start centers (if not expansionist)
@@ -1617,6 +1634,7 @@ class Ownership(Highliteable, Renderable):
         ctx.strokeStyle = outline_colour.str_value()
 
         self.actual_draw(ctx)
+        self._center.render_free(ctx)
 
     def description(self):
         """ description for helping """
