@@ -2468,9 +2468,6 @@ class GamesCompleteOrReadyRessource(flask_restful.Resource):  # type: ignore
         # dict to say how many not allocated in game
         norole_dict = {tr[0]: tr[1] for tr in no_role_data}
 
-        # dict to say how many allocated in game
-        role_dict = {tr[0]: tr[1] for tr in have_role_data}
-
         # game is complete if there are at least as many people allocated to the game (without a role) than the capacity (-1 : remove GM) and nobody has a role (except GM)
         # if game has disorder we need less people allocated
         complete_games = [tr[0] for tr in no_role_data if tr[0] in relevant_games and tr[1] >= tr[2] - 1 - disorder_dict[tr[0]]]
