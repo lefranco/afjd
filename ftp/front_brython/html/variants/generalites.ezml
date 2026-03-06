@@ -53,7 +53,7 @@ _Cold War Redux_ : L'Albanie est inaccessible.
 
 
 _
-$ Condition de victoire
+$ Conditions de victoire
 
 - Pas de solo
 (La notion de solo peut disparaître purement et simplement.)
@@ -62,9 +62,11 @@ _Standard pds_ : on continue après le solo.
 
 
 - Solo ajusté
-(Il peut arriver que le solo ne soit pas à la majorité absolue des centres.)
+(Il peut arriver que le solo ne soit pas à la majorité absolue des centres, mais PLUS de centres.)
 _Cold War_ : le solo requiert 17 centres au lieu des 14 "logiques".
 
+(Il peut arriver que le solo ne soit pas à la majorité absolue des centres, mais MOINS de centres.)
+_v1900_ : le solo requiert 18 centres au lieu des 20 "logiques". Dans ce cas le solo n'est validé qui si le nombre de centres n'est pas partagé.
 
 _
 $ Position de départ
