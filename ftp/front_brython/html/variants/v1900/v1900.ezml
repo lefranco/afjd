@@ -38,11 +38,14 @@ $ Datation
 La partie commence en *1901*. Chaque tour représente *1* année "en temps réel".
 
 _
-$ Centres de ravitaillement
+$ Conditions de victoire
 
 Il y a *39* centres de ravitaillement sur le plateau. 
 .
-Le gagnant est donc la puissance qui détient *20* centres de ravitaillement ou plus pendant une phase d'ajustement, sauf spécificité (Cf. dernier paragraphe.)
+Attention : le solo est changé par rapport à la majorité + 1 : il est à *18* centres au lieu de 20.
+.
+A noter : quand le solo est plus petit que la moitié plus un, la majorité des centres est nécessaire.
+
 .
 
 (Centres "politiquement libres" - non constructibles)
@@ -172,9 +175,6 @@ $ Expansionnisme (non)
 Constructions sur les centres de départ comme dans la variante standard, sauf spécificité. (Cf. dernier paragraphe.)
 _
 $ Règles spéciales
-
-(Solo à 18 centres seul)
-Selon les règles de la variante, le gagnant est le premier joueur à attendre 18 centres et être seul à le faire. Il faut continuer la partie en cas d'égalité à 18 centres. L'arrêt à 20 centres (majorité absolue) reste appliqué par le système.
 
 (Construction en Sibérie)
 Lorsque la Russie possède au moins un, MAIS PAS LES QUATRE, de ses centres de ravitaillement d'origine, elle maintient une unité supplémentaire sur la carte (c'est-à-dire une de plus que le nombre de centres de ravitaillement qu'elle contrôle actuellement). De plus, tant que la Russie est dans cette situation, le joueur russe peut utiliser la Sibérie comme site de construction pendant la phase d'ajustement, si elle est inoccupée. 

@@ -43,7 +43,6 @@ La côte Byzance (Byz) fonctionne de la même manière que Constantinople sur la
 Les Baléares sont une île, c'est à dire à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Une armée ne peut y accéder (entrer et quitter) que par le convoi d'une flotte.
 
 
-
 (Intersection dans les hautes mers)
 L'accès est possible, pour une flotte, de n'importe quelle des mers suivantes vers une autre :
 - Mer Ausanienne (Aus)
@@ -84,7 +83,7 @@ $ Datation
 La partie commence en *1*. Chaque tour représente *1* année "en temps réel".
 
 _
-$ Centres de ravitaillement
+$ Conditions de victoire
 
 Il y a *34* centres de ravitaillement sur le plateau.
 .
