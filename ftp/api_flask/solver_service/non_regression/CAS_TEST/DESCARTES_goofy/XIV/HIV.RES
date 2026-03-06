@@ -2,7 +2,7 @@ SITUATION
 
 Preparation des ajustements :
  - Ajustements attendus :
-FRANCE : 1 centres 1 unites 0 centres libres
+FRANCE : 1 centres 1 unites 0 centres inoccupes
  - Position des unites :
 FRANCE : A POR 
  - Sont possedes :

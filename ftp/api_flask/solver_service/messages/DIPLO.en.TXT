@@ -6,7 +6,7 @@ decrit.c#5#Preparation of retreats :
 decrit.c#7# - Are owned :
 decrit.c#8#Preparation of adjustments :
 decrit.c#9# - Adjustments expected :
-decrit.c#10#%1 centres %2 units %3 free centres
+decrit.c#10#%1 centres %2 units %3 unoccupied centres
 decrit.c#11# => %1 builds
 decrit.c#12#Report of moves :
 decrit.c#13#Report of retreats :
@@ -358,10 +358,10 @@ parse.c#268#Country %1 without any centre but not dissapeared (rectified)
 parse.c#269#Do not use the 'R -' construction (remove the '-')
 parse.c#270#Missing anneezero
 parse.c#271#Missing end of line after anneezero
-parse.c#272#Problem definition of a free centre on the centre
+parse.c#272#Problem definition of a freecentre on the centre
 parse.c#273#Centre %1 not declared on a  freecentre
 parse.c#274#Missing end of line after freecentre
-parse.c#275#Region %1 is a free centre therfore not buildable
+parse.c#275#Region %1 is a politically free centre therefore not buildable
 resoud.c#1#Missing move order of %1
 resoud.c#2#Dublin in move orders on %1
 resoud.c#3#Unit %1 is supporting a compatriot unit to attack which does not perform the move (=> void)

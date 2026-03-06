@@ -969,7 +969,7 @@ def submit_orders():
                 elif center not in play_low.POSITION_DATA.owner_table:
                     alert("Bien essayé, mais ce centre n'appartient à personne !")
                 elif center.free:
-                    alert("Bien essayé, mais ce centre est libre donc non constructible !")
+                    alert("Bien essayé, mais ce centre est politiquement libre et donc non constructible !")
                 else:
                     # becomes tricky
                     accepted = True

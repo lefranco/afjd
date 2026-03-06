@@ -288,7 +288,7 @@ static void creeconstructions(_PAYS *pays, int souhaites) {
 
 		for (zonedest = ZONE.t; zonedest < ZONE.t + ZONE.n; zonedest++) {
 
-			/* la zone ne doit pas etre un centre libre*/
+			/* la zone ne doit pas etre un centre politiquement libre*/
 			centrelibre = NULL;
 			for (s = CENTRELIBRE.t; s < CENTRELIBRE.t + CENTRELIBRE.n; s++) {
 				if(s->centre->region == zonedest->region) {
@@ -338,7 +338,7 @@ static void creeconstructions(_PAYS *pays, int souhaites) {
 				continue;
 			}
 
-			/* la zone doit etre libre */
+			/* la zone doit etre inoccupee */
 			if (chercheoccupant(zonedest->region)) {
 				continue;
 			}

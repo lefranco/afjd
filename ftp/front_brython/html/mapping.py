@@ -1652,7 +1652,7 @@ class Ownership(Highliteable, Renderable):
         zone_full_name = variant.full_zone_name_table[zone]
 
         buildable = self._center not in self._position.variant.free_centers
-        return f"Un centre {'constructible' if buildable else 'libre, non constructible'} appartenant au joueur {adjective} positionné dans la région {zone_full_name}."
+        return f"Un centre {'constructible' if buildable else 'politiquement libre, non constructible'} appartenant au joueur {adjective} positionné dans la région {zone_full_name}."
 
     def save_json(self):
         """ Save to  dict """

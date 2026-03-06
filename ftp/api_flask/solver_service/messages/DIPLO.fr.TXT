@@ -6,7 +6,7 @@ decrit.c#5#Preparation des retraites :
 decrit.c#7# - Sont possedés :
 decrit.c#8#Préparation des ajustements :
 decrit.c#9# - Ajustements attendus :
-decrit.c#10#%1 centres %2 unités %3 centres libres
+decrit.c#10#%1 centres %2 unités %3 centres inoccupés
 decrit.c#11# => %1 constructions
 decrit.c#12#Compte rendu des mouvements :
 decrit.c#13#Compte rendu des retraites :
@@ -361,7 +361,7 @@ parse.c#271#Manque fin de ligne après anneezero
 parse.c#272#Problème définition d'un centrelibre sur le centre
 parse.c#273#Centre %1 non déclaré sur un centrelibre
 parse.c#274#Manque fin de ligne après centrelibre
-parse.c#275#La région %1 est un centre libre donc non constructible
+parse.c#275#La région %1 est un centre politiquement libre donc non constructible
 resoud.c#1#Manque l'ordre de mouvement de %1
 resoud.c#2#Doublon dans les ordres de mouvement sur %1
 resoud.c#3#L'unité %1 soutient une unité compatriote pour attaquer qui n'effectue pas le déplacement (=> annulé)

@@ -1055,7 +1055,7 @@ def game_master():
         body += "\n"
         body += "Cette partie a besoin d'un remplaçant. Vous aves demandé à être notifié dans un tel cas. Son arbitre vous sollicite !"
         body += "\n"
-        body += f"Le rôle qui est libre est {role_name}."
+        body += f"Le rôle qui est disponible est {role_name}."
         body += "\n"
         body += "Comment s'y prendre ? Aller sur le site, onglet 'Rejoindre une partie' et cliquez sur le bouton dans la colonne 'rejoindre' de la ligne de la partie en rose (Il peut être judicieux d'aller tâter un peu la partie au préalable)"
         body += "\n"
