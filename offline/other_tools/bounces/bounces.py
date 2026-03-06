@@ -2,10 +2,10 @@
 
 """BOUNCE.
 Consider going to this page :
-https://sender.office.com/
+    https://sender.office.com/
 to request un banning
-and to this page : 
-https://mxtoolbox.com/ReverseLookup.aspx
+and to this page :
+    https://mxtoolbox.com/ReverseLookup.aspx
 to check IP seind is really OVH
 """
 
@@ -43,9 +43,6 @@ SAID = 'said:'
 def parse_content(content: str) -> tuple[str, str, str, str, str, str, str, str, str]:
     """Parse a string that is the content of a bounce message."""
 
-    #print(content)
-    #print("================")
-
     host_reporter = ""
     subject = ""
     discourse = ""
@@ -80,7 +77,7 @@ def parse_content(content: str) -> tuple[str, str, str, str, str, str, str, str,
 
     # Extract recipient email
     email_dest, _, rest = subject.partition(':')
-    email_dest = email_dest.strip('<>').strip()
+    email_dest = email_dest.replace('<', '').replace('>', '').strip()
 
     # Extract reporter host and IP
     _, _, rest = rest.partition('host ')
@@ -107,8 +104,6 @@ def parse_content(content: str) -> tuple[str, str, str, str, str, str, str, str,
     _, _, client_ip = client.partition('[')
     client_ip = client_ip.strip()
     explanations = ' '.join(explanations.split())
-
-    #print(f"{host_reporter=}\n{email_dest=}\n{reporter_host=}\n{reporter_ip=}\n{code_class=}\n{code_value=}\n{code_desc=}\n{client_ip=}\n{explanations=}")
 
     return host_reporter, email_dest, reporter_host, reporter_ip, code_class, code_value, code_desc, client_ip, explanations
 
@@ -140,11 +135,11 @@ def read_config(config_file: pathlib.Path) -> None:
     WORK_DIR = config["work_dir"]
 
 
-ITEMS_DICT: dict[str, tuple[str, bool, str, str]] = {}
+ITEMS_DICT: dict[str, tuple[str, bool, str]] = {}
 IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
-def display_callback(description: str, body_text: list[str]) -> None:
+def display_callback(description: str, body_text: str) -> None:
     """Display information about content in email with copy/paste."""
     win = tkinter.Toplevel()
     win.title(description)
@@ -211,21 +206,21 @@ def load_mails(dump: bool, headers: bool) -> None:
     imap.login(IMAP_USER, IMAP_PASSWORD)
     imap.select(IMAP_MAILBOX)
 
-    status, data = imap.uid("search", None, "ALL")
+    status, data = imap.uid("search", None, "ALL")  # type: ignore[arg-type]
     assert status == "OK", f"Search failed {data}"
 
     for uid in data[0].split():
 
         if headers:
-            status, msg_data = imap.uid("fetch", uid, "(BODY.PEEK[HEADER])")
+            status, msg_data = imap.uid("fetch", uid.decode(), "(BODY.PEEK[HEADER])")
             assert status, "Failed to get email header"
             with open(f"header_{uid.decode()}.eml", "a", encoding="utf-8") as file:
                 for response_part in msg_data:
                     if isinstance(response_part, tuple):
-                        raw_header = response_part[1].decode('utf-8', errors='ignore')
+                        raw_header = response_part[1].decode('utf-8', errors='ignore')  # pylint: disable=unsubscriptable-object
                         file.write(raw_header)
-                        file.write("-------------")            
-  
+                        file.write("-------------")
+
         # -----
         # 1 Date
         # -----
@@ -237,19 +232,21 @@ def load_mails(dump: bool, headers: bool) -> None:
         metadata_bytes = date_data[0]
         if isinstance(metadata_bytes, tuple):
             metadata_bytes = metadata_bytes[0]
-                
+
         metadata_str = metadata_bytes.decode(errors="ignore")
-        
+
         # Use robust parsing to get the date string
         if "INTERNALDATE" in metadata_str:
             date_part = metadata_str.split('INTERNALDATE', 1)[1].strip()
             date_str = date_part.split('"')[1]
+        else:
+            date_str = "Unknown"
 
         # -----
         # 2 Body
         # -----
 
-        status, msg_data = imap.uid("fetch", uid, '(BODY.PEEK[])')
+        status, msg_data = imap.uid("fetch", uid.decode(), '(BODY.PEEK[])')
         assert status == "OK", f"Fetch failed {data}"
 
         item = msg_data[0]
@@ -261,11 +258,10 @@ def load_mails(dump: bool, headers: bool) -> None:
             assert False, f"Unexpected fetch result: {item}"
 
         if dump:
-            print("========")
             assert isinstance(raw_email, bytes), "Bad raw_email not bytes"
             full_content_str = raw_email.decode('utf-8', errors='ignore')
-            print(full_content_str) 
-            print("========")
+            with open(f"log_{uid.decode()}", 'w', encoding='utf-8') as file:
+                file.write(full_content_str)
 
         msg = email.message_from_bytes(raw_email, policy=email.policy.default)
 
@@ -274,20 +270,20 @@ def load_mails(dump: bool, headers: bool) -> None:
             content_type = part.get_content_type()
             content_disposition = str(part.get("Content-Disposition") or "")
 
-            if "attachment" in content_disposition:
+            if 'attachment' in content_disposition:
                 continue
             if content_type in ("text/plain", "text/html"):
                 try:
                     body_text = part.get_content()
-                except Exception as e:
+                except (LookupError, TypeError, UnicodeDecodeError) as e:
                     print(f"Error decoding body: {e}")
                     body_text = None
                 break
 
         assert body_text is not None
 
-        host_reporter, email_dest, reporter_host, reporter_ip, code_class, code_value, code_desc, client_ip, explanations = parse_content(body_text)
-        title = f"{email_dest}[{client_ip}] {code_class} {code_value} {uid.decode()} {date_str}"
+        _, email_dest, __, ___, code_class, code_value, ____, client_ip, _____ = parse_content(body_text)
+        title = f"{email_dest}[{client_ip}] {code_class} {code_value} {date_str} /{uid.decode()}/"
         message_uid = uid.decode()
         description = body_text.replace('\r\n', '\n')
         attention = False  # TODO : think of something
