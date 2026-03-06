@@ -79,9 +79,11 @@ def parse_xml(xml_file: str, dump: bool) -> tuple[str, bool, list[str]]:
     if dump:
         with open(xml_file, 'r', encoding='utf-8') as fic:
             content = fic.read()
-        print("..............")
+        print()
+        print("####################################################")
         print(content)
-        print("..............")
+        print("####################################################")
+        print()
 
     tree = xml.etree.ElementTree.parse(xml_file)
     root = tree.getroot()
@@ -197,7 +199,7 @@ def load_mails(dump: bool, headers: bool) -> None:
     imap.login(IMAP_USER, IMAP_PASSWORD)
     imap.select(IMAP_MAILBOX)
 
-    status, data = imap.uid("search", None, "ALL")
+    status, data = imap.uid("search", None, "ALL")  # type: ignore[arg-type]
     assert status == "OK", f"Search failed {data}"
 
     for uid in data[0].split():
@@ -210,9 +212,9 @@ def load_mails(dump: bool, headers: bool) -> None:
             with open(f"header_{uid.decode()}.eml", "a", encoding="utf-8") as file:
                 for response_part in msg_data:
                     if isinstance(response_part, tuple):
-                        raw_header = response_part[1].decode('utf-8', errors='ignore')
+                        raw_header = response_part[1].decode('utf-8', errors='ignore')  # pylint: disable=unsubscriptable-object
                         file.write(raw_header)
-                        file.write("-------------")            
+                        file.write("-------------")
 
         status, msg_data = imap.uid("fetch", uid, '(BODY.PEEK[])')
         assert status == "OK", f"Fetch failed {data}"
@@ -229,7 +231,7 @@ def load_mails(dump: bool, headers: bool) -> None:
             print("========")
             assert isinstance(raw_email, bytes), "Bad raw_email not bytes"
             full_content_str = raw_email.decode('utf-8', errors='ignore')
-            print(full_content_str) 
+            print(full_content_str)
             print("========")
 
         msg = email.message_from_bytes(raw_email, policy=email.policy.default)
@@ -238,12 +240,12 @@ def load_mails(dump: bool, headers: bool) -> None:
         message_uid = uid.decode()
 
         added = False
-        body = None
+        body = ""
 
         # Go through email parts
         num_part = 0
         for part in msg.walk():
-           
+
             disposition = part.get_content_disposition()
 
             # Attachment
@@ -251,8 +253,9 @@ def load_mails(dump: bool, headers: bool) -> None:
                 content_type = part.get_content_type()
                 if content_type == "text/plain":
                     payload = part.get_payload(decode=True)
+                    assert isinstance(payload, bytes)
                     if not body:
-                        body = payload.decode(part.get_content_charset() or 'utf-8', errors='ignore')                
+                        body = payload.decode(part.get_content_charset() or 'utf-8', errors='ignore')
                 continue
 
             num_part += 1
@@ -269,6 +272,7 @@ def load_mails(dump: bool, headers: bool) -> None:
                 zip_path = os.path.join(WORK_DIR, filename)
                 payload = part.get_payload(decode=True)
                 assert payload, "No payload"
+                assert isinstance(payload, bytes)
                 with open(zip_path, "wb") as fic:
                     fic.write(payload)
                 with zipfile.ZipFile(zip_path, 'r') as zip_ref:
@@ -287,6 +291,7 @@ def load_mails(dump: bool, headers: bool) -> None:
                 gz_path = os.path.join(WORK_DIR, filename)
                 payload = part.get_payload(decode=True)
                 assert payload, "No payload"
+                assert isinstance(payload, bytes)
                 with open(gz_path, "wb") as fic:
                     fic.write(payload)
                 extracted_file = os.path.join(WORK_DIR, os.path.splitext(filename)[0])
@@ -307,7 +312,6 @@ def load_mails(dump: bool, headers: bool) -> None:
         if not added:
             description = msg['subject']
             ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, True, False, [body])
-
 
     imap.logout()
     print("")
@@ -392,7 +396,7 @@ def main() -> None:
     # all buttons inside
     for i, (description, (message_id, nomarc, attention, content_list)) in enumerate(ITEMS_DICT.items()):
 
-        fg = 'Blue' if nomarc else 'Red' if attention else 'Black' 
+        fg = 'Blue' if nomarc else 'Red' if attention else 'Black'
 
         # to display
         display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, nm=nomarc, cl=content_list: display_callback(d, nm, cl))  # type: ignore[misc]
