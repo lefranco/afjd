@@ -925,7 +925,7 @@ class Variant(Renderable):
             name = data_dict['name']
             self._region_name_table[region_type] = name
 
-        # load the units type names        
+        # load the units type names
         assert len(raw_parameters_content['units']) == len(UnitTypeEnum.inventory())
         for unit_type_code_str, data_dict in raw_parameters_content['units'].items():
             unit_type_code = int(unit_type_code_str)
@@ -1908,22 +1908,6 @@ class Position(Renderable):
     def save_json4(self):
         """ export forbidden as list of int """
         return [f.region.identifier for f in self._forbiddens]
-
-    def closest_ownership(self, designated_pos: geometry.PositionRecord):
-        """ closest_ownership  """
-
-        closest_ownership = None
-        distance_closest = inf
-
-        for ownership in self._ownerships:
-            center = ownership.center
-            center_pos = self._variant.position_table[center]
-            distance = designated_pos.distance(center_pos)
-            if distance < distance_closest:
-                closest_ownership = ownership
-                distance_closest = distance
-
-        return closest_ownership
 
     def closest_unit(self, designated_pos: geometry.PositionRecord, dislodged):
         """ closest_unit (pass dislodged = None for all dislodged and not dislodged)  """
