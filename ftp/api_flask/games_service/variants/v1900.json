@@ -280,7 +280,7 @@
     ],
     "year_zero": 1900,
     "increment": 1,
-    "extra_requirement_solo": 0,
+    "extra_requirement_solo": -2,
     "build_everywhere": false,
     "start_build": false,
     "disorder": {},

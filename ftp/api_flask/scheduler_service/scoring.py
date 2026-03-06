@@ -15,9 +15,10 @@ def c_diplo(_, solo_threshold, ratings):
     # default score
     score = {role_name: 0 for role_name in ratings}
 
-    # detect solo
+    # detect solo (need to be strictly first because some solos are less than half + 1)
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > solo_threshold:
+    second_role_name = list(ratings.keys())[1]
+    if ratings[best_role_name] > solo_threshold and ratings[best_role_name] > ratings[second_role_name]:
         score[best_role_name] = solo_reward
         return score
 
@@ -61,9 +62,10 @@ def win_namur(_, solo_threshold, ratings):
     # default score
     score = {role_name: 0 for role_name in ratings}
 
-    # detect solo
+    # detect solo (need to be strictly first because some solos are less than half + 1)
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > solo_threshold:
+    second_role_name = list(ratings.keys())[1]
+    if ratings[best_role_name] > solo_threshold and ratings[best_role_name] > ratings[second_role_name]:
         score[best_role_name] = solo_reward
         return score
 
@@ -107,7 +109,7 @@ def win_namur(_, solo_threshold, ratings):
 
 
 def diplo_league(_, __, ratings):
-    """ the diplo_league scoring system (variant_data is not used) """
+    """ the diplo_league scoring system (variant_data is not used) no solo here """
 
     rank_points_list = [16, 14, 12, 10, 8, 6, 4]
     bonus_alone = 4
@@ -153,9 +155,10 @@ def nexus_omg(_, solo_threshold, ratings):
     # default score
     score = {role_name: 0 for role_name in ratings}
 
-    # detect solo
+    # detect solo (need to be strictly first because some solos are less than half + 1)
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > solo_threshold:
+    second_role_name = list(ratings.keys())[1]
+    if ratings[best_role_name] > solo_threshold and ratings[best_role_name] > ratings[second_role_name]:
         score[best_role_name] = solo_reward
         return score
 
@@ -218,9 +221,10 @@ def c_diplo_namur(_, solo_threshold, ratings):
     # default score
     score = {role_name: 0 for role_name in ratings}
 
-    # detect solo
+    # detect solo (need to be strictly first because some solos are less than half + 1)
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > solo_threshold:
+    second_role_name = list(ratings.keys())[1]
+    if ratings[best_role_name] > solo_threshold and ratings[best_role_name] > ratings[second_role_name]:
         score[best_role_name] = solo_reward
         return score
 
@@ -267,9 +271,10 @@ def butcher(_, solo_threshold, ratings):
     # default score
     score = {role_name: 0 for role_name in ratings}
 
-    # detect solo
+    # detect solo (need to be strictly first because some solos are less than half + 1)
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > solo_threshold:
+    second_role_name = list(ratings.keys())[1]
+    if ratings[best_role_name] > solo_threshold and ratings[best_role_name] > ratings[second_role_name]:
         score[best_role_name] = solo_reward
         return score
 
@@ -307,9 +312,10 @@ def bangkok(centers_variant, solo_threshold, ratings):
     # default score
     score = {role_name: 0 for role_name in ratings}
 
-    # detect solo
+    # detect solo (need to be strictly first because some solos are less than half + 1)
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > solo_threshold:
+    second_role_name = list(ratings.keys())[1]
+    if ratings[best_role_name] > solo_threshold and ratings[best_role_name] > ratings[second_role_name]:
         score[best_role_name] = solo_reward
         return score
 
@@ -331,8 +337,8 @@ def bangkok(centers_variant, solo_threshold, ratings):
         score[role_name] += participation_points
 
     # survival points (if you survive you get survival + second half participation)
-    survivers = [r for r in ratings if ratings[r]]
-    for role_name in survivers:
+    survivors = [r for r in ratings if ratings[r]]
+    for role_name in survivors:
         score[role_name] += survival_points
 
     return score
@@ -350,9 +356,10 @@ def manorcon(centers_variant, solo_threshold, ratings):
     # default score
     score = {role_name: 0 for role_name in ratings}
 
-    # detect solo
+    # detect solo (need to be strictly first because some solos are less than half + 1)
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > solo_threshold:
+    second_role_name = list(ratings.keys())[1]
+    if ratings[best_role_name] > solo_threshold and ratings[best_role_name] > ratings[second_role_name]:
         score[best_role_name] = solo_reward * nb_players
         return score
 
@@ -364,8 +371,8 @@ def manorcon(centers_variant, solo_threshold, ratings):
         total += share
 
     # only survivors score
-    survivers = [r for r in ratings if ratings[r]]
-    for role_name in survivers:
+    survivors = [r for r in ratings if ratings[r]]
+    for role_name in survivors:
         center_num = ratings[role_name]
         share = center_num ** 2 + 4 * center_num + add_param
         score[role_name] = 100 * nb_players * (share / total)
@@ -381,16 +388,17 @@ def calhammer(_, solo_threshold, ratings):
     # default score
     score = {role_name: 0 for role_name in ratings}
 
-    # detect solo
+    # detect solo (need to be strictly first because some solos are less than half + 1)
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > solo_threshold:
+    second_role_name = list(ratings.keys())[1]
+    if ratings[best_role_name] > solo_threshold and ratings[best_role_name] > ratings[second_role_name]:
         score[best_role_name] = solo_reward
         return score
 
     # only survivors score
-    survivers = [r for r in ratings if ratings[r]]
-    for role_name in survivers:
-        score[role_name] = solo_reward // len(survivers)
+    survivors = [r for r in ratings if ratings[r]]
+    for role_name in survivors:
+        score[role_name] = solo_reward // len(survivors)
 
     return score
 
