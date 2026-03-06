@@ -1254,6 +1254,8 @@ def slide_submit_orders(table_of_contents):
                     alert("Bien essayé, mais il y a déjà une unité à cet endroit !")
                 elif center not in POSITION_DATA.owner_table:
                     alert("Bien essayé, mais ce centre n'appartient à personne !")
+                elif center.free:
+                    alert("Bien essayé, mais ce centre est libre donc non constructible !")
                 else:
                     # becomes tricky
                     accepted = True
