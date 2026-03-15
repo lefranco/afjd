@@ -612,9 +612,11 @@ class Game:
         list_owners = [r for _, _, r in game_ownerships]
         counter = collections.Counter(list_owners)
         _, ncentersmax = counter.most_common(1)[0]
+        _, ncenterssecond = counter.most_common(2)[1]
 
         # solo when more than int(c/2) + extra
-        return ncentersmax > len(variant_data['centers']) // 2 + int(variant_data['extra_requirement_solo'])
+        # but need to be alone
+        return ncentersmax > ncenterssecond and ncentersmax > len(variant_data['centers']) // 2 + int(variant_data['extra_requirement_solo'])
 
     def advance(self, sql_executor: database.SqlExecutor) -> None:
         """ advance the game """
