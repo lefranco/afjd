@@ -11,16 +11,23 @@ Egeemonie ne possède aucune provinces avec deux côtes.
 _
 $ Particularités de la carte
 
+(Les îles : Lesbos \(LES\), Chiros \(CHI\) et Samos \(SAM\))
+Ces régions sont des îles, c'est à dire à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). Une armée ne peut y accéder (entrer et quitter) que par le convoi d'une flotte, sauf exception : Lesbos a la particularité - inhabituelle pour une île - d'être accessible par armée depuis Pergamon. Chiros idem  depuis Ephesus.
+Samos idem depuis Miletus.
+
+
 (Canaux)
 Hellespont, Troias, Byzantion , Bythinia, Korinthios, Megara fonctionnent comme des canaux.
+
 (Ponts)
 Olympia & Stratos, Etolia & Achaia, Marathon & Eretre, Lesbos & Pergamon, Chiros & Ephese, Milet & Samos sont liés par des ponts de communication.
+
 (Centres maritimes - archipels)
 Delos, Thera, Naxos et Limnos sont des archipels : à la fois zone maritime et centre de ravitaillement. Une flotte stationnée à l'intérieur d'un archipel peut convoyer. Une armée ne peut y stationner.
-(Zones insulaires)
-Lesbos, Chiros et Samos sont des zones insulaires (i.e. des zone cotière, comme Ephèse et Rhodes par exemple). Si elles contiennent de la mer, c'est uniquement pour les possibilités de déplacements maritimes. Une flotte stationnée dans une zone insulaire ne peut convoyer. Une armée peut y stationner.
+
 (Chiros et Lesbos)
 Puisque ce sont deux zones insulaires, il n'est pas possible à une armée de passer de Chiros à Lesbos (et réciproquement) sans l'assistance d'un convoi.
+
 (Samos et Ephèse)
 Puisque Samos est une zone insulaire, il n'est pas possible à une armée de passer de Samos à Ephèse (et réciproquement) sans l'assistance d'un convoi.
 
