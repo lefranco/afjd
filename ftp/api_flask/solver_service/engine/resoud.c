@@ -740,7 +740,7 @@ void verifajustements(void) {
 
 	for (r = PAYS.t; r < PAYS.t + PAYS.n; r++) {
 
-		lesajustements(r, &possessions, &unites, &possibles);
+		calculajustements(r, &possessions, &unites, &possibles);
 		souhaites = INF(possessions - unites, possibles);
 
 		ajustements = 0;
@@ -917,7 +917,7 @@ void creeretraites(_PAYS *pays) {
 void creeajustements(_PAYS *pays) {
 	int possessions, unites, possibles, souhaites;
 
-	lesajustements(pays, &possessions, &unites, &possibles);
+	calculajustements(pays, &possessions, &unites, &possibles);
 
 	/* cas ou on supprime */
 	if(possessions < unites) {

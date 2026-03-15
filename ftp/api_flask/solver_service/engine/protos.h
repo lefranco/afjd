@@ -34,7 +34,7 @@ BOOL peutconvoyer(_UNITE *, _UNITE *, _ZONE *);
 
 /* GESTION.C ********************************************************/
 
-void lesajustements(_PAYS *, int *, int *, int *);
+void calculajustements(_PAYS *, int *, int *, int *);
 BOOL compatibles(TYPEUNITE, _ZONE *);
 _PAYS *paysdinitiale(int);
 _PAYS *cherchepays(char *);
@@ -105,7 +105,6 @@ void verifiecarte(void);
 /* operationnel */
 /* pour le ploteur aussi */
 void classementpays(void);
-void calculajustements(_PAYS *, int *, int *, int *);
 /* reste */
 void decritsituation(char *);
 void decritordres(char *, BOOL);

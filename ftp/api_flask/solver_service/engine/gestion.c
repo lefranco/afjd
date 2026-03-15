@@ -15,6 +15,76 @@ BOOL TABLEVOISINAGEARMEE[NZONES][NZONES];
 /*        DEUX FONCTIONS UTILES                                          */
 /*************************************************************************/
 
+void calculajustements(_PAYS *pays, int *ncentres, int *nunites,
+	int *najustementspossibles) {
+	_POSSESSION *q;
+	_UNITE *r;
+	_CENTRELIBRE *s;
+	_CENTREDEPART *v;
+
+	*nunites = 0;
+	for (r = UNITE.t; r < UNITE.t + UNITE.n; r++)
+		if (r->pays == pays)
+			(*nunites)++;
+
+	*ncentres = 0;
+	for (q = POSSESSION.t; q < POSSESSION.t + POSSESSION.n; q++)
+		if (q->pays == pays)
+			(*ncentres)++;
+
+	if(!OPTIONE) {
+		/* standard : can only build on start centers */
+		*najustementspossibles = 0;
+		for (v = CENTREDEPART.t; v < CENTREDEPART.t + CENTREDEPART.n; v++) {
+
+			if (v->pays != pays)
+				continue; /* pas centre de depart du bon pays */
+			
+			for (r = UNITE.t; r < UNITE.t + UNITE.n; r++)
+				if (r->zone->region == v->centre->region)
+					break;
+			if (r != UNITE.t + UNITE.n)
+				continue; /* centre occupe */
+
+			for (s = CENTRELIBRE.t; s < CENTRELIBRE.t + CENTRELIBRE.n; s++)
+				if (s->centre == v->centre)
+					break;
+			if (s != CENTRELIBRE.t + CENTRELIBRE.n)
+				continue; /* centre depart = centre libre donc pas constructible */
+
+			for (q = POSSESSION.t; q < POSSESSION.t + POSSESSION.n; q++)
+				if (q->centre == v->centre && q->pays == pays) 
+					break;
+			if (q == POSSESSION.t + POSSESSION.n)
+				continue; /* le centre n'est pas possede */
+
+			(*najustementspossibles)++;
+		}
+	} else {
+		/* can build on all owned centers */
+		*najustementspossibles = 0;
+		for (q = POSSESSION.t; q < POSSESSION.t + POSSESSION.n; q++) {
+
+			if (q->pays != pays)
+				continue; /* pas centre de depart du bon pays */
+
+			for (r = UNITE.t; r < UNITE.t + UNITE.n; r++)
+				if (r->zone->region == q->centre->region)
+					break;
+			if (r != UNITE.t + UNITE.n)
+				continue; /* centre occupe */
+
+			for (s = CENTRELIBRE.t; s < CENTRELIBRE.t + CENTRELIBRE.n; s++)
+				if (s->centre == q->centre)
+					break;
+			if (s != CENTRELIBRE.t + CENTRELIBRE.n)
+				continue; /* posession = centre libre pas constructible */
+
+			(*najustementspossibles)++;
+		}
+	}
+}
+
 BOOL compatibles(TYPEUNITE typeunite, _ZONE *zone)
 /* Verifie qu'un armee ne va pas en mer et qu'une flotte ne va pas en terre */
 {
@@ -27,63 +97,6 @@ BOOL compatibles(TYPEUNITE typeunite, _ZONE *zone)
 	return 
 		(typeunite == FLOTTE && (zone->typezone == MER  || zone->typezone == ILE || zone->typezone == COTE)) || 
 		(typeunite == ARMEE && (zone->typezone == TERRE || zone->typezone == ILE || (zone->typezone == COTE && zone->specificite[0] == EOS)));
-}
-
-void lesajustements(_PAYS *pays, int *possessions, int *unites, int *possibles) {
-	_POSSESSION *s;
-	_CENTREDEPART *v;
-	_UNITE *t;
-
-	(*possessions) = 0;
-	for (s = POSSESSION.t; s < POSSESSION.t + POSSESSION.n; s++)
-		if (s->pays == pays)
-			(*possessions)++;
-
-	(*unites) = 0;
-	for (t = UNITE.t; t < UNITE.t + UNITE.n; t++)
-		if (t->pays == pays)
-			(*unites)++;
-
-
-	if(!OPTIONE) {
-		/* standard : can only build on start centers */
-		(*possibles) = 0;
-		for (v = CENTREDEPART.t; v < CENTREDEPART.t + CENTREDEPART.n; v++) {
-			if (v->pays != pays)
-				continue; /* pas centre de depart du bon pays */
-
-			for (t = UNITE.t; t < UNITE.t + UNITE.n; t++)
-				if (t->zone->region == v->centre->region)
-					break;
-			if (t != UNITE.t + UNITE.n)
-				continue; /* centre occupe */
-
-			for (s = POSSESSION.t; s < POSSESSION.t + POSSESSION.n; s++)
-				if (s->centre == v->centre)
-					break;
-			if (s == POSSESSION.t + POSSESSION.n)
-				continue; /* centre possede par personne */
-			else if (s->pays != pays)
-				continue; /* centre possede par un autre */
-
-			(*possibles)++;
-		}
-	} else {
-		/* can build on all owned centers */
-		(*possibles) = 0;
-		for (s = POSSESSION.t; s < POSSESSION.t + POSSESSION.n; s++) {
-			if (s->pays != pays)
-				continue; /* pas possession  du bon pays */
-
-			for (t = UNITE.t; t < UNITE.t + UNITE.n; t++)
-				if (t->zone->region == s->centre->region)
-					break;
-			if (t != UNITE.t + UNITE.n)
-				continue; /* centre occupe */
-
-			(*possibles)++;
-		}
-	}
 }
 
 /*************************************************************************/
