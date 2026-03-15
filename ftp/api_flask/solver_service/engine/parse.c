@@ -3117,7 +3117,7 @@ void parseajustements(char *nomfic) {
 				} else {
 					/* Autorise une ellipse : directement le trigramme, pas de '+', pas de 'A',  */
 					ungettoken(&tok); /* on va essayer de se passer du type d'unite */
-					lesajustements(pays, &possessions, &unites, &possibles);
+					calculajustements(pays, &possessions, &unites, &possibles);
 					souhaites = INF(possessions - unites, possibles);
 					cherchechaine(__FILE__, 202, buf, 0); /*"Il est preferable de mettre un '+' ou '-'"*/
 					avertir(buf);
@@ -3140,7 +3140,7 @@ void parseajustements(char *nomfic) {
 				cherchechaine(__FILE__, 202, buf, 0); /*"Il est preferable de mettre un '+' ou '-'"*/
 				avertir(buf);
 				ungettoken(&tok);
-				lesajustements(pays, &possessions, &unites, &possibles);
+				calculajustements(pays, &possessions, &unites, &possibles);
 				souhaites = INF(possessions - unites, possibles);
 				if (souhaites >= 0) {
 					cherchechaine(__FILE__, 255, buf, 0); /*"Construction presumee"*/
