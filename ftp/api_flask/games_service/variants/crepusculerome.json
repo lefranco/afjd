@@ -197,6 +197,7 @@
         ]
     ],
     "free_centers":  [],
+    "emergency_centers":  [],
     "type_coasts": {
         "number": 4
     },
