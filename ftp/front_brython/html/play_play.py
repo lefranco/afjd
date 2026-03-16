@@ -962,38 +962,47 @@ def submit_orders():
                 # create fake unit
                 region = selected_build_zone.region
                 center = region.center
+
+                emergency_center = None
                 if center is None:
-                    alert("Bien essayé, mais il n'y a pas de centre à cet endroit !")
+                    print("emergency ?")
+                    if play_low.POSITION_DATA.emergency_situation(role):
+                        for emergency_center in play_low.VARIANT_DATA.emergency_centers:
+                            if emergency_center.region is region and emergency_center.role.identifier is play_low.ROLE_ID:
+                                break
+
+                if center is None and emergency_center is None:
+                    alert("Bien essayé, mais il n'y a pas de centre ni de centre de secours à cet endroit !")
                 elif region in play_low.POSITION_DATA.occupant_table:
                     alert("Bien essayé, mais il y a déjà une unité à cet endroit !")
-                elif center not in play_low.POSITION_DATA.owner_table:
+                elif center is not None and center not in play_low.POSITION_DATA.owner_table:
                     alert("Bien essayé, mais ce centre n'appartient à personne !")
-                elif center.free:
+                elif center is not None and center.free:
                     alert("Bien essayé, mais ce centre est politiquement libre et donc non constructible !")
                 else:
                     # becomes tricky
                     accepted = True
-                    deducted_role = play_low.POSITION_DATA.owner_table[center].role
+                    deducted_role = play_low.POSITION_DATA.owner_table[center].role if center else emergency_center.role
                     if play_low.ROLE_ID == 0:  # game master
                         if not play_low.VARIANT_CONTENT_LOADED['build_everywhere']:
-                            expected_role = center.owner_start
+                            expected_role = center.owner_start if center else emergency_center.role
                             if not expected_role:
-                                alert("Bien essayé mais ce n'est pas un centre de départ !")
+                                alert("Bien essayé, mais ce n'est pas un centre de départ ni un centre de secours !")
                                 accepted = False
                             elif expected_role is not deducted_role:
-                                alert("Bien essayé mais ce n'est pas une variante dans laquelle on peut construire partout !")
+                                alert("Bien essayé, mais ce n'est pas une variante dans laquelle on peut construire partout !")
                                 accepted = False
                     else:  # player
                         if play_low.ROLE_ID is not deducted_role.identifier:
                             alert("Bien essayé, mais ce centre ne vous appartient pas ")
                             accepted = False
                         elif not play_low.VARIANT_CONTENT_LOADED['build_everywhere']:
-                            expected_role = center.owner_start
+                            expected_role = center.owner_start if center else emergency_center.role
                             if not expected_role:
-                                alert("Bien essayé mais ce n'est pas un centre de départ !")
+                                alert("Bien essayé, mais ce n'est pas un centre de départ ni un centre de secours !")
                                 accepted = False
                             elif expected_role is not deducted_role:
-                                alert("Bien essayé mais ce n'est pas une variante dans laquelle on peut construire partout !")
+                                alert("Bien essayé, mais ce n'est pas une variante dans laquelle on peut construire partout !")
                                 accepted = False
                     if accepted:  # actual build
                         if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
