@@ -741,7 +741,7 @@ def slide_submit_orders(table_of_contents):
                 nb_builds_done = orders_data.number()
                 if nb_builds_done < nb_builds:
                     if not warned:
-                        dialog = mydialog.MyDialog(f"Vous construisez {nb_builds_done} unités alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
+                        dialog = mydialog.MyDialog(f"Vous construisez {nb_builds_done} unité(s) alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
                         dialog.ok_button.bind("click", lambda e, w=True, d=dialog: submit_orders_callback(e, w, d))
                         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_submit_orders_callback(e, d))
                         return
