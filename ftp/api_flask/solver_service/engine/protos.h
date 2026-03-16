@@ -34,7 +34,7 @@ BOOL peutconvoyer(_UNITE *, _UNITE *, _ZONE *);
 
 /* GESTION.C ********************************************************/
 
-void calculajustements(_PAYS *, int *, int *, int *);
+void calculajustements(_PAYS *, int *, int *, int *, int *);
 BOOL compatibles(TYPEUNITE, _ZONE *);
 _PAYS *paysdinitiale(int);
 _PAYS *cherchepays(char *);
@@ -42,6 +42,7 @@ _PAYS *chercheadjectifpays(char *);
 _REGION *chercheregion(char *);
 _CENTRE *cherchecentre(char *);
 _CENTRELIBRE *cherchecentrelibre(_CENTRE *);
+_CENTRESECOURS *cherchecentresecours(_PAYS *, _REGION *);
 _CENTREDEPART *cherchecentredepart(char *);
 _ZONE *cherchezone(char *);
 BOOL cotesexistent(_ZONE *zone);
@@ -61,6 +62,7 @@ BOOL interditretraite(_REGION *);
 BOOL uniteaneantie(_UNITE *);
 BOOL unitedelogee(_UNITE *);
 void initialisetablevoisinages(void);
+BOOL situationurgence(_PAYS *);
 
 /* PARSE.C **********************************************************/
 

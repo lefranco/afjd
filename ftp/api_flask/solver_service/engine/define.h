@@ -13,6 +13,7 @@
 #define NCENTRES        100
 #define NCENTREDEPARTS  60
 #define NCENTRELIBRES   10
+#define NCENTRESECOURSS 5
 #define NZONES          250
 #define NARMEEVOISINS   1000
 #define NFLOTTEVOISINS  1000

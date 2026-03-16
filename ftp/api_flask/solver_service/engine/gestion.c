@@ -15,12 +15,12 @@ BOOL TABLEVOISINAGEARMEE[NZONES][NZONES];
 /*        DEUX FONCTIONS UTILES                                          */
 /*************************************************************************/
 
-void calculajustements(_PAYS *pays, int *ncentres, int *nunites,
-	int *najustementspossibles) {
+void calculajustements(_PAYS *pays, int *ncentres, int *nunites, int *ncentresurgence, int *najustementspossibles) {
 	_POSSESSION *q;
 	_UNITE *r;
 	_CENTRELIBRE *s;
 	_CENTREDEPART *v;
+	_CENTRESECOURS *w;
 
 	*nunites = 0;
 	for (r = UNITE.t; r < UNITE.t + UNITE.n; r++)
@@ -33,6 +33,7 @@ void calculajustements(_PAYS *pays, int *ncentres, int *nunites,
 			(*ncentres)++;
 
 	if(!OPTIONE) {
+
 		/* standard : can only build on start centers */
 		*najustementspossibles = 0;
 		for (v = CENTREDEPART.t; v < CENTREDEPART.t + CENTREDEPART.n; v++) {
@@ -60,7 +61,9 @@ void calculajustements(_PAYS *pays, int *ncentres, int *nunites,
 
 			(*najustementspossibles)++;
 		}
+
 	} else {
+
 		/* can build on all owned centers */
 		*najustementspossibles = 0;
 		for (q = POSSESSION.t; q < POSSESSION.t + POSSESSION.n; q++) {
@@ -82,7 +85,30 @@ void calculajustements(_PAYS *pays, int *ncentres, int *nunites,
 
 			(*najustementspossibles)++;
 		}
+		
 	}
+
+	/* situation urgence */
+	*ncentresurgence = 0;
+	if(situationurgence(pays)) {
+		for (w = CENTRESECOURS.t; w < CENTRESECOURS.t + CENTRESECOURS.n; w++) {
+
+			if (w->pays != pays)
+				continue; /* pas centre de secours du bon pays */
+
+			for (r = UNITE.t; r < UNITE.t + UNITE.n; r++)
+				if (r->zone->region == w->region)
+					break;
+			if (r != UNITE.t + UNITE.n)
+				continue; /* centre secours occupe */
+
+			/* compte comme un centre et comme un emplacement libre */
+			(*ncentresurgence)++;
+			(*ncentres)++;
+			(*najustementspossibles)++;
+		}
+	}
+
 }
 
 BOOL compatibles(TYPEUNITE typeunite, _ZONE *zone)
@@ -320,6 +346,16 @@ _CENTRELIBRE *cherchecentrelibre(_CENTRE *centre) {
 	return NULL;
 }
 
+_CENTRESECOURS *cherchecentresecours(_PAYS* pays, _REGION *region) {
+	_CENTRESECOURS *p;
+
+	for (p = CENTRESECOURS.t; p < CENTRESECOURS.t + CENTRESECOURS.n; p++)
+		if(p->region == region && p->pays == pays)
+			return p;
+
+	return NULL;
+}
+
 _CENTREDEPART *cherchecentredepart(char *s) {
 	_CENTREDEPART *p;
 	char c = *s;
@@ -547,4 +583,31 @@ void initialisetablevoisinages(void)
 			TABLEVOISINAGEFLOTTE[i][j] = FALSE;
 		}
 
+}
+
+BOOL situationurgence(_PAYS *pays) {
+/* Determine si le pays en en situation d'urgence*/
+
+	BOOL un_possede = FALSE;
+	BOOL un_occupe = FALSE;
+	_CENTREDEPART *p;
+	_POSSESSION *q;
+
+	for (p = CENTREDEPART.t; p < CENTREDEPART.t + CENTREDEPART.n; p++) {
+		if (p->pays != pays) {
+			continue;
+		}
+		for (q = POSSESSION.t; q < POSSESSION.t + POSSESSION.n; q++) {
+			if (q->centre != p->centre) {
+				continue;
+			}
+			if (q->pays == pays) {
+				un_possede = TRUE;
+			}
+			if (q->pays != pays) {
+				un_occupe = TRUE;
+			}
+		}
+	}
+	return un_possede && un_occupe;
 }

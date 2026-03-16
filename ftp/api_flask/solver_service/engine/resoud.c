@@ -679,7 +679,7 @@ void verifajustements(void) {
 	char buf2[TAILLEMOT * 4], buf3[TAILLEMOT * 4];
 	_PAYS *r, *pays;
 	_AJUSTEMENT *u, *v;
-	int possessions, unites, ajustements, possibles, souhaites;
+	int possessions, unites, ajustements, urgences, possibles, souhaites;
 	char buf[TAILLEMESSAGE];
 	char bufn1[TAILLEENTIER], bufn2[TAILLEENTIER], bufn3[TAILLEENTIER],
 			bufn4[TAILLEENTIER], bufn5[TAILLEENTIER];
@@ -740,7 +740,7 @@ void verifajustements(void) {
 
 	for (r = PAYS.t; r < PAYS.t + PAYS.n; r++) {
 
-		calculajustements(r, &possessions, &unites, &possibles);
+		calculajustements(r, &possessions, &unites, &urgences, &possibles);
 		souhaites = INF(possessions - unites, possibles);
 
 		ajustements = 0;
@@ -915,9 +915,9 @@ void creeretraites(_PAYS *pays) {
 }
 
 void creeajustements(_PAYS *pays) {
-	int possessions, unites, possibles, souhaites;
+	int possessions, unites, urgences, possibles, souhaites;
 
-	calculajustements(pays, &possessions, &unites, &possibles);
+	calculajustements(pays, &possessions, &unites, &urgences, &possibles);
 
 	/* cas ou on supprime */
 	if(possessions < unites) {
@@ -1194,11 +1194,11 @@ void suppressionelimines(void) {
 	_PAYS *p;
 	_UNITE *q, *s;
 	_DELOGEE *r;
-	int ncent, nunit, najustementsposs;
+	int ncent, nunit, nurgen, najustementsposs;
 
 	for (p = PAYS.t; p < PAYS.t + PAYS.n; p++) {
 
-		calculajustements(p, &ncent, &nunit, &najustementsposs);
+		calculajustements(p, &ncent, &nunit, &nurgen, &najustementsposs);
 
 		if (nunit > 0 && ncent == 0) {
 

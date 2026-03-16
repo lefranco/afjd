@@ -613,7 +613,7 @@ void decritordressecurite(char *nomfic, _PAYS *pays)
 {
 	_SUPPRESSIONS SUPPRESSIONS;
 	FILE *fd;
-	int ajustements, el, elrec, souhaites, nunit, ncent, najustementsposs;
+	int ajustements, el, elrec, souhaites, nunit, ncent, nurgen, najustementsposs;
 	SPECIFICITE specif;
 	_UNITE **w, *p, *prec;
 	_DELOGEE *q;
@@ -656,7 +656,7 @@ void decritordressecurite(char *nomfic, _PAYS *pays)
 
 	case BILAN:
 
-		calculajustements(pays, &ncent, &nunit, &najustementsposs);
+		calculajustements(pays, &ncent, &nunit, &nurgen, &najustementsposs);
 		souhaites = INF(ncent - nunit,najustementsposs);
 
 		SUPPRESSIONS.n = 0;
@@ -762,7 +762,7 @@ void decritactifs(char *nomfic)
 	_PAYS *p;
 	_UNITE *q;
 	_DELOGEE *r;
-	int ncentres, nunites, najustementspossibles;
+	int ncentres, nunites, nurgences, najustementspossibles;
 	char buf[TAILLEMESSAGE];
 
 	if (!strcmp(nomfic, ""))
@@ -802,7 +802,7 @@ void decritactifs(char *nomfic)
 	case BILAN:
 		for (p = PAYS.t; p < PAYS.t + PAYS.n; p++) {
 			/* Compte tout */
-			calculajustements(p, &ncentres, &nunites, &najustementspossibles);
+			calculajustements(p, &ncentres, &nunites, &nurgences, &najustementspossibles);
 			if ((nunites > ncentres) || ((nunites < ncentres)
 					&& (najustementspossibles > 0)))
 				(void) fprintf(fd, "%s ", p->nom);
@@ -820,7 +820,7 @@ void decritvivants(char *nomfic)
 {
 	FILE *fd;
 	_PAYS *p;
-	int ncentres, nunites, najustementspossibles;
+	int ncentres, nunites, nurgences, najustementspossibles;
 	char buf[TAILLEMESSAGE];
 
 	if (!strcmp(nomfic, ""))
@@ -834,7 +834,7 @@ void decritvivants(char *nomfic)
 	for (p = PAYS.t; p < PAYS.t + PAYS.n; p++) {
 
 		/* Compte tout */
-		calculajustements(p, &ncentres, &nunites, &najustementspossibles);
+		calculajustements(p, &ncentres, &nunites, &nurgences, &najustementspossibles);
 
 		/* Vivant si a un centre ou une unite */
 		if (nunites > 0 || ncentres > 0)
@@ -848,20 +848,24 @@ void decritvivants(char *nomfic)
 void infospreajustements(FILE *fd)
 {
 	_PAYS **p;
-	int nappr, ncent, nunit, najustementsposs;
+	int nappr, ncent, nunit, nurgen, najustementsposs;
 	char buf[TAILLENOMFIC];
 
 	classementpays();
 
 	for (p = PAYSCLASSES.t; p < PAYSCLASSES.t + PAYSCLASSES.n; p++) {
 
-		calculajustements(*p, &ncent, &nunit, &najustementsposs);
+		calculajustements(*p, &ncent, &nunit, &nurgen, &najustementsposs);
 
 		nappr = INF(najustementsposs, ncent - nunit);
 
 		/* le gars construit */
 		if (nappr > 0) {
-			sprintf(buf, "%s: %d centres, %d unités, %d emplacements : + %d", (*p)->nom, ncent, nunit, najustementsposs, nappr);
+			if(nurgen) {
+				sprintf(buf, "%s: %d centres, %d unités, %d emplacements (dont %d en urgence): + %d", (*p)->nom, ncent, nunit, najustementsposs, nurgen, nappr);
+			} else {
+				sprintf(buf, "%s: %d centres, %d unités, %d emplacements : + %d", (*p)->nom, ncent, nunit, najustementsposs, nappr);
+			}
 		}
 		/* le gars detruit */
 		else if (nappr < 0) {
