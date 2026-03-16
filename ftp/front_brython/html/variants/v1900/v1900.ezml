@@ -20,17 +20,17 @@ $ Particularités de la carte
 (Une île : Gibraltar \(Gib\) )
 Gibraltar est une île, c'est à dire à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). En principe une armée ne peut y accéder (entrer et quitter) que par le convoi d'une flotte, sauf exception : Gibraltar a la particularité - inhabituelle pour une île - d'être accessible par armée depuis l'Espagne ou le Maroc.
 
-(ATTENTION)
-La carte possède la particularité d’avoir une sorte de fusion entre la Mer Rouge et l'Océan Atlantique (Cf. dernier paragraphe.)
+(Fusion Mer Rouge et Océan Atlantique)
+La carte possède la particularité d’avoir une sorte de fusion entre la Mer Rouge et l'Océan Atlantique. Les mouvements entre l'Égypte ou le Hedjaz et le l'Océan Atlantique sont autorisés. On suppose que l'unité contourne la pointe sud de l'Afrique.
+
+(Hedjaz - Egypte)
+Les flottes peuvent se déplacer ou apporter leur soutien de Egypte à Hedjaz ou vice versa indépendamment de la présence d'une flotte dans l'Océan Atlantique (Mer Rouge). 
+
+(Palestine)
+Pas de voisinage par flotte entre la Palestine et Océan Atlantique (Mer Rouge). 
 
 (Clyde - Irlande)
 Les unités (armées et flottes) peuvent se déplacer ou apporter leur soutien de Irlande à Clyde ou vice versa indépendamment de la présence d'une flotte dans l'Atlantique Nord.
-
-(Hedjaz - Egypte)
-Les flottes peuvent se déplacer ou apporter leur soutien de Egypte à Hedjaz ou vice versa indépendamment de la présence d'une flotte dans l'Océan Atlantique (Mer Rouge). (Cf. dernier paragraphe.)
-
-(Palestine)
-Pas de voisinage par flotte entre la Palestine et Océan Atlantique (Mer Rouge). (Cf. dernier paragraphe.)
 
 (Centres "politiquement libres" - non constructibles)
 Le joueur britannique ne peut pas construire en Égypte et le joueur français ne peut pas construire en Algérie.
@@ -181,31 +181,18 @@ Lorsque la Russie possède au moins un, MAIS PAS LES QUATRE, de ses centres de r
 Si la Russie ne possède pas au moins un centre de ravitaillement ou si elle reprend possession de ses quatre centres de ravitaillement, elle perd la possibilité de maintenir une unité supplémentaire et toute unité excédentaire doit être dissoute lors de la phase d'ajustement suivante. De plus, la Sibérie retrouve son statut normal (elle n'est plus un site de construction).
 .
 Noter que la Sibérie, même si elle peut devenir un chantier de construction, n'atteint JAMAIS le statut de centre d'approvisionnement.
-
-(Fusion Mer Rouge et Océan Atlantique)
-Les mouvements entre l'Égypte ou le Hedjaz et le l'Océan Atlantique sont autorisés. 
 .
-On suppose que l'unité contourne la pointe sud de l'Afrique.
-.
-Une unité qui se déplace de cette manière le fait à la moitié de ses effectifs. Cela signifie qu'une unité adjacente à l'Égypte ou au Hedjaz peut s'y déplacer si elle est seulement contrariée par une flotte venant du milieu de l'Atlantique, et qu'une flotte adjacente à l'Océan Atlantique peut s'y déplacer si elle est seulement contrariée par une flotte venant d'Égypte ou du Hedjaz.
-.
-Une flotte en Égypte ou au Hedjaz ne peut pas soutenir une unité qui se maintient ou se déplace vers l'Océan Atlantique. Ceci est vrai même si la flotte en Égypte ou au Hedjaz peut elle-même se déplacer vers l'Océan Atlantique.
-.
-De même, une flotte en Océan Atlantique ne peut pas soutenir une unité qui se maintient ou se déplace vers l'Égypte ou le Hedjaz. Une flotte se déplaçant d'Égypte ou du Hedjaz vers l'Océan Atlantique ne réduit pas le soutien fourni par une flotte déjà présente dans cette zone, sauf si l'attaque entraîne le déplacement de l'unité. L'inverse est également vrai. 
-.
-Une flotte se déplaçant du centre de l'Océan Atlantique vers l'Égypte ou le Hedjaz ne réduit pas le soutien fourni par une unité déjà présente dans cette zone, sauf si l'attaque entraîne le déplacement de l'unité.
-.
-Une flotte en  Océan Atlantique peut convoyer une armée depuis ou vers l'Égypte ou le Hedjaz. Une armée convoyée depuis l'Égypte ou le Hedjaz attaque sa zone de destination à pleine puissance. Une armée convoyée vers l'Égypte ou le Hedjaz attaque à moitié puissance.
-.
-Si deux unités se replient vers l'Égypte, le Hedjaz ou l'Océan Atlantique, et que l'une d'elles doit contourner la pointe sud de l'Afrique, l'unité qui ne contourne pas l'Afrique australe peut se replier tandis que l'autre unité est dissoute.
-
-(IMPORTANT)
-*Seul l'arbitre peut manuellement appliquer ces règles spéciales. Voir avec elle/lui.*
 
 _
 $ Ecart avec la version théorique
 
-Les règles spéciales ci-dessus ne sont pas implémentées.
+$$ Les règles spéciales ci-dessous de la version théorique ne sont pas implémentées et donc pas appliquées.
+
+<blockquote>
+
+^Une unité qui se déplace entre l'Égypte ou le Hedjaz et le l'Océan Atlantique le fait à la moitié de ses effectifs. Cela signifie qu'une unité adjacente à l'Égypte ou au Hedjaz peut s'y déplacer si elle est seulement contrariée par une flotte venant du milieu de l'Atlantique, et qu'une flotte adjacente à l'Océan Atlantique peut s'y déplacer si elle est seulement contrariée par une flotte venant d'Égypte ou du Hedjaz. Une flotte en Égypte ou au Hedjaz ne peut pas soutenir une unité qui se maintient ou se déplace vers l'Océan Atlantique. Ceci est vrai même si la flotte en Égypte ou au Hedjaz peut elle-même se déplacer vers l'Océan Atlantique. De même, une flotte en Océan Atlantique ne peut pas soutenir une unité qui se maintient ou se déplace vers l'Égypte ou le Hedjaz. Une flotte se déplaçant d'Égypte ou du Hedjaz vers l'Océan Atlantique ne réduit pas le soutien fourni par une flotte déjà présente dans cette zone, sauf si l'attaque entraîne le déplacement de l'unité. L'inverse est également vrai. Une flotte se déplaçant du centre de l'Océan Atlantique vers l'Égypte ou le Hedjaz ne réduit pas le soutien fourni par une unité déjà présente dans cette zone, sauf si l'attaque entraîne le déplacement de l'unité. Une flotte en  Océan Atlantique peut convoyer une armée depuis ou vers l'Égypte ou le Hedjaz. Une armée convoyée depuis l'Égypte ou le Hedjaz attaque sa zone de destination à pleine puissance. Une armée convoyée vers l'Égypte ou le Hedjaz attaque à moitié puissance. Si deux unités se replient vers l'Égypte, le Hedjaz ou l'Océan Atlantique, et que l'une d'elles doit contourner la pointe sud de l'Afrique, l'unité qui ne contourne pas l'Afrique australe peut se replier tandis que l'autre unité est dissoute^
+
+</blockquote>
 
 _
 $ Sur le wiki
