@@ -558,18 +558,25 @@ class Zone(Highliteable, Renderable):
         variant = self._variant
 
         # zone
-        # zone
         zone_full_name = variant.full_zone_name_table[self]
         zone_name = variant.zone_name_table[self]
 
         # region type name
         region_type_name = variant.region_name_table[self._region.region_type]
-
         neighbours_army_desc = f"par {self._variant.unit_name_table[UnitTypeEnum.ARMY_UNIT]} : [{' '.join([variant.zone_name_table[z] for z in self.neighbours[UnitTypeEnum.ARMY_UNIT]])}]" if self.neighbours[UnitTypeEnum.ARMY_UNIT] else ""
-
         neighbours_fleet_desc = f"par {self._variant.unit_name_table[UnitTypeEnum.FLEET_UNIT]} : [{' '.join([variant.zone_name_table[z] for z in self.neighbours[UnitTypeEnum.FLEET_UNIT]])}]" if self.neighbours[UnitTypeEnum.FLEET_UNIT] else ""
 
-        return f"La zone {zone_full_name} ({zone_name}) - {region_type_name} - dont les voisins sont {neighbours_army_desc} {neighbours_fleet_desc}."
+        info = f"La zone {zone_full_name} ({zone_name}) - {region_type_name} - dont les voisins sont {neighbours_army_desc} {neighbours_fleet_desc}."
+
+        # emergency center
+        for emergency_center in variant.emergency_centers:
+            if emergency_center.region is self._region:
+                role = emergency_center.role
+                role_name = variant.role_name_table[role]
+                info += f" (Cette zone est dans une région centre de secours de {role_name})"
+                break
+
+        return info
 
     @property
     def identifier(self) -> int:
@@ -636,6 +643,23 @@ class Role:
     def start_centers(self, start_centers) -> None:
         """ setter """
         self._start_centers = start_centers
+
+
+class EmergencyCenter:
+    """Emergency center for v1900 only"""
+    def __init__(self, role, region) -> None:
+        self._role = role
+        self._region = region
+
+    @property
+    def role(self) -> Role:
+        """ property """
+        return self._role
+
+    @property
+    def region(self) -> Region:
+        """ property """
+        return self._region
 
 
 class ColourRecord:
@@ -839,6 +863,14 @@ class Variant(Renderable):
             free_center = self._centers[number_center]
             free_center.free = True
             self._free_centers.append(free_center)
+
+        # load emergency centers
+        self._emergency_centers = []
+        for num_role, num_region in raw_variant_content['emergency_centers']:
+            role = self._roles[num_role]
+            region = self._regions[num_region]
+            emergency_center = EmergencyCenter(role, region)
+            self._emergency_centers.append(emergency_center)
 
         # load the coast types
         self._coast_types = {}
@@ -1334,6 +1366,10 @@ class Variant(Renderable):
         """ property """
         return self._free_centers
 
+    @property
+    def emergency_centers(self) -> list:
+        """ property """
+        return self._emergency_centers
 
 # imagined units
 BLUR_COLOR = 'Black'
@@ -2068,6 +2104,11 @@ class Position(Renderable):
         else:
             nb_free_centers = len([c for c in role.start_centers if c not in self._variant.free_centers and c in self._owner_table and self._owner_table[c].role == role and c.region not in self._occupant_table])
 
+        # emergency center
+        nb_emergency_centers = len([e for e in self._variant.emergency_centers if e.role is role and e.region not in self._occupant_table]) if self.emergency_situation(role) else 0
+        nb_ownerships += nb_emergency_centers
+        nb_free_centers += nb_emergency_centers
+
         nb_builds = min(nb_ownerships - nb_units, nb_free_centers)
         return nb_builds, nb_ownerships, nb_units, nb_free_centers
 
@@ -2117,6 +2158,21 @@ class Position(Renderable):
     def empty(self) -> bool:
         """ empty """
         return not self._units
+
+    def emergency_situation(self, role: Role):
+        """ Is role in emergency situaion ?"""
+
+        one_owned = False
+        one_occupied = False
+        for start_center in role.start_centers:
+            if start_center not in self._owner_table:
+                continue
+            ownership = self._owner_table[start_center]
+            if ownership.role is role:
+                one_owned = True
+            else:
+                one_occupied = True
+        return one_owned and one_occupied
 
     def export_json(self):
         """ For trainer """
