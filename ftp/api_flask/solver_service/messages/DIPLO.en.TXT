@@ -362,6 +362,14 @@ parse.c#272#Problem definition of a freecentre on the centre
 parse.c#273#Centre %1 not declared on a  freecentre
 parse.c#274#Missing end of line after freecentre
 parse.c#275#Region %1 is a politically free centre therefore not buildable
+parse.c#276#Problem definition of a backup centre on the country
+parse.c#277#Country %1 not declared for a backup centre
+parse.c#278#Problem definition of a backup centre on the province
+parse.c#279#Province %1 not declared for backup center
+parse.c#280#Province %1 backup center cannot be center
+parse.c#281#Missing end of line after backup centre
+parse.c#282#Region %1 not backup centre of country %2
+parse.c#283#Country %1 is not in emergency situation
 resoud.c#1#Missing move order of %1
 resoud.c#2#Dublin in move orders on %1
 resoud.c#3#Unit %1 is supporting a compatriot unit to attack which does not perform the move (=> void)

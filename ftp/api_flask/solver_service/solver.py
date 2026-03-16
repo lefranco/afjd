@@ -95,6 +95,19 @@ def build_variant_file(variant: typing.Dict[str, typing.Any], names: typing.Dict
     result.append("")
 
     result.append("; -------")
+    result.append("; centres de secours")
+    result.append("; -------")
+    for role_num, centers in enumerate(variant['emergency_centers']):
+        for start_center_num in centers:
+            # role
+            role, _, _ = names['roles'][str(role_num + 1)]
+            # center
+            center_num = variant['centers'][start_center_num - 1]
+            region_name = region_names[center_num - 1]
+            result.append(f"CENTRESECOURS {role} {region_name}")
+        result.append("")
+
+    result.append("; -------")
     result.append("; ZONES")
     result.append("; -------")
     for num_region, region in enumerate(region_names):

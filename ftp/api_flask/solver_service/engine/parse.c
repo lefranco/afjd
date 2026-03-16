@@ -376,6 +376,10 @@ void readtoken(char *word, TOKEN *tok) {
 			tok->id = UNCENTRELIBRE;
 			return;
 		}
+		if (!strcmp(word, "CENTRESECOURS")) {
+			tok->id = UNCENTRESECOURS;
+			return;
+		}
 		if (!strcmp(word, "CE")) {
 			tok->id = UNECOTEEST;
 			(void) strcpy(tok->val, "CE");
@@ -706,6 +710,46 @@ static void parsecentrelibre(FILE *fd) {
 	}
 
 	assert(++CENTRELIBRE.n != NCENTRELIBRES);
+}
+
+static void parsecentresecours(FILE *fd) {
+	TOKEN tok;
+	char buf[TAILLEMESSAGE];
+
+	gettoken(fd, &tok);
+	if (tok.id != CHAINE) {
+		cherchechaine(__FILE__, 276, buf, 0); /*"Probleme definition d'un centresecours sur le pays"*/
+		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
+	}
+	if ((CENTRESECOURS.t[CENTRESECOURS.n].pays = cherchepays(tok.val)) == NULL) {
+		cherchechaine(__FILE__, 277, buf, 1, tok.val); /*"Pays %1 non declare pour un centresecours"*/
+		erreurparse(NULL, LACARTE, FALSE, buf);
+	}
+
+	gettoken(fd, &tok);
+	if (tok.id != CHAINE) {
+		cherchechaine(__FILE__, 278, buf, 0); /*"Probleme definition d'un centresecours sur la region"*/
+		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
+	}
+	if ((CENTRESECOURS.t[CENTRESECOURS.n].region = chercheregion(tok.val)) == NULL) {
+		cherchechaine(__FILE__, 279, buf, 1, tok.val); /*"Region %1 non declaree pour centresecours"*/
+		erreurparse(NULL, LACARTE, FALSE, buf);
+	}
+
+	/* must not be a center*/
+	if (cherchecentre(tok.val) != NULL) {
+		cherchechaine(__FILE__, 280, buf, 1, tok.val); /*"Region %1 pour centresecours ne peut pas être un centre"*/
+		erreurparse(NULL, LACARTE, FALSE, buf);
+	}
+
+	gettoken(fd, &tok);
+	if (tok.id != FINLIGNE) {
+		cherchechaine(__FILE__, 281, buf, 0); /*"Manque fin de ligne apres centresecours"*/
+		erreurparse(NULL, SYNTAXIQUE, FALSE, buf);
+	}
+
+	assert(++CENTRESECOURS.n != NCENTRESECOURSS);
+
 }
 
 static void parsezone(FILE *fd) {
@@ -1557,6 +1601,9 @@ void parsecarte(char *nomfic) {
 			break;
 		case UNCENTRELIBRE:
 			parsecentrelibre(fd);
+			break;
+		case UNCENTRESECOURS:
+			parsecentresecours(fd);
 			break;
 		case UNEZONE:
 			parsezone(fd);
@@ -3019,7 +3066,7 @@ void parseajustements(char *nomfic) {
 	_UNITE *unite;
 	_PAYS *pays, *paysprec;
 	_COTEPOSS *p;
-	int possessions, unites, possibles, souhaites;
+	int possessions, unites, urgences, possibles, souhaites;
 
 	if ((fd = fopen(nomfic, "r")) == NULL) {
 		cherchechaine(__FILE__, 195, buf, 1, nomfic); /*"Impossible de lire les ordres d'ajustements : %1"*/
@@ -3117,7 +3164,7 @@ void parseajustements(char *nomfic) {
 				} else {
 					/* Autorise une ellipse : directement le trigramme, pas de '+', pas de 'A',  */
 					ungettoken(&tok); /* on va essayer de se passer du type d'unite */
-					calculajustements(pays, &possessions, &unites, &possibles);
+					calculajustements(pays, &possessions, &unites, &urgences, &possibles);
 					souhaites = INF(possessions - unites, possibles);
 					cherchechaine(__FILE__, 202, buf, 0); /*"Il est preferable de mettre un '+' ou '-'"*/
 					avertir(buf);
@@ -3140,7 +3187,7 @@ void parseajustements(char *nomfic) {
 				cherchechaine(__FILE__, 202, buf, 0); /*"Il est preferable de mettre un '+' ou '-'"*/
 				avertir(buf);
 				ungettoken(&tok);
-				calculajustements(pays, &possessions, &unites, &possibles);
+				calculajustements(pays, &possessions, &unites, &urgences, &possibles);
 				souhaites = INF(possessions - unites, possibles);
 				if (souhaites >= 0) {
 					cherchechaine(__FILE__, 255, buf, 0); /*"Construction presumee"*/
@@ -3405,29 +3452,42 @@ void parseajustements(char *nomfic) {
 
 			case AJOUTE:
 				if ((centre = cherchecentre(zonedest->region->nom)) == NULL) {
-					cherchechaine(__FILE__, 251, buf, 1, zonedest->region->nom); /*"R�gion %1 pas centre "*/
-					erreurparse(pays, LACARTE, FALSE, buf);
-				}
-				if ((centrelibre = cherchecentrelibre(centre)) != NULL) {
-					cherchechaine(__FILE__, 275, buf, 1, zonedest->region->nom); /*"La région %1 est un centre libre donc non constructible "*/
-					erreurparse(pays, LACARTE, FALSE, buf);
-				}
-				if(!OPTIONE) {
-					/* Standard rules : we worry about the center being a start center */
-					if ((centredepart = cherchecentredepart(zonedest->region->nom))
-							== NULL) {
-						cherchechaine(__FILE__, 214, buf, 1, zonedest->region->nom); /*"Centre %1 pas centre de depart"*/
+
+					/* has to be a backup center then */
+					if (cherchecentresecours(pays, zonedest->region) == NULL) {
+						cherchechaine(__FILE__, 282, buf, 2, pays->nom, zonedest->region->nom); /*"R�gion %1 pas centre secours "*/
 						erreurparse(pays, LACARTE, FALSE, buf);
 					}
-					if (centredepart->pays != pays) {
-						cherchechaine(__FILE__, 215, buf, 0); /*"Pas centre de depart du bon pays"*/
+					if (!situationurgence(pays)) {
+						cherchechaine(__FILE__, 283, buf, 1, pays->nom); /*"Le pays %1 n'est pas en situation d'urgence"*/
+						erreurparse(pays, LESREGLES, FALSE, buf);
+					}
+
+				} else {
+
+					if ((centrelibre = cherchecentrelibre(centre)) != NULL) {
+						cherchechaine(__FILE__, 275, buf, 1, zonedest->region->nom); /*"La région %1 est un centre libre donc non constructible "*/
 						erreurparse(pays, LACARTE, FALSE, buf);
 					}
+					if(!OPTIONE) {
+						/* Standard rules : we worry about the center being a start center */
+						if ((centredepart = cherchecentredepart(zonedest->region->nom))
+								== NULL) {
+							cherchechaine(__FILE__, 214, buf, 1, zonedest->region->nom); /*"Centre %1 pas centre de depart"*/
+							erreurparse(pays, LACARTE, FALSE, buf);
+						}
+						if (centredepart->pays != pays) {
+							cherchechaine(__FILE__, 215, buf, 0); /*"Pas centre de depart du bon pays"*/
+							erreurparse(pays, LACARTE, FALSE, buf);
+						}
+					}
+					if (!possede(pays, centre)) {
+						cherchechaine(__FILE__, 216, buf, 0); /*"Le pays ne possede pas le centre"*/
+						erreurparse(pays, LASITUATION, FALSE, buf);
+					}
+
 				}
-				if (!possede(pays, centre)) {
-					cherchechaine(__FILE__, 216, buf, 0); /*"Le pays ne possede pas le centre"*/
-					erreurparse(pays, LASITUATION, FALSE, buf);
-				}
+
 				if (!compatibles(typeunite, zonedest)) {
 					if (typeunite == FLOTTE && !strcmp(zonedest->specificite,
 							"") && cotesexistent(zonedest)) {
@@ -3441,6 +3501,7 @@ void parseajustements(char *nomfic) {
 					cherchechaine(__FILE__, 218, buf, 0); /*"Incompatibilite de types entre unite a ajouter et sa zone"*/
 					erreurparse(pays, LESREGLES, FALSE, buf);
 				}
+
 				if (chercheoccupant(zonedest->region) != NULL) {
 					cherchechaine(__FILE__, 219, buf, 0); /*"Il y a deja une unite a cet endroit"*/
 					erreurparse(pays, LASITUATION, FALSE, buf);
