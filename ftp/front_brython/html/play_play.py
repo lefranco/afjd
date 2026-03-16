@@ -965,10 +965,10 @@ def submit_orders():
 
                 emergency_center = None
                 if center is None:
-                    print("emergency ?")
+                    role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
                     if play_low.POSITION_DATA.emergency_situation(role):
                         for emergency_center in play_low.VARIANT_DATA.emergency_centers:
-                            if emergency_center.region is region and emergency_center.role.identifier is play_low.ROLE_ID:
+                            if emergency_center.region is region and emergency_center.role is role:
                                 break
 
                 if center is None and emergency_center is None:

@@ -1251,10 +1251,10 @@ def slide_submit_orders(table_of_contents):
 
                 emergency_center = None
                 if center is None:
-                    print("emergency ?")
+                    role = VARIANT_DATA.roles[ROLE_ID]
                     if POSITION_DATA.emergency_situation(role):
                         for emergency_center in VARIANT_DATA.emergency_centers:
-                            if emergency_center.region is region and emergency_center.role.identifier is play_low.ROLE_ID:
+                            if emergency_center.region is region and emergency_center.role is role:
                                 break
 
                 if center is None and emergency_center is None:

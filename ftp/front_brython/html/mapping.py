@@ -1371,6 +1371,7 @@ class Variant(Renderable):
         """ property """
         return self._emergency_centers
 
+
 # imagined units
 BLUR_COLOR = 'Black'
 BLUR_VALUE = 20
