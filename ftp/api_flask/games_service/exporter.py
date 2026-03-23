@@ -12,6 +12,7 @@ import typing
 import json
 import sys
 import requests
+import datetime
 
 import lowdata
 import database
@@ -262,10 +263,10 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
         # extract year and season
         game_season, game_year = advancement2game_season_year(advancement)
 
+        phase_data: typing.Dict[str, typing.Any] = {}
+
         # season : not so easy
         if advancement % 5 in [0, 2, 4]:
-
-            phase_data: typing.Dict[str, typing.Any] = {}
 
             phase_data['Phase'] = game_year * 10 + game_season
             phase_data['Status'] = 'Completed'
@@ -304,14 +305,14 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
         report_txt = transition.report_txt
         report_lines = report_txt.split('\n')
 
-        report_header = report_lines[0]
-        report_date, _, _ = report_header.partition(' ')
-
         # so the begin date will be the date of the first report
         if result['DateBegan'] is None:
-            result['DateBegan'] = report_date
+            readable_date = datetime.datetime.fromtimestamp(transition.time_stamp)
+            result['DateBegan'] = readable_date.strftime("%A, %B %d, %Y - %H:%M:%S")
+
         # so the end date will be the date of the last report
-        result['DateEnded'] = report_date
+        readable_date = datetime.datetime.fromtimestamp(transition.time_stamp)
+        result['DateEnded'] = readable_date.strftime("%A, %B %d, %Y - %H:%M:%S")
 
         # extract justification at end of line
         justification_table: typing.Dict[int, str] = {}
@@ -453,7 +454,7 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
     center_table = {}
     for role_num, power_name in enumerate(POWER_NAME):
         role_id = role_num + 1
-        n_centers = len([_ for c, r in ownership_dict.items() if r == role_id])
+        n_centers = len([c for c, r in ownership_dict.items() if r == role_id])
         center_table[power_name] = n_centers
 
     last_phase_data['CenterCounts'] = {}
