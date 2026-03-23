@@ -624,6 +624,78 @@ def show_informations():
         return
     games_dict = dict(games_dict)
 
+    # get the actual incidents (dropouts) of the tournament
+    tournament_incidents3 = common.tournament_incidents3_reload(tournament_id)
+    # there can be no incidents (if no incident of failed to load)
+
+    tournament_incidents3_table = html.TABLE()
+
+    fields = ['alias', 'date']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'alias': 'alias', 'date': 'date'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    tournament_incidents3_table <= thead
+
+    for game_id, role_num, _, time_stamp in sorted(tournament_incidents3, key=lambda i: i[3], reverse=True):
+
+        data = games_dict[str(game_id)]
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        row = html.TR()
+
+        # player
+        game_name = data['name']
+        role = variant_data.roles[role_num]
+        role_name = variant_data.role_name_table[role]
+        alias = f"{game_name}##{role_name}"
+        col = html.TD(alias)
+        row <= col
+
+        # date
+        datetime_incident = mydatetime.fromtimestamp(time_stamp)
+        datetime_incident_str = mydatetime.strftime(*datetime_incident, year_first=True)
+        col = html.TD(datetime_incident_str)
+        row <= col
+
+        tournament_incidents3_table <= row
+
+    # ======================
+
     # get the actual incidents (civil disorders) of the tournament
     tournament_incidents2 = common.tournament_incidents2_reload(tournament_id)
     # there can be no incidents (if no incident of failed to load)
@@ -699,6 +771,8 @@ def show_informations():
         row <= col
 
         tournament_incidents2_table <= row
+
+    # ======================
 
     # get the actual incidents (delays) of the tournament
     tournament_incidents = common.tournament_incidents_reload(tournament_id)
@@ -779,6 +853,9 @@ def show_informations():
         row <= col
 
         tournament_incidents_table <= row
+
+    MY_SUB_PANEL <= html.H4("Les abandons du tournoi")
+    MY_SUB_PANEL <= tournament_incidents3_table
 
     MY_SUB_PANEL <= html.H4("Les désordres civils du tournoi")
     MY_SUB_PANEL <= tournament_incidents2_table
@@ -1212,6 +1289,43 @@ def show_informations():
 
         incident_table2 <= row
 
+    # =====
+    # incidents3
+    # =====
+
+    # get the actual incidents of the tournament
+    tournament_incidents3 = common.tournament_incidents3_reload(tournament_id)
+    # there can be no incidents (if no incident of failed to load)
+
+    count = {}
+    for game_id, role_num, player_id, _ in tournament_incidents3:
+        pseudo = id2pseudo[player_id]
+        if pseudo:
+            if pseudo not in count:
+                count[pseudo] = 0
+            count[pseudo] += 1
+
+    incident_table3 = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'Nombre d\'abandons']:
+        col = html.TD(field)
+        thead <= col
+    incident_table3 <= thead
+
+    for pseudo in sorted(count, key=lambda p: count[p], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        nb_ab = count[pseudo]
+        col = html.TD(nb_ab)
+        row <= col
+
+        incident_table3 <= row
+
     MY_SUB_PANEL <= html.H3("Informations réservées aux créateurs")
 
     MY_SUB_PANEL <= html.H4("Les meilleures performances individuelles du tournoi")
@@ -1231,6 +1345,9 @@ def show_informations():
 
     MY_SUB_PANEL <= html.H4("Désordres Civils")
     MY_SUB_PANEL <= incident_table2
+
+    MY_SUB_PANEL <= html.H4("Abandons")
+    MY_SUB_PANEL <= incident_table3
 
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Attention : si des parties sont anonymes le classement est incomplet", Class='important')

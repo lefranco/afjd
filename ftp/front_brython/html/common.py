@@ -925,6 +925,37 @@ def tournament_incidents2_reload(tournament_id):
     return incidents
 
 
+def tournament_incidents3_reload(tournament_id):
+    """ tournament_incidents3_reload """
+
+    incidents = []
+
+    def reply_callback(req):
+        nonlocal incidents
+        req_result = loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des incidents abandons du tournoi : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des incidents abandons du tournoi : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        incidents = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/tournament-incidents3/{tournament_id}"
+
+    # extracting incidents from a tournament : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return incidents
+
+
 def get_player_id(pseudo):
     """ get_player_id """
 
