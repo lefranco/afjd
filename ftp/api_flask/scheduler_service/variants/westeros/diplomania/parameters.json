@@ -17,6 +17,9 @@
         },
         "3": {
             "name": "Mer"
+        },
+        "4": {
+            "name": "Île"
         }
     },
     "units": {
@@ -185,8 +188,8 @@
     },
     "zones": {
         "1": {
-            "name": "Arb",
-            "full_name": "The Arbor",
+            "name": "Tre",
+            "full_name": "La Treille",
             "x_pos": 75,
             "y_pos": 1101,
             "x_legend_pos": 54,
@@ -194,8 +197,8 @@
             "display": 7
         },
         "2": {
-            "name": "Bar",
-            "full_name": "Barrowlands",
+            "name": "Ter",
+            "full_name": "Tertres",
             "x_pos": 202,
             "y_pos": 385,
             "x_legend_pos": 202,
@@ -203,24 +206,24 @@
             "display": 5
         },
         "3": {
-            "name": "Bit",
-            "full_name": "The Bite",
+            "name": "Mrs",
+            "full_name": "La Morsure",
             "x_pos": 434,
             "y_pos": 443,
             "x_legend_pos": 434,
             "y_legend_pos": 429
         },
         "4": {
-            "name": "BlB",
-            "full_name": "Blazewater Bay",
+            "name": "BEn",
+            "full_name": "La baie d'Enfer",
             "x_pos": 71,
             "y_pos": 435,
             "x_legend_pos": 71,
             "y_legend_pos": 421
         },
         "5": {
-            "name": "Bmt",
-            "full_name": "Blackmont",
+            "name": "Nmo",
+            "full_name": "Noirmont",
             "x_pos": 198,
             "y_pos": 994,
             "x_legend_pos": 198,
@@ -228,24 +231,24 @@
             "display": 7
         },
         "6": {
-            "name": "BoC",
-            "full_name": "Bay of Crabs",
+            "name": "BCr",
+            "full_name": "Baie des Crabes",
             "x_pos": 501,
             "y_pos": 644,
             "x_legend_pos": 501,
             "y_legend_pos": 630
         },
         "7": {
-            "name": "BoI",
-            "full_name": "Bay of Ice",
+            "name": "BGl",
+            "full_name": "Baie des Glaces",
             "x_pos": 210,
             "y_pos": 143,
             "x_legend_pos": 210,
             "y_legend_pos": 129
         },
         "8": {
-            "name": "BoS",
-            "full_name": "Bay of Seals",
+            "name": "BPh",
+            "full_name": "Baie des Phoques",
             "x_pos": 499,
             "y_pos": 46,
             "x_legend_pos": 499,
@@ -260,32 +263,32 @@
             "y_legend_pos": 563
         },
         "10": {
-            "name": "BtW",
-            "full_name": "Beyond the Wall",
+            "name": "AdM",
+            "full_name": "Au-delà du Mur",
             "x_pos": 158,
             "y_pos": 56,
             "x_legend_pos": 158,
             "y_legend_pos": 42
         },
         "11": {
-            "name": "BwB",
-            "full_name": "Blackwater Bay",
+            "name": "BNe",
+            "full_name": "Baie de la Néra",
             "x_pos": 431,
             "y_pos": 737,
             "x_legend_pos": 431,
             "y_legend_pos": 723
         },
         "12": {
-            "name": "BwR",
-            "full_name": "Blackwater Rush",
+            "name": "RNe",
+            "full_name": "Ruisseau Néra",
             "x_pos": 443,
             "y_pos": 764,
             "x_legend_pos": 422,
             "y_legend_pos": 777
         },
         "13": {
-            "name": "CaB",
-            "full_name": "Castle Black ",
+            "name": "ChN",
+            "full_name": "Châteaunoir",
             "x_pos": 327,
             "y_pos": 142,
             "x_legend_pos": 352,
@@ -293,15 +296,15 @@
         },
         "14": {
             "name": "Cai",
-            "full_name": "Moat Cailin",
+            "full_name": "Fosse de Cailin",
             "x_pos": 286,
             "y_pos": 400,
             "x_legend_pos": 286,
             "y_legend_pos": 386
         },
         "15": {
-            "name": "Cas",
-            "full_name": "Casterly Rock",
+            "name": "CaR",
+            "full_name": "Castral Rock",
             "x_pos": 158,
             "y_pos": 662,
             "x_legend_pos": 158,
@@ -309,33 +312,33 @@
             "display": 3
         },
         "16": {
-            "name": "Coa",
-            "full_name": "Braavosi Coastlands",
+            "name": "LBr",
+            "full_name": "Littoral de Braavos",
             "x_pos": 671,
             "y_pos": 666,
             "x_legend_pos": 671,
             "y_legend_pos": 652
         },
         "17": {
-            "name": "Cro",
-            "full_name": "Crownlands",
+            "name": "TCo",
+            "full_name": "Terres de la Couronne",
             "x_pos": 351,
             "y_pos": 725,
             "x_legend_pos": 351,
             "y_legend_pos": 711
         },
         "18": {
-            "name": "Dra",
-            "full_name": "Dragonstone",
-            "x_pos": 492,
-            "y_pos": 725,
-            "x_legend_pos": 491,
-            "y_legend_pos": 713,
+            "name": "Pey",
+            "full_name": "Peyredragon",
+            "x_pos": 502,
+            "y_pos": 718,
+            "x_legend_pos": 488,
+            "y_legend_pos": 714,
             "display": 6
         },
         "19": {
-            "name": "Dre",
-            "full_name": "The Dreadfort",
+            "name": "FTe",
+            "full_name": "Fort-Terreur",
             "x_pos": 367,
             "y_pos": 309,
             "x_legend_pos": 367,
@@ -343,8 +346,8 @@
             "display": 5
         },
         "20": {
-            "name": "End",
-            "full_name": "Storm's End",
+            "name": "Acc",
+            "full_name": "Accalmie",
             "x_pos": 413,
             "y_pos": 870,
             "x_legend_pos": 413,
@@ -352,16 +355,16 @@
             "display": 1
         },
         "21": {
-            "name": "ESS",
-            "full_name": "East Summer Sea",
+            "name": "MOR",
+            "full_name": "Mer d’Été Orientale",
             "x_pos": 570,
             "y_pos": 1078,
             "x_legend_pos": 570,
             "y_legend_pos": 1064
         },
         "22": {
-            "name": "Eye",
-            "full_name": "God's Eye",
+            "name": "Oei",
+            "full_name": "Œildieu",
             "x_pos": 315,
             "y_pos": 714,
             "x_legend_pos": 310,
@@ -369,31 +372,31 @@
         },
         "23": {
             "name": "Eyr",
-            "full_name": "The Eyrie",
-            "x_pos": 412,
-            "y_pos": 590,
-            "x_legend_pos": 412,
-            "y_legend_pos": 576
+            "full_name": "Les Eyrié",
+            "x_pos": 441,
+            "y_pos": 572,
+            "x_legend_pos": 441,
+            "y_legend_pos": 558
         },
         "24": {
-            "name": "Fin",
-            "full_name": "The Fingers",
+            "name": "Doi",
+            "full_name": "Les Doigts",
             "x_pos": 373,
             "y_pos": 534,
             "x_legend_pos": 373,
             "y_legend_pos": 520
         },
         "25": {
-            "name": "Fli",
-            "full_name": "Flint's Finger",
+            "name": "PoF",
+            "full_name": "Pouce-Flint",
             "x_pos": 142,
             "y_pos": 479,
             "x_legend_pos": 142,
             "y_legend_pos": 465
         },
         "26": {
-            "name": "God",
-            "full_name": "Godsgrace",
+            "name": "LGd",
+            "full_name": "La Gracedieu",
             "x_pos": 388,
             "y_pos": 1038,
             "x_legend_pos": 369,
@@ -402,7 +405,7 @@
         },
         "27": {
             "name": "Har",
-            "full_name": "Harlaw",
+            "full_name": "Harloi",
             "x_pos": 122,
             "y_pos": 591,
             "x_legend_pos": 135,
@@ -418,8 +421,8 @@
             "y_legend_pos": 691
         },
         "29": {
-            "name": "Hig",
-            "full_name": "Highgarden",
+            "name": "Hau",
+            "full_name": "Hautjardiniens",
             "x_pos": 224,
             "y_pos": 928,
             "x_legend_pos": 224,
@@ -427,8 +430,8 @@
             "display": 7
         },
         "30": {
-            "name": "Hor",
-            "full_name": "Horn Hill",
+            "name": "Cor",
+            "full_name": "Corcolline",
             "x_pos": 122,
             "y_pos": 965,
             "x_legend_pos": 122,
@@ -436,8 +439,8 @@
             "display": 7
         },
         "31": {
-            "name": "IrB",
-            "full_name": "Ironman's Bay",
+            "name": "BFN",
+            "full_name": "Baie du Fer-né",
             "x_pos": 146,
             "y_pos": 546,
             "x_legend_pos": 146,
@@ -445,7 +448,7 @@
         },
         "32": {
             "name": "Kar",
-            "full_name": "Karhold",
+            "full_name": "Karbourg",
             "x_pos": 440,
             "y_pos": 219,
             "x_legend_pos": 440,
@@ -453,40 +456,40 @@
             "display": 5
         },
         "33": {
-            "name": "KLW",
-            "full_name": " King's Landing West",
+            "name": "PRO",
+            "full_name": "Port-Réal Ouest",
             "x_pos": 354,
             "y_pos": 770,
             "x_legend_pos": 332,
             "y_legend_pos": 775
         },
         "34": {
-            "name": "KLE",
-            "full_name": "King's Landing East",
+            "name": "PRE",
+            "full_name": "Port-Réal Est",
             "x_pos": 397,
             "y_pos": 749,
             "x_legend_pos": 383,
             "y_legend_pos": 747
         },
         "35": {
-            "name": "Krd",
-            "full_name": "Kingsroad",
+            "name": "RRo",
+            "full_name": "Route Royale",
             "x_pos": 272,
             "y_pos": 563,
             "x_legend_pos": 272,
             "y_legend_pos": 549
         },
         "36": {
-            "name": "Kwd",
-            "full_name": "Kingswood",
+            "name": "BdR",
+            "full_name": "Bois-du-Roi",
             "x_pos": 406,
             "y_pos": 817,
             "x_legend_pos": 406,
             "y_legend_pos": 803
         },
         "37": {
-            "name": "Lan",
-            "full_name": "Lannisport",
+            "name": "PLa",
+            "full_name": "Port-Lannis",
             "x_pos": 136,
             "y_pos": 783,
             "x_legend_pos": 136,
@@ -494,24 +497,24 @@
             "display": 3
         },
         "38": {
-            "name": "Mar",
-            "full_name": "Dornish Marches",
+            "name": "MdD",
+            "full_name": "Marches de Dorne",
             "x_pos": 340,
             "y_pos": 942,
             "x_legend_pos": 340,
             "y_legend_pos": 928
         },
         "39": {
-            "name": "Moo",
-            "full_name": "Mountains of the Moon",
+            "name": "MLU",
+            "full_name": "Montagnes de la Lune",
             "x_pos": 363,
             "y_pos": 635,
             "x_legend_pos": 363,
             "y_legend_pos": 621
         },
         "40": {
-            "name": "Mot",
-            "full_name": "Deepwood Motte",
+            "name": "MlF",
+            "full_name": "Motte-la-Forêt",
             "x_pos": 219,
             "y_pos": 461,
             "x_legend_pos": 219,
@@ -527,31 +530,31 @@
         },
         "42": {
             "name": "Nec",
-            "full_name": "The Neck",
+            "full_name": "Le Neck",
             "x_pos": 277,
             "y_pos": 454,
             "x_legend_pos": 277,
             "y_legend_pos": 440
         },
         "43": {
-            "name": "NNS",
-            "full_name": "North Narrow Sea",
+            "name": "NEN",
+            "full_name": "Mer Étroite Nord",
             "x_pos": 553,
             "y_pos": 517,
             "x_legend_pos": 553,
             "y_legend_pos": 503
         },
         "44": {
-            "name": "NSS",
-            "full_name": "North Sunset Sea",
+            "name": "NCN",
+            "full_name": "Mer d'Été Nord",
             "x_pos": 59,
             "y_pos": 140,
             "x_legend_pos": 59,
             "y_legend_pos": 126
         },
         "45": {
-            "name": "Old",
-            "full_name": "Oldtown",
+            "name": "ViV",
+            "full_name": "Villevieille",
             "x_pos": 134,
             "y_pos": 1022,
             "x_legend_pos": 134,
@@ -559,8 +562,8 @@
             "display": 7
         },
         "46": {
-            "name": "Pas",
-            "full_name": "Prince's Pass",
+            "name": "PPr",
+            "full_name": "Passe-du-Prince",
             "x_pos": 274,
             "y_pos": 995,
             "x_legend_pos": 274,
@@ -576,7 +579,7 @@
         },
         "48": {
             "name": "Pyk",
-            "full_name": "Pyke",
+            "full_name": "Pyk",
             "x_pos": 118,
             "y_pos": 626,
             "x_legend_pos": 108,
@@ -584,32 +587,32 @@
             "display": 2
         },
         "49": {
-            "name": "Rea",
-            "full_name": "The Reach",
+            "name": "Bie",
+            "full_name": "Le Bief",
             "x_pos": 221,
             "y_pos": 831,
             "x_legend_pos": 221,
             "y_legend_pos": 817
         },
         "50": {
-            "name": "ReS",
-            "full_name": "Redwyne Straits ",
+            "name": "DRe",
+            "full_name": "Détroits Redwyne",
             "x_pos": 79,
             "y_pos": 1060,
             "x_legend_pos": 79,
             "y_legend_pos": 1046
         },
         "51": {
-            "name": "Riv",
-            "full_name": "Riverlands",
+            "name": "Con",
+            "full_name": "Conflans",
             "x_pos": 252,
             "y_pos": 617,
             "x_legend_pos": 252,
             "y_legend_pos": 603
         },
         "52": {
-            "name": "Roo",
-            "full_name": "Griffin's Roost",
+            "name": "Gri",
+            "full_name": "La Griffonnière",
             "x_pos": 424,
             "y_pos": 935,
             "x_legend_pos": 424,
@@ -617,16 +620,16 @@
             "display": 1
         },
         "53": {
-            "name": "Run",
-            "full_name": "Riverrun",
+            "name": "VAi",
+            "full_name": "Vivesaigues",
             "x_pos": 250,
             "y_pos": 677,
             "x_legend_pos": 250,
             "y_legend_pos": 663
         },
         "54": {
-            "name": "Sal",
-            "full_name": "Salt Shore",
+            "name": "SaR",
+            "full_name": "Salrivage",
             "x_pos": 327,
             "y_pos": 1066,
             "x_legend_pos": 327,
@@ -634,16 +637,16 @@
             "display": 4
         },
         "55": {
-            "name": "San",
-            "full_name": "Sandstone",
+            "name": "Gre",
+            "full_name": "Le Grès",
             "x_pos": 266,
             "y_pos": 1069,
             "x_legend_pos": 266,
             "y_legend_pos": 1055
         },
         "56": {
-            "name": "Sep",
-            "full_name": "Stoney Sept",
+            "name": "Pmo",
+            "full_name": "Pierremoûtier",
             "x_pos": 278,
             "y_pos": 725,
             "x_legend_pos": 278,
@@ -651,80 +654,80 @@
             "display": 3
         },
         "57": {
-            "name": "ShB",
-            "full_name": "Shipbreaker Bay",
+            "name": "BNa",
+            "full_name": "La baie des Naufrageurs",
             "x_pos": 470,
             "y_pos": 895,
             "x_legend_pos": 470,
             "y_legend_pos": 882
         },
         "58": {
-            "name": "Shi",
-            "full_name": "Shield Islands",
+            "name": "IBo",
+            "full_name": "Îles Bouclier",
             "x_pos": 71,
             "y_pos": 924,
             "x_legend_pos": 71,
             "y_legend_pos": 910
         },
         "59": {
-            "name": "SNS",
-            "full_name": "South Narrow Sea",
+            "name": "MES",
+            "full_name": "Mer Étroite Sud",
             "x_pos": 551,
             "y_pos": 842,
             "x_legend_pos": 551,
             "y_legend_pos": 828
         },
         "60": {
-            "name": "SoD",
-            "full_name": "Sea of Dorne",
+            "name": "MDo",
+            "full_name": "Mer de Dorne",
             "x_pos": 403,
             "y_pos": 991,
             "x_legend_pos": 403,
             "y_legend_pos": 977
         },
         "61": {
-            "name": "SoM",
-            "full_name": "Sea of Myrth",
+            "name": "MMy",
+            "full_name": "Mer de Myrth",
             "x_pos": 604,
             "y_pos": 910,
             "x_legend_pos": 604,
             "y_legend_pos": 896
         },
         "62": {
-            "name": "Srd",
-            "full_name": "Searoad",
+            "name": "RdO",
+            "full_name": "Route de l'Océan",
             "x_pos": 146,
             "y_pos": 863,
             "x_legend_pos": 146,
             "y_legend_pos": 849
         },
         "63": {
-            "name": "SSS",
-            "full_name": "South Sunset Sea",
+            "name": "MTS",
+            "full_name": "Mer d'Été Sud",
             "x_pos": 40,
             "y_pos": 808,
             "x_legend_pos": 40,
             "y_legend_pos": 794
         },
         "64": {
-            "name": "Sta",
-            "full_name": "Starfall",
+            "name": "Mte",
+            "full_name": "Les Météores",
             "x_pos": 198,
             "y_pos": 1077,
             "x_legend_pos": 198,
             "y_legend_pos": 1063
         },
         "65": {
-            "name": "Ste",
-            "full_name": "The Stepstones",
+            "name": "DdP",
+            "full_name": "Degrés de Pierre",
             "x_pos": 521,
             "y_pos": 1006,
             "x_legend_pos": 520,
             "y_legend_pos": 990
         },
         "66": {
-            "name": "Sto",
-            "full_name": "Stony Shore",
+            "name": "Roc",
+            "full_name": "Roches",
             "x_pos": 116,
             "y_pos": 348,
             "x_legend_pos": 116,
@@ -732,16 +735,16 @@
             "display": 5
         },
         "67": {
-            "name": "Str",
-            "full_name": "Stormlands",
+            "name": "TOr",
+            "full_name": "Terres de l’Orage",
             "x_pos": 317,
             "y_pos": 861,
             "x_legend_pos": 317,
             "y_legend_pos": 847
         },
         "68": {
-            "name": "Sun",
-            "full_name": "Sunspear",
+            "name": "Lah",
+            "full_name": "Lancehélion",
             "x_pos": 472,
             "y_pos": 1039,
             "x_legend_pos": 472,
@@ -749,32 +752,32 @@
             "display": 4
         },
         "69": {
-            "name": "TGS",
-            "full_name": "The Golden Sound",
+            "name": "SDo",
+            "full_name": "Sonorité Dorée",
             "x_pos": 84,
             "y_pos": 692,
             "x_legend_pos": 84,
             "y_legend_pos": 678
         },
         "70": {
-            "name": "TNS",
-            "full_name": "The Narrow Sea",
+            "name": "MET",
+            "full_name": "Mer Étroite",
             "x_pos": 513,
             "y_pos": 772,
             "x_legend_pos": 513,
             "y_legend_pos": 758
         },
         "71": {
-            "name": "TSS",
-            "full_name": "The Shivering Sea",
+            "name": "MGR",
+            "full_name": "Mer Grelotte",
             "x_pos": 600,
             "y_pos": 332,
             "x_legend_pos": 600,
             "y_legend_pos": 318
         },
         "72": {
-            "name": "Twi",
-            "full_name": "The Twins",
+            "name": "Jum",
+            "full_name": "Les jumeaux",
             "x_pos": 224,
             "y_pos": 527,
             "x_legend_pos": 224,
@@ -782,15 +785,15 @@
         },
         "73": {
             "name": "Tyr",
-            "full_name": "Tyrosh",
+            "full_name": "Tyroshis",
             "x_pos": 550,
             "y_pos": 924,
             "x_legend_pos": 548,
             "y_legend_pos": 950
         },
         "74": {
-            "name": "Wes",
-            "full_name": "Westerlands",
+            "name": "TOu",
+            "full_name": "Terres de l’Ouest",
             "x_pos": 208,
             "y_pos": 754,
             "x_legend_pos": 208,
@@ -798,8 +801,8 @@
             "display": 3
         },
         "75": {
-            "name": "Whi",
-            "full_name": "White Harbor",
+            "name": "BlP",
+            "full_name": "Blancport",
             "x_pos": 363,
             "y_pos": 399,
             "x_legend_pos": 363,
@@ -816,16 +819,16 @@
             "display": 5
         },
         "77": {
-            "name": "WSS",
-            "full_name": "West Summer Sea",
+            "name": "MOc",
+            "full_name": "Mer d’Été Occidentale",
             "x_pos": 153,
             "y_pos": 1115,
             "x_legend_pos": 153,
             "y_legend_pos": 1101
         },
         "78": {
-            "name": "Wyk",
-            "full_name": "Great Wyk",
+            "name": "GWy",
+            "full_name": "Grand-Wyk",
             "x_pos": 70,
             "y_pos": 597,
             "x_legend_pos": 70,
@@ -833,8 +836,8 @@
             "display": 2
         },
         "79": {
-            "name": "Yro",
-            "full_name": "Yronwood",
+            "name": "FBo",
+            "full_name": "Ferboys",
             "x_pos": 333,
             "y_pos": 1023,
             "x_legend_pos": 308,
@@ -842,8 +845,8 @@
             "display": 4
         },
         "80": {
-            "name": "Ash",
-            "full_name": "Ashford",
+            "name": "Cen",
+            "full_name": "Cendregué ",
             "x_pos": 286,
             "y_pos": 934,
             "x_legend_pos": 286,
@@ -851,16 +854,16 @@
             "display": 7
         },
         "81": {
-            "name": "Dis",
-            "full_name": "The Disputed Lands",
+            "name": "TeC",
+            "full_name": "Terres Contestées",
             "x_pos": 640,
             "y_pos": 977,
             "x_legend_pos": 640,
             "y_legend_pos": 963
         },
         "82": {
-            "name": "Cra",
-            "full_name": "Craclaw Point",
+            "name": "PGi",
+            "full_name": "Pointe Griffecroc",
             "x_pos": 408,
             "y_pos": 708,
             "x_legend_pos": 408,
@@ -880,8 +883,8 @@
             "full_name": "",
             "x_pos": 343,
             "y_pos": 37,
-            "x_legend_pos": 344,
-            "y_legend_pos": 22
+            "x_legend_pos": 343,
+            "y_legend_pos": 23
         },
         "85": {
             "name": "",
@@ -954,8 +957,8 @@
             "y_pos": 745
         },
         "6": {
-            "x_pos": 474,
-            "y_pos": 715
+            "x_pos": 480,
+            "y_pos": 724
         },
         "7": {
             "x_pos": 426,
@@ -1904,15 +1907,11 @@
                     674
                 ],
                 [
-                    333,
-                    659
+                    346,
+                    668
                 ],
                 [
-                    335,
-                    657
-                ],
-                [
-                    349,
+                    348,
                     667
                 ],
                 [
@@ -6300,11 +6299,11 @@
                     627
                 ],
                 [
-                    332,
-                    650
+                    333,
+                    656
                 ],
                 [
-                    332,
+                    331,
                     659
                 ],
                 [
@@ -6832,16 +6831,24 @@
                     670
                 ],
                 [
-                    350,
+                    352,
                     667
                 ],
                 [
                     344,
-                    664
+                    667
                 ],
                 [
-                    332,
-                    654
+                    337,
+                    661
+                ],
+                [
+                    335,
+                    661
+                ],
+                [
+                    333,
+                    658
                 ],
                 [
                     329,
@@ -8524,116 +8531,8 @@
                     624
                 ],
                 [
-                    77,
-                    623
-                ],
-                [
-                    94,
-                    619
-                ],
-                [
-                    95,
-                    620
-                ],
-                [
-                    93,
-                    624
-                ],
-                [
-                    96,
-                    629
-                ],
-                [
-                    99,
-                    631
-                ],
-                [
-                    109,
-                    629
-                ],
-                [
-                    109,
-                    624
-                ],
-                [
-                    111,
-                    620
-                ],
-                [
-                    110,
-                    617
-                ],
-                [
-                    108,
-                    617
-                ],
-                [
-                    105,
-                    622
-                ],
-                [
-                    99,
-                    620
-                ],
-                [
-                    106,
-                    622
-                ],
-                [
-                    109,
-                    617
-                ],
-                [
-                    111,
-                    618
-                ],
-                [
-                    109,
-                    628
-                ],
-                [
-                    107,
-                    630
-                ],
-                [
-                    102,
-                    629
-                ],
-                [
-                    104,
-                    627
-                ],
-                [
-                    102,
-                    623
-                ],
-                [
-                    98,
-                    625
-                ],
-                [
-                    100,
-                    629
-                ],
-                [
-                    99,
-                    630
-                ],
-                [
-                    94,
-                    626
-                ],
-                [
-                    93,
-                    623
-                ],
-                [
-                    97,
-                    620
-                ],
-                [
-                    94,
-                    619
+                    88,
+                    621
                 ],
                 [
                     100,
@@ -14160,28 +14059,28 @@
         "84": {
             "area": [
                 [
-                    258,
-                    148
+                    340,
+                    30
                 ],
                 [
-                    264,
-                    148
+                    346,
+                    30
                 ],
                 [
-                    268,
-                    155
+                    350,
+                    37
                 ],
                 [
-                    264,
-                    161
+                    346,
+                    43
                 ],
                 [
-                    257,
-                    161
+                    339,
+                    43
                 ],
                 [
-                    254,
-                    156
+                    336,
+                    38
                 ]
             ]
         },
@@ -14353,5 +14252,43 @@
                 ]
             ]
         }
+    },
+
+
+    "alternative_zone_areas": {
+
+        "18":[
+            [[469, 715], [473, 711], [476, 711], [479, 714], [476, 717], [472, 717]]
+        ],
+
+        "27":[
+[[139, 593], [142, 596], [142, 603], [145, 611], [142, 614], [131, 614], [129, 616], [124, 609], [123, 605], [125, 602], [138, 602]],
+[[121, 598], [118, 599], [113, 597], [106, 600], [102, 594], [110, 594], [113, 591], [116, 591], [121, 595]],
+[[107, 578], [109, 576], [119, 576], [122, 577], [123, 580], [109, 580]]
+        ],
+
+
+        "48":[
+[[109, 617], [110, 622], [108, 628], [103, 631], [99, 631], [93, 623], [96, 620], [106, 622]],
+[[79, 626], [81, 625], [89, 629], [84, 631], [81, 630]]
+        ],
+
+        "58":[
+[[86, 894], [90, 899], [95, 900], [91, 907], [83, 898], [83, 896]],
+[[96, 893], [101, 892], [104, 895], [102, 897], [98, 897]],
+[[108, 899], [115, 899], [113, 902]],
+[[99, 905], [101, 906], [101, 911], [98, 909]]
+        ],
+
+        "73": [
+[[565, 935], [560, 940], [557, 940], [555, 938], [561, 936], [563, 933]],
+[[534, 932], [536, 932], [537, 936], [540, 937], [538, 941], [536, 941], [533, 938]]
+        ],
+
+        "78": [
+[[72, 590], [78, 592], [76, 597], [80, 607], [90, 608], [96, 604], [99, 606], [96, 611], [96, 614], [93, 617], [81, 619], [69, 616], [67, 609], [70, 605], [65, 599]],
+[[60, 596], [61, 601], [57, 603], [56, 598]]
+]
     }
+
 }
