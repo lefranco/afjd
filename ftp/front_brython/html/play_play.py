@@ -964,15 +964,16 @@ def submit_orders():
                 center = region.center
 
                 emergency_center = None
+                role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
                 if center is None:
-                    role = play_low.VARIANT_DATA.roles[play_low.ROLE_ID]
-                    if play_low.POSITION_DATA.emergency_situation(role):
-                        for emergency_center in play_low.VARIANT_DATA.emergency_centers:
-                            if emergency_center.region is region and emergency_center.role is role:
-                                break
+                    for emergency_center in play_low.VARIANT_DATA.emergency_centers:
+                        if emergency_center.region is region and emergency_center.role is role:
+                            break
 
                 if center is None and emergency_center is None:
                     alert("Bien essayé, mais il n'y a pas de centre ni de centre de secours à cet endroit !")
+                elif emergency_center is not None and not play_low.POSITION_DATA.emergency_situation(role):
+                    alert("Bien essayé, mais ce n'est pas une situation d'urgence !")
                 elif region in play_low.POSITION_DATA.occupant_table:
                     alert("Bien essayé, mais il y a déjà une unité à cet endroit !")
                 elif center is not None and center not in play_low.POSITION_DATA.owner_table:
