@@ -1243,6 +1243,9 @@ void suppressionelimines(void) {
 					q->zonedepart = s->zonedepart;
 					q->pays = s->pays;
 					UNITE.n--;
+
+					/* on doit "redescendre" pour éviter à la déplacée de s'echapper ;-) */
+					q--;
 				}
 		}
 	}
