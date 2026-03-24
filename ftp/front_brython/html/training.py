@@ -1250,15 +1250,16 @@ def slide_submit_orders(table_of_contents):
                 center = region.center
 
                 emergency_center = None
+                role = VARIANT_DATA.roles[ROLE_ID]
                 if center is None:
-                    role = VARIANT_DATA.roles[ROLE_ID]
-                    if POSITION_DATA.emergency_situation(role):
-                        for emergency_center in VARIANT_DATA.emergency_centers:
-                            if emergency_center.region is region and emergency_center.role is role:
-                                break
+                    for emergency_center in VARIANT_DATA.emergency_centers:
+                        if emergency_center.region is region and emergency_center.role is role:
+                            break
 
                 if center is None and emergency_center is None:
                     alert("Bien essayé, mais il n'y a pas de centre ni de centre de secours à cet endroit !")
+                elif emergency_center is not None and not play_low.POSITION_DATA.emergency_situation(role):
+                    alert("Bien essayé, mais ce n'est pas une situation d'urgence !")
                 elif region in POSITION_DATA.occupant_table:
                     alert("Bien essayé, mais il y a déjà une unité à cet endroit !")
                 elif center is not None and center not in POSITION_DATA.owner_table:
