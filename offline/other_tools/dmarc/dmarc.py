@@ -17,6 +17,7 @@ import gzip
 import shutil
 import sys
 import typing
+import collections
 import tkinter
 import tkinter.scrolledtext
 
@@ -105,7 +106,7 @@ def parse_xml(xml_file: str, dump: bool) -> tuple[str, bool, list[str]]:
 
     # Scan records
     overall_attention = False
-    content_list = []
+    content_dict = collections.defaultdict(list)
     for record in root.findall(f"{tag_prefix}record", ns):
         source_ip = get_text(record, "row/source_ip")
         count = get_text(record, "row/count")
@@ -115,32 +116,51 @@ def parse_xml(xml_file: str, dump: bool) -> tuple[str, bool, list[str]]:
         attention = (disposition != 'none' or dkim != 'pass' or spf != 'pass')
         if attention:
             overall_attention = True
-            line = f"  IP: {source_ip}, Count: {count}, Disposition: {disposition}, DKIM: {dkim}, SPF: {spf}"
-            content_list.append(line)
+            line = f"Count: {count}, Disposition: {disposition}, DKIM: {dkim}, SPF: {spf}"
+            content_dict[source_ip].append(line)
 
     description = f"{org_name}/{report_id}"
-    return description, overall_attention, content_list
+
+    return description, overall_attention, content_dict
 
 
-def display_callback(description: str, nomarc: bool, content_list: list[str]) -> None:
+def display_callback(description: str, nomarc: bool, content_dict: dict[str, str]) -> None:
     """Display information about content in email."""
+
+    def copier_selection():
+        try:
+            selected_text = txt.get(tkinter.SEL_FIRST, tkinter.SEL_LAST)
+        except tkinter.TclError:
+            return
+        win.clipboard_clear()
+        win.clipboard_append(selected_text)
+        win.update()
+
     win = tkinter.Toplevel()
     win.title(description)
     txt = tkinter.scrolledtext.ScrolledText(win, wrap=tkinter.WORD)
     txt.pack(expand=True, fill="both", padx=10, pady=10)
 
-    txt.tag_config('red_highlight', foreground='red')
-
-    for line_text in sorted(content_list):
-        if not nomarc:
-            start_index = txt.index("end-1c")
-        txt.insert(tkinter.END, line_text)
-        if not nomarc:
-            end_index = f"{start_index} + {len(line_text)}c"
-            txt.tag_add('red_highlight', start_index, end_index)
+    for source_ip, lines_text in content_dict.items():
+        lines = '\n '.join(lines_text)
+        txt.insert(tkinter.END, f"{source_ip}:\n {lines}")
+        txt.insert(tkinter.END, '\n')
         txt.insert(tkinter.END, '\n')
 
-    txt.config(state=tkinter.DISABLED)
+    if nomarc:
+        txt.insert(tkinter.END, '\n')
+        txt.insert(tkinter.END, 'Not DMARC content here.')
+
+    txt.focus()
+
+    # Handle Right Click
+    menu_contextuel = tkinter.Menu(win, tearoff=0)
+    menu_contextuel.add_command(label="Copy", command=copier_selection)
+    menu_contextuel.add_command(label="Select All", command=lambda: txt.tag_add("sel", "1.0", "end"))
+    txt.bind("<Button-3>", lambda e: menu_contextuel.post(e.x_root, e.y_root))
+
+    # Forbid edition
+    txt.bind("<Key>", lambda e: "break")
 
 
 def delete_mail(message_uid: str) -> None:
@@ -282,9 +302,9 @@ def load_mails(dump: bool, headers: bool) -> None:
                 extracted_files = [os.path.join(WORK_DIR, f) for f in files_in_zip]
                 for xml_file in extracted_files:
                     #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
-                    description, attention, content_list = parse_xml(xml_file, dump)
+                    description, attention, content_dict = parse_xml(xml_file, dump)
                     os.remove(xml_file)
-                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, False, attention, content_list)
+                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, False, attention, content_dict)
                     added = True
 
             elif filename.lower().endswith(".gz"):
@@ -300,9 +320,9 @@ def load_mails(dump: bool, headers: bool) -> None:
                 os.remove(gz_path)
                 for xml_file in [extracted_file]:
                     #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
-                    description, attention, content_list = parse_xml(xml_file, dump)
+                    description, attention, content_dict = parse_xml(xml_file, dump)
                     os.remove(xml_file)
-                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, False, attention, content_list)
+                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, False, attention, content_dict)
                     added = True
 
             else:
@@ -311,7 +331,7 @@ def load_mails(dump: bool, headers: bool) -> None:
         # This will add a line for non dmarc emails
         if not added:
             description = msg['subject']
-            ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, True, False, [body])
+            ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, True, False, {'': [body]})
 
     imap.logout()
     print("")
@@ -394,12 +414,12 @@ def main() -> None:
     buttons_frame.bind("<Configure>", on_frame_configure)
 
     # all buttons inside
-    for i, (description, (message_id, nomarc, attention, content_list)) in enumerate(ITEMS_DICT.items()):
+    for i, (description, (message_id, nomarc, attention, content_dict)) in enumerate(ITEMS_DICT.items()):
 
         fg = 'Blue' if nomarc else 'Red' if attention else 'Black'
 
         # to display
-        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, nm=nomarc, cl=content_list: display_callback(d, nm, cl))  # type: ignore[misc]
+        display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, nm=nomarc, cd=content_dict: display_callback(d, nm, cd))  # type: ignore[misc]
         display_button.grid(row=i + 1, column=0)
 
         # to delete

@@ -141,6 +141,7 @@ IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 def display_callback(description: str, body_text: str) -> None:
     """Display information about content in email with copy/paste."""
+
     win = tkinter.Toplevel()
     win.title(description)
 
@@ -148,8 +149,17 @@ def display_callback(description: str, body_text: str) -> None:
     txt.pack(expand=True, fill="both", padx=10, pady=10)
 
     txt.insert("1.0", body_text)
-    txt.config(state=tkinter.DISABLED)
+
     txt.focus()
+
+    # Handle Right Click
+    menu_contextuel = tkinter.Menu(win, tearoff=0)
+    menu_contextuel.add_command(label="Copy", command=copier_selection)
+    menu_contextuel.add_command(label="Select All", command=lambda: txt.tag_add("sel", "1.0", "end"))
+    txt.bind("<Button-3>", lambda e: menu_contextuel.post(e.x_root, e.y_root))
+
+    # Forbid edition
+    txt.bind("<Key>", lambda e: "break")
 
 
 def delete_mail(message_uid: str) -> None:
