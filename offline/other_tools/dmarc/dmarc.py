@@ -62,11 +62,11 @@ def read_config(config_file: pathlib.Path) -> None:
     WORK_DIR = config["work_dir"]
 
 
-ITEMS_DICT: dict[str, tuple[str, bool, bool, list[str]]] = {}
+ITEMS_DICT: dict[str, tuple[str, bool, bool, dict[str, list[str]]]] = {}
 IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
-def parse_xml(xml_file: str, dump: bool) -> tuple[str, bool, list[str]]:
+def parse_xml(xml_file: str, dump: bool) -> tuple[str, bool, dict[str, list[str]]]:
     """Parse an XML file."""
 
     def get_text(parent: xml.etree.ElementTree.Element, tag: str) -> str:
@@ -127,7 +127,7 @@ def parse_xml(xml_file: str, dump: bool) -> tuple[str, bool, list[str]]:
 def display_callback(description: str, nomarc: bool, content_dict: dict[str, str]) -> None:
     """Display information about content in email."""
 
-    def copier_selection():
+    def copy_selection() -> None:
         try:
             selected_text = txt.get(tkinter.SEL_FIRST, tkinter.SEL_LAST)
         except tkinter.TclError:
@@ -155,7 +155,7 @@ def display_callback(description: str, nomarc: bool, content_dict: dict[str, str
 
     # Handle Right Click
     menu_contextuel = tkinter.Menu(win, tearoff=0)
-    menu_contextuel.add_command(label="Copy", command=copier_selection)
+    menu_contextuel.add_command(label="Copy", command=copy_selection)
     menu_contextuel.add_command(label="Select All", command=lambda: txt.tag_add("sel", "1.0", "end"))
     txt.bind("<Button-3>", lambda e: menu_contextuel.post(e.x_root, e.y_root))
 
@@ -304,7 +304,7 @@ def load_mails(dump: bool, headers: bool) -> None:
                     #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, content_dict = parse_xml(xml_file, dump)
                     os.remove(xml_file)
-                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, False, attention, content_dict)
+                    ITEMS_DICT[f"{date_message}-{description}"] = (str(message_uid), False, attention, content_dict)
                     added = True
 
             elif filename.lower().endswith(".gz"):
@@ -322,7 +322,7 @@ def load_mails(dump: bool, headers: bool) -> None:
                     #  assert xml_file.lower().endswith('xml'), f"{xml_file} : Not XML file"
                     description, attention, content_dict = parse_xml(xml_file, dump)
                     os.remove(xml_file)
-                    ITEMS_DICT[f"{date_message}-{description}"] = (message_uid, False, attention, content_dict)
+                    ITEMS_DICT[f"{date_message}-{description}"] = (str(message_uid), False, attention, content_dict)
                     added = True
 
             else:
