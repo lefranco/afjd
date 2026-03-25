@@ -912,6 +912,8 @@ def rectify_position():
 
         nonlocal selected_hovered_object
 
+        event.preventDefault()
+
         helper.clear()
 
         # find where is mouse
@@ -925,8 +927,10 @@ def rectify_position():
         else:
             helper <= "_"
 
-    def callback_canvas_mouse_leave(_):
+    def callback_canvas_mouse_leave(ev):
         """ callback_canvas_mouse_leave """
+
+        ev.preventDefault()
 
         if selected_hovered_object is not None:
             selected_hovered_object.highlite(ctx, False)
@@ -953,6 +957,8 @@ def rectify_position():
     def callback_take_item(event):
         """  take an item (unit or center)  """
 
+        event.preventDefault()
+
         nonlocal moved_item_id
 
         # take unit or center
@@ -962,6 +968,9 @@ def rectify_position():
         """  drop an item (unit or center)  """
 
         nonlocal moved_item_id
+        nonlocal selected_hovered_object
+
+        event.preventDefault()
 
         if moved_item_id in unit_info_table:
 
@@ -1006,6 +1015,10 @@ def rectify_position():
             if selected_drop_region in position_data.occupant_table:
                 previous_unit = position_data.occupant_table[selected_drop_region]
                 position_data.remove_unit(previous_unit)
+
+                # tricky
+                if selected_hovered_object == previous_unit:
+                    selected_hovered_object = new_unit
 
             # add to position
             position_data.add_unit(new_unit)
