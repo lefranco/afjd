@@ -1258,7 +1258,7 @@ def slide_submit_orders(table_of_contents):
 
                 if center is None and emergency_center is None:
                     alert("Bien essayé, mais il n'y a pas de centre ni de centre de secours à cet endroit !")
-                elif emergency_center is not None and not play_low.POSITION_DATA.emergency_situation(role):
+                elif emergency_center is not None and not POSITION_DATA.emergency_situation(role):
                     alert("Bien essayé, mais ce n'est pas une situation d'urgence !")
                 elif region in POSITION_DATA.occupant_table:
                     alert("Bien essayé, mais il y a déjà une unité à cet endroit !")
