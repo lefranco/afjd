@@ -142,6 +142,15 @@ IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 def display_callback(description: str, body_text: str) -> None:
     """Display information about content in email with copy/paste."""
 
+    def copy_selection() -> None:
+        try:
+            selected_text = txt.get(tkinter.SEL_FIRST, tkinter.SEL_LAST)
+        except tkinter.TclError:
+            return
+        win.clipboard_clear()
+        win.clipboard_append(selected_text)
+        win.update()
+
     win = tkinter.Toplevel()
     win.title(description)
 
@@ -154,7 +163,7 @@ def display_callback(description: str, body_text: str) -> None:
 
     # Handle Right Click
     menu_contextuel = tkinter.Menu(win, tearoff=0)
-    menu_contextuel.add_command(label="Copy", command=copier_selection)
+    menu_contextuel.add_command(label="Copy", command=copy_selection)
     menu_contextuel.add_command(label="Select All", command=lambda: txt.tag_add("sel", "1.0", "end"))
     txt.bind("<Button-3>", lambda e: menu_contextuel.post(e.x_root, e.y_root))
 
