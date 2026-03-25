@@ -29,13 +29,12 @@ import mylogger
 import lowdata
 import solver
 
-# set to True to be able to compile
-ALLOW_COMMAND = False
-
 APP = flask.Flask(__name__)
 flask_cors.CORS(APP)
 API = flask_restful.Api(APP)
 
+# set to True to be able to compile
+ALLOW_COMMAND = False
 
 SOLVER_PARSER = flask_restful.reqparse.RequestParser()
 SOLVER_PARSER.add_argument('variant', type=str, required=True)
