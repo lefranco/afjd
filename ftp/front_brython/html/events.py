@@ -498,16 +498,16 @@ def registrations():
     event_information <= f" : {manager}"
     event_information <= html.BR()
 
+    event_information <= html.B("Date limite de fin d'inscription")
+    event_information <= f" : {end_date}"
+    event_information <= html.BR()
+
     event_information <= html.B("Date de début")
     event_information <= f" : {start_date}"
     event_information <= html.BR()
 
     event_information <= html.B("Heure de début")
     event_information <= f" : {start_hour}"
-    event_information <= html.BR()
-
-    event_information <= html.B("Date de fin")
-    event_information <= f" : {end_date}"
     event_information <= html.BR()
 
     event_information <= html.B("Lieu")
@@ -707,6 +707,13 @@ def create_event(json_dict):
     form <= html.BR()
 
     fieldset = html.FIELDSET()
+    legend_end_date = html.LEGEND("date de fin d'inscription", title="Date limite de fin d'inscription à l'événement")
+    fieldset <= legend_end_date
+    input_end_date = html.INPUT(type="date", value=end_date if end_date is not None else "", Class='btn-inside')
+    fieldset <= input_end_date
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
     legend_start_date = html.LEGEND("date de début", title="Date de début de l'événement")
     fieldset <= legend_start_date
     input_start_date = html.INPUT(type="date", value=start_date if start_date is not None else "", Class='btn-inside')
@@ -714,17 +721,10 @@ def create_event(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
+    legend_start_hour = html.LEGEND("heure de début", title="Heure de debut de l'événement")
     fieldset <= legend_start_hour
     input_start_hour = html.INPUT(type="time", value=start_hour if start_hour is not None else "", step=1, Class='btn-inside')
     fieldset <= input_start_hour
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_end_date = html.LEGEND("date de fin", title="Date de fin de l'événement")
-    fieldset <= legend_end_date
-    input_end_date = html.INPUT(type="date", value=end_date if end_date is not None else "", Class='btn-inside')
-    fieldset <= input_end_date
     form <= fieldset
 
     fieldset = html.FIELDSET()
@@ -1182,6 +1182,13 @@ def handle_event():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
+    legend_end_date = html.LEGEND("date de fin d'inscription", title="Date limite de fin d'inscription de l'événement")
+    fieldset <= legend_end_date
+    input_end_date = html.INPUT(type="date", value=end_date, Class='btn-inside')
+    fieldset <= input_end_date
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
     legend_start_date = html.LEGEND("date de début", title="Date de début de l'événement")
     fieldset <= legend_start_date
     input_start_date = html.INPUT(type="date", value=start_date, Class='btn-inside')
@@ -1189,17 +1196,10 @@ def handle_event():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
+    legend_start_hour = html.LEGEND("heure de début", title="Heure de début de l'événement")
     fieldset <= legend_start_hour
     input_start_hour = html.INPUT(type="time", value=start_hour, step=1, Class='btn-inside')
     fieldset <= input_start_hour
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_end_date = html.LEGEND("date de fin", title="Date de fin de l'événement")
-    fieldset <= legend_end_date
-    input_end_date = html.INPUT(type="date", value=end_date, Class='btn-inside')
-    fieldset <= input_end_date
     form <= fieldset
 
     fieldset = html.FIELDSET()

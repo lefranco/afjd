@@ -14,6 +14,14 @@ import time
 import sys
 import threading
 
+import patch
+
+# Patch Werkzeug's host validation BEFORE importing Flask
+patch.patch_werkzeug_host_validation()
+
+# flake8: noqa: E402
+# pylint: disable=wrong-import-order
+# pylint: disable=wrong-import-position
 import waitress
 import flask
 import flask_cors
@@ -2376,7 +2384,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         nb_registered_table = {e.identifier: len(registrations.Registration.list_by_event_id(sql_executor, int(e.identifier))) for e in events_list}
         del sql_executor
 
-        data = {str(e.identifier): {'name': e.name, 'priority': e.priority, 'summary': e.summary, 'nb_registered': nb_registered_table[e.identifier]} for e in events_list}
+        data = {str(e.identifier): {'name': e.name, 'priority': e.priority, 'end_date': e.end_date, 'summary': e.summary, 'nb_registered': nb_registered_table[e.identifier]} for e in events_list}
 
         return data, 200
 
