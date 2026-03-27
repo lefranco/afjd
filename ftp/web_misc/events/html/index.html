@@ -74,6 +74,9 @@ for event_id, event_dict in sorted(events_data.items(), key=lambda t:(t[1]['prio
     div_event_box <= link
 
     div_event_box <= html.BR()
+    div_event_box <= html.B(f"Inscriptions ouvertes jusqu'au {event_dict['end_date']}")
+
+    div_event_box <= html.BR()
     for line in event_dict['summary'].split('\n'):
         if line.startswith("http"):
             anchor = html.A(href=line, target="_blank")
