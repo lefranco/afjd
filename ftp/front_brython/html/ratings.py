@@ -17,8 +17,8 @@ import scoring
 import ezml_render
 
 
-# a dropout is worth that meany delays
-FACTOR_DROPOUT = 10
+# a dropout is worth that many delays
+FACTOR_DROPOUT = 7
 
 DEFAULT_ELO = 1500
 
@@ -448,14 +448,21 @@ def show_rating_reliability():
 
             # usually retreats ans builds are not played
             number_advancements_used = (number_advancements / 5) * 3
+
             # avoid division by zero
             if number_advancements_used == 0:
                 number_advancements_used = 1
+
             # ratio delays/ advancements
             reliability = round(100 * (number_advancements_used - number_delays - FACTOR_DROPOUT * number_dropouts) / number_advancements_used, 3)
+
             # bonus for no delays
-            if number_delays == 0:
+            if reliability == 100:
                 reliability += number_advancements / 1000
+
+            # if negative lower it up
+            if reliability < 0:
+                reliability /= 1000
 
             rating = (player_id, reliability, number_delays, number_dropouts, number_advancements)
             rating_list.append(rating)
@@ -563,6 +570,7 @@ def show_rating_reliability():
             Un joueur qui n'a joué aucune partie (présent parce qu'il a tout de même un retard ou un abandon) reçoit un tour joué.<br>
             Seuls les tours joués lors de la dernière année en temps réel depuis l'instant présent sont pris en compte.<br>
             Pour le calcul, on considère qu'il y a 3 tours joués par année dans une partie (et non 5 puisque souvent les retraites ne sont pas jouées)
+            Par charité chrétienne, les fiabilité négatives sont divisées par 1000.
         """
         MY_SUB_PANEL <= html.DIV(explanations, Class='important')
         MY_SUB_PANEL <= html.BR()
