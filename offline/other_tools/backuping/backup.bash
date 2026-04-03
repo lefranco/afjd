@@ -240,13 +240,7 @@ echo
 
 echo "Moving artefacts to google drive..."
 archive_dir=${now}
-rclone mkdir ${GOOGLE_DRIVE}:${archive_dir}
-for file in $(ls ${backup_dir}) ; do 
-    echo
-    echo "Moving ${file} to google drive..."
-    rclone copy ${backup_dir}/${file} ${GOOGLE_DRIVE}:${archive_dir}/ --bwlimit 2M --transfers 1 --checkers 1 --progress
-    sleep 2
-done
+rclone copy ${backup_dir}/ ${GOOGLE_DRIVE}:${archive_dir}/ --bwlimit 2M --transfers 1 --checkers 2 --tpslimit 3 --fast-list --progress
 
 # Removing artefacts from here
 rm -fr ${backup_dir}
