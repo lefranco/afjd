@@ -612,7 +612,10 @@ class Game:
         list_owners = [r for _, _, r in game_ownerships]
         counter = collections.Counter(list_owners)
         _, ncentersmax = counter.most_common(1)[0]
-        _, ncenterssecond = counter.most_common(2)[1]
+        try:
+            _, ncenterssecond = counter.most_common(2)[1]
+        except IndexError:
+            ncenterssecond = 0
 
         # solo when more than int(c/2) + extra
         # but need to be alone
