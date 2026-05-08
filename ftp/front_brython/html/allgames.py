@@ -34,12 +34,19 @@ MAX_LEN_VARIANT_NAME = 50
 DEFAULT_SCORING_CODE = "CDIP"
 DEFAULT_DEADLINE_TIME = 23
 DEFAULT_GRACE_DURATION = 24
-DEFAULT_SPEED_MOVES = 72
-DEFAULT_SPEED_OTHERS = 24
+
+DEFAULT_SPEED_MOVES_SLOW = 72
+DEFAULT_SPEED_RETREATS_SLOW = 24
+DEFAULT_SPEED_ADJUSTMENTS_SLOW = 48
+DEFAULT_SPEED_MOVES_FAST = 24
+DEFAULT_SPEED_RETREATS_FAST = 24
+DEFAULT_SPEED_ADJUSTMENTS_FAST = 24
+
 
 # initial deadline (in days) - how long before considering game has problems getting complete
 DELAY_FOR_COMPLETING_GAME_DAYS = 21
 
+DEFAULT_DURATION = 7
 
 ARRIVAL = False
 
@@ -101,8 +108,6 @@ def create_game(json_dict):
     information_displayed_deadline_time = False
     information_displayed_vote_allowed = False
 
-    default_nb_max_cycles_to_play = 0
-
     def display_disorder_callback(_):
         """ display_disorder_callback """
 
@@ -140,10 +145,32 @@ def create_game(json_dict):
 
         if not information_displayed_game_type:
             all_game_types = '\n'.join(common.TYPE_GAME_EXPLAIN_CONV.values())
-            avoid_open_blitz = "Attention, il est préférable d'éviter les parties BlitzOuvertes qui sont sources de tergiversations - à réserver aux parties de test !"
-            explain = f"{all_game_types}\n\n{avoid_open_blitz}"
-            alert(explain)
+            alert(all_game_types)
             information_displayed_game_type = True
+
+    def change_game_type_callback(_):
+
+        # 0: Négo 1: Blitz 2: Négo Publique 3: Blitz Ouverte
+        game_type_code = config.GAME_TYPES_CODE_TABLE[input_game_type.value]
+
+        # warn if open blitz
+        if game_type_code == 3:
+            alert("Attention, il est préférable d'éviter les parties Blitz Ouvertes qui sont sources de tergiversations - à réserver aux parties de test !")
+
+        # set durations
+        if game_type_code in (0, 2):
+
+            alert(f"On met par défaut les paramètres de partie plutôt lente ({DEFAULT_SPEED_MOVES_SLOW}h/{DEFAULT_SPEED_RETREATS_SLOW}h/{DEFAULT_SPEED_ADJUSTMENTS_SLOW}h) ")
+            input_speed_moves.value = str(DEFAULT_SPEED_MOVES_SLOW)
+            input_speed_retreats.value = str(DEFAULT_SPEED_RETREATS_SLOW)
+            input_speed_adjustments.value = str(DEFAULT_SPEED_ADJUSTMENTS_SLOW)
+
+        else:
+
+            alert(f"On met par défaut les paramètres de partie plutôt rapide ({DEFAULT_SPEED_MOVES_FAST}h/{DEFAULT_SPEED_RETREATS_FAST}h/{DEFAULT_SPEED_ADJUSTMENTS_FAST}h) ")
+            input_speed_moves.value = str(DEFAULT_SPEED_MOVES_FAST)
+            input_speed_retreats.value = str(DEFAULT_SPEED_RETREATS_FAST)
+            input_speed_adjustments.value = str(DEFAULT_SPEED_ADJUSTMENTS_FAST)
 
     def display_deadline_time_callback(_):
         """ display_deadline_time_callback """
@@ -160,9 +187,9 @@ def create_game(json_dict):
 
         nonlocal information_displayed_vote_allowed
 
-        if input_endgame_vote_allowed.checked:
+        if (input_endgame_vote_allowed.checked and not information_displayed_vote_allowed) or (not  input_endgame_vote_allowed.checked and information_displayed_vote_allowed):
             if not information_displayed_vote_allowed:
-                alert("Attention, le vote de fin de partie n'a de sens que pour les parties relativement longues, c'est à dire d'au moins une dizaine d'années.")
+                alert("Attention, le vote de fin de partie s'impose et n'a de sens que pour les parties relativement longues.")
                 information_displayed_vote_allowed = True
 
     def display_just_play_callback(_):
@@ -174,18 +201,13 @@ def create_game(json_dict):
             alert("Si vous cochez vous serez mis dans les joueurs de la partie et le site trouvera un arbitre.\nSi vous ne cochez pas (par défaut) vous serez arbitre de la partie et ne pourrez pas la jouer.\n\nCeci est modifiable par la suite !")
             information_displayed_just_play = True
 
-    def update_default_nb_max_cycles_to_play_callback(ev):
-        """ display_just_play_callback """
-
-        nonlocal default_nb_max_cycles_to_play
-
-        selected_variant = ev.target.value
-        default_nb_max_cycles_to_play = config.VARIANT_NAMES_DICT[selected_variant][1]
-
-        nb_players = config.VARIANT_NAMES_DICT[selected_variant][0]
-        alert(f"Variante à {nb_players} joueurs. Durée par defaut à {default_nb_max_cycles_to_play} années")
-
-        document["nb_cycles_input"].value = default_nb_max_cycles_to_play
+    def change_nb_max_cycles_to_play(_):
+        if int(input_nb_max_cycles_to_play.value) > DEFAULT_DURATION:
+            alert("Partie longue : le vote de fin autorisé par defaut")
+            input_endgame_vote_allowed.checked = True
+        else:
+            alert("Partie normale : le vote de fin interdit par defaut")
+            input_endgame_vote_allowed.checked = False
 
     def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
@@ -215,8 +237,6 @@ def create_game(json_dict):
         nonlocal access_restriction_performance
         nonlocal nb_max_cycles_to_play
         nonlocal endgame_vote_allowed
-
-        nonlocal default_nb_max_cycles_to_play
 
         def reply_callback(req):
             req_result = loads(req.text)
@@ -414,8 +434,6 @@ def create_game(json_dict):
 
     pseudo = storage['PSEUDO']
 
-    default_nb_max_cycles_to_play = list(config.VARIANT_NAMES_DICT.values())[0][1]
-
     MY_SUB_PANEL <= information_about_input()
 
     form = html.FORM()
@@ -443,8 +461,6 @@ def create_game(json_dict):
         if variant_name == variant:
             option.selected = True
         input_variant <= option
-
-    input_variant.bind("change", update_default_nb_max_cycles_to_play_callback)
 
     fieldset <= input_variant
     form <= fieldset
@@ -490,6 +506,7 @@ def create_game(json_dict):
     legend_variant = html.LEGEND("type de partie", title="Type de partie pour la communication en jeu")
     fieldset <= legend_variant
     input_game_type = html.SELECT(type="select-one", value="", Class='btn-inside')
+    input_game_type.bind("change", change_game_type_callback)
     input_game_type.bind("click", display_game_type_callback)
 
     for game_type_name in config.GAME_TYPES_CODE_TABLE:
@@ -571,7 +588,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_speed_moves = html.LEGEND("cadence mouvements (heures)", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite de mouvements")
     fieldset <= legend_speed_moves
-    input_speed_moves = html.INPUT(type="number", value=speed_moves if speed_moves is not None else DEFAULT_SPEED_MOVES, Class='btn-inside')
+    input_speed_moves = html.INPUT(type="number", value=speed_moves if speed_moves is not None else DEFAULT_SPEED_MOVES_SLOW, Class='btn-inside')
     fieldset <= input_speed_moves
     form <= fieldset
 
@@ -588,7 +605,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_speed_retreats = html.LEGEND("cadence retraites (heures)", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite de retraites")
     fieldset <= legend_speed_retreats
-    input_speed_retreats = html.INPUT(type="number", value=speed_retreats if speed_retreats is not None else DEFAULT_SPEED_OTHERS, Class='btn-inside')
+    input_speed_retreats = html.INPUT(type="number", value=speed_retreats if speed_retreats is not None else DEFAULT_SPEED_RETREATS_SLOW, Class='btn-inside')
     fieldset <= input_speed_retreats
     form <= fieldset
 
@@ -605,7 +622,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_speed_adjustments = html.LEGEND("cadence ajustements (heures)", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite d'ajustements")
     fieldset <= legend_speed_adjustments
-    input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments if speed_adjustments is not None else DEFAULT_SPEED_OTHERS, Class='btn-inside')
+    input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments if speed_adjustments is not None else DEFAULT_SPEED_ADJUSTMENTS_SLOW, Class='btn-inside')
     fieldset <= input_speed_adjustments
     form <= fieldset
 
@@ -634,9 +651,10 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_nb_max_cycles_to_play = html.LEGEND("maximum de cycles (années)", title="Combien d'années à jouer au plus ?")
     fieldset <= legend_nb_max_cycles_to_play
-    input_nb_max_cycles_to_play = html.INPUT(type="number", id="nb_cycles_input", value=nb_max_cycles_to_play if nb_max_cycles_to_play is not None else default_nb_max_cycles_to_play, Class='btn-inside')
+    input_nb_max_cycles_to_play = html.INPUT(type="number", id="nb_cycles_input", value=nb_max_cycles_to_play if nb_max_cycles_to_play is not None else DEFAULT_DURATION, Class='btn-inside')
     fieldset <= input_nb_max_cycles_to_play
     form <= fieldset
+    input_nb_max_cycles_to_play.bind("change", change_nb_max_cycles_to_play)
 
     title_access = html.H4("Spécial")
     form <= title_access
