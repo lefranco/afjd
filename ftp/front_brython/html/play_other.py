@@ -24,10 +24,16 @@ import play_low
 NON_DIVULGUE = "Non divulgué"
 
 
-def display_special_information_callback(_):
-    """ display_special_information_callback """
+def display_inappropriate_information_callback(_):
+    """ display_inappropriate_information_callback """
 
-    alert("Après un stab - réussi ou pas ou tout autre raison - la victime vous insulte ? Voici la conduite à tenir :\n\n 1) Contacter l'arbitre de la partie par la messagerie de la partie\n\n 2) Contacter un modérateur - la liste des modérateurs est dans Classement/Groupe Modérateur et la messagerie personnelle s'accède par Accueil/Messagerie personnelle\n\n 3) Contacter un administrateur par Accueil/Déclarer un incident.\n\n Ne passer à l'étape suivante qu'en cas d'échec de l'étape précédente bien sûr !\n\nDans tous les cas, notez bien et transmettez le numéro ('id') du message ou de la déclaration incriminée pour référence !")
+    alert("Après un stab - réussi ou pas ou tout autre raison - la victime vous insulte ? Voici la conduite à tenir :\n\n 1) Contacter l'arbitre de la partie par la messagerie de la partie\n\n 2) Contacter un modérateur - la liste des modérateurs est dans Classement/Liste Globale (colonne \"rôle sur le site\") et la messagerie personnelle s'accède par Accueil/Messagerie personnelle\n\n 3) Contacter un administrateur par Accueil/Déclarer un incident.\n\n Ne passer à l'étape suivante qu'en cas d'échec de l'étape précédente bien sûr !\n\nDans tous les cas, notez bien et transmettez le numéro ('id') du message ou de la déclaration incriminée pour référence !")
+
+
+def display_lazy_game_master_information_callback(_):
+    """ display_lazy_game_master_information_callback """
+
+    alert("Après plusieurs relances l'arbitre ne se manifeste pas ? Voici la conduite à tenir :\n\n  1) Contacter un modérateur - la liste des modérateurs est dans Classement/Liste Globale (colonne \"rôle sur le site\") et la messagerie personnelle s'accède par Accueil/Messagerie personnelle\n\n 2) Contacter un administrateur par Accueil/Déclarer un incident.\n\n Ne passer à l'étape suivante qu'en cas d'échec de l'étape précédente bien sûr !")
 
 
 def date_last_visit_update(game_id, role_id, visit_type):
@@ -1602,8 +1608,14 @@ def negotiate(default_dest_set, def_focus_role_id):
     play_low.MY_SUB_PANEL <= html.BR()
     play_low.MY_SUB_PANEL <= html.BR()
 
-    button = html.BUTTON("Un message avec un contenu inaproprié ?", Class='btn-inside')
-    button.bind("click", display_special_information_callback)
+    button = html.BUTTON("Un message avec un contenu inapproprié ?", Class='btn-inside')
+    button.bind("click", display_inappropriate_information_callback)
+    play_low.MY_SUB_PANEL <= button
+    # separator
+    play_low.MY_SUB_PANEL <= " "
+
+    button = html.BUTTON("Pas de réponse de l'arbitre ?", Class='btn-inside')
+    button.bind("click", display_lazy_game_master_information_callback)
     play_low.MY_SUB_PANEL <= button
     play_low.MY_SUB_PANEL <= html.BR()
     play_low.MY_SUB_PANEL <= html.BR()
@@ -1876,7 +1888,13 @@ def declare():
     play_low.MY_SUB_PANEL <= html.BR()
 
     button = html.BUTTON("Une presse avec un contenu inaproprié ?", Class='btn-inside')
-    button.bind("click", display_special_information_callback)
+    button.bind("click", display_inappropriate_information_callback)
+    play_low.MY_SUB_PANEL <= button
+    # separator
+    play_low.MY_SUB_PANEL <= " "
+
+    button = html.BUTTON("Pas de réponse de l'arbitre ?", Class='btn-inside')
+    button.bind("click", display_lazy_game_master_information_callback)
     play_low.MY_SUB_PANEL <= button
     play_low.MY_SUB_PANEL <= html.BR()
     play_low.MY_SUB_PANEL <= html.BR()
