@@ -65,7 +65,7 @@ FAQ_CONTENT_TABLE = {
     "Toute heure de retard entamée est due. Cela signifie qu'un retard indiqué “2“ (2 heures) est un retard d'au moins une heure et d'au plus deux heures (par rapport à la date limite au moment de la soumission)",
 
     "Est ce que je peux écrire n'importe quoi dans les messages et les presses ?":
-    "Non ! Les messages sont certes privés entre émetteur et destinataire(s). Les presses sont certes privées dans la partie et avec le modérateur du site (qui peut les lire et en écrire). Dans les deux cas le contenu doit respecter la charte. L'administrateur peut sur demande lire un message de presse ou de messagerie pour vérifier. Contenu inaproprié ? Déclarez un incident ! (repérez le message par son id)",
+    "Non ! Les messages sont certes privés entre émetteur et destinataire(s). Les presses sont certes privées dans la partie et avec le modérateur du site (qui peut les lire et en écrire). Dans les deux cas le contenu doit respecter la charte. L'administrateur peut sur demande lire un message de presse ou de messagerie pour vérifier. Contenu inapproprié ? Déclarez un incident ! (repérez le message par son id)",
 
     "C'est quoi cette petite pastille rose en haut à gauche dans la carte ?":
     "Celà attire l'attention sur la présence d'ordres de com'.",
