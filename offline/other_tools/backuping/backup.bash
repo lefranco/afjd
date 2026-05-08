@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# Deliberate choice is made to lower load on server (therefore no compression)
 
 # Script will stop if a command returns an error code
 set -e 
@@ -25,7 +24,7 @@ MONGODB_DATABASE_NAME=nodebb
 MONGODB_DATABASE_USER=nodebb
 GOOGLE_DRIVE=backup_diplomania
 
-# If script recives interruption signal, it stops completely
+# If script receives interruption signal, it stops completely
 trap "exit" INT
 
 # Time of script execution
@@ -70,11 +69,11 @@ for service in users players games ; do
     cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db '.backup ${backup_distant_db_file}'"
     sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
 
-    # do dump
-    echo "Dumping sql ${service}..."
-    dump_sql_distant_file=/tmp/dump_db_${service}_${now}.sql.gz
-    cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db .dump > ${dump_sql_distant_file}"
-    sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
+    # we do not do dump since it may encounter database locked
+    #### echo "Dumping sql ${service}..."
+    #### dump_sql_distant_file=/tmp/dump_db_${service}_${now}.sql.gz
+    #### cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db .dump > ${dump_sql_distant_file}"
+    #### sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
 
     # bring backup db here on backup machine
     echo "Bringing locally ${service} backup db file"
@@ -83,12 +82,13 @@ for service in users players games ; do
     sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_db_file} ${backup_local_db_file}
     echo "Took $SECONDS seconds"
 
+    # we do not do dump since it may encounter database locked
     # bring sql dump here on backup machine
-    echo "Bringing locally ${service} sql dump file"
-    dump_local_sql_file=dump_db_${service}_${now}.sql.gz
-    SECONDS=0
-    sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${dump_sql_distant_file} ${dump_local_sql_file}
-    echo "Took $SECONDS seconds"
+    #### echo "Bringing locally ${service} sql dump file"
+    #### dump_local_sql_file=dump_db_${service}_${now}.sql.gz
+    #### SECONDS=0
+    #### sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${dump_sql_distant_file} ${dump_local_sql_file}
+    #### echo "Took $SECONDS seconds"
 
     # compress backup
     echo "Compress ${service} backup db file"
@@ -99,24 +99,28 @@ for service in users players games ; do
     echo "Delete ${service} dump file"
     rm ${backup_local_db_file}
 
+    # we do not do dump since it may encounter database locked
     # compress sql dump
-    echo "Compress ${service} dump sql file"
-    dump_local_file=${dump_local_sql_file}.tar.gz
-    SECONDS=0
-    tar czf ${dump_local_file} ${dump_local_sql_file}
-    echo "Took $SECONDS seconds"
-    echo "Delete ${service} dump file"
-    rm ${dump_local_sql_file}
+    #### echo "Compress ${service} dump sql file"
+    #### dump_local_file=${dump_local_sql_file}.tar.gz
+    #### SECONDS=0
+    #### tar czf ${dump_local_file} ${dump_local_sql_file}
+    #### echo "Took $SECONDS seconds"
+    #### echo "Delete ${service} dump file"
+    #### rm ${dump_local_sql_file}
 
     # delete backup sql and dump db from server
     echo "Deleting from server ${service} files"
-    cmd="rm ${backup_distant_db_file} && rm ${dump_sql_distant_file}"
+    cmd="rm ${backup_distant_db_file}"
+    # we do not do dump since it may encounter database locked
+    #### cmd="rm ${backup_distant_db_file} && rm ${dump_sql_distant_file}"
     sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
 
     # move to backup dir
     echo "Moving to backup dir ${service} files"
     mv ${backup_local_file} ${backup_dir}/
-    mv ${dump_local_file} ${backup_dir}/
+    # we do not do dump since it may encounter database locked
+    #### mv ${dump_local_file} ${backup_dir}/
 
     echo
     sleep 2
