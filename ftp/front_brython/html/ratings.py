@@ -569,7 +569,7 @@ def show_rating_reliability():
             Seuls les joueurs présents à la fin de la partie ont joué la partie.<br>
             Un joueur qui n'a joué aucune partie (présent parce qu'il a tout de même un retard ou un abandon) reçoit un tour joué.<br>
             Seuls les tours joués lors de la dernière année en temps réel depuis l'instant présent sont pris en compte.<br>
-            Pour le calcul, on considère qu'il y a 3 tours joués par année dans une partie (et non 5 puisque souvent les retraites ne sont pas jouées)
+            Pour le calcul, on considère qu'il y a 3 tours joués par année dans une partie (et non 5 puisque souvent les retraites ne sont pas jouées)<br>
             Par charité chrétienne, les fiabilité négatives sont divisées par 1000.
         """
         MY_SUB_PANEL <= html.DIV(explanations, Class='important')
