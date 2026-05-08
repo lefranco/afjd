@@ -2314,6 +2314,43 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/game-allocations2/<game_id>')
+class AllocationGame2Ressource(flask_restful.Resource):  # type: ignore
+    """ AllocationGame2Ressource """
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Gets all allocations for the game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-allocations2/<game_id> - GET - get getting allocations (no token) for game id=%s", game_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # anonymous game : no data
+        if game.anonymous:
+            return {}, 200
+
+        # get answer
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+
+        data = {str(a[1]): a[2] for a in allocations_list}
+
+        # find game master
+        assert game is not None
+        game_master_id = game.get_role(sql_executor, 0)
+
+        del sql_executor
+
+        return data, 200
+
 @API.resource('/player-allocations/<player_id>')
 class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
     """ AllocationPlayerRessource """
