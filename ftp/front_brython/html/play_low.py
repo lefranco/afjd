@@ -347,23 +347,27 @@ def load_special_stuff():
     global GAME_PLAYERS_DICT
     GAME_PLAYERS_DICT = {}
 
-    if PSEUDO is None:
+    # not in game
+    if ROLE_ID is None:
+        # can be empty
+        GAME_PLAYERS_DICT = common.get_game_players_data2(GAME_ID)
         return
 
-    if ROLE_ID is not None:
-        content_loaded = common.game_note_reload(GAME_ID)
-        if content_loaded:
-            mydialog.info_go("Attention, vous avez pris des notes dans cette partie !")
+    content_loaded = common.game_note_reload(GAME_ID)
+    if content_loaded:
+        mydialog.info_go("Attention, vous avez pris des notes dans cette partie !")
 
-    if not (ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+    # master
+    if ROLE_ID == 0:
+        GAME_PLAYERS_DICT = common.get_game_players_data(GAME_ID)
+        # cannot be empty
+        if not GAME_PLAYERS_DICT:
+            alert("Erreur chargement joueurs de la partie")
         return
 
-    # get the players of the game
-    # need a token for this
-    GAME_PLAYERS_DICT = common.get_game_players_data(GAME_ID)
-    if not GAME_PLAYERS_DICT:
-        alert("Erreur chargement joueurs de la partie")
-        return
+    # player
+    GAME_PLAYERS_DICT = common.get_game_players_data2(GAME_ID)
+    # can be empty
 
 
 def stack_last_moves_button(button_container, content_container, insert_before, disable_callback, disabled):
