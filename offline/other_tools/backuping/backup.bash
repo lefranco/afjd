@@ -1,21 +1,15 @@
 #!/usr/bin/env bash
 
-
 # Script will stop if a command returns an error code
 set -e 
-
-# Disable screen saver etc for one hour (script should take less than that)
-systemd-inhibit --why="Backup in progress" --mode=block bash -c "
-  echo 'Start of screen saver inihibit'
-  sleep 3600
-  echo 'End of screen saver inihibit'
-" &
-
 
 # sshpass needs to be installed on backup machine (sudo apt install)
 # sqlite3 needs to be installed on server (sudo apt install)
 # mongodb needs to be installed on backup machine (can get very complicated)
+# rsync needs to be installed on backup machine (sudo apt install)
 # rclone needs to be installed on backup machine (and credentials in ~/.config/rclone/rclone.conf - copy them from here is simpler)
+# msmtp and bsd-mailx need to be installed 
+# screen needs to be installed 
 
 SERVER_USERNAME="ubuntu"
 SERVER_ADDRESS="37.59.100.228"
@@ -23,6 +17,7 @@ MONGODB_PORT=27017
 MONGODB_DATABASE_NAME=nodebb
 MONGODB_DATABASE_USER=nodebb
 GOOGLE_DRIVE=backup_diplomania
+EMAIL_DEST=jeremie.lefrancois@gmail.com
 
 # If script receives interruption signal, it stops completely
 trap "exit" INT
@@ -49,220 +44,222 @@ if [ ! -d ./backups ]; then
     mkdir ./backups
 fi
 
-# Create a fresh backup dir
-backup_dir=./backups/${now}
-if [ -d ${backup_dir} ]; then
-     rm -fr ${backup_dir}
-fi
-mkdir ${backup_dir}
+while true ; do  
 
-echo "================"
-echo "Backuping Flask APIs ..."
-echo "================"
-echo
-
-for service in users players games ; do
-
-    # do backup 
-    echo "Backuping db ${service}..."
-    backup_distant_db_file=/tmp/backup_db_${service}_${now}.db
-    cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db '.backup ${backup_distant_db_file}'"
-    sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
-
-    # we do not do dump since it may encounter database locked
-    #### echo "Dumping sql ${service}..."
-    #### dump_sql_distant_file=/tmp/dump_db_${service}_${now}.sql.gz
-    #### cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db .dump > ${dump_sql_distant_file}"
-    #### sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
-
-    # bring backup db here on backup machine
-    echo "Bringing locally ${service} backup db file"
-    backup_local_db_file=backup_db_${service}_${now}.db
-    SECONDS=0
-    sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_db_file} ${backup_local_db_file}
-    echo "Took $SECONDS seconds"
-
-    # we do not do dump since it may encounter database locked
-    # bring sql dump here on backup machine
-    #### echo "Bringing locally ${service} sql dump file"
-    #### dump_local_sql_file=dump_db_${service}_${now}.sql.gz
-    #### SECONDS=0
-    #### sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${dump_sql_distant_file} ${dump_local_sql_file}
-    #### echo "Took $SECONDS seconds"
-
-    # compress backup
-    echo "Compress ${service} backup db file"
-    backup_local_file=${backup_local_db_file}.tar.gz
-    SECONDS=0
-    tar czf ${backup_local_file} ${backup_local_db_file}
-    echo "Took $SECONDS seconds"
-    echo "Delete ${service} dump file"
-    rm ${backup_local_db_file}
-
-    # we do not do dump since it may encounter database locked
-    # compress sql dump
-    #### echo "Compress ${service} dump sql file"
-    #### dump_local_file=${dump_local_sql_file}.tar.gz
-    #### SECONDS=0
-    #### tar czf ${dump_local_file} ${dump_local_sql_file}
-    #### echo "Took $SECONDS seconds"
-    #### echo "Delete ${service} dump file"
-    #### rm ${dump_local_sql_file}
-
-    # delete backup sql and dump db from server
-    echo "Deleting from server ${service} files"
-    cmd="rm ${backup_distant_db_file}"
-    # we do not do dump since it may encounter database locked
-    #### cmd="rm ${backup_distant_db_file} && rm ${dump_sql_distant_file}"
-    sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
-
-    # move to backup dir
-    echo "Moving to backup dir ${service} files"
-    mv ${backup_local_file} ${backup_dir}/
-    # we do not do dump since it may encounter database locked
-    #### mv ${dump_local_file} ${backup_dir}/
-
-    echo
-    sleep 2
-
-done
-
-if [ "$1" == "-f" ]; then
-    echo "Fast mode selected. Exiting"
-    exit 0
-fi
-
-echo "================"
-echo "Backuping Forum ..."
-echo "================"
-echo
-
-if [ -z "${MONGODB_DATABASE_PASSWORD}" ]; then
-    echo "Please define MONGODB_PASSWORD !"
-    exit 1
-fi
-
-backup_local_dir=nodebb-${now}
-backup_local_file=nodebb-${now}.tar
-
-echo "Backuping forum database"
-if [ -d ${backup_local_dir} ]; then
-    rm -fr ${backup_local_dir}
-fi
-mkdir ${backup_local_dir}
-SECONDS=0
-echo "Mongodump command"
-mongodump --host ${SERVER_ADDRESS} --port ${MONGODB_PORT} --db ${MONGODB_DATABASE_NAME} --out ${backup_local_dir} --gzip --authenticationMechanism SCRAM-SHA-256 --username ${MONGODB_DATABASE_USER} --password ${MONGODB_DATABASE_PASSWORD} --quiet
-echo "Took $SECONDS seconds"
-
-# tar dir to single file
-SECONDS=0
-echo "tar to single file"
-tar cf ${backup_local_file} ${backup_local_dir}
-echo "Took $SECONDS seconds"
-rm -fr ${backup_local_dir}
-
-# move to backup dir
-echo "Moving to backup mongodb file"
-mv ${backup_local_file} ${backup_dir}/
-
-echo
-
-echo "Bringing locally uploads files"
-backup_local_directory=./uploads-${now}
-if [ -d ${backup_local_directory} ]; then
-    rm -fr ${backup_local_directory}
-fi
-backup_distant_directory=/home/ubuntu/forum_nodebb/data/nodebb/uploads
-SECONDS=0
-sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_directory} ${backup_local_directory}
-echo "Took $SECONDS seconds"
-
-echo "Compressing uploads dir"
-backup_local_file=uploads-${now}.tar.gz
-SECONDS=0
-tar -czf ${backup_local_file} ${backup_local_directory}
-echo "Took $SECONDS seconds"
-rm -fr ${backup_local_directory}
-
-echo "Moving to backup dir uploads file"
-mv ${backup_local_file} ${backup_dir}/
-
-echo
-
-echo "================"
-echo "Backuping Wikis ..."
-echo "================"
-echo
-
-for wiki in dokuwiki-data dokuwiki-data2 ; do
-
-    echo "Backuping ${wiki}..."
-    echo
-
-    backup_local_directory=./${wiki}-${now}
-    if [ -d ${backup_local_directory} ]; then
-        rm -fr ${backup_local_directory}
+    # Create a fresh backup dir
+    backup_dir=./backups/${now}
+    if [ -d ${backup_dir} ]; then
+         rm -fr ${backup_dir}
     fi
+    mkdir ${backup_dir}
 
-    # data/attic is too big and causes "broken pipe"
-    for item in data/pages data/media data/meta lib/plugins lib/tpl conf ; do
+    echo "================"
+    echo "Backuping Flask APIs ..."
+    echo "================"
+    echo
 
-        echo "Bringing locally ${wiki} ${item} files"
-        backup_local_item_directory=./${backup_local_directory}/${item//\//_}
-        mkdir -p ${backup_local_item_directory}
-        backup_distant_item_directory=/home/ubuntu/wiki_doku/${wiki}/${item}
+    for service in users players games ; do
+
+        # do backup 
+        echo "Backuping db ${service}..."
+        backup_distant_db_file=/tmp/backup_db_${service}_${now}.db
+        cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db '.backup ${backup_distant_db_file}'"
+        sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
+
+        # we do not do dump since it may encounter database locked
+        #### echo "Dumping sql ${service}..."
+        #### dump_sql_distant_file=/tmp/dump_db_${service}_${now}.sql.gz
+        #### cmd="sqlite3 ./api_flask/${service}_service/db/${service}.db .dump > ${dump_sql_distant_file}"
+        #### sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
+
+        # bring backup db here on backup machine
+        echo "Bringing locally ${service} backup db file"
+        backup_local_db_file=backup_db_${service}_${now}.db
         SECONDS=0
-        sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_item_directory} ${backup_local_item_directory}
+        sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_db_file} ${backup_local_db_file}
         echo "Took $SECONDS seconds"
+
+        # we do not do dump since it may encounter database locked
+        # bring sql dump here on backup machine
+        #### echo "Bringing locally ${service} sql dump file"
+        #### dump_local_sql_file=dump_db_${service}_${now}.sql.gz
+        #### SECONDS=0
+        #### sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${dump_sql_distant_file} ${dump_local_sql_file}
+        #### echo "Took $SECONDS seconds"
+
+        # compress backup
+        echo "Compress ${service} backup db file"
+        backup_local_file=${backup_local_db_file}.tar.gz
+        SECONDS=0
+        tar czf ${backup_local_file} ${backup_local_db_file}
+        echo "Took $SECONDS seconds"
+        echo "Delete ${service} dump file"
+        rm ${backup_local_db_file}
+
+        # we do not do dump since it may encounter database locked
+        # compress sql dump
+        #### echo "Compress ${service} dump sql file"
+        #### dump_local_file=${dump_local_sql_file}.tar.gz
+        #### SECONDS=0
+        #### tar czf ${dump_local_file} ${dump_local_sql_file}
+        #### echo "Took $SECONDS seconds"
+        #### echo "Delete ${service} dump file"
+        #### rm ${dump_local_sql_file}
+
+        # delete backup sql and dump db from server
+        echo "Deleting from server ${service} files"
+        cmd="rm ${backup_distant_db_file}"
+        # we do not do dump since it may encounter database locked
+        #### cmd="rm ${backup_distant_db_file} && rm ${dump_sql_distant_file}"
+        sshpass -p "${SERVER_PASSWORD}" ssh ${SERVER_USERNAME}@${SERVER_ADDRESS} ${cmd}
+
+        # move to backup dir
+        echo "Moving to backup dir ${service} files"
+        mv ${backup_local_file} ${backup_dir}/
+        # we do not do dump since it may encounter database locked
+        #### mv ${dump_local_file} ${backup_dir}/
 
         echo
         sleep 2
 
     done
 
-    echo "Compressing ${wiki}  dir"
-    backup_local_file=${wiki}-${now}.tar.gz
+    if [ "$1" == "-f" ]; then
+        echo "Fast mode selected. Exiting"
+        exit 0
+    fi
+
+    echo "================"
+    echo "Backuping Forum ..."
+    echo "================"
+    echo
+
+    if [ -z "${MONGODB_DATABASE_PASSWORD}" ]; then
+        echo "Please define MONGODB_PASSWORD !"
+        exit 1
+    fi
+
+    backup_local_dir=nodebb-${now}
+    backup_local_file=nodebb-${now}.tar
+
+    echo "Backuping forum database"
+    if [ -d ${backup_local_dir} ]; then
+        rm -fr ${backup_local_dir}
+    fi
+    mkdir ${backup_local_dir}
+    SECONDS=0
+    echo "Mongodump command"
+    mongodump --host ${SERVER_ADDRESS} --port ${MONGODB_PORT} --db ${MONGODB_DATABASE_NAME} --out ${backup_local_dir} --gzip --authenticationMechanism SCRAM-SHA-256 --username ${MONGODB_DATABASE_USER} --password ${MONGODB_DATABASE_PASSWORD} --quiet
+    echo "Took $SECONDS seconds"
+
+    # tar dir to single file
+    SECONDS=0
+    echo "tar to single file"
+    tar cf ${backup_local_file} ${backup_local_dir}
+    echo "Took $SECONDS seconds"
+    rm -fr ${backup_local_dir}
+
+    # move to backup dir
+    echo "Moving to backup mongodb file"
+    mv ${backup_local_file} ${backup_dir}/
+
+    echo
+
+    echo "Bringing locally uploads files"
+    backup_local_directory=./uploads-${now}
+    if [ -d ${backup_local_directory} ]; then
+        rm -fr ${backup_local_directory}
+    fi
+    backup_distant_directory=/home/ubuntu/forum_nodebb/data/nodebb/uploads
+    SECONDS=0
+    sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_directory} ${backup_local_directory}
+    echo "Took $SECONDS seconds"
+
+    echo "Compressing uploads dir"
+    backup_local_file=uploads-${now}.tar.gz
     SECONDS=0
     tar -czf ${backup_local_file} ${backup_local_directory}
     echo "Took $SECONDS seconds"
     rm -fr ${backup_local_directory}
 
-    echo "Moving to backup dir ${wiki} file"
+    echo "Moving to backup dir uploads file"
     mv ${backup_local_file} ${backup_dir}/
 
     echo
 
+    echo "================"
+    echo "Backuping Wikis ..."
+    echo "================"
+    echo
+
+    for wiki in dokuwiki-data dokuwiki-data2 ; do
+
+        echo "Backuping ${wiki}..."
+        echo
+
+        backup_local_directory=./${wiki}-${now}
+        if [ -d ${backup_local_directory} ]; then
+            rm -fr ${backup_local_directory}
+        fi
+
+        # data/attic is too big and causes "broken pipe"
+        for item in data/pages data/media data/meta lib/plugins lib/tpl conf ; do
+
+            echo "Bringing locally ${wiki} ${item} files"
+            backup_local_item_directory=./${backup_local_directory}/${item//\//_}
+            mkdir -p ${backup_local_item_directory}
+            backup_distant_item_directory=/home/ubuntu/wiki_doku/${wiki}/${item}
+            SECONDS=0
+            sshpass -p "${SERVER_PASSWORD}" rsync -aqz ${SERVER_USERNAME}@${SERVER_ADDRESS}:${backup_distant_item_directory} ${backup_local_item_directory}
+            echo "Took $SECONDS seconds"
+
+            echo
+            sleep 2
+
+        done
+
+        echo "Compressing ${wiki}  dir"
+        backup_local_file=${wiki}-${now}.tar.gz
+        SECONDS=0
+        tar -czf ${backup_local_file} ${backup_local_directory}
+        echo "Took $SECONDS seconds"
+        rm -fr ${backup_local_directory}
+
+        echo "Moving to backup dir ${wiki} file"
+        mv ${backup_local_file} ${backup_dir}/
+
+        echo
+
+    done
+
+    echo
+
+    echo "================"
+    echo "Exporting to drive ..."
+    echo "================"
+    echo
+
+    echo "Moving artefacts to google drive..."
+    archive_dir=${now}
+    rclone copy ${backup_dir}/ ${GOOGLE_DRIVE}:${archive_dir}/ --bwlimit 2M --transfers 1 --checkers 2 --tpslimit 3 --fast-list --progress
+
+    # Removing artefacts from here
+    rm -fr ${backup_dir}
+
+    end_time=$(date +%s)
+    duration=$((end_time - start_time))
+
+    echo
+    echo "Script took $((duration / 60)) minutes $((duration % 60)) seconds."
+
+    echo "Sending report email to boss"
+    backup_done_date=$(date)
+    free_space_go=$(rclone about backup_diplomania: --json | jq -r '.free / 1000000000')
+    echo -e "Subject: backup was done !\n\nDate : ${backup_done_date}\n Free space: ${free_space_go} Go" | msmtp ${EMAIL_DEST}
+
+    # run endlessly
+    now=$(date +%s)
+    target=$(date -d "tomorrow 04:00" +%s)
+    sleep $(( target - now ))
+
 done
-
-echo
-
-echo "================"
-echo "Exporting to drive ..."
-echo "================"
-echo
-
-echo "Moving artefacts to google drive..."
-archive_dir=${now}
-rclone copy ${backup_dir}/ ${GOOGLE_DRIVE}:${archive_dir}/ --bwlimit 2M --transfers 1 --checkers 2 --tpslimit 3 --fast-list --progress
-
-# Removing artefacts from here
-rm -fr ${backup_dir}
-
-end_time=$(date +%s)
-duration=$((end_time - start_time))
-
-echo
-echo "Script took $((duration / 60)) minutes $((duration % 60)) seconds."
-
-# TODO run endlessly
-### now=$(date +%s)
-### target=$(date -d "tomorrow 04:00" +%s)
-### sleep $(( target - now ))
-
-# TODO : send email
-# mailutils msmtp msmtp-mta etc
-# echo "content" | mail -s "subject" <dest>
-
-# Re-enable screen saver
-
