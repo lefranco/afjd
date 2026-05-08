@@ -18,8 +18,8 @@ import config
 TYPE_GAME_EXPLAIN_CONV = {
     0: "Négo : pas de restriction, tout est possible !",
     1: "Blitz : pas de communication, tout est fermé !",
-    2: "NégoPublique : communication publique uniquement...",
-    3: "BlitzOuverte : comme Blitz avec ouverture du canal public (presse) pour organiser la partie sans faire action de jeu."
+    2: "Négo Publique : communication publique uniquement...",
+    3: "Blitz Ouverte : comme Blitz avec ouverture du canal public (presse) pour organiser la partie sans faire action de jeu."
 }
 
 
