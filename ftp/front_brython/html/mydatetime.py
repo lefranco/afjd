@@ -129,8 +129,8 @@ def strftime(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec, loc_hour, loc_m
 
     if year_first:
         if day_only:
-            return f"{dt_year:04}-{dt_month:02}-{dt_day:02} GMT ({loc_hour:02}:{loc_min:02})"
-        return f"{dt_year:04}-{dt_month:02}-{dt_day:02} {dt_hour:02}:{dt_min:02}:{dt_sec:02} GMT ({loc_hour:02}:{loc_min:02})"
+            return f"{dt_year:04}-{dt_month:02}-{dt_day:02} UTC ({loc_hour:02}:{loc_min:02})"
+        return f"{dt_year:04}-{dt_month:02}-{dt_day:02} {dt_hour:02}:{dt_min:02}:{dt_sec:02} UTC ({loc_hour:02}:{loc_min:02})"
     if day_only:
-        return f"{dt_day:02}-{dt_month:02}-{dt_year:04} GMT ({loc_hour:02}:{loc_min:02})"
-    return f"{dt_day:02}-{dt_month:02}-{dt_year:04} {dt_hour:02}:{dt_min:02}:{dt_sec:02} GMT ({loc_hour:02}:{loc_min:02})"
+        return f"{dt_day:02}-{dt_month:02}-{dt_year:04} UTC ({loc_hour:02}:{loc_min:02})"
+    return f"{dt_day:02}-{dt_month:02}-{dt_year:04} {dt_hour:02}:{dt_min:02}:{dt_sec:02} UTC ({loc_hour:02}:{loc_min:02})"
