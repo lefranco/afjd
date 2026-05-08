@@ -12,10 +12,10 @@ systemd-inhibit --why="Backup in progress" --mode=block bash -c "
 " &
 
 
-# sshpass needs to be installed on backup machine
-# sqlite3 needs to be installed on server
-# mongodb needs to be installed on backup machine
-# rclone needs to be installed on backup machine (and credentials in ~/.config/rclone/rclone.conf)
+# sshpass needs to be installed on backup machine (sudo apt install)
+# sqlite3 needs to be installed on server (sudo apt install)
+# mongodb needs to be installed on backup machine (can get very complicated)
+# rclone needs to be installed on backup machine (and credentials in ~/.config/rclone/rclone.conf - copy them from here is simpler)
 
 SERVER_USERNAME="ubuntu"
 SERVER_ADDRESS="37.59.100.228"
