@@ -68,7 +68,7 @@ def extract_frequentation_data():
 def readable(time_stamp):
 
     deadline_date = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-    date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S GMT')
+    date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S UTC')
     return date_desc
 
 
