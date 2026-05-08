@@ -1785,10 +1785,10 @@ def submit_orders():
             my_sub_panel3 <= html.DIV("Règles du vote d'arrêt de la partie", Class='note')
             rules = html.UL()
             rules <= html.LI("Le vote individuel est confidentiel mais le nombre de votes exprimés est public.")
-            rules <= html.LI("Seules les voix des joueurs encore en jeu comptent (ceux qui ont encore un centre et/ou une unité).")
+            rules <= html.LI("Seules les voix des joueurs encore en jeu comptent (ceux qui ont encore un centre).")
             rules <= html.LI("Les non votants sont considérés en faveur de la continuation de la partie.")
             rules <= html.LI("L'unanimité (pour l'arrêt de la partie) est requise pour que l'arrêt soit voté.")
-            rules <= html.LI("La décision est prise en attendant les ordres d'ajustement.")
+            rules <= html.LI("La décision est prise par l'arbitre manuellement en attendant les ordres d'ajustement.")
             rules <= html.LI("Quand un vote est en cours, la partie continue normalement.")
             rules <= html.LI("Les modalités d'un tournoi peuvent interdire l'arrêt de la partie avant une année de jeu spécifique.")
 
