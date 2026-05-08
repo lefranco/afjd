@@ -1632,7 +1632,7 @@ def game_master():
 
         deadline_form = html.FORM()
 
-        dl_gmt = html.DIV("ATTENTION : vous devez entrer une valeur en temps GMT.", Class='important')
+        dl_gmt = html.DIV("ATTENTION : vous devez entrer une valeur en temps UTC.", Class='important')
         special_legend = html.LEGEND(dl_gmt)
         deadline_form <= special_legend
         deadline_form <= html.BR()

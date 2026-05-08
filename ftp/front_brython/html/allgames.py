@@ -152,7 +152,7 @@ def create_game(json_dict):
 
         if input_deadline_hour.value != DEFAULT_DEADLINE_TIME:
             if not information_displayed_deadline_time:
-                alert(f"Attention, il est préférable d'éviter de dévier de l'heure des date limite 'standard' sur le site ({DEFAULT_DEADLINE_TIME}h GMT), car cela perturbe certains joueurs d'avoir des parties avec des DL différentes.")
+                alert(f"Attention, il est préférable d'éviter de dévier de l'heure des date limite 'standard' sur le site ({DEFAULT_DEADLINE_TIME}h UTC), car cela perturbe certains joueurs d'avoir des parties avec des DL différentes.")
                 information_displayed_deadline_time = True
 
     def display_vote_allowed_callback(_):
@@ -545,7 +545,7 @@ def create_game(json_dict):
     # deadline
 
     fieldset = html.FIELDSET()
-    legend_deadline_hour = html.LEGEND("heure de date limite (GMT)", title="Heure GMT de la journée à laquelle placer les dates limites")
+    legend_deadline_hour = html.LEGEND("heure de date limite (UTC)", title="Heure UTC de la journée à laquelle placer les dates limites")
     fieldset <= legend_deadline_hour
     input_deadline_hour = html.INPUT(type="number", value=deadline_hour if deadline_hour is not None else DEFAULT_DEADLINE_TIME, Class='btn-inside')
     input_deadline_hour.bind("click", display_deadline_time_callback)
@@ -1179,7 +1179,7 @@ def rectify_parameters_game():
     # deadline related
 
     fieldset = html.FIELDSET()
-    legend_deadline_hour = html.LEGEND("heure de date limite (GMT)", title="Heure GMT de la journée à laquelle placer les dates limites")
+    legend_deadline_hour = html.LEGEND("heure de date limite (UTC)", title="Heure UTC de la journée à laquelle placer les dates limites")
     fieldset <= legend_deadline_hour
     input_deadline_hour = html.INPUT(type="number", value=deadline_hour_loaded, Class='btn-inside')
     fieldset <= input_deadline_hour

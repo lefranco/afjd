@@ -515,7 +515,7 @@ def show_news():
 
     current_collected_value = news_content_table_loaded['raised']
 
-    label_overall = html.LABEL(f"Collecté à ce jour (selon la mise à jour à 6h00 GMT depuis le site HelloAsso) : {current_collected_value}€")
+    label_overall = html.LABEL(f"Collecté à ce jour (selon la mise à jour à 6h00 UTC depuis le site HelloAsso) : {current_collected_value}€")
     label_balance = html.LABEL(html.B(f"Jauge d'équilibre : {current_collected_value}€ / {BALANCE_NEEDED_VALUE}€: "), for_='balance_raised')
     gauge_balance = html.METER(id='balance_raised', value=current_collected_value, min=0, max=BALANCE_NEEDED_VALUE)
     label_comfort = html.LABEL(html.B(f"Jauge de confort : {current_collected_value}€ / {COMFORT_NEEDED_VALUE}€: "), for_='comfort_raised')
