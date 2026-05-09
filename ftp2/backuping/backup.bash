@@ -25,15 +25,6 @@ trap "exit" INT
 # Time of script execution
 start_time=$(date +%s)
 
-# Backup  time stamp
-now=$(date +%Y%m%d)
-
-# Only one possible parameter
-if [ ! "$1" == "-f" ]; then
-    echo "Use -f parameter for fast mode (only Flasks APIs)"
-    echo
-fi
-
 # Need server machine password
 if [ -z "${SERVER_PASSWORD}" ]; then
     echo "Please define SERVER_PASSWORD !"
@@ -45,6 +36,9 @@ if [ ! -d ./backups ]; then
 fi
 
 while true ; do  
+
+    # Backup time stamp
+    now=$(date +%Y%m%d)
 
     # Create a fresh backup dir
     backup_dir=./backups/${now}
@@ -260,6 +254,8 @@ while true ; do
     # run endlessly
     now=$(date +%s)
     target=$(date -d "tomorrow 04:00" +%s)
-    sleep $(( target - now ))
+    sleep_time=$(( target - now ))
+    echo "Falling asleep for ${sleep_time} sec."
+    sleep ${sleep_time}
 
 done
