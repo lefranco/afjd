@@ -872,11 +872,7 @@ def show_informations():
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
         role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
-
-        if role_icon_img:
-            col = html.TD(role_icon_img)
-        else:
-            col = html.TD()
+        col = html.TD(role_icon_img)
         row <= col
 
         role = play_low.VARIANT_DATA.roles[role_id]
@@ -932,11 +928,7 @@ def show_informations():
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
         role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
-
-        if role_icon_img:
-            col = html.TD(role_icon_img)
-        else:
-            col = html.TD()
+        col = html.TD(role_icon_img)
         row <= col
 
         role = play_low.VARIANT_DATA.roles[role_id]
@@ -1001,20 +993,20 @@ def show_informations():
         row = html.TR()
 
         # role flag
-        role = play_low.VARIANT_DATA.roles[role_id]
-        role_name = play_low.VARIANT_DATA.role_name_table[role]
-        role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
-
-        if role_icon_img:
-            col = html.TD(role_icon_img)
-        else:
-            col = html.TD()
+        col = html.TD()
+        if role_id is not None:
+            role = play_low.VARIANT_DATA.roles[role_id]
+            role_name = play_low.VARIANT_DATA.role_name_table[role]
+            role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
+            col <= role_icon_img
         row <= col
 
-        role = play_low.VARIANT_DATA.roles[role_id]
-        role_name = play_low.VARIANT_DATA.role_name_table[role]
-
-        col = html.TD(role_name)
+        # role name
+        col = html.TD()
+        if role_id is not None:
+            role = play_low.VARIANT_DATA.roles[role_id]
+            role_name = play_low.VARIANT_DATA.role_name_table[role]
+            col <= role_name
         row <= col
 
         # pseudo

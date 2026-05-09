@@ -6336,7 +6336,7 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
 
         # player_id only provided if not anonymous and delay only provided if player still in the game
-        late_list = [(o[1], o[2], o[3] if not game.anonymous else None, o[4], o[5]) for o in incidents_list if (o[1], o[3]) in current_players]
+        late_list = [(o[1] if not game.anonymous else None, o[2], o[3] if not game.anonymous else None, o[4], o[5]) for o in incidents_list if (o[1], o[3]) in current_players]
 
         del sql_executor
 
