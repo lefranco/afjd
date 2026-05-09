@@ -187,7 +187,7 @@ def create_game(json_dict):
 
         nonlocal information_displayed_vote_allowed
 
-        if (input_endgame_vote_allowed.checked and not information_displayed_vote_allowed) or (not  input_endgame_vote_allowed.checked and information_displayed_vote_allowed):
+        if (input_endgame_vote_allowed.checked and not information_displayed_vote_allowed) or (not input_endgame_vote_allowed.checked and information_displayed_vote_allowed):
             if not information_displayed_vote_allowed:
                 alert("Attention, le vote de fin de partie s'impose et n'a de sens que pour les parties relativement longues.")
                 information_displayed_vote_allowed = True

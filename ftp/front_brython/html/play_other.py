@@ -586,8 +586,6 @@ def show_position(advancement=None):
         if play_low.ROLE_ID is not None:
             play_low.stack_role_flag(buttons_right)
 
-        buttons_right <= html.H3("Position")
-
         input_refresh = html.INPUT(type="submit", value="Recharger la partie", Class='btn-inside')
         input_refresh.bind("click", callback_refresh)
         buttons_right <= input_refresh
@@ -596,8 +594,6 @@ def show_position(advancement=None):
 
         # button last moves
         play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, None, None, False)
-
-        buttons_right <= html.H3("Historique")
 
         if advancement_selected != min_possible_advancement:
             input_first = html.BUTTON("||<<", Class='btn-inside')
@@ -647,11 +643,8 @@ def show_position(advancement=None):
             input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}", Class='btn-inside')
             input_last.bind("click", lambda e, a=adv_sample: transition_display_callback(e, a))
             buttons_right <= input_last
-            if adv_sample + 5 < last_advancement:
-                buttons_right <= html.BR()
-                buttons_right <= html.BR()
-
-        buttons_right <= html.H3("Appariement")
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
         if pseudo is None:
 
@@ -688,8 +681,6 @@ def show_position(advancement=None):
                     form <= input_join_game
                     buttons_right <= form
                     buttons_right <= html.BR()
-
-        buttons_right <= html.H3("Divers")
 
         if orders_data_txt:
             input_show_orders_text = html.INPUT(type="submit", value="Visualiser les ordres en texte", Class='btn-inside')

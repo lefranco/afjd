@@ -1794,10 +1794,13 @@ def submit_orders():
 
             my_sub_panel3 <= rules
 
-    # notes now
+    if not play_low.VARIANT_DATA.name.startswith('standard'):
+        variant_information = html.DIV(Class='note')
+        variant_information <= "Des informations sur cette variante sont accessibles par le bouton en haut à droite (avec le nom de la variante)"
+        my_sub_panel3 <= variant_information
 
-    notes_title = html.H3("Prise de notes")
-    my_sub_panel3 <= notes_title
+    # notes now
+    my_sub_panel3 <= html.H3("Prise de notes")
 
     form = html.FORM()
 
