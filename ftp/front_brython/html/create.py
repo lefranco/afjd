@@ -19,7 +19,7 @@ import allgames
 OPTIONS = {
     'Editer les informations face à face': "Changer nouvelles du site pour les informations du face à face",
     'Créer plusieurs parties': "Créer des parties à partir d'un fichier CSV",
-    'Explications': "Explications sur la création de parties à partir d'un fichier CSV",
+    'Explications sur la création': "Explications sur la création de parties à partir d'un fichier CSV",
     'Mur de la honte': "Les joueurs qui ont abandonné une partie",
 }
 
@@ -725,7 +725,7 @@ def load_option(_, item_name):
         change_glorious()
     if item_name == 'Créer plusieurs parties':
         create_many_games()
-    if item_name == 'Explications':
+    if item_name == 'Explications sur la création':
         explain_stuff()
     if item_name == 'Mur de la honte':
         show_game_quitters()
