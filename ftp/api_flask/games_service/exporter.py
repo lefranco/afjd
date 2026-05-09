@@ -11,8 +11,9 @@ import argparse
 import typing
 import json
 import sys
-import requests
 import datetime
+
+import requests
 
 import lowdata
 import database
