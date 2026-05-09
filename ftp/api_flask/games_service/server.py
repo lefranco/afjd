@@ -2335,6 +2335,7 @@ class AllocationGame2Ressource(flask_restful.Resource):  # type: ignore
         if game is None:
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+        assert game is not None
 
         # anonymous game : no data
         if game.anonymous:
@@ -2345,13 +2346,10 @@ class AllocationGame2Ressource(flask_restful.Resource):  # type: ignore
 
         data = {str(a[1]): a[2] for a in allocations_list}
 
-        # find game master
-        assert game is not None
-        game_master_id = game.get_role(sql_executor, 0)
-
         del sql_executor
 
         return data, 200
+
 
 @API.resource('/player-allocations/<player_id>')
 class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
@@ -6310,7 +6308,7 @@ class PlayerGameDropoutsRessource(flask_restful.Resource):  # type: ignore
 class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
     """ GameIncidentsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, typing.Optional[int], int, float]]], int]:
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[typing.Optional[int], int, typing.Optional[int], int, float]]], int]:
         """
         Gets list of roles which have produced an incident for given game
         EXPOSED
@@ -8007,20 +8005,30 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # check creator rights
-        # get creator list
+        # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/creators"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
-        the_creators = req_result.json()
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
 
-        # check pseudo in creator list
-        if pseudo not in the_creators:
-            flask_restful.abort(403, msg="You do not seem to be site creator so you are not allowed get all players from tournament !")
+        sql_executor = database.SqlExecutor()
+
+        # the object tournament
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Tournament with identfier {tournament_id} doesn't exist")
+        assert tournament is not None
+
+        # check that user is the creator of the tournament
+        if user_id != tournament.get_director(sql_executor):
+            del sql_executor
+            flask_restful.abort(404, msg="You do not seem to be director of that tournament")
 
         sql_executor = database.SqlExecutor()
 
@@ -8044,10 +8052,6 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
             assert game is not None
-
-            # no anonymous game possible
-            if game.anonymous:
-                continue
 
             # get answer
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)

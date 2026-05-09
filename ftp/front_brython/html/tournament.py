@@ -1245,9 +1245,6 @@ def show_informations():
     MY_SUB_PANEL <= html.H4("Abandons")
     MY_SUB_PANEL <= incident_table3
 
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV("Attention : si des parties sont anonymes le classement est incomplet", Class='important')
-
 
 def create_tournament():
     """ create_tournament """
