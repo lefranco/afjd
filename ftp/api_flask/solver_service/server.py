@@ -11,14 +11,6 @@ import typing
 import json
 import subprocess
 
-import patch
-
-# Patch Werkzeug's host validation BEFORE importing Flask
-patch.patch_werkzeug_host_validation()
-
-# flake8: noqa: E402
-# pylint: disable=wrong-import-order
-# pylint: disable=wrong-import-position
 import waitress
 import flask
 import flask_cors
