@@ -38,20 +38,19 @@ Voici ce qui appliqué sur le site :
 # Cas des perdants et des gagnants
 ## Un perdant est un joueur qui a obtenu la marque _minimale_ sur la partie, il ne doit pas gagner de points (cela provoque un avertissement).
 ## Un gagnant est un joueur qui a obtenu la marque _maximale_ sur la partie, il ne doit pas perdre de points (cela provoque un avertissement).
-# Une partie incomplète (dans laquelle au moins un des joueurs est inconnu) n'est pas prise en compte.
+# Une partie incomplète (dans laquelle au moins un des joueurs est inconnu) est tout de même prise en compte en remplaçant les joueurs absents par un joueur arbitraire de ELO à ELO\_DEF.
 # Le changement de ELO d’un joueur sur la partie est déterminé par la formule suivante :
 ## k = max(KMAX/2, KMAX – nombre de parties jouées par (joueur avec son rôle) / K\_SLOPE)
 ## ELO(joueur avec son rôle) \+= k x nombre de joueurs de la partie \* (nombre de joueurs de la partie – 1) / 2 x [performance réalisée(joueur avec son rôle) – performance attendue(joueur avec son rôle)]
+## Cas particulier: si un abandon existe sur la partie avec ce pays
+### Le joueur gagne du ELO : pas de changement
+### Le joueur perd du ELO : la perte qu'aurait du subir le joueur est reportée au(x) joueur(s) qui ont abandonné sur le pays
 # Le ELO d’un joueur est minoré par ELO\_MIN (s’il est inférieur il est ramené à cette valeur).
 # Le *ELO global* d’un joueur est égal à la moyenne des ELO du joueur avec tous les rôles possibles (ou ELO\_DEF pour un rôle qui n’a pas été joué).
 
 
 (Attention)
 Seules les parties des variantes "standard" et "standard\_pds" sont éligibles pour le calcul du ELO.
-.
-Quand il manque un joueur dans une partie, on met provisoirement, juste pour le calcul, l'administrateur à sa place avec le ELO de ELO\_DEF.
-.
-On supprime toujours l'administrateur du résultat final du ELO.
 
 $ Valeur des constantes
 
