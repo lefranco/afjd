@@ -532,6 +532,9 @@ def recruiting_games():
     # store the list of games
     storage['GAME_LIST'] = ' '.join(games_list)
 
+    MY_SUB_PANEL <= html.DIV("Un remplacement sur une partie ne peut que faire gagner du ELO, jamais en perdre !", Class='important')
+    MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= html.DIV("Pour les parties en attente, la date limite est pour le démarrage de la partie (pas le rendu des ordres)", Class='note')
     MY_SUB_PANEL <= html.BR()
 
