@@ -27,7 +27,7 @@ FAQ_CONTENT_TABLE = {
     "Pour les parties 'Désordre Civil', celui-ci est-il toujours possible ?":
     "Non. Pas de DC si aucun joueur n'a mis d'ordre. Pas de DC au premier tour de jeu (printemps 1901 typiquement)",
 
-    "A qui sert la grâce ?":
+    "A quoi sert la grâce ?":
     "Cf. paragraphe précédent. Pour les parties en direct, un autre mécanisme force les choses après la grâce (typiquement une minute) petit à petit et aléatoirement.",
 
     "La D.L. est passée, je suis arbitre, je vois que tous les ordres sont là, mais la partie n'a pas avancé, au secours !":
@@ -46,6 +46,11 @@ FAQ_CONTENT_TABLE = {
       - Argent que la partie est finie sur échéance.<br>
       - Bleu clair que la partie est finie sur solo.<br>
       - Blanc que la partie est finie sur vote unanime d'arrêt.<br>
+    """,
+
+    "Est ce que je risque de perdre des point sau classement ELO si j'effectue un remplacement ?":
+    """
+    Non. Un joueur qui remplace ne perd pas de ELO, son eventuelle perte de points de ELO est reportée sur le ou les joueurs qui ont abandonné sur la partie.
     """,
 
     "Pourquoi certaines dates limites sont elles précédées du signe = ?":
