@@ -4,7 +4,7 @@
 """
 File : elo_scheduler.py
 
-ELO update
+ELO update (take care of replacements)
 """
 
 import typing
@@ -33,9 +33,6 @@ FORCED_VARIANT_NAME = 'standard'
 
 SESSION = requests.Session()
 
-# admin id
-ADDRESS_ADMIN = 1
-
 
 def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, typing.Any], games_results_dict: typing.Dict[str, typing.Dict[str, typing.Any]], games_dict: typing.Dict[str, typing.Any], elo_information: typing.List[str], commuter_account: str) -> typing.Tuple[typing.List[typing.List[typing.Any]], str]:
     """ returns elo_raw_list, teaser_text """
@@ -57,16 +54,6 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
     # rolename from number
     num2rolename = {n: variant_data.role_name_table[variant_data.roles[n]] for n in variant_data.roles if n >= 1}
 
-    # to measure times spent
-    dating_calculation_time = 0.
-    scoring_calculation_time = 0.
-    pseudo_calculation_time = 0.
-    performance_calculation_time = 0.
-    count_calculation_time = 0.
-    extract_calculation_time = 0.
-    expected_calculation_time = 0.
-    variation_calculation_time = 0.
-
     effective_roles = [r for r in variant_data.roles if r >= 1]
 
     # should be 7
@@ -87,29 +74,14 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
         centers_number_dict = game_data['centers_number']
         game_players_dict = game_data['players']
         classic = game_data['classic']
-
-        if len(game_players_dict) != len(effective_roles):
-
-            # message
-            elo_information.append(f"WARNING {game_name}: has missing player(s) but still proceed !!!!")
-            if VERIFY:
-                elo_information.append("-------------------")
-
-            # put admin as replacement
-            for r in effective_roles:
-                if r not in game_players_dict.values():
-                    game_players_dict[ADDRESS_ADMIN] = r
+        quitting_dict = game_data['quitting_dict']
 
         # convert time
-        before = time.time()
         if VERIFY:
             time_creation = datetime.datetime.fromtimestamp(game_start_time)
             time_creation_str = time_creation.strftime("%Y-%m-%d %H:%M:%S %f")
-        after = time.time()
-        dating_calculation_time += (after - before)
 
         # calculate scoring
-        before = time.time()
         raw_ratings = {num2rolename[n]: centers_number_dict[str(n)] if str(n) in centers_number_dict else 0 for n in variant_data.roles if n >= 1}
         ratings = dict(sorted(raw_ratings.items(), key=lambda i: i[1], reverse=True))
 
@@ -128,11 +100,7 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
             continue
 
         relevant_score_table = {r: s for r, s in score_table.items() if s > 0}
-        after = time.time()
-        scoring_calculation_time += (after - before)
 
-        # calculate performance
-        before = time.time()
         # get everyones's rank
         ranking_table = {r: len([ss for ss in relevant_score_table.values() if ss > s]) + 1 for r, s in relevant_score_table.items()}
         # get everyones's sharing
@@ -145,14 +113,8 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
         # for non scorers
         performed_table.update({r: 0 for r, s in score_table.items() if s <= 0})
 
-        after = time.time()
-        performance_calculation_time += (after - before)
-
         # get pseudos of players
-        before = time.time()
         pseudo_table = {num2rolename[rn]: num2pseudo[int(pn)] for pn, rn in game_players_dict.items()}
-        after = time.time()
-        pseudo_calculation_time += (after - before)
 
         # optimization
         memo = {}
@@ -164,28 +126,24 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
             player = pseudo_table[role_name]
             memo[num] = (role_name, player)
 
+        # replacers
+        replacers = [num2rolename[num] for num in quitting_dict.values()]
+
         # count games
-        before = time.time()
         for (role_name, player) in memo.values():
             if (player, role_name, classic) not in number_games_table:
                 number_games_table[(player, role_name, classic)] = 0
             number_games_table[(player, role_name, classic)] += 1
-        after = time.time()
-        count_calculation_time += (after - before)
 
         # extract ELO of players
-        before = time.time()
         rating_table = {}
         for (role_name, player) in memo.values():
             if (player, role_name, classic) not in elo_table:
                 elo_table[(player, role_name, classic)] = DEFAULT_ELO
             rating_table[role_name] = elo_table[(player, role_name, classic)]
-        after = time.time()
-        extract_calculation_time += (after - before)
 
         # calculate expected performance
         # here is where most time is spent
-        before = time.time()
         divider = num_players * (num_players - 1) / 2.
         expected_table = {}
         for (role_name, _) in memo.values():
@@ -195,8 +153,6 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
                     sigma += 1 / (1 + (10 ** ((rating_table[role_name2] - rating_table[role_name]) / D_CONSTANT)))
             sigma /= divider
             expected_table[role_name] = sigma
-        after = time.time()
-        expected_calculation_time += (after - before)
 
         if VERIFY:
             elo_information.append(f"{time_creation_str=} {game_name=} {classic=}")
@@ -216,7 +172,6 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
             elo_information.append("Effect :")
 
         # calculate effect on ELO
-        before = time.time()
         loosers = [r for r in score_table if r == min(score_table.values())]
         winners = [r for r in score_table if r == max(score_table.values())]
         for (role_name, player) in memo.values():
@@ -235,7 +190,35 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
             if VERIFY:
                 prev_elo = elo_table[(player, role_name, classic)]
 
-            elo_table[(player, role_name, classic)] += delta
+            if role_name in replacers and delta < 0:
+
+                # we have a quitter (or several)
+                for quitter_id, quitter_role_num in quitting_dict.items():
+                    quitter_role_name = num2rolename[quitter_role_num]
+                    if quitter_role_name == role_name:
+                        quitter_player = num2pseudo[int(quitter_id)]
+
+                        # log that we have a quitter
+                        elo_information.append(f"INFO {game_name}: {player} as {role_name} is replacer so {delta} passes to {quitter_player}")
+                        if quitter_player == player:
+                            elo_information.append("WARNING : quitter and player are the same !")
+
+                        # insert quitter in elo_table
+                        if (quitter_player, role_name, classic) not in elo_table:
+                            elo_table[(quitter_player, role_name, classic)] = DEFAULT_ELO
+                        elo_table[(quitter_player, role_name, classic)] += delta
+
+                        # insert quitter in number_games_table
+                        if (quitter_player, role_name, classic) not in number_games_table:
+                            number_games_table[(quitter_player, role_name, classic)] = 0
+                        number_games_table[(quitter_player, role_name, classic)] += 1
+
+                        # insert quitter in elo_change_table
+                        elo_change_table[(quitter_player, role_name, classic)] = (game_name, delta)
+
+            elif player != commuter_account:
+                elo_table[(player, role_name, classic)] += delta
+
             elo_change_table[(player, role_name, classic)] = (game_name, delta)
 
             if VERIFY:
@@ -246,25 +229,10 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
                 elo_table[(player, role_name, classic)] = MINIMUM_ELO
                 elo_information.append(f"INFORMATION {game_name}: {player}({role_name}) would have less than {MINIMUM_ELO} so forced to this value")
 
-            # no elo for admin
-            if player == num2pseudo[ADDRESS_ADMIN]:
-                del elo_table[(player, role_name, classic)]
-
-        after = time.time()
-        variation_calculation_time += (after - before)
-
         if VERIFY:
             elo_information.append("-------------------")
 
     elo_information.append(f"Number of games processed : {len(games_results_dict)}")
-    elo_information.append(f"Dating calculation time : {dating_calculation_time}")
-    elo_information.append(f"Scoring calculation time : {scoring_calculation_time}")
-    elo_information.append(f"Pseudo calculation time : {pseudo_calculation_time}")
-    elo_information.append(f"Performance calculation time : {performance_calculation_time}")
-    elo_information.append(f"Count calculation time : {count_calculation_time}")
-    elo_information.append(f"Extract calculation time : {extract_calculation_time}")
-    elo_information.append(f"Expected calculation time : {expected_calculation_time}")
-    elo_information.append(f"Variation calculation time : {variation_calculation_time}")
 
     lowdata.elapsed_then(elo_information, "Parsing games time")
 

@@ -8361,6 +8361,10 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
             dropouts_number = {q: len([qq for qq in game_dropouts if qq[2] == q]) for q in quitters}
             game_data['dropouts_number'] = dropouts_number
 
+            # get quits dict player_id -> role_id (a player can quit mor than one role)
+            quitting_dict = {d[2]: d[1] for d in game_dropouts}
+            game_data['quitting_dict'] = quitting_dict
+
             games_dict[game_name] = game_data
 
         del sql_executor
