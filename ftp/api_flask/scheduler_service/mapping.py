@@ -285,7 +285,7 @@ class Role:
 
 
 class EmergencyCenter:
-    """Emergency center for v1900 only"""
+    """Emergency center for v1900s only"""
     def __init__(self, role: Role, region: Region) -> None:
         self._role = role
         self._region = region
