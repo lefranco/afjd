@@ -48,7 +48,7 @@ VARIANT_NAMES_DICT = {
     'egeemonie': 6,
     'standard_pds': 7,
     'canton': 7,
-    'v1900': 7,
+    'v1900s': 7,
     'westeros': 7,
     'spiceislands': 7,
     'crepusculerome': 8,

@@ -19,7 +19,7 @@ _Canton_ : Damas possède une côte orientée Ouest.
 
 - Plus de deux côtes
 (Une région peut avoir plus de deux côtes spéciales.)
-_v1900_ : Espagne possède trois côtes : Ouest, Est et Nord.
+_v1900s_ : Espagne possède trois côtes : Ouest, Est et Nord.
 
 
 
@@ -66,7 +66,7 @@ _Standard pds_ : on continue après le solo.
 _Cold War_ : le solo requiert 17 centres au lieu des 14 "logiques".
 
 (Il peut arriver que le solo ne soit pas à la majorité absolue des centres, mais MOINS de centres.)
-_v1900_ : le solo requiert 18 centres au lieu des 20 "logiques". Dans ce cas le solo n'est validé qui si le nombre de centres n'est pas partagé.
+_v1900s_ : le solo requiert 18 centres au lieu des 20 "logiques". Dans ce cas le solo n'est validé qui si le nombre de centres n'est pas partagé.
 
 
 _
@@ -106,7 +106,7 @@ _Westeros_ : Personne ne peut construire en Port Réal Est et Ouest, même si un
 
 - Construction de secours (NON IMPLEMENTE POUR LE MOMENT)
 (Un pays peut avoir un centre de construction de secours.)
-_v1900_ : La Russie peut constuire en Sibérie sous certaines conditions.
+_v1900s_ : La Russie peut constuire en Sibérie sous certaines conditions.
 
 
 

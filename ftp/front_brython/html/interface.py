@@ -19,7 +19,7 @@ INTERFACE_TABLE = {
     'crowded': ['diplomania'],
     'coldwar': ['diplomania'],
     'coldwar_redux': ['diplomania'],
-    'v1900': ['diplomania'],
+    'v1900s': ['diplomania'],
     'westeros': ['diplomania'],
     'canton': ['diplomania'],
     'spiceislands': ['diplomania'],
