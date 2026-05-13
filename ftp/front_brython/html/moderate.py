@@ -31,7 +31,7 @@ OPTIONS = {
     'Récupérer un courriel': "Récupérer le courriel d'un utilisateur du site",
     # surveillance
     'Tous les ordres manquants': "Tous les ordres manquants sur les parties en cours",
-    'Pires récidivistes retard et abandon': "Pires récidivistes retard et abandon sur les parties en cours",
+    'Pires retardataires': "Pires retardataires sur les parties en cours",
     'Toutes les parties d\'un joueur': "Toutes les parties d\'un joueur du site",
     'Tous les joueurs de la partie': "Toutes les joueurs d'une partie du site",
     'Dernières soumissions d\'ordres': "Dernières soumissions d\'ordres sur les parties du site",
@@ -1291,38 +1291,19 @@ def all_missing_orders():
 def current_worst_annoyers():
     """ current_worst_annoyers """
 
-    MY_SUB_PANEL <= html.H3("Les pires récidivistes du retard ou de l'abandon dans les parties en cours")
+    MY_SUB_PANEL <= html.H3("Les retards dans les parties en cours")
 
     if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
-    games_dict = common.get_games_data(1, 1)  # ongoing
+    state = 1
+    games_dict = common.get_games_data(state, state)  # in the required state
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
     games_dict = dict(games_dict)
-
-    players_dict = common.get_players_data()
-    if not players_dict:
-        return
-
-    # get the link (allocations) of players
-    allocations_data = common.get_allocations_data(1, 1)  # ongoing
-    if not allocations_data:
-        alert("Erreur chargement allocations")
-        return
-
-    masters_alloc = allocations_data['game_masters_dict']
-
-    # gather game to master
-    game_master_dict = {}
-    for master_id, games_id in masters_alloc.items():
-        master = players_dict[str(master_id)]['pseudo']
-        for game_id in games_id:
-            if str(game_id) in games_dict:
-                game = games_dict[str(game_id)]['name']
-                game_master_dict[game] = master
+    advancement_dict = {v['name']: v['current_advancement'] for v in games_dict.values()}
 
     players_dict2 = common.get_players()
     if not players_dict2:
@@ -1336,71 +1317,67 @@ def current_worst_annoyers():
         alert("Erreur chargement des pires recidivistes du retard et de l'abandon dans les parties en cours")
         return
 
-    # reshape data
-    annoyers_dict = {}
-    for game_name, game_data in dict_worst_annoyers_data['games_dict'].items():
+    for game_name, game_incidents in sorted(dict_worst_annoyers_data.items(), key=lambda t: (- len(t[1]), t[0])):
 
-        for player_id_str, num_delays in game_data['delays_number'].items():
+        MY_SUB_PANEL <= html.H4(game_name)
 
-            if player_id_str not in annoyers_dict:
-                annoyers_dict[player_id_str] = {}
-                annoyers_dict[player_id_str]['delays'] = 0
-                annoyers_dict[player_id_str]['dropouts'] = 0
-            annoyers_dict[player_id_str]['delays'] += num_delays
+        count = {}
+        for player_id, duration, _ in game_incidents:
+            if player_id not in count:
+                count[player_id] = []
+            count[player_id].append(duration)
 
-            if 'games' not in annoyers_dict[player_id_str]:
-                annoyers_dict[player_id_str]['games'] = set()
-            annoyers_dict[player_id_str]['games'].add(game_name)
+        recap_table = html.TABLE()
 
-        for player_id_str, num_dropouts in game_data['dropouts_number'].items():
+        # header
+        thead = html.THEAD()
+        for field in ['rang', 'pseudo', 'retards', 'nombre', 'cumul', 'ratio']:
+            col = html.TD(field)
+            thead <= col
+        recap_table <= thead
 
-            if player_id_str not in annoyers_dict:
-                annoyers_dict[player_id_str] = {}
-                annoyers_dict[player_id_str]['delays'] = 0
-                annoyers_dict[player_id_str]['dropouts'] = 0
-            annoyers_dict[player_id_str]['dropouts'] += num_dropouts
+        rank = 1
+        for player_id in sorted(count.keys(), key=lambda r: (len(count[r]), max(count[r])), reverse=True):
+            row = html.TR()
 
-            if 'games' not in annoyers_dict[player_id_str]:
-                annoyers_dict[player_id_str]['games'] = set()
-            annoyers_dict[player_id_str]['games'].add(game_name)
-
-    annoyers_table = html.TABLE()
-
-    # the display order
-    fields = ['pseudo', 'dropouts', 'delays', 'games']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'dropouts': 'abandons', 'delays': 'retards', 'games': 'parties'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    annoyers_table <= thead
-
-    # force sort according to deadline (latest games first of course)
-    for player_id_str, data in sorted(annoyers_dict.items(), key=lambda p: (p[1]['dropouts'], p[1]['delays']), reverse=True):
-
-        if int(player_id_str) in num2pseudo:
-            pseudo = num2pseudo[int(player_id_str)]
-        else:
-            pseudo = "???"
-        data['pseudo'] = pseudo
-
-        row = html.TR()
-        for field in fields:
-
-            value = data[field]
-
-            if field == 'games':
-                value = ' '.join([str(n) for n in sorted(value)])
-
-            col = html.TD(value)
-
+            # rank
+            col = html.TD(rank)
             row <= col
 
-        annoyers_table <= row
+            # pseudo
+            col = html.TD()
+            pseudo_late = num2pseudo[player_id]
+            col <= pseudo_late
+            row <= col
 
-    MY_SUB_PANEL <= annoyers_table
+            # incidents
+            incidents_list = count.get(player_id, [])
+            col = html.TD(" ".join([f"{i}" for i in incidents_list]))
+            row <= col
+
+            # incidents number
+            incidents_number = len(count.get(player_id, []))
+            col = html.TD(f"{incidents_number}")
+            row <= col
+
+            # incidents total
+            incidents_total = sum(count.get(player_id, []))
+            col = html.TD(f"{incidents_total}")
+            row <= col
+
+            # ratio
+            nb_played = (advancement_dict[game_name] / 5) * 3
+            # avoid division by zero
+            if nb_played == 0:
+                nb_played = 1
+            ratio = int((incidents_number / nb_played) * 100)
+            col = html.TD(f"{ratio} %")
+            row <= col
+
+            recap_table <= row
+            rank += 1
+
+        MY_SUB_PANEL <= recap_table
 
 
 def show_player_games(pseudo_player, player_games_dict):
@@ -2329,7 +2306,7 @@ def load_option(_, item_name):
     # surveillance
     if item_name == 'Tous les ordres manquants':
         all_missing_orders()
-    if item_name == 'Pires récidivistes retard et abandon':
+    if item_name == 'Pires retardataires':
         current_worst_annoyers()
     if item_name == 'Toutes les parties d\'un joueur':
         show_player_games(None, [])

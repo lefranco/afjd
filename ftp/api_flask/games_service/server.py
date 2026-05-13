@@ -8207,11 +8207,42 @@ class CurrentWorstAnnoyersRessource(flask_restful.Resource):  # type: ignore
 
     def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
-        Get current worst annoyers (late or giving  up) in current games...
+        Get current worst annoyers late in current games...
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/current-worst-annoyers - GET - getting current annoyers ")
+        mylogger.LOGGER.info("/current-worst-annoyers - GET - getting current annoyers")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # check moderator rights
+
+        # get moderator list
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+        the_moderators = req_result.json()
+
+        # check pseudo in moderator list
+        if pseudo not in the_moderators:
+            flask_restful.abort(403, msg="You do not seem to be site moderator so you are not allowed to see cuerrent worst annoyers")
 
         sql_executor = database.SqlExecutor()
 
@@ -8219,10 +8250,8 @@ class CurrentWorstAnnoyersRessource(flask_restful.Resource):  # type: ignore
         games_list = games.Game.inventory(sql_executor)
         concerned_games_list = [g.identifier for g in games_list if g.current_state == 1]
 
-        games_dict = {}
+        games_incidents_dict = {}
         for game_id in concerned_games_list:
-
-            game_data: typing.Dict[str, typing.Any] = {}
 
             # get game
             game = games.Game.find_by_identifier(sql_executor, game_id)
@@ -8231,26 +8260,20 @@ class CurrentWorstAnnoyersRessource(flask_restful.Resource):  # type: ignore
             # get name
             game_name = game.name
 
-            # get delays
-            game_incidents = incidents.Incident.list_by_game_id(sql_executor, game_id)
-            delayers = {d[3] for d in game_incidents}
-            delays_number = {d: len([dd for dd in game_incidents if dd[3] == d]) for d in delayers}
-            game_data['delays_number'] = delays_number
+            # incidents_list : those who submitted orders after deadline
+            incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
 
-            # get dropouts
-            game_dropouts = dropouts.Dropout.list_by_game_id(sql_executor, game_id)
-            quitters = {d[2] for d in game_dropouts}
-            dropouts_number = {q: len([qq for qq in game_dropouts if qq[2] == q]) for q in quitters}
-            game_data['dropouts_number'] = dropouts_number
+            # all info
+            late_list = [(o[3], o[4], o[5]) for o in incidents_list]
 
-            if not (delays_number or dropouts_number):
+            if not late_list:
                 continue
 
-            games_dict[game_name] = game_data
+            games_incidents_dict[game_name] = late_list
 
         del sql_executor
 
-        data = {'games_dict': games_dict}
+        data = games_incidents_dict
         return data, 200
 
 
