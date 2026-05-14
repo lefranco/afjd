@@ -302,6 +302,9 @@ def create_account(json_dict):
 
     MY_SUB_PANEL <= html.H3("Création du compte")
 
+    MY_SUB_PANEL <= html.DIV("ATTENTION : Ce site est en accès libre, donc se créer un compte n'est vraiment utile qui si l'on veut jouer dans une partie.", Class='important')
+    MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= information_about_private_data()
     MY_SUB_PANEL <= html.BR()
 
