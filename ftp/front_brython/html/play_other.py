@@ -1064,7 +1064,7 @@ def show_informations():
 
     # header
     thead = html.THEAD()
-    for field in ['rang', 'role', 'pseudo', 'retards', 'nombre', 'cumul', 'ratio']:
+    for field in ['rang', 'role', 'pseudo', 'retards', 'nombre', 'cumul', 'pire', 'ratio']:
         col = html.TD(field)
         thead <= col
     recap_table <= thead
@@ -1108,6 +1108,11 @@ def show_informations():
         # incidents total
         incidents_total = sum(count.get(role_id, []))
         col = html.TD(f"{incidents_total}")
+        row <= col
+
+        # worst
+        worst = max(count.get(role_id, []))
+        col = html.TD(f"{worst}")
         row <= col
 
         # ratio
