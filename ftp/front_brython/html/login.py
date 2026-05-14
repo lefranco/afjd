@@ -387,5 +387,6 @@ def render(panel_middle):
     if login_panel:
         MY_SUB_PANEL <= html.H3("Identifiez-vous pour accéder aux ressources protégées")
         MY_SUB_PANEL <= login_panel
+        MY_SUB_PANEL <= html.DIV("ATTENTION : Ce site est en accès libre, donc se créer un compte n'est vraiment utile qui si l'on veut jouer dans une partie.", Class='important')
 
     PANEL_MIDDLE <= MY_SUB_PANEL
