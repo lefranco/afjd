@@ -353,6 +353,9 @@ def show_rating_performance(classic, role_id):
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par performance")
         MY_SUB_PANEL <= html.DIV("Ce classement est un ELO - il prend en compte le résultat des joueurs sur les parties par rapport aux autres", Class='important')
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("ATTENTION : remplacer dans une partie immunise contre une perte de ELO et peut donc être très profitable !", Class='important')
+        MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV(f"Mode de jeu sélectionné {'classique' if classic else 'blitz'}")
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= switch_mode_button
