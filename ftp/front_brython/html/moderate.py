@@ -1317,9 +1317,9 @@ def current_worst_annoyers():
         alert("Erreur chargement des pires recidivistes du retard et de l'abandon dans les parties en cours")
         return
 
-    for game_name, game_incidents in sorted(dict_worst_annoyers_data.items(), key=lambda t: (- len(t[1]), t[0])):
+    for game_name, game_incidents in sorted(dict_worst_annoyers_data.items(), key=lambda t: t[0]):
 
-        MY_SUB_PANEL <= html.H4(game_name)
+        MY_SUB_PANEL <= html.H4(f"{game_name} ({advancement_dict[game_name]} résolutions)")
 
         count = {}
         for player_id, duration, _ in game_incidents:
