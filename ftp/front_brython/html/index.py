@@ -92,20 +92,7 @@ MENU_LEFT <= MENU_SELECTION
 ITEM_NAME_SELECTED = list(OPTIONS.keys())[0]
 
 IP_TIMEOUT_SEC = 7
-
-
-def read_timezone():
-    """ read_timezone """
-
-    time_stamp = time()
-
-    # Javascript Date constructor
-    date = window.Date.new
-    full_date = date(time_stamp * 1000).toString()
-    timezone_value = ' '.join(full_date.split(' ')[5:])
-
-    # store it
-    storage['TIMEZONE'] = timezone_value
+LOCALIZATION_TIMEOUT_SEC = 7
 
 
 # reading the IP in a non disruptive way
@@ -125,6 +112,40 @@ def read_ip():
 
     url = "https://ident.me"
     ajax.get(url, blocking=False, timeout=IP_TIMEOUT_SEC, oncomplete=store_ip, ontimeout=no_ip)
+
+
+# reading the localization
+def read_localization_data():
+    """ read_localization_data """
+
+    def store_localization(req):
+        if req.status != 200:
+            # Problem getting localization
+            return
+        try:
+            localization_data = loads(req.text)
+        except:  # noqa: E722 pylint: disable=bare-except
+            return
+
+        # now we store all data
+        city = localization_data.get('city', '?')
+        region = localization_data.get('region', '?')
+        country_name = localization_data.get('country_name', '?')
+        storage['LOCALIZATION'] = f"{city}, {region}, {country_name}"
+
+        timezone = localization_data.get('timezone', '?')
+        utc_offset = localization_data.get('utc_offset', '?')
+        storage['TIMEZONE'] = f"{timezone}, {utc_offset}"
+
+    def no_localization():
+        # Failed to get localization (timeout)
+        pass
+
+    if 'IPADDRESS' not in storage:
+        return
+    ip_value = storage['IPADDRESS']
+    url = f"https://ipapi.co/{ip_value}/json/"
+    ajax.get(url, blocking=False, timeout=LOCALIZATION_TIMEOUT_SEC, oncomplete=store_localization, ontimeout=no_localization)
 
 
 def check_event(event_name):
@@ -366,11 +387,11 @@ def load_option(_, item_name):
     MENU_LEFT <= html.SMALL("Testé avec Firefox.")
 
 
-# we update timezone now
-read_timezone()
-
 # we update ip now
 read_ip()
+
+# we update localization from IP
+read_localization_data()
 
 # get site image
 get_site_image()

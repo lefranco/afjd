@@ -1091,17 +1091,23 @@ def send_submission_data():
             else:
                 alert("Réponse du serveur imprévue et non documentée")
 
+    # must have a localization (should be the case)
+    localization = '???'
+    if 'LOCALIZATION' in storage:
+        localization = storage['LOCALIZATION']
+
     # must have a timezone (should be the case)
-    time_zone = '?'
+    time_zone = '???'
     if 'TIMEZONE' in storage:
         time_zone = storage['TIMEZONE']
 
     # must have an IP (should be the case)
-    ip_address = '?'
+    ip_address = '???'
     if 'IPADDRESS' in storage:
         ip_address = storage['IPADDRESS']
 
     json_dict = {
+        'localization': localization,
         'time_zone': time_zone,
         'ip_address': ip_address
     }

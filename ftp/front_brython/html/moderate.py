@@ -35,7 +35,8 @@ OPTIONS = {
     'Toutes les parties d\'un joueur': "Toutes les parties d\'un joueur du site",
     'Tous les joueurs de la partie': "Toutes les joueurs d'une partie du site",
     'Dernières soumissions d\'ordres': "Dernières soumissions d\'ordres sur les parties du site",
-    'Affichage fuseaux horaires': "Afficher les fuseaux horaires utilisateurs du site",
+    'Affichage localisations': "Afficher les localisations des utilisateurs du site",
+    'Affichage fuseaux horaires': "Afficher les fuseaux horaires des utilisateurs du site",
     'Vérification adresses IP': "Détecter les doubons d'adresses IP des utilisateurs du site",
     'Vérification courriels': "Détecter les doubons de courriels des utilisateurs du site",
     # management
@@ -1815,6 +1816,62 @@ def show_last_submissions():
     MY_SUB_PANEL <= players_table
 
 
+def show_localizations():
+    """ show_localizations """
+
+    MY_SUB_PANEL <= html.H3("Vérification des localizations à la soumission d'ordres")
+
+    if not common.check_modo():
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    submission_data_table = common.get_submission_data_table()
+    if not submission_data_table:
+        return
+
+    localizations_table = submission_data_table['localizations_list']
+
+    players_table = html.TABLE()
+
+    fields = ['pseudo', 'localization']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'localization': 'Localisation', }[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for data in sorted(localizations_table, key=lambda c: num2pseudo[c[0]].upper()):
+
+        row = html.TR()
+        for field in fields:
+
+            value = ''
+
+            if field == 'pseudo':
+                value = num2pseudo[data[0]]
+
+            if field == 'localization':
+                value = data[1]
+
+            col = html.TD(value)
+
+            row <= col
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
+
+
 def show_time_zones():
     """ show_time_zones """
 
@@ -2319,6 +2376,8 @@ def load_option(_, item_name):
         show_players_game()
     if item_name == 'Dernières soumissions d\'ordres':
         show_last_submissions()
+    if item_name == 'Affichage localisations':
+        show_localizations()
     if item_name == 'Affichage fuseaux horaires':
         show_time_zones()
     if item_name == 'Vérification adresses IP':
