@@ -35,6 +35,7 @@ import ratings3
 import teasers
 import events
 import registrations
+import localizations
 import timezones
 import addresses
 import submissions
@@ -127,6 +128,7 @@ REGISTRATION_UPDATE_PARSER.add_argument('player_id', type=int, required=True)
 REGISTRATION_UPDATE_PARSER.add_argument('value', type=int, required=True)
 
 DATA_SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
+DATA_SUBMISSION_PARSER.add_argument('localization', type=str, required=True)
 DATA_SUBMISSION_PARSER.add_argument('time_zone', type=str, required=True)
 DATA_SUBMISSION_PARSER.add_argument('ip_address', type=str, required=True)
 
@@ -2681,13 +2683,14 @@ class SubmissionDataRessource(flask_restful.Resource):  # type: ignore
 
         # gather data
 
+        localizations_list = localizations.Localization.inventory(sql_executor)
         time_zones_list = timezones.Timezone.inventory(sql_executor)
         ip_addresses_list = addresses.Address.inventory(sql_executor)
         submissions_list = submissions.Submission.inventory(sql_executor)
 
         del sql_executor
 
-        data = {'time_zones_list': time_zones_list, 'ip_addresses_list': ip_addresses_list, 'submissions_list': submissions_list}
+        data = {'localizations_list': localizations_list, 'time_zones_list': time_zones_list, 'ip_addresses_list': ip_addresses_list, 'submissions_list': submissions_list}
         return data, 200
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
@@ -2697,8 +2700,9 @@ class SubmissionDataRessource(flask_restful.Resource):  # type: ignore
         """
 
         args = DATA_SUBMISSION_PARSER.parse_args(strict=True)
-        time_zone = args['time_zone']
-        ip_address = args['ip_address']
+        localization_sent = args['localization']
+        time_zone_sent = args['time_zone']
+        ip_address_sent = args['ip_address']
 
         mylogger.LOGGER.info("/submission_data- POST - stores a timezone,  ipaddress and submission")
 
@@ -2729,11 +2733,15 @@ class SubmissionDataRessource(flask_restful.Resource):  # type: ignore
         player_id = player.identifier
 
         # store a time zone for player
-        timezone = timezones.Timezone(player_id, time_zone)
-        timezone.update_database(sql_executor)
+        localization = localizations.Localization(player_id, localization_sent)
+        localization.update_database(sql_executor)
+
+        # store a time zone for player
+        time_zone = timezones.Timezone(player_id, time_zone_sent)
+        time_zone.update_database(sql_executor)
 
         # store an ip address for player
-        address = addresses.Address(ip_address, player_id)
+        address = addresses.Address(ip_address_sent, player_id)
         address.update_database(sql_executor)
 
         # store a last submission date for player
@@ -2742,7 +2750,7 @@ class SubmissionDataRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor.commit()
 
-        data = {'pseudo': pseudo, 'msg': 'Ok Time zone, IP address and submission stored'}
+        data = {'pseudo': pseudo, 'msg': 'Ok, Localization, Time zone, IP address and submission stored'}
         return data, 200
 
 
@@ -3167,11 +3175,10 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
-
-        for player in players.Player.inventory(sql_executor):
-            player.update_database(sql_executor)
-
-        sql_executor.commit()
+        
+        # TODO
+        
+        #  sql_executor.commit()
 
         del sql_executor
 
