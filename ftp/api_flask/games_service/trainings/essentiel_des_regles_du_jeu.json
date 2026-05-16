@@ -57,7 +57,7 @@
 {
     "title": "Particularités de la carte standard 2/2", 
     "type": "submit",
-    "introduction" : "Suède et Danemark sont adjacents. Une armée ou une flotte peut aller de l'un à l'autre et vice-versa. Une flotte en Mer Baltique ne peut pas aller directement en Skaggerak. Le Danemark n'est pas adjacent à Berlin.<br><br><b>Essayez donc d'ordonner le mouvement Baltique -> Skaggerak...puis ordonnez à la flotte d'aller en Suède.</b>",
+    "introduction" : "Une flotte en Mer Baltique ne peut pas aller directement en Skaggerak. Le Danemark n'est pas adjacent à Berlin.<br><br><b>Essayez donc d'ordonner le mouvement Baltique -> Skaggerak...puis ordonnez à la flotte d'aller en Suède.</b>",
     "role_id" : 3,
     "variant_name" : "standard",
     "game_parameters_current_advancement": 2, 
