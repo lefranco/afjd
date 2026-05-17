@@ -128,7 +128,7 @@ REGISTRATION_UPDATE_PARSER.add_argument('player_id', type=int, required=True)
 REGISTRATION_UPDATE_PARSER.add_argument('value', type=int, required=True)
 
 DATA_SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
-DATA_SUBMISSION_PARSER.add_argument('localization', type=str, required=True)
+DATA_SUBMISSION_PARSER.add_argument('localization', type=str, required=False)  # TODO put True
 DATA_SUBMISSION_PARSER.add_argument('time_zone', type=str, required=True)
 DATA_SUBMISSION_PARSER.add_argument('ip_address', type=str, required=True)
 
@@ -683,6 +683,9 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
         # remove registration to all event
         registrations.Registration.delete_by_player_id(sql_executor, player_id)
+
+        # delete player from localization table
+        localizations.Localization.delete_by_player_id(sql_executor, player_id)
 
         # delete player from timezone table
         timezones.Timezone.delete_by_player_id(sql_executor, player_id)
@@ -2701,6 +2704,8 @@ class SubmissionDataRessource(flask_restful.Resource):  # type: ignore
 
         args = DATA_SUBMISSION_PARSER.parse_args(strict=True)
         localization_sent = args['localization']
+        if localization_sent is None:  # TODO REMOVE
+            localization_sent = "?!?"
         time_zone_sent = args['time_zone']
         ip_address_sent = args['ip_address']
 
@@ -2732,7 +2737,7 @@ class SubmissionDataRessource(flask_restful.Resource):  # type: ignore
 
         player_id = player.identifier
 
-        # store a time zone for player
+        # store a localization for player
         localization = localizations.Localization(player_id, localization_sent)
         localization.update_database(sql_executor)
 
@@ -3176,7 +3181,7 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
         
-        # TODO
+        # Insert usefule code here
         
         #  sql_executor.commit()
 
