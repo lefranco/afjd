@@ -1,0 +1,326 @@
+{
+"title": "04 Difficultés des différentes variantes implémentées sur le site",
+"slides": 
+[
+
+{
+    "title": "Standard", 
+    "type": "submit",
+"introduction" : "Une armée en Danemark peut aller en Suède et réciproquement. Ordonnez à l'armée de réaliser le mouvement...",
+    "role_id" : 6,
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"6": [[1, 20]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 1, 20, 0, 62]] }
+},
+
+{
+    "title": "Coldwar & Coldwar Rédux 1/2", 
+    "type": "submit",
+"introduction" : "Une flotte en Mer du Nord peut aller en Suède et réciproquement. Ordonnez à la flotte de réaliser le mouvement...",
+    "role_id" : 1,
+    "variant_name" : "coldwar",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"1": [[2, 54]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 1, 54, 0, 81]] }
+},
+
+{
+    "title": "Coldwar & Coldwar Rédux 2/2", 
+    "type": "adjudicate",
+"introduction" : "Une flotte en Ouest Canadien ne peut pas aller en Groenland et réciproquement. Demandez la résolution...",
+    "role_id" : 1,
+    "variant_name" : "coldwar",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"1": [[2, 98]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 98, 0, 34]] }
+},
+
+{
+    "title": "Hundred 1/2", 
+    "type": "submit",
+"introduction" : "Londres et calais sont voisins. Faites traverser la Manche à l'armée à Londres'...",
+    "role_id" : 1,
+    "variant_name" : "hundred",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {"11": 1},
+        "dislodged_ones": {},
+        "units":  {"1": [[1, 23]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 1, 23, 0, 9]] }
+},
+
+{
+    "title": "Hundred 1/2", 
+    "type": "adjudicate",
+"introduction" : "Londres et calais sont voisins. Demandez la résolution...",
+    "role_id" : 1,
+    "variant_name" : "hundred",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units":  {"1": [[1, 23], [1, 9]], "2": [[1, 32], [2, 28]]}, 
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 3, 23, 9, 0], [0, 0, 4, 9, 0, 0], [0, 0, 1, 28, 0, 9], [0, 0, 2, 32, 28, 9]] }
+},
+
+{
+    "title": "Cold War Rédux (et pas Cold War)", 
+    "type": "submit",
+"introduction" : "Yougoslavie et Grèce sont voisins par flotte car l'Albanie n'existe pas. Faites traverser l'Albanie à la flotte de Grèce...",
+    "role_id" : 4,
+    "variant_name" : "coldwar_redux",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units":  {"4": [[2, 90]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 1, 90, 0, 33]] }
+},
+
+{
+    "title": "Méditerranée 1/2", 
+    "type": "submit",
+"introduction" : "Le mouvement Baléares vers Tarraconaise semble possible mais ne l'est pas, surtout si la flotte en Mer Ligurienne est inamicale. Tentez le déplacement pour voir...",
+    "role_id" : 1,
+    "variant_name" : "mediterranee",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units":  {"1": [[1, 10]], "2": [[2, 42]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 1, 10, 0, 73]] }
+},
+
+{
+    "title": "Méditerranée 1/2", 
+    "type": "submit",
+"introduction" : "La flotte en Mer Ligurienne a maintenant disparu. Tentez à nouveau le déplacement ... puis ordnooez à l'unité de tenir.",
+    "role_id" : 1,
+    "variant_name" : "mediterranee",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units":  {"1": [[1, 10]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 4, 10, 0, 0]] }
+},
+
+{
+    "title": "Egéemonie", 
+    "type": "submit",
+"introduction" : "Dans la même logique que précédemment, une armée a besoin d'un convoi pour se déplacer entre Chiros et Lesbons d'une part, entre Samos et Ephèse d'autre part. Tentez les déplacements...",
+    "role_id" : 3,
+    "variant_name" : "egeemonie",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {"3": [[1, 52], [1, 59]], "5": [[2, 82]], "6": [[2, 63]]},
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 1, 52, 0, 51], [0, 0, 1, 59, 0, 48]] }
+},
+
+{
+    "title": "Canton", 
+    "type": "submit",
+"introduction" : "Dans cette variante une petite difficulté pourraît consister dans les canaux. Déplacez les flottes turques ainsi : Mer Rouge -> Egypte -> Méditerranée -> Constantinople -> Mer Noire...",
+    "role_id" : 7,
+    "variant_name" : "canton",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {"9": 7},
+        "dislodged_ones": {},
+        "units": {"7": [[2, 58], [2, 27], [2, 50], [2, 21]]},
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 1, 58, 0, 27], [0, 0, 1, 27, 0, 50], [0, 0, 1, 50, 0, 21], [0, 0, 1, 21, 0, 11]] }
+},
+
+{
+    "title": "v1900s", 
+    "type": "adjudicate",
+"introduction" : "Cette variante comporte plusieurs particularités, mais la plus déroutante reste la fusion entre la Mer Rouge et la mer Atliantique. Demandez la résolution dans la situation suivante pour bien en prendre la mesure.",
+    "variant_name" : "v1900s",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {"13": 3},
+        "dislodged_ones": {},
+        "units": {"3": [[2, 50], [2, 28]], "7": [[1, 61], [2, 26]]},
+        "forbiddens": []
+    },
+    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 61, 0, 28], [0, 0, 2, 26, 61, 28], [0, 0, 3, 50, 28, 0], [0, 0, 4, 28, 0, 0]] }
+},
+
+{
+    "title": "Westeros", 
+    "type": "submit",
+"introduction" : "Cette variante implémente des zones libres c'est à dire que les constructions y sont interdites. Tentez la construction en PortRéal (Est ou Ouest) puis une flotte en Peydragon",
+    "role_id" : 6,
+    "variant_name" : "westeros",
+    "game_parameters_current_advancement": 4, 
+    "position" : {
+        "ownerships":  {"6": 6, "8": 6, "14": 6, "15": 6},
+        "dislodged_ones": {},
+        "units": {"6": [[1, 23], [2, 70], [2, 11]]},
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[[0, 2, 18, 6, 0, 0]], "orders": [[0, 0, 8, 18, 0, 0]] }
+},
+
+{
+    "title": "Spice", 
+    "type": "submit",
+"introduction" : "Cette variante ne présente aucune difficulté. Vous jouez Brunéï, sortez vos flottes ailleurs qu'en Mer du Sulu (Sus)",
+    "role_id" : 1,
+    "variant_name" : "spiceislands",
+    "game_parameters_current_advancement": 0, 
+    "position": {
+        "ownerships": {"3": 5, "4": 1, "5": 6, "7": 5, "8": 7, "9": 7, "10": 6, "11": 7, "12": 2, "13": 3, "16": 4, "18": 3, "21": 4, "22": 2, "23": 1, "25": 4, "26": 5, "29": 6, "31": 3, "32": 2, "33": 1}, 
+        "dislodged_ones": {}, 
+        "units": {"1": [[2, 6], [2, 51], [2, 75]], "2": [[2, 50], [2, 74], [2, 85]], "3": [[2, 29], [2, 73], [2, 88]], "4": [[2, 41], [2, 49], [2, 55]], "5": [[1, 3], [1, 56], [2, 84]], "6": [[2, 7], [2, 23], [2, 60]], "7": [[1, 22], [1, 24], [2, 18]]}, 
+        "forbiddens": []
+    }, 
+    "expected_orders": {"fake_units": [], "orders": [[0, 0, 1, 6, 0, 12], [0, 0, 1, 75, 0, 69], [0, 0, 1, 51, 0, 38]] }
+},
+
+{
+    "title": "Crépusculde de Rome 1/2", 
+    "type": "submit",
+"introduction" : "Cette variante introduit une zone de steppes (avec explication sur la carte). Ordonnez la chaîne Bachikiristan -> Stepp 3 -> Steppe 1 -> Pologne",
+    "role_id" : 5,
+    "variant_name" : "crepusculerome",
+    "game_parameters_current_advancement": 0, 
+    "position": {
+        "ownerships": {"3": 5, "4": 1, "5": 6, "7": 5, "8": 7, "9": 7, "10": 6, "11": 7, "12": 2, "13": 3, "16": 4, "18": 3, "21": 4, "22": 2, "23": 1, "25": 4, "26": 5, "29": 6, "31": 3, "32": 2, "33": 1}, 
+        "dislodged_ones": {}, 
+        "units": {"5": [[1, 77], [1, 89], [1, 87]]}, 
+        "forbiddens": []
+    }, 
+    "expected_orders": {"fake_units": [], "orders":  [[0, 0, 1, 77, 0, 89], [0, 0, 1, 87, 0, 73], [0, 0, 1, 89, 0, 87]] }
+},
+
+{
+    "title": "Crépusculde de Rome 2/2", 
+    "type": "submit",
+"introduction" : "Constantinople semble s'étendre sur deux régions. Ordonnez à vos deux flottes d'y réaliser un stand-off pour en empĉher l'accès au joueur Africain",
+    "role_id" : 7,
+    "variant_name" : "crepusculerome",
+    "game_parameters_current_advancement": 0, 
+    "position": {
+        "ownerships": {"13": 7}, 
+        "dislodged_ones": {}, 
+        "units": {"7": [[2, 103], [2, 97]], "8": [[2, 96]]}, 
+        "forbiddens": []
+    }, 
+    "expected_orders": {"fake_units": [], "orders":  [[0, 0, 1, 97, 0, 26], [0, 0, 1, 103, 0, 26]] }
+},
+
+{
+    "title": "Succession Autriche", 
+    "type": "submit",
+"introduction" : "Milan est un centre Autrichien, entre le Piémont et la partie en Italie appartenant à l'Espagnol. Contruisez-y une armée (en tant que joueur Autrichien)",
+    "role_id" : 1,
+    "variant_name" : "successionautriche",
+    "game_parameters_current_advancement": 4, 
+    "position": {
+        "ownerships": {"20": 1, "29": 1}, 
+        "dislodged_ones": {}, 
+        "units": {"1": [[2, 88]]}, 
+        "forbiddens": []
+    }, 
+    "expected_orders" : {"fake_units":[[0, 1, 50, 1, 0, 0]], "orders": [[0, 0, 8, 50, 0, 0]] }
+},
+
+{
+    "title": "Moderne", 
+    "type": "submit",
+"introduction" : "La variante comporte plusieurs canaux qu'il convient de bien repérer sur la carte. Déplacez les flottes Ukrainiennes ainsi : Héligoland  -> Hambourg -> Bornholm ; Mer Rouge -> Le Caire -> Méditerranée Orientale; Mer Noire Orientale -> Rostock -> Volga -> Mer Caspienne",
+    "role_id" : 8,
+    "variant_name" : "moderne",
+    "game_parameters_current_advancement": 0, 
+    "position": {
+        "ownerships": {}, 
+        "dislodged_ones": {}, 
+        "units":  {"8": [[2, 105], [2, 29], [2, 126], [2, 54], [2, 125], [2, 9], [2, 68]]},
+        "forbiddens": []
+    }, 
+    "expected_orders": {"fake_units": [], "orders":  [[0, 0, 1, 105, 0, 29], [0, 0, 1, 29, 0, 106], [0, 0, 1, 125, 0, 9], [0, 0, 1, 9, 0, 68], [0, 0, 1, 68, 0, 102], [0, 0, 1, 126, 0, 54], [0, 0, 1, 54, 0, 123]] }
+},
+
+{
+    "title": "Crowded", 
+    "type": "submit",
+"introduction" : "Cette variante ne comporte pas de piège. Pas de dispute pour la Belgique en début de partie puisque c'est un centre de depart du joueur du Bénélux. Ordonnez pour lui une attaque de la France en règle : Belgique -> Picardie ; Rhénanie -> Bourgogne ; Hollande -> Belgique",
+    "role_id" : 9,
+    "variant_name" : "crowded",
+    "game_parameters_current_advancement": 0, 
+    "position": {
+        "ownerships": {"1": 7, "2": 9, "3": 3, "4": 2, "5": 5, "6": 8, "7": 7, "8": 10, "9": 1, "10": 8, "11": 9, "12": 3, "13": 1, "14": 1, "15": 2, "16": 6, "17": 3, "18": 4, "19": 10, "20": 2, "21": 11, "22": 4, "23": 8, "24": 8, "25": 6, "26": 7, "27": 11, "28": 6, "29": 10, "30": 5, "31": 11, "32": 4, "33": 5, "34": 6, "35": 9}, 
+        "dislodged_ones": {}, 
+        "units": {"1": [[1, 36], [2, 22], [2, 34]], "2": [[1, 37], [1, 47], [2, 14]], "3": [[1, 10], [1, 40], [2, 33]], "4": [[1, 52], [1, 70], [2, 42]], "5": [[1, 15], [1, 71], [2, 64]], "6": [[1, 39], [1, 73], [2, 56], [2, 81]], "7": [[1, 19], [1, 59], [2, 4]], "8": [[1, 16], [1, 55], [2, 28], [2, 54]], "9": [[1, 30], [1, 53], [2, 9]], "10": [[1, 62], [2, 20], [2, 46]], "11": [[1, 60], [2, 50], [2, 65]]}, 
+        "forbiddens": []
+    }, 
+    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 1, 30, 0, 9], [0, 0, 1, 9, 0, 48], [0, 0, 1, 53, 0, 17]] }
+},
+
+{
+    "title": "Chaos", 
+    "type": "submit",
+"introduction" : "Cette variante met un joueur sur chaque centre, mais elle commence par une phase de construction. Construisez une flotte en tant que joueur de Londres",
+    "role_id" : 13,
+    "variant_name" : "chaos",
+    "game_parameters_current_advancement": -1, 
+    "position": {
+        "ownerships": {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "11": 11, "12": 12, "13": 13, "14": 14, "15": 15, "16": 16, "17": 17, "18": 18, "19": 19, "20": 20, "21": 21, "22": 22, "23": 23, "24": 24, "25": 25, "26": 26, "27": 27, "28": 28, "29": 29, "30": 30, "31": 31, "32": 32, "33": 33, "34": 34}, 
+        "dislodged_ones": {}, 
+        "units":  {}, 
+        "forbiddens": []
+    }, 
+    "expected_orders" : {"fake_units":[[0, 2, 34, 13, 0, 0]], "orders": [[0, 0, 8, 34, 0, 0]] }
+},
+
+{
+    "title": "Conclusion...", 
+    "type": "display",
+    "introduction" : "Si vous avez aperçu une  coquille dans le tutoriel, manifestez-vous (sur le forum idéalement) ! Si ce tutoriel vous a plu, n'hésitez pas à diffuser le lien pour qu'il profite à d'autres néopĥytes...",
+    "variant_name" : "standard",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] }
+}
+
+
+]
+}
