@@ -168,21 +168,6 @@
         "forbiddens": []
     },
     "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 65, 0, 42], [0, 0, 5, 67, 65, 42], [0, 0, 1, 31, 0, 67], [0, 0, 2, 42, 31, 67]] }
-},
-
-{
-    "title": "Conclusion...", 
-    "type": "display",
-    "introduction" : "Si vous avez aperçu une  coquille dans le tutoriel, manifestez-vous (sur le forum idéalement) ! Si ce tutoriel vous a plu, n'hésitez pas à diffuser le lien pour qu'il profite à d'autres néopĥytes...",
-    "variant_name" : "standard",
-    "game_parameters_current_advancement": 0, 
-    "position" : {
-        "ownerships": {},
-        "dislodged_ones": {},
-        "units": {}, 
-        "forbiddens": []
-    },
-    "expected_orders" : {"fake_units":[], "orders":[] }
 }
 
 ]
