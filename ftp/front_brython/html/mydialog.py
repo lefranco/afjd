@@ -2,10 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-
-from browser import html, window  # pylint: disable=import-error
+from browser import html, window, timer  # pylint: disable=import-error
 from browser.widgets.dialog import Dialog  # pylint: disable=import-error
-
 
 POPUP_TOP = 40
 POPUP_LEFT = 60
@@ -19,16 +17,17 @@ class Relocatable:
     """ add relocatable property to brython Dialog classes """
 
     def __init__(self):
+    
+        # By default, no position found
+        self.popup_pos = -1  
 
         # Take occupation slot if available
         for popup_pos, occupant in POPUP_OCCUPATION.items():
-            if not occupant:
+            if occupant is None:
                 POPUP_OCCUPATION[popup_pos] = self
                 self.popup_pos = popup_pos
                 break
-        else:
-            self.popup_pos = -1
-
+                
         # Move popup according to slot taken
         # Occupation map as below:
         #
@@ -36,6 +35,7 @@ class Relocatable:
         #     0
         # 2       1
         #
+
         match self.popup_pos:
             # case 0 (only one popup) or -1 (too many popups) : no move (centered)
             case 1:
@@ -61,23 +61,21 @@ class MyDialog(Dialog, Relocatable):
     """ RelocatableDialog """
 
     def __init__(self, title, **kargs):
-
-        # parent classes
+        # Initialize first Dialog of Brython to have self.left and self.top
         Dialog.__init__(self, title, **kargs, default_css=False, can_close=False)
+        # Apply after positionning logic
         Relocatable.__init__(self)
 
     def close(self, *args):
-        """ close """
-        Relocatable.close(self)
-        Dialog.close(self, *args)
+        """ Overload to clean dict """
+        Relocatable.close(self)       # free slot
+        Dialog.close(self, *args)     # let Brython destry graphical component
 
 
 class MyInfoDialog(MyDialog):
-    """ Customized InfoDialog (we customize and do not use InfoDialog provided since we cannot get close to work properly) """
+    """ Customized InfoDialog """
 
     def __init__(self, title, message, *, remove_after=None, ok_text=None):
-
-        # parent classes
         MyDialog.__init__(self, title)
 
         # Put message
@@ -88,20 +86,20 @@ class MyInfoDialog(MyDialog):
             self.ok_button = html.BUTTON(ok_text, Class="brython-dialog-button")
             self.panel <= html.P()
             self.panel <= html.DIV(self.ok_button, style={"text-align": "center"})
-            self.ok_button.bind("click", lambda ev: self.remove())
+            # CRUCIAL : call self.close (not self.remove) to free the slot !
+            self.ok_button.bind("click", lambda ev: self.close())
 
         # Handle timed removal
         if remove_after:
-            window.setTimeout(self.close, remove_after * 1000)
+            # Use timer of Brython (cleaner)
+            timer.set_timeout(self.close, remove_after * 1000)
 
 
 def info_go(message):
-    """ Information that will automatically dissapear """
-
+    """ Information that will automatically disappear """
     MyInfoDialog('Information', str(message), remove_after=REMOVE_AFTER_SEC)
 
 
 def info_stay(message):
     """ Information that will persist until OK is pressed """
-
     MyInfoDialog('Information', str(message), ok_text="OK")
