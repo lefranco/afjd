@@ -37,8 +37,8 @@
 
 {
     "title": "Coldwar & Coldwar Rédux 2/2", 
-    "type": "adjudicate",
-"introduction" : "Une flotte en Ouest Canadien ne peut pas aller en Groenland et réciproquement. Demandez la résolution...",
+    "type": "submit",
+"introduction" : "Une flotte en Ouest Canadien ne peut pas aller en Groënland et réciproquement. Ordonnez à la flotte de réaliser le mouvement... puis de rester en place...",
     "role_id" : 1,
     "variant_name" : "coldwar",
     "game_parameters_current_advancement": 0, 
@@ -48,13 +48,13 @@
         "units": {"1": [[2, 98]]}, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders":[[0, 0, 1, 98, 0, 34]] }
+    "expected_orders" : {"fake_units":[], "orders":[[0, 0, 4, 98, 0, 0]] }
 },
 
 {
     "title": "Hundred 1/2", 
     "type": "submit",
-"introduction" : "Londres et calais sont voisins. Faites traverser la Manche à l'armée à Londres'...",
+"introduction" : "Londres et calais sont voisins. Faites traverser la Manche à l'armée à Londres...",
     "role_id" : 1,
     "variant_name" : "hundred",
     "game_parameters_current_advancement": 0, 
@@ -68,9 +68,9 @@
 },
 
 {
-    "title": "Hundred 1/2", 
-    "type": "adjudicate",
-"introduction" : "Londres et calais sont voisins. Demandez la résolution...",
+    "title": "Hundred 2/2", 
+    "type": "submit",
+"introduction" : "Londres et calais sont voisins. Soutenez la flotte à Calais menacée par le Français...",
     "role_id" : 1,
     "variant_name" : "hundred",
     "game_parameters_current_advancement": 0, 
@@ -80,13 +80,13 @@
         "units":  {"1": [[1, 23], [1, 9]], "2": [[1, 32], [2, 28]]}, 
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 3, 23, 9, 0], [0, 0, 4, 9, 0, 0], [0, 0, 1, 28, 0, 9], [0, 0, 2, 32, 28, 9]] }
+    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 3, 23, 9, 0], [0, 0, 4, 9, 0, 0]] }
 },
 
 {
     "title": "Méditerranée 1/2", 
     "type": "submit",
-"introduction" : "Le mouvement Baléares vers Tarraconaise semble possible mais ne l'est pas, surtout si la flotte en Mer Ligurienne est inamicale. Tentez le déplacement pour voir...",
+"introduction" : "Le mouvement Baléares vers Tarraconaise semble possible mais ne l'est pas, surtout si la flotte en Mer Ligurienne est inamicale. Tentez le déplacement pour voir...ça passe mais il faut bien lire l'avertissement !'",
     "role_id" : 1,
     "variant_name" : "mediterranee",
     "game_parameters_current_advancement": 0, 
@@ -100,9 +100,9 @@
 },
 
 {
-    "title": "Méditerranée 1/2", 
+    "title": "Méditerranée 2/2", 
     "type": "submit",
-"introduction" : "La flotte en Mer Ligurienne a maintenant disparu. Tentez à nouveau le déplacement ... puis ordnooez à l'unité de tenir.",
+"introduction" : "La flotte en Mer Ligurienne a maintenant disparu. Tentez à nouveau le déplacement ... puis ordonnez à l'unité de tenir...",
     "role_id" : 1,
     "variant_name" : "mediterranee",
     "game_parameters_current_advancement": 0, 
@@ -118,7 +118,7 @@
 {
     "title": "Egéemonie", 
     "type": "submit",
-"introduction" : "Dans la même logique que précédemment, une armée a besoin d'un convoi pour se déplacer entre Chiros et Lesbons d'une part, entre Samos et Ephèse d'autre part. Tentez les déplacements...",
+"introduction" : "Dans la même logique que précédemment, une armée a besoin d'un convoi pour se déplacer entre Chiros et Lesbons d'une part, entre Samos et Ephèse d'autre part. Tentez ces déplacements...Une fois encore, attention aux avertissements...",
     "role_id" : 3,
     "variant_name" : "egeemonie",
     "game_parameters_current_advancement": 0, 
@@ -149,8 +149,9 @@
 
 {
     "title": "v1900s", 
-    "type": "adjudicate",
-"introduction" : "Cette variante comporte plusieurs particularités, mais la plus déroutante reste la fusion entre la Mer Rouge et la mer Atliantique. Demandez la résolution dans la situation suivante pour bien en prendre la mesure.",
+    "type": "submit",
+"introduction" : "Cette variante comporte plusieurs particularités, mais la plus déroutante reste la fusion entre la Mer Rouge et la mer Atliantique. Vous pouvez soutenir la flotte en Egypte pour se défendre de la menace Turque...",
+    "role_id" : 3,
     "variant_name" : "v1900s",
     "game_parameters_current_advancement": 0, 
     "position" : {
@@ -159,13 +160,13 @@
         "units": {"3": [[2, 50], [2, 28]], "7": [[1, 61], [2, 26]]},
         "forbiddens": []
     },
-    "shown_orders" : {"fake_units":[], "orders": [[0, 0, 1, 61, 0, 28], [0, 0, 2, 26, 61, 28], [0, 0, 3, 50, 28, 0], [0, 0, 4, 28, 0, 0]] }
+    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 3, 50, 28, 0], [0, 0, 4, 28, 0, 0]] }
 },
 
 {
     "title": "Westeros", 
     "type": "submit",
-"introduction" : "Cette variante implémente des zones libres c'est à dire que les constructions y sont interdites. Tentez la construction en PortRéal (Est ou Ouest) puis une flotte en Peydragon",
+"introduction" : "Cette variante implémente des zones libres c'est à dire que les constructions y sont interdites. Tentez une construction quelconque en PortRéal (Est ou Ouest)...  puis une flotte en Peydragon...",
     "role_id" : 6,
     "variant_name" : "westeros",
     "game_parameters_current_advancement": 4, 
@@ -181,7 +182,7 @@
 {
     "title": "Spice", 
     "type": "submit",
-"introduction" : "Cette variante ne présente aucune difficulté. Vous jouez Brunéï, sortez vos flottes ailleurs qu'en Mer du Sulu (Sus)",
+"introduction" : "Cette variante ne présente aucune difficulté. Vous jouez Brunéï, sortez vos flottes ailleurs qu'en Mer du Sulu (Sus)...",
     "role_id" : 1,
     "variant_name" : "spiceislands",
     "game_parameters_current_advancement": 0, 
@@ -195,9 +196,9 @@
 },
 
 {
-    "title": "Crépusculde de Rome 1/2", 
+    "title": "Crépuscule de Rome 1/2", 
     "type": "submit",
-"introduction" : "Cette variante introduit une zone de steppes (avec explication sur la carte). Ordonnez la chaîne Bachikiristan -> Stepp 3 -> Steppe 1 -> Pologne",
+"introduction" : "Cette variante introduit une zone de steppes (avec explication sur la carte). Ordonnez la chaîne Bachikiristan -> Stepp 3 -> Steppe 1 -> Pologne...",
     "role_id" : 5,
     "variant_name" : "crepusculerome",
     "game_parameters_current_advancement": 0, 
@@ -211,9 +212,9 @@
 },
 
 {
-    "title": "Crépusculde de Rome 2/2", 
+    "title": "Crépuscule de Rome 2/2", 
     "type": "submit",
-"introduction" : "Constantinople semble s'étendre sur deux régions. Ordonnez à vos deux flottes d'y réaliser un stand-off pour en empĉher l'accès au joueur Africain",
+"introduction" : "Constantinople semble s'étendre sur deux régions. Ordonnez à vos deux flottes d'y réaliser un stand-off pour en empêcher l'accès au joueur Africain...",
     "role_id" : 7,
     "variant_name" : "crepusculerome",
     "game_parameters_current_advancement": 0, 
@@ -229,7 +230,7 @@
 {
     "title": "Succession Autriche", 
     "type": "submit",
-"introduction" : "Milan est un centre Autrichien, entre le Piémont et la partie en Italie appartenant à l'Espagnol. Contruisez-y une armée (en tant que joueur Autrichien)",
+"introduction" : "Milan est un centre Autrichien, entre le Piémont et la partie de Italie qui appartient à l'Espagnol. Contruisez-y une armée (en tant que joueur Autrichien)...",
     "role_id" : 1,
     "variant_name" : "successionautriche",
     "game_parameters_current_advancement": 4, 
@@ -245,7 +246,7 @@
 {
     "title": "Moderne", 
     "type": "submit",
-"introduction" : "La variante comporte plusieurs canaux qu'il convient de bien repérer sur la carte. Déplacez les flottes Ukrainiennes ainsi : Héligoland  -> Hambourg -> Bornholm ; Mer Rouge -> Le Caire -> Méditerranée Orientale; Mer Noire Orientale -> Rostock -> Volga -> Mer Caspienne",
+"introduction" : "La variante comporte plusieurs canaux qu'il convient de bien repérer sur la carte. Déplacez les flottes Ukrainiennes ainsi : Héligoland  -> Hambourg -> Bornholm ; Mer Rouge -> Le Caire -> Méditerranée Orientale; Mer Noire Orientale -> Rostock -> Volga -> Mer Caspienne...",
     "role_id" : 8,
     "variant_name" : "moderne",
     "game_parameters_current_advancement": 0, 
@@ -277,10 +278,10 @@
 {
     "title": "Chaos", 
     "type": "submit",
-"introduction" : "Cette variante met un joueur sur chaque centre, mais elle commence par une phase de construction. Construisez une flotte en tant que joueur de Londres",
+"introduction" : "Cette variante met un joueur sur chaque centre, mais elle débute par une phase de construction. Construisez une flotte en tant que joueur de Londres...",
     "role_id" : 13,
     "variant_name" : "chaos",
-    "game_parameters_current_advancement": -1, 
+    "game_parameters_current_advancement": 4, 
     "position": {
         "ownerships": {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "11": 11, "12": 12, "13": 13, "14": 14, "15": 15, "16": 16, "17": 17, "18": 18, "19": 19, "20": 20, "21": 21, "22": 22, "23": 23, "24": 24, "25": 25, "26": 26, "27": 27, "28": 28, "29": 29, "30": 30, "31": 31, "32": 32, "33": 33, "34": 34}, 
         "dislodged_ones": {}, 
