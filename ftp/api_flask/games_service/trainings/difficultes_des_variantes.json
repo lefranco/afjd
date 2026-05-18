@@ -84,22 +84,6 @@
 },
 
 {
-    "title": "Cold War Rédux (et pas Cold War)", 
-    "type": "submit",
-"introduction" : "Yougoslavie et Grèce sont voisins par flotte car l'Albanie n'existe pas. Faites traverser l'Albanie à la flotte de Grèce...",
-    "role_id" : 4,
-    "variant_name" : "coldwar_redux",
-    "game_parameters_current_advancement": 0, 
-    "position" : {
-        "ownerships": {},
-        "dislodged_ones": {},
-        "units":  {"4": [[2, 90]]}, 
-        "forbiddens": []
-    },
-    "expected_orders" : {"fake_units":[], "orders": [[0, 0, 1, 90, 0, 33]] }
-},
-
-{
     "title": "Méditerranée 1/2", 
     "type": "submit",
 "introduction" : "Le mouvement Baléares vers Tarraconaise semble possible mais ne l'est pas, surtout si la flotte en Mer Ligurienne est inamicale. Tentez le déplacement pour voir...",
