@@ -396,23 +396,7 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders":[[0, 0, 6, 73, 0, 25]] }
-},
-
-{
-    "title": "Conclusion...", 
-    "type": "display",
-    "introduction" : "Si vous avez aperçu une  coquille dans le tutoriel, manifestez-vous (sur le forum idéalement) ! Si ce tutoriel vous a plu, n'hésitez pas à diffuser le lien pour qu'il profite à d'autres néopĥytes...",
-    "variant_name" : "standard",
-    "game_parameters_current_advancement": 0, 
-    "position" : {
-        "ownerships": {},
-        "dislodged_ones": {},
-        "units": {}, 
-        "forbiddens": []
-    },
-    "expected_orders" : {"fake_units":[], "orders":[] }
 }
-
 
 ]
 }
