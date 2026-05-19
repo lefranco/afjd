@@ -46,12 +46,6 @@ _Moderne_ : Un canal permet d'aller de Héligoland à Bornholm en passant par Da
 _Hundred_ : Un pont existe entre Londres et Calais.
 
 
-
-- Région décorative
-(Une région peut être inaccessible \(elle est "décorative".\))
-_Cold War Redux_ : L'Albanie est inaccessible.
-
-
 _
 $ Conditions de victoire
 
@@ -92,7 +86,7 @@ _Chaos_ : Chaque joueur possède un centre et commence par construire.
 
 
 
-- Expansionnisme
+- Expansionisme
 (La variante peut être expansioniste, c'est à dire que l'on peut constuire sur tout centre possédé.)
 _Spice Island_ : cette variante est expansioniste
 
@@ -104,7 +98,7 @@ _Westeros_ : Personne ne peut construire en Port Réal Est et Ouest, même si un
 
 
 
-- Construction de secours (NON IMPLEMENTE POUR LE MOMENT)
+- Construction de secours
 (Un pays peut avoir un centre de construction de secours.)
 _v1900s_ : La Russie peut constuire en Sibérie sous certaines conditions.
 
@@ -120,7 +114,7 @@ $ Changements mineurs de règles
 
 - Première année
 (La première année de datation est susceptible de changer.)
-_Westeros_ : La première année est 1.
+_Méditeranée_ : La première année est 1.
 
 
 
