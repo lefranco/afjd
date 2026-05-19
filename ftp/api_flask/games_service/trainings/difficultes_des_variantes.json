@@ -148,7 +148,7 @@
 },
 
 {
-    "title": "v1900s", 
+    "title": "v1900s 1/2", 
     "type": "submit",
 "introduction" : "Cette variante comporte plusieurs particularités, mais la plus déroutante reste la fusion entre la Mer Rouge et la mer Atliantique. Vous pouvez soutenir la flotte en Egypte pour se défendre de la menace Turque...",
     "role_id" : 3,
@@ -161,6 +161,22 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[], "orders": [[0, 0, 3, 50, 28, 0], [0, 0, 4, 28, 0, 0]] }
+},
+
+{
+    "title": "v1900s 1/2", 
+    "type": "submit",
+"introduction" : "Danc cette variante le Russe peut utiliser des constructions de secours. S'il lui manque un centre mais pas tous, on considère qu'il a un centre de plus et peut construire en Sibérie si la Sibérie est libre. Faites-le ...",
+    "role_id" : 6,
+    "variant_name" : "v1900s",
+    "game_parameters_current_advancement": 4, 
+    "position" : {
+        "ownerships": {"21": 6, "31": 6, "33": 6, "39": 4},
+        "dislodged_ones": {},
+        "units": {"4": [[1, 88]], "6": [[2, 13], [1, 84], [2, 33]]},
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[[0, 1, 71, 6, 0, 0]], "orders": [[0, 0, 8, 71, 0, 0]] }
 },
 
 {
