@@ -167,8 +167,8 @@
             "y_legend_pos": 211
         },
         "5": {
-            "name": ".",
-            "full_name": ".",
+            "name": "x",
+            "full_name": "x",
             "x_pos": 0,
             "y_pos": 0,
             "x_legend_pos": 0,
