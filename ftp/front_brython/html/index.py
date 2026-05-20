@@ -234,6 +234,17 @@ def show_site_image(_):
     document <= image_full
 
 
+def show_load_time_version(load_time):
+    """ show_load_time_version """
+
+    document <= html.BR()
+    version_value = storage['VERSION']
+    document <= html.I(f"Vous utilisez la version du {version_value}")
+
+    document <= html.BR()
+    document <= html.I(f"Temps de chargement de la page d'accueil : {load_time:.2f} secs")
+
+
 def load_option(_, item_name):
     """ load_option """
 
@@ -491,7 +502,7 @@ document <= html.BR()
 # home page loading time
 END_TIME = time()
 ELAPSED = END_TIME - START_TIME
-home.show_load_time_version(ELAPSED)
+show_load_time_version(ELAPSED)
 
 # spinner dies
 spinner = document['spinner']
