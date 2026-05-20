@@ -1208,17 +1208,6 @@ def show_personal_data():
     my_ezml.render(MY_SUB_PANEL)
 
 
-def show_load_time_version(load_time):
-    """ show_load_time_version """
-
-    MY_SUB_PANEL <= html.BR()
-    version_value = storage['VERSION']
-    MY_SUB_PANEL <= html.I(f"Vous utilisez la version du {version_value}")
-
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.I(f"Temps de chargement de la page d'accueil : {load_time:.2f} secs")
-
-
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
