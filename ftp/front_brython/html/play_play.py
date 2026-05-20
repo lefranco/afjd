@@ -511,7 +511,7 @@ def submit_orders():
         # do not put erase all
         if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
             put_rest_hold(buttons_right)
-        if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             buttons_right <= html.BR()
             put_submit(buttons_right)
 
