@@ -275,10 +275,12 @@ def sandbox():
 
         stack_orders(buttons_right)
         if not POSITION_DATA.empty():
+            put_download(buttons_right)
+        if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
         # do not put erase orders
+        put_rest_hold(buttons_right)
         # do not put submit
-        # do not put download
         buttons_right <= html.BR()
 
         my_sub_panel2 <= buttons_right
