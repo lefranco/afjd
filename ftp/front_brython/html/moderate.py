@@ -1338,7 +1338,7 @@ def current_worst_annoyers():
         recap_table <= thead
 
         rank = 1
-        for player_id in sorted(count.keys(), key=lambda r: (len(count[r]), max(count[r])), reverse=True):
+        for player_id in sorted(count.keys(), key=lambda r, c=count: (len(c[r]), max(c[r])), reverse=True):
             row = html.TR()
 
             # rank
