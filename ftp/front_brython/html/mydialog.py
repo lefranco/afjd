@@ -17,9 +17,9 @@ class Relocatable:
     """ add relocatable property to brython Dialog classes """
 
     def __init__(self):
-    
+
         # By default, no position found
-        self.popup_pos = -1  
+        self.popup_pos = -1
 
         # Take occupation slot if available
         for popup_pos, occupant in POPUP_OCCUPATION.items():
@@ -27,7 +27,7 @@ class Relocatable:
                 POPUP_OCCUPATION[popup_pos] = self
                 self.popup_pos = popup_pos
                 break
-                
+
         # Move popup according to slot taken
         # Occupation map as below:
         #
