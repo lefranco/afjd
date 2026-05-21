@@ -85,7 +85,7 @@
 {
     "title": "Plus ou moins de centres de d'unité", 
     "type": "display",
-"introduction" : "Dans la variante Hundred, la France a une armée en plus que de centre au départ. De son côté, l'Angleterre a un centre de moins que d'unité. La position de départ est reproduite ici. Cliquez sur 'La suite !''",
+"introduction" : "Dans la variante Hundred, la France a une armée en plus que de centre au départ. De son côté, l'Angleterre a un centre de moins que d'unité. La position de départ est reproduite ici. Cliquez sur 'La suite !'",
     "variant_name" : "hundred",
     "game_parameters_current_advancement": 0, 
     "position" : {
@@ -111,7 +111,24 @@
         "forbiddens": []
     },
     "expected_orders" : {"fake_units":[[0, 2, 49, 2, 0, 0], [0, 2, 55, 2, 0, 0]], "orders": [[0, 0, 8, 49, 0, 0], [0, 0, 8, 55, 0, 0]] }
+},
+
+{
+    "title": "Pays neutralisé", 
+    "type": "display",
+"introduction" : "Certaines variantes ont neutralié un pays. Ce pays est en désordre civil pendant toute la partie. C'est le cas de l'Itale dans la variante Grande Guerre qui se jouer à deux joueurs. Cliquez sur 'La suite !'",
+    "role_id" : 2,
+    "variant_name" : "grandeguerre",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {"1": 2, "3": 2, "4": 1, "5": 2, "7": 2, "9": 1, "12": 2, "13": 1, "14": 1, "15": 1, "16": 1, "17": 2, "18": 3, "20": 1, "22": 3, "25": 1, "26": 2, "28": 1, "30": 2, "32": 3, "33": 2, "34": 1},
+        "dislodged_ones": {},
+        "units": {"1": [[1, 36], [1, 37], [1, 47], [1, 39], [1, 73], [2, 22], [2, 34], [2, 14], [2, 56], [2, 81]], "2": [[1, 10], [1, 40], [1, 15], [1, 71], [1, 19], [1, 59], [2, 33], [2, 64], [2, 4]], "3": [[1, 52], [1, 70], [2, 42]]}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[[0, 2, 49, 2, 0, 0], [0, 2, 55, 2, 0, 0]], "orders": [[0, 0, 8, 49, 0, 0], [0, 0, 8, 55, 0, 0]] }
 }
+
 
 ]
 }
