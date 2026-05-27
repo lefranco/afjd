@@ -18,6 +18,8 @@ MONGODB_DATABASE_NAME=nodebb
 MONGODB_DATABASE_USER=nodebb
 GOOGLE_DRIVE=backup_diplomania
 EMAIL_DEST=jeremie.lefrancois@gmail.com
+MAX_BACKUPS=10
+
 
 # If script receives interruption signal, it stops completely
 trap "exit" INT
@@ -239,6 +241,16 @@ while true ; do
 
     # Removing artefacts from here
     rm -fr ${backup_dir}
+
+    # Important : need to remove older backup at some point (otherwise we run out of space of course !)
+    NB_DIRS=$(rclone lsd "${GOOGLE_DRIVE}:" | wc -l)
+    echo "We currently have ${NB_DIRS} backups"
+    if [ "${NB_DIRS}" -ge "${MAX_BACKUPS}" ]; then 
+        OLDER_BACKUP=$(rclone lsd "${GOOGLE_DRIVE}:" | sort | head -n 1 | awk '{print $NF}') 
+        echo "We remove backup ${OLDER_BACKUP}"
+        rclone purge "${GOOGLE_DRIVE}:${OLDER_BACKUP}"
+        rclone cleanup "${GOOGLE_DRIVE}:"
+    fi
 
     end_time=$(date +%s)
     duration=$((end_time - start_time))
