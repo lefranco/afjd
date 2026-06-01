@@ -1332,13 +1332,13 @@ def current_worst_annoyers():
 
         # header
         thead = html.THEAD()
-        for field in ['rang', 'pseudo', 'retards', 'nombre', 'cumul', 'pire', 'ratio']:
+        for field in ['rang', 'pseudo', 'retards', 'cumul', 'nombre', 'pire', 'ratio']:
             col = html.TD(field)
             thead <= col
         recap_table <= thead
 
         rank = 1
-        for player_id in sorted(count.keys(), key=lambda r, c=count: (len(c[r]), max(c[r])), reverse=True):
+        for player_id in sorted(count.keys(), key=lambda r, c=count: (sum(c[r]), len(c[r]), max(c[r])), reverse=True):
             row = html.TR()
 
             # rank
@@ -1356,14 +1356,14 @@ def current_worst_annoyers():
             col = html.TD(" ".join([f"{i}" for i in incidents_list]))
             row <= col
 
-            # incidents number
-            incidents_number = len(count.get(player_id, []))
-            col = html.TD(f"{incidents_number}")
-            row <= col
-
             # incidents total
             incidents_total = sum(count.get(player_id, []))
             col = html.TD(f"{incidents_total}")
+            row <= col
+
+            # incidents number
+            incidents_number = len(count.get(player_id, []))
+            col = html.TD(f"{incidents_number}")
             row <= col
 
             # worst
