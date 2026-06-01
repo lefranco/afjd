@@ -22,7 +22,7 @@ FAQ_CONTENT_TABLE = {
     "Non. Si au moins un joueur a coché “d'accord pour résoudre à la date limite“ il faudra attendre l'automate. Ce dernier vient, toutes les heures,  regarder les parties dont la date limite est passée. Il se charge de soigneusement transformer tout “d'accord pour résoudre à la date limite“ en “d'accord pour résoudre maintenant“ toujours avec les mêmes conséquences.",
 
     "Et les parties 'Désordre Civil' ?":
-    "Pour de telles partie l'arbitre peut forcer les choses après la résolution. L'automate le fera automatiquement après la grâce.",
+    "Pour de telles partie l'arbitre peut forcer les choses après la date limite. L'automate le fera automatiquement après la grâce.",
 
     "Pour les parties 'Désordre Civil', celui-ci est-il toujours possible ?":
     "Non. Pas de DC si aucun joueur n'a mis d'ordre. Pas de DC au premier tour de jeu (printemps 1901 typiquement)",
