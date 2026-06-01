@@ -1064,7 +1064,7 @@ def show_informations():
 
     # header
     thead = html.THEAD()
-    for field in ['rang', 'role', 'pseudo', 'retards', 'nombre', 'cumul', 'pire', 'ratio']:
+    for field in ['rang', 'role', 'pseudo', 'retards', 'cumul', 'nombre', 'pire', 'ratio']:
         col = html.TD(field)
         thead <= col
     recap_table <= thead
@@ -1072,7 +1072,7 @@ def show_informations():
     role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
     rank = 1
-    for role_id in sorted(count.keys(), key=lambda r: (len(count[r]), max(count[r])), reverse=True):
+    for role_id in sorted(count.keys(), key=lambda r: (sum(count[r]), len(count[r]), max(count[r])), reverse=True):
         row = html.TR()
 
         # rank
@@ -1100,14 +1100,14 @@ def show_informations():
         col = html.TD(" ".join([f"{i}" for i in incidents_list]))
         row <= col
 
-        # incidents number
-        incidents_number = len(count.get(role_id, []))
-        col = html.TD(f"{incidents_number}")
-        row <= col
-
         # incidents total
         incidents_total = sum(count.get(role_id, []))
         col = html.TD(f"{incidents_total}")
+        row <= col
+
+        # incidents number
+        incidents_number = len(count.get(role_id, []))
+        col = html.TD(f"{incidents_number}")
         row <= col
 
         # worst
