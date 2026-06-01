@@ -94,6 +94,7 @@ def create_game(json_dict):
     access_restriction_performance = json_dict['access_restriction_performance'] if json_dict and 'access_restriction_performance' in json_dict else None
     nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play'] if json_dict and 'nb_max_cycles_to_play' in json_dict else None
     endgame_vote_allowed = json_dict['end_game_vote'] if json_dict and 'end_game_vote' in json_dict else None
+    force_wait = json_dict['force_wait'] if json_dict and 'force_wait' in json_dict else None
 
     # conversion
     scoring = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[scoring_code]
@@ -116,6 +117,7 @@ def create_game(json_dict):
         if input_cd_possible_moves.checked or input_cd_possible_retreats.checked or input_cd_possible_builds.checked:
             if not information_displayed_disorder:
                 alert("Attention, le désordre civil n'est pas la norme sur le site. Le remplacement des joueurs en gros retard est préconisé pour jouer des meilleures parties.\n\nDe plus, de telles parties ne devraient pas compter pour le ELO.")
+                alert("Attention, le désordre civil s'appliquera de manière automatique à l'expiration de la grace (un délai paramétrable après la date limite)")
                 information_displayed_disorder = True
 
     def display_exposition_callback(_):
@@ -160,17 +162,19 @@ def create_game(json_dict):
         # set durations
         if game_type_code in (0, 2):
 
-            alert(f"On met par défaut les paramètres de partie plutôt lente ({DEFAULT_SPEED_MOVES_SLOW}h/{DEFAULT_SPEED_RETREATS_SLOW}h/{DEFAULT_SPEED_ADJUSTMENTS_SLOW}h) ")
+            alert(f"On met par défaut les paramètres de partie plutôt lente ({DEFAULT_SPEED_MOVES_SLOW}h/{DEFAULT_SPEED_RETREATS_SLOW}h/{DEFAULT_SPEED_ADJUSTMENTS_SLOW}h)/Autorisé de de forcer l'attente de la date limite")
             input_speed_moves.value = str(DEFAULT_SPEED_MOVES_SLOW)
             input_speed_retreats.value = str(DEFAULT_SPEED_RETREATS_SLOW)
             input_speed_adjustments.value = str(DEFAULT_SPEED_ADJUSTMENTS_SLOW)
+            input_force_wait.checked = False
 
         else:
 
-            alert(f"On met par défaut les paramètres de partie plutôt rapide ({DEFAULT_SPEED_MOVES_FAST}h/{DEFAULT_SPEED_RETREATS_FAST}h/{DEFAULT_SPEED_ADJUSTMENTS_FAST}h) ")
+            alert(f"On met par défaut les paramètres de partie plutôt rapide ({DEFAULT_SPEED_MOVES_FAST}h/{DEFAULT_SPEED_RETREATS_FAST}h/{DEFAULT_SPEED_ADJUSTMENTS_FAST}h/Interdit de forcer l'attente de la date limite) ")
             input_speed_moves.value = str(DEFAULT_SPEED_MOVES_FAST)
             input_speed_retreats.value = str(DEFAULT_SPEED_RETREATS_FAST)
             input_speed_adjustments.value = str(DEFAULT_SPEED_ADJUSTMENTS_FAST)
+            input_force_wait.checked = True
 
     def display_deadline_time_callback(_):
         """ display_deadline_time_callback """
@@ -237,6 +241,7 @@ def create_game(json_dict):
         nonlocal access_restriction_performance
         nonlocal nb_max_cycles_to_play
         nonlocal endgame_vote_allowed
+        nonlocal force_wait
 
         def reply_callback(req):
             req_result = loads(req.text)
@@ -325,6 +330,8 @@ def create_game(json_dict):
         except:  # noqa: E722 pylint: disable=bare-except
             nb_max_cycles_to_play = None
 
+        force_wait = -1 if int(input_force_wait.checked) else 0
+
         # to be able to create many same games
         bypass = int(input_bypass.checked)
 
@@ -365,7 +372,8 @@ def create_game(json_dict):
             'description': description,
             'current_state': state,
             'game_type': game_type_code,
-            'end_vote_allowed': endgame_vote_allowed
+            'end_vote_allowed': endgame_vote_allowed,
+            'force_wait': force_wait
         }
 
         just_play = int(input_just_play_game.checked)
@@ -495,7 +503,7 @@ def create_game(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_fast = html.LEGEND("en direct", title="ATTENTION ! Ne cocher que pour une partie comme sur un plateau - qui se joue en temps réel comme sur un plateau ! Le calcul des dates limites se fait en minutes au lieu d'heures.")
+    legend_fast = html.LEGEND("en direct", title="Une partie en temps réel comme sur un plateau ! Le calcul des dates limites se fait en minutes au lieu d'heures.")
     fieldset <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=bool(fast) if fast is not None else False, Class='btn-inside')
     input_fast.bind("click", display_fast_callback)
@@ -617,7 +625,7 @@ def create_game(json_dict):
     fieldset <= input_cd_possible_retreats
     form <= fieldset
 
-    # adjustments
+    # builds/removals
 
     fieldset = html.FIELDSET()
     legend_speed_adjustments = html.LEGEND("cadence ajustements (heures)", title="Nombre d'heures (minutes pour une partie en direct) alloués avant la date limite d'ajustements")
@@ -625,8 +633,6 @@ def create_game(json_dict):
     input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments if speed_adjustments is not None else DEFAULT_SPEED_ADJUSTMENTS_SLOW, Class='btn-inside')
     fieldset <= input_speed_adjustments
     form <= fieldset
-
-    # builds/removals
 
     fieldset = html.FIELDSET()
     legend_cd_possible_builds = html.LEGEND("DC (Ordres par défaut pour un joueur en retard) possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
@@ -636,7 +642,7 @@ def create_game(json_dict):
     fieldset <= input_cd_possible_builds
     form <= fieldset
 
-    # ---
+    # play weekend
 
     fieldset = html.FIELDSET()
     legend_play_weekend = html.LEGEND("jeu weekend", title="La date limite peut elle se trouver en fin de semaine")
@@ -644,6 +650,17 @@ def create_game(json_dict):
     input_play_weekend = html.INPUT(type="checkbox", checked=bool(play_weekend) if play_weekend is not None else False, Class='btn-inside')
     fieldset <= input_play_weekend
     form <= fieldset
+
+    # prevent players from pushing 'wait deadline' button
+
+    fieldset = html.FIELDSET()
+    legend_force_wait = html.LEGEND("empêcher forçage attente date limite", title="Empêcher les joueurs de demander à attendre la date limite")
+    fieldset <= legend_force_wait
+    input_force_wait = html.INPUT(type="checkbox", checked=bool(force_wait) if force_wait is not None else False, Class='btn-inside')
+    fieldset <= input_force_wait
+    form <= fieldset
+
+    # ---
 
     title_access = html.H4("Fin de la partie - ne peut plus être changé une fois la partie créée")
     form <= title_access
