@@ -1310,14 +1310,12 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         elif args['game_type'] == 1:  # Blitz
             args['nopress_current'] = 1
             args['nomessage_current'] = 1
-            args['force_wait'] = -1
         elif args['game_type'] == 2:  # Nego publique
             args['nopress_current'] = 0
             args['nomessage_current'] = 1
         elif args['game_type'] == 3:  # Blitz ouverte
             args['nopress_current'] = 0
             args['nomessage_current'] = 1
-            args['force_wait'] = -1
 
         # we do not want a deadline here, we make our own
         time_stamp = time.time()
