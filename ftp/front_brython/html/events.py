@@ -998,7 +998,7 @@ def handle_event():
         if not end_date:
             alert("Date de fin d'inscription manquante")
             MY_SUB_PANEL.clear()
-            handle_event(json_dict)
+            handle_event()
             return
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
