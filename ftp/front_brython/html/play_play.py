@@ -1492,7 +1492,12 @@ def submit_orders():
         buttons_right <= input_submit
         buttons_right <= html.BR()
         buttons_right <= html.BR()
-        buttons_right <= html.I("(*) Utilisez s'il vous plaît ce choix 'à bon escient', puisqu'il retarde la résolution !", Class='Note')
+        if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['exposition']:
+            buttons_right <= html.I("(*) Inaproprié !", Class='Note')
+        elif play_low.GAME_PARAMETERS_LOADED['force_wait'] == -1:
+            buttons_right <= html.I("(*) Ce choix étant actuellement désactivé par l'arbitre, consultez-le si vous voulez tout de même en bénéficier.", Class='Note')
+        else:
+            buttons_right <= html.I("(*) Utilisez s'il vous plaît ce choix 'à bon escient', puisqu'il retarde la résolution !", Class='Note')
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
