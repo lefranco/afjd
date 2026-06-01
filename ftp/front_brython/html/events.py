@@ -672,6 +672,12 @@ def create_event(json_dict):
             create_event(json_dict)
             return
 
+        if not end_date:
+            alert("Date de fin d'inscription manquante")
+            MY_SUB_PANEL.clear()
+            create_event(json_dict)
+            return
+
         # send to server
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -987,6 +993,12 @@ def handle_event():
             alert("Lieu de l'événement trop long")
             MY_SUB_PANEL.clear()
             handle_event()
+            return
+
+        if not end_date:
+            alert("Date de fin d'inscription manquante")
+            MY_SUB_PANEL.clear()
+            handle_event(json_dict)
             return
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
