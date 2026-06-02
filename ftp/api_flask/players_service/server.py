@@ -128,7 +128,7 @@ REGISTRATION_UPDATE_PARSER.add_argument('player_id', type=int, required=True)
 REGISTRATION_UPDATE_PARSER.add_argument('value', type=int, required=True)
 
 DATA_SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
-DATA_SUBMISSION_PARSER.add_argument('localization', type=str, required=False)  # TODO put True
+DATA_SUBMISSION_PARSER.add_argument('localization', type=str, required=True)
 DATA_SUBMISSION_PARSER.add_argument('time_zone', type=str, required=True)
 DATA_SUBMISSION_PARSER.add_argument('ip_address', type=str, required=True)
 
@@ -2706,8 +2706,6 @@ class SubmissionDataRessource(flask_restful.Resource):  # type: ignore
 
         args = DATA_SUBMISSION_PARSER.parse_args(strict=True)
         localization_sent = args['localization']
-        if localization_sent is None:  # TODO REMOVE
-            localization_sent = "?!?"
         time_zone_sent = args['time_zone']
         ip_address_sent = args['ip_address']
 
@@ -3182,9 +3180,9 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
-        
+
         # Insert usefule code here
-        
+
         #  sql_executor.commit()
 
         del sql_executor
