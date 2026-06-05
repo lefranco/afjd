@@ -330,7 +330,10 @@ def create_game(json_dict):
         except:  # noqa: E722 pylint: disable=bare-except
             nb_max_cycles_to_play = None
 
-        force_wait = -1 if int(input_force_wait.checked) else 0
+        if input_force_wait.checked:
+            force_wait = -1
+        else:
+            force_wait = 0
 
         # to be able to create many same games
         bypass = int(input_bypass.checked)
@@ -656,7 +659,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_force_wait = html.LEGEND("empêcher forçage attente date limite", title="Empêcher les joueurs de demander à attendre la date limite")
     fieldset <= legend_force_wait
-    input_force_wait = html.INPUT(type="checkbox", checked=bool(force_wait) if force_wait is not None else False, Class='btn-inside')
+    input_force_wait = html.INPUT(type="checkbox", checked=(force_wait == -1) if force_wait is not None else False, Class='btn-inside')
     fieldset <= input_force_wait
     form <= fieldset
 

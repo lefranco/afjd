@@ -810,7 +810,7 @@ def show_informations():
             'access_restriction_performance': ("",          "entier", "Un minimum de performance est exigé pour rejoindre la partie"),  # noqa: E241
             'nb_max_cycles_to_play':          ("nombre maximum de cycles (années) à jouer",      "entier", "Durée de la partie : Le système déclare la partie terminée si autant de cycles ont été joués"),  # noqa: E241
             'game_type':                      ("type de la partie",                              "choix sur liste", "Type de la partie : Négo : pas de restriction, tout est possible ! Blitz : pas de communication, tout est fermé ! NégoPublique : presse (déclarations publiques) uniquement... BlitzOuverte : comme Blitz avec ouverture de la presse pour organiser la partie sans faire action de jeu."),  # noqa: E241
-            'force_wait':                     ("forçage d'attente",                              "maintenant, pas de forçage, à la date limite", "L'arbitre peut invalider le bouton 'attendre la date limite' (il force à 'maintenant' pour accélérer) ou invalider le bouton 'maintenant' (il force à 'à la date limite' pour ralentir) ou... ne rien invalider du tout !"),  # noqa: E241
+            'force_wait':                     ("forçage d'attente",                              "maintenant, à la date limite, pas de forçage", "L'arbitre peut invalider le bouton 'attendre la date limite' (il force à cocher 'maintenant' pour accélérer la partie) [maintenant] ou invalider le bouton 'maintenant' (il force à cocher 'à la date limite' pour ralentir) [à la date limite] ou... ne rien invalider du tout ![pas de forçage]"),  # noqa: E241
 
         }[key]
 
