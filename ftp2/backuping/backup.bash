@@ -18,7 +18,7 @@ MONGODB_DATABASE_NAME=nodebb
 MONGODB_DATABASE_USER=nodebb
 GOOGLE_DRIVE=backup_diplomania
 EMAIL_DEST=jeremie.lefrancois@gmail.com
-MAX_BACKUPS=10
+MAX_BACKUPS=15
 
 
 # If script receives interruption signal, it stops completely
