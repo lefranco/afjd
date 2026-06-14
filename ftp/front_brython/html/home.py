@@ -732,10 +732,11 @@ def show_news():
     active_game_masters = stats_content['active_game_masters']
     active_players = stats_content['active_players']
     most_active_master_id = stats_content['most_active_master']
+    average_games_played = stats_content['average_games_played']
     most_active_master = id2pseudo[most_active_master_id] if most_active_master_id != -1 else "?"
     most_active_player_id = stats_content['most_active_player']
     most_active_player = id2pseudo[most_active_player_id] if most_active_player_id != -1 else "?"
-    information = f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. L'arbitre le plus actif est {most_active_master}. Le joueur le plus actif est {most_active_player}. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
+    information = f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. La moyenne du nombre de parties par joueur actif est {average_games_played:.2f}. L'arbitre le plus actif est {most_active_master}. Le joueur le plus actif est {most_active_player}. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
     div_a1 <= information
 
     # ----

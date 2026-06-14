@@ -15,6 +15,7 @@ import time
 import sys
 import threading
 import pathlib
+import statistics
 
 import waitress
 import flask
@@ -8185,6 +8186,9 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
                 players_set.add(player_id)
                 active_players[player_id] += 1
 
+        # average
+        average_games_played = statistics.mean(active_players.values())
+
         if active_masters.most_common(1):
             most_active_master_id = active_masters.most_common(1)[0][0]
         else:
@@ -8195,7 +8199,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         else:
             most_active_player_id = -1
 
-        data = {'dying_games': dying_games, 'stalled_games': stalled_games, 'waiting_games': waiting_games, 'suffering_games': suffering_games, 'ongoing_games': len(ongoing_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set), 'most_active_master': most_active_master_id, 'most_active_player': most_active_player_id}
+        data = {'dying_games': dying_games, 'stalled_games': stalled_games, 'waiting_games': waiting_games, 'suffering_games': suffering_games, 'ongoing_games': len(ongoing_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set), 'most_active_master': most_active_master_id, 'average_games_played': average_games_played, 'most_active_player': most_active_player_id}
         return data, 200
 
 
