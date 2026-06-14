@@ -29,6 +29,9 @@ def process_reliability(players_dict: typing.Dict[str, typing.Any], games_result
     number_delays_table = {}
 
     # index is player_id
+    sum_delays_duration_table = {}
+
+    # index is player_id
     number_dropouts_table = {}
 
     # index is player_id
@@ -49,6 +52,7 @@ def process_reliability(players_dict: typing.Dict[str, typing.Any], games_result
         # extract information
         number_advancement_played = game_data['number_advancement_played']
         delays_number_dict = game_data['delays_number']
+        delays_duration_sum_dict = game_data['delays_duration_sum']
         dropouts_number_dict = game_data['dropouts_number']
         game_players_dict = game_data['players']
         game_players = set(map(int, game_players_dict.keys()))
@@ -57,7 +61,7 @@ def process_reliability(players_dict: typing.Dict[str, typing.Any], games_result
 
         reliability_information.append(f"{game_name=} {list(map(lambda n: num2pseudo[n], game_players))}")
 
-        delays_info = "delays from this game: "
+        delays_info = "delays number from this game: "
         for key, value in delays_number_dict.items():
             if int(key) in num2pseudo:
                 player_pseudo = num2pseudo[int(key)]
@@ -68,6 +72,18 @@ def process_reliability(players_dict: typing.Dict[str, typing.Any], games_result
             if int(key) not in game_players:
                 delays_info += " (outside) "
         reliability_information.append(delays_info)
+
+        delays_info2 = "delays duration from this game: "
+        for key, value in delays_duration_sum_dict.items():
+            if int(key) in num2pseudo:
+                player_pseudo = num2pseudo[int(key)]
+                delays_info2 += f" {player_pseudo} "
+            else:
+                delays_info2 += f" ({key}???) "
+            delays_info2 += f" -> {value} "
+            if int(key) not in game_players:
+                delays_info2 += " (outside) "
+        reliability_information.append(delays_info2)
 
         dropouts_info = "dropouts from this game: "
         for key, value in dropouts_number_dict.items():
@@ -98,6 +114,13 @@ def process_reliability(players_dict: typing.Dict[str, typing.Any], games_result
                 number_delays = delays_number_dict[str(player_id)]
                 number_delays_table[player_id] += number_delays
 
+            #  sum delays durations
+            if player_id not in sum_delays_duration_table:
+                sum_delays_duration_table[player_id] = 0
+            if str(player_id) in delays_duration_sum_dict:
+                sum_delays_duration = delays_duration_sum_dict[str(player_id)]
+                sum_delays_duration_table[player_id] += sum_delays_duration
+
             #  how many dropouts
             if player_id not in number_dropouts_table:
                 number_dropouts_table[player_id] = 0
@@ -122,10 +145,11 @@ def process_reliability(players_dict: typing.Dict[str, typing.Any], games_result
     for player_id in players_set:
 
         number_delays = number_delays_table[player_id]
+        sum_delays_duration = sum_delays_duration_table[player_id]
         number_dropouts = number_dropouts_table[player_id]
         number_advancements = number_advancements_table[player_id]
 
-        reliability_element = [player_id, number_delays, number_dropouts, number_advancements]
+        reliability_element = [player_id, number_delays, sum_delays_duration, number_dropouts, number_advancements]
         reliability_list.append(reliability_element)
 
         # to check

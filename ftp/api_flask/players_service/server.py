@@ -1946,7 +1946,7 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
 class ReliabilityRessource(flask_restful.Resource):  # type: ignore
     """ ReliabilityRessource """
 
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int]], int]:
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int]], int]:
         """
         Provides reliability ratings
         EXPOSED

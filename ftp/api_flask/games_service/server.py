@@ -8379,6 +8379,8 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
             delayers = {d[3] for d in game_incidents}
             delays_number = {d: len([dd for dd in game_incidents if dd[3] == d]) for d in delayers}
             game_data['delays_number'] = delays_number
+            delays_duration_sum = {d: sum(dd[4] for dd in game_incidents if dd[3] == d) for d in delayers}
+            game_data['delays_duration_sum'] = delays_duration_sum
 
             # get dropouts
             game_dropouts = dropouts.Dropout.list_by_game_id(sql_executor, game_id)
