@@ -17,8 +17,8 @@ import scoring
 import ezml_render
 
 
-# a dropout is worth that many delays
-FACTOR_DROPOUT = 7
+# an advancement lasts this number of hours
+ADVANCEMENT_DURATION = 12
 
 DEFAULT_ELO = 1500
 
@@ -445,40 +445,34 @@ def show_rating_reliability():
 
         # from raw data to displayable data (simpler than ELO here)
         rating_list = []
-        for player_id, number_delays, number_dropouts, number_advancements in complete_rating_list:
+        for player_id, number_delays, sum_delays_duration, number_dropouts, number_advancements in complete_rating_list:
 
             # verdict - mostly a ratio
 
-            # usually retreats ans builds are not played
-            number_advancements_used = (number_advancements / 5) * 3
-
             # avoid division by zero
-            if number_advancements_used == 0:
-                number_advancements_used = 1
+            if number_advancements == 0:
+                continue
 
-            # ratio delays/ advancements
-            reliability = round(100 * (number_advancements_used - number_delays - FACTOR_DROPOUT * number_dropouts) / number_advancements_used, 3)
+            # ratio sum delays/ advancements
+            if number_dropouts != 0:
+                reliability = - 10 * number_dropouts
+            elif number_delays != 0:
+                reliability = ((ADVANCEMENT_DURATION * number_advancements - sum_delays_duration) / (ADVANCEMENT_DURATION * number_advancements)) * 100
+            else:
+                reliability = 100 + number_advancements / 1000
 
-            # bonus for no delays
-            if reliability == 100:
-                reliability += number_advancements / 1000
-
-            # if negative lower it up
-            if reliability < 0:
-                reliability /= 1000
-
-            rating = (player_id, reliability, number_delays, number_dropouts, number_advancements)
+            rating = (player_id, reliability, number_delays, number_advancements, number_dropouts, number_advancements)
             rating_list.append(rating)
 
         ratings_table = html.TABLE()
 
         # the display order
-        fields = ['rank', 'player', 'reliability', 'number_delays', 'number_dropouts', 'number']
+        fields = ['rank', 'player', 'reliability', 'sum_delays_duration', 'number_delays', 'number_dropouts', 'number']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'rank': 'rang', 'player': 'joueur', 'reliability': 'fiabilité', 'number_delays': 'nombre de retards', 'number_dropouts': 'nombre d\'abandons', 'number': 'nombre de tours joués'}[field]
+            field_fr = {'rank': 'rang', 'player': 'joueur', 'reliability': 'fiabilité', 'sum_delays_duration': 'temps de retard total', 'number_delays': 'nombre de retards', 'number_dropouts': 'nombre d\'abandons', 'number': 'nombre de tours joués'}[field]
             col = html.TD(field_fr)
             thead <= col
         ratings_table <= thead
@@ -486,7 +480,7 @@ def show_rating_reliability():
         row = html.TR()
         for field in fields:
             buttons = html.DIV()
-            if field in ['player', 'reliability', 'number_delays', 'number_dropouts', 'number']:
+            if field in ['player', 'reliability', 'sum_delays_duration', 'number_delays', 'number_dropouts', 'number']:
 
                 # button for sorting
                 button = html.BUTTON("<>", Class='btn-inside')
@@ -506,12 +500,14 @@ def show_rating_reliability():
             def key_function(r): return num2pseudo[r[0]].upper() if r[0] in num2pseudo else ""  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'reliability':
             def key_function(r): return r[1]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        elif sort_by == 'number_delays':
+        elif sort_by == 'sum_delays_duration':
             def key_function(r): return r[2]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        elif sort_by == 'number_dropouts':
+        elif sort_by == 'number_delays':
             def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        elif sort_by == 'number':
+        elif sort_by == 'number_dropouts':
             def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'number':
+            def key_function(r): return r[5]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
         reliability_sorted = sorted(rating_list, key=lambda r: r[1], reverse=True)
         rank_table = {p[0]: i + 1 for i, p in enumerate(reliability_sorted)}
@@ -538,14 +534,17 @@ def show_rating_reliability():
                 if field == 'reliability':
                     value = f"{rating[1]:.3f} %"
 
-                if field == 'number_delays':
+                if field == 'sum_delays_duration':
                     value = rating[2]
 
-                if field == 'number_dropouts':
+                if field == 'number_delays':
                     value = rating[3]
 
-                if field == 'number':
+                if field == 'number_dropouts':
                     value = rating[4]
+
+                if field == 'number':
+                    value = rating[5]
 
                 col = html.TD(value)
                 if colour is not None:
@@ -566,19 +565,16 @@ def show_rating_reliability():
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par fiabilité")
         explanations = f"""
-            Ce classement est un ratio du nombre de tours joués moins le nombre de retards par rapport au nombre de tours joués. Chaque abandon compte pour {FACTOR_DROPOUT} retards. Seuls les joueurs présents à la fin de la partie ont joué la partie. Seuls les tours joués lors de la dernière année dans la vraie vie depuis l'instant présent sont pris en compte.
+            Ce classement est un ratio du temps total de retards par rapport au nombre de tours joués. On compte {ADVANCEMENT_DURATION} heure(s) par tour joué. Seuls les joueurs présents à la fin de la partie ont joué la partie. Seuls les tours joués lors de la dernière année dans la vraie vie depuis l'instant présent sont pris en compte.<br>
+            Si un abandon vous semble injustifié, contactez l'arbitre de la partie, à défaut un modérateur.
         """
         MY_SUB_PANEL <= html.DIV(explanations, Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Pour le calcul, on considère qu'il y a 3 tours joués par année dans une partie (et non 5 puisque souvent les retraites ne sont pas jouées)", Class='note')
+        MY_SUB_PANEL <= html.DIV("Les joueurs sans retard sont bonifiés du millième du nombre de tours joués pour les départager.", Class='note')
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Les joueurs sans retard sont bonifiés du millième du nombre de tours joués.", Class='note')
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Un joueur qui n'a joué aucune partie (présent parce qu'il a tout de même un retard ou un abandon) reçoit un tour joué.", Class='note')
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Par charité chrétienne, les fiabilité négatives sont divisées par 1000.", Class='note')
+        MY_SUB_PANEL <= html.DIV("Pour les joueurs qui ont abandonné, la fiabilité est de -10% par abandon.", Class='note')
 
     def sort_by_callback(_, new_sort_by):
 

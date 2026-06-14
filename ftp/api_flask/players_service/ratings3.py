@@ -15,7 +15,7 @@ class Rating3:
     """ Class for handling a rating """
 
     @staticmethod
-    def list(sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[int, int, int, int]]:
+    def list(sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[int, int, int, int, int]]:
         """ class lookup : finds the object in database from fame id """
         ratings_found = sql_executor.execute("SELECT * FROM ratings3", need_result=True)
         if not ratings_found:
@@ -27,15 +27,18 @@ class Rating3:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS ratings3")
-        sql_executor.execute("CREATE TABLE ratings3 (player_id INTEGER, number_delays INTEGER, number_dropouts INTEGER, number_advancements INTEGER)")
+        sql_executor.execute("CREATE TABLE ratings3 (player_id INTEGER, number_delays INTEGER, sum_delays_duration INTEGER, number_dropouts INTEGER, number_advancements INTEGER)")
 
-    def __init__(self, player_id: int, number_delays: int, number_dropouts: int, number_advancements: int) -> None:
+    def __init__(self, player_id: int, number_delays: int, sum_delays_duration: int, number_dropouts: int, number_advancements: int) -> None:
 
         assert isinstance(player_id, int), "player_id must be an int"
         self._player_id = player_id
 
         assert isinstance(number_delays, int), "number_delays must be an int"
         self._number_delays = number_delays
+
+        assert isinstance(sum_delays_duration, int), "sum_delays_duration must be an int"
+        self._sum_delays_duration = sum_delays_duration
 
         assert isinstance(number_dropouts, int), "number_dropouts must be an int"
         self._number_dropouts = number_dropouts
@@ -45,14 +48,14 @@ class Rating3:
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        sql_executor.execute("INSERT OR REPLACE INTO ratings3 (player_id, number_delays, number_dropouts, number_advancements) VALUES (?, ?, ?, ?)", (self._player_id, self._number_delays, self._number_dropouts, self._number_advancements))
+        sql_executor.execute("INSERT OR REPLACE INTO ratings3 (player_id, number_delays, sum_delays_duration, number_dropouts, number_advancements) VALUES (?, ?, ?, ?, ?)", (self._player_id, self._number_delays, self._sum_delays_duration, self._number_dropouts, self._number_advancements))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
         sql_executor.execute("DELETE FROM ratings3 WHERE player_id = ?", (self._player_id, ))
 
     def __str__(self) -> str:
-        return f"player_id={self._player_id} number_delays={self._number_delays} number_dropouts={self._number_dropouts} number_advancements={self._number_advancements}"
+        return f"player_id={self._player_id} number_delays={self._number_delays} sum_delays_duration={self._sum_delays_duration} number_dropouts={self._number_dropouts} number_advancements={self._number_advancements}"
 
 
 if __name__ == '__main__':
