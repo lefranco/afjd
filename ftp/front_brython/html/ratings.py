@@ -458,6 +458,8 @@ def show_rating_reliability():
                 reliability = - 10 * number_dropouts
             elif number_delays != 0:
                 reliability = ((ADVANCEMENT_DURATION * number_advancements - sum_delays_duration) / (ADVANCEMENT_DURATION * number_advancements)) * 100
+                if reliability < 0:
+                    reliability = 0
             else:
                 reliability = 100 + number_advancements / 1000
 
@@ -565,7 +567,7 @@ def show_rating_reliability():
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par fiabilité")
         explanations = f"""
-            Ce classement est un ratio du temps total de retards par rapport au nombre de tours joués. On compte {ADVANCEMENT_DURATION} heure(s) par tour joué. Seuls les joueurs présents à la fin de la partie ont joué la partie. Seuls les tours joués lors de la dernière année dans la vraie vie depuis l'instant présent sont pris en compte.<br>
+            Ce classement est un ratio du temps total de retards par rapport au nombre de tours joués. On compte {ADVANCEMENT_DURATION} heure(s) par tour joué. Ce ratio est mis à zéro si négatif. Seuls les joueurs présents à la fin de la partie ont joué la partie. Seuls les tours joués lors de la dernière année dans la vraie vie depuis l'instant présent sont pris en compte.<br><br>
             Si un abandon vous semble injustifié, contactez l'arbitre de la partie, à défaut un modérateur.
         """
         MY_SUB_PANEL <= html.DIV(explanations, Class='important')
