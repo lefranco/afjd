@@ -58,6 +58,8 @@ typedef/**/LISTE2(_DECISION_TWO_UNIT,NMOUVEMENTS) _DECISION2;
 typedef/**/LISTE(_DECISION_REGION,NREGIONS) _DECISION3;
 typedef/**/LISTE(_RETRAITE *,NRETRAITES) _COLLISIONRETRAITE;
 typedef/**/LISTE(_REGION *,NREGIONS) _REGIONVIDE;
+typedef/**/LISTE(_PAYS *,NPAYSS) _PAYSMENACE;
+typedef/**/LISTE(_PAYS *,NPAYSS) _PAYSELIMINE;
 
 typedef struct {
 	_DECISION1 DECISION1;
@@ -1376,7 +1378,7 @@ void calculaneanties(void)
 
 void suppressionelimines2(void) {
 	char buf[TAILLEMESSAGE];
-	_PAYS *p;
+	_PAYS *p, **y, **z;
 	_UNITE *q;
 	_CENTRE *t;
 	_POSSESSION *u;
@@ -1384,7 +1386,16 @@ void suppressionelimines2(void) {
 	_ARMEEVOISIN *v, *vv;
 	_FLOTTEVOISIN *w, *ww;
 	BOOL retraitecentrepossible, collisionpossible;
+	_PAYSMENACE PAYSMENACE;
+	_PAYSELIMINE PAYSELIMINE;
 
+	/* Trouve les pays menaces, c'est a dire ceux qui : 
+	  - ont une retraite 
+	  - n'occupent aucun centre
+	  - on tous leur centres occupes
+	  - pas de retraite possible sur un centre
+	*/
+	PAYSMENACE.n = 0;
 	for (p = PAYS.t; p < PAYS.t + PAYS.n; p++) {
 		
 		for (r = DELOGEE.t; r < DELOGEE.t + DELOGEE.n; r++)
@@ -1433,7 +1444,9 @@ void suppressionelimines2(void) {
 		if (q < UNITE.t + UNITE.n)
 			continue; /* une unite du pays occupe un centre */
 
-		retraitecentrepossible = collisionpossible = FALSE;
+		/* maintenant on cherche une retraite sur un centre */
+		retraitecentrepossible = FALSE;
+
 		for (r = DELOGEE.t; r < DELOGEE.t + DELOGEE.n; r++) {
 
 			if (r->unite->pays != p)
@@ -1457,10 +1470,79 @@ void suppressionelimines2(void) {
 							r = DELOGEE.t + DELOGEE.n; /* sortie de boucle */
 							break;/* sortie de boucle */
 						}
-						/* cherche une unite delogee d'un autre pays */
+					}
+				break;
+
+			case FLOTTE:
+				for (w = FLOTTEVOISIN.t; w < FLOTTEVOISIN.t + FLOTTEVOISIN.n; w++)
+					if (w->zone1 == r->unite->zone &&
+							/* marche aussi avec le fonction chercheoccupant() */
+						chercheoccupantnondeloge(w->zone2->region) == NULL &&
+						w->zone2->region != r->zoneorig->region &&
+						!interditretraite(w->zone2->region)) {
+
+						/* voila une zone accessible en retraite */
+						for (t = CENTRE.t; t < CENTRE.t + CENTRE.n; t++)
+							if (t->region == w->zone2->region)
+								break;
+						if (t < CENTRE.t + CENTRE.n) { /* retraite possible sur un centre */
+							retraitecentrepossible = TRUE;
+							r = DELOGEE.t + DELOGEE.n; /* sortie de boucle */
+							break;/* sortie de boucle */
+						}
+					}
+				break;
+			}
+			if(retraitecentrepossible)
+				break;
+		}
+
+		if(retraitecentrepossible)
+			continue;
+
+		/* Le pays va disparaitre, reste a determiner s'il peut nuire par ses retraites, auquel cas il reste pour le moment */
+		PAYSMENACE.t[PAYSMENACE.n] = p;
+		PAYSMENACE.n++;
+		assert(PAYSMENACE.n <= NPAYSS);
+
+		printf(">>>> pays menace %s\n", p->nom);
+	}
+
+	/* Trouve les pays elimines : ce sont les pays menaces qui ne peuvent pas retraiter en collision avec une unite d'un pays qui n'est pas menace */
+	PAYSELIMINE.n = 0;
+	for (y = PAYSMENACE.t; y < PAYSMENACE.t + PAYSMENACE.n; y++) {
+
+		collisionpossible = FALSE;
+
+		for (r = DELOGEE.t; r < DELOGEE.t + DELOGEE.n; r++) {
+
+			if (r->unite->pays != *y)
+				continue;
+
+			switch (r->unite->typeunite) {
+			case ARMEE:
+
+				for (v = ARMEEVOISIN.t; v < ARMEEVOISIN.t + ARMEEVOISIN.n; v++)
+					if (v->zone1 == r->unite->zone &&
+							/* marche aussi avec le fonction chercheoccupant() */
+							chercheoccupantnondeloge(v->zone2->region) == NULL &&
+							v->zone2->region != r->zoneorig->region &&
+							!interditretraite(v->zone2->region)) {
+
+						/* cherche une unite delogee d'un autre pays non menace */
 						for (x = DELOGEE.t; x < DELOGEE.t + DELOGEE.n; x++) {
-							if (x->unite->pays == p)
+
+							if (x->unite->pays == *y)
 								continue;
+
+							/* seulement un pays pas menace */
+							for (z = PAYSMENACE.t; z < PAYSMENACE.t + PAYSMENACE.n; z++) {
+								if(*z == x->unite->pays)
+									break;
+							}
+							if(z < PAYSMENACE.t + PAYSMENACE.n) 
+								continue;
+
 							/* peut elle retraiter au meme endroit ? */
 							switch (x->unite->typeunite) {
 							case ARMEE:
@@ -1496,24 +1578,25 @@ void suppressionelimines2(void) {
 			case FLOTTE:
 				for (w = FLOTTEVOISIN.t; w < FLOTTEVOISIN.t + FLOTTEVOISIN.n; w++)
 					if (w->zone1 == r->unite->zone &&
-							/* marche aussi avec le fonction chercheoccupant() */
+						/* marche aussi avec le fonction chercheoccupant() */
 						chercheoccupantnondeloge(w->zone2->region) == NULL &&
 						w->zone2->region != r->zoneorig->region &&
 						!interditretraite(w->zone2->region)) {
 
-						/* voila une zone accessible en retraite */
-						for (t = CENTRE.t; t < CENTRE.t + CENTRE.n; t++)
-							if (t->region == w->zone2->region)
-								break;
-						if (t < CENTRE.t + CENTRE.n) { /* retraite possible sur un centre */
-							retraitecentrepossible = TRUE;
-							r = DELOGEE.t + DELOGEE.n; /* sortie de boucle */
-							break;/* sortie de boucle */
-						}
-						/* cherche une unite delogee d'un autre pays */
+						/* cherche une unite delogee d'un autre pays non menace */
 						for (x = DELOGEE.t; x < DELOGEE.t + DELOGEE.n; x++) {
-							if (x->unite->pays == p)
+
+							if (x->unite->pays == *y)
 								continue;
+
+							/* seulement un pays pas menace */
+							for (z = PAYSMENACE.t; z < PAYSMENACE.t + PAYSMENACE.n; z++) {
+								if(*z == *y)
+									break;
+							}
+							if(z < PAYSMENACE.t + PAYSMENACE.n)
+								continue;
+
 							/* peut elle retraiter au meme endroit ? */
 							switch (x->unite->typeunite) {
 							case ARMEE:
@@ -1547,34 +1630,37 @@ void suppressionelimines2(void) {
 			}
 		}
 
-		if (retraitecentrepossible || collisionpossible)
-			continue; /* une delogee du pays peut retraiter sur un centre ou realiser une collision */
+		if (collisionpossible)
+			continue; /* une delogee du pays peut realiser une collision */
 
-		/* test presume inutile a confirmer */
-		/*if (q < UNITE.t + UNITE.n)
-			continue; *//* pays suivant */
+		/* si on arrive ici c'est que le pays est mort, il n'a plus aucun centre ni aucon moyen de gener un pays non menace */
+		PAYSELIMINE.t[PAYSELIMINE.n] = *y;
+		PAYSELIMINE.n++;
+		assert(PAYSELIMINE.n <= NPAYSS);
+	}
 
-		/* si on arrive ici c'est que le pays est mort */
+	/* Maintenant on elimine les pays (unites delogees passent a aneanties */
+	for (y = PAYSELIMINE.t; y < PAYSELIMINE.t + PAYSELIMINE.n; y++) {
 
 		if (strcmp(NOMPROGRAMME, "JOUEUR")) { /* ne pas afficher si appel du joueur */
 			if (OPTIONw) {
-				cherchechaine(__FILE__, 45, buf, 1, p->nom); /*"Suppression des unites du pays %1"*/
+				cherchechaine(__FILE__, 45, buf, 1, (*y)->nom); /*"Suppression des unites du pays %1"*/
 				informer(buf);
 			}
 		}
 
 		for (r = DELOGEE.t; r < DELOGEE.t + DELOGEE.n; r++) {
 
-			if (r->unite->pays != p)
+			if (r->unite->pays != *y)
 				continue;
 
-			/* la marque comme aneantie */
+			/* la marque comme aneantie pour empĉher d'attendre le joueur */
 			ANEANTIE.t[ANEANTIE.n].delogee = r;
 			ANEANTIE.n++;
 			assert(ANEANTIE.n <= NANEANTIES);
 		}
 
-	} /* pays */
+	}
 }
 /**************************************************************************/
 
