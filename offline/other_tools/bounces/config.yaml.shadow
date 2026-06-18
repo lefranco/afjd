@@ -1,8 +1,7 @@
 imap:
-  server: xxx
-  port: xxx
-  user: xxx
-  password: xxx
+  server: pro3.mail.ovh.net
+  port: 993
+  user: "afjdiplo_server_noreply@diplomania2.fr"
+  password: "xxxx"
   mailbox: "INBOX"
-  max_emails: 0 
 work_dir: ./tmp

@@ -1,8 +1,7 @@
 imap:
-  server: xxx
-  port: xxx
-  user: xxx
-  password: xxx
+  server: ns0.ovh.net
+  port: 143
+  user: "postmaster@diplomania2.fr"
+  password: xxxx
   mailbox: "INBOX"
-  max_emails: 0 
 work_dir: ./tmp
