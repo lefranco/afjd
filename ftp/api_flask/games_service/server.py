@@ -2005,6 +2005,10 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
             replacement = replacements.Replacement(game_id, role_id, player_id, True)
             replacement.update_database(sql_executor)  # noqa: F821
 
+            # in case player taking role is a former quitter : erase !
+            dropout = dropouts.Dropout(game_id, role_id, player_id)
+            dropout.delete_database(sql_executor)  # noqa: F821
+
             sql_executor.commit()
             del sql_executor
 
