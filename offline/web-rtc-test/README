@@ -1,3 +1,6 @@
+# WARNING !!!
+# la version originale de config.py (avec le mot de passe) a fuité sur l'historique git
+
 # once
 ngrok config add-authtoken $TOKEN 
 
@@ -10,4 +13,6 @@ python3 app.py
 # start client
 firefox 
   open http://localhost:5000/
+
+
 
