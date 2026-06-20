@@ -16,6 +16,14 @@ class Replacement:
     """ Class for handling an replacement """
 
     @staticmethod
+    def list_by_player_game_id(sql_executor: database.SqlExecutor, player_id: int, game_id: int) -> typing.List[typing.Tuple[int, int, int, float, int]]:
+        """ class lookup : finds the object in database from game id """
+        replacements_found = sql_executor.execute("SELECT * FROM replacements where player_id = ? and game_id = ?", (player_id, game_id), need_result=True)
+        if not replacements_found:
+            return []
+        return replacements_found
+
+    @staticmethod
     def list_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, int, int, float, int]]:
         """ class lookup : finds the object in database from game id """
         replacements_found = sql_executor.execute("SELECT * FROM replacements where player_id = ?", (player_id,), need_result=True)
@@ -57,10 +65,10 @@ class Replacement:
         assert isinstance(player_id, int), "player_id must be an int"
         self._player_id = player_id
 
+        self._date = time.time()
+
         assert isinstance(entering, bool), "entering must be an bool"
         self._entering = int(entering)
-
-        self._date = time.time()
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """

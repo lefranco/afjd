@@ -10,7 +10,6 @@ import typing
 import collections
 import json
 import time
-import sys
 
 import requests
 
@@ -27,6 +26,7 @@ import reports
 import games
 import variants
 import database
+import replacements
 import definitives
 import updates
 import incidents
@@ -357,7 +357,6 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
 
     # adjudication failed
     if req_result.status_code != 201:
-        print(f"ERROR from server  : {req_result.text}", file=sys.stderr)
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
         return False, False, f"ERROR : Failed to adjudicate {message} : {adjudication_report}"
 
@@ -656,11 +655,23 @@ def fake_post(now: float, game_id: int, role_id: int, definitive_value: int, nam
                     debug_message = "ERROR : Could not find the player identifier"
                     return status, late, unsafe, missing, adjudicated, debug_message
 
-                duration = game.hours_after_deadline()
-                incident = incidents.Incident(int(game_id), int(role_id), advancement, player_id, duration)
-                incident.update_database(sql_executor)  # noqa: F821
+                joined_after_deadline = False
+                # replacements_list : when did player who entered  game
+                replacements_list = replacements.Replacement.list_by_player_game_id(sql_executor, player_id, game_id)
+                for _, role_num2, _, date2, entering in replacements_list:
+                    if not entering:
+                        continue
+                    if role_num2 != int(role_id):
+                        continue
+                    if date2 > game.deadline:
+                        joined_after_deadline = True
 
-                late = True
+                # if player joined after deadline : no incident
+                if not joined_after_deadline:
+                    duration = game.hours_after_deadline()
+                    incident = incidents.Incident(int(game_id), int(role_id), advancement, player_id, duration)
+                    incident.update_database(sql_executor)  # noqa: F821
+                    late = True
 
         else:
 
