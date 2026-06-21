@@ -64,7 +64,7 @@ FAQ_CONTENT_TABLE = {
     """,
 
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
-    "Passer ses ordres signifie réaliser une transition “pas d'accord pour résoudre“ (ou pas d'information) -> “d'accord pour résoudre“ (maintenant ou à la date limite, peu importe). Un retard signifie que cela est réalisé après la date limite. Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels (on l'a déjà dit ?) !",
+    "Passer ses ordres signifie réaliser une transition “pas d'accord pour résoudre“ (ou pas d'information) -> “d'accord pour résoudre“ (maintenant ou à la date limite, peu importe). Un retard signifie que cela est réalisé après la date limite. Exception : si le joueur est arrivé dans la partie après la date limite, il n'est pas en retard. Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels (on l'a déjà dit ?) !",
 
     "Comment sont comptés les retards ?":
     "Toute heure de retard entamée est due. Cela signifie qu'un retard indiqué “2“ (2 heures) est un retard d'au moins une heure et d'au plus deux heures (par rapport à la date limite au moment de la soumission)",
