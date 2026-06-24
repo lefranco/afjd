@@ -9249,7 +9249,6 @@ class WarnDeadlinePlayersGameRessource(flask_restful.Resource):  # type: ignore
         # check orders are required
         actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
         needed_list = [o[1] for o in actives_list]
-
         if not needed_list:
             # This should not happen !
             del sql_executor
@@ -9258,13 +9257,11 @@ class WarnDeadlinePlayersGameRessource(flask_restful.Resource):  # type: ignore
         # check orders are submitted
         submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
         submitted_list = [o[1] for o in submissions_list]
-
         missing_orders_list = list(set(needed_list) - set(submitted_list))
 
         # check agreements are provided
         definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
         agreed_list = [o[1] for o in definitives_list if o[2] in [1, 2]]  # 0 = never 1 = now 2 = after
-
         missing_agreement_list = list(set(needed_list) - set(agreed_list))
         if not missing_agreement_list:
             # This may happen sometimes !
@@ -9381,8 +9378,13 @@ class ScoldLatePlayersGameRessource(flask_restful.Resource):  # type: ignore
         # check orders are submitted
         submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
         submitted_list = [o[1] for o in submissions_list]
+        missing_orders_list = list(set(needed_list) - set(submitted_list))
 
-        missing_list = list(set(needed_list) - set(submitted_list))
+        # check agreements are provided
+        definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
+        agreed_list = [o[1] for o in definitives_list if o[2] in [1, 2]]  # 0 = never 1 = now 2 = after
+        missing_agreement_list = list(set(needed_list) - set(agreed_list))
+        missing_list = list(set(missing_orders_list) | set(missing_agreement_list))
         if not missing_list:
             # This should not happen !
             del sql_executor
@@ -9408,7 +9410,7 @@ class ScoldLatePlayersGameRessource(flask_restful.Resource):  # type: ignore
 
         body = "Bonjour !\n"
         body += "\n"
-        body += "Vos ordres sont attendus dans cette partie !\n"
+        body += "Vos ordres (ou votre accord) sont attendus dans cette partie !\n"
         body += "\n"
         body += "Conseil : allez très rapidement dans la partie pour valider vos ordres.\n"
         body += "\n"
