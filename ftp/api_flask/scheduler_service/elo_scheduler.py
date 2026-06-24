@@ -76,11 +76,6 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
         classic = game_data['classic']
         quitting_dict = game_data['quitting_dict']
 
-        # convert time
-        if VERIFY:
-            time_creation = datetime.datetime.fromtimestamp(game_start_time)
-            time_creation_str = time_creation.strftime("%Y-%m-%d %H:%M:%S %f")
-
         # calculate scoring
         raw_ratings = {num2rolename[n]: centers_number_dict[str(n)] if str(n) in centers_number_dict else 0 for n in variant_data.roles if n >= 1}
         ratings = dict(sorted(raw_ratings.items(), key=lambda i: i[1], reverse=True))
@@ -155,6 +150,8 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
             expected_table[role_name] = sigma
 
         if VERIFY:
+            time_creation = datetime.datetime.fromtimestamp(game_start_time)
+            time_creation_str = time_creation.strftime("%Y-%m-%d %H:%M:%S %f")
             elo_information.append(f"{time_creation_str=} {game_name=} {classic=}")
             elo_information.append(f"{game_scoring_name=}")
             elo_information.append(f"{solo_threshold=}")
@@ -372,7 +369,7 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
 
 
 def run(jwt_token: str, commuter_account: str) -> None:
-    """ elo_scheduler """
+    """ Elo calculation scheduler. Calculates from games data for proviing ELO on the site. """
 
     # ========================
     # get players list
@@ -475,9 +472,6 @@ def run(jwt_token: str, commuter_account: str) -> None:
             mylogger.LOGGER.error(req_result.json()['msg'])
         mylogger.LOGGER.error("ERROR: Failed to update ELO database")
         return
-
-    # all done !
-    mylogger.LOGGER.info("=== Hurray, ELO was updated !")
 
 
 if __name__ == '__main__':

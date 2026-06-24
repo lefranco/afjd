@@ -19,7 +19,7 @@ SESSION = requests.Session()
 
 
 def run(jwt_token: str) -> None:
-    """ archiver_scheduler """
+    """ Archiver scheduler. Archives all games that need to. """
 
     # ========================
     # archive finished games
@@ -35,10 +35,6 @@ def run(jwt_token: str) -> None:
         if 'msg' in req_result.json():
             mylogger.LOGGER.error(req_result.json()['msg'])
         mylogger.LOGGER.error("ERROR: Failed to perform Archiving")
-        return
-
-    # all done !
-    mylogger.LOGGER.info("=== Hurray, Archiving was performed !")
 
 
 if __name__ == '__main__':

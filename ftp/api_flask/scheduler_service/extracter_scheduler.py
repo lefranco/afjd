@@ -33,7 +33,7 @@ SESSION = requests.Session()
 
 
 def run(jwt_token: str, client_id: str, client_secret: str) -> None:
-    """ extracter scheduler """
+    """ Extracter scheduler. Extracts information about people giving money to association (from helloasso) """
 
     json_dict = {
         'client_id': client_id,

@@ -161,7 +161,7 @@ def process_reliability(players_dict: typing.Dict[str, typing.Any], games_result
 
 
 def run(jwt_token: str) -> None:
-    """ elo_scheduler """
+    """ Reliability calculation scheduler. Same ELO scheduler for reliability. """
 
     # ========================
     # get players list
@@ -224,9 +224,6 @@ def run(jwt_token: str) -> None:
             mylogger.LOGGER.error(req_result.json()['msg'])
         mylogger.LOGGER.error("ERROR: Failed to update Reliability database")
         return
-
-    # all done !
-    mylogger.LOGGER.info("=== Hurray, Reliability was updated !")
 
 
 if __name__ == '__main__':

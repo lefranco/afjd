@@ -26,7 +26,7 @@ SESSION = requests.Session()
 
 
 def run(jwt_token: str) -> None:
-    """ warner_scheduler """
+    """ Warner scheduler. Warns people that are liable to soon be late in their game. """
 
     # ========================
     # warn people they did not enter orders and deadline is soon
@@ -123,9 +123,6 @@ def run(jwt_token: str) -> None:
 
         # easy on the server !
         time.sleep(INTER_WARNING_TIME_SEC)
-
-    # all done !
-    mylogger.LOGGER.info("=== Hurray, Warning was performed !")
 
 
 if __name__ == '__main__':

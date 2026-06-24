@@ -372,73 +372,82 @@ def acting_threaded_procedure() -> None:
             hour_now = (int(timestamp_now) // 3600) % 24
 
             if hour_now == 0:
-                mylogger.LOGGER.info("Scolder scheduler...")
+                mylogger.LOGGER.info("=== Calling Scolder scheduler...")
                 try:
                     scolder_scheduler.run(jwt_token)
+                    mylogger.LOGGER.info("=== Hurray, Scolding was performed !")
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Scolder, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 1:
-                mylogger.LOGGER.info("ELO Scheduler...")
+                mylogger.LOGGER.info("=== Calling ELO Scheduler...")
                 try:
                     elo_scheduler.run(jwt_token, COMMUTER_ACCOUNT)
+                    mylogger.LOGGER.info("=== Hurray, ELO was updated !")
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with ELO, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 2:
-                mylogger.LOGGER.info("Reliability Scheduler...")
+                mylogger.LOGGER.info("=== Calling Reliability Scheduler...")
                 try:
                     reliability_scheduler.run(jwt_token)
+                    mylogger.LOGGER.info("=== Hurray, Reliability was updated !")
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Reliability, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 3:
-                mylogger.LOGGER.info("Regularity Scheduler...")
+                mylogger.LOGGER.info("=== Calling Regularity Scheduler...")
                 try:
                     regularity_scheduler.run(jwt_token)
+                    mylogger.LOGGER.info("=== Hurray, Regularity was updated !")
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Regularity, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 4:
-                mylogger.LOGGER.info("Game archiver Scheduler...")
+                mylogger.LOGGER.info("=== Calling Game Archiver Scheduler...")
                 try:
                     archiver_scheduler.run(jwt_token)
+                    mylogger.LOGGER.info("=== Hurray, Archiving was performed !")
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Archiver, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 5:
-                mylogger.LOGGER.info("Forgiver Scheduler...")
+                mylogger.LOGGER.info("=== Calling Forgiver Scheduler...")
                 try:
                     forgiver_scheduler.run(jwt_token)
+                    mylogger.LOGGER.info("=== Hurray, Forgiveness was performed !")
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Forgiver, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 6:
-                mylogger.LOGGER.info("Extracter Scheduler...")
+                mylogger.LOGGER.info("=== Calling Extracter Scheduler...")
                 try:
                     extracter_scheduler.run(jwt_token, client_id, client_secret)
+                    mylogger.LOGGER.info("=== Hurray, Extracting was performed !")
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Extracter, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 7:
-                mylogger.LOGGER.info("Mailchecker Scheduler...")
+                mylogger.LOGGER.info("Calling Mailchecker Scheduler...")
                 try:
                     mailchecker_scheduler.run()
+                    mylogger.LOGGER.info("=== Hurray, Mailchecker was done!")
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Mailchecker, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())
 
             if hour_now == 12:
-                mylogger.LOGGER.info("Warner scheduler...")
+                mylogger.LOGGER.info("=== Calling Warner scheduler...")
                 try:
                     warner_scheduler.run(jwt_token)
+                    mylogger.LOGGER.info("=== Hurray, Warning was performed !")
                 except:  # noqa: E722 pylint: disable=bare-except
                     mylogger.LOGGER.error("Exception occured with Warner, stack is below")
                     mylogger.LOGGER.error("%s", traceback.format_exc())

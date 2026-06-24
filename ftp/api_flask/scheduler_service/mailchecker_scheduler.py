@@ -36,7 +36,7 @@ def email_checking_message() -> typing.Tuple[str, str]:
 
 
 def run() -> None:
-    """ mailchecker scheduler """
+    """ Mailchecker scheduler. Just sends an email to make sure site is still alive. """
 
     admin_pseudo = EMAIL_ADMIN
 
@@ -58,8 +58,6 @@ def run() -> None:
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
         mylogger.LOGGER.error("Mailchecker Scheduler ERROR...")
         flask_restful.abort(400, msg=f"Failed to send email to {admin_pseudo} : {message}")
-
-    mylogger.LOGGER.info("Mailchecker Scheduler SUCCESS...")
 
 
 if __name__ == '__main__':

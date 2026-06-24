@@ -146,7 +146,7 @@ def process_regularity(players_dict: typing.Dict[str, typing.Any], games_results
 
 
 def run(jwt_token: str) -> None:
-    """ elo_scheduler """
+    """ Regularity scheduler. Same ELO scheduler for regularity. """
 
     # ========================
     # get players list
@@ -209,9 +209,6 @@ def run(jwt_token: str) -> None:
             mylogger.LOGGER.error(req_result.json()['msg'])
         mylogger.LOGGER.error("ERROR: Failed to update Regularity database")
         return
-
-    # all done !
-    mylogger.LOGGER.info("=== Hurray, Regularity was updated !")
 
 
 if __name__ == '__main__':

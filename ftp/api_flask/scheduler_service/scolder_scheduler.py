@@ -26,7 +26,7 @@ SESSION = requests.Session()
 
 
 def run(jwt_token: str) -> None:
-    """ scolder_scheduler """
+    """ Scolder scheduler. Shouts at people that are late (once for a lateness) """
 
     # ========================
     # tell people they are late
@@ -108,9 +108,6 @@ def run(jwt_token: str) -> None:
 
         # easy on the server !
         time.sleep(INTER_SCOLDING_TIME_SEC)
-
-    # all done !
-    mylogger.LOGGER.info("=== Hurray, Scolding was performed !")
 
 
 if __name__ == '__main__':

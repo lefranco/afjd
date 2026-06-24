@@ -19,7 +19,7 @@ SESSION = requests.Session()
 
 
 def run(jwt_token: str) -> None:
-    """ forgiver_scheduler """
+    """ Forgiver scheduler. Clears all delays that are more than a year old. """
 
     # ========================
     # clear old delays
@@ -35,10 +35,6 @@ def run(jwt_token: str) -> None:
         if 'msg' in req_result.json():
             mylogger.LOGGER.error(req_result.json()['msg'])
         mylogger.LOGGER.error("ERROR: Failed to perform Forgiveness")
-        return
-
-    # all done !
-    mylogger.LOGGER.info("=== Hurray, Forgiveness was performed !")
 
 
 if __name__ == '__main__':
