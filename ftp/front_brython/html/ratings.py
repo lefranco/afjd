@@ -463,7 +463,7 @@ def show_rating_reliability():
             else:
                 reliability = 100 + number_advancements / 1000
 
-            rating = (player_id, reliability, number_delays, number_advancements, number_dropouts, number_advancements)
+            rating = (player_id, reliability, number_delays, number_delays, number_dropouts, number_advancements)
             rating_list.append(rating)
 
         ratings_table = html.TABLE()
