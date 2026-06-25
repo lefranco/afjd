@@ -54,7 +54,7 @@ def show_games(ev, game_list):  # pylint: disable=invalid-name
     mydialog.info_stay(game_list)
 
 
-def get_detailed_elo_rating(classic, role_id):
+def get_detailed_elo_rating(variant_name, negotiate, role_id):
     """ get_detailed_elo_rating """
 
     rating_list = None
@@ -76,7 +76,7 @@ def get_detailed_elo_rating(classic, role_id):
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/elo_rating/{int(classic)}/{role_id}"
+    url = f"{host}:{port}/elo_rating/{int(negotiate)}/{role_id}"
 
     # getting rating list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -84,7 +84,7 @@ def get_detailed_elo_rating(classic, role_id):
     return list(rating_list)
 
 
-def get_global_elo_rating(classic):
+def get_global_elo_rating(variant_name, negotiate):
     """ get_global_elo_rating """
 
     rating_list = None
@@ -106,7 +106,7 @@ def get_global_elo_rating(classic):
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/elo_rating/{int(classic)}"
+    url = f"{host}:{port}/elo_rating/{int(negotiate)}"
 
     # getting rating list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -174,27 +174,27 @@ def get_regularity_rating():
     return list(rating_list)
 
 
-def show_rating_performance(classic, role_id):
+def show_rating_performance(variant_name, negotiate, role_id):
     """ show_rating_performance """
 
-    def make_ratings_table(classic, role_id, nb_roles):
+    def make_ratings_table(variant_name, negociate, role_id, nb_roles):
 
         if role_id:
 
             # for a given role
-            rating_list = get_detailed_elo_rating(classic, role_id)
+            rating_list = get_detailed_elo_rating(variant_name, negociate, role_id)
 
         else:
 
             # for all roles
-            complete_rating_list = get_global_elo_rating(classic)
+            complete_rating_list = get_global_elo_rating(variant_name, negociate)
 
             # need to sum up per player
             rating_list_dict = {}
-            for (classic2, role_id2, player_id, elo, change, game_id, number_games) in complete_rating_list:
+            for (negotiate2, role_id2, player_id, elo, change, game_id, number_games) in complete_rating_list:
 
                 # avoid using loop variable
-                classic_found = classic2
+                negotiate_found = negotiate2
 
                 # create entry if necessary
                 if player_id not in rating_list_dict:
@@ -215,7 +215,7 @@ def show_rating_performance(classic, role_id):
                 rating_list_dict[player_id]['last_game'] = game_id
                 rating_list_dict[player_id]['last_role'] = role_id2
 
-            rating_list = [[classic_found, v['last_role'], k, round((v['elo_sum'] + (nb_roles - v['number_rated']) * DEFAULT_ELO) / nb_roles), v['last_change'], v['last_game'], v['number_games']] for k, v in rating_list_dict.items()]
+            rating_list = [[negotiate_found, v['last_role'], k, round((v['elo_sum'] + (nb_roles - v['number_rated']) * DEFAULT_ELO) / nb_roles), v['last_change'], v['last_game'], v['number_games']] for k, v in rating_list_dict.items()]
 
         ratings_table = html.TABLE()
 
@@ -247,7 +247,7 @@ def show_rating_performance(classic, role_id):
         sort_by = storage['SORT_BY_ELO_RATINGS']
         reverse_needed = bool(storage['REVERSE_NEEDED_ELO_RATINGS'] == 'True')
 
-        # 0 classic / 1 role_id / 2 player_id / 3 elo / 4 change / 5 game_id / 6 number games
+        # 0 negotiate / 1 role_id / 2 player_id / 3 elo / 4 change / 5 game_id / 6 number games
 
         if sort_by == 'player':
             def key_function(r): return num2pseudo[r[2]].upper() if r[2] in num2pseudo else ""  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
@@ -298,7 +298,7 @@ def show_rating_performance(classic, role_id):
                     value = role_icon_img
 
                 if field == 'game':
-                    value = games_dict[str(rating[5])]['name'] if str(rating[5]) in games_dict else ""
+                    value = games_dict[str(rating[5])]['name'] if str(rating[5]) in games_dict else f"??{rating[5]}??"
 
                 if field == 'number':
                     value = rating[6]
@@ -321,54 +321,81 @@ def show_rating_performance(classic, role_id):
 
     def refresh():
 
-        # should be 7
         nb_roles = len(variant_data.roles) - 1
 
-        ratings_table, average = make_ratings_table(classic, role_id, nb_roles)
+        ratings_table, average = make_ratings_table(variant_name, negotiate, role_id, nb_roles)
+
+        # button for changing variant
+        switch_variant_buttons = []
+        for variant_name2 in config.VARIANT_NAMES_DICT:
+            if variant_name2 == variant_name:
+                continue
+            switch_variant_button = html.BUTTON(variant_name2, Class='btn-inside')
+            switch_variant_button.bind("click", lambda ev, vn=variant_name2: switch_variant_callback(ev, vn))
+            switch_variant_buttons.append(switch_variant_button)
 
         # button for changing mode
-        switch_mode_button = html.BUTTON(f"Passer en {'blitz' if classic else 'classique'}", Class='btn-inside')
-        switch_mode_button.bind("click", switch_mode_callback)
+        switch_mode_button = html.BUTTON(f"{'blitz' if negotiate else 'négo'}", Class='btn-inside')
+        switch_mode_button.bind("click", lambda ev, nn=not negotiate: switch_mode_callback(ev, nn))
 
         # button for going global
-        switch_global_button = html.BUTTON("Classement global", Class='btn-inside')
-        switch_global_button.bind("click", lambda e: switch_role_callback(e, None))
+        switch_global_button = html.BUTTON("Retour au classement global", Class='btn-inside')
+        switch_global_button.bind("click", lambda ev: switch_role_callback(ev, None))
 
         # buttons for selecting role
-        switch_role_buttons_table = html.TABLE()
-        row = html.TR()
-        col = html.TD("Cliquer sur le pays pour le détail ->")
-        row <= col
+        switch_role_buttons = []
         for poss_role_id, poss_role in variant_data.roles.items():
             if poss_role_id >= 1 and poss_role_id != role_id:
-                form = html.FORM()
                 role_name = variant_data.role_name_table[poss_role]
-                role_icon_img = common.display_flag(variant_name, interface_chosen, poss_role_id, role_name)
-                role_icon_img.bind("click", lambda e, r=poss_role_id: switch_role_callback(e, r))
-                form <= role_icon_img
-                col = html.TD(form)
-                row <= col
-        switch_role_buttons_table <= row
+                switch_role_button = html.BUTTON(role_name, Class='btn-inside')
+                switch_role_button.bind("click", lambda e, r=poss_role_id: switch_role_callback(e, r))
+                switch_role_buttons.append(switch_role_button)
 
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par performance")
-        MY_SUB_PANEL <= html.DIV("Ce classement est un ELO - il prend en compte le résultat des joueurs sur les parties par rapport aux autres", Class='important')
+        MY_SUB_PANEL <= html.DIV("Ce classement est un ELO - il prend en compte le résultat des joueurs sur les parties par rapport aux autres sur une variante donnée.", Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("ATTENTION : remplacer dans une partie immunise contre une perte de ELO et peut donc être très profitable !", Class='important')
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV(f"Mode de jeu sélectionné {'classique' if classic else 'blitz'}")
+
+        fieldset = html.FIELDSET()
+        legend_fog = html.LEGEND("Cliquez sur la variante, le mode ou le rôle :", title="Sélectionnez le ELO que vous voulez consulter")
+        fieldset <= legend_fog
+        MY_SUB_PANEL <= fieldset
+
+        # variant selection
+        for switch_variant_button in switch_variant_buttons:
+            MY_SUB_PANEL <= switch_variant_button
+            MY_SUB_PANEL <= " "
         MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+
+        # mode selection
         MY_SUB_PANEL <= switch_mode_button
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
+
+        # role selection
         if role_id:
             MY_SUB_PANEL <= switch_global_button
-            MY_SUB_PANEL <= html.BR()
-            MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= switch_role_buttons_table
-        MY_SUB_PANEL <= html.BR()
+            MY_SUB_PANEL <= " "
+        for switch_role_button in switch_role_buttons:
+            MY_SUB_PANEL <= switch_role_button
+            MY_SUB_PANEL <= " "
+
+        # title
+        if role_id:
+            role_sel = variant_data.roles[role_id]
+            role_name_sel = variant_data.role_name_table[role_sel]
+        else:
+            role_name_sel = ""
+        MY_SUB_PANEL <= html.H4(f"Classement {variant_name} {'négo' if negotiate else 'blitz'} {role_name_sel}")
+
+        # rating table
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
+
+        # traling info
         MY_SUB_PANEL <= html.DIV(f"La moyenne des ELO est de {average}", Class='note')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("Le changement indiqué est celui global pour le joueur, celui entre parenthèse pour le rôle donné.", Class='note')
@@ -385,16 +412,27 @@ def show_rating_performance(classic, role_id):
 
         refresh()
 
-    def switch_mode_callback(_):
+    def switch_variant_callback(_, new_variant):
 
-        # note : actualy 'classic' is a parameter, not a variable
-        nonlocal classic
-        classic = not classic
+        # temporary code ;-)
+        alert("Pas de changement de variante pour le moment, désolé !")
+        return
+
+        # note : actually 'variant_name' is a parameter, not a variable
+        nonlocal variant_name
+        variant_name = new_variant
+        refresh()
+
+    def switch_mode_callback(_, new_negotiate):
+
+        # note : actually 'negotiate' is a parameter, not a variable
+        nonlocal negotiate
+        negotiate = new_negotiate
         refresh()
 
     def switch_role_callback(_, new_role_id):
 
-        # note : actualy 'role_id' is a parameter, not a variable
+        # note : actually 'role_id' is a parameter, not a variable
         nonlocal role_id
         role_id = new_role_id
         refresh()
@@ -404,12 +442,9 @@ def show_rating_performance(classic, role_id):
     else:
         pseudo = None
 
-    variant_name = config.FORCED_VARIANT_NAME
-
     variant_content = common.game_variant_content_reload(variant_name)
     interface_chosen = interface.get_interface_from_variant(variant_name)
     interface_parameters = common.read_parameters(variant_name, interface_chosen)
-
     variant_data = mapping.Variant(variant_name, variant_content, interface_parameters)
 
     players_dict = common.get_players()
@@ -420,7 +455,7 @@ def show_rating_performance(classic, role_id):
     # pseudo from number
     num2pseudo = {v: k for k, v in players_dict.items()}
 
-    games_dict = common.get_games_data(3, 3)  # archived
+    games_dict = common.get_games_data(2, 2)  # archived
     if games_dict is None:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -458,8 +493,7 @@ def show_rating_reliability():
                 reliability = - 10 * number_dropouts
             elif number_delays != 0:
                 reliability = ((ADVANCEMENT_DURATION * number_advancements - sum_delays_duration) / (ADVANCEMENT_DURATION * number_advancements)) * 100
-                if reliability < 0:
-                    reliability = 0
+                reliability = max(reliability, 0)
             else:
                 reliability = 100 + number_advancements / 1000
 
@@ -1237,7 +1271,7 @@ def load_option(_, item_name):
     window.scroll(0, 0)
 
     if item_name == 'Classement performance':
-        show_rating_performance(True, None)
+        show_rating_performance(config.FORCED_VARIANT_NAME, True, None)
     if item_name == 'Classement fiabilité':
         show_rating_reliability()
     if item_name == 'Classement régularité':
