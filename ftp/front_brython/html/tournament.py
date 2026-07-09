@@ -781,6 +781,12 @@ def show_informations():
 
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
 
+    # build dict of positions
+    positions_dict_loaded = common.tournament_position_reload(tournament_id)
+    if not positions_dict_loaded:
+        alert("Erreur chargement positions des parties du tournoi")
+        return
+
     games_in = TOURNAMENT_DICT['games']
 
     # if two different variants we stop here
@@ -791,171 +797,167 @@ def show_informations():
         variant_names.add(variant_name_loaded)
 
     if len(variant_names) >= 2:
+
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Tournoi hérétoclite : pas toutes les parties utilisent la même variante", Class='important')
-        return
+        MY_SUB_PANEL <= html.DIV("Tournoi hérétoclite : toutes les parties n'utilisent pas la même variante - pas de résultat par puissance", Class='important')
 
-    # build dict of positions
-    positions_dict_loaded = common.tournament_position_reload(tournament_id)
-    if not positions_dict_loaded:
-        alert("Erreur chargement positions des parties du tournoi")
-        return
-
-    game_id = games_in[0]
-    data = games_dict[str(game_id)]
-
-    # variant is available
-    variant_name_loaded = data['variant']
-
-    # from variant name get variant content
-    if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
-        variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
     else:
-        variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-        if not variant_content_loaded:
-            alert("Erreur chargement données variante de la partie")
-            return
-        memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
 
-    # selected display (user choice)
-    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+        game_id = games_in[0]
+        data = games_dict[str(game_id)]
 
-    # parameters
+        # variant is available
+        variant_name_loaded = data['variant']
 
-    if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
-        parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
-    else:
-        parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
-        memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
 
-    # build variant data
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
 
-    if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
-        variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
-    else:
-        variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-        memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+        # parameters
 
-    sc_table = {r: 0 for r in variant_data.roles if r}
-    top_table = {r: 0 for r in variant_data.roles if r}
-    solo_table = {r: 0 for r in variant_data.roles if r}
-    elimination_table = {r: 0 for r in variant_data.roles if r}
-    worst_centers_table = {r: 100000 for r in variant_data.roles if r}
-    best_centers_table = {r: 0 for r in variant_data.roles if r}
-    best_performance_table = {r: ((-100000, -100000, 0), None) for r in variant_data.roles if r}
-    for game_id_str, data in positions_dict_loaded.items():
-        game_score_table = {}
-        for power in sc_table:
-            game_score_table[power] = len([p for p in data['ownerships'].values() if int(p) == power])
-        for power in sc_table:
-            nb_centers = game_score_table[power]
-            sc_table[power] += nb_centers
-            if nb_centers < worst_centers_table[power]:
-                worst_centers_table[power] = nb_centers
-            if nb_centers > best_centers_table[power]:
-                best_centers_table[power] = nb_centers
-            if game_score_table[power] == max(game_score_table.values()):
-                top_table[power] += 1
-            if game_score_table[power] > variant_data.number_centers() // 2:
-                solo_table[power] += 1
-            if game_score_table[power] == 0:
-                elimination_table[power] += 1
-            # performance is (- nb powers with more centers, - nb powers with same number of centers, nb centers)
-            performance = (
-                - len([p for p, c in game_score_table.items() if c > nb_centers]),
-                - len([p for p, c in game_score_table.items() if c == nb_centers]),
-                game_score_table[power])
-            if performance > best_performance_table[power][0]:
-                # we have better, we take slot
-                best_performance_table[power] = (performance, int(game_id_str))
-            elif performance == best_performance_table[power][0]:
-                # we have same we cancel
-                best_performance_table[power] = (best_performance_table[power][0], None)
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
 
-    tournament_powers_results_table = html.TABLE()
+        # build variant data
 
-    fields = ['flag', 'power', 'centers', 'worst', 'best', 'victories', 'solos', 'eliminations']
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
 
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'flag': 'drapeau', 'power': 'puissance', 'centers': 'moyenne centres (possibles)', 'worst': 'pire', 'best': 'mieux', 'victories': 'victoires', 'solos': 'solos', 'eliminations': 'éliminations'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    tournament_powers_results_table <= thead
+        sc_table = {r: 0 for r in variant_data.roles if r}
+        top_table = {r: 0 for r in variant_data.roles if r}
+        solo_table = {r: 0 for r in variant_data.roles if r}
+        elimination_table = {r: 0 for r in variant_data.roles if r}
+        worst_centers_table = {r: 100000 for r in variant_data.roles if r}
+        best_centers_table = {r: 0 for r in variant_data.roles if r}
+        best_performance_table = {r: ((-100000, -100000, 0), None) for r in variant_data.roles if r}
+        for game_id_str, data in positions_dict_loaded.items():
+            game_score_table = {}
+            for power in sc_table:
+                game_score_table[power] = len([p for p in data['ownerships'].values() if int(p) == power])
+            for power in sc_table:
+                nb_centers = game_score_table[power]
+                sc_table[power] += nb_centers
+                if nb_centers < worst_centers_table[power]:
+                    worst_centers_table[power] = nb_centers
+                if nb_centers > best_centers_table[power]:
+                    best_centers_table[power] = nb_centers
+                if game_score_table[power] == max(game_score_table.values()):
+                    top_table[power] += 1
+                if game_score_table[power] > variant_data.number_centers() // 2:
+                    solo_table[power] += 1
+                if game_score_table[power] == 0:
+                    elimination_table[power] += 1
+                # performance is (- nb powers with more centers, - nb powers with same number of centers, nb centers)
+                performance = (
+                    - len([p for p, c in game_score_table.items() if c > nb_centers]),
+                    - len([p for p, c in game_score_table.items() if c == nb_centers]),
+                    game_score_table[power])
+                if performance > best_performance_table[power][0]:
+                    # we have better, we take slot
+                    best_performance_table[power] = (performance, int(game_id_str))
+                elif performance == best_performance_table[power][0]:
+                    # we have same we cancel
+                    best_performance_table[power] = (best_performance_table[power][0], None)
 
-    nb_possible_centers = len(variant_data.centers)
-    nb_games = len(positions_dict_loaded)
+        tournament_powers_results_table = html.TABLE()
 
-    for role_id in sorted(variant_data.roles, key=lambda r: variant_data.role_name_table[variant_data.roles[r]]):
+        fields = ['flag', 'power', 'centers', 'worst', 'best', 'victories', 'solos', 'eliminations']
 
-        # discard game master
-        if role_id == 0:
-            continue
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'flag': 'drapeau', 'power': 'puissance', 'centers': 'moyenne centres (possibles)', 'worst': 'pire', 'best': 'mieux', 'victories': 'victoires', 'solos': 'solos', 'eliminations': 'éliminations'}[field]
+            col = html.TD(field_fr)
+            thead <= col
+        tournament_powers_results_table <= thead
 
-        row = html.TR()
+        nb_possible_centers = len(variant_data.centers)
+        nb_games = len(positions_dict_loaded)
 
-        role = variant_data.roles[role_id]
-        role_name = variant_data.role_name_table[role]
+        for role_id in sorted(variant_data.roles, key=lambda r: variant_data.role_name_table[variant_data.roles[r]]):
 
-        # flag
-        col = html.TD()
-        role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
-        col <= role_icon_img
-        row <= col
+            # discard game master
+            if role_id == 0:
+                continue
 
-        # role name
-        col = html.TD()
-        col <= role_name
-        row <= col
+            row = html.TR()
 
-        # average centers
-        col = html.TD()
-        value = sc_table[role_id] / nb_games
-        col <= f"{value:.2f} ({nb_possible_centers})"
-        row <= col
+            role = variant_data.roles[role_id]
+            role_name = variant_data.role_name_table[role]
 
-        # worst
-        col = html.TD()
-        value = worst_centers_table[role_id]
-        col <= value
-        row <= col
+            # flag
+            col = html.TD()
+            role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
+            col <= role_icon_img
+            row <= col
 
-        # best
-        col = html.TD()
-        value = best_centers_table[role_id]
-        col <= value
-        row <= col
+            # role name
+            col = html.TD()
+            col <= role_name
+            row <= col
 
-        # percent victories
-        col = html.TD()
-        value = (top_table[role_id] / nb_games) * 100
-        col <= f"{value:.2f} %"
-        row <= col
+            # average centers
+            col = html.TD()
+            value = sc_table[role_id] / nb_games
+            col <= f"{value:.2f} ({nb_possible_centers})"
+            row <= col
 
-        # percent solos
-        col = html.TD()
-        value = (solo_table[role_id] / nb_games) * 100
-        col <= f"{value:.2f} %"
-        row <= col
+            # worst
+            col = html.TD()
+            value = worst_centers_table[role_id]
+            col <= value
+            row <= col
 
-        # percent eliminations
-        col = html.TD()
-        value = (elimination_table[role_id] / nb_games) * 100
-        col <= f"{value:.2f} %"
-        row <= col
+            # best
+            col = html.TD()
+            value = best_centers_table[role_id]
+            col <= value
+            row <= col
 
-        tournament_powers_results_table <= row
+            # percent victories
+            col = html.TD()
+            value = (top_table[role_id] / nb_games) * 100
+            col <= f"{value:.2f} %"
+            row <= col
 
-    # title
-    MY_SUB_PANEL <= html.H4(f"Les résultats par puissance ({nb_games} parties(s))")
+            # percent solos
+            col = html.TD()
+            value = (solo_table[role_id] / nb_games) * 100
+            col <= f"{value:.2f} %"
+            row <= col
 
-    MY_SUB_PANEL <= tournament_powers_results_table
-    MY_SUB_PANEL <= html.BR()
+            # percent eliminations
+            col = html.TD()
+            value = (elimination_table[role_id] / nb_games) * 100
+            col <= f"{value:.2f} %"
+            row <= col
 
-    information = html.DIV(Class='note')
-    information <= "Attention : les parties sont considérées toutes comme terminées en l'état - à prendre en compte pour un tournoi en cours..."
-    MY_SUB_PANEL <= information
+            tournament_powers_results_table <= row
+
+        # title
+        MY_SUB_PANEL <= html.H4(f"Les résultats par puissance ({nb_games} parties(s))")
+
+        MY_SUB_PANEL <= tournament_powers_results_table
+        MY_SUB_PANEL <= html.BR()
+
+        information = html.DIV(Class='note')
+        information <= "Attention : les parties sont considérées toutes comme terminées en l'état - à prendre en compte pour un tournoi en cours..."
+        MY_SUB_PANEL <= information
 
     # ===============
     # now restrict access to following information to tournament director
@@ -971,76 +973,93 @@ def show_informations():
     if player_id != director_id:
         return
 
+    MY_SUB_PANEL <= html.H3("Informations réservées au directeur de tournoi")
+
     tournament_players_dict = get_tournament_players_data(tournament_id)
 
     gamerole2pseudo = {(int(g), r): id2pseudo[int(p)] for g, d in tournament_players_dict.items() for p, r in d.items()}
 
-    tournament_best_result_per_power = html.TABLE()
+    if len(variant_names) >= 2:
 
-    fields = ['flag', 'power', 'champion', 'game', 'performance']
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("Tournoi hérétoclite : toutes les parties n'utilisent pas la même variante - pas de champions par puissance", Class='important')
 
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'flag': 'drapeau', 'power': 'puissance', 'champion': 'champion', 'game': 'partie', 'performance': 'performance'}[field]
-        col = html.TD(field_fr)
-        thead <= col
+    else:
 
-    tournament_best_result_per_power <= thead
+        tournament_best_result_per_power = html.TABLE()
 
-    rolename2num = {variant_data.role_name_table[r]: n for n, r in variant_data.roles.items()}
+        fields = ['flag', 'power', 'champion', 'game', 'performance']
 
-    for role_id in sorted(variant_data.roles, key=lambda r: variant_data.role_name_table[variant_data.roles[r]]):
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'flag': 'drapeau', 'power': 'puissance', 'champion': 'champion', 'game': 'partie', 'performance': 'performance'}[field]
+            col = html.TD(field_fr)
+            thead <= col
 
-        # discard game master
-        if role_id == 0:
-            continue
+        tournament_best_result_per_power <= thead
 
-        row = html.TR()
+        rolename2num = {variant_data.role_name_table[r]: n for n, r in variant_data.roles.items()}
 
-        role = variant_data.roles[role_id]
-        role_name = variant_data.role_name_table[role]
+        for role_id in sorted(variant_data.roles, key=lambda r: variant_data.role_name_table[variant_data.roles[r]]):
 
-        # flag
-        col = html.TD()
-        role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
-        col <= role_icon_img
-        row <= col
+            # discard game master
+            if role_id == 0:
+                continue
 
-        # role name
-        col = html.TD()
-        col <= role_name
-        row <= col
-        tournament_best_result_per_power
+            row = html.TR()
 
-        # best
-        performance, game_id = best_performance_table[role_id]
+            role = variant_data.roles[role_id]
+            role_name = variant_data.role_name_table[role]
 
-        col = html.TD()
-        if game_id is not None:
-            role_num = rolename2num[role_name]
-            pseudo = gamerole2pseudo.get((game_id, role_num), None)
-            if pseudo:
-                col <= pseudo
-        row <= col
+            # flag
+            col = html.TD()
+            role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
+            col <= role_icon_img
+            row <= col
 
-        col = html.TD()
-        if game_id is not None:
-            data = games_dict[str(game_id)]
-            game_name = data['name']
-            col <= game_name
-        row <= col
+            # role name
+            col = html.TD()
+            col <= role_name
+            row <= col
+            tournament_best_result_per_power
 
-        col = html.TD()
-        if game_id is not None:
-            op_nb_better, op_nb_same, nb_centers = performance
-            rank = 1 - op_nb_better
-            shared = - op_nb_same
-            shared_text = f"(patagée {shared - 1} fois)" if shared > 1 else ""
-            col <= f"{rank}{'er' if rank == 1 else 'ème'} {shared_text} ({nb_centers} centres)"
-        row <= col
+            # best
+            performance, game_id = best_performance_table[role_id]
 
-        tournament_best_result_per_power <= row
+            col = html.TD()
+            if game_id is not None:
+                role_num = rolename2num[role_name]
+                pseudo = gamerole2pseudo.get((game_id, role_num), None)
+                if pseudo:
+                    col <= pseudo
+            row <= col
+
+            col = html.TD()
+            if game_id is not None:
+                data = games_dict[str(game_id)]
+                game_name = data['name']
+                col <= game_name
+            row <= col
+
+            col = html.TD()
+            if game_id is not None:
+                op_nb_better, op_nb_same, nb_centers = performance
+                rank = 1 - op_nb_better
+                shared = - op_nb_same
+                shared_text = f"(partagée {shared - 1} fois)" if shared > 1 else ""
+                col <= f"{rank}{'er' if rank == 1 else 'ème'} {shared_text} ({nb_centers} centres)"
+            row <= col
+
+            tournament_best_result_per_power <= row
+
+        MY_SUB_PANEL <= html.H4("Les meilleures performances individuelles du tournoi")
+        MY_SUB_PANEL <= tournament_best_result_per_power
+
+        MY_SUB_PANEL <= html.BR()
+        information2 = html.DIV(Class='note')
+        information2 <= "Pour déterminer la meilleure performance, le critère est la place, puis le partage de la place, puis le nombre de centres. En cas d'égalité (même avec soi-même) ce n'est pas attribué. Le scorage n'est pas pris en compte. Les pseudo des parties anonymes sont cachés."
+        MY_SUB_PANEL <= information2
 
     # =====
     # points
@@ -1152,6 +1171,9 @@ def show_informations():
         recap_table <= row
         rank += 1
 
+    MY_SUB_PANEL <= html.H4("Classement brut du tournoi")
+    MY_SUB_PANEL <= recap_table
+
     # =====
     # incidents2
     # =====
@@ -1189,6 +1211,9 @@ def show_informations():
 
         incident_table2 <= row
 
+    MY_SUB_PANEL <= html.H4("Désordres Civils")
+    MY_SUB_PANEL <= incident_table2
+
     # =====
     # incidents3
     # =====
@@ -1225,22 +1250,6 @@ def show_informations():
         row <= col
 
         incident_table3 <= row
-
-    MY_SUB_PANEL <= html.H3("Informations réservées au directeur de tournoi")
-
-    MY_SUB_PANEL <= html.H4("Les meilleures performances individuelles du tournoi")
-    MY_SUB_PANEL <= tournament_best_result_per_power
-
-    MY_SUB_PANEL <= html.BR()
-    information2 = html.DIV(Class='note')
-    information2 <= "Pour déterminer la meilleure performance, le critère est la place, puis le partage de la place, puis le nombre de centres. En cas d'égalité (même avec soi-même) ce n'est pas attribué. Le scorage n'est pas pris en compte. Les pseudo des parties anonymes sont cachés."
-    MY_SUB_PANEL <= information2
-
-    MY_SUB_PANEL <= html.H4("Classement brut du tournoi")
-    MY_SUB_PANEL <= recap_table
-
-    MY_SUB_PANEL <= html.H4("Désordres Civils")
-    MY_SUB_PANEL <= incident_table2
 
     MY_SUB_PANEL <= html.H4("Abandons")
     MY_SUB_PANEL <= incident_table3
