@@ -1529,6 +1529,10 @@ def submit_orders():
         play.load_option(None, 'Consulter')
         return False
 
+    # Notify server that player now is aware (even if wrong state)
+    if play_low.ROLE_ID != 0:
+        notify_server_game_seen(play_low.GAME_ID)
+
     # game needs to be ongoing - not waiting
     if play_low.GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
@@ -1826,10 +1830,6 @@ def submit_orders():
     my_sub_panel3 <= form
 
     play_low.MY_SUB_PANEL.insertBefore(my_sub_panel3, my_sub_panel2.nextSibling)
-
-    # Notify server that player now is aware
-    if play_low.ROLE_ID != 0:
-        notify_server_game_seen(play_low.GAME_ID)
 
     return True
 

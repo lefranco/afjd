@@ -1197,6 +1197,7 @@ def my_games(state_name):
                     link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
                     if game_id in changed_games:
                         link.style.color = "red"
+                        link.style.backgroundColor = "white"
                     value = link
 
             if field == 'deadline':
