@@ -780,7 +780,6 @@ def show_informations():
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
-    MY_SUB_PANEL <= html.BR()
 
     # build dict of positions
     positions_dict_loaded = common.tournament_position_reload(tournament_id)
@@ -799,6 +798,7 @@ def show_informations():
 
     if len(variant_names) >= 2:
 
+        MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("Tournoi hétéroclite : toutes les parties n'utilisent pas la même variante - pas de résultat par puissance", Class='important')
 
     else:
@@ -1170,8 +1170,64 @@ def show_informations():
         recap_table <= row
         rank += 1
 
-    MY_SUB_PANEL <= html.H4("Classement brut du tournoi")
+    MY_SUB_PANEL <= html.H4("Classement brut du tournoi (avec les retards)")
     MY_SUB_PANEL <= recap_table
+
+    # =====
+    # incidents1
+    # =====
+
+    count = {}
+    sum_ = {}
+    games_involved = {}
+    for game_id, role_num, _, duration, _ in tournament_incidents:
+        pseudo = gamerole2pseudo.get((game_id, role_num), None)
+        if pseudo:
+            if pseudo not in count:
+                count[pseudo] = 0
+            count[pseudo] += 1
+            if pseudo not in sum_:
+                sum_[pseudo] = 0
+            sum_[pseudo] += duration
+            if pseudo not in games_involved:
+                games_involved[pseudo] = set()
+            if str(game_id) in games_dict:
+                game_name = games_dict[str(game_id)]['name']
+            else:
+                game_name = '???'
+            games_involved[pseudo].add(game_name)
+
+    incident_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'Somme de retards', 'Nombre de retards', 'Parties impliquées']:
+        col = html.TD(field)
+        thead <= col
+    incident_table <= thead
+
+    for pseudo in sorted(count, key=lambda p: sum_[p], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        sum_duration = sum_[pseudo]
+        col = html.TD(sum_duration)
+        row <= col
+
+        nb_delays = count[pseudo]
+        col = html.TD(nb_delays)
+        row <= col
+
+        games_set = games_involved[pseudo]
+        col = html.TD(' '.join(sorted(games_set, key=lambda n: n.upper())))
+        row <= col
+
+        incident_table <= row
+
+    MY_SUB_PANEL <= html.H4("Retards")
+    MY_SUB_PANEL <= incident_table
 
     # =====
     # incidents2
