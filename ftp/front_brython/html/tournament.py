@@ -780,6 +780,7 @@ def show_informations():
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
+    MY_SUB_PANEL <= html.BR()
 
     # build dict of positions
     positions_dict_loaded = common.tournament_position_reload(tournament_id)
