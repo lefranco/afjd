@@ -115,7 +115,7 @@ def create_game(json_dict):
 
         nonlocal information_displayed_disorder
 
-        if input_cd_possible_moves.checked or input_cd_possible_retreats.checked or input_cd_possible_builds.checked:
+        if input_cd_possible.checked:
             if not information_displayed_disorder:
                 alert("Attention, le désordre civil n'est pas la norme sur le site. Le remplacement des joueurs en gros retard est préconisé pour jouer des meilleures parties.\n\nDe plus, de telles parties ne devraient pas compter pour le ELO.")
                 alert("Attention, le désordre civil s'appliquera de manière automatique à l'expiration de la grace (un délai paramétrable après la date limite)")
@@ -309,21 +309,22 @@ def create_game(json_dict):
         except:  # noqa: E722 pylint: disable=bare-except
             speed_moves = None
 
-        cd_possible_moves = int(input_cd_possible_moves.checked)
+        cd_possible_moves = int(input_cd_possible.checked)
 
         try:
             speed_retreats = int(input_speed_retreats.value)
         except:  # noqa: E722 pylint: disable=bare-except
             speed_retreats = None
 
-        cd_possible_retreats = int(input_cd_possible_retreats.checked)
+        cd_possible_retreats = int(input_cd_possible.checked)
 
         try:
             speed_adjustments = int(input_speed_adjustments.value)
         except:  # noqa: E722 pylint: disable=bare-except
             speed_adjustments = None
 
-        cd_possible_builds = int(input_cd_possible_builds.checked)
+        cd_possible_builds = int(input_cd_possible.checked)
+
         play_weekend = int(input_play_weekend.checked)
 
         try:
@@ -595,6 +596,14 @@ def create_game(json_dict):
     fieldset <= input_grace_duration
     form <= fieldset
 
+    fieldset = html.FIELDSET()
+    legend_cd_possible = html.LEGEND("DC (Ordres par défaut pour un joueur en retard)", title="Désordre civil possible")
+    fieldset <= legend_cd_possible
+    input_cd_possible = html.INPUT(type="checkbox", checked=bool(cd_possible_moves) if cd_possible_moves is not None else False, Class='btn-inside')
+    input_cd_possible.bind("click", display_disorder_callback)
+    fieldset <= input_cd_possible
+    form <= fieldset
+
     # moves
 
     fieldset = html.FIELDSET()
@@ -602,14 +611,6 @@ def create_game(json_dict):
     fieldset <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=speed_moves if speed_moves is not None else DEFAULT_SPEED_MOVES_SLOW, Class='btn-inside')
     fieldset <= input_speed_moves
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_cd_possible_moves = html.LEGEND("DC (Ordres par défaut pour un joueur en retard) possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
-    fieldset <= legend_cd_possible_moves
-    input_cd_possible_moves = html.INPUT(type="checkbox", checked=bool(cd_possible_moves) if cd_possible_moves is not None else False, Class='btn-inside')
-    input_cd_possible_moves.bind("click", display_disorder_callback)
-    fieldset <= input_cd_possible_moves
     form <= fieldset
 
     # retreats
@@ -621,14 +622,6 @@ def create_game(json_dict):
     fieldset <= input_speed_retreats
     form <= fieldset
 
-    fieldset = html.FIELDSET()
-    legend_cd_possible_retreats = html.LEGEND("DC (Ordres par défaut pour un joueur en retard) possible retraites", title="Désordre civil possible pour une résolution de retraites")
-    fieldset <= legend_cd_possible_retreats
-    input_cd_possible_retreats = html.INPUT(type="checkbox", checked=bool(cd_possible_retreats) if cd_possible_retreats is not None else False, Class='btn-inside')
-    input_cd_possible_retreats.bind("click", display_disorder_callback)
-    fieldset <= input_cd_possible_retreats
-    form <= fieldset
-
     # builds/removals
 
     fieldset = html.FIELDSET()
@@ -636,14 +629,6 @@ def create_game(json_dict):
     fieldset <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments if speed_adjustments is not None else DEFAULT_SPEED_ADJUSTMENTS_SLOW, Class='btn-inside')
     fieldset <= input_speed_adjustments
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_cd_possible_builds = html.LEGEND("DC (Ordres par défaut pour un joueur en retard) possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
-    fieldset <= legend_cd_possible_builds
-    input_cd_possible_builds = html.INPUT(type="checkbox", checked=bool(cd_possible_builds) if cd_possible_builds is not None else False, Class='btn-inside')
-    input_cd_possible_builds.bind("click", display_disorder_callback)
-    fieldset <= input_cd_possible_builds
     form <= fieldset
 
     # play weekend
@@ -723,12 +708,23 @@ def rectify_parameters_game():
     deadline_sync_loaded = None
     grace_duration_loaded = None
     speed_moves_loaded = None
-    cd_possible_moves_loaded = None
+    cd_possible_loaded = None
     speed_retreats_loaded = None
-    cd_possible_retreats_loaded = None
     speed_adjustments_loaded = None
-    cd_possible_builds_loaded = None
     play_weekend_loaded = None
+
+    # alert will be shown once
+    information_displayed_disorder = False
+
+    def display_disorder_callback(_):
+        """ display_disorder_callback """
+
+        nonlocal information_displayed_disorder
+
+        if input_cd_possible.checked:
+            if not information_displayed_disorder:
+                alert("Attention, le désordre civil s'appliquera de manière automatique à l'expiration de la grace (un délai paramétrable après la date limite)")
+                information_displayed_disorder = True
 
     def rectify_parameters_reload():
         """ rectify_parameters_reload """
@@ -757,11 +753,9 @@ def rectify_parameters_game():
             nonlocal deadline_sync_loaded
             nonlocal grace_duration_loaded
             nonlocal speed_moves_loaded
-            nonlocal cd_possible_moves_loaded
+            nonlocal cd_possible_loaded
             nonlocal speed_retreats_loaded
-            nonlocal cd_possible_retreats_loaded
             nonlocal speed_adjustments_loaded
-            nonlocal cd_possible_builds_loaded
             nonlocal play_weekend_loaded
 
             req_result = loads(req.text)
@@ -789,12 +783,12 @@ def rectify_parameters_game():
             deadline_sync_loaded = req_result['deadline_sync']
             grace_duration_loaded = req_result['grace_duration']
             speed_moves_loaded = req_result['speed_moves']
-            cd_possible_moves_loaded = req_result['cd_possible_moves']
             speed_retreats_loaded = req_result['speed_retreats']
-            cd_possible_retreats_loaded = req_result['cd_possible_retreats']
             speed_adjustments_loaded = req_result['speed_adjustments']
-            cd_possible_builds_loaded = req_result['cd_possible_builds']
             play_weekend_loaded = req_result['play_weekend']
+
+            # moves, retreats, builds : just one
+            cd_possible_loaded = req_result['cd_possible_moves']
 
         json_dict = {}
 
@@ -1017,21 +1011,18 @@ def rectify_parameters_game():
         except:  # noqa: E722 pylint: disable=bare-except
             speed_moves = None
 
-        cd_possible_moves = int(input_cd_possible_moves.checked)
+        cd_possible = int(input_cd_possible.checked)
 
         try:
             speed_retreats = int(input_speed_retreats.value)
         except:  # noqa: E722 pylint: disable=bare-except
             speed_retreats = None
 
-        cd_possible_retreats = int(input_cd_possible_retreats.checked)
-
         try:
             speed_adjustments = int(input_speed_adjustments.value)
         except:  # noqa: E722 pylint: disable=bare-except
             speed_adjustments = None
 
-        cd_possible_builds = int(input_cd_possible_builds.checked)
         play_weekend = int(input_play_weekend.checked)
 
         json_dict = {
@@ -1040,12 +1031,14 @@ def rectify_parameters_game():
             'deadline_sync': deadline_sync,
             'grace_duration': grace_duration,
             'speed_moves': speed_moves,
-            'cd_possible_moves': cd_possible_moves,
             'speed_retreats': speed_retreats,
-            'cd_possible_retreats': cd_possible_retreats,
             'speed_adjustments': speed_adjustments,
-            'cd_possible_builds': cd_possible_builds,
             'play_weekend': play_weekend,
+
+            # one parameter becomes three
+            'cd_possible_moves': cd_possible,
+            'cd_possible_retreats': cd_possible,
+            'cd_possible_builds': cd_possible
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -1238,6 +1231,14 @@ def rectify_parameters_game():
     fieldset <= input_grace_duration
     form <= fieldset
 
+    fieldset = html.FIELDSET()
+    legend_cd_possible = html.LEGEND("DC (Ordres par défaut pour un joueur en retard)", title="Désordre civil possible")
+    fieldset <= legend_cd_possible
+    input_cd_possible = html.INPUT(type="checkbox", checked=cd_possible_loaded, Class='btn-inside')
+    input_cd_possible.bind("click", display_disorder_callback)
+    fieldset <= input_cd_possible
+    form <= fieldset
+
     # moves
 
     fieldset = html.FIELDSET()
@@ -1247,13 +1248,6 @@ def rectify_parameters_game():
     fieldset <= input_speed_moves
     form <= fieldset
 
-    fieldset = html.FIELDSET()
-    legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
-    fieldset <= legend_cd_possible_moves
-    input_cd_possible_moves = html.INPUT(type="checkbox", checked=cd_possible_moves_loaded, Class='btn-inside')
-    fieldset <= input_cd_possible_moves
-    form <= fieldset
-
     # retreats
 
     fieldset = html.FIELDSET()
@@ -1261,13 +1255,6 @@ def rectify_parameters_game():
     fieldset <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=speed_retreats_loaded, Class='btn-inside')
     fieldset <= input_speed_retreats
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
-    fieldset <= legend_cd_possible_retreats
-    input_cd_possible_retreats = html.INPUT(type="checkbox", checked=cd_possible_retreats_loaded, Class='btn-inside')
-    fieldset <= input_cd_possible_retreats
     form <= fieldset
 
     # adjustments
@@ -1280,15 +1267,6 @@ def rectify_parameters_game():
     form <= fieldset
 
     # builds/removals
-
-    fieldset = html.FIELDSET()
-    legend_cd_possible_builds = html.LEGEND("DC possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
-    fieldset <= legend_cd_possible_builds
-    input_cd_possible_builds = html.INPUT(type="checkbox", checked=cd_possible_builds_loaded, Class='btn-inside')
-    fieldset <= input_cd_possible_builds
-    form <= fieldset
-
-    # ---
 
     fieldset = html.FIELDSET()
     legend_play_weekend = html.LEGEND("jeu weekend", title="La date limite peut elle se trouver en fin de semaine")
