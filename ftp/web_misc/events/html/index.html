@@ -8,12 +8,23 @@
 <script src="https://cdn.jsdelivr.net/npm/brython@3.12.0/brython_stdlib.js"></script>
 
 <style>
-.event_element {
+.upcoming_event_element {
   font-size: 12px;
-  border: 1px solid #333;
-  box-shadow: 8px 8px 5px #444;
+  border: 1px solid #2f6db3;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   padding: 8px 12px;
-  background-image: linear-gradient(180deg, #989898, #838383 40%, #EDEDED);
+  background: linear-gradient(180deg, #d9ecff, #9fcbff);
+  color: #003366;
+  font-weight: bold;
+}
+.passed_event_element {
+  font-size: 12px;
+  border: 1px solid #b0b0b0;
+  box-shadow: none;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, #eeeeee, #d5d5d5);
+  color: #777777;
+  opacity: 0.8;
 }
 </style>
 
@@ -24,6 +35,7 @@
 <script type="text/python">
 
 import json
+import datetime
 
 from browser import html, ajax, document, alert
 
@@ -60,10 +72,16 @@ def get_events_data():
 
     return events_dict
 
-
+today = datetime.date.today()
+    
 events_data = get_events_data()
 for event_id, event_dict in sorted(events_data.items(), key=lambda t:(t[1]['priority'], int(t[0])), reverse=True):
-    div_event_box = html.DIV(Class='event_element')
+
+    event_date = datetime.date.fromisoformat(event_dict['end_date'])
+    if event_date < today:
+        div_event_box = html.DIV(Class='passed_event_element')
+    else:
+        div_event_box = html.DIV(Class='upcoming_event_element')
 
     name = event_dict['name']
     nb_registered = event_dict['nb_registered']
