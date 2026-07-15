@@ -4146,9 +4146,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)  # noqa: F821
                     addressees = []
-                    for _, player_id, role_id in allocations_list:
+                    for _, player_id, role_id2 in allocations_list:
                         # no mailing for fake player in disorder from variant
-                        if role_id in map(int, variant_data['disorder'].keys()):
+                        if role_id2 in map(int, variant_data['disorder'].keys()):
                             continue
                         addressees.append(player_id)
                     body = "Bonjour !\n"
@@ -4193,12 +4193,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 assert variant_data is not None
 
                 for role_id_str in variant_data['disorder']:
-                    role_id = int(role_id_str)
-                    status, _, message = agree.disorder(game_id, role_id, game, variant_data, adjudication_names, sql_executor)  # noqa: F821
+                    role_id2 = int(role_id_str)
+                    status, _, message = agree.disorder(game_id, role_id2, game, variant_data, adjudication_names, sql_executor)  # noqa: F821
                     if not status:
-                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id, definitive_value, game_deadline, "ERR-20-FAILED-SET-DISORDER")
+                        orders_logger.LOGGER.error("pseudo=%s game=%s role=%d definitive=%d deadline=%s info=%s", pseudo, game.name, role_id2, definitive_value, game_deadline, "ERR-20-FAILED-SET-DISORDER")
                         del sql_executor
-                        flask_restful.abort(400, msg=f"Failed to set power {role_id} in disorder : {message}")
+                        flask_restful.abort(400, msg=f"Failed to set power {role_id2} in disorder : {message}")
 
             sql_executor.commit()  # noqa: F821
             del sql_executor  # noqa: F821
