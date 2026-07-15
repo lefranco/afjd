@@ -383,6 +383,7 @@ def main() -> None:
     parser.add_argument("-c", "--config", required=True, help="Path to YAML file")
     parser.add_argument('-d', '--dump', action='store_true', help="Dump report content")
     parser.add_argument('-H', '--header', action='store_true', help="Dump emails headers")
+    parser.add_argument('-p', '--purge', action='store_true', help="Purge mails with no warning")
     args = parser.parse_args()
     config_file = pathlib.Path(args.config)
     read_config(config_file)
@@ -393,6 +394,14 @@ def main() -> None:
     if not ITEMS_DICT:
         print("Nothing in mailbox!")
         sys.exit(0)
+
+    if args.purge:
+        print("Purging messages not needing attetion...")
+        for i, (description, (message_id, _, attention, __)) in enumerate(ITEMS_DICT.items()):
+            if attention:
+                continue
+            # delete from server
+            delete_mail(message_id)
 
     # create
     root = tkinter.Tk()
