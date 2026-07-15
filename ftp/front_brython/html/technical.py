@@ -102,17 +102,26 @@ def show_technical():
 
     # --
 
-    title5 = html.H3("Les sources du site")
-    MY_SUB_PANEL <= title5
+    title3 = html.H3("Les sources du site")
+    MY_SUB_PANEL <= title3
 
-    link5 = html.A(href="https://github.com/lefranco/afjd", target="_blank")
-    link5 <= "Lien vers l'espace GITHUB qui archive tous les sources de la brique jeu (Diplomania v1 'front-end' et 'back-end')"
-    MY_SUB_PANEL <= link5
+    link3 = html.A(href="https://github.com/lefranco/afjd", target="_blank")
+    link3 <= "Lien vers l'espace GITHUB qui archive tous les sources de la brique jeu (Diplomania v1 'front-end' et 'back-end')"
+    MY_SUB_PANEL <= link3
 
     # --
 
-    title7 = html.H3("Document d'interface de l'API")
-    MY_SUB_PANEL <= title7
+    title4 = html.H3("Création de variante")
+    MY_SUB_PANEL <= title4
+
+    link4 = html.A(href="./docs/requis_variantes.pdf", target="_blank")
+    link4 <= "Lien vers une procédure complète à suivre pour créar une variante sur le site"
+    MY_SUB_PANEL <= link4
+
+    # --
+
+    title5 = html.H3("Document d'interface de l'API")
+    MY_SUB_PANEL <= title5
 
     link71 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
     link71 <= "Si vous voulez vous aussi développer votre front end..."
@@ -120,8 +129,8 @@ def show_technical():
 
     # --
 
-    title8 = html.H3("Remerciements")
-    MY_SUB_PANEL <= title8
+    title6 = html.H3("Remerciements")
+    MY_SUB_PANEL <= title6
 
     link81 = html.A(href="https://brython.info/", target="_blank")
     link81 <= "Outil utilisé pour ce site web"
