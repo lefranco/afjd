@@ -402,6 +402,7 @@ def main() -> None:
                 continue
             # delete from server
             delete_mail(message_id)
+        sys.exit(0)
 
     # create
     root = tkinter.Tk()
