@@ -798,8 +798,7 @@ def show_informations():
 
     if len(variant_names) >= 2:
 
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Tournoi hérétoclite : toutes les parties n'utilisent pas la même variante - pas de résultat par puissance", Class='important')
+        MY_SUB_PANEL <= html.DIV("Tournoi hétéroclite : toutes les parties n'utilisent pas la même variante - pas de résultat par puissance", Class='important')
 
     else:
 
@@ -981,8 +980,7 @@ def show_informations():
 
     if len(variant_names) >= 2:
 
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Tournoi hérétoclite : toutes les parties n'utilisent pas la même variante - pas de champions par puissance", Class='important')
+        MY_SUB_PANEL <= html.DIV("Tournoi hétéroclite : toutes les parties n'utilisent pas la même variante - pas de champions par puissance", Class='important')
 
     else:
 
