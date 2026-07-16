@@ -712,9 +712,9 @@ def slide_submit_orders(table_of_contents):
                 messages = "<br>".join(req_result['submission_report'].strip().split('\n'))
 
                 if messages:
-                    mydialog.info_stay(f"Ordres validés avec le(s) message(s) : {messages}")
+                    alert(f"Ordres validés avec le(s) message(s) : {messages}")
                 else:
-                    mydialog.info_go("Ordres validés !")
+                    alert("Ordres validés !")
 
             # compare with expected orders
             expected = mapping.Orders(EXPECTED_ORDERS, POSITION_DATA, [])

@@ -285,9 +285,9 @@ def submit_orders():
             #  mydialog.info_stay(f"debug_message : {debug_message}")
 
             if messages:
-                mydialog.info_stay(f"Ordres validés avec le(s) message(s) : {messages}")
+                alert(f"Ordres validés avec le(s) message(s) : {messages}")
             else:
-                mydialog.info_go("Ordres validés !")
+                alert("Ordres validés !")
 
             # special : send timezone, ip address, sublmission  to server
             common.send_submission_data()
