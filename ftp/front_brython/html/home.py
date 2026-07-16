@@ -19,6 +19,8 @@ import mydialog
 import play
 import allgames
 
+# TODO REMOVE
+FORCED_VARIANT_NAME = 'standard'
 
 # how many of the last chats are displayed
 MAX_DISPLAYED_CHAT = 3
@@ -118,7 +120,7 @@ def get_teaser_content():
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/elo_rating"
+    url = f"{host}:{port}/elo_rating/{FORCED_VARIANT_NAME}"
 
     # get teaser elo : do not need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)

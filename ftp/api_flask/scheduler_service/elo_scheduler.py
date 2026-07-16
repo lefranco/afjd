@@ -29,12 +29,13 @@ MINIMUM_ELO = 1000.
 K_MAX_CONSTANT = 40
 K_SLOPE = 2.
 
+# TODO REMOVE TEMPORARY
 FORCED_VARIANT_NAME = 'standard'
 
 SESSION = requests.Session()
 
 
-def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, typing.Any], games_results_dict: typing.Dict[str, typing.Dict[str, typing.Any]], games_dict: typing.Dict[str, typing.Any], elo_information: typing.List[str], commuter_account: str) -> typing.Tuple[typing.List[typing.List[typing.Any]], str]:
+def process_elo_variant(variant_data: mapping.Variant, players_dict: typing.Dict[str, typing.Any], games_results_dict: typing.Dict[str, typing.Dict[str, typing.Any]], games_dict: typing.Dict[str, typing.Any], elo_information: typing.List[str], commuter_account: str) -> typing.Tuple[typing.List[typing.List[typing.Any]], str]:
     """ returns elo_raw_list, teaser_text """
 
     lowdata.start()
@@ -61,6 +62,12 @@ def process_elo(variant_data: mapping.Variant, players_dict: typing.Dict[str, ty
 
     # table rank -> score
     static_score_table = {r: (ALPHA ** (num_players + 1 - r) - 1) / sum(ALPHA ** (num_players + 1 - i) - 1 for i in range(1, num_players + 1)) for r in range(1, num_players + 1)}
+
+    # put a title in logs
+    elo_information.append("===============")
+    elo_information.append(f"Variant is {variant_data.name}")
+    elo_information.append("===============")
+    elo_information.append("")
 
     # ------------------
     # 1 Parse all games
@@ -403,30 +410,6 @@ def run(jwt_token: str, commuter_account: str) -> None:
     games_dict = req_result.json()
 
     # ========================
-    # get variant data
-    # ========================
-
-    host = lowdata.SERVER_CONFIG['GAME']['HOST']
-    port = lowdata.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/variants/{FORCED_VARIANT_NAME}"
-    req_result = SESSION.get(url)
-    if req_result.status_code != 200:
-        if 'msg' in req_result.json():
-            mylogger.LOGGER.error(req_result.json()['msg'])
-        mylogger.LOGGER.error("ERROR: Failed to get variant data")
-        return
-    variant_content_loaded = req_result.json()
-
-    # selected interface (forced)
-    interface_inforced = lowdata.get_inforced_interface_from_variant(FORCED_VARIANT_NAME)
-
-    # from interface chose get display parameters
-    parameters_read = lowdata.read_parameters(FORCED_VARIANT_NAME, interface_inforced)
-
-    # build variant data
-    variant_data = mapping.Variant(FORCED_VARIANT_NAME, variant_content_loaded, parameters_read)
-
-    # ========================
     # extract game results data
     # ========================
 
@@ -443,24 +426,67 @@ def run(jwt_token: str, commuter_account: str) -> None:
     games_results_dict = res_dict['games_dict']
 
     # ========================
-    # perform ELO calculation
+    # loop on variants
     # ========================
 
-    elo_information: typing.List[str] = []
-    elo_raw_list, teaser_text = process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information, commuter_account)
+    elo_raw_list_table = {}
+    teaser_text_table = {}
 
-    # dump ELO logs into a log file
-    with open("./logdir/ELO.log", "w", encoding='utf-8') as file_ptr:
-        file_ptr.write('\n'.join(elo_information))
+    # TODO : list of variants here
+    for variant_name in (FORCED_VARIANT_NAME, ):
 
-    # ========================
+        # ------------------------
+        # get variant data
+        # ------------------------
+
+        host = lowdata.SERVER_CONFIG['GAME']['HOST']
+        port = lowdata.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/variants/{variant_name}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            if 'msg' in req_result.json():
+                mylogger.LOGGER.error(req_result.json()['msg'])
+            mylogger.LOGGER.error("ERROR: Failed to get variant data")
+            return
+        variant_content_loaded = req_result.json()
+
+        # selected interface (forced)
+        interface_inforced = lowdata.get_inforced_interface_from_variant(variant_name)
+
+        # from interface chose get display parameters
+        parameters_read = lowdata.read_parameters(variant_name, interface_inforced)
+
+        # build variant data
+        variant_data = mapping.Variant(variant_name, variant_content_loaded, parameters_read)
+
+        # ------------------------
+        # filter games_results_dict for variant
+        # ------------------------
+        variant_games_results_dict = games_results_dict
+
+        # ------------------------
+        # perform ELO calculation for variant
+        # ------------------------
+
+        elo_information_variant: typing.List[str] = []
+        elo_raw_list_variant, teaser_text_variant = process_elo_variant(variant_data, players_dict, variant_games_results_dict, games_dict, elo_information_variant, commuter_account)
+
+        # dump ELO logs into a log file
+        with open(f"./logdir/ELO_{variant_name}.log", "w", encoding='utf-8') as file_ptr:
+            file_ptr.write('\n'.join(elo_information_variant))
+
+        elo_raw_list_table[variant_name] = elo_raw_list_variant
+        teaser_text_table[variant_name] = teaser_text_variant
+
+    # ------------------------
     # load ELO in database
-    # ========================
+    # ------------------------
 
-    elo_raw_list_json = json.dumps(elo_raw_list)
+    elo_raw_list_table_json = json.dumps(elo_raw_list_table)
+    teaser_text_table_json = json.dumps(teaser_text_table)
     json_dict = {
-        'elo_list': elo_raw_list_json,
-        'teaser': teaser_text
+        'elo_list_table': elo_raw_list_table_json,
+        'teaser_table': teaser_text_table_json
     }
 
     host = lowdata.SERVER_CONFIG['PLAYER']['HOST']

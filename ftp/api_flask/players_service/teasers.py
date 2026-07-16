@@ -4,20 +4,20 @@
 """
 File : teasers.py
 
-Handles the teaser
+Handles the teasers
 """
 
 import database
 
 
 class Teaser:
-    """ Class for handling a teaser """
+    """ Class for handling teasers """
 
     @staticmethod
-    def content(sql_executor: database.SqlExecutor) -> str:
+    def content(sql_executor: database.SqlExecutor, variant: str) -> str:
         """ get content """
 
-        content_found = sql_executor.execute("SELECT content FROM teasers", None, need_result=True)
+        content_found = sql_executor.execute("SELECT content FROM teasers where variant=?", (variant,), need_result=True)
         content = content_found[0][0]  # type: ignore
         return content  # type: ignore
 
@@ -27,21 +27,24 @@ class Teaser:
 
         # create actual table
         sql_executor.execute("DROP TABLE IF EXISTS teasers")
-        sql_executor.execute("CREATE TABLE teasers (content str)")
-        sql_executor.execute("INSERT INTO teasers (content) VALUES (?)", ("",))
 
-    def __init__(self, content: str) -> None:
+        # teaser
+        sql_executor.execute("CREATE TABLE teasers (variant str, content str)")
 
+    def __init__(self, variant: str, content: str) -> None:
+
+        assert isinstance(variant, str), "variant must be a str"
         assert isinstance(content, str), "content must be a str"
+        self._variant = variant
         self._content = content
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        sql_executor.execute("DELETE FROM teasers")
-        sql_executor.execute("INSERT INTO teasers (content) VALUES (?)", (self._content,))
+        sql_executor.execute("DELETE FROM teasers where variant = ?", (self._variant,))
+        sql_executor.execute("INSERT INTO teasers (variant, content) VALUES (?, ?)", (self._variant, self._content))
 
     def __str__(self) -> str:
-        return f"content={self._content}"
+        return f"variant={self._variant} content={self._content}"
 
 
 if __name__ == '__main__':

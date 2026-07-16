@@ -93,8 +93,8 @@ CREATOR_PARSER.add_argument('player_pseudo', type=str, required=True)
 CREATOR_PARSER.add_argument('delete', type=int, required=True)
 
 ELO_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
-ELO_UPDATE_PARSER.add_argument('elo_list', type=str, required=True)
-ELO_UPDATE_PARSER.add_argument('teaser', type=str, required=True)
+ELO_UPDATE_PARSER.add_argument('elo_list_table', type=str, required=True)
+ELO_UPDATE_PARSER.add_argument('teaser_table', type=str, required=True)
 
 REGULARITY_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
 REGULARITY_UPDATE_PARSER.add_argument('regularity_list', type=str, required=True)
@@ -1827,60 +1827,80 @@ class PriviledgedListRessource(flask_restful.Resource):  # type: ignore
         return {'creators': c_list, 'moderators': m_list, 'admin': admin_pseudo}, 200
 
 
-@API.resource('/elo_rating/<classic>')
+@API.resource('/elo_rating/<variant_name>/<classic>')
 class EloClassicRessource(flask_restful.Resource):  # type: ignore
     """ EloClassicRessource """
 
-    def get(self, classic: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int, int]], int]:
+    def get(self, variant_name: str, classic: int) -> typing.Tuple[typing.List[typing.Tuple[str, int, int, int, int, int, int, int]], int]:
         """
-        Provides ratings by classic and role
+        Provides ratings by variant and classic
         EXPOSED
         """
 
         mylogger.LOGGER.info("/elo_rating - GET - get by classic")
 
         sql_executor = database.SqlExecutor()
-        ratings_list = ratings.Rating.list_by_classic(sql_executor, bool(int(classic)))
+        ratings_list = ratings.Rating.list_by_variant_classic(sql_executor, variant_name, bool(int(classic)))
 
         del sql_executor
 
         return ratings_list, 200
 
 
-@API.resource('/elo_rating/<classic>/<role_id>')
+@API.resource('/elo_rating/<variant_name>/<classic>/<role_id>')
 class EloClassicRoleRessource(flask_restful.Resource):  # type: ignore
     """ EloClassicRoleRessource """
 
-    def get(self, classic: int, role_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int, int]], int]:
+    def get(self, variant_name: str, classic: int, role_id: int) -> typing.Tuple[typing.List[typing.Tuple[str, int, int, int, int, int, int, int]], int]:
         """
-        Provides ELO ratings by classic and role
+        Provides ELO ratings by variant, classic and role
         EXPOSED
         """
 
         mylogger.LOGGER.info("/elo_rating - GET - get by classic and role")
 
         sql_executor = database.SqlExecutor()
-        ratings_list = ratings.Rating.list_by_classic_role_id(sql_executor, bool(int(classic)), role_id)
+        ratings_list = ratings.Rating.list_by_variant_classic_role_id(sql_executor, variant_name, bool(int(classic)), role_id)
         del sql_executor
 
         return ratings_list, 200
+
+
+@API.resource('/elo_rating/<variant_name>')
+class RawEloTeaserRessource(flask_restful.Resource):  # type: ignore
+    """ RawEloTeaserRessource """
+
+    def get(self, variant_name: str) -> typing.Tuple[str, int]:
+        """
+        Provides the elo teaser for a variant
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/elo_rating - GET - get the elo teaser for variant %s", variant_name)
+
+        sql_executor = database.SqlExecutor()
+        teaser_content = teasers.Teaser.content(sql_executor, variant_name)
+        del sql_executor
+
+        data = teaser_content
+
+        return data, 200
 
 
 @API.resource('/elo_rating')
 class RawEloRessource(flask_restful.Resource):  # type: ignore
     """ RawEloRessource """
 
+    # TODO : legacy REMOVE
     def get(self) -> typing.Tuple[str, int]:
         """
         Provides the elo teaser
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/news - GET - get the elo teaser")
+        mylogger.LOGGER.info("/elo_rating - GET - get the elo teaser")
 
-        sql_executor = database.SqlExecutor()
-        teaser_content = teasers.Teaser.content(sql_executor)
-        del sql_executor
+        teaser_content = '\n\n2026-07-16 01:00:32 UTC'
 
         data = teaser_content
 
@@ -1888,7 +1908,7 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
-        Update elo data
+        Update the whole elo data
         EXPOSED
         """
 
@@ -1896,8 +1916,8 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
 
         args = ELO_UPDATE_PARSER.parse_args(strict=True)
 
-        elo_list_submitted = args['elo_list']
-        teaser_submitted = args['teaser']
+        elo_list_table_submitted = args['elo_list_table']
+        teaser_table_submitted = args['teaser_table']
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1920,20 +1940,29 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site commuter so you are not allowed to update ELO data")
 
         try:
-            elo_list = json.loads(elo_list_submitted)
+            elo_list_table = json.loads(elo_list_table_submitted)
         except json.JSONDecodeError:
             del sql_executor   # noqa: F821
             flask_restful.abort(400, msg="Did you convert elo table from json to text ?")
 
+        try:
+            teaser_table = json.loads(teaser_table_submitted)
+        except json.JSONDecodeError:
+            del sql_executor   # noqa: F821
+            flask_restful.abort(400, msg="Did you convert teaser table from json to text ?")
+
         # put the raw ratings
         ratings.Rating.create_table(sql_executor)   # noqa: F821
-        for elo in elo_list:
-            rating = ratings.Rating(*elo)
-            rating.update_database(sql_executor)   # noqa: F821
+        for variant_name, elo_list in elo_list_table.items():
+            for elo in elo_list:
+                rating = ratings.Rating(variant_name, *elo)
+                rating.update_database(sql_executor)   # noqa: F821
 
-        # put the teaser
-        teaser = teasers.Teaser(teaser_submitted)
-        teaser.update_database(sql_executor)   # noqa: F821
+        # put the teasers
+        teasers.Teaser.create_table(sql_executor)   # noqa: F821
+        for variant_name, teaser_text in teaser_table.items():
+            teaser = teasers.Teaser(variant_name, teaser_text)
+            teaser.update_database(sql_executor)   # noqa: F821
 
         sql_executor.commit()   # noqa: F821
         del sql_executor   # noqa: F821

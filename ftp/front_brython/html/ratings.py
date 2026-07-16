@@ -76,7 +76,7 @@ def get_detailed_elo_rating(variant_name, negotiate, role_id):
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/elo_rating/{int(negotiate)}/{role_id}"
+    url = f"{host}:{port}/elo_rating/{variant_name}/{int(negotiate)}/{role_id}"
 
     # getting rating list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -106,7 +106,7 @@ def get_global_elo_rating(variant_name, negotiate):
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/elo_rating/{int(negotiate)}"
+    url = f"{host}:{port}/elo_rating/{variant_name}/{int(negotiate)}"
 
     # getting rating list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -182,7 +182,9 @@ def show_rating_performance(variant_name, negotiate, role_id):
         if role_id:
 
             # for a given role
-            rating_list = get_detailed_elo_rating(variant_name, negociate, role_id)
+            partial_rating_list = get_detailed_elo_rating(variant_name, negociate, role_id)
+            # do not need first field of tuples (variant name)
+            rating_list = [t[1:] for t in partial_rating_list]
 
         else:
 
@@ -191,7 +193,7 @@ def show_rating_performance(variant_name, negotiate, role_id):
 
             # need to sum up per player
             rating_list_dict = {}
-            for (negotiate2, role_id2, player_id, elo, change, game_id, number_games) in complete_rating_list:
+            for (_, negotiate2, role_id2, player_id, elo, change, game_id, number_games) in complete_rating_list:
 
                 # avoid using loop variable
                 negotiate_found = negotiate2
@@ -413,10 +415,6 @@ def show_rating_performance(variant_name, negotiate, role_id):
         refresh()
 
     def switch_variant_callback(_, new_variant):
-
-        # temporary code ;-)
-        alert("Pas de changement de variante pour le moment, désolé !")
-        return
 
         # note : actually 'variant_name' is a parameter, not a variable
         nonlocal variant_name
