@@ -370,6 +370,10 @@ def game_position_fog_of_war_reload(game_id, role_id):
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/game-fog-of-war-positions/{game_id}/{role_id}"
 
+    # safety
+    if 'JWT_TOKEN' not in storage:
+        storage['JWT_TOKEN'] = ''
+
     # getting game position : need a token if fog_of_war
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
