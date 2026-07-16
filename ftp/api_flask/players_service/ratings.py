@@ -17,7 +17,7 @@ class Rating:
     @staticmethod
     def list_by_variant_classic(sql_executor: database.SqlExecutor, variant: str, classic: bool) -> typing.List[typing.Tuple[str, int, int, int, int, int, int, int]]:
         """ class lookup : finds the object in database from fame id """
-        ratings_found = sql_executor.execute("SELECT * FROM ratings where variant = ? AND classic = ?", (variant, int(classic), ), need_result=True)
+        ratings_found = sql_executor.execute("SELECT * FROM ratings where variant = ? AND classic = ?", (variant, int(classic)), need_result=True)
         if not ratings_found:
             return []
         return ratings_found
