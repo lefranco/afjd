@@ -19,8 +19,6 @@ import mydialog
 import play
 import allgames
 
-# TODO REMOVE (change according to time)
-FORCED_VARIANT_NAME = 'standard'
 
 # how many of the last chats are displayed
 MAX_DISPLAYED_CHAT = 3
@@ -98,7 +96,7 @@ def get_stats_content():
     return stats_content
 
 
-def get_teaser_content():
+def get_teaser_content(today_teased_variant):
     """ get_teaser_content """
 
     teaser_content = None
@@ -120,7 +118,7 @@ def get_teaser_content():
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/elo_rating/{FORCED_VARIANT_NAME}"
+    url = f"{host}:{port}/elo_rating/{today_teased_variant}"
 
     # get teaser elo : do not need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -639,13 +637,18 @@ def show_news():
 
     # ==A3==============================
 
+    # This will select a diffferent variant every hour for teaser
+    possible_variants = list(config.VARIANT_NAMES_DICT.keys())
+    num_variant = (int(time()) % 3600) % len(possible_variants)
+    today_teased_variant = possible_variants[num_variant]
+
     div_a3 = html.DIV(Class='tooltip')
-    title2 = html.H4("Les meilleurs joueurs du site (d'après le classement ELO sur les parties 'standard')")
+    title2 = html.H4(f"Les meilleurs joueurs du site (d'après le classement ELO) sur la variante '{today_teased_variant}' :")
     div_a3 <= title2
 
     # ----
 
-    teaser_loaded = get_teaser_content()
+    teaser_loaded = get_teaser_content(today_teased_variant)
     teaser_table, datation = formatted_teaser(teaser_loaded)
     # create a box that alllow scrolling table inside
     scroll_box = html.DIV(style={

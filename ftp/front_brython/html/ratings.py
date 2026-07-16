@@ -431,10 +431,13 @@ def show_rating_performance(variant_name, negotiate, role_id):
         nonlocal variant_name
         nonlocal variant_data
         nonlocal interface_chosen
+        nonlocal role_id
 
         # note : actually 'variant_name' is a parameter, not a variable
         variant_name = new_variant
         interface_chosen, variant_data = get_interface_chosen_variant_data(variant_name)
+        # must reset role_id
+        role_id = None
         sort_by_callback(None, None)
 
     def switch_mode_callback(_, new_negotiate):
