@@ -72,6 +72,11 @@ INTERFACE_TABLE = {
 }
 
 
+def get_variant_list() -> typing.List[str]:
+    """ get_variant_list """
+    return list(INTERFACE_TABLE.keys())
+
+
 def get_inforced_interface_from_variant(variant: str) -> str:
     """ get_inforced_interface_from_variant """
 

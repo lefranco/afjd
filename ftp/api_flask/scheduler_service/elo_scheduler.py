@@ -29,8 +29,6 @@ MINIMUM_ELO = 1000.
 K_MAX_CONSTANT = 40
 K_SLOPE = 2.
 
-# TODO REMOVE TEMPORARY
-FORCED_VARIANT_NAME = 'standard'
 
 SESSION = requests.Session()
 
@@ -57,7 +55,6 @@ def process_elo_variant(variant_data: mapping.Variant, players_dict: typing.Dict
 
     effective_roles = [r for r in variant_data.roles if r >= 1]
 
-    # should be 7
     num_players = len(effective_roles)
 
     # table rank -> score
@@ -358,8 +355,9 @@ def process_elo_variant(variant_data: mapping.Variant, players_dict: typing.Dict
     for classic1 in (False, True):
         for role_id1 in effective_roles:
             elo_sub_raw_list = [e for e in elo_raw_list if e[0] == classic1 and e[1] == role_id1]
-            best_one = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0]
-            teaser_text += f"{num2pseudo[best_one[2]]} {best_one[3]} {num2rolename[best_one[1]]} {'classique' if best_one[0] else 'blitz'}\n"
+            if elo_sub_raw_list:
+                best_one = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0]
+                teaser_text += f"{num2pseudo[best_one[2]]} {best_one[3]} {num2rolename[best_one[1]]} {'classique' if best_one[0] else 'blitz'}\n"
 
     # separator
     teaser_text += "\n"
@@ -432,8 +430,7 @@ def run(jwt_token: str, commuter_account: str) -> None:
     elo_raw_list_table = {}
     teaser_text_table = {}
 
-    # TODO : list of variants here
-    for variant_name in (FORCED_VARIANT_NAME, ):
+    for variant_name in lowdata.get_variant_list():
 
         # ------------------------
         # get variant data
@@ -462,7 +459,7 @@ def run(jwt_token: str, commuter_account: str) -> None:
         # ------------------------
         # filter games_results_dict for variant
         # ------------------------
-        variant_games_results_dict = games_results_dict
+        variant_games_results_dict = {k : v for k, v in games_results_dict.items() if v['variant'] == variant_name}
 
         # ------------------------
         # perform ELO calculation for variant

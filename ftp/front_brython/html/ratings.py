@@ -177,6 +177,18 @@ def get_regularity_rating():
 def show_rating_performance(variant_name, negotiate, role_id):
     """ show_rating_performance """
 
+    interface_chosen = None
+    variant_data = None
+
+    def get_interface_chosen_variant_data(variant_name):
+        """ get_interface_chosen_variant_data """
+
+        variant_content = common.game_variant_content_reload(variant_name)
+        interface_chosen = interface.get_interface_from_variant(variant_name)
+        interface_parameters = common.read_parameters(variant_name, interface_chosen)
+        variant_data = mapping.Variant(variant_name, variant_content, interface_parameters)
+        return interface_chosen, variant_data
+
     def make_ratings_table(variant_name, negociate, role_id, nb_roles):
 
         if role_id:
@@ -416,10 +428,14 @@ def show_rating_performance(variant_name, negotiate, role_id):
 
     def switch_variant_callback(_, new_variant):
 
-        # note : actually 'variant_name' is a parameter, not a variable
         nonlocal variant_name
+        nonlocal variant_data
+        nonlocal interface_chosen
+
+        # note : actually 'variant_name' is a parameter, not a variable
         variant_name = new_variant
-        refresh()
+        interface_chosen, variant_data = get_interface_chosen_variant_data(variant_name)
+        sort_by_callback(None, None)
 
     def switch_mode_callback(_, new_negotiate):
 
@@ -439,11 +455,6 @@ def show_rating_performance(variant_name, negotiate, role_id):
         pseudo = storage['PSEUDO']
     else:
         pseudo = None
-
-    variant_content = common.game_variant_content_reload(variant_name)
-    interface_chosen = interface.get_interface_from_variant(variant_name)
-    interface_parameters = common.read_parameters(variant_name, interface_chosen)
-    variant_data = mapping.Variant(variant_name, variant_content, interface_parameters)
 
     players_dict = common.get_players()
     if not players_dict:
@@ -465,6 +476,7 @@ def show_rating_performance(variant_name, negotiate, role_id):
     if 'REVERSE_NEEDED_ELO_RATINGS' not in storage:
         storage['REVERSE_NEEDED_ELO_RATINGS'] = str(True)
 
+    interface_chosen, variant_data = get_interface_chosen_variant_data(variant_name)
     sort_by_callback(None, None)
 
 

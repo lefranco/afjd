@@ -8367,8 +8367,9 @@ class ExtractGamesDataRessource(flask_restful.Resource):  # type: ignore
             assert end_transition is not None
             game_data['end_time_stamp'] = end_transition.time_stamp
 
-            # get scoring, classic and name
+            # get variant, scoring, classic and name
             game_name = game.name
+            game_data['variant'] = game.variant
             game_data['scoring'] = game.scoring
             game_data['classic'] = not bool(game.game_type)  # only game_type == 0 ("nego") is "classic"
 
@@ -9548,13 +9549,21 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
 
-        # sql_executor = database.SqlExecutor()
+        sql_executor = database.SqlExecutor()
+
         #
         # # insert specific code here
 
-        # sql_executor.commit()
+        games_list = games.Game.inventory(sql_executor)
+        for game in games_list:
+            if game.fog:
+                continue
+            game._used_for_elo = True
+            game.update_database(sql_executor)
 
-        # del sql_executor
+        sql_executor.commit()
+
+        del sql_executor
 
         print("MAINTENANCE - done !!!", file=sys.stderr)
 

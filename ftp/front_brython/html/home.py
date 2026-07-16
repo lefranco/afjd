@@ -19,7 +19,7 @@ import mydialog
 import play
 import allgames
 
-# TODO REMOVE
+# TODO REMOVE (change according to time)
 FORCED_VARIANT_NAME = 'standard'
 
 # how many of the last chats are displayed
