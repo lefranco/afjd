@@ -527,6 +527,7 @@ def rectify_parameters():
     end_voted_loaded = None
     soloed_loaded = None
     nb_max_cycles_to_play_loaded = None
+    variant_loaded = None
 
     def change_parameters_reload():
         """ change_parameters_reload """
@@ -549,6 +550,8 @@ def rectify_parameters():
             nonlocal end_voted_loaded
             nonlocal soloed_loaded
             nonlocal nb_max_cycles_to_play_loaded
+            nonlocal variant_loaded
+
             req_result = loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -568,6 +571,7 @@ def rectify_parameters():
             end_voted_loaded = req_result['end_voted']
             soloed_loaded = req_result['soloed']
             nb_max_cycles_to_play_loaded = req_result['nb_max_cycles_to_play']
+            variant_loaded = req_result['variant']
 
         json_dict = {}
 
@@ -679,6 +683,11 @@ def rectify_parameters():
         if config.GAME_TYPES_CODE_TABLE[game_type_name] == game_type_loaded:
             option.selected = True
         input_game_type <= option
+
+    # duel : open blitz forced
+    number_players = config.VARIANT_NAMES_DICT[variant_loaded]
+    if number_players == 2:
+        input_game_type.disabled = True
 
     fieldset <= input_game_type
     form <= fieldset

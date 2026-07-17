@@ -151,6 +151,21 @@ def create_game(json_dict):
             alert(all_game_types)
             information_displayed_game_type = True
 
+    def change_variant_callback(_):
+
+        # get number of players of variant
+        variant_name = input_variant.value
+        number_players = config.VARIANT_NAMES_DICT[variant_name]
+
+        # duel : open blitz forced
+        if number_players == 2:
+            alert("Partie duel : le type de partie est forcé à Blitz Ouverte")
+            # 0: Négo 1: Blitz 2: Négo Publique 3: Blitz Ouverte
+            input_game_type.value = 'Blitz Ouverte'
+            input_game_type.disabled = True
+        else:
+            input_game_type.disabled = False
+
     def change_game_type_callback(_):
 
         # 0: Négo 1: Blitz 2: Négo Publique 3: Blitz Ouverte
@@ -158,7 +173,7 @@ def create_game(json_dict):
 
         # warn if open blitz
         if game_type_code == 3:
-            alert("Attention, il est préférable d'éviter les parties Blitz Ouvertes qui sont sources de tergiversations - à réserver aux parties de test !")
+            alert("Attention, il est préférable d'éviter les parties Blitz Ouvertes qui sont sources de tergiversations - à réserver aux parties de duel et aux de test !")
 
         # set durations
         if game_type_code in (0, 2):
@@ -468,6 +483,7 @@ def create_game(json_dict):
     legend_variant = html.LEGEND("variante", title="La variante de la partie")
     fieldset <= legend_variant
     input_variant = html.SELECT(type="select-one", value="", Class='btn-inside')
+    input_variant.bind("change", change_variant_callback)
 
     for variant_name in config.VARIANT_NAMES_DICT:
         option = html.OPTION(variant_name)
