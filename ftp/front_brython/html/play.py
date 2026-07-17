@@ -112,7 +112,7 @@ def load_option(_, item_name):
     if item_name == 'Consulter':
         status = play_other.show_position(ARRIVAL2)
     if item_name == 'Ordonner':
-        status = play_play.submit_orders()
+        status = play_play.submit_orders(True)
     if item_name == 'Ordres de com\'':
         status = play_play.submit_communication_orders()
     if item_name == 'Imaginer':
@@ -122,7 +122,7 @@ def load_option(_, item_name):
     if item_name == 'Presse':
         status = play_other.declare()
     if item_name == 'Arbitrer':
-        status = play_master.game_master()
+        status = play_master.game_master(True)
     if item_name == 'Informations':
         status = play_other.show_informations()
     if item_name == 'Superviser':

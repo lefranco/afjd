@@ -84,7 +84,7 @@ def notify_server_game_seen(game_id):
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
-def submit_orders():
+def submit_orders(arrival):
     """ submit_orders """
 
     selected_active_unit = None
@@ -150,7 +150,7 @@ def submit_orders():
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
-            submit_orders()
+            submit_orders(False)
 
         ev.preventDefault()
 
@@ -170,7 +170,7 @@ def submit_orders():
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
-        submit_orders()
+        submit_orders(False)
 
     def submit_vote_callback(ev):  # pylint: disable=invalid-name
         """ submit_vote_callback """
@@ -191,7 +191,7 @@ def submit_orders():
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
-            submit_orders()
+            submit_orders(False)
 
         ev.preventDefault()
 
@@ -209,7 +209,7 @@ def submit_orders():
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
-        submit_orders()
+        submit_orders(False)
 
     def update_select(event):
         """ update_select """
@@ -251,7 +251,7 @@ def submit_orders():
     def cancel_submit_orders_callback(_, dialog):
         dialog.close(None)
         play_low.MY_SUB_PANEL.clear()
-        submit_orders()
+        submit_orders(False)
 
     def submit_orders_callback(_, warned=False, dialog2=None):
         """ submit_orders_callback """
@@ -1558,22 +1558,28 @@ def submit_orders():
             return False
     else:
         if play_low.ROLE_ID not in submitted_data['needed']:
-            alert("Vous n'avez pas d'ordre à passer.")
+            if arrival:
+                alert("Vous n'avez pas d'ordre à passer.")
             # may still vote or edit notes
 
-    # check game finished
-    if play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']:
-        message = "La partie est terminée..."
-        if play_low.GAME_PARAMETERS_LOADED['soloed']:
-            message += " parce qu'un solo a été réalisé !"
-        elif play_low.GAME_PARAMETERS_LOADED['finished']:
-            message += " parce qu'arrivée à échéance !"
-        elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
-            message += " sur un vote de fin unanime !"
-        if not play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:
-            message += " (la presse est dorénavant ouverte pour les déclarations de fin de partie !)"
-        alert(message)
-        # may still edit notes
+    # warning if game not waiting or ongoing
+    if arrival:
+        if play_low.GAME_PARAMETERS_LOADED['current_state'] not in [0, 1]:
+            alert("Cette partie est archivée ou distinguée !")
+        else:
+            # check game finished
+            if play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']:
+                message = "La partie est terminée..."
+                if play_low.GAME_PARAMETERS_LOADED['soloed']:
+                    message += " parce qu'un solo a été réalisé !"
+                elif play_low.GAME_PARAMETERS_LOADED['finished']:
+                    message += " parce qu'arrivée à échéance !"
+                elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
+                    message += " sur un vote de fin unanime !"
+                if not play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['game_type'] in [1, 3]:
+                    message += " (la presse est dorénavant ouverte pour les déclarations de fin de partie !)"
+                alert(message)
+                # may still edit notes
 
     # load notes
     content_loaded = common.game_note_reload(play_low.GAME_ID)

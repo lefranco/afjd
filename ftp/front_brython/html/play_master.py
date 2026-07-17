@@ -145,7 +145,7 @@ def get_game_allocated_players(game_id):
     return game_master_id, players_allocated_list, players_assigned_list
 
 
-def game_master():
+def game_master(arrival):
     """ game_master """
 
     players_dict = {}
@@ -172,7 +172,7 @@ def game_master():
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -192,7 +192,7 @@ def game_master():
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
-        game_master()
+        game_master(False)
 
     def quit_mastering_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -208,7 +208,7 @@ def game_master():
 
                 # failed but refresh
                 play_low.MY_SUB_PANEL.clear()
-                game_master()
+                game_master(False)
 
                 return
 
@@ -260,7 +260,7 @@ def game_master():
 
                 # fail but refresh
                 play_low.MY_SUB_PANEL.clear()
-                game_master()
+                game_master(False)
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -269,7 +269,7 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -304,7 +304,7 @@ def game_master():
 
                 # fail but refresh
                 play_low.MY_SUB_PANEL.clear()
-                game_master()
+                game_master(False)
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -317,7 +317,7 @@ def game_master():
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
             play_low.load_special_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -346,7 +346,7 @@ def game_master():
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
-        game_master()
+        game_master(False)
 
     def cancel_delete_game_callback(_, dialog):
         """ cancel_delete_game_callback """
@@ -396,7 +396,7 @@ def game_master():
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
-        game_master()
+        game_master(False)
 
     def callback_download_game_csv(ev):  # pylint: disable=invalid-name
         """ callback_download_game_csv """
@@ -450,7 +450,7 @@ def game_master():
 
                 # failed but refresh
                 play_low.MY_SUB_PANEL.clear()
-                game_master()
+                game_master(False)
 
                 return
 
@@ -460,7 +460,7 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_special_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -494,7 +494,7 @@ def game_master():
 
                 # failed but refresh
                 play_low.MY_SUB_PANEL.clear()
-                game_master()
+                game_master(False)
 
                 return
 
@@ -504,7 +504,7 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_special_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -552,7 +552,7 @@ def game_master():
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
-            game_master()
+            game_master(False)
 
         dialog.close(None)
 
@@ -583,7 +583,7 @@ def game_master():
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
-            game_master()
+            game_master(False)
 
         dialog.close(None)
 
@@ -607,7 +607,7 @@ def game_master():
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
-        game_master()
+        game_master(False)
 
     def remove_incident_callback_confirm(ev, role_id, advancement, text):  # pylint: disable=invalid-name
         """ remove_incident_callback_confirm """
@@ -620,7 +620,7 @@ def game_master():
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
-        game_master()
+        game_master(False)
 
     def clear_vote_callback(ev, role_id):  # pylint: disable=invalid-name
         """ clear_vote_callback """
@@ -641,7 +641,7 @@ def game_master():
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -659,7 +659,7 @@ def game_master():
 
         # back to where we started
         play_low.MY_SUB_PANEL.clear()
-        game_master()
+        game_master(False)
 
     def change_deadline_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -680,7 +680,7 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -702,7 +702,7 @@ def game_master():
             alert("Désolé, il est interdit de positionner une date limite dans le passé")
             # back to where we were
             play_low.MY_SUB_PANEL.clear()
-            game_master()
+            game_master(False)
             return
 
         json_dict = {
@@ -736,7 +736,7 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -779,7 +779,7 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -816,7 +816,7 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -1042,7 +1042,7 @@ def game_master():
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -1106,7 +1106,7 @@ def game_master():
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -1150,7 +1150,7 @@ def game_master():
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
             play_low.load_special_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -1189,7 +1189,7 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_special_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -1227,7 +1227,7 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_special_stuff()
-            game_master()
+            game_master(False)
 
         ev.preventDefault()
 
@@ -1291,25 +1291,24 @@ def game_master():
         return False
 
     # warning if game not waiting or ongoing
-    if play_low.GAME_PARAMETERS_LOADED['current_state'] not in [0, 1]:
-        mydialog.info_go("Cette partie est archivée ou distinguée !")
-
-    else:
-
-        # check game finished
-        if play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']:
-            message = "La partie est terminée..."
-            if play_low.GAME_PARAMETERS_LOADED['soloed']:
-                message += " parce qu'un solo a été réalisé !"
-            elif play_low.GAME_PARAMETERS_LOADED['finished']:
-                message += " parce qu'arrivée à échéance !"
-            elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
-                message += " sur un vote de fin unanime !"
-            if play_low.GAME_PARAMETERS_LOADED['nopress_current']:
-                message += " (la presse n'est toujours pas ouverte !)"
-            if play_low.GAME_PARAMETERS_LOADED['anonymous']:
-                message += " (l'anonymat n'est toujours pas levé !)"
-            alert(message)
+    if arrival:
+        if play_low.GAME_PARAMETERS_LOADED['current_state'] not in [0, 1]:
+            alert("Cette partie est archivée ou distinguée !")
+        else:
+            # check game finished
+            if play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']:
+                message = "La partie est terminée..."
+                if play_low.GAME_PARAMETERS_LOADED['soloed']:
+                    message += " parce qu'un solo a été réalisé !"
+                elif play_low.GAME_PARAMETERS_LOADED['finished']:
+                    message += " parce qu'arrivée à échéance !"
+                elif play_low.GAME_PARAMETERS_LOADED['end_voted']:
+                    message += " sur un vote de fin unanime !"
+                if play_low.GAME_PARAMETERS_LOADED['nopress_current']:
+                    message += " (la presse n'est toujours pas ouverte !)"
+                if play_low.GAME_PARAMETERS_LOADED['anonymous']:
+                    message += " (l'anonymat n'est toujours pas levé !)"
+                alert(message)
 
     advancement_loaded = play_low.GAME_PARAMETERS_LOADED['current_advancement']
 
