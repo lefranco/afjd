@@ -9549,14 +9549,21 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
 
-        # sql_executor = database.SqlExecutor()
+        sql_executor = database.SqlExecutor()
 
         #
         # # insert specific code here
+        games_list = games.Game.inventory(sql_executor)
+        for game in games_list:
+            if game.variant not in ('coldwar', 'grandeguerre', 'franceautriche'):
+                continue
+            print(f"{game.name=}", file=sys.stderr)
+            game._type_code = 3
+            game.update_database(sql_executor)
 
-        # sql_executor.commit()
+        sql_executor.commit()
 
-        # del sql_executor
+        del sql_executor
 
         print("MAINTENANCE - done !!!", file=sys.stderr)
 
