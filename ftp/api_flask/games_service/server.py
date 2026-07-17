@@ -9558,7 +9558,7 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             if game.variant not in ('coldwar', 'grandeguerre', 'franceautriche'):
                 continue
             print(f"{game.name=}", file=sys.stderr)
-            game._type_code = 3
+            game._game_type = 3
             game.update_database(sql_executor)
 
         sql_executor.commit()
