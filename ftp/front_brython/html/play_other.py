@@ -801,9 +801,9 @@ def show_informations():
             'speed_moves':                    ("vitesse pour les mouvements",                    "entier en heures", "Le système ajoute autant d'heures avant une résolution de mouvement pour une date limite"),  # noqa: E241
             'speed_retreats':                 ("vitesse pour les retraites",                     "entier en heures", "Le système ajoute autant d'heures avant une résolution de retraites pour une date limite"),  # noqa: E241
             'speed_adjustments':              ("vitesse pour les ajustements",                   "entier en heures", "Le système ajoute autant d'heures avant une résolution d'ajustements pour une date limite"),  # noqa: E241
-            'cd_possible_moves':              ("désordre civil possible pour les mouvements",    "oui ou non", "Si oui, l'arbitre est en mesure d'imposer un désordre civil pour une phase de mouvements"),  # noqa: E241
-            'cd_possible_retreats':           ("désordre civil possible pour les retraites",     "oui ou non", "Si oui, l'arbitre est en mesure d'imposer un désordre civil pour une phase de retraites"),  # noqa: E241
-            'cd_possible_builds':             ("désordre civil possible pour les constructions", "oui ou non", "Si oui, l'arbitre est en mesure d'imposer un désordre civil pour une phase d'ajustements"),  # noqa: E241
+            'cd_possible_moves':              ("désordre civil possible pour les mouvements",    "oui ou non", "Si oui, l'arbitre ou le système est en mesure d'imposer un désordre civil pour une phase de mouvements"),  # noqa: E241
+            'cd_possible_retreats':           ("désordre civil possible pour les retraites",     "oui ou non", "Si oui, l'arbitre ou le système est en mesure d'imposer un désordre civil pour une phase de retraites"),  # noqa: E241
+            'cd_possible_builds':             ("désordre civil possible pour les constructions", "oui ou non", "Si oui, l'arbitre ou le système est en mesure d'imposer un désordre civil pour une phase d'ajustements"),  # noqa: E241
             'play_weekend':                   ("jeu le week-end",                                "oui ou non", "Si oui, on joue le week-end et Le système pourra placer une date limite pendant le week-end"),  # noqa: E241
             'access_restriction_reliability': ("",          "entier", "Un minimum de fiabilité est exigé pour rejoindre la partie"),  # noqa: E241
             'access_restriction_regularity':  ("",          "entier", "Un minimum de régularité est exigé pour rejoindre la partie"),  # noqa: E241
