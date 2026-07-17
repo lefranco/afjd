@@ -639,7 +639,8 @@ def show_news():
 
     # This will select a diffferent variant every hour for teaser
     possible_variants = list(config.VARIANT_NAMES_DICT.keys())
-    num_variant = (int(time()) % (24 * 3600)) % len(possible_variants)
+    num_day = int(time()) // (24 * 3600)
+    num_variant = num_day % len(possible_variants)
     today_teased_variant = possible_variants[num_variant]
 
     div_a3 = html.DIV(Class='tooltip')
