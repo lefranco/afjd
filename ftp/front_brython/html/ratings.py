@@ -349,7 +349,7 @@ def show_rating_performance(variant_name, negotiate, role_id):
             switch_variant_buttons.append(switch_variant_button)
 
         # button for changing mode
-        switch_mode_button = html.BUTTON(f"{'blitz' if negotiate else 'négo'}", Class='btn-inside')
+        switch_mode_button = html.BUTTON(f"{'blitz' if negotiate else 'classique'}", Class='btn-inside')
         switch_mode_button.bind("click", lambda ev, nn=not negotiate: switch_mode_callback(ev, nn))
 
         # button for going global
@@ -403,7 +403,7 @@ def show_rating_performance(variant_name, negotiate, role_id):
             role_name_sel = variant_data.role_name_table[role_sel]
         else:
             role_name_sel = ""
-        MY_SUB_PANEL <= html.H4(f"Classement {variant_name} {'négo' if negotiate else 'blitz'} {role_name_sel}")
+        MY_SUB_PANEL <= html.H4(f"Classement {variant_name} {'classique' if negotiate else 'blitz'} {role_name_sel}")
 
         # rating table
         MY_SUB_PANEL <= ratings_table
