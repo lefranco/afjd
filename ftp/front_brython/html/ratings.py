@@ -231,6 +231,8 @@ def show_rating_performance(variant_name, negotiate, role_id):
 
             rating_list = [[negotiate_found, v['last_role'], k, round((v['elo_sum'] + (nb_roles - v['number_rated']) * DEFAULT_ELO) / nb_roles), v['last_change'], v['last_game'], v['number_games']] for k, v in rating_list_dict.items()]
 
+        number_positions_based_on = sum(r[6] for r in rating_list)
+
         ratings_table = html.TABLE()
 
         # the display order
@@ -331,13 +333,13 @@ def show_rating_performance(variant_name, negotiate, role_id):
             average = round(sum(r[3] for r in rating_list) / len(rating_list))
         else:
             average = DEFAULT_ELO
-        return ratings_table, average
+        return ratings_table, average, number_positions_based_on
 
     def refresh():
 
         nb_roles = len(variant_data.roles) - 1
 
-        ratings_table, average = make_ratings_table(variant_name, negotiate, role_id, nb_roles)
+        ratings_table, average, number_positions_based_on = make_ratings_table(variant_name, negotiate, role_id, nb_roles)
 
         # button for changing variant
         switch_variant_buttons = []
@@ -403,7 +405,7 @@ def show_rating_performance(variant_name, negotiate, role_id):
             role_name_sel = variant_data.role_name_table[role_sel]
         else:
             role_name_sel = ""
-        MY_SUB_PANEL <= html.H4(f"Classement {variant_name} {'classique' if negotiate else 'blitz'} {role_name_sel}")
+        MY_SUB_PANEL <= html.H4(f"Classement {variant_name} {'classique' if negotiate else 'blitz'} {role_name_sel} basé sur {number_positions_based_on} résultats")
 
         # rating table
         MY_SUB_PANEL <= ratings_table
