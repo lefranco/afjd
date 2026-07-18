@@ -1504,8 +1504,6 @@ void suppressionelimines2(void) {
 		PAYSMENACE.t[PAYSMENACE.n] = p;
 		PAYSMENACE.n++;
 		assert(PAYSMENACE.n <= NPAYSS);
-
-		printf(">>>> pays menace %s\n", p->nom);
 	}
 
 	/* Trouve les pays elimines : ce sont les pays menaces qui ne peuvent pas retraiter en collision avec une unite d'un pays qui n'est pas menace */
