@@ -1,7 +1,7 @@
 {
     "author": {
-        "x_pos" : 150,
-        "y_pos" : 10
+        "x_pos": 150,
+        "y_pos": 10
     },
     "additional_text": "La guerre des épices.",
     "map": {
@@ -660,8 +660,8 @@
         "58": {
             "name": "Sat",
             "full_name": "Sampit",
-            "x_pos": 480,
-            "y_pos": 753,
+            "x_pos": 462,
+            "y_pos": 758,
             "x_legend_pos": 480,
             "y_legend_pos": 739
         },
