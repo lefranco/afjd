@@ -347,6 +347,27 @@ def process_elo_variant(variant_data: mapping.Variant, players_dict: typing.Dict
         elo_raw_element = [classic, role_id, player_id, elo_value_int, change_int, game_id, number_games]
         elo_raw_list.append(elo_raw_element)
 
+    # agregate to have actual ELO values
+
+    elo_global_table = {}
+    for (player, role_name, classic) in elo_table:
+
+        elo_value = elo_table[(player, role_name, classic)]
+
+        # player is the id
+        player_id = players_dict[player]
+
+        if (classic, player_id) not in elo_global_table:
+            elo_global_table[(classic, player_id)] = 0.
+        elo_global_table[(classic, player_id)] += elo_value
+
+    elo_raw_list2 = []
+    for (classic, player_id), elo_value in elo_global_table.items():
+        # elo is integer
+        elo_value_int = round(elo_value)
+        elo_raw_element = [classic, player_id, elo_value_int]
+        elo_raw_list2.append(elo_raw_element)
+
     # table game -> start time (for sorting)
     gameid2starttime = {gamename2gameid[k]: v['start_time_stamp'] for k, v in games_results_dict.items()}
 
@@ -358,12 +379,12 @@ def process_elo_variant(variant_data: mapping.Variant, players_dict: typing.Dict
 
     # global
     for classic1 in (False, True):
-        elo_sub_raw_list = [e for e in elo_raw_list if e[0] == classic1]
-        if elo_sub_raw_list:
-            best_ones = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0: NUMBER_ELO_TEASER]
+        elo_sub_raw_list2 = [e for e in elo_raw_list2 if e[0] == classic1]
+        if elo_sub_raw_list2:
+            best_ones = sorted(elo_sub_raw_list2, key=lambda e: e[2], reverse=True)[0: NUMBER_ELO_TEASER]
             rank = 1
             for best_one in best_ones:
-                teaser_text_variant += f"global {'classique' if best_one[0] else 'blitz'} {num2pseudo[best_one[2]]} {best_one[3]} {rank}\n"
+                teaser_text_variant += f"global {'classique' if best_one[0] else 'blitz'} {num2pseudo[best_one[1]]} {best_one[2]} {rank}\n"
                 rank += 1
 
     # per role
