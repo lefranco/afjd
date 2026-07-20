@@ -211,7 +211,7 @@ def formatted_teaser(teasers):
             champion_data = line.split()
             c_type = champion_data[0]
             if c_type == 'date':
-                datation = champion_data[0]
+                datation = champion_data[1]
             elif c_type == 'global':
                 c_mode = champion_data[1]
                 c_pseudo = champion_data[2]
@@ -689,7 +689,14 @@ def show_news():
     scroll_box <= teaser_role_table
     div_a3 <= scroll_box
     div_a3 <= html.BR()
+
     div_a3 <= html.EM(f"En date de {datation}")
+    div_a3 <= " "
+
+    warning_button = html.INPUT(type="submit", value="Avertissement important sur le ELO", Class='btn-inside')
+    warning_button.attrs['style'] = 'font-size: 10px'
+    warning_button.bind("click", common.warning_elo_callback)
+    div_a3 <= warning_button
 
     # ----
 

@@ -1687,3 +1687,16 @@ def check_correct_email(email):
         return False
 
     return True
+
+
+def warning_elo_callback(_):
+    """ warning about ELO """
+    alert(
+        "Le système Elo repose sur l'accumulation de données.\n"
+        "Lorsque le volume de parties est faible, le score obtenu est seulement une mesure de performance ponctuelle : il traduit de manière brute les derniers résultats, mais reste soumis au hasard des séries.\n"
+        "À mesure que l'échantillon de données s'élargit, l'impact de la chance se lisse.\n"
+        "Le score se stabilise et passe alors du statut de simple constat à celui de prédiction statistique.\n"
+        "Il devient le reflet fidèle du niveau théorique réel comme souhaité.\n"
+        "\n"
+        "Consultez la page 'classement' pour connaître les tailles des échantillons et obtenir plus de détails sur ce classemnet.\n"
+        "Consultez la page 'technique' pour comprendre sa méthode de calcul.")

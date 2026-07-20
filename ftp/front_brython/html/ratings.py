@@ -407,6 +407,11 @@ def show_rating_performance(variant_name, negotiate, role_id):
             role_name_sel = ""
         MY_SUB_PANEL <= html.H4(f"Classement {variant_name} {'classique' if negotiate else 'blitz'} {role_name_sel} basé sur {number_positions_based_on} résultats")
 
+        warning_button = html.INPUT(type="submit", value="Avertissement important sur le ELO", Class='btn-inside')
+        warning_button.attrs['style'] = 'font-size: 10px'
+        warning_button.bind("click", common.warning_elo_callback)
+        MY_SUB_PANEL <= warning_button
+
         # rating table
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
