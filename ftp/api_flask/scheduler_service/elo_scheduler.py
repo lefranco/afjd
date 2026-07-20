@@ -30,6 +30,9 @@ K_MAX_CONSTANT = 40
 K_SLOPE = 2.
 
 
+# How many in teaser rating
+NUMBER_ELO_TEASER = 7
+
 SESSION = requests.Session()
 
 
@@ -350,27 +353,36 @@ def process_elo_variant(variant_data: mapping.Variant, players_dict: typing.Dict
     # sort according to game start
     elo_raw_list_sorted = sorted(elo_raw_list, key=lambda e: gameid2starttime[e[5]])
 
-    # make teaser (just an abstract)
-    teaser_text = ""
+    # make teasers (just an abstract)
+    teaser_text_variant = ""
+
+    # global
+    for classic1 in (False, True):
+        elo_sub_raw_list = [e for e in elo_raw_list if e[0] == classic1]
+        if elo_sub_raw_list:
+            best_ones = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0: NUMBER_ELO_TEASER]
+            rank = 1
+            for best_one in best_ones:
+                teaser_text_variant += f"global {'classique' if best_one[0] else 'blitz'} {num2pseudo[best_one[2]]} {best_one[3]} {rank}\n"
+                rank += 1
+
+    # per role
     for classic1 in (False, True):
         for role_id1 in effective_roles:
             elo_sub_raw_list = [e for e in elo_raw_list if e[0] == classic1 and e[1] == role_id1]
             if elo_sub_raw_list:
                 best_one = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0]
-                teaser_text += f"{num2pseudo[best_one[2]]} {best_one[3]} {num2rolename[best_one[1]]} {'classique' if best_one[0] else 'blitz'}\n"
-
-    # separator
-    teaser_text += "\n"
+                teaser_text_variant += f"role  {'classique' if best_one[0] else 'blitz'} {num2pseudo[best_one[2]]} {best_one[3]} {num2rolename[best_one[1]]}\n"
 
     # date to teaser
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp)
     date_now_gmt_str = date_now_gmt.strftime("%Y-%m-%d %H:%M:%S UTC")
-    teaser_text += f"{date_now_gmt_str}"
+    teaser_text_variant += f"date {date_now_gmt_str}"
 
     lowdata.elapsed_then(elo_information, "list built")
 
-    return elo_raw_list_sorted, teaser_text
+    return elo_raw_list_sorted, teaser_text_variant
 
 
 def run(jwt_token: str, commuter_account: str) -> None:
@@ -459,7 +471,7 @@ def run(jwt_token: str, commuter_account: str) -> None:
         # ------------------------
         # filter games_results_dict for variant
         # ------------------------
-        variant_games_results_dict = {k : v for k, v in games_results_dict.items() if v['variant'] == variant_name}
+        variant_games_results_dict = {k: v for k, v in games_results_dict.items() if v['variant'] == variant_name}
 
         # ------------------------
         # perform ELO calculation for variant

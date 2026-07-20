@@ -1891,21 +1891,6 @@ class RawEloTeaserRessource(flask_restful.Resource):  # type: ignore
 class RawEloRessource(flask_restful.Resource):  # type: ignore
     """ RawEloRessource """
 
-    # TODO : legacy REMOVE
-    def get(self) -> typing.Tuple[str, int]:
-        """
-        Provides the elo teaser
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/elo_rating - GET - get the elo teaser")
-
-        teaser_content = '\n\n2026-07-16 01:00:32 UTC'
-
-        data = teaser_content
-
-        return data, 200
-
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Update the whole elo data

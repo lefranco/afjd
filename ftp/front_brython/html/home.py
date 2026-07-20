@@ -203,46 +203,72 @@ def formatted_teaser(teasers):
     """ formatted_teaser """
 
     # collect data
-    data = {}
-    done = False
+    data_global = {}
+    data_role = {}
     datation = ''
     for line in teasers.split('\n'):
         if line:
-            if done:
-                datation = line
-            else:
-                champion_data = line.split()
-                c_pseudo = champion_data[0]
-                c_score = int(champion_data[1])
-                c_role = champion_data[2]
-                c_mode = champion_data[3]
-                data[(c_role, c_mode)] = (c_pseudo, c_score)
-        else:
-            done = True
+            champion_data = line.split()
+            c_type = champion_data[0]
+            if c_type == 'date':
+                datation = champion_data[0]
+            elif c_type == 'global':
+                c_mode = champion_data[1]
+                c_pseudo = champion_data[2]
+                c_score = int(champion_data[3])
+                c_num = champion_data[4]
+                data_global[(c_num, c_mode)] = (c_pseudo, c_score)
+            elif c_type == 'role':
+                c_mode = champion_data[1]
+                c_pseudo = champion_data[2]
+                c_score = int(champion_data[3])
+                c_role = champion_data[4]
+                data_role[(c_role, c_mode)] = (c_pseudo, c_score)
 
+    # ranks sorted numerically
+    ranks = sorted({d[0] for d in data_global}, key=int)
     # roles sorted alphabetically
-    roles = sorted({d[0] for d in data})
+    roles = sorted({d[0] for d in data_role})
     # mode sorted with classical (nego) first
-    modes = sorted({d[1] for d in data}, key=lambda m: {'classique': 1, 'blitz': 0}[m], reverse=True)
+    modes_global = sorted({d[1] for d in data_global}, key=lambda m: {'classique': 1, 'blitz': 0}[m], reverse=True)
+    # mode sorted with classical (nego) first
+    modes_role = sorted({d[1] for d in data_role}, key=lambda m: {'classique': 1, 'blitz': 0}[m], reverse=True)
 
-    # data in table
-    teaser_content_table = html.TABLE(width="100%")
+    # data in table for global
+    teaser_global_content_table = html.TABLE(width="100%")
     title = html.TR()
-    for header in [' '] + modes:
+    for header in ['global'] + modes_global:
         title <= html.TD(html.B(header))
-    teaser_content_table <= title
-    for role in roles:
+    teaser_global_content_table <= title
+    for rank in ranks:
         row = html.TR()
-        row <= html.TD(html.B(role))
-        for mode in modes:
+        row <= html.TD(html.B(rank))
+        for mode in modes_global:
             # ignore score to save room
-            pseud, _ = data[(role, mode)]
+            pseud, _ = data_global[(rank, mode)]
             elem = html.DIV()
             elem <= pseud
             row <= html.TD(elem)
-        teaser_content_table <= row
+        teaser_global_content_table <= row
 
-    return teaser_content_table, datation
+    # data in table for roles
+    teaser_role_content_table = html.TABLE(width="100%")
+    title = html.TR()
+    for header in ['par rôle'] + modes_role:
+        title <= html.TD(html.B(header))
+    teaser_role_content_table <= title
+    for role in roles:
+        row = html.TR()
+        row <= html.TD(html.B(role))
+        for mode in modes_role:
+            # ignore score to save room
+            pseud, _ = data_role[(role, mode)]
+            elem = html.DIV()
+            elem <= pseud
+            row <= html.TD(elem)
+        teaser_role_content_table <= row
+
+    return teaser_global_content_table, teaser_role_content_table, datation
 
 
 def important_links_table():
@@ -641,6 +667,7 @@ def show_news():
     possible_variants = list(config.VARIANT_NAMES_DICT.keys())
     num_day = int(time()) // (24 * 3600)
     num_variant = num_day % len(possible_variants)
+
     today_teased_variant = possible_variants[num_variant]
 
     div_a3 = html.DIV(Class='tooltip')
@@ -650,14 +677,16 @@ def show_news():
     # ----
 
     teaser_loaded = get_teaser_content(today_teased_variant)
-    teaser_table, datation = formatted_teaser(teaser_loaded)
+    teaser_global_table, teaser_role_table, datation = formatted_teaser(teaser_loaded)
     # create a box that alllow scrolling table inside
     scroll_box = html.DIV(style={
         "width": "100%",
         "overflow-x": "auto",
         "display": "block"
     })
-    scroll_box <= teaser_table
+    scroll_box <= teaser_global_table
+    scroll_box <= html.BR()
+    scroll_box <= teaser_role_table
     div_a3 <= scroll_box
     div_a3 <= html.BR()
     div_a3 <= html.EM(f"En date de {datation}")
