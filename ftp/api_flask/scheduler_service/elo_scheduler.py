@@ -351,21 +351,24 @@ def process_elo_variant(variant_data: mapping.Variant, players_dict: typing.Dict
 
     elo_global_table = {}
     for (player, role_name, classic) in elo_table:
-
         elo_value = elo_table[(player, role_name, classic)]
-
-        # player is the id
         player_id = players_dict[player]
-
         if (classic, player_id) not in elo_global_table:
             elo_global_table[(classic, player_id)] = 0.
         elo_global_table[(classic, player_id)] += elo_value
+
+    elo_global_table2 = {}
+    for (classic, _, player_id, _, _, _, number_games) in elo_raw_list:
+        if (classic, player_id) not in elo_global_table2:
+            elo_global_table2[(classic, player_id)] = 0
+        elo_global_table2[(classic, player_id)] += number_games
 
     elo_raw_list2 = []
     for (classic, player_id), elo_value in elo_global_table.items():
         # elo is integer
         elo_value_int = round(elo_value)
-        elo_raw_element = [classic, player_id, elo_value_int]
+        nb_games = elo_global_table2[(classic, player_id)]
+        elo_raw_element = [classic, player_id, elo_value_int, nb_games]
         elo_raw_list2.append(elo_raw_element)
 
     # table game -> start time (for sorting)
@@ -384,7 +387,7 @@ def process_elo_variant(variant_data: mapping.Variant, players_dict: typing.Dict
             best_ones = sorted(elo_sub_raw_list2, key=lambda e: e[2], reverse=True)[0: NUMBER_ELO_TEASER]
             rank = 1
             for best_one in best_ones:
-                teaser_text_variant += f"global {'classique' if best_one[0] else 'blitz'} {num2pseudo[best_one[1]]} {best_one[2]} {rank}\n"
+                teaser_text_variant += f"global {'classique' if best_one[0] else 'blitz'} {num2pseudo[best_one[1]]} {best_one[2]} {best_one[3]} {rank}\n"
                 rank += 1
 
     # per role
@@ -393,7 +396,7 @@ def process_elo_variant(variant_data: mapping.Variant, players_dict: typing.Dict
             elo_sub_raw_list = [e for e in elo_raw_list if e[0] == classic1 and e[1] == role_id1]
             if elo_sub_raw_list:
                 best_one = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0]
-                teaser_text_variant += f"role  {'classique' if best_one[0] else 'blitz'} {num2pseudo[best_one[2]]} {best_one[3]} {num2rolename[best_one[1]]}\n"
+                teaser_text_variant += f"role {'classique' if best_one[0] else 'blitz'} {num2pseudo[best_one[2]]} {best_one[3]} {best_one[6]} {num2rolename[best_one[1]]}\n"
 
     # date to teaser
     time_stamp = time.time()

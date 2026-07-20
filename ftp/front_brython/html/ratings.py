@@ -22,7 +22,6 @@ ADVANCEMENT_DURATION = 12
 
 DEFAULT_ELO = 1500
 
-
 OPTIONS = {
     'Classement performance': "Classement selon la performance, c'est à dire le E.L.O.",
     'Classement fiabilité': "Classement selon la fiabilité, c'est à dire pas de retard ni d'abandon",
@@ -280,6 +279,7 @@ def show_rating_performance(variant_name, negotiate, role_id):
 
         elo_sorted = sorted(rating_list, key=lambda r: r[3], reverse=True)
         rank_table = {p[2]: i + 1 for i, p in enumerate(elo_sorted)}
+        restricted_rank = 0
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
@@ -289,19 +289,24 @@ def show_rating_performance(variant_name, negotiate, role_id):
             if player == pseudo:
                 colour = config.MY_RATING
 
+            nb_games = rating[6]
+
             row = html.TR()
             for field in fields:
 
                 value = ''
 
                 if field == 'rank':
-                    value = rank_table[rating[2]]
+                    if nb_games >= common.GAMES_REQUIRED_ELO:
+                        restricted_rank += 1
+                        value = f"{restricted_rank} ({rank_table[rating[2]]})"
 
                 if field == 'player':
                     value = player
 
                 if field == 'elo':
-                    value = rating[3]
+                    if nb_games >= common.GAMES_REQUIRED_ELO:
+                        value = rating[3]
 
                 if field == 'change':
                     value = f"{round(rating[4] / nb_roles):+} ({rating[4]:+})"
@@ -317,7 +322,10 @@ def show_rating_performance(variant_name, negotiate, role_id):
                     value = games_dict[str(rating[5])]['name'] if str(rating[5]) in games_dict else f"??{rating[5]}??"
 
                 if field == 'number':
-                    value = rating[6]
+                    if nb_games >= common.GAMES_REQUIRED_ELO:
+                        value = rating[6]
+                    else:
+                        value = f"({rating[6]})"
 
                 col = html.TD(value)
                 if colour is not None:
@@ -370,6 +378,8 @@ def show_rating_performance(variant_name, negotiate, role_id):
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par performance")
         MY_SUB_PANEL <= html.DIV("Ce classement est un ELO - il prend en compte le résultat des joueurs sur les parties par rapport aux autres sur une variante donnée.", Class='important')
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV(f"Les données des joueurs avec moins de {common.GAMES_REQUIRED_ELO} parties sont ofusquées pour des raisons sportives (cf. 'Avertissement important sur le ELO').", Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("ATTENTION : remplacer dans une partie immunise contre une perte de ELO et peut donc être très profitable !", Class='important')
         MY_SUB_PANEL <= html.BR()

@@ -23,6 +23,9 @@ TYPE_GAME_EXPLAIN_CONV = {
 }
 
 
+GAMES_REQUIRED_ELO = 10
+
+
 def noreply_callback(_):
     """ noreply_callback """
     alert("Problème (pas de réponse de la part du serveur)")
