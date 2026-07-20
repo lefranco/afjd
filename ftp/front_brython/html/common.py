@@ -1698,5 +1698,5 @@ def warning_elo_callback(_):
         "Le score se stabilise et passe alors du statut de simple constat à celui de prédiction statistique.\n"
         "Il devient le reflet fidèle du niveau théorique réel comme souhaité.\n"
         "\n"
-        "Consultez la page 'classement' pour connaître les tailles des échantillons et obtenir plus de détails sur ce classemnet.\n"
-        "Consultez la page 'technique' pour comprendre sa méthode de calcul.")
+        "Consultez la page 'Classement' sous page 'Classement performance' pour connaître les tailles des échantillons et obtenir plus de détails sur ce classement.\n"
+        "Consultez la page 'Technique' sous page 'calcul du ELO' pour comprendre sa méthode de calcul.")

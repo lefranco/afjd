@@ -411,6 +411,8 @@ def show_rating_performance(variant_name, negotiate, role_id):
         warning_button.attrs['style'] = 'font-size: 10px'
         warning_button.bind("click", common.warning_elo_callback)
         MY_SUB_PANEL <= warning_button
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
 
         # rating table
         MY_SUB_PANEL <= ratings_table
