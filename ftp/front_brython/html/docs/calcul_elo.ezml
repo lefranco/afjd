@@ -15,13 +15,13 @@ $ Procédure détaillée
 
 Voici ce qui appliqué sur le site :
 
-
+# Chaque variante est considérée séparement des autres.
 # Deux modes distincts sont considérés : parties _blitz_ et _classiques_. La distinction se fait sur le paramètre "no-message" des parties.
-# Un ELO distinct est géré pour chacun des rôles possibles sur la partie.
+# Un ELO distinct est géré pour chacune deschacun des rôles possibles sur la partie.
 # Pour être prise en compte, une partie doit :
-## avoir paramètre "used\_for\_elo" à vrai
+## avoir le paramètre "used\_for\_elo" à vrai
 ## être dans l’état "terminée" (et pas "distinguée")
-# L’ordre de prise en compte des parties est celui chronologique croissant de la première résolution (Printemps 1901).
+# L’ordre de prise en compte des parties est celui chronologique croissant de la première résolution (Printemps 1901 typiquement).
 # La méthode de scorage attachée à la partie est appliquée pour déterminer le scorage sur la partie.
 # Le classement d’un joueur est égal à 1 \+ le nombre de joueurs qui ont strictement un meilleur score sur la partie.
 # La *performance obtenue* d’un joueur est :
@@ -36,8 +36,8 @@ Voici ce qui appliqué sur le site :
 ## [Somme [1 / (1 \+ 10 \^ (ELO(autre joueur avec son rôle) – ELO(joueur avec son rôle) / D) ]] / [ nombre de joueurs sur la partie x (nombre de joueurs sur la partie – 1) / 2 ]
 ## Un joueur qui n’a jamais joué le pays se voir attribuer par défaut un ELO de ELO\_DEF
 # Cas des perdants et des gagnants
-## Un perdant est un joueur qui a obtenu la marque _minimale_ sur la partie, il ne doit pas gagner de points (cela provoque un avertissement).
-## Un gagnant est un joueur qui a obtenu la marque _maximale_ sur la partie, il ne doit pas perdre de points (cela provoque un avertissement).
+## Un perdant est un joueur qui a obtenu la marque _minimale_ sur la partie, il ne doit pas gagner de points.
+## Un gagnant est un joueur qui a obtenu la marque _maximale_ sur la partie, il ne doit pas perdre de points.
 # Une partie incomplète (dans laquelle au moins un des joueurs est inconnu) est tout de même prise en compte en remplaçant les joueurs absents par un joueur arbitraire de ELO à ELO\_DEF.
 # Le changement de ELO d’un joueur sur la partie est déterminé par la formule suivante :
 ## k = max(KMAX/2, KMAX – nombre de parties jouées par (joueur avec son rôle) / K\_SLOPE)
@@ -46,11 +46,11 @@ Voici ce qui appliqué sur le site :
 ### Le joueur gagne du ELO : pas de changement
 ### Le joueur perd du ELO : la perte qu'aurait du subir le joueur est reportée au(x) joueur(s) qui ont abandonné sur le pays
 # Le ELO d’un joueur est minoré par ELO\_MIN (s’il est inférieur il est ramené à cette valeur).
-# Le *ELO global* d’un joueur est égal à la moyenne des ELO du joueur avec tous les rôles possibles (ou ELO\_DEF pour un rôle qui n’a pas été joué).
+# Le *ELO global* d’un joueur est égal à la moyenne des ELO du joueur avec tous les rôles possibles de la variante (ou ELO\_DEF pour un rôle qui n’a pas été joué).
 
 
 (Attention)
-Seules les parties des variantes "standard" et "standard\_pds" sont éligibles pour le calcul du ELO.
+Un remplacement sur une partie immunise contre la perte de ELO (mais n'enpêche aucunement le gain).
 
 $ Valeur des constantes
 
@@ -61,7 +61,7 @@ $ Valeur des constantes
 
 $ Scorage équivalent au ELO
 
-A titre indicatif, le ELO revient approximativement à appliquer sur les parties un scorage qui ne prend en compte que le classement et qiu serait défini de la manière suivante :
+A titre indicatif, le ELO revient approximativement à appliquer sur les parties un scorage qui ne prend en compte que le classement (obtenu par le scorage réel applicable à la partie) et qui serait défini de la manière suivante :
 
 
 
