@@ -220,6 +220,8 @@ def formatted_teaser(teasers):
                 c_rank = int(champion_data[5])
                 if c_num_games >= common.GAMES_REQUIRED_ELO:
                     data_global[(c_rank, c_mode)] = (c_pseudo, c_score)
+                elif SHOW_LOW:
+                    data_global[(c_rank, c_mode)] = (f"{c_pseudo} ({c_num_games})", c_score)
                 else:
                     data_global[(c_rank, c_mode)] = (f"- de {common.GAMES_REQUIRED_ELO} parties", c_score)
             elif c_type == 'role':
@@ -230,6 +232,8 @@ def formatted_teaser(teasers):
                 c_role = champion_data[5]
                 if c_num_games >= common.GAMES_REQUIRED_ELO:
                     data_role[(c_role, c_mode)] = (c_pseudo, c_score)
+                elif SHOW_LOW:
+                    data_role[(c_role, c_mode)] = (f"{c_pseudo} ({c_num_games})", c_score)
                 else:
                     data_role[(c_role, c_mode)] = (f"- de {common.GAMES_REQUIRED_ELO} parties", c_score)
 
@@ -480,8 +484,18 @@ def email_address_status():
     return email_status
 
 
+# true when we want to see peoplw with few games for ELO
+SHOW_LOW = False
+
+
 def show_news():
     """ show_home """
+
+    def show_low_callback(_):
+        global SHOW_LOW
+        SHOW_LOW = True
+        MY_SUB_PANEL.clear()
+        show_news()
 
     games_dict = common.get_games_data(0, 1)  # awaiting or ongoing
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
@@ -705,6 +719,15 @@ def show_news():
     warning_button.attrs['style'] = 'font-size: 10px'
     warning_button.bind("click", common.warning_elo_callback)
     div_a3 <= warning_button
+
+    if not SHOW_LOW:
+
+        div_a3 <= " "
+
+        show_low_button = html.INPUT(type="submit", value="Montrer même avec peu de parties", Class='btn-inside')
+        show_low_button.attrs['style'] = 'font-size: 10px'
+        show_low_button.bind("click", show_low_callback)
+        div_a3 <= show_low_button
 
     # ----
 
