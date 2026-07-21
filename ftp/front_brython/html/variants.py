@@ -1,6 +1,7 @@
 """ variants """
 
 # pylint: disable=pointless-statement, expression-not-assigned
+from math import sqrt
 from json import loads, dumps
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
@@ -13,12 +14,14 @@ import mapping
 import interface
 import sandbox
 import index
+import memoize
 import ezml_render
 
 
 OPTIONS = {'Généralités': "Généralités sur les variantes implémentées sur le site"}
 OPTIONS.update({f"{variant_name} ({nb_players}j.)": f"La variante {variant_name}" for variant_name, nb_players in config.VARIANT_NAMES_DICT.items()})
-OPTIONS.update({'Fréquentation des variantes': "Statistiques de fréquentation des variantes sur le site"})
+OPTIONS.update({'Fréquentation des variantes': "Statistiques sur la fréquentation des variantes sur le site"})
+OPTIONS.update({'Equilibre des variantes': "Statistiques l'équilibre des variantes sur le site"})
 
 ARRIVAL = None
 
@@ -324,6 +327,201 @@ def show_variants_frequentation_data():
     MY_SUB_PANEL <= variants_table
 
 
+def show_variants_balance_data():
+    """ show_variants_balance_data """
+
+    def variant_position_reload(variant_name):
+        """ variant_position_reload : returns empty dict on error """
+
+        positions_loaded = {}
+
+        def reply_callback(req):
+            nonlocal positions_loaded
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au chargement des positions des parties de la variante : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au chargement des positions des parties de la variante : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            positions_loaded = req_result
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/variant-positions/{variant_name}"
+
+        # getting game position : do not need a token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return positions_loaded
+
+    alert("Attention le calcul est un peu long...")
+
+    for variant_name_loaded in config.VARIANT_NAMES_DICT:
+
+        # build dict of positions
+        positions_dict_loaded = variant_position_reload(variant_name_loaded)
+        if not positions_dict_loaded:
+            alert("Erreur chargement positions des parties du tournoi")
+            return
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        sc_table = {r: 0 for r in variant_data.roles if r}
+        top_table = {r: 0 for r in variant_data.roles if r}
+        solo_table = {r: 0 for r in variant_data.roles if r}
+        elimination_table = {r: 0 for r in variant_data.roles if r}
+        worst_centers_table = {r: 100000 for r in variant_data.roles if r}
+        best_centers_table = {r: 0 for r in variant_data.roles if r}
+        best_performance_table = {r: ((-100000, -100000, 0), None) for r in variant_data.roles if r}
+        for game_id_str, data in positions_dict_loaded.items():
+            game_score_table = {}
+            for power in sc_table:
+                game_score_table[power] = len([p for p in data['ownerships'].values() if int(p) == power])
+            for power in sc_table:
+                nb_centers = game_score_table[power]
+                sc_table[power] += nb_centers
+                if nb_centers < worst_centers_table[power]:
+                    worst_centers_table[power] = nb_centers
+                if nb_centers > best_centers_table[power]:
+                    best_centers_table[power] = nb_centers
+                if game_score_table[power] == max(game_score_table.values()):
+                    top_table[power] += 1
+                if game_score_table[power] > variant_data.number_centers() // 2:
+                    solo_table[power] += 1
+                if game_score_table[power] == 0:
+                    elimination_table[power] += 1
+                # performance is (- nb powers with more centers, - nb powers with same number of centers, nb centers)
+                performance = (
+                    - len([p for p, c in game_score_table.items() if c > nb_centers]),
+                    - len([p for p, c in game_score_table.items() if c == nb_centers]),
+                    game_score_table[power])
+                if performance > best_performance_table[power][0]:
+                    # we have better, we take slot
+                    best_performance_table[power] = (performance, int(game_id_str))
+                elif performance == best_performance_table[power][0]:
+                    # we have same we cancel
+                    best_performance_table[power] = (best_performance_table[power][0], None)
+
+        variant_powers_results_table = html.TABLE()
+
+        fields = ['flag', 'power', 'centers', 'worst', 'best', 'victories', 'solos', 'eliminations']
+
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'flag': 'drapeau', 'power': 'puissance', 'centers': 'moyenne centres (possibles)', 'worst': 'pire', 'best': 'mieux', 'victories': 'victoires', 'solos': 'solos', 'eliminations': 'éliminations'}[field]
+            col = html.TD(field_fr)
+            thead <= col
+        variant_powers_results_table <= thead
+
+        nb_possible_centers = len(variant_data.centers)
+        nb_games = len(positions_dict_loaded)
+
+        for role_id in sorted(variant_data.roles, key=lambda r: variant_data.role_name_table[variant_data.roles[r]]):
+
+            # discard game master
+            if role_id == 0:
+                continue
+
+            row = html.TR()
+
+            role = variant_data.roles[role_id]
+            role_name = variant_data.role_name_table[role]
+
+            # flag
+            col = html.TD()
+            role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
+            col <= role_icon_img
+            row <= col
+
+            # role name
+            col = html.TD()
+            col <= role_name
+            row <= col
+
+            # average centers
+            col = html.TD()
+            value = sc_table[role_id] / nb_games
+            col <= f"{value:.2f} ({nb_possible_centers})"
+            row <= col
+
+            # worst
+            col = html.TD()
+            value = worst_centers_table[role_id]
+            col <= value
+            row <= col
+
+            # best
+            col = html.TD()
+            value = best_centers_table[role_id]
+            col <= value
+            row <= col
+
+            # percent victories
+            col = html.TD()
+            value = (top_table[role_id] / nb_games) * 100
+            col <= f"{value:.2f} %"
+            row <= col
+
+            # percent solos
+            col = html.TD()
+            value = (solo_table[role_id] / nb_games) * 100
+            col <= f"{value:.2f} %"
+            row <= col
+
+            # percent eliminations
+            col = html.TD()
+            value = (elimination_table[role_id] / nb_games) * 100
+            col <= f"{value:.2f} %"
+            row <= col
+
+            variant_powers_results_table <= row
+
+        # standard deviation
+        avg = sum(sc_table[ri] / nb_games for ri in variant_data.roles if ri != 0) / len([r for r in variant_data.roles if r])
+        std_dev = sqrt(sum(((sc_table[ri] / nb_games) - avg) ** 2 for ri in variant_data.roles if ri != 0))
+        deviation = (std_dev / nb_possible_centers) * 100
+
+        # title
+        MY_SUB_PANEL <= html.H4(variant_name_loaded)
+        MY_SUB_PANEL <= variant_powers_results_table
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= f"Moyenne des centres : {avg:.2f} Ecart type : {std_dev:.2f} ... nombre de centres : {nb_possible_centers} donc déviation de {deviation:.2f} % (sur un échantillon de {nb_games} parties)"
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -354,6 +552,8 @@ def load_option(_, item_name):
         show_variant_basics()
     elif item_name == 'Fréquentation des variantes':
         show_variants_frequentation_data()
+    elif item_name == 'Equilibre des variantes':
+        show_variants_balance_data()
     else:
         # remove the number of players on the right
         variant, _, __ = item_name.partition(' ')

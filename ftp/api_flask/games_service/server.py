@@ -7722,6 +7722,66 @@ class TournamentPositionRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/variant-positions/<variant_name>')
+class VariantPositionRessource(flask_restful.Resource):  # type: ignore
+    """ VariantPositionRessource """
+
+    def get(self, variant_name: str) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:
+        """
+        Gets list of positions of the games of the variant
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/variant-positions/<variant_name> - GET - getting positions for games of variant name=%s", variant_name)
+
+        sql_executor = database.SqlExecutor()
+
+        # concerned_games
+        games_list = games.Game.inventory(sql_executor)
+        concerned_games_list = [g.identifier for g in games_list if g.current_state == 2 and g.variant == variant_name]
+
+        position_dict: typing.Dict[int, typing.Dict[str, typing.Any]] = {}
+        for game_id in concerned_games_list:
+
+            # get ownerships
+            ownership_dict = {}
+            game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
+            for _, center_num, role_num in game_ownerships:
+                ownership_dict[str(center_num)] = role_num
+
+            # get units
+            unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+            dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+            game_units = units.Unit.list_by_game_id(sql_executor, game_id)
+            for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+                if fake:
+                    pass  # this is confidential
+                elif region_dislodged_from_num:
+                    dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
+                else:
+                    unit_dict[str(role_num)].append([type_num, zone_num])
+
+            # get forbiddens
+            forbidden_list = []
+            game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
+            for _, region_num in game_forbiddens:
+                forbidden_list.append(region_num)
+
+            position = {
+                'ownerships': ownership_dict,
+                'dislodged_ones': dislodged_unit_dict,
+                'units': unit_dict,
+                'forbiddens': forbidden_list,
+            }
+
+            position_dict[game_id] = position
+
+        del sql_executor
+
+        data = position_dict
+        return data, 200
+
+
 @API.resource('/revoke/<game_id>')
 class RevokeRessource(flask_restful.Resource):  # type: ignore
     """ RevokeRessource """
@@ -9549,21 +9609,11 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
 
-        sql_executor = database.SqlExecutor()
+        # sql_executor = database.SqlExecutor()
 
-        #
-        # # insert specific code here
-        games_list = games.Game.inventory(sql_executor)
-        for game in games_list:
-            if game.variant not in ('coldwar', 'grandeguerre', 'franceautriche'):
-                continue
-            print(f"{game.name=}", file=sys.stderr)
-            game._game_type = 3
-            game.update_database(sql_executor)
+        # sql_executor.commit()
 
-        sql_executor.commit()
-
-        del sql_executor
+        # del sql_executor
 
         print("MAINTENANCE - done !!!", file=sys.stderr)
 

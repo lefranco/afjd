@@ -492,6 +492,8 @@ def show_ezml_spec():
 def frequentation_evolution():
     """ frequentation_evolution """
 
+    alert("Attention le calcul est un peu long...")
+
     # load frequentation directly
     host = config.SERVER_CONFIG['FREQUENTATION']['HOST']
     port = config.SERVER_CONFIG['FREQUENTATION']['PORT']
