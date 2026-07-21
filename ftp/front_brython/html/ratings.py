@@ -283,7 +283,6 @@ def show_rating_performance(variant_name, negotiate, role_id):
 
         elo_sorted = sorted(rating_list, key=lambda r: r[3], reverse=True)
         rank_table = {p[2]: i + 1 for i, p in enumerate(elo_sorted)}
-        restricted_rank = 0
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
