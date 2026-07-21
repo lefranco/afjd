@@ -220,10 +220,10 @@ def formatted_teaser(teasers):
                 c_rank = int(champion_data[5])
                 if SHOW_LOW:
                     data_global[(c_rank, c_mode)] = (f"{c_pseudo} ({c_num_games})", c_score)
-                elif c_num_games >= common.GAMES_REQUIRED_ELO:
+                elif c_num_games >= common.GAMES_REQUIRED_GLOBAL_ELO:
                     data_global[(c_rank, c_mode)] = (html.B(f"{c_pseudo} {c_num_games}"), c_score)
                 else:
-                    data_global[(c_rank, c_mode)] = (html.I(f"- de {common.GAMES_REQUIRED_ELO} parties"), c_score)
+                    data_global[(c_rank, c_mode)] = (html.I(f"- de {common.GAMES_REQUIRED_GLOBAL_ELO} parties"), c_score)
             elif c_type == 'role':
                 c_mode = champion_data[1]
                 c_pseudo = champion_data[2]
@@ -232,10 +232,10 @@ def formatted_teaser(teasers):
                 c_role = champion_data[5]
                 if SHOW_LOW:
                     data_role[(c_role, c_mode)] = (f"{c_pseudo} ({c_num_games})", c_score)
-                elif c_num_games >= common.GAMES_REQUIRED_ELO:
+                elif c_num_games >= common.GAMES_REQUIRED_GLOBAL_ELO:
                     data_role[(c_role, c_mode)] = (html.B(f"{c_pseudo} {c_num_games}"), c_score)
                 else:
-                    data_role[(c_role, c_mode)] = (html.I(f"- de {common.GAMES_REQUIRED_ELO} parties"), c_score)
+                    data_role[(c_role, c_mode)] = (html.I(f"- de {common.GAMES_REQUIRED_ROLE_ELO} parties"), c_score)
 
     # ranks sorted numerically
     ranks = sorted({d[0] for d in data_global})
@@ -493,7 +493,7 @@ def show_news():
 
     def show_low_callback(_):
         global SHOW_LOW
-        SHOW_LOW = True
+        SHOW_LOW = not SHOW_LOW
         MY_SUB_PANEL.clear()
         show_news()
 
@@ -720,14 +720,12 @@ def show_news():
     warning_button.bind("click", common.warning_elo_callback)
     div_a3 <= warning_button
 
-    if not SHOW_LOW:
+    div_a3 <= " "
 
-        div_a3 <= " "
-
-        show_low_button = html.INPUT(type="submit", value="Montrer même avec peu de parties", Class='btn-inside')
-        show_low_button.attrs['style'] = 'font-size: 10px'
-        show_low_button.bind("click", show_low_callback)
-        div_a3 <= show_low_button
+    show_low_button = html.INPUT(type="submit", value="Montrer même avec peu de parties" if not SHOW_LOW else "Monter seulement avec suffisamment de parties", Class='btn-inside')
+    show_low_button.attrs['style'] = 'font-size: 10px'
+    show_low_button.bind("click", show_low_callback)
+    div_a3 <= show_low_button
 
     # ----
 

@@ -305,10 +305,10 @@ def show_rating_performance(variant_name, negotiate, role_id):
                 if field == 'player':
                     if SHOW_LOW:
                         value = player
-                    elif nb_games >= common.GAMES_REQUIRED_ELO:
+                    elif nb_games >= (common.GAMES_REQUIRED_GLOBAL_ELO if not role_id else common.GAMES_REQUIRED_ROLE_ELO):
                         value = html.B(player)
                     else:
-                        value = html.I(f"- de {common.GAMES_REQUIRED_ELO} parties")
+                        value = html.I(f"- de {common.GAMES_REQUIRED_GLOBAL_ELO if not role_id else common.GAMES_REQUIRED_ROLE_ELO} parties")
 
                 if field == 'elo':
                     value = rating[3]
@@ -317,17 +317,17 @@ def show_rating_performance(variant_name, negotiate, role_id):
                     value = f"{round(rating[4] / nb_roles):+} ({rating[4]:+})"
 
                 if field == 'role':
-                    role_id = rating[1]
-                    role = variant_data.roles[role_id]
+                    role_id1 = rating[1]
+                    role = variant_data.roles[role_id1]
                     role_name = variant_data.role_name_table[role]
-                    role_icon_img = common.display_flag(variant_name, interface_chosen, role_id, role_name)
+                    role_icon_img = common.display_flag(variant_name, interface_chosen, role_id1, role_name)
                     value = role_icon_img
 
                 if field == 'game':
                     value = games_dict[str(rating[5])]['name'] if str(rating[5]) in games_dict else f"??{rating[5]}??"
 
                 if field == 'number':
-                    if nb_games >= common.GAMES_REQUIRED_ELO:
+                    if nb_games >= (common.GAMES_REQUIRED_GLOBAL_ELO if not role_id else common.GAMES_REQUIRED_ROLE_ELO):
                         value = rating[6]
                     else:
                         value = f"({rating[6]})"
@@ -352,7 +352,7 @@ def show_rating_performance(variant_name, negotiate, role_id):
 
         def show_low_callback(_):
             global SHOW_LOW
-            SHOW_LOW = True
+            SHOW_LOW = not SHOW_LOW
             refresh()
 
         nb_roles = len(variant_data.roles) - 1
@@ -389,7 +389,7 @@ def show_rating_performance(variant_name, negotiate, role_id):
         MY_SUB_PANEL <= html.H3("Le classement par performance")
         MY_SUB_PANEL <= html.DIV("Ce classement est un ELO - il prend en compte le résultat des joueurs sur les parties par rapport aux autres sur une variante donnée.", Class='important')
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV(f"Les données des joueurs avec moins de {common.GAMES_REQUIRED_ELO} parties sont ofusquées pour des raisons sportives (cf. 'Avertissement important sur le ELO').", Class='important')
+        MY_SUB_PANEL <= html.DIV(f"Les données des joueurs avec moins de {common.GAMES_REQUIRED_GLOBAL_ELO} parties (au global) ou moins de {common.GAMES_REQUIRED_ROLE_ELO} parties (pour un rôle) sont ofusquées pour des raisons sportives (cf. 'Avertissement important sur le ELO').", Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("ATTENTION : remplacer dans une partie immunise contre une perte de ELO et peut donc être très profitable !", Class='important')
         MY_SUB_PANEL <= html.BR()
@@ -432,14 +432,12 @@ def show_rating_performance(variant_name, negotiate, role_id):
         warning_button.bind("click", common.warning_elo_callback)
         MY_SUB_PANEL <= warning_button
 
-        if not SHOW_LOW:
+        MY_SUB_PANEL <= " "
 
-            MY_SUB_PANEL <= " "
-
-            show_low_button = html.INPUT(type="submit", value="Montrer même avec peu de parties", Class='btn-inside')
-            show_low_button.attrs['style'] = 'font-size: 10px'
-            show_low_button.bind("click", show_low_callback)
-            MY_SUB_PANEL <= show_low_button
+        show_low_button = html.INPUT(type="submit", value="Montrer même avec peu de parties" if not SHOW_LOW else "Montrer seulement avec suffisamment de parties", Class='btn-inside')
+        show_low_button.attrs['style'] = 'font-size: 10px'
+        show_low_button.bind("click", show_low_callback)
+        MY_SUB_PANEL <= show_low_button
 
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
@@ -660,9 +658,9 @@ def show_rating_reliability():
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Les joueurs sans retard sont bonifiés du millième du nombre de tours joués pour les départager.", Class='note')
+        MY_SUB_PANEL <= html.DIV("Les joueurs sans aucun retard sont bonifiés du millième du nombre de tours joués pour les départager.", Class='note')
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Pour les joueurs qui ont abandonné, la fiabilité est de -10% par abandon.", Class='note')
+        MY_SUB_PANEL <= html.DIV("Les joueurs qui ont abandonné sont pénalisés de -10% par abandon.", Class='note')
 
     def sort_by_callback(_, new_sort_by):
 
