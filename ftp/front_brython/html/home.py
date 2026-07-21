@@ -218,24 +218,24 @@ def formatted_teaser(teasers):
                 c_score = int(champion_data[3])
                 c_num_games = int(champion_data[4])
                 c_rank = int(champion_data[5])
-                if c_num_games >= common.GAMES_REQUIRED_ELO:
-                    data_global[(c_rank, c_mode)] = (c_pseudo, c_score)
-                elif SHOW_LOW:
+                if SHOW_LOW:
                     data_global[(c_rank, c_mode)] = (f"{c_pseudo} ({c_num_games})", c_score)
+                elif c_num_games >= common.GAMES_REQUIRED_ELO:
+                    data_global[(c_rank, c_mode)] = (html.B(f"{c_pseudo} {c_num_games}"), c_score)
                 else:
-                    data_global[(c_rank, c_mode)] = (f"- de {common.GAMES_REQUIRED_ELO} parties", c_score)
+                    data_global[(c_rank, c_mode)] = (html.I(f"- de {common.GAMES_REQUIRED_ELO} parties"), c_score)
             elif c_type == 'role':
                 c_mode = champion_data[1]
                 c_pseudo = champion_data[2]
                 c_score = int(champion_data[3])
                 c_num_games = int(champion_data[4])
                 c_role = champion_data[5]
-                if c_num_games >= common.GAMES_REQUIRED_ELO:
-                    data_role[(c_role, c_mode)] = (c_pseudo, c_score)
-                elif SHOW_LOW:
+                if SHOW_LOW:
                     data_role[(c_role, c_mode)] = (f"{c_pseudo} ({c_num_games})", c_score)
+                elif c_num_games >= common.GAMES_REQUIRED_ELO:
+                    data_role[(c_role, c_mode)] = (html.B(f"{c_pseudo} {c_num_games}"), c_score)
                 else:
-                    data_role[(c_role, c_mode)] = (f"- de {common.GAMES_REQUIRED_ELO} parties", c_score)
+                    data_role[(c_role, c_mode)] = (html.I(f"- de {common.GAMES_REQUIRED_ELO} parties"), c_score)
 
     # ranks sorted numerically
     ranks = sorted({d[0] for d in data_global})

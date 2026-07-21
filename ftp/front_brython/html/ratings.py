@@ -173,6 +173,10 @@ def get_regularity_rating():
     return list(rating_list)
 
 
+# true when we want to see peoplw with few games for ELO
+SHOW_LOW = False
+
+
 def show_rating_performance(variant_name, negotiate, role_id):
     """ show_rating_performance """
 
@@ -297,16 +301,18 @@ def show_rating_performance(variant_name, negotiate, role_id):
                 value = ''
 
                 if field == 'rank':
-                    if nb_games >= common.GAMES_REQUIRED_ELO:
-                        restricted_rank += 1
-                        value = f"{restricted_rank} ({rank_table[rating[2]]})"
+                    value = rank_table[rating[2]]
 
                 if field == 'player':
-                    value = player
+                    if SHOW_LOW:
+                        value = player
+                    elif nb_games >= common.GAMES_REQUIRED_ELO:
+                        value = html.B(player)
+                    else:
+                        value = html.I(f"- de {common.GAMES_REQUIRED_ELO} parties")
 
                 if field == 'elo':
-                    if nb_games >= common.GAMES_REQUIRED_ELO:
-                        value = rating[3]
+                    value = rating[3]
 
                 if field == 'change':
                     value = f"{round(rating[4] / nb_roles):+} ({rating[4]:+})"
@@ -344,6 +350,11 @@ def show_rating_performance(variant_name, negotiate, role_id):
         return ratings_table, average, number_positions_based_on
 
     def refresh():
+
+        def show_low_callback(_):
+            global SHOW_LOW
+            SHOW_LOW = True
+            refresh()
 
         nb_roles = len(variant_data.roles) - 1
 
@@ -421,6 +432,16 @@ def show_rating_performance(variant_name, negotiate, role_id):
         warning_button.attrs['style'] = 'font-size: 10px'
         warning_button.bind("click", common.warning_elo_callback)
         MY_SUB_PANEL <= warning_button
+
+        if not SHOW_LOW:
+
+            MY_SUB_PANEL <= " "
+
+            show_low_button = html.INPUT(type="submit", value="Montrer même avec peu de parties", Class='btn-inside')
+            show_low_button.attrs['style'] = 'font-size: 10px'
+            show_low_button.bind("click", show_low_callback)
+            MY_SUB_PANEL <= show_low_button
+
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
 
