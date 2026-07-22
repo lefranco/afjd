@@ -368,8 +368,7 @@ def show_variants_balance_data():
 
     for variant_name_loaded in config.VARIANT_NAMES_DICT:
 
-        # for fast testing
-        # if variant_name_loaded != 'hundred': continue
+        # if variant_name_loaded != 'grandeguerre': continue
 
         # build dict of positions
         positions_dict_loaded = variant_position_reload(variant_name_loaded)
@@ -457,10 +456,15 @@ def show_variants_balance_data():
         nb_possible_centers = len(variant_data.centers)
         nb_games = len(positions_dict_loaded)
 
+        result_table = {}
         for role_id in sorted(variant_data.roles, key=lambda r: variant_data.role_name_table[variant_data.roles[r]]):
 
             # discard game master
             if role_id == 0:
+                continue
+
+            # discard disorder roles
+            if role_id in map(int, variant_content_loaded['disorder']):
                 continue
 
             row = html.TR()
@@ -481,7 +485,7 @@ def show_variants_balance_data():
 
             # average centers
             col = html.TD()
-            value = sc_table[role_id] / nb_games
+            result_table[role_id] = value = sc_table[role_id] / nb_games
             col <= f"{value:.2f} ({nb_possible_centers})"
             row <= col
 
@@ -518,8 +522,8 @@ def show_variants_balance_data():
             variant_powers_results_table <= row
 
         # standard deviation
-        avg = sum(sc_table[ri] / nb_games for ri in variant_data.roles if ri != 0) / len([r for r in variant_data.roles if r])
-        std_dev = sqrt(sum(((sc_table[ri] / nb_games) - avg) ** 2 for ri in variant_data.roles if ri != 0) / len([r for r in variant_data.roles if r]))
+        avg = sum(result_table[r] for r in result_table) / len(result_table)
+        std_dev = sqrt(sum((result_table[r] - avg) ** 2 for r in result_table) / len(result_table))
         deviation = (std_dev / nb_possible_centers) * 100
 
         # title
