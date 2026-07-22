@@ -630,12 +630,12 @@ def general_announce():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/announce-games"
+        url = f"{host}:{port}/announce-games-site"
 
         # adding a declaration in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    MY_SUB_PANEL <= html.H3("Annoncer dans toutes la partie en cours")
+    MY_SUB_PANEL <= html.H3("Annoncer dans toutes la partie en cours du site")
 
     if not common.check_modo():
         alert("Pas le bon compte (pas modo)")
@@ -646,7 +646,7 @@ def general_announce():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_declaration = html.LEGEND("Votre presse", title="Qu'avez vous à déclarer dans toutes les parties en cours ?")
+    legend_declaration = html.LEGEND("Votre presse", title="Qu'avez vous à déclarer dans toutes les parties en cours du site ?")
     fieldset <= legend_declaration
     input_declaration = html.TEXTAREA(type="text", rows=8, cols=80)
     input_declaration <= announce
@@ -655,7 +655,7 @@ def general_announce():
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Publier cette presse dans toutes les parties en cours", Class='btn-inside')
+    input_declare_in_game = html.INPUT(type="submit", value="Publier cette presse dans toutes les parties en cours du site", Class='btn-inside')
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
 

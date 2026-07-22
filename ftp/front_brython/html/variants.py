@@ -457,7 +457,7 @@ def show_variants_balance_data():
         nb_games = len(positions_dict_loaded)
 
         result_table = {}
-        for role_id in sorted(variant_data.roles, key=lambda r: variant_data.role_name_table[variant_data.roles[r]]):
+        for role_id in sorted(variant_data.roles, key=lambda r, vd=variant_data: vd.role_name_table[vd.roles[r]]):
 
             # discard game master
             if role_id == 0:
@@ -522,8 +522,8 @@ def show_variants_balance_data():
             variant_powers_results_table <= row
 
         # standard deviation
-        avg = sum(result_table[r] for r in result_table) / len(result_table)
-        std_dev = sqrt(sum((result_table[r] - avg) ** 2 for r in result_table) / len(result_table))
+        avg = sum(result_table.values()) / len(result_table)
+        std_dev = sqrt(sum((val - avg) ** 2 for val in result_table.values()) / len(result_table))
         deviation = (std_dev / nb_possible_centers) * 100
 
         # title

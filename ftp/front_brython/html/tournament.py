@@ -1563,6 +1563,49 @@ def handle_tournament():
         # removing a game from a tournament : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    def add_declaration_callback(ev):  # pylint: disable=invalid-name
+        """ add_declaration_callback """
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'ajout annonce générale dans le tournoi : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'ajout annonce générale dans le tournoi : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.info_go(f"L'annonce dans tout le tournoi a été faite ! {messages}")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            handle_tournament()
+            return
+
+        ev.preventDefault()
+
+        content = input_declaration.value
+
+        if not content:
+            alert("Pas de contenu pour cette presse !")
+            MY_SUB_PANEL.clear()
+            handle_tournament()
+            return
+
+        json_dict = {
+            'content': content
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/announce-games-tournament/{tournament_id}"
+
+        # adding a declaration in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     def change_name_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -1745,6 +1788,29 @@ def handle_tournament():
     MY_SUB_PANEL <= form
 
     # title 2
+    MY_SUB_PANEL <= html.H4("Annoncer dans le tournoi")
+
+    announce = ""
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_declaration = html.LEGEND("Votre presse", title="Qu'avez vous à déclarer dans toutes les parties du tournoi ?")
+    fieldset <= legend_declaration
+    input_declaration = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_declaration <= announce
+    fieldset <= input_declaration
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_declare_in_game = html.INPUT(type="submit", value="Publier cette presse dans toutes les parties du tournoi", Class='btn-inside')
+    input_declare_in_game.bind("click", add_declaration_callback)
+    form <= input_declare_in_game
+
+    MY_SUB_PANEL <= form
+
+    # title 3
     MY_SUB_PANEL <= html.H4("Renommer le tournoi")
 
     form = html.FORM()
