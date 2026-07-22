@@ -1188,6 +1188,9 @@ def my_games(state_name):
 
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
+                    # probably random bug in naviator/brython = need initialization ?
+                    button.style.color = None
+                    button.style.backgroundColor = None
                     if game_id in changed_games:
                         button.style.color = "red"
                         button.style.backgroundColor = "white"
@@ -1195,6 +1198,9 @@ def my_games(state_name):
                     value = button
                 else:
                     link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
+                    # probably random bug in naviator/brython = need initialization ?
+                    link.style.color = None
+                    link.style.backgroundColor = None
                     if game_id in changed_games:
                         link.style.color = "red"
                         link.style.backgroundColor = "white"
