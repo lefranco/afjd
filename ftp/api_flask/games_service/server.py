@@ -5533,7 +5533,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             POST_DECLARATION_REPEAT_PREVENTER.did(int(game_id), role_id)
 
         if announce:
-            subject = f"Un modérateur a posté une déclaration (une annonce) dans la partie {game.name}"
+            subject = f"Un modérateur du site a posté une déclaration (une annonce) dans la partie {game.name}"
         elif anonymous:
             subject = f"Un joueur (ou l'arbitre) a posté une déclaration anonyme dans la partie {game.name}"
         elif role_id == 0:
@@ -8837,11 +8837,11 @@ class AnnounceGamesTournamentRessource(flask_restful.Resource):  # type: ignore
 
     def post(self, tournament_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
-        Insert declaration in database for all games of tournament
+        Insert declaration in database for all ongoing games of tournament
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/announce-games - POST - creating declaration in all ongoing games in tournament %d", tournament_id)
+        mylogger.LOGGER.info("/announce-games-tournament - POST - creating declaration in all ongoing games in tournament %d", tournament_id)
 
         args = DECLARATION_PARSER2.parse_args(strict=True)
 
@@ -8971,7 +8971,7 @@ class AnnounceGamesTournamentRessource(flask_restful.Resource):  # type: ignore
             game = games.Game.find_by_identifier(sql_executor, game_id)
             assert game is not None
 
-            subject = f"Un modérateur a posté une déclaration générale (une annonce) dans la partie {game.name} (ainsi que dans un ensemble de parties de sorte à atteindre tous les joueurs actifs)"
+            subject = f"Le directeur du tournoi a posté une déclaration générale (une annonce) dans la partie {game.name} (ainsi que dans un ensemble de parties de sorte à atteindre tous les joueurs actifs)"
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
             addressees = []
             for _, player_id, role_id1 in allocations_list:
@@ -8980,9 +8980,9 @@ class AnnounceGamesTournamentRessource(flask_restful.Resource):  # type: ignore
             body = "Bonjour !\n"
             body += "\n"
 
-            body += f"Auteur de la déclaration générale : {role_name}\n"
+            body += f"Auteur de la déclaration dans le tournoi : {role_name}\n"
             body += "\n"
-            body += "Contenu de la déclaration générale :\n"
+            body += "Contenu de la déclaration dans le tournoi :\n"
             body += "================\n"
             body += payload
             body += "\n"
@@ -9165,7 +9165,7 @@ class AnnounceGamesSiteRessource(flask_restful.Resource):  # type: ignore
             game = games.Game.find_by_identifier(sql_executor, game_id)
             assert game is not None
 
-            subject = f"Un modérateur a posté une déclaration générale (une annonce) dans la partie {game.name} (ainsi que dans un ensemble de parties de sorte à atteindre tous les joueurs actifs)"
+            subject = f"Un modérateur du site a posté une déclaration générale sur le site (une annonce) dans la partie {game.name} (ainsi que dans un ensemble de parties de sorte à atteindre tous les joueurs actifs)"
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
             addressees = []
             for _, player_id, role_id1 in allocations_list:
