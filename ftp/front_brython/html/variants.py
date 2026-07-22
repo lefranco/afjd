@@ -362,7 +362,14 @@ def show_variants_balance_data():
 
     alert("Attention le calcul est un peu long...")
 
+    MY_SUB_PANEL <= html.H3("L'équilibre des variantes du site")
+
+    MY_SUB_PANEL <= html.DIV("ATTENTION : Le lecteur avisé (ce message s'adresse aux autres) sait que la vérité d'une mesure statistique est proportionelle à la taille de l'échantillon, aussi il prendra du recul sur les valeurs avec peu ou très peu de parties !", Class='important')
+
     for variant_name_loaded in config.VARIANT_NAMES_DICT:
+
+        # for fast testing
+        # if variant_name_loaded != 'hundred': continue
 
         # build dict of positions
         positions_dict_loaded = variant_position_reload(variant_name_loaded)
@@ -512,14 +519,14 @@ def show_variants_balance_data():
 
         # standard deviation
         avg = sum(sc_table[ri] / nb_games for ri in variant_data.roles if ri != 0) / len([r for r in variant_data.roles if r])
-        std_dev = sqrt(sum(((sc_table[ri] / nb_games) - avg) ** 2 for ri in variant_data.roles if ri != 0))
+        std_dev = sqrt(sum(((sc_table[ri] / nb_games) - avg) ** 2 for ri in variant_data.roles if ri != 0) / len([r for r in variant_data.roles if r]))
         deviation = (std_dev / nb_possible_centers) * 100
 
         # title
         MY_SUB_PANEL <= html.H4(variant_name_loaded)
         MY_SUB_PANEL <= variant_powers_results_table
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= f"Moyenne des centres : {avg:.2f} Ecart type : {std_dev:.2f} ... nombre de centres : {nb_possible_centers} donc déviation de {deviation:.2f} % (sur un échantillon de {nb_games} parties)"
+        MY_SUB_PANEL <= f"Moyenne des centres : {avg:.2f} écart type : {std_dev:.2f} ... nombre de centres : {nb_possible_centers} donc déviation de {deviation:.2f} % (sur un échantillon de {nb_games} parties)"
 
 
 MY_PANEL = html.DIV()
