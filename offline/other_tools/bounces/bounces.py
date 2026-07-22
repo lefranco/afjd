@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
 
 """BOUNCE.
-Consider going to this page :
-    https://sender.office.com/
-to request un banning
-and to this page :
-    https://mxtoolbox.com/ReverseLookup.aspx
-to check IP seind is really OVH
+See readme in same directory
 """
 
 from __future__ import annotations
@@ -135,7 +130,7 @@ def read_config(config_file: pathlib.Path) -> None:
     WORK_DIR = config["work_dir"]
 
 
-ITEMS_DICT: dict[str, tuple[str, bool, str]] = {}
+ITEMS_DICT: dict[str, tuple[str, bool, str, str]] = {}
 IHM_TABLE: dict[str, tuple[tkinter.Button, tkinter.Button]] = {}
 
 
@@ -211,8 +206,9 @@ def delete_callback(message_id: str, description: str) -> None:
     delete_mail(message_id)
 
     # delete from ihm
-    display_button, delete_button = IHM_TABLE[description]
+    display_button, raw_button, delete_button = IHM_TABLE[description]
     display_button.destroy()
+    raw_button.destroy()
     delete_button.destroy()
     del IHM_TABLE[description]
 
@@ -283,6 +279,7 @@ def load_mails(dump: bool, headers: bool) -> None:
                 file.write(full_content_str)
 
         msg = email.message_from_bytes(raw_email, policy=email.policy.default)
+        raw_content = msg
 
         body_text = None
         for part in msg.walk():
@@ -306,7 +303,7 @@ def load_mails(dump: bool, headers: bool) -> None:
         message_uid = uid.decode()
         description = body_text.replace('\r\n', '\n')
         attention = False  # TODO : think of something
-        ITEMS_DICT[title] = (message_uid, attention, description)
+        ITEMS_DICT[title] = (message_uid, attention, description, raw_content)
 
         print(".", end='', flush=True)
 
@@ -392,7 +389,7 @@ def main() -> None:
     buttons_frame.bind("<Configure>", on_frame_configure)
 
     # all buttons inside
-    for i, (description, (message_id, attention, content)) in enumerate(sorted(ITEMS_DICT.items(), key=lambda t: t[0])):
+    for i, (description, (message_id, attention, content, raw_content)) in enumerate(sorted(ITEMS_DICT.items(), key=lambda t: t[0])):
 
         fg = 'Red' if attention else 'Black'
 
@@ -400,12 +397,16 @@ def main() -> None:
         display_button = tkinter.Button(buttons_frame, text=description, font=("Arial", 8), fg=fg, command=lambda d=description, c=content: display_callback(d, c))  # type: ignore[misc]
         display_button.grid(row=i + 1, column=0)
 
+        # to get raw content
+        raw_button = tkinter.Button(buttons_frame, text='raw', font=("Arial", 8), fg=fg, command=lambda d=description, c=raw_content: display_callback(d, c))  # type: ignore[misc]
+        raw_button.grid(row=i + 1, column=1)
+
         # to delete
-        delete_button = tkinter.Button(buttons_frame, text='delete me', font=("Arial", 8), fg=fg, command=lambda m=message_id, d=description: delete_callback(m, d))  # type: ignore[misc]
-        delete_button.grid(row=i + 1, column=1)
+        delete_button = tkinter.Button(buttons_frame, text='delete', font=("Arial", 8), fg=fg, command=lambda m=message_id, d=description: delete_callback(m, d))  # type: ignore[misc]
+        delete_button.grid(row=i + 1, column=2)
 
         # remember so to destroy
-        IHM_TABLE[description] = (display_button, delete_button)
+        IHM_TABLE[description] = (display_button, raw_button, delete_button)
 
     # position window
     position(root)
