@@ -233,7 +233,8 @@ def recruiting_games():
         button = html.BUTTON("Je n'ai pas de compte, je veux le créer !", Class='btn-inside')
         button.bind("click", create_account_callback)
         MY_SUB_PANEL <= button
-        MY_SUB_PANEL <= html.BR()
+        # separator
+        MY_SUB_PANEL <= " "
 
     # button for switching mode
     if 'GAME_ACCESS_MODE' not in storage:

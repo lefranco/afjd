@@ -13,6 +13,8 @@ import common
 import login
 import welcome
 import home
+import index
+
 
 OPTIONS = {
     'Editer': "Modifier une information personnelle",
@@ -123,6 +125,7 @@ def information_about_emails():
     information <= html.BR()
     information <= "Rien de plus !"
     information <= html.BR()
+    information <= html.BR()
     information <= "Il vous est déconseillé d'utiliser une adresse courriel professionelle."
     return information
 
@@ -199,6 +202,9 @@ def create_account(json_dict):
             alert("Un code de vérification vous a été envoyé pour vérifier votre adresse courriel. Pensez à regarder dans les spams !")
             alert(f"Félicitation, votre compte a été crée.\n\nAttention : votre compte sera supprimé après {config.IDLE_DAY_TIMEOUT / 30.5} mois d'inactivité")
             alert(welcome.MESSAGE)
+
+            # send to join game page
+            index.load_option(None, 'Rejoindre une partie')
 
         ev.preventDefault()
 
