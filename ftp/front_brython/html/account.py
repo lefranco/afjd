@@ -105,14 +105,6 @@ def information_about_account():
     return information
 
 
-def information_about_idle_account():
-    """ information_about_idle_account """
-
-    information = html.DIV(Class='important')
-    information <= f"ATTENTION : Un compte oisif plus de {config.IDLE_DAY_TIMEOUT} jours sera supprimé pour ne pas encombrer le système."
-    return information
-
-
 def information_about_remove_account():
     """ information_about_remove_account """
 
@@ -127,7 +119,7 @@ def information_about_emails():
     """ information_about_emails """
 
     information = html.DIV(Class='note')
-    information <= "Vous recevrez un courriel de rappel de l'arbitre si vous êtes en retard sur les ordres. Un courriel au démarrage et à l'arrêt de vos parties. Un courriel de notification de résolution et/ou de message ou presse dans la partie. Sauf dans le premier cas, seulement si vous l'avez demandé. Un courriel à la suppression du compte. Un courriel à chaque modification d'adresse courriel pour vérifier celle-ci..."
+    information <= "Vous recevrez un courriel de rappel de l'arbitre si vous êtes en retard sur les ordres. Un courriel au démarrage et à l'arrêt de vos parties. Un courriel à la suppression du compte. Un courriel à chaque modification d'adresse courriel pour vérifier celle-ci. Tous autres courriels comme par exemple l'avance ment de partie sont débrayables."
     information <= html.BR()
     information <= "Rien de plus !"
     information <= html.BR()
@@ -432,8 +424,6 @@ def create_account(json_dict):
 
     MY_SUB_PANEL <= form
 
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= information_about_idle_account()
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= information_about_pseudo()
     MY_SUB_PANEL <= html.BR()
