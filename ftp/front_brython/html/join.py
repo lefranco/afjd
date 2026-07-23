@@ -160,6 +160,10 @@ def recruiting_games():
         MY_SUB_PANEL.clear()
         recruiting_games()
 
+    def login_callback(_):
+        # need to login
+        index.load_option(None, 'Connexion')
+
     overall_time_before = time()
 
     # declared by safety but could be not used
@@ -250,15 +254,15 @@ def recruiting_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'join', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_current', 'nomessage_current', 'game_type']
+    fields = ['name', 'action', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_current', 'nomessage_current', 'game_type']
 
     # header
     thead = html.THEAD()
     for field in fields:
 
-        content = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_current': 'presse', 'nomessage_current': 'messagerie', 'game_type': 'type de partie'}[field]
+        content = {'name': 'nom', 'action': 'action', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_current': 'presse', 'nomessage_current': 'messagerie', 'game_type': 'type de partie'}[field]
 
-        legend = {'name': "Le nom de la partie", 'join': "Un bouton pour rejoindre la partie (pour jouer dedans)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_current': "Est-ce que les messages publics (presse) sont autorisés pour les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (messagerie) sont autorisés pour les joueurs actuellement", 'game_type': "Type de partie pour la communication en jeu"}[field]
+        legend = {'name': "Le nom de la partie", 'action': "Un bouton pour rejoindre ou quitter la partie (pour jouer dedans)", 'deadline': "La date limite de la partie", 'current_state': "L'état actuel de la partie", 'current_advancement': "La  saison qui est maintenant à jouer dans la partie", 'allocated': "Combien de joueurs sont alloué à la partie (arbitre compris) ?", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'master': "L'arbitre de la partie", 'description': "Une petite description de la partie", 'nopress_current': "Est-ce que les messages publics (presse) sont autorisés pour les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (messagerie) sont autorisés pour les joueurs actuellement", 'game_type': "Type de partie pour la communication en jeu"}[field]
 
         field = html.DIV(content, title=legend)
         col = html.TD(field)
@@ -394,7 +398,7 @@ def recruiting_games():
         games_list.append(game_name)
 
         data['master'] = None
-        data['join'] = None
+        data['action'] = None
         data['allocated'] = None
 
         row = html.TR()
@@ -415,9 +419,11 @@ def recruiting_games():
                     link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
                     value = link
 
-            if field == 'join':
+            if field == 'action':
                 if player_id is None:
-                    value = "Pas identifié"
+                    button = html.BUTTON("m'identifier", title="Cliquer pour vous identifier et pouvoir ensuite entrer dans la partie", Class='btn-inside')
+                    button.bind("click", login_callback)
+                    value = button
                 elif game_id_str in player_games:
                     button = html.BUTTON("quitter", title="Cliquer pour quitter dans la partie (ne plus y jouer)", Class='btn-inside')
                     button.bind("click", lambda e, gn=game_name, gds=game_data_sel: quit_and_select_game_callback(e, gn, gds))
@@ -428,6 +434,8 @@ def recruiting_games():
                     value = button
                     # highlite free available position
                     colour = config.CAN_JOIN
+                button.style.color = "red"
+                button.style.backgroundColor = "white"
 
             if field == 'deadline':
 
