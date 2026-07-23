@@ -26,6 +26,9 @@ TYPE_GAME_EXPLAIN_CONV = {
 GAMES_REQUIRED_GLOBAL_ELO = 10
 GAMES_REQUIRED_ROLE_ELO = 5
 
+# an advancement lasts this number of hours
+ADVANCEMENT_DURATION = 12
+
 
 def noreply_callback(_):
     """ noreply_callback """

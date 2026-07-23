@@ -1064,7 +1064,7 @@ def show_informations():
 
     # header
     thead = html.THEAD()
-    for field in ['rang', 'role', 'pseudo', 'retards', 'cumul', 'nombre', 'pire', 'ratio']:
+    for field in ['rang', 'role', 'pseudo', 'retards', 'cumul', 'nombre', 'pire', 'fiabilité']:
         col = html.TD(field)
         thead <= col
     recap_table <= thead
@@ -1115,13 +1115,13 @@ def show_informations():
         col = html.TD(f"{worst}")
         row <= col
 
-        # ratio
-        nb_played = (play_low.GAME_PARAMETERS_LOADED['current_advancement'] / 5) * 3
+        # reliability
+        number_advancements = play_low.GAME_PARAMETERS_LOADED['current_advancement']
         # avoid division by zero
-        if nb_played == 0:
-            nb_played = 1
-        ratio = int((incidents_number / nb_played) * 100)
-        col = html.TD(f"{ratio} %")
+        if number_advancements == 0:
+            number_advancements = 1
+        reliability = ((common.ADVANCEMENT_DURATION * number_advancements - incidents_total) / (common.ADVANCEMENT_DURATION * number_advancements)) * 100
+        col = html.TD(f"{reliability:.2f} %")
         row <= col
 
         recap_table <= row

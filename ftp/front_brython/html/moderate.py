@@ -1332,7 +1332,7 @@ def current_worst_annoyers():
 
         # header
         thead = html.THEAD()
-        for field in ['rang', 'pseudo', 'retards', 'cumul', 'nombre', 'pire', 'ratio']:
+        for field in ['rang', 'pseudo', 'retards', 'cumul', 'nombre', 'pire', 'fiabilité']:
             col = html.TD(field)
             thead <= col
         recap_table <= thead
@@ -1371,13 +1371,13 @@ def current_worst_annoyers():
             col = html.TD(f"{worst}")
             row <= col
 
-            # ratio
-            nb_played = (advancement_dict[game_name] / 5) * 3
+            # reliability
+            number_advancements = advancement_dict[game_name]
             # avoid division by zero
-            if nb_played == 0:
-                nb_played = 1
-            ratio = int((incidents_number / nb_played) * 100)
-            col = html.TD(f"{ratio} %")
+            if number_advancements == 0:
+                number_advancements = 1
+            reliability = ((common.ADVANCEMENT_DURATION * number_advancements - incidents_total) / (common.ADVANCEMENT_DURATION * number_advancements)) * 100
+            col = html.TD(f"{reliability:.2f} %")
             row <= col
 
             recap_table <= row
