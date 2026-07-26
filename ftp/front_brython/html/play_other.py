@@ -173,6 +173,10 @@ def show_position(advancement=None):
         play.set_arrival('rejoindre')
         play.render(play_low.PANEL_MIDDLE)
 
+    def choose_role_callback(ev):  # pylint: disable=invalid-name
+        ev.preventDefault()
+        alert("pas implémenté !")
+
     def quit_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -592,59 +596,62 @@ def show_position(advancement=None):
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        # button last moves
-        play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, None, None, False)
+        # navigation implies game is on waiting
+        if play_low.GAME_PARAMETERS_LOADED['current_state'] != 0:
 
-        if advancement_selected != min_possible_advancement:
-            input_first = html.BUTTON("||<<", Class='btn-inside')
-            input_first.bind("click", lambda e, a=min_possible_advancement: transition_display_callback(e, a))
-        else:
-            input_first = html.BUTTON("||<<", disabled=True, Class='btn-inside')
-            input_first.style = {'pointer-events': 'none'}
-        buttons_right <= input_first
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+            # button last moves
+            play_low.stack_last_moves_button(buttons_right, play_low.MY_SUB_PANEL, None, None, False)
 
-        if advancement_selected > min_possible_advancement:
-            input_previous = html.BUTTON("<", Class='btn-inside')
-            input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
-        else:
-            input_previous = html.BUTTON("<", disabled=True, Class='btn-inside')
-            input_previous.style = {'pointer-events': 'none'}
-        buttons_right <= input_previous
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+            if advancement_selected != min_possible_advancement:
+                input_first = html.BUTTON("||<<", Class='btn-inside')
+                input_first.bind("click", lambda e, a=min_possible_advancement: transition_display_callback(e, a))
+            else:
+                input_first = html.BUTTON("||<<", disabled=True, Class='btn-inside')
+                input_first.style = {'pointer-events': 'none'}
+            buttons_right <= input_first
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
-        if advancement_selected < last_advancement:
-            input_next = html.BUTTON(">", Class='btn-inside')
-        else:
-            input_next = html.BUTTON(">", disabled=True, Class='btn-inside')
-            input_next.style = {'pointer-events': 'none'}
-        input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
-        buttons_right <= input_next
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+            if advancement_selected > min_possible_advancement:
+                input_previous = html.BUTTON("<", Class='btn-inside')
+                input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
+            else:
+                input_previous = html.BUTTON("<", disabled=True, Class='btn-inside')
+                input_previous.style = {'pointer-events': 'none'}
+            buttons_right <= input_previous
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
-        if advancement_selected != last_advancement:
-            input_last = html.BUTTON(">>||", Class='btn-inside')
-        else:
-            input_last = html.BUTTON(">>||", disabled=True, Class='btn-inside')
-            input_last.style = {'pointer-events': 'none'}
-        input_last.bind("click", lambda e, a=last_advancement: transition_display_callback(e, a))
-        buttons_right <= input_last
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+            if advancement_selected < last_advancement:
+                input_next = html.BUTTON(">", Class='btn-inside')
+            else:
+                input_next = html.BUTTON(">", disabled=True, Class='btn-inside')
+                input_next.style = {'pointer-events': 'none'}
+            input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
+            buttons_right <= input_next
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
-        for adv_sample in range(4, last_advancement, 5):
-
-            adv_sample_season, adv_sample_year = common.get_short_season(adv_sample, play_low.VARIANT_DATA)
-            adv_sample_season_readable = play_low.VARIANT_DATA.season_name_table[adv_sample_season]
-
-            input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}", Class='btn-inside')
-            input_last.bind("click", lambda e, a=adv_sample: transition_display_callback(e, a))
+            if advancement_selected != last_advancement:
+                input_last = html.BUTTON(">>||", Class='btn-inside')
+            else:
+                input_last = html.BUTTON(">>||", disabled=True, Class='btn-inside')
+                input_last.style = {'pointer-events': 'none'}
+            input_last.bind("click", lambda e, a=last_advancement: transition_display_callback(e, a))
             buttons_right <= input_last
             buttons_right <= html.BR()
             buttons_right <= html.BR()
+
+            for adv_sample in range(4, last_advancement, 5):
+
+                adv_sample_season, adv_sample_year = common.get_short_season(adv_sample, play_low.VARIANT_DATA)
+                adv_sample_season_readable = play_low.VARIANT_DATA.season_name_table[adv_sample_season]
+
+                input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}", Class='btn-inside')
+                input_last.bind("click", lambda e, a=adv_sample: transition_display_callback(e, a))
+                buttons_right <= input_last
+                buttons_right <= html.BR()
+                buttons_right <= html.BR()
 
         if pseudo is None:
 
@@ -666,6 +673,16 @@ def show_position(advancement=None):
 
                 # quit game
                 if in_game:
+
+                    # may emit preferences
+                    form = html.FORM()
+                    input_choose_role = html.INPUT(type="submit", value="Je choisis mon rôle !", Class='btn-inside')
+                    input_choose_role.bind("click", choose_role_callback)
+                    form <= input_choose_role
+                    buttons_right <= form
+                    buttons_right <= html.BR()
+
+                    # may leave the game
                     form = html.FORM()
                     input_quit_game = html.INPUT(type="submit", value="Je quitte la partie !", Class='btn-inside')
                     input_quit_game.bind("click", quit_game_callback)
@@ -682,16 +699,12 @@ def show_position(advancement=None):
                     buttons_right <= form
                     buttons_right <= html.BR()
 
-        if orders_data_txt:
-            input_show_orders_text = html.INPUT(type="submit", value="Visualiser les ordres en texte", Class='btn-inside')
-            input_show_orders_text.bind("click", callback_text_orders)
-            buttons_right <= input_show_orders_text
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
 
-        input_export_sandbox = html.INPUT(type="submit", value="Exporter la position actuelle vers le bac à sable", Class='btn-inside')
-        input_export_sandbox.bind("click", callback_export_sandbox)
-        buttons_right <= input_export_sandbox
+        url = f"{config.SITE_ADDRESS}?game={play_low.GAME}&arrival=rejoindre"
+        input_copy_url_join = html.INPUT(type="text", value=url)
+        button_copy_url_join = html.BUTTON("Copier le lien pour inviter un joueur à rejoindre la partie.", Class='btn-inside')
+        button_copy_url_join.bind("click", copy_url_join_callback)
+        buttons_right <= button_copy_url_join
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
@@ -703,38 +716,45 @@ def show_position(advancement=None):
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        url = f"{config.SITE_ADDRESS}?game={play_low.GAME}&advancement={advancement_selected}"
-        input_copy_url_consult2 = html.INPUT(type="text", value=url)
-        button_copy_url_consult2 = html.BUTTON("Copier le lien pour inviter un joueur à consulter la partie sur la saison affichée.", Class='btn-inside')
-        button_copy_url_consult2.bind("click", copy_url_consult2_callback)
-        buttons_right <= button_copy_url_consult2
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+        if play_low.GAME_PARAMETERS_LOADED['current_state'] != 0:
 
-        url = f"{config.SITE_ADDRESS}?game={play_low.GAME}&arrival=rejoindre"
-        input_copy_url_join = html.INPUT(type="text", value=url)
-        button_copy_url_join = html.BUTTON("Copier le lien pour inviter un joueur à rejoindre la partie.", Class='btn-inside')
-        button_copy_url_join.bind("click", copy_url_join_callback)
-        buttons_right <= button_copy_url_join
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+            if orders_data_txt:
+                input_show_orders_text = html.INPUT(type="submit", value="Visualiser les ordres en texte", Class='btn-inside')
+                input_show_orders_text.bind("click", callback_text_orders)
+                buttons_right <= input_show_orders_text
+                buttons_right <= html.BR()
+                buttons_right <= html.BR()
 
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-export/{play_low.GAME_ID}"
-        input_copy_url_extract = html.INPUT(type="text", value=url)
-        button_copy_url_extract = html.BUTTON("Copier le lien pour une extraction automatique depuis le back-end.", Class='btn-inside')
-        button_copy_url_extract.bind("click", copy_url_extract_callback)
-        buttons_right <= button_copy_url_extract
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
-
-        if play_low.VARIANT_DATA.name.startswith('standard'):
-            input_download_game_json = html.INPUT(type="submit", value="Télécharger la partie au format JSON", Class='btn-inside')
-            input_download_game_json.bind("click", callback_download_game_json)
-            buttons_right <= input_download_game_json
+            input_export_sandbox = html.INPUT(type="submit", value="Exporter la position actuelle vers le bac à sable", Class='btn-inside')
+            input_export_sandbox.bind("click", callback_export_sandbox)
+            buttons_right <= input_export_sandbox
             buttons_right <= html.BR()
             buttons_right <= html.BR()
+
+            url = f"{config.SITE_ADDRESS}?game={play_low.GAME}&advancement={advancement_selected}"
+            input_copy_url_consult2 = html.INPUT(type="text", value=url)
+            button_copy_url_consult2 = html.BUTTON("Copier le lien pour inviter un joueur à consulter la partie sur la saison affichée.", Class='btn-inside')
+            button_copy_url_consult2.bind("click", copy_url_consult2_callback)
+            buttons_right <= button_copy_url_consult2
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
+
+            host = config.SERVER_CONFIG['GAME']['HOST']
+            port = config.SERVER_CONFIG['GAME']['PORT']
+            url = f"{host}:{port}/game-export/{play_low.GAME_ID}"
+            input_copy_url_extract = html.INPUT(type="text", value=url)
+            button_copy_url_extract = html.BUTTON("Copier le lien pour une extraction automatique depuis le back-end.", Class='btn-inside')
+            button_copy_url_extract.bind("click", copy_url_extract_callback)
+            buttons_right <= button_copy_url_extract
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
+
+            if play_low.VARIANT_DATA.name.startswith('standard'):
+                input_download_game_json = html.INPUT(type="submit", value="Télécharger la partie au format JSON", Class='btn-inside')
+                input_download_game_json.bind("click", callback_download_game_json)
+                buttons_right <= input_download_game_json
+                buttons_right <= html.BR()
+                buttons_right <= html.BR()
 
     game_id = play_low.GAME_ID
     role_id = play_low.ROLE_ID
