@@ -74,6 +74,8 @@ def login():
             # erased
             if 'DATE_NEW_MESSAGES_NOTIFIED' in storage:
                 del storage['DATE_NEW_MESSAGES_NOTIFIED']
+            if 'DATE_EXPECTED_IN_GAMES_NOTIFIED' in storage:
+                del storage['DATE_EXPECTED_IN_GAMES_NOTIFIED']
             if 'DATE_CONFIRMATION_MISSING_NOTIFIED' in storage:
                 del storage['DATE_CONFIRMATION_MISSING_NOTIFIED']
             if 'DATE_SUFFERING_NOTIFIED' in storage:

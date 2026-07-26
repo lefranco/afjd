@@ -853,6 +853,18 @@ def show_news():
         # get the day
         day_now = int(time()) // (3600 * 24)
 
+        # we recommend to go to my games page once a day
+        day_notified = 0
+        if 'DATE_EXPECTED_IN_GAMES_NOTIFIED' in storage:
+            day_notified = int(storage['DATE_EXPECTED_IN_GAMES_NOTIFIED'])
+        if day_now > day_notified:
+            pseudo = storage['PSEUDO']
+            player_id = common.get_player_id(pseudo)
+            changed_games = common.get_player_games_changed(player_id)
+            if changed_games:
+                alert("Certaines de vos parties ont bougé depuis votre dernière visite, allez dans le page 'Mes parties' !")
+            storage['DATE_EXPECTED_IN_GAMES_NOTIFIED'] = str(day_now)
+
         # we check email not confirmed once a day
         day_notified = 0
         if 'DATE_CONFIRMATION_MISSING_NOTIFIED' in storage:
@@ -860,12 +872,11 @@ def show_news():
         if day_now > day_notified:
             email_status = email_address_status()
             if email_status == 0:
-                alert("Votre adresse courriel n'est pas confirmée. Il faut la confirmer! Pour le faire : Menu 'Mon compte' / Sous menu 'Valider mon courriel' / Bouton 'Me renvoyer un nouveau code'.\nCela ne vous empêche pas de rejoindre et jouer des parties sur le site !")
-                storage['DATE_CONFIRMATION_MISSING_NOTIFIED'] = str(day_now)
+                alert("Votre adresse courriel n'est pas confirmée. Il faut la confirmer ! Pour le faire : Menu 'Mon compte' / Sous menu 'Valider mon courriel' / Bouton 'Me renvoyer un nouveau code'.\nCela ne vous empêche pas de rejoindre et jouer des parties sur le site !")
             elif email_status == 2:
                 alert("ATTENTION : VOTRE ADRESSE COURRIEL EST EN ERREUR")
                 alert("Il faut la changer au plus vite ! Pour le faire : Menu 'Mon compte' / 'Editer' et changer votre adresse courriel.\nCela ne vous empêche pas de rejoindre et jouer des parties sur le site !")
-                storage['DATE_CONFIRMATION_MISSING_NOTIFIED'] = str(day_now)
+            storage['DATE_CONFIRMATION_MISSING_NOTIFIED'] = str(day_now)
 
     # RGPD
     if 'RGPD_ACCEPTED' not in storage:

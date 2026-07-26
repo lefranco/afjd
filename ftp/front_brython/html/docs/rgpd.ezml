@@ -89,6 +89,7 @@ $$ Interne
 | _ANNOUNCEMENT MODO_ | contenu de l'annonce spéciale ("popup") (modérateur) |
 | _ANNOUNCEMENT DISPLAYED MODO_ | le contenu de l'annonce spéciale ("popup") déjà montrée (modérateur) |
 | _DATE NEW MESSAGES NOTIFIED_ | le dernier jour de notification de messages personnels |
+| _DATE_CONFIRMATION_MISSING_NOTIFIED_ | le dernier jour de notification que des parties ont bougé |
 | _DATE CONFIRMATION MISSING NOTIFIED_ | le dernier jour de notification de confirmation de courriel manquante |
 | _DATE SUFFERING NOTIFIED_ | le dernier jour de notifications de parties à démarrer |
 | _DELTA TIME SEC_ | différence temps local et temps serveur |
