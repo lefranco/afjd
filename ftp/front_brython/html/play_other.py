@@ -150,6 +150,112 @@ def non_playing_information():
     return html.EM(info)
 
 
+def choose_role():
+    """ Choose role """
+
+    choices_list = []
+    buttons_right = None
+
+    def callback_render(_):
+        """ callback_render """
+
+        # since orders are part of the data not save/restore context
+
+        # put the background map first
+        ctx.drawImage(img, 0, 0)
+
+        # put the position and the neutral centers
+        play_low.POSITION_DATA.render(ctx)
+
+        # put the legends
+        play_low.VARIANT_DATA.render(ctx)
+
+    def select_role_callback(_, new_role_id):
+        nonlocal buttons_right
+
+        if new_role_id is not None:        
+            choices_list.append(new_role_id)
+            my_sub_panel2.removeChild(buttons_right)
+
+        # TODO consider Italie in grandeguerre
+        if len(choices_list) == len(play_low.VARIANT_DATA.roles) - 1:
+
+            # TODO : take into account !
+            alert(f"{choices_list=}")
+            alert(f"NON PRIS EN COMPTE POUR LE MOMENT DESOLE")
+
+            play.set_arrival('position')
+            play.render(play_low.PANEL_MIDDLE)
+            return
+
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+        buttons_right <= html.H4(f"Jusqu'à présent :")
+        for num, choice in enumerate(choices_list, start=1):
+            role = play_low.VARIANT_DATA.roles[choice]
+            role_name = play_low.VARIANT_DATA.role_name_table[role]
+            buttons_right <= f"{num} {role_name}"
+            buttons_right <= html.BR()
+
+        rank = len(choices_list) + 1
+        buttons_right <= html.H4(f"Choix numéro {rank} :")
+
+        for poss_role_id, poss_role in play_low.VARIANT_DATA.roles.items():
+            if poss_role_id >= 1 and poss_role_id not in choices_list:
+                role_name = play_low.VARIANT_DATA.role_name_table[poss_role]
+                select_role_button = html.BUTTON(role_name, Class='btn-inside')
+                select_role_button.bind("click", lambda e, r=poss_role_id: select_role_callback(e, r))
+                buttons_right <= select_role_button
+                buttons_right <= " "
+
+        my_sub_panel2 <= buttons_right
+
+    # game status
+    play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
+    beacon = html.BR()
+    play_low.MY_SUB_PANEL <= beacon
+
+    # create canvas
+    map_size = play_low.VARIANT_DATA.map_size
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return
+
+    # put background (this will call the callback that display the whole map)
+    img = common.read_map(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
+    img.bind('load', lambda _: callback_render(True))
+
+    fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
+    game_over = play_low.GAME_PARAMETERS_LOADED['soloed'] or play_low.GAME_PARAMETERS_LOADED['end_voted'] or play_low.GAME_PARAMETERS_LOADED['finished']
+    game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = common.make_rating_colours_window(fog_of_war, game_over, play_low.VARIANT_DATA, play_low.POSITION_DATA, play_low.INTERFACE_CHOSEN, game_scoring, play_low.ROLE_ID, play_low.GAME_PLAYERS_DICT, play_low.ID2PSEUDO)
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    display_left <= canvas
+
+    display_left <= html.BR()
+    display_left <= rating_colours_window
+
+    # overall
+    my_sub_panel2 = html.DIV()
+    my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left
+
+    # right side
+    select_role_callback(None, None)
+
+    play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
+
+    return True
+
+
 def show_position(advancement=None):
     """ show_position """
 
@@ -174,8 +280,10 @@ def show_position(advancement=None):
         play.render(play_low.PANEL_MIDDLE)
 
     def choose_role_callback(ev):  # pylint: disable=invalid-name
+
         ev.preventDefault()
-        alert("pas implémenté !")
+        play.set_arrival('choisir')
+        play.render(play_low.PANEL_MIDDLE)
 
     def quit_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -698,7 +806,6 @@ def show_position(advancement=None):
                     form <= input_join_game
                     buttons_right <= form
                     buttons_right <= html.BR()
-
 
         url = f"{config.SITE_ADDRESS}?game={play_low.GAME}&arrival=rejoindre"
         input_copy_url_join = html.INPUT(type="text", value=url)

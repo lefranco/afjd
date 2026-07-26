@@ -75,7 +75,9 @@ def next_previous_game(previous: bool):
     allgames.show_game_selected()
 
     arrival = None
-    if ITEM_NAME_SELECTED == 'Consulter':
+    if ITEM_NAME_SELECTED == 'Choisir':
+        arrival = 'choisir'
+    elif ITEM_NAME_SELECTED == 'Consulter':
         arrival = 'position'
     elif ITEM_NAME_SELECTED == 'Messagerie':
         arrival = 'messages'
@@ -109,6 +111,8 @@ def load_option(_, item_name):
 
     status = False
 
+    if item_name == 'Choisir':
+        status = play_other.choose_role()
     if item_name == 'Consulter':
         status = play_other.show_position(ARRIVAL2)
     if item_name == 'Ordonner':
@@ -139,6 +143,11 @@ def load_option(_, item_name):
 
     # items in menu
     for possible_item_name, legend in OPTIONS.items():
+
+        if possible_item_name == 'Choisir':
+            # game must be awaiting
+            if play_low.GAME_PARAMETERS_LOADED['current_state'] != 0:
+                continue
 
         if possible_item_name == 'Ordonner':
             # game must be ongoing
@@ -376,7 +385,11 @@ def render(panel_middle):
     if COUNTDOWN_TIMER is None:
         COUNTDOWN_TIMER = timer.set_interval(countdown, 1000)
 
-    if ARRIVAL == 'position':
+    if ARRIVAL == 'choisir':
+        # set page for position
+        ITEM_NAME_SELECTED = 'Choisir'
+
+    elif ARRIVAL == 'position':
         # set page for position
         ITEM_NAME_SELECTED = 'Consulter'
 
