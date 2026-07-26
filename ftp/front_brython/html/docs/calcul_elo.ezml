@@ -17,7 +17,7 @@ Voici ce qui appliqué sur le site :
 
 # Chaque variante est considérée séparement des autres.
 # Deux modes distincts sont considérés : parties _blitz_ et _classiques_. La distinction se fait sur le paramètre "no-message" des parties.
-# Un ELO distinct est géré pour chacune deschacun des rôles possibles sur la partie.
+# Un ELO distinct est géré pour chacun des rôles possibles sur la partie.
 # Pour être prise en compte, une partie doit :
 ## avoir le paramètre "used\_for\_elo" à vrai
 ## être dans l’état "terminée" (et pas "distinguée")
