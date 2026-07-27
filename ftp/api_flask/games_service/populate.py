@@ -31,6 +31,7 @@ import incidents
 import incidents2
 import votes
 import notes
+import preferences
 import assignments
 import tournaments
 import groupings
@@ -134,6 +135,11 @@ def populate_notes(sql_executor: database.SqlExecutor) -> None:
     notes.Note.create_table(sql_executor)
 
 
+def populate_preferences(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    preferences.Preference.create_table(sql_executor)
+
+
 def populate_definitives(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
     definitives.Definitive.create_table(sql_executor)
@@ -202,6 +208,8 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_allocations(sql_executor)
     populate_visits(sql_executor)
     populate_votes(sql_executor)
+    populate_notes(sql_executor)
+    populate_preferences(sql_executor)
     populate_definitives(sql_executor)
     populate_updates(sql_executor)
     populate_incidents(sql_executor)

@@ -48,6 +48,7 @@ import database
 import visits
 import votes
 import notes
+import preferences
 import definitives
 import updates
 import incidents
@@ -206,6 +207,9 @@ VOTE_PARSER.add_argument('value', type=int, required=True)
 NOTE_PARSER = flask_restful.reqparse.RequestParser()
 NOTE_PARSER.add_argument('role_id', type=int, required=True)
 NOTE_PARSER.add_argument('content', type=str, required=True)
+
+PREFERENCE_PARSER = flask_restful.reqparse.RequestParser()
+PREFERENCE_PARSER.add_argument('content', type=str, required=True)
 
 TOURNAMENT_PARSER = flask_restful.reqparse.RequestParser()
 TOURNAMENT_PARSER.add_argument('name', type=str, required=True)
@@ -6691,7 +6695,7 @@ class GameNoteRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # check user has right to read not - must be player of game master
+        # check user has right to read note - must be player of game master
 
         # check there is a game
         game = games.Game.find_by_identifier(sql_executor, game_id)
@@ -6709,6 +6713,127 @@ class GameNoteRessource(flask_restful.Resource):  # type: ignore
         # retrieve note here
         assert role_id is not None
         content = notes.Note.content_by_game_id_role_num(sql_executor, game_id, role_id)
+
+        del sql_executor
+
+        data = {'content': content}
+        return data, 200
+
+
+@API.resource('/game-preferences/<game_id>')
+class GamePreferenceRessource(flask_restful.Resource):  # type: ignore
+    """  GamePreferenceRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Insert preference in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-preferences/<game_id> - POST - creating new preference game id=%s", game_id)
+
+        args = PREFERENCE_PARSER.parse_args(strict=True)
+
+        content = args['content']
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # create preference here
+        preference = preferences.Preference(int(game_id), int(player_id), content)
+        preference.update_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': "Ok preference inserted"}
+        return data, 201
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Retrieve preference in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-preferences/<game_id> - GET - retrieving preferences game id=%s", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # check user has right to read preference - must be game master
+
+        # check there is a game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # get the role
+        assert game is not None
+        role_id = game.find_role(sql_executor, player_id)
+        if role_id != 0:
+            del sql_executor
+            flask_restful.abort(403, msg=f"You do not seem to master game {game_id}")
+
+        # retrieve preference here
+        assert role_id is not None
+        content = preferences.Preference.content_by_game_id(sql_executor, game_id)
 
         del sql_executor
 

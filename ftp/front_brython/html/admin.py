@@ -2729,9 +2729,6 @@ def maintain():
         json_dict = {
         }
 
-#        host = config.SERVER_CONFIG['PLAYER']['HOST']
-#        port = config.SERVER_CONFIG['PLAYER']['PORT']
-
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
 

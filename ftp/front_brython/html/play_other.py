@@ -170,11 +170,44 @@ def choose_role():
         # put the legends
         play_low.VARIANT_DATA.render(ctx)
 
-    def submit_callback(_):
-        # TODO : take into account !
-        alert(f"{choices_list=}")
-        alert("NON PRIS EN COMPTE POUR LE MOMENT DESOLE")
+    def add_preference_callback(ev):  # pylint: disable=invalid-name
+        """ add_preference_callback """
 
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'ajout de la preference dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'ajout de la preference dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.info_go(f"La preference a été enregistrée ! {messages}")
+
+            # back to where we started
+            play.set_arrival('position')
+            play.render(play_low.PANEL_MIDDLE)
+
+        ev.preventDefault()
+
+        content = ' '.join(map(str, choices_list))
+        print(f"passed {content=}")
+
+        json_dict = {
+            'content': content
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-preferences/{play_low.GAME_ID}"
+
+        # adding a preference in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
         play.set_arrival('position')
         play.render(play_low.PANEL_MIDDLE)
 
@@ -199,20 +232,21 @@ def choose_role():
             buttons_right <= f"{num} {role_name}"
             buttons_right <= html.BR()
 
-        rank = len(choices_list) + 1
-        buttons_right <= html.H4(f"Choix numéro {rank} :")
+        if len(choices_list) < len(play_low.VARIANT_DATA.roles) - len(play_low.VARIANT_CONTENT_LOADED['disorder']) - 1:
+            rank = len(choices_list) + 1
+            buttons_right <= html.H4(f"Choix numéro {rank} :")
 
-        for poss_role_id, poss_role in play_low.VARIANT_DATA.roles.items():
+            for poss_role_id, poss_role in play_low.VARIANT_DATA.roles.items():
 
-            if poss_role_id in map(int, play_low.VARIANT_CONTENT_LOADED['disorder']):
-                continue
+                if poss_role_id in map(int, play_low.VARIANT_CONTENT_LOADED['disorder']):
+                    continue
 
-            if poss_role_id >= 1 and poss_role_id not in choices_list:
-                role_name = play_low.VARIANT_DATA.role_name_table[poss_role]
-                select_role_button = html.BUTTON(role_name, Class='btn-inside')
-                select_role_button.bind("click", lambda e, r=poss_role_id: select_role_callback(e, r))
-                buttons_right <= select_role_button
-                buttons_right <= " "
+                if poss_role_id >= 1 and poss_role_id not in choices_list:
+                    role_name = play_low.VARIANT_DATA.role_name_table[poss_role]
+                    select_role_button = html.BUTTON(role_name, Class='btn-inside')
+                    select_role_button.bind("click", lambda e, r=poss_role_id: select_role_callback(e, r))
+                    buttons_right <= select_role_button
+                    buttons_right <= " "
 
         if choices_list:
             cancel_last_button = html.BUTTON("Effacer dernier choix", Class='btn-inside')
@@ -222,8 +256,8 @@ def choose_role():
             buttons_right <= cancel_last_button
 
         if len(choices_list) == len(play_low.VARIANT_DATA.roles) - len(play_low.VARIANT_CONTENT_LOADED['disorder']) - 1:
-            submit_button = html.BUTTON("Valider ces choix", Class='btn-inside')
-            submit_button.bind("click", submit_callback)
+            submit_button = html.BUTTON("Valider", Class='btn-inside')
+            submit_button.bind("click", add_preference_callback)
             buttons_right <= html.BR()
             buttons_right <= html.BR()
             buttons_right <= submit_button
