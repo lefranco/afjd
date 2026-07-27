@@ -62,7 +62,7 @@ def date_last_visit_update(game_id, role_id, visit_type):
 
 
 def join_game():
-    """ join_game_action : the third way of joining a game (by a link) """
+    """ join_game_action : the three ways of joining a game (by join games page, by game page and by a link) """
 
     def cancel_join_callback(_, dialog):
         alert("Sage décision !")
@@ -83,6 +83,7 @@ def join_game():
 
             alert("Félicitations, vous avez bien rejoint la partie !")
             alert("Si elle n'est pas en cours, un courriel vous préviendra de son démarrage mais revenez régulièrement sur le site surveiller pour ne pas le manquer...")
+            alert("Si elle est paramétrée en 'casting manuel' vous pouvez dès maintenant exprimer vos préférences en matière de pays depuis la page de la partie avec le bouton 'je choisis mon rôle'")
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.info_go(f"Vous avez rejoint la partie  : {messages}")
@@ -194,7 +195,6 @@ def choose_role():
         ev.preventDefault()
 
         content = ' '.join(map(str, choices_list))
-        print(f"passed {content=}")
 
         json_dict = {
             'content': content
