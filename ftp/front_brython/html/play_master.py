@@ -168,6 +168,8 @@ def game_master(arrival):
                 return
 
             summary = ""
+            summary += "Préférences :"
+            summary += "\n"
             content = req_result['content']
             for _, player_id, preferences in content:
                 player_pseudo = play_low.ID2PSEUDO[player_id]
@@ -177,14 +179,10 @@ def game_master(arrival):
                     role = play_low.VARIANT_DATA.roles[role_id]
                     role_name = play_low.VARIANT_DATA.role_name_table[role]
                     summary += role_name
-                    summary += " " 
+                    summary += " "
                 summary += "\n"
 
             alert(summary)
-
-            # back to where we started
-            play_low.MY_SUB_PANEL.clear()
-            game_master(False)
 
         ev.preventDefault()
 
@@ -196,10 +194,6 @@ def game_master(arrival):
 
         # show  role chocesin a game : need token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        play_low.MY_SUB_PANEL.clear()
-        game_master(False)
 
     def add_note_callback(ev):  # pylint: disable=invalid-name
         """ add_note_callback """
@@ -282,6 +276,40 @@ def game_master(arrival):
 
         # giving up game mastering : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def change_anonymity_games_callback(ev, new_anonymous):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification anonymat de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification anonymat de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.info_go(f"L'anonymat a été mis à {new_anonymous} : {messages}")
+
+        ev.preventDefault()
+
+        json_dict = {
+            'name': play_low.GAME,
+            'anonymous': new_anonymous,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{play_low.GAME}"
+
+        # changing game anonimity : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        play_low.PANEL_MIDDLE.clear()
+        play.render(play_low.PANEL_MIDDLE)
 
     def edit_game_callback(ev):  # pylint: disable=invalid-name
         """ edit_game_callback """
@@ -1398,6 +1426,8 @@ def game_master(arrival):
 
     role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
+    missing_role = False
+
     ############################################
     if play_low.GAME_PARAMETERS_LOADED['current_state'] == 1:
 
@@ -1646,6 +1676,8 @@ def game_master(arrival):
                     input_contact_replacers = html.INPUT(type="submit", value="Contacter les remplaçants", title="Ceci contactera tous les remplaçants déclarés volontaires du site", display='inline', Class='btn-inside')
                     input_contact_replacers.bind("click", lambda e, r=role_id: send_need_replacement_callback(e, r))
                     form <= input_contact_replacers
+
+                    missing_role = True
 
                 elif not (play_low.GAME_PARAMETERS_LOADED['current_state'] == 0 and not play_low.GAME_PARAMETERS_LOADED['manual']):
 
@@ -2047,7 +2079,20 @@ def game_master(arrival):
                 play_low.MY_SUB_PANEL <= form
 
     ############################################
-    play_low.MY_SUB_PANEL <= html.H3("Paramètres de la partie")
+    play_low.MY_SUB_PANEL <= html.H3("Anonymat de la partie")
+
+    form = html.FORM()
+    if play_low.GAME_PARAMETERS_LOADED['anonymous']:
+        input_change_anonimity_game = html.INPUT(type="submit", value="Supprimer l'anonymat", Class='btn-inside')
+        input_change_anonimity_game.bind("click", lambda e, a=False: change_anonymity_games_callback(e, a))
+    else:
+        input_change_anonimity_game = html.INPUT(type="submit", value="Mettre l'anonymat", Class='btn-inside')
+        input_change_anonimity_game.bind("click", lambda e, a=True: change_anonymity_games_callback(e, a))
+    form <= input_change_anonimity_game
+    play_low.MY_SUB_PANEL <= form
+
+    ############################################
+    play_low.MY_SUB_PANEL <= html.H3("Autres paramètres de la partie")
 
     form = html.FORM()
 
@@ -2109,13 +2154,13 @@ def game_master(arrival):
                 play_low.MY_SUB_PANEL <= information_about_debrief_game()
 
     ############################################
-    play_low.MY_SUB_PANEL <= html.H3("Préférences des joueurs")
-
-    form = html.FORM()
-    input_show_choices = html.INPUT(type="submit", value="Préférences des joueurs en matière de rôle", Class='btn-inside')
-    input_show_choices.bind("click", show_choices_callback)
-    form <= input_show_choices
-    play_low.MY_SUB_PANEL <= form
+    if missing_role:
+        play_low.MY_SUB_PANEL <= html.H3("Préférences des joueurs")
+        form = html.FORM()
+        input_show_choices = html.INPUT(type="submit", value="Préférences des joueurs en matière de rôle", Class='btn-inside')
+        input_show_choices.bind("click", show_choices_callback)
+        form <= input_show_choices
+        play_low.MY_SUB_PANEL <= form
 
     ############################################
     play_low.MY_SUB_PANEL <= html.H3("Démission de l'arbitrage")
