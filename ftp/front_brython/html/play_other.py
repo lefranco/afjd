@@ -170,28 +170,29 @@ def choose_role():
         # put the legends
         play_low.VARIANT_DATA.render(ctx)
 
+    def submit_callback(_):
+        # TODO : take into account !
+        alert(f"{choices_list=}")
+        alert("NON PRIS EN COMPTE POUR LE MOMENT DESOLE")
+
+        play.set_arrival('position')
+        play.render(play_low.PANEL_MIDDLE)
+
+    def cancel_last_callback(ev):
+        choices_list.pop()
+        select_role_callback(ev, None)
+
     def select_role_callback(_, new_role_id):
         nonlocal buttons_right
 
-        if new_role_id is not None:        
+        if new_role_id is not None:
             choices_list.append(new_role_id)
-            my_sub_panel2.removeChild(buttons_right)
 
-        # TODO consider Italie in grandeguerre
-        if len(choices_list) == len(play_low.VARIANT_DATA.roles) - 1:
-
-            # TODO : take into account !
-            alert(f"{choices_list=}")
-            alert(f"NON PRIS EN COMPTE POUR LE MOMENT DESOLE")
-
-            play.set_arrival('position')
-            play.render(play_low.PANEL_MIDDLE)
-            return
-
+        my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        buttons_right <= html.H4(f"Jusqu'à présent :")
+        buttons_right <= html.H4("Jusqu'à présent :")
         for num, choice in enumerate(choices_list, start=1):
             role = play_low.VARIANT_DATA.roles[choice]
             role_name = play_low.VARIANT_DATA.role_name_table[role]
@@ -202,12 +203,30 @@ def choose_role():
         buttons_right <= html.H4(f"Choix numéro {rank} :")
 
         for poss_role_id, poss_role in play_low.VARIANT_DATA.roles.items():
+
+            if poss_role_id in map(int, play_low.VARIANT_CONTENT_LOADED['disorder']):
+                continue
+
             if poss_role_id >= 1 and poss_role_id not in choices_list:
                 role_name = play_low.VARIANT_DATA.role_name_table[poss_role]
                 select_role_button = html.BUTTON(role_name, Class='btn-inside')
                 select_role_button.bind("click", lambda e, r=poss_role_id: select_role_callback(e, r))
                 buttons_right <= select_role_button
                 buttons_right <= " "
+
+        if choices_list:
+            cancel_last_button = html.BUTTON("Effacer dernier choix", Class='btn-inside')
+            cancel_last_button.bind("click", cancel_last_callback)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
+            buttons_right <= cancel_last_button
+
+        if len(choices_list) == len(play_low.VARIANT_DATA.roles) - len(play_low.VARIANT_CONTENT_LOADED['disorder']) - 1:
+            submit_button = html.BUTTON("Valider ces choix", Class='btn-inside')
+            submit_button.bind("click", submit_callback)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
+            buttons_right <= submit_button
 
         my_sub_panel2 <= buttons_right
 
@@ -222,7 +241,7 @@ def choose_role():
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
-        return
+        return False
 
     # put background (this will call the callback that display the whole map)
     img = common.read_map(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
@@ -249,6 +268,8 @@ def choose_role():
     my_sub_panel2 <= display_left
 
     # right side
+    buttons_right = html.DIV(id='buttons_right')
+    my_sub_panel2 <= buttons_right
     select_role_callback(None, None)
 
     play_low.MY_SUB_PANEL.insertBefore(my_sub_panel2, beacon.nextSibling)
@@ -535,10 +556,11 @@ def show_position(advancement=None):
 
         def copy_url_consult2_callback(_):
             """ copy_url_consult2_callback """
-            input_copy_url_consult.select()
-            # ev.setSelectionRange(0, 99999) # For mobile devices
-            window.navigator.clipboard.writeText(input_copy_url_consult2.value)
-            alert(f"Lien '{input_copy_url_consult2.value}' copié dans le presse papier...")
+            if play_low.GAME_PARAMETERS_LOADED['current_state'] != 0:
+                input_copy_url_consult.select()
+                # ev.setSelectionRange(0, 99999) # For mobile devices
+                window.navigator.clipboard.writeText(input_copy_url_consult2.value)
+                alert(f"Lien '{input_copy_url_consult2.value}' copié dans le presse papier...")
 
         def copy_url_join_callback(_):
             """ copy_url_join_callback """
@@ -549,10 +571,11 @@ def show_position(advancement=None):
 
         def copy_url_extract_callback(_):
             """ copy_url_extract_callback """
-            input_copy_url_extract.select()
-            # ev.setSelectionRange(0, 99999) # For mobile devices
-            window.navigator.clipboard.writeText(input_copy_url_extract.value)
-            alert(f"Lien '{input_copy_url_extract.value}' copié dans le presse papier...")
+            if play_low.GAME_PARAMETERS_LOADED['current_state'] != 0:
+                input_copy_url_extract.select()
+                # ev.setSelectionRange(0, 99999) # For mobile devices
+                window.navigator.clipboard.writeText(input_copy_url_extract.value)
+                alert(f"Lien '{input_copy_url_extract.value}' copié dans le presse papier...")
 
         def callback_render(_):
             """ callback_render """
