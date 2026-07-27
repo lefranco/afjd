@@ -817,6 +817,40 @@ def rectify_parameters_game():
 
         return status
 
+    def change_anonymity_games_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification anonymat de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification anonymat de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.info_go(f"L'accès à l'anonymat a été modifié : {messages}")
+
+        ev.preventDefault()
+
+        json_dict = {
+            'name': game,
+            'anonymous': input_anonymous.checked,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # changing game anonimity : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        rectify_parameters_game()
+
     def change_access_messages_games_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -1049,6 +1083,29 @@ def rectify_parameters_game():
     status = rectify_parameters_reload()
     if not status:
         return
+
+    MY_SUB_PANEL <= html.HR()
+    MY_SUB_PANEL <= html.H4("Anonymat")
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
+    fieldset <= legend_anonymous
+    input_anonymous = html.INPUT(type="checkbox", checked=anonymity_loaded, Class='btn-inside')
+    fieldset <= input_anonymous
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_anonymity_game = html.INPUT(type="submit", value="Changer l'anonymat de la partie", Class='btn-inside')
+    input_change_anonymity_game.bind("click", change_anonymity_games_callback)
+    form <= input_change_anonymity_game
+
+    MY_SUB_PANEL <= form
 
     MY_SUB_PANEL <= html.HR()
     MY_SUB_PANEL <= html.H4("Accès à la presse et à la messagerie")
