@@ -839,13 +839,14 @@ def show_position(advancement=None):
                 # quit game
                 if in_game:
 
-                    # may emit preferences
-                    form = html.FORM()
-                    input_choose_role = html.INPUT(type="submit", value="Je choisis mon rôle !", Class='btn-inside')
-                    input_choose_role.bind("click", choose_role_callback)
-                    form <= input_choose_role
-                    buttons_right <= form
-                    buttons_right <= html.BR()
+                    if play_low.GAME_PARAMETERS_LOADED['manual']:
+                        # may emit preferences
+                        form = html.FORM()
+                        input_choose_role = html.INPUT(type="submit", value="Je choisis mon rôle !", Class='btn-inside')
+                        input_choose_role.bind("click", choose_role_callback)
+                        form <= input_choose_role
+                        buttons_right <= form
+                        buttons_right <= html.BR()
 
                     # may leave the game
                     form = html.FORM()

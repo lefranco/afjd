@@ -2154,7 +2154,7 @@ def game_master(arrival):
                 play_low.MY_SUB_PANEL <= information_about_debrief_game()
 
     ############################################
-    if missing_role:
+    if play_low.GAME_PARAMETERS_LOADED['manual'] and missing_role:
         play_low.MY_SUB_PANEL <= html.H3("Préférences des joueurs")
         form = html.FORM()
         input_show_choices = html.INPUT(type="submit", value="Préférences des joueurs en matière de rôle", Class='btn-inside')
