@@ -370,22 +370,24 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
                 print(f"\033[34m Removing {zone2}({zone2.number}) from neighbours of {zone1}({zone1.number}) because two special coasts of same region!\033[0m")
                 neighbours.remove(zone_num2)
 
-    old_neighbouring = json_variant_data['neighbouring'].copy()
+    if 'neighbouring' in json_variant_data:
 
-    # now let's show changes
-    for num, (old_dict_unit_type, new_dict_unit_type) in enumerate(zip(old_neighbouring, new_neighbouring)):
-        for (old_zone_num, old_neighbours), (new_zone_num, new_neighbours) in zip(old_dict_unit_type.items(), new_dict_unit_type.items()):
-            if new_zone_num != old_zone_num:
-                print(f"WARNING : By {'army' if num == 0 else 'fleet'} Zone number {old_zone_num} became {new_zone_num}")
-                continue
-            gained_items = set(new_neighbours) - set(old_neighbours)
-            if gained_items:
-                zone = Zone.nomenclature[int(new_zone_num)]
-                print(f"By {'army' if num == 0 else 'fleet'} {str(zone)} gained : {[str(Zone.nomenclature[n]) for n in gained_items]}")
-            lost_items = set(old_neighbours) - set(new_neighbours)
-            if lost_items:
-                zone = Zone.nomenclature[int(new_zone_num)]
-                print(f"By {'army' if num == 0 else 'fleet'} {str(zone)} lost : {[str(Zone.nomenclature[n]) for n in lost_items]}")
+        # now let's show changes
+        old_neighbouring = json_variant_data['neighbouring'].copy()
+
+        for num, (old_dict_unit_type, new_dict_unit_type) in enumerate(zip(old_neighbouring, new_neighbouring)):
+            for (old_zone_num, old_neighbours), (new_zone_num, new_neighbours) in zip(old_dict_unit_type.items(), new_dict_unit_type.items()):
+                if new_zone_num != old_zone_num:
+                    print(f"WARNING : By {'army' if num == 0 else 'fleet'} Zone number {old_zone_num} became {new_zone_num}")
+                    continue
+                gained_items = set(new_neighbours) - set(old_neighbours)
+                if gained_items:
+                    zone = Zone.nomenclature[int(new_zone_num)]
+                    print(f"By {'army' if num == 0 else 'fleet'} {str(zone)} gained : {[str(Zone.nomenclature[n]) for n in gained_items]}")
+                lost_items = set(old_neighbours) - set(new_neighbours)
+                if lost_items:
+                    zone = Zone.nomenclature[int(new_zone_num)]
+                    print(f"By {'army' if num == 0 else 'fleet'} {str(zone)} lost : {[str(Zone.nomenclature[n]) for n in lost_items]}")
 
     # now put changes in json
     json_variant_data['neighbouring'] = new_neighbouring
