@@ -135,7 +135,7 @@
     "zones": {
         "1": {
             "name": "Aeo",
-            "full_name": "Village of Aeolus",
+            "full_name": "Village d'Éole",
             "x_pos": 403,
             "y_pos": 151,
             "x_legend_pos": 403,
@@ -144,7 +144,7 @@
         },
         "2": {
             "name": "Alc",
-            "full_name": "Alcmene's Village",
+            "full_name": "Village d'Alcmène",
             "x_pos": 135,
             "y_pos": 253,
             "x_legend_pos": 135,
@@ -152,7 +152,7 @@
         },
         "3": {
             "name": "Ama",
-            "full_name": "Amazon Village",
+            "full_name": "Village des Amazones",
             "x_pos": 576,
             "y_pos": 361,
             "x_legend_pos": 576,
@@ -161,7 +161,7 @@
         },
         "4": {
             "name": "Aph",
-            "full_name": "Aphrodite's Beach",
+            "full_name": "Plage d'Aphrodite",
             "x_pos": 417,
             "y_pos": 394,
             "x_legend_pos": 417,
@@ -169,7 +169,7 @@
         },
         "5": {
             "name": "Are",
-            "full_name": "Palace of Ares",
+            "full_name": "Palais d'Arès",
             "x_pos": 612,
             "y_pos": 586,
             "x_legend_pos": 612,
@@ -177,7 +177,7 @@
         },
         "6": {
             "name": "Arg",
-            "full_name": "Argo's Pasture",
+            "full_name": "Pâturage d'Argo",
             "x_pos": 515,
             "y_pos": 711,
             "x_legend_pos": 515,
@@ -185,7 +185,7 @@
         },
         "7": {
             "name": "Aut",
-            "full_name": "Autolycus' Hideout",
+            "full_name": "Repaire d'Autolycos",
             "x_pos": 399,
             "y_pos": 739,
             "x_legend_pos": 399,
@@ -193,7 +193,7 @@
         },
         "8": {
             "name": "Cal",
-            "full_name": "Callisto's Stronghold",
+            "full_name": "Forteresse de Callisto",
             "x_pos": 295,
             "y_pos": 751,
             "x_legend_pos": 295,
@@ -201,7 +201,7 @@
         },
         "9": {
             "name": "Cec",
-            "full_name": "Cecrops' Channel",
+            "full_name": "Chenal de Cécrops",
             "x_pos": 539,
             "y_pos": 660,
             "x_legend_pos": 539,
@@ -209,7 +209,7 @@
         },
         "10": {
             "name": "Cen",
-            "full_name": "Centaur Forest",
+            "full_name": "Forêt des Centaures",
             "x_pos": 569,
             "y_pos": 215,
             "x_legend_pos": 569,
@@ -218,7 +218,7 @@
         },
         "11": {
             "name": "Cha",
-            "full_name": "Charon's Crossing",
+            "full_name": "Passage de Charon",
             "x_pos": 94,
             "y_pos": 702,
             "x_legend_pos": 94,
@@ -226,7 +226,7 @@
         },
         "12": {
             "name": "Chi",
-            "full_name": "Chiron's Cave",
+            "full_name": "Grotte de Chiron",
             "x_pos": 510,
             "y_pos": 136,
             "x_legend_pos": 510,
@@ -234,7 +234,7 @@
         },
         "13": {
             "name": "Cup",
-            "full_name": "Cupid's Cloud",
+            "full_name": "Nuage de Cupidon",
             "x_pos": 393,
             "y_pos": 489,
             "x_legend_pos": 393,
@@ -242,7 +242,7 @@
         },
         "14": {
             "name": "Dei",
-            "full_name": "Deianeira's Grave",
+            "full_name": "Tombe de Déjanire",
             "x_pos": 216,
             "y_pos": 46,
             "x_legend_pos": 216,
@@ -250,7 +250,7 @@
         },
         "15": {
             "name": "Eas",
-            "full_name": "Eastern Ocean",
+            "full_name": "Océan Oriental",
             "x_pos": 671,
             "y_pos": 437,
             "x_legend_pos": 671,
@@ -258,7 +258,7 @@
         },
         "16": {
             "name": "Ech",
-            "full_name": "Echo's Glade",
+            "full_name": "Clairière d'Écho",
             "x_pos": 583,
             "y_pos": 293,
             "x_legend_pos": 583,
@@ -267,7 +267,7 @@
         },
         "17": {
             "name": "Ely",
-            "full_name": "Elysian Fields",
+            "full_name": "Champs Élysées",
             "x_pos": 29,
             "y_pos": 736,
             "x_legend_pos": 29,
@@ -275,7 +275,7 @@
         },
         "18": {
             "name": "Fir",
-            "full_name": "Sea of Fire",
+            "full_name": "Mer de Feu",
             "x_pos": 168,
             "y_pos": 597,
             "x_legend_pos": 168,
@@ -283,7 +283,7 @@
         },
         "19": {
             "name": "Fle",
-            "full_name": "Field of the Golden Fleece",
+            "full_name": "Champ de la Toison d'Or",
             "x_pos": 81,
             "y_pos": 87,
             "x_legend_pos": 81,
@@ -291,7 +291,7 @@
         },
         "20": {
             "name": "Fur",
-            "full_name": "Realm of the 3 Furies",
+            "full_name": "Royaume des trois Furies",
             "x_pos": 199,
             "y_pos": 739,
             "x_legend_pos": 199,
@@ -299,7 +299,7 @@
         },
         "21": {
             "name": "Gab",
-            "full_name": "Gabrielle's Village",
+            "full_name": "Village de Gabrielle",
             "x_pos": 368,
             "y_pos": 692,
             "x_legend_pos": 368,
@@ -308,7 +308,7 @@
         },
         "22": {
             "name": "Gli",
-            "full_name": "Glittering Gulf",
+            "full_name": "Golfe Scintillant",
             "x_pos": 412,
             "y_pos": 258,
             "x_legend_pos": 412,
@@ -316,7 +316,7 @@
         },
         "23": {
             "name": "GoC",
-            "full_name": "Gulf of Chains",
+            "full_name": "Golfe des Chaînes",
             "x_pos": 224,
             "y_pos": 335,
             "x_legend_pos": 224,
@@ -324,7 +324,7 @@
         },
         "24": {
             "name": "Had",
-            "full_name": "Depths of Hades",
+            "full_name": "Profondeurs d'Hadès",
             "x_pos": 301,
             "y_pos": 710,
             "x_legend_pos": 301,
@@ -333,7 +333,7 @@
         },
         "25": {
             "name": "Her",
-            "full_name": "Hercules' Respite",
+            "full_name": "Répit d'Hercule",
             "x_pos": 212,
             "y_pos": 182,
             "x_legend_pos": 212,
@@ -342,7 +342,7 @@
         },
         "26": {
             "name": "Hes",
-            "full_name": "Shrine to Hestia",
+            "full_name": "Sanctuaire d'Hestia",
             "x_pos": 189,
             "y_pos": 497,
             "x_legend_pos": 164,
@@ -351,7 +351,7 @@
         },
         "27": {
             "name": "Hin",
-            "full_name": "Forest of the Golden Hind",
+            "full_name": "Forêt de la Biche d'Or",
             "x_pos": 553,
             "y_pos": 599,
             "x_legend_pos": 553,
@@ -359,7 +359,7 @@
         },
         "28": {
             "name": "Hip",
-            "full_name": "Hippolyta's Girdle",
+            "full_name": "Ceinture d'Hippolyte",
             "x_pos": 650,
             "y_pos": 349,
             "x_legend_pos": 650,
@@ -367,7 +367,7 @@
         },
         "29": {
             "name": "Jas",
-            "full_name": "Jason's Kingdom",
+            "full_name": "Royaume de Jason",
             "x_pos": 51,
             "y_pos": 223,
             "x_legend_pos": 51,
@@ -375,7 +375,7 @@
         },
         "30": {
             "name": "Jox",
-            "full_name": "Joxter's Retreat",
+            "full_name": "Retraite de Joxter",
             "x_pos": 459,
             "y_pos": 740,
             "x_legend_pos": 459,
@@ -383,7 +383,7 @@
         },
         "31": {
             "name": "Lbs",
-            "full_name": "Lesbian Sea",
+            "full_name": "Mer de Lesbos",
             "x_pos": 47,
             "y_pos": 538,
             "x_legend_pos": 47,
@@ -391,7 +391,7 @@
         },
         "32": {
             "name": "Les",
-            "full_name": "Isle of Lesbos",
+            "full_name": "Île de Lesbos",
             "x_pos": 118,
             "y_pos": 493,
             "x_legend_pos": 118,
@@ -400,7 +400,7 @@
         },
         "33": {
             "name": "Lov",
-            "full_name": "Lover's Lane",
+            "full_name": "Allée des Amoureux",
             "x_pos": 442,
             "y_pos": 530,
             "x_legend_pos": 442,
@@ -408,7 +408,7 @@
         },
         "34": {
             "name": "Mid",
-            "full_name": "Realm of King Midas",
+            "full_name": "Royaume du Roi Midas",
             "x_pos": 335,
             "y_pos": 240,
             "x_legend_pos": 335,
@@ -416,7 +416,7 @@
         },
         "35": {
             "name": "Min",
-            "full_name": "Minotaur's Labyrinth",
+            "full_name": "Labyrinthe du Minotaure",
             "x_pos": 687,
             "y_pos": 261,
             "x_legend_pos": 687,
@@ -424,7 +424,7 @@
         },
         "36": {
             "name": "Mor",
-            "full_name": "Morpheus' Palace",
+            "full_name": "Palais de Morphée",
             "x_pos": 102,
             "y_pos": 334,
             "x_legend_pos": 102,
@@ -432,7 +432,7 @@
         },
         "37": {
             "name": "Nar",
-            "full_name": "Narcissus' Reflection",
+            "full_name": "Reflet de Narcisse",
             "x_pos": 489,
             "y_pos": 255,
             "x_legend_pos": 489,
@@ -440,7 +440,7 @@
         },
         "38": {
             "name": "Nes",
-            "full_name": "Nestor's Kingdom",
+            "full_name": "Royaume de Nestor",
             "x_pos": 545,
             "y_pos": 539,
             "x_legend_pos": 545,
@@ -448,7 +448,7 @@
         },
         "39": {
             "name": "Oly",
-            "full_name": "Mount Olympus",
+            "full_name": "Mont Olympe",
             "x_pos": 305,
             "y_pos": 138,
             "x_legend_pos": 305,
@@ -457,7 +457,7 @@
         },
         "40": {
             "name": "Pea",
-            "full_name": "Ocean of Peace",
+            "full_name": "Océan de Paix",
             "x_pos": 64,
             "y_pos": 633,
             "x_legend_pos": 64,
@@ -465,7 +465,7 @@
         },
         "41": {
             "name": "Per",
-            "full_name": "Persephone's Garden",
+            "full_name": "Jardin de Perséphone",
             "x_pos": 231,
             "y_pos": 690,
             "x_legend_pos": 231,
@@ -473,7 +473,7 @@
         },
         "42": {
             "name": "Pos",
-            "full_name": "Poseidon's Curse",
+            "full_name": "Malédiction de Poséidon",
             "x_pos": 454,
             "y_pos": 610,
             "x_legend_pos": 454,
@@ -481,7 +481,7 @@
         },
         "43": {
             "name": "Pro",
-            "full_name": "Prometheus' Cliff",
+            "full_name": "Falaise de Prométhée",
             "x_pos": 327,
             "y_pos": 348,
             "x_legend_pos": 327,
@@ -489,7 +489,7 @@
         },
         "44": {
             "name": "Psy",
-            "full_name": "Village of Psyche",
+            "full_name": "Village de Psyché",
             "x_pos": 414,
             "y_pos": 437,
             "x_legend_pos": 414,
@@ -497,7 +497,7 @@
         },
         "45": {
             "name": "Sal",
-            "full_name": "Salmonius' Scheme",
+            "full_name": "Machination de Salmonée",
             "x_pos": 280,
             "y_pos": 303,
             "x_legend_pos": 280,
@@ -505,7 +505,7 @@
         },
         "46": {
             "name": "Sch",
-            "full_name": "Scholars Channel",
+            "full_name": "Chenal des Érudits",
             "x_pos": 519,
             "y_pos": 449,
             "x_legend_pos": 519,
@@ -513,7 +513,7 @@
         },
         "47": {
             "name": "Ser",
-            "full_name": "Serina's Village",
+            "full_name": "Village de Serina",
             "x_pos": 607,
             "y_pos": 521,
             "x_legend_pos": 607,
@@ -521,7 +521,7 @@
         },
         "48": {
             "name": "Sis",
-            "full_name": "Sisyphus' Hill",
+            "full_name": "Colline de Sisyphe",
             "x_pos": 651,
             "y_pos": 76,
             "x_legend_pos": 651,
@@ -529,7 +529,7 @@
         },
         "49": {
             "name": "SoA",
-            "full_name": "Sea of Arrows",
+            "full_name": "Mer des Flèches",
             "x_pos": 287,
             "y_pos": 463,
             "x_legend_pos": 287,
@@ -537,7 +537,7 @@
         },
         "50": {
             "name": "SoD",
-            "full_name": "Sea of Dreams",
+            "full_name": "Mer des Rêves",
             "x_pos": 173,
             "y_pos": 384,
             "x_legend_pos": 173,
@@ -545,7 +545,7 @@
         },
         "51": {
             "name": "SoT",
-            "full_name": "Sea of Tears",
+            "full_name": "Mer des Larmes",
             "x_pos": 289,
             "y_pos": 623,
             "x_legend_pos": 289,
@@ -553,7 +553,7 @@
         },
         "52": {
             "name": "Sou",
-            "full_name": "South Sea",
+            "full_name": "Mer du Sud",
             "x_pos": 685,
             "y_pos": 722,
             "x_legend_pos": 685,
@@ -561,7 +561,7 @@
         },
         "53": {
             "name": "SoW",
-            "full_name": "Sea of Waves",
+            "full_name": "Mer des Vagues",
             "x_pos": 486,
             "y_pos": 337,
             "x_legend_pos": 486,
@@ -569,7 +569,7 @@
         },
         "54": {
             "name": "Str",
-            "full_name": "Strife's Cave",
+            "full_name": "Grotte de la Discorde",
             "x_pos": 601,
             "y_pos": 627,
             "x_legend_pos": 601,
@@ -577,7 +577,7 @@
         },
         "55": {
             "name": "Tan",
-            "full_name": "Tantalus' Pool",
+            "full_name": "Bassin de Tantale",
             "x_pos": 468,
             "y_pos": 46,
             "x_legend_pos": 468,
@@ -585,7 +585,7 @@
         },
         "56": {
             "name": "Tar",
-            "full_name": "Tartarus",
+            "full_name": "Tartare",
             "x_pos": 171,
             "y_pos": 703,
             "x_legend_pos": 171,
@@ -593,7 +593,7 @@
         },
         "57": {
             "name": "Ves",
-            "full_name": "Convent of the Vestal Virgins",
+            "full_name": "Couvent des Vestales",
             "x_pos": 223,
             "y_pos": 517,
             "x_legend_pos": 223,
@@ -602,7 +602,7 @@
         },
         "58": {
             "name": "Wes",
-            "full_name": "Western Ocean",
+            "full_name": "Océan Occidental",
             "x_pos": 49,
             "y_pos": 430,
             "x_legend_pos": 49,
@@ -610,7 +610,7 @@
         },
         "59": {
             "name": "Xen",
-            "full_name": "Xena's Rest",
+            "full_name": "Repos de Xena",
             "x_pos": 440,
             "y_pos": 685,
             "x_legend_pos": 440,
@@ -619,7 +619,7 @@
         },
         "60": {
             "name": "Zeu",
-            "full_name": "Temple of Zeus",
+            "full_name": "Temple de Zeus",
             "x_pos": 339,
             "y_pos": 50,
             "x_legend_pos": 339,
