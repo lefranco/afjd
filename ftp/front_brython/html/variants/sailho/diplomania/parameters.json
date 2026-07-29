@@ -3,7 +3,7 @@
         "x_pos": 10,
         "y_pos": 10
     },
-    "additional_text": "Dans lunivers de mythologie grecque.",
+    "additional_text": "Dans l'univers de la mythologie grecque.",
     "map": {
         "width": 728,
         "height": 764
@@ -82,7 +82,7 @@
         "3": {
             "name": "Ouest",
             "adjective_name": "ouest",
-            "letter_name": "O",
+            "letter_name": "W",
             "red": [
                 0,
                 20
@@ -101,8 +101,8 @@
             "adjective_name": "sud",
             "letter_name": "S",
             "red": [
-                255,
-                235
+                225,
+                205
             ],
             "green": [
                 0,
@@ -139,7 +139,8 @@
             "x_pos": 403,
             "y_pos": 151,
             "x_legend_pos": 403,
-            "y_legend_pos": 137
+            "y_legend_pos": 137,
+            "display": 1
         },
         "2": {
             "name": "Alc",
@@ -155,7 +156,8 @@
             "x_pos": 576,
             "y_pos": 361,
             "x_legend_pos": 576,
-            "y_legend_pos": 347
+            "y_legend_pos": 347,
+            "display": 2
         },
         "4": {
             "name": "Aph",
@@ -211,7 +213,8 @@
             "x_pos": 569,
             "y_pos": 215,
             "x_legend_pos": 569,
-            "y_legend_pos": 201
+            "y_legend_pos": 201,
+            "display": 2
         },
         "11": {
             "name": "Cha",
@@ -259,7 +262,8 @@
             "x_pos": 583,
             "y_pos": 293,
             "x_legend_pos": 583,
-            "y_legend_pos": 279
+            "y_legend_pos": 279,
+            "display": 2
         },
         "17": {
             "name": "Ely",
@@ -299,7 +303,8 @@
             "x_pos": 368,
             "y_pos": 692,
             "x_legend_pos": 368,
-            "y_legend_pos": 678
+            "y_legend_pos": 678,
+            "display": 4
         },
         "22": {
             "name": "Gli",
@@ -323,7 +328,8 @@
             "x_pos": 301,
             "y_pos": 710,
             "x_legend_pos": 301,
-            "y_legend_pos": 696
+            "y_legend_pos": 696,
+            "display": 4
         },
         "25": {
             "name": "Her",
@@ -331,7 +337,8 @@
             "x_pos": 212,
             "y_pos": 182,
             "x_legend_pos": 212,
-            "y_legend_pos": 168
+            "y_legend_pos": 168,
+            "display": 1
         },
         "26": {
             "name": "Hes",
@@ -339,7 +346,8 @@
             "x_pos": 189,
             "y_pos": 497,
             "x_legend_pos": 164,
-            "y_legend_pos": 478
+            "y_legend_pos": 478,
+            "display": 3
         },
         "27": {
             "name": "Hin",
@@ -387,7 +395,8 @@
             "x_pos": 118,
             "y_pos": 493,
             "x_legend_pos": 118,
-            "y_legend_pos": 479
+            "y_legend_pos": 479,
+            "display": 3
         },
         "33": {
             "name": "Lov",
@@ -443,7 +452,8 @@
             "x_pos": 305,
             "y_pos": 138,
             "x_legend_pos": 305,
-            "y_legend_pos": 124
+            "y_legend_pos": 124,
+            "display": 1
         },
         "40": {
             "name": "Pea",
@@ -587,7 +597,8 @@
             "x_pos": 223,
             "y_pos": 517,
             "x_legend_pos": 223,
-            "y_legend_pos": 503
+            "y_legend_pos": 503,
+            "display": 3
         },
         "58": {
             "name": "Wes",
@@ -603,7 +614,8 @@
             "x_pos": 440,
             "y_pos": 685,
             "x_legend_pos": 440,
-            "y_legend_pos": 671
+            "y_legend_pos": 671,
+            "display": 4
         },
         "60": {
             "name": "Zeu",
