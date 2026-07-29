@@ -16,7 +16,7 @@ _
 $ Particularités de la carte
 
 (Iles centrales)
-Il y a trois regions qui sont des îles géographiques : Île des Femmes (qui regroupe Île de Lesbos (Les), Sanctuaire d'Hestia (Hes) et Couvent des Vestales (Ves)), Chypre (qui regroupe Plage d'Aphrodite (Aph), Village de Psyché (Psy) et Nuage de Cupidon (Cup)), Dissentos (qui regroupe Répit d'Hercule (Her), Palais d'Arès (Are), Forêt de la Biche d'Or (Hin), Village de Serina (Ser) et Grotte de la Discorde (Str)).
+Il y a trois regions qui sont des îles géographiques : Île des Femmes (qui regroupe Île de Lesbos (Les), Sanctuaire d'Hestia (Hes) et Couvent des Vestales (Ves)), Chypre (qui regroupe Plage d'Aphrodite (Aph), Village de Psyché (Psy) et Nuage de Cupidon (Cup)), Dissentos (qui regroupe Répit d'Hercule (Her), Palais d'Arès (Are), Forêt de la Biche d'Or (Bic), Village de Serina (Ser) et Grotte de la Discorde (Dis)).
 
 _
 $ Datation
@@ -38,7 +38,7 @@ Il y a quatre puissances dont les unités de départ sont les suivantes :
 .
 = Position de départ
 |Puissance | Centres | Armées | Flottes| Centres inoccupés|
-|Nord | 2 | Répit d'Hercule (Her), Village d'Éole (Aeo) | | |
+|Nord | 2 | Répit d'Hercule (Her), Village d'Éole (Eol) | | |
 |Est | 2 | Forêt des Centaures (Cen) | Village des Amazones (Ama) | |
 |Ouest | 2 | | Île de Lesbos (Les), Couvent des Vestales (Ves) | |
 |Sud | 2 | Profondeurs d'Hadès (Had), Repos de Xena (Xen) | | |
@@ -59,64 +59,64 @@ $ Nomenclature
 
 = Régions et abréviations de la variante
 | Abréviation | Nom complet | type | centre |
-| Aeo | Village d'Éole | côte | \* |
 | Alc | Village d'Alcmène | côte |  |
 | Ama | Village des Amazones | côte | \* |
+| Amo | Allée des Amoureux | mer |  |
 | Aph | Plage d'Aphrodite | côte | \* |
 | Are | Palais d'Arès | terre | \* |
 | Arg | Pâturage d'Argo | côte |  |
 | Aut | Repaire d'Autolycos | terre |  |
+| Bic | Forêt de la Biche d'Or | côte |  |
 | Cal | Forteresse de Callisto | terre |  |
 | Cec | Chenal de Cécrops | mer |  |
 | Cen | Forêt des Centaures | côte | \* |
 | Cha | Passage de Charon | côte |  |
 | Chi | Grotte de Chiron | côte |  |
 | Cup | Nuage de Cupidon | côte | \* |
-| Dei | Tombe de Déjanire | terre |  |
-| Eas | Océan Oriental | mer |  |
+| Dej | Tombe de Déjanire | terre |  |
+| Dis | Grotte de la Discorde | côte | \* |
 | Ech | Clairière d'Écho | côte |  |
 | Ely | Champs Élysées | côte |  |
-| Fir | Mer de Feu | mer |  |
-| Fle | Champ de la Toison d'Or | terre |  |
+| Eol | Village d'Éole | côte | \* |
+| Eru | Chenal des Érudits | mer |  |
+| Feu | Mer de Feu | mer |  |
 | Fur | Royaume des trois Furies | terre |  |
 | Gab | Village de Gabrielle | côte |  |
-| Gli | Golfe Scintillant | mer |  |
 | GoC | Golfe des Chaînes | mer |  |
+| GSc | Golfe Scintillant | mer |  |
 | Had | Profondeurs d'Hadès | côte | \* |
 | Her | Répit d'Hercule | côte | \* |
 | Hes | Sanctuaire d'Hestia | côte |  |
-| Hin | Forêt de la Biche d'Or | côte |  |
 | Hip | Ceinture d'Hippolyte | côte |  |
 | Jas | Royaume de Jason | côte |  |
 | Jox | Retraite de Joxter | côte |  |
 | Lbs | Mer de Lesbos | mer |  |
 | Les | Île de Lesbos | côte | \* |
-| Lov | Allée des Amoureux | mer |  |
+| MdF | Mer des Flèches | mer |  |
+| MdL | Mer des Larmes | mer |  |
+| MdR | Mer des Rêves | mer |  |
+| MdV | Mer des Vagues | mer |  |
 | Mid | Royaume du Roi Midas | côte |  |
 | Min | Labyrinthe du Minotaure | côte |  |
 | Mor | Palais de Morphée | côte | \* |
 | Nar | Reflet de Narcisse | mer |  |
 | Nes | Royaume de Nestor | côte | \* |
 | Oly | Mont Olympe | terre |  |
-| Pea | Océan de Paix | mer |  |
+| OOc | Océan Occidental | mer |  |
+| OOr | Océan Oriental | mer |  |
+| Pai | Océan de Paix | mer |  |
 | Per | Jardin de Perséphone | côte |  |
 | Pos | Malédiction de Poséidon | mer |  |
 | Pro | Falaise de Prométhée | côte | \* |
 | Psy | Village de Psyché | côte |  |
 | Sal | Machination de Salmonée | côte |  |
-| Sch | Chenal des Érudits | mer |  |
 | Ser | Village de Serina | côte |  |
 | Sis | Colline de Sisyphe | terre |  |
-| SoA | Mer des Flèches | mer |  |
-| SoD | Mer des Rêves | mer |  |
-| SoT | Mer des Larmes | mer |  |
-| Sou | Mer du Sud | mer |  |
-| SoW | Mer des Vagues | mer |  |
-| Str | Grotte de la Discorde | côte | \* |
+| Sud | Mer du Sud | mer |  |
 | Tan | Bassin de Tantale | terre |  |
 | Tar | Tartare | côte | \* |
+| Toi | Champ de la Toison d'Or | terre |  |
 | Ves | Couvent des Vestales | côte | \* |
-| Wes | Océan Occidental | mer |  |
 | Xen | Repos de Xena | côte | \* |
 | Zeu | Temple de Zeus | terre |  |
 =

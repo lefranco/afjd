@@ -134,7 +134,7 @@
     },
     "zones": {
         "1": {
-            "name": "Aeo",
+            "name": "Eol",
             "full_name": "Village d'Éole",
             "x_pos": 403,
             "y_pos": 151,
@@ -241,7 +241,7 @@
             "y_legend_pos": 475
         },
         "14": {
-            "name": "Dei",
+            "name": "Dej",
             "full_name": "Tombe de Déjanire",
             "x_pos": 216,
             "y_pos": 46,
@@ -249,7 +249,7 @@
             "y_legend_pos": 32
         },
         "15": {
-            "name": "Eas",
+            "name": "OOr",
             "full_name": "Océan Oriental",
             "x_pos": 671,
             "y_pos": 437,
@@ -274,7 +274,7 @@
             "y_legend_pos": 722
         },
         "18": {
-            "name": "Fir",
+            "name": "Feu",
             "full_name": "Mer de Feu",
             "x_pos": 168,
             "y_pos": 597,
@@ -282,7 +282,7 @@
             "y_legend_pos": 583
         },
         "19": {
-            "name": "Fle",
+            "name": "Toi",
             "full_name": "Champ de la Toison d'Or",
             "x_pos": 81,
             "y_pos": 87,
@@ -307,7 +307,7 @@
             "display": 4
         },
         "22": {
-            "name": "Gli",
+            "name": "GSc",
             "full_name": "Golfe Scintillant",
             "x_pos": 412,
             "y_pos": 258,
@@ -350,7 +350,7 @@
             "display": 3
         },
         "27": {
-            "name": "Hin",
+            "name": "Bic",
             "full_name": "Forêt de la Biche d'Or",
             "x_pos": 553,
             "y_pos": 599,
@@ -399,7 +399,7 @@
             "display": 3
         },
         "33": {
-            "name": "Lov",
+            "name": "Amo",
             "full_name": "Allée des Amoureux",
             "x_pos": 442,
             "y_pos": 530,
@@ -456,7 +456,7 @@
             "display": 1
         },
         "40": {
-            "name": "Pea",
+            "name": "Pai",
             "full_name": "Océan de Paix",
             "x_pos": 64,
             "y_pos": 633,
@@ -504,7 +504,7 @@
             "y_legend_pos": 289
         },
         "46": {
-            "name": "Sch",
+            "name": "Eru",
             "full_name": "Chenal des Érudits",
             "x_pos": 519,
             "y_pos": 449,
@@ -528,7 +528,7 @@
             "y_legend_pos": 62
         },
         "49": {
-            "name": "SoA",
+            "name": "MdF",
             "full_name": "Mer des Flèches",
             "x_pos": 287,
             "y_pos": 463,
@@ -536,7 +536,7 @@
             "y_legend_pos": 449
         },
         "50": {
-            "name": "SoD",
+            "name": "MdR",
             "full_name": "Mer des Rêves",
             "x_pos": 173,
             "y_pos": 384,
@@ -544,7 +544,7 @@
             "y_legend_pos": 370
         },
         "51": {
-            "name": "SoT",
+            "name": "MdL",
             "full_name": "Mer des Larmes",
             "x_pos": 289,
             "y_pos": 623,
@@ -552,7 +552,7 @@
             "y_legend_pos": 609
         },
         "52": {
-            "name": "Sou",
+            "name": "Sud",
             "full_name": "Mer du Sud",
             "x_pos": 685,
             "y_pos": 722,
@@ -560,7 +560,7 @@
             "y_legend_pos": 708
         },
         "53": {
-            "name": "SoW",
+            "name": "MdV",
             "full_name": "Mer des Vagues",
             "x_pos": 486,
             "y_pos": 337,
@@ -568,7 +568,7 @@
             "y_legend_pos": 323
         },
         "54": {
-            "name": "Str",
+            "name": "Dis",
             "full_name": "Grotte de la Discorde",
             "x_pos": 601,
             "y_pos": 627,
@@ -601,7 +601,7 @@
             "display": 3
         },
         "58": {
-            "name": "Wes",
+            "name": "OOc",
             "full_name": "Océan Occidental",
             "x_pos": 49,
             "y_pos": 430,
