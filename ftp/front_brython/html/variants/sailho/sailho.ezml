@@ -1,0 +1,134 @@
+Sail Ho
+
+_
+$ Contexte
+Sail Ho est une variante à 4 joueurs plongés dans un univers lié à la mythologie grecque. Il faudra bien maîtriser les convois pour espérer remporter la partie.
+
+_
+$ Côtes spéciales
+
+(Village of Psyche)
+   Elle a 2 côtes, Ouest et Est.
+(Shrine to Hestia)
+   Elle a 2 côtes, Nord et Sud.
+
+_
+$ Particularités de la carte
+
+(Iles centrales)
+Il y a trois regions qui sont des îles géographiques : Isle of Women (qui regroupe Isle of Lesbos, Shrine to Hestia et Convent of the Vestal Virgins), Cyprus (qui regroupe Aphrodite's Beach, Village of Psyche et Cupid's Cloud), Dissentos (qui regroupe Hercules' Respite, Palace of Ares, Forest of the Golden Hind, Serina's Village et Strife's Cave).
+
+_
+$ Datation
+
+La partie commence en *1*. Chaque tour représente *1* années "en temps réel".
+
+_
+$ Conditions de victoire
+
+Il y a *17* centres de ravitaillement sur le plateau.
+.
+Le gagnant donc est la puissance qui détient *9* centres de ravitaillement ou plus pendant une phase d'ajustement.
+
+_
+$ Puissances en présence
+
+Il y a quatre puissances dont les unités de départ sont les suivantes :
+.
+.
+= Position de départ
+|Puissance | Centres | Armées | Flottes| Centres inoccupés|
+|Nord | 2 |Hercules' Respite, Village of Aeolus | Amazon Village | |
+|Est | 2 |Centaur Forest | Amazon Village | |
+|Ouest | 2 | |Isle of Lesbos, Convent of the Vestal Virgins | |
+|Sud | 2 |Depths of Hades, Xena's Rest | | |
+=
+
+_
+$ Particularités
+
+_
+$ Pièges de la variante
+
+
+_
+$ Nomenclature
+
+= Régions et abréviations de la variante
+| Abréviation | Nom complet | type | centre |
+| Aeo | Village of Aeolus | côte | \* |
+| Alc | Alcmene's Village | côte |  |
+| Ama | Amazon Village | côte | \* |
+| Aph | Aphrodite's Beach | côte | \* |
+| Are | Palace of Ares | terre | \* |
+| Arg | Argo's Pasture | côte |  |
+| Aut | Autolycus' Hideout | terre |  |
+| Cal | Callisto's Stronghold | terre |  |
+| Cec | Cecrops' Channel | mer |  |
+| Cen | Centaur Forest | côte | \* |
+| Cha | Charon's Crossing | côte |  |
+| Chi | Chiron's Cave | côte |  |
+| Convent of the Vestal Virgins | Ves | côte | \* |
+| Cup | Cupid's Cloud | côte | \* |
+| Dei | Deianeira's Grave | terre |  |
+| Eas | Eastern Ocean | mer |  |
+| Ech | Echo's Glade | côte |  |
+| Ely | Elysian Fields | côte |  |
+| Fir | Sea of Fire | mer |  |
+| Fle | Field of the Golden Fleece | terre |  |
+| Fur | Realm of the 3 Furies | terre |  |
+| Gab | Gabrielle's Village | côte |  |
+| Gli | Glittering Gulf | mer |  |
+| GoC | Gulf of Chains | mer |  |
+| Had | Depths of Hades | côte | \* |
+| Her | Hercules' Respite | côte | \* |
+| Hes | Shrine to Hestia | côte |  |
+| Hin | Forest of the Golden Hind | côte |  |
+| Hip | Hippolyta's Girdle | côte |  |
+| Jas | Jason's Kingdom | côte |  |
+| Jos | Joxter's Retreat | côte |  |
+| Lbs | Lesbian Sea | mer |  |
+| Les | Isle of Lesbos | côte | \* |
+| Lov | Lover's Lane | mer |  |
+| Mid | Realm of King Midas | côte |  |
+| Min | Minotaur's Labyrinth | côte |  |
+| Mor | Morpheus' Palace | côte | \* |
+| Nar | Narcissus' Reflection | mer |  |
+| Nes | Nestor's Kingdom | côte | \* |
+| Oly | Mount Olympus | terre |  |
+| Pea | Ocean of Peace | mer |  |
+| Per | Persephone's Garden | côte |  |
+| Pos | Poseidon's Curse | mer |  |
+| Pro | Prometheus' Cliff | côte | \* |
+| Psy | Village of Psyche | côte |  |
+| Sal | Salmonius' Scheme | côte |  |
+| Sch | Scholars Channel | mer |  |
+| Ser | Serina's Village | côte |  |
+| Sis | Sisyphus' Hill | terre |  |
+| SoA | Sea of Arrows | mer |  |
+| SoD | Sea of Dreams | mer |  |
+| SoT | Sea of Tears | mer |  |
+| Sou | South Sea | mer |  |
+| SoW | Sea of Waves | mer |  |
+| Str | Strife's Cave | côte | \* |
+| Tan | Tantalus' Pool | terre |  |
+| Tar | Tartarus | côte | \* |
+| Wes | Western Ocean | mer |  |
+| Xen | Xena's Rest | côte | \* |
+| Zeu | Temple of Zeus | terre |  |
+=
+
+_
+$ Expansionnisme (non)
+
+Constructions sur les centres de départ comme dans la variante standard.
+
+_
+$ Ecart avec la version théorique
+
+Sans objet.
+
+_
+$ Sur le wiki
+
+
