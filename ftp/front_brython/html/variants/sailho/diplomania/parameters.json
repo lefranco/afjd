@@ -147,8 +147,7 @@
             "x_pos": 135,
             "y_pos": 253,
             "x_legend_pos": 135,
-            "y_legend_pos": 239,
-            "display": 1
+            "y_legend_pos": 239
         },
         "3": {
             "name": "Ama",
@@ -156,8 +155,7 @@
             "x_pos": 576,
             "y_pos": 361,
             "x_legend_pos": 576,
-            "y_legend_pos": 347,
-            "display": 2
+            "y_legend_pos": 347
         },
         "4": {
             "name": "Aph",
@@ -205,8 +203,7 @@
             "x_pos": 539,
             "y_pos": 660,
             "x_legend_pos": 539,
-            "y_legend_pos": 646,
-            "display": 1
+            "y_legend_pos": 646
         },
         "10": {
             "name": "Cen",
@@ -230,8 +227,7 @@
             "x_pos": 510,
             "y_pos": 136,
             "x_legend_pos": 510,
-            "y_legend_pos": 122,
-            "display": 2
+            "y_legend_pos": 122
         },
         "13": {
             "name": "Cup",
@@ -239,8 +235,7 @@
             "x_pos": 393,
             "y_pos": 489,
             "x_legend_pos": 393,
-            "y_legend_pos": 475,
-            "display": 2
+            "y_legend_pos": 475
         },
         "14": {
             "name": "Dei",
@@ -248,8 +243,7 @@
             "x_pos": 216,
             "y_pos": 46,
             "x_legend_pos": 216,
-            "y_legend_pos": 32,
-            "display": 1
+            "y_legend_pos": 32
         },
         "15": {
             "name": "Eas",
@@ -257,8 +251,7 @@
             "x_pos": 671,
             "y_pos": 437,
             "x_legend_pos": 671,
-            "y_legend_pos": 423,
-            "display": 3
+            "y_legend_pos": 423
         },
         "16": {
             "name": "Ech",
@@ -274,8 +267,7 @@
             "x_pos": 29,
             "y_pos": 736,
             "x_legend_pos": 29,
-            "y_legend_pos": 722,
-            "display": 3
+            "y_legend_pos": 722
         },
         "18": {
             "name": "Fir",
@@ -283,8 +275,7 @@
             "x_pos": 168,
             "y_pos": 597,
             "x_legend_pos": 168,
-            "y_legend_pos": 583,
-            "display": 3
+            "y_legend_pos": 583
         },
         "19": {
             "name": "Fle",
@@ -292,8 +283,7 @@
             "x_pos": 81,
             "y_pos": 87,
             "x_legend_pos": 81,
-            "y_legend_pos": 73,
-            "display": 1
+            "y_legend_pos": 73
         },
         "20": {
             "name": "Fur",
@@ -301,8 +291,7 @@
             "x_pos": 199,
             "y_pos": 739,
             "x_legend_pos": 199,
-            "y_legend_pos": 725,
-            "display": 3
+            "y_legend_pos": 725
         },
         "21": {
             "name": "Gab",
@@ -318,8 +307,7 @@
             "x_pos": 412,
             "y_pos": 258,
             "x_legend_pos": 412,
-            "y_legend_pos": 244,
-            "display": 2
+            "y_legend_pos": 244
         },
         "23": {
             "name": "GoC",
@@ -327,8 +315,7 @@
             "x_pos": 224,
             "y_pos": 335,
             "x_legend_pos": 224,
-            "y_legend_pos": 321,
-            "display": 1
+            "y_legend_pos": 321
         },
         "24": {
             "name": "Had",
@@ -336,8 +323,7 @@
             "x_pos": 301,
             "y_pos": 710,
             "x_legend_pos": 301,
-            "y_legend_pos": 696,
-            "display": 3
+            "y_legend_pos": 696
         },
         "25": {
             "name": "Her",
@@ -345,8 +331,7 @@
             "x_pos": 212,
             "y_pos": 182,
             "x_legend_pos": 212,
-            "y_legend_pos": 168,
-            "display": 3
+            "y_legend_pos": 168
         },
         "26": {
             "name": "Hes",
@@ -370,8 +355,7 @@
             "x_pos": 650,
             "y_pos": 349,
             "x_legend_pos": 650,
-            "y_legend_pos": 335,
-            "display": 1
+            "y_legend_pos": 335
         },
         "29": {
             "name": "Jas",
@@ -387,8 +371,7 @@
             "x_pos": 459,
             "y_pos": 740,
             "x_legend_pos": 459,
-            "y_legend_pos": 726,
-            "display": 1
+            "y_legend_pos": 726
         },
         "31": {
             "name": "Lbs",
@@ -396,8 +379,7 @@
             "x_pos": 47,
             "y_pos": 538,
             "x_legend_pos": 47,
-            "y_legend_pos": 524,
-            "display": 2
+            "y_legend_pos": 524
         },
         "32": {
             "name": "Les",
@@ -405,8 +387,7 @@
             "x_pos": 118,
             "y_pos": 493,
             "x_legend_pos": 118,
-            "y_legend_pos": 479,
-            "display": 2
+            "y_legend_pos": 479
         },
         "33": {
             "name": "Lov",
@@ -414,8 +395,7 @@
             "x_pos": 442,
             "y_pos": 530,
             "x_legend_pos": 442,
-            "y_legend_pos": 516,
-            "display": 2
+            "y_legend_pos": 516
         },
         "34": {
             "name": "Mid",
@@ -423,8 +403,7 @@
             "x_pos": 335,
             "y_pos": 240,
             "x_legend_pos": 335,
-            "y_legend_pos": 226,
-            "display": 2
+            "y_legend_pos": 226
         },
         "35": {
             "name": "Min",
@@ -472,8 +451,7 @@
             "x_pos": 64,
             "y_pos": 633,
             "x_legend_pos": 64,
-            "y_legend_pos": 619,
-            "display": 2
+            "y_legend_pos": 619
         },
         "41": {
             "name": "Per",
@@ -481,8 +459,7 @@
             "x_pos": 231,
             "y_pos": 690,
             "x_legend_pos": 231,
-            "y_legend_pos": 676,
-            "display": 1
+            "y_legend_pos": 676
         },
         "42": {
             "name": "Pos",
@@ -490,8 +467,7 @@
             "x_pos": 454,
             "y_pos": 610,
             "x_legend_pos": 454,
-            "y_legend_pos": 596,
-            "display": 1
+            "y_legend_pos": 596
         },
         "43": {
             "name": "Pro",
@@ -499,8 +475,7 @@
             "x_pos": 327,
             "y_pos": 348,
             "x_legend_pos": 327,
-            "y_legend_pos": 334,
-            "display": 1
+            "y_legend_pos": 334
         },
         "44": {
             "name": "Psy",
@@ -508,8 +483,7 @@
             "x_pos": 414,
             "y_pos": 437,
             "x_legend_pos": 414,
-            "y_legend_pos": 423,
-            "display": 1
+            "y_legend_pos": 423
         },
         "45": {
             "name": "Sal",
@@ -517,8 +491,7 @@
             "x_pos": 280,
             "y_pos": 303,
             "x_legend_pos": 280,
-            "y_legend_pos": 289,
-            "display": 1
+            "y_legend_pos": 289
         },
         "46": {
             "name": "Sch",
@@ -526,8 +499,7 @@
             "x_pos": 519,
             "y_pos": 449,
             "x_legend_pos": 519,
-            "y_legend_pos": 435,
-            "display": 1
+            "y_legend_pos": 435
         },
         "47": {
             "name": "Ser",
@@ -535,8 +507,7 @@
             "x_pos": 607,
             "y_pos": 521,
             "x_legend_pos": 607,
-            "y_legend_pos": 507,
-            "display": 1
+            "y_legend_pos": 507
         },
         "48": {
             "name": "Sis",
@@ -544,8 +515,7 @@
             "x_pos": 651,
             "y_pos": 76,
             "x_legend_pos": 651,
-            "y_legend_pos": 62,
-            "display": 1
+            "y_legend_pos": 62
         },
         "49": {
             "name": "SoA",
@@ -553,8 +523,7 @@
             "x_pos": 287,
             "y_pos": 463,
             "x_legend_pos": 287,
-            "y_legend_pos": 449,
-            "display": 1
+            "y_legend_pos": 449
         },
         "50": {
             "name": "SoD",
@@ -562,8 +531,7 @@
             "x_pos": 173,
             "y_pos": 384,
             "x_legend_pos": 173,
-            "y_legend_pos": 370,
-            "display": 1
+            "y_legend_pos": 370
         },
         "51": {
             "name": "SoT",
@@ -571,8 +539,7 @@
             "x_pos": 289,
             "y_pos": 623,
             "x_legend_pos": 289,
-            "y_legend_pos": 609,
-            "display": 1
+            "y_legend_pos": 609
         },
         "52": {
             "name": "Sou",
@@ -580,8 +547,7 @@
             "x_pos": 685,
             "y_pos": 722,
             "x_legend_pos": 685,
-            "y_legend_pos": 708,
-            "display": 1
+            "y_legend_pos": 708
         },
         "53": {
             "name": "SoW",
@@ -589,8 +555,7 @@
             "x_pos": 486,
             "y_pos": 337,
             "x_legend_pos": 486,
-            "y_legend_pos": 323,
-            "display": 1
+            "y_legend_pos": 323
         },
         "54": {
             "name": "Str",
@@ -598,8 +563,7 @@
             "x_pos": 601,
             "y_pos": 627,
             "x_legend_pos": 601,
-            "y_legend_pos": 613,
-            "display": 1
+            "y_legend_pos": 613
         },
         "55": {
             "name": "Tan",
@@ -607,8 +571,7 @@
             "x_pos": 468,
             "y_pos": 46,
             "x_legend_pos": 468,
-            "y_legend_pos": 32,
-            "display": 1
+            "y_legend_pos": 32
         },
         "56": {
             "name": "Tar",
@@ -616,8 +579,7 @@
             "x_pos": 171,
             "y_pos": 703,
             "x_legend_pos": 171,
-            "y_legend_pos": 689,
-            "display": 1
+            "y_legend_pos": 689
         },
         "57": {
             "name": "Ves",
@@ -625,8 +587,7 @@
             "x_pos": 223,
             "y_pos": 517,
             "x_legend_pos": 223,
-            "y_legend_pos": 503,
-            "display": 1
+            "y_legend_pos": 503
         },
         "58": {
             "name": "Wes",
@@ -634,8 +595,7 @@
             "x_pos": 49,
             "y_pos": 430,
             "x_legend_pos": 49,
-            "y_legend_pos": 416,
-            "display": 1
+            "y_legend_pos": 416
         },
         "59": {
             "name": "Xen",
@@ -643,8 +603,7 @@
             "x_pos": 440,
             "y_pos": 685,
             "x_legend_pos": 440,
-            "y_legend_pos": 671,
-            "display": 1
+            "y_legend_pos": 671
         },
         "60": {
             "name": "Zeu",
@@ -652,8 +611,7 @@
             "x_pos": 339,
             "y_pos": 50,
             "x_legend_pos": 339,
-            "y_legend_pos": 36,
-            "display": 1
+            "y_legend_pos": 36
         },
         "61": {
             "name": "",

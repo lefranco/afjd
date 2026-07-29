@@ -69,6 +69,7 @@ INTERFACE_TABLE = {
     'spiceislands': ['diplomania'],
     'crepusculerome': ['diplomania'],
     'chaos': ['diplomania'],
+    'sailho': ['diplomania'],
 }
 
 

@@ -44,6 +44,7 @@ VARIANT_NAMES_DICT = {
     'franceautriche': 2,
     'hundred': 3,
     'coldwar_redux': 4,
+    'sailho': 4,
     'mediterranee': 5,
     'egeemonie': 6,
     'standard_pds': 7,
