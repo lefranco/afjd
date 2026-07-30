@@ -157,7 +157,7 @@
             ]
         }
     ],
-    "year_zero": 1,
+    "year_zero": -1000,
     "increment": 1,
     "extra_requirement_solo": 0,
     "build_everywhere": false,

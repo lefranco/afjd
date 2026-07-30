@@ -115,7 +115,7 @@ def show_technical():
     MY_SUB_PANEL <= title4
 
     link4 = html.A(href="./docs/requis_variantes.pdf", target="_blank")
-    link4 <= "Lien vers une procédure complète à suivre pour créar une variante sur le site"
+    link4 <= "Lien vers une procédure complète à suivre pour créer une variante sur le site"
     MY_SUB_PANEL <= link4
 
     # --
