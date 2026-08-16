@@ -46,8 +46,8 @@
             ]
         },
         "1": {
-            "name": "Nord",
-            "adjective_name": "nord",
+            "name": "Arctos",
+            "adjective_name": "arctos",
             "letter_name": "N",
             "red": [
                 255,
@@ -63,8 +63,8 @@
             ]
         },
         "2": {
-            "name": "Est",
-            "adjective_name": "est",
+            "name": "Anatole",
+            "adjective_name": "anatole",
             "letter_name": "E",
             "red": [
                 235,
@@ -80,8 +80,8 @@
             ]
         },
         "3": {
-            "name": "Ouest",
-            "adjective_name": "ouest",
+            "name": "Dysis",
+            "adjective_name": "dysis",
             "letter_name": "W",
             "red": [
                 20,
@@ -97,8 +97,8 @@
             ]
         },
         "4": {
-            "name": "Sud",
-            "adjective_name": "sud",
+            "name": "Mesembria",
+            "adjective_name": "mesembria",
             "letter_name": "S",
             "red": [
                 225,
