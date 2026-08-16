@@ -444,7 +444,8 @@ def submit_orders(arrival):
         stack_orders(buttons_right)
 
         if not orders_data.empty():
-            put_copy_orders(buttons_right)
+            if not (play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nomessage_current']):
+                put_copy_orders(buttons_right)
             put_erase_all(buttons_right)
         if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             buttons_right <= html.BR()
@@ -568,7 +569,8 @@ def submit_orders(arrival):
 
             stack_orders(buttons_right)
             if not orders_data.empty():
-                put_copy_orders(buttons_right)
+                if not (play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nomessage_current']):
+                    put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
@@ -755,7 +757,8 @@ def submit_orders(arrival):
 
             stack_orders(buttons_right)
             if not orders_data.empty():
-                put_copy_orders(buttons_right)
+                if not (play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nomessage_current']):
+                    put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
@@ -896,7 +899,8 @@ def submit_orders(arrival):
 
             stack_orders(buttons_right)
             if not orders_data.empty():
-                put_copy_orders(buttons_right)
+                if not (play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nomessage_current']):
+                    put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
@@ -1046,7 +1050,8 @@ def submit_orders(arrival):
 
             stack_orders(buttons_right)
             if not orders_data.empty():
-                put_copy_orders(buttons_right)
+                if not (play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nomessage_current']):
+                    put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
@@ -1113,7 +1118,8 @@ def submit_orders(arrival):
 
                 stack_orders(buttons_right)
                 if not orders_data.empty():
-                    put_copy_orders(buttons_right)
+                    if not (play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nomessage_current']):
+                        put_copy_orders(buttons_right)
                     put_erase_all(buttons_right)
                 if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                     put_rest_hold(buttons_right)
@@ -1141,7 +1147,8 @@ def submit_orders(arrival):
 
             stack_orders(buttons_right)
             if not orders_data.empty():
-                put_copy_orders(buttons_right)
+                if not (play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nomessage_current']):
+                    put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
@@ -1249,7 +1256,8 @@ def submit_orders(arrival):
 
         stack_orders(buttons_right)
         if not orders_data.empty():
-            put_copy_orders(buttons_right)
+            if not (play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nomessage_current']):
+                put_copy_orders(buttons_right)
             put_erase_all(buttons_right)
         if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
             put_rest_hold(buttons_right)
@@ -1751,7 +1759,8 @@ def submit_orders(arrival):
 
         stack_orders(buttons_right)
         if not orders_data.empty():
-            put_copy_orders(buttons_right)
+            if not (play_low.GAME_PARAMETERS_LOADED['nopress_current'] and play_low.GAME_PARAMETERS_LOADED['nomessage_current']):
+                put_copy_orders(buttons_right)
             buttons_right <= " "
             put_erase_all(buttons_right)
         if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
