@@ -5,7 +5,7 @@
 from json import loads, dumps
 from time import time
 
-from browser import html, ajax, alert, document   # pylint: disable=import-error
+from browser import html, ajax, alert, window, document   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -444,6 +444,7 @@ def submit_orders(arrival):
         stack_orders(buttons_right)
 
         if not orders_data.empty():
+            put_copy_orders(buttons_right)
             put_erase_all(buttons_right)
         if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             buttons_right <= html.BR()
@@ -453,6 +454,12 @@ def submit_orders(arrival):
         stack_orders_status(buttons_right)
 
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+    def copy_orders_callback(_):
+        """ copy_orders_callback """
+
+        window.navigator.clipboard.writeText(str(orders_data))
+        alert("Ordres copiés dans le presse papier...")
 
     def erase_all_callback(_):
         """ erase_all_callback """
@@ -561,6 +568,7 @@ def submit_orders(arrival):
 
             stack_orders(buttons_right)
             if not orders_data.empty():
+                put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
@@ -747,6 +755,7 @@ def submit_orders(arrival):
 
             stack_orders(buttons_right)
             if not orders_data.empty():
+                put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
@@ -887,6 +896,7 @@ def submit_orders(arrival):
 
             stack_orders(buttons_right)
             if not orders_data.empty():
+                put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
@@ -1036,6 +1046,7 @@ def submit_orders(arrival):
 
             stack_orders(buttons_right)
             if not orders_data.empty():
+                put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
@@ -1102,6 +1113,7 @@ def submit_orders(arrival):
 
                 stack_orders(buttons_right)
                 if not orders_data.empty():
+                    put_copy_orders(buttons_right)
                     put_erase_all(buttons_right)
                 if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                     put_rest_hold(buttons_right)
@@ -1129,6 +1141,7 @@ def submit_orders(arrival):
 
             stack_orders(buttons_right)
             if not orders_data.empty():
+                put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
@@ -1236,6 +1249,7 @@ def submit_orders(arrival):
 
         stack_orders(buttons_right)
         if not orders_data.empty():
+            put_copy_orders(buttons_right)
             put_erase_all(buttons_right)
         if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
             put_rest_hold(buttons_right)
@@ -1388,6 +1402,15 @@ def submit_orders(arrival):
                     no_orders <= html.EM(line)
                     no_orders <= html.BR()
                 buttons_right <= no_orders
+
+    def put_copy_orders(buttons_right):
+        """ put_copy_orders """
+
+        input_copy_orders = html.INPUT(type="submit", value="Copier", Class='btn-inside')
+        input_copy_orders.bind("click", copy_orders_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_copy_orders
+        buttons_right <= html.BR()
 
     def put_erase_all(buttons_right):
         """ put_erase_all """
@@ -1728,6 +1751,8 @@ def submit_orders(arrival):
 
         stack_orders(buttons_right)
         if not orders_data.empty():
+            put_copy_orders(buttons_right)
+            buttons_right <= " "
             put_erase_all(buttons_right)
         if not orders_data.all_ordered(play_low.ROLE_ID) and advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
             put_rest_hold(buttons_right)
