@@ -206,6 +206,7 @@ def sandbox():
         if not POSITION_DATA.empty():
             put_download(buttons_right)
         if not POSITION_DATA.empty():
+            put_copy_orders(buttons_right)
             put_erase_all(buttons_right)
         if not ORDERS_DATA.empty():
             put_erase_orders(buttons_right)
@@ -216,6 +217,12 @@ def sandbox():
 
         my_sub_panel2 <= buttons_right
         MY_SUB_PANEL <= my_sub_panel2
+
+    def copy_orders_callback(_):
+        """ copy_orders_callback """
+
+        window.navigator.clipboard.writeText(str(ORDERS_DATA))
+        alert("Ordres copiés dans le presse papier...")
 
     def erase_all_callback(_):
         """ erase_all_callback """
@@ -277,6 +284,7 @@ def sandbox():
         if not POSITION_DATA.empty():
             put_download(buttons_right)
         if not POSITION_DATA.empty():
+            put_copy_orders(buttons_right)
             put_erase_all(buttons_right)
         # do not put erase orders
         put_rest_hold(buttons_right)
@@ -470,6 +478,7 @@ def sandbox():
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
             if not POSITION_DATA.empty():
+                put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
@@ -552,6 +561,7 @@ def sandbox():
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
             if not POSITION_DATA.empty():
+                put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
@@ -607,6 +617,7 @@ def sandbox():
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
             if not POSITION_DATA.empty():
+                put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
@@ -650,6 +661,7 @@ def sandbox():
                 if not POSITION_DATA.empty():
                     put_download(buttons_right)
                 if not POSITION_DATA.empty():
+                    put_copy_orders(buttons_right)
                     put_erase_all(buttons_right)
                 if not ORDERS_DATA.empty():
                     put_erase_orders(buttons_right)
@@ -677,6 +689,7 @@ def sandbox():
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
             if not POSITION_DATA.empty():
+                put_copy_orders(buttons_right)
                 put_erase_all(buttons_right)
             if not ORDERS_DATA.empty():
                 put_erase_orders(buttons_right)
@@ -768,6 +781,7 @@ def sandbox():
         if not POSITION_DATA.empty():
             put_download(buttons_right)
         if not POSITION_DATA.empty():
+            put_copy_orders(buttons_right)
             put_erase_all(buttons_right)
         if not ORDERS_DATA.empty():
             put_erase_orders(buttons_right)
@@ -889,6 +903,15 @@ def sandbox():
             orders <= html.B(line)
             orders <= html.BR()
         buttons_right <= orders
+
+    def put_copy_orders(buttons_right):
+        """ put_copy_orders """
+
+        input_copy_orders = html.INPUT(type="submit", value="Copier", Class='btn-inside')
+        input_copy_orders.bind("click", copy_orders_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_copy_orders
+        buttons_right <= html.BR()
 
     def put_erase_all(buttons_right):
         """ put_erase_all """
@@ -1049,6 +1072,7 @@ def sandbox():
         if not POSITION_DATA.empty():
             put_download(buttons_right)
         if not POSITION_DATA.empty():
+            put_copy_orders(buttons_right)
             put_erase_all(buttons_right)
         if not ORDERS_DATA.empty():
             put_erase_orders(buttons_right)
@@ -1239,6 +1263,7 @@ def sandbox():
     if not POSITION_DATA.empty():
         put_download(buttons_right)
     if not POSITION_DATA.empty():
+        put_copy_orders(buttons_right)
         put_erase_all(buttons_right)
     if not ORDERS_DATA.empty():
         put_erase_orders(buttons_right)
