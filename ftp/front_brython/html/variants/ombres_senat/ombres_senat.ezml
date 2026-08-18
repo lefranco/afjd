@@ -1,0 +1,290 @@
+Sail Ho
+
+_
+$ Contexte
+Sail Ho est une variante à 4 joueurs plongés dans un univers lié à la mythologie grecque (avec un soupçon d'inspiration puisé dans la série télévisée Xénia). Il faudra bien maîtriser les convois pour espérer remporter la partie.
+
+_
+$ Côtes spéciales
+
+(Village de Psyché \(Psy\) )
+   Elle a 2 côtes, Ouest et Est.
+(Sanctuaire d'Hestia \(Hes\) )
+   Elle a 2 côtes, Nord et Sud.
+
+_
+$ Particularités de la carte
+
+(Iles centrales)
+Il y a trois regions qui sont des îles géographiques : Île des Femmes (qui regroupe Île de Lesbos (Les), Sanctuaire d'Hestia (Hes) et Couvent des Vestales (Ves)), Chypre (qui regroupe Plage d'Aphrodite (Aph), Village de Psyché (Psy) et Nuage de Cupidon (Cup)), Dissentos (qui regroupe Répit d'Hercule (Her), Palais d'Arès (Are), Forêt de la Biche d'Or (Bic), Village de Serina (Ser) et Grotte de la Discorde (Dis)).
+
+_
+$ Datation
+
+La partie commence en *-999*. Chaque tour représente *1* années "en temps réel".
+
+_
+$ Conditions de victoire
+
+Il y a *17* centres de ravitaillement sur le plateau.
+.
+Le gagnant donc est la puissance qui détient *9* centres de ravitaillement ou plus pendant une phase d'ajustement.
+
+_
+$ Puissances en présence
+
+Il y a quatre puissances dont les unités de départ sont les suivantes :
+.
+.
+= Position de départ
+|Puissance | Centres | Armées | Flottes| Centres inoccupés|
+|Arctos | 2 | Répit d'Hercule (Her), Village d'Éole (Eol) | | |
+|Anatole | 2 | | Forêt des Centaures (Cen), Village des Amazones (Ama) | |
+|Dysis | 2 | | Île de Lesbos (Les), Couvent des Vestales (Ves) | |
+|Mesembria | 2 | Profondeurs d'Hadès (Had)| Repos de Xena (Xen) | |
+=
+
+_
+$ Particularités
+
+Sans objet.
+
+_
+$ Pièges de la variante
+
+Sans objet.
+
+_
+$ Nomenclature
+
+= Régions et abréviations de la variante
+| Abréviation | Nom complet | type | centre |
+| Alc | Village d'Alcmène | côte |  |
+| Ama | Village des Amazones | côte | \* |
+| Amo | Allée des Amoureux | mer |  |
+| Aph | Plage d'Aphrodite | côte | \* |
+| Are | Palais d'Arès | terre | \* |
+| Arg | Pâturage d'Argo | côte |  |
+| Aut | Repaire d'Autolycos | terre |  |
+| Bic | Forêt de la Biche d'Or | côte |  |
+| Cal | Forteresse de Callisto | terre |  |
+| Cec | Chenal de Cécrops | mer |  |
+| Cen | Forêt des Centaures | côte | \* |
+| Cha | Passage de Charon | côte |  |
+| Chi | Grotte de Chiron | côte |  |
+| Cup | Nuage de Cupidon | côte | \* |
+| Dej | Tombe de Déjanire | terre |  |
+| Dis | Grotte de la Discorde | côte | \* |
+| Ech | Clairière d'Écho | côte |  |
+| Ely | Champs Élysées | côte |  |
+| Eol | Village d'Éole | côte | \* |
+| Eru | Chenal des Érudits | mer |  |
+| Feu | Mer de Feu | mer |  |
+| Fur | Royaume des trois Furies | terre |  |
+| Gab | Village de Gabrielle | côte |  |
+| GoC | Golfe des Chaînes | mer |  |
+| GSc | Golfe Scintillant | mer |  |
+| Had | Profondeurs d'Hadès | côte | \* |
+| Her | Répit d'Hercule | côte | \* |
+| Hes | Sanctuaire d'Hestia | côte |  |
+| Hip | Ceinture d'Hippolyte | côte |  |
+| Jas | Royaume de Jason | côte |  |
+| Jox | Retraite de Joxter | côte |  |
+| Lbs | Mer de Lesbos | mer |  |
+| Les | Île de Lesbos | côte | \* |
+| MdF | Mer des Flèches | mer |  |
+| MdL | Mer des Larmes | mer |  |
+| MdR | Mer des Rêves | mer |  |
+| MdV | Mer des Vagues | mer |  |
+| Mid | Royaume du Roi Midas | côte |  |
+| Min | Labyrinthe du Minotaure | côte |  |
+| Mor | Palais de Morphée | côte | \* |
+| Nar | Reflet de Narcisse | mer |  |
+| Nes | Royaume de Nestor | côte | \* |
+| Oly | Mont Olympe | terre |  |
+| OOc | Océan Occidental | mer |  |
+| OOr | Océan Oriental | mer |  |
+| Pai | Océan de Paix | mer |  |
+| Per | Jardin de Perséphone | côte |  |
+| Pos | Malédiction de Poséidon | mer |  |
+| Pro | Falaise de Prométhée | côte | \* |
+| Psy | Village de Psyché | côte |  |
+| Sal | Machination de Salmonée | côte |  |
+| Ser | Village de Serina | côte |  |
+| Sis | Colline de Sisyphe | terre |  |
+| Sud | Mer du Sud | mer |  |
+| Tan | Bassin de Tantale | terre |  |
+| Tar | Tartare | côte | \* |
+| Toi | Champ de la Toison d'Or | terre |  |
+| Ves | Couvent des Vestales | côte | \* |
+| Xen | Repos de Xena | côte | \* |
+| Zeu | Temple de Zeus | terre |  |
+=
+
+_
+$ Expansionnisme (non)
+
+Constructions sur les centres de départ comme dans la variante standard.
+
+_
+$ Ecart avec la version théorique
+
+Sans objet.
+
+_
+$ Sur le wiki
+
+Sans objet.
+
+_
+$ Un peu de contexte
+
+
+(Alcmène)
+Mortelle ; mère d'Hercule ; elle épousa plus tard Jason
+
+(Amazones)
+Peuple de femmes guerrières vivant dans la forêt et hostiles aux hommes ; elles sont en guerre contre les Centaures
+
+(Aphrodite)
+Déesse de l'amour et de la beauté ; née de l'écume de mer ; fille de Zeus ; demi-sœur d'Hercule ; mère de Cupidon ; jalouse de la beauté de Psyché ; aime le surf, une vraie « fille de Californie »
+
+(Arès)
+Dieu de la guerre ; fils de Zeus ; jaloux de la préférence de son père pour son demi-frère, Hercule ; amant d'Aphrodite et père de Cupidon ; attiré par Xena
+
+(Argo)
+Cheval de Xena Nom du navire de Jason dans la mythologie.
+
+(Autolycos)
+« Roi des voleurs » (selon ses propres dires), ami de Xena et d'Hercule
+
+(Biche aux pieds d'airain)
+Créature mi-femme mi-cheval ; elle est la dernière de son « espèce » ; la rumeur court que son sang peut tuer un dieu
+
+(Callisto)
+Ennemie de Xena ; son village fut pris d'assaut par Xena lorsqu'elle était enfant, moment où ses parents furent assassinés
+
+(Cécrops)
+Puni par Poséidon et condamné à naviguer sur les mers pour capturer des âmes, qui ne peuvent jamais quitter son navire
+
+(Centaures)
+Peuple mi-hommes (du buste à la tête) et mi-chevaux (du bas du corps) ; généralement sauvages ; en guerre contre les Amazones
+
+(Champs Élysées)
+Séjour paradisiaque des Enfers réservé aux âmes vertueuses ou héroïques, où elles connaissent une existence bienheureuse après la mort.
+
+(Charon)
+Passeur qui transporte les âmes vers le royaume d'Hadès
+
+(Chiron)
+Célèbre centaure connu pour sa vertu et sa sagesse ; mentor d'Hercule
+
+(Chypre)
+Île où Aphrodite a accosté lorsqu'elle a émergé de l'écume de mer
+
+(Cupidon)
+Dieu de l'amour, fils d'Aphrodite et d'Arès, amoureux de Psyché
+
+(Déjanire)
+Épouse d'Hercule ; tuée par Héra avec leurs enfants
+
+(Discorde)
+Neveu d'Arès ; dieu mineur aux pouvoirs limités ; il sème généralement le trouble
+
+(Écho)
+Nymphe amoureuse de Narcisse ; punie par Héra, qui a transformé sa parole en une répétition de ce que disaient les autres (c.-à-d. des échos)
+
+(Éole)
+Ami et partenaire d'Hercule dans la série. Dieu des vents dans la mythonlogie.
+
+(Érinyes)
+Ou appelées Furies – trois créatures terrifiantes au service de Perséphone dans le royaume d'Hadès
+
+(Gabrielle)
+Amie et partenaire de Xena
+
+(Hadès)
+Seigneur des Enfers ; frère de Zeus
+
+(Héra)
+Reine des dieux et épouse jalouse (à juste titre) de Zeus ; elle est très vindicative et voue une haine farouche à Hercule
+
+(Hercule)
+Un « bienfaiteur » ; mi-homme, mi-dieu doté d'une force colossale ; fils de Zeus
+
+(Hestia)
+Déesse du foyer, de la famille et de la paix ; sœur de Zeus
+
+(Hippolyte)
+Reine des Amazones ; elle possède une ceinture d'une beauté merveilleuse offerte par Arès
+
+(Jason)
+Un roi qui a épousé la mère d'Hercule ; celui qui a trouvé la Toison d'or
+
+(Joxter)
+Aussi appelé « Joxter le Puissant » (par lui-même) ; brave et stupide, mais attachant ; ami de Xena et Gabrielle ; assez maladroit au combat
+
+(Labyrinthe)
+Un dédale géant destiné à cacher le Minotaure
+
+(Lesbos)
+Une île « mystérieuse » peuplée uniquement de femmes
+
+(Midas)
+Un roi fortuné qui aimait l'or par-dessus tout ; il obtint le pouvoir de transformer en or tout ce qu'il touchait (y compris sa fille !) ; ce don se révéla être aussi sa malédiction
+
+(Minotaure)
+Mi-homme (du bas du corps) et mi-taureau (du haut du corps) ; il vit au cœur du Labyrinthe
+
+(Morphée)
+Gardien des rêves, qu'ils soient prophétiques ou trompeurs
+
+(Narcisse)
+Un jeune homme d'une beauté incroyable ; aimé de beaucoup, il les repoussa tous (y compris Écho) ; il n'aimait que lui-même
+
+(Nestor)
+Prince qui hait Hercule et veut le tuer en utilisant le sang de la Biche aux pieds d'airain
+
+(Olympe)
+Montagne où résident les dieux
+
+(Perséphone)
+Reine des Enfers ; fille de Zeus ; enlevée par Hadès, elle doit passer la moitié de son temps avec lui aux Enfers
+
+(Poséidon)
+Seigneur des Mers ; frère de Zeus
+
+(Prométhée)
+Puni par les dieux pour avoir offert le feu à l'humanité ; enchaîné à un rocher où des vautours dévorent sa chair ; chaque partie de son corps repousse, perpétuant ainsi le supplice à l'infini
+
+(Psyché)
+Une très belle jeune fille amoureuse de Cupidon
+
+(Salmonée)
+Un individu lâche et avide d'argent, mais attachant ; ami d'Hercule et d'Éole
+
+(Serina)
+Forme humaine (féminine) prise par la Biche aux pieds d'airain ; aimée d'Hercule
+
+(Sisyphe)
+Connu pour sa ruse et sa fourberie, il vivait de vols ; il fut puni aux Enfers, condamné à pousser un énorme rocher au sommet d'une colline ; une fois arrivé en haut, le rocher redescendait et le supplice recommençait
+
+(Tantale)
+Fils de Zeus ; puni par les dieux pour diverses offenses ; il fut placé dans un bassin où la nourriture et la boisson restaient hors de sa portée
+
+(Tartare)
+Région la plus profonde des Enfers, gouffre sombre et effrayant servant de prison aux damnés et aux ennemis vaincus des dieux (comme les Titans).
+
+(Toison d'or)
+Peau d'un bélier magique ; bien que la toison fût gardée par un dragon qui ne dormait jamais, Jason et ses Argonautes réussirent à s'emparer de ce trésor
+
+(Vestales)
+Belles jeunes femmes vierges chargées d'entretenir le feu sacré d'Hestia ; très courtisées et désirées
+
+(Xena)
+La « Princesse guerrière » ; ancienne chef de guerre devenue justicière
+
+(Zeus)
+Roi des dieux et époux d'Héra ; père d'Hercule, d'Aphrodite, d'Arès et d'autres ; il entretient de nombreuses liaisons, tant avec des déesses qu'avec des mortelles
+
+

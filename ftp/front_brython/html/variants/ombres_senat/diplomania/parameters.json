@@ -1,0 +1,910 @@
+{
+    "author": {
+        "x_pos": 10,
+        "y_pos": 10
+    },
+    "additional_text": "Enfin une variante dans l'univers de la guerre des étoiles !",
+    "map": {
+        "width": 1187,
+        "height": 1077
+    },
+    "regions": {
+        "1": {
+            "name": "Côte"
+        },
+        "2": {
+            "name": "Terre"
+        },
+        "3": {
+            "name": "Mer"
+        },
+        "4": {
+            "name": "Ile"
+        }
+    },
+    "units": {
+        "1": {
+            "name": "Armée"
+        },
+        "2": {
+            "name": "Flotte"
+        }
+    },
+    "roles": {
+        "0": {
+            "name": "Arbitre",
+            "adjective_name": "Arbitre",
+            "letter_name": "M",
+            "red": [
+                0,
+                0
+            ],
+            "green": [
+                0,
+                0
+            ],
+            "blue": [
+                0,
+                0
+            ]
+        },
+        "1": {
+            "name": "Chiss",
+            "adjective_name": "chiss",
+            "letter_name": "A",
+            "red": [
+                20,
+                0
+            ],
+            "green": [
+                235,
+                255
+            ],
+            "blue": [
+                235,
+                255
+            ]
+        },
+        "2": {
+            "name": "Banquiers",
+            "adjective_name": "banquiers",
+            "letter_name": "B",
+            "red": [
+                224,
+                204
+            ],
+            "green": [
+                225,
+                204
+            ],
+            "blue": [
+                20,
+                0
+            ]
+        },
+        "3": {
+            "name": "Séparatistes",
+            "adjective_name": "separatistes",
+            "letter_name": "S",
+            "red": [
+                203,
+                183
+            ],
+            "green": [
+                85,
+                65
+            ],
+            "blue": [
+                34,
+                14
+            ]
+        },
+        "4": {
+            "name": "Hutt",
+            "adjective_name": "hutt",
+            "letter_name": "H",
+            "red": [
+                148,
+                128
+            ],
+            "green": [
+                84,
+                64
+            ],
+            "blue": [
+                20,
+                0
+            ]
+        },
+        "5": {
+            "name": "Mandalore",
+            "adjective_name": "mandalore",
+            "letter_name": "M",
+            "red": [
+                148,
+                128
+            ],
+            "green": [
+                148,
+                128
+            ],
+            "blue": [
+                148,
+                128
+            ]
+        },
+        "6": {
+            "name": "Marchands",
+            "adjective_name": "marchands",
+            "letter_name": "F",
+            "red": [
+                148,
+                128
+            ],
+            "green": [
+                20,
+                0
+            ],
+            "blue": [
+                148,
+                128
+            ]
+        },
+        "7": {
+            "name": "MonCala",
+            "adjective_name": "moncala",
+            "letter_name": "P",
+            "red": [
+                84,
+                64
+            ],
+            "green": [
+                24,
+                224
+            ],
+            "blue": [
+                228,
+                208
+            ]
+        },
+        "8": {
+            "name": "Corellia",
+            "adjective_name": "correlia",
+            "letter_name": "C",
+            "red": [
+                20,
+                0
+            ],
+            "green": [
+                20,
+                0
+            ],
+            "blue": [
+                148,
+                128
+            ]
+        },
+        "9": {
+            "name": "Pyke",
+            "adjective_name": "pyke",
+            "letter_name": "P",
+            "red": [
+                159,
+                139
+            ],
+            "green": [
+                20,
+                0
+            ],
+            "blue": [
+                20,
+                0
+            ]
+        },
+        "10": {
+            "name": "Dathomir",
+            "adjective_name": "Dathomir",
+            "letter_name": "S",
+            "red": [
+                235,
+                255
+            ],
+            "green": [
+                185,
+                165
+            ],
+            "blue": [
+                20,
+                0
+            ]
+        }
+    },
+    "coasts": {
+    },
+    "zones": {
+        "1": {
+            "name": "Aar",
+            "full_name": "Aargau",
+            "x_pos": 403,
+            "y_pos": 151,
+            "x_legend_pos": 403,
+            "y_legend_pos": 137
+        },
+        "2": {
+            "name": "Ahc",
+            "full_name": "Ahch-To",
+            "x_pos": 135,
+            "y_pos": 253,
+            "x_legend_pos": 135,
+            "y_legend_pos": 239
+        },
+        "3": {
+            "name": "Avi",
+            "full_name": "Avidich",
+            "x_pos": 576,
+            "y_pos": 361,
+            "x_legend_pos": 576,
+            "y_legend_pos": 347
+        },
+        "4": {
+            "name": "Bes",
+            "full_name": "Bespin",
+            "x_pos": 417,
+            "y_pos": 394,
+            "x_legend_pos": 417,
+            "y_legend_pos": 380
+        },
+        "5": {
+            "name": "Cat",
+            "full_name": "Cato Neimodia",
+            "x_pos": 612,
+            "y_pos": 586,
+            "x_legend_pos": 612,
+            "y_legend_pos": 572
+        },
+        "6": {
+            "name": "Con",
+            "full_name": "Concordia",
+            "x_pos": 515,
+            "y_pos": 711,
+            "x_legend_pos": 515,
+            "y_legend_pos": 697
+        },
+        "7": {
+            "name": "Cop",
+            "full_name": "Copero",
+            "x_pos": 399,
+            "y_pos": 739,
+            "x_legend_pos": 399,
+            "y_legend_pos": 725
+        },
+        "8": {
+            "name": "Coa",
+            "full_name": "Corellia",
+            "x_pos": 295,
+            "y_pos": 751,
+            "x_legend_pos": 295,
+            "y_legend_pos": 737
+        },
+        "9": {
+            "name": "Cor",
+            "full_name": "Coruscant",
+            "x_pos": 539,
+            "y_pos": 660,
+            "x_legend_pos": 539,
+            "y_legend_pos": 646
+        },
+        "10": {
+            "name": "Cog",
+            "full_name": "Corulag",
+            "x_pos": 569,
+            "y_pos": 215,
+            "x_legend_pos": 569,
+            "y_legend_pos": 201
+        },
+        "11": {
+            "name": "Csi",
+            "full_name": "Csilla",
+            "x_pos": 94,
+            "y_pos": 702,
+            "x_legend_pos": 94,
+            "y_legend_pos": 688
+        },
+        "12": {
+            "name": "Dag",
+            "full_name": "Dagobah",
+            "x_pos": 510,
+            "y_pos": 136,
+            "x_legend_pos": 510,
+            "y_legend_pos": 122
+        },
+        "13": {
+            "name": "Dat",
+            "full_name": "Dathomir",
+            "x_pos": 393,
+            "y_pos": 489,
+            "x_legend_pos": 393,
+            "y_legend_pos": 475
+        },
+        "14": {
+            "name": "Dek",
+            "full_name": "Deko Neimoidia",
+            "x_pos": 216,
+            "y_pos": 46,
+            "x_legend_pos": 216,
+            "y_legend_pos": 32
+        },
+        "15": {
+            "name": "Dra",
+            "full_name": "Drall",
+            "x_pos": 671,
+            "y_pos": 437,
+            "x_legend_pos": 671,
+            "y_legend_pos": 423
+        },
+        "16": {
+            "name": "End",
+            "full_name": "Endor",
+            "x_pos": 583,
+            "y_pos": 293,
+            "x_legend_pos": 583,
+            "y_legend_pos": 279
+        },
+        "17": {
+            "name": "Exe",
+            "full_name": "Exegol",
+            "x_pos": 29,
+            "y_pos": 736,
+            "x_legend_pos": 29,
+            "y_legend_pos": 722
+        },
+        "18": {
+            "name": "Geo",
+            "full_name": "Geonosis",
+            "x_pos": 168,
+            "y_pos": 597,
+            "x_legend_pos": 168,
+            "y_legend_pos": 583
+        },
+        "19": {
+            "name": "Hot",
+            "full_name": "Hoth",
+            "x_pos": 81,
+            "y_pos": 87,
+            "x_legend_pos": 81,
+            "y_legend_pos": 73
+        },
+        "20": {
+            "name": "Jak",
+            "full_name": "Jakku",
+            "x_pos": 199,
+            "y_pos": 739,
+            "x_legend_pos": 199,
+            "y_legend_pos": 725
+        },
+        "21": {
+            "name": "Kal",
+            "full_name": "Kalevala",
+            "x_pos": 368,
+            "y_pos": 692,
+            "x_legend_pos": 368,
+            "y_legend_pos": 678
+        },
+        "22": {
+            "name": "Kam",
+            "full_name": "Kamino",
+            "x_pos": 412,
+            "y_pos": 258,
+            "x_legend_pos": 412,
+            "y_legend_pos": 244
+        },
+        "23": {
+            "name": "Kas",
+            "full_name": "Kashyyyk",
+            "x_pos": 224,
+            "y_pos": 335,
+            "x_legend_pos": 224,
+            "y_legend_pos": 321
+        },
+        "24": {
+            "name": "Kes",
+            "full_name": "Kessel",
+            "x_pos": 301,
+            "y_pos": 710,
+            "x_legend_pos": 301,
+            "y_legend_pos": 696
+        },
+        "25": {
+            "name": "Kor",
+            "full_name": "Koru Neimoidia",
+            "x_pos": 212,
+            "y_pos": 182,
+            "x_legend_pos": 212,
+            "y_legend_pos": 168
+        },
+        "26": {
+            "name": "Kro",
+            "full_name": "Krownest",
+            "x_pos": 189,
+            "y_pos": 497,
+            "x_legend_pos": 164,
+            "y_legend_pos": 478
+        },
+        "27": {
+            "name": "Maa",
+            "full_name": "Manaan",
+            "x_pos": 553,
+            "y_pos": 599,
+            "x_legend_pos": 553,
+            "y_legend_pos": 585
+        },
+        "28": {
+            "name": "Man",
+            "full_name": "Mandalore",
+            "x_pos": 650,
+            "y_pos": 349,
+            "x_legend_pos": 650,
+            "y_legend_pos": 335
+        },
+        "29": {
+            "name": "Mon",
+            "full_name": "Mon Cala",
+            "x_pos": 51,
+            "y_pos": 223,
+            "x_legend_pos": 51,
+            "y_legend_pos": 209
+        },
+        "30": {
+            "name": "Mor",
+            "full_name": "Moraband",
+            "x_pos": 459,
+            "y_pos": 740,
+            "x_legend_pos": 459,
+            "y_legend_pos": 726
+        },
+        "31": {
+            "name": "Mus",
+            "full_name": "Mustafar",
+            "x_pos": 47,
+            "y_pos": 538,
+            "x_legend_pos": 47,
+            "y_legend_pos": 524
+        },
+        "32": {
+            "name": "Muu",
+            "full_name": "Muunilinst",
+            "x_pos": 118,
+            "y_pos": 493,
+            "x_legend_pos": 118,
+            "y_legend_pos": 479
+        },
+        "33": {
+            "name": "Myg",
+            "full_name": "Mygeeto",
+            "x_pos": 442,
+            "y_pos": 530,
+            "x_legend_pos": 442,
+            "y_legend_pos": 516
+        },
+        "34": {
+            "name": "Nab",
+            "full_name": "Naboo",
+            "x_pos": 335,
+            "y_pos": 240,
+            "x_legend_pos": 335,
+            "y_legend_pos": 226
+        },
+        "35": {
+            "name": "Nal",
+            "full_name": "Nal Hutta",
+            "x_pos": 687,
+            "y_pos": 261,
+            "x_legend_pos": 687,
+            "y_legend_pos": 247
+        },
+        "36": {
+            "name": "NKa",
+            "full_name": "Nar Kanji",
+            "x_pos": 102,
+            "y_pos": 334,
+            "x_legend_pos": 102,
+            "y_legend_pos": 320
+        },
+        "37": {
+            "name": "NSh",
+            "full_name": "Nar Shaddaa",
+            "x_pos": 489,
+            "y_pos": 255,
+            "x_legend_pos": 489,
+            "y_legend_pos": 241
+        },
+        "38": {
+            "name": "Oba",
+            "full_name": "Oba Diah",
+            "x_pos": 545,
+            "y_pos": 539,
+            "x_legend_pos": 545,
+            "y_legend_pos": 525
+        },
+        "39": {
+            "name": "Oss",
+            "full_name": "Ossus",
+            "x_pos": 305,
+            "y_pos": 138,
+            "x_legend_pos": 305,
+            "y_legend_pos": 124
+        },
+        "40": {
+            "name": "Pri",
+            "full_name": "Prime Neimoidia",
+            "x_pos": 64,
+            "y_pos": 633,
+            "x_legend_pos": 64,
+            "y_legend_pos": 619
+        },
+        "41": {
+            "name": "Rax",
+            "full_name": "Raxus",
+            "x_pos": 231,
+            "y_pos": 690,
+            "x_legend_pos": 231,
+            "y_legend_pos": 676
+        },
+        "42": {
+            "name": "Ren",
+            "full_name": "Rentor",
+            "x_pos": 454,
+            "y_pos": 610,
+            "x_legend_pos": 454,
+            "y_legend_pos": 596
+        },
+        "43": {
+            "name": "Ryl",
+            "full_name": "Ryloth",
+            "x_pos": 327,
+            "y_pos": 348,
+            "x_legend_pos": 327,
+            "y_legend_pos": 334
+        },
+        "44": {
+            "name": "Sca",
+            "full_name": "Scarif",
+            "x_pos": 414,
+            "y_pos": 437,
+            "x_legend_pos": 414,
+            "y_legend_pos": 423
+        },
+        "45": {
+            "name": "Sci",
+            "full_name": "Scipio",
+            "x_pos": 280,
+            "y_pos": 303,
+            "x_legend_pos": 280,
+            "y_legend_pos": 289
+        },
+        "46": {
+            "name": "Sel",
+            "full_name": "Selonia",
+            "x_pos": 519,
+            "y_pos": 449,
+            "x_legend_pos": 519,
+            "y_legend_pos": 435
+        },
+        "47": {
+            "name": "Sul",
+            "full_name": "Sullust",
+            "x_pos": 607,
+            "y_pos": 521,
+            "x_legend_pos": 607,
+            "y_legend_pos": 507
+        },
+        "48": {
+            "name": "Tal",
+            "full_name": "Talus",
+            "x_pos": 651,
+            "y_pos": 76,
+            "x_legend_pos": 651,
+            "y_legend_pos": 62
+        },
+        "49": {
+            "name": "Tat",
+            "full_name": "Tatooine",
+            "x_pos": 287,
+            "y_pos": 463,
+            "x_legend_pos": 287,
+            "y_legend_pos": 449
+        },
+        "50": {
+            "name": "Tra",
+            "full_name": "Tralus",
+            "x_pos": 173,
+            "y_pos": 384,
+            "x_legend_pos": 173,
+            "y_legend_pos": 370
+        },
+        "51": {
+            "name": "Uta",
+            "full_name": "Utapau",
+            "x_pos": 289,
+            "y_pos": 623,
+            "x_legend_pos": 289,
+            "y_legend_pos": 609
+        },
+        "52": {
+            "name": "Yav",
+            "full_name": "Yavin",
+            "x_pos": 685,
+            "y_pos": 722,
+            "x_legend_pos": 685,
+            "y_legend_pos": 708
+        },
+        "53": {
+            "name": "Yle",
+            "full_name": "Ylesia",
+            "x_pos": 486,
+            "y_pos": 337,
+            "x_legend_pos": 486,
+            "y_legend_pos": 323
+        },
+        "54": {
+            "name": "HPer",
+            "full_name": "Route Perlémienne",
+            "x_pos": 601,
+            "y_pos": 627,
+            "x_legend_pos": 601,
+            "y_legend_pos": 613
+        },
+        "55": {
+            "name": "HDur",
+            "full_name": "Route Duros",
+            "x_pos": 468,
+            "y_pos": 46,
+            "x_legend_pos": 468,
+            "y_legend_pos": 32
+        },
+        "56": {
+            "name": "HCor",
+            "full_name": "Route Coréllienne",
+            "x_pos": 171,
+            "y_pos": 703,
+            "x_legend_pos": 171,
+            "y_legend_pos": 689
+        },
+        "57": {
+            "name": "HRim",
+            "full_name": "Route imma",
+            "x_pos": 223,
+            "y_pos": 517,
+            "x_legend_pos": 223,
+            "y_legend_pos": 503
+        }
+    },
+    "centers": {
+        "1": {
+            "x_pos": 422,
+            "y_pos": 180
+        },
+        "2": {
+            "x_pos": 581,
+            "y_pos": 396
+        },
+        "3": {
+            "x_pos": 452,
+            "y_pos": 400
+        },
+        "4": {
+            "x_pos": 601,
+            "y_pos": 559
+        },
+        "5": {
+            "x_pos": 546,
+            "y_pos": 237
+        },
+        "6": {
+            "x_pos": 364,
+            "y_pos": 490
+        },
+        "7": {
+            "x_pos": 301,
+            "y_pos": 679
+        },
+        "8": {
+            "x_pos": 224,
+            "y_pos": 269
+        },
+        "9": {
+            "x_pos": 93,
+            "y_pos": 495
+        },
+        "10": {
+            "x_pos": 120,
+            "y_pos": 361
+        },
+        "11": {
+            "x_pos": 526,
+            "y_pos": 561
+        },
+        "12": {
+            "x_pos": 312,
+            "y_pos": 369
+        },
+        "13": {
+            "x_pos": 653,
+            "y_pos": 585
+        },
+        "14": {
+            "x_pos": 153,
+            "y_pos": 675
+        },
+        "15": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "16": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "17": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "18": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "19": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "20": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "21": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "22": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "23": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "24": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "25": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "26": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "27": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "28": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "29": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "30": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "31": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "32": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "33": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "34": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "35": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "36": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "37": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "38": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "39": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "40": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "41": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "42": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "43": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "44": {
+            "x_pos": 221,
+            "y_pos": 535
+        },
+        "45": {
+            "x_pos": 221,
+            "y_pos": 535
+        }
+    },
+    "seasons": {
+        "1": {
+            "name": "Printemps"
+        },
+        "2": {
+            "name": "Été"
+        },
+        "3": {
+            "name": "Automne"
+        },
+        "4": {
+            "name": "Hiver"
+        },
+        "5": {
+            "name": "Ajustements"
+        }
+    },
+    "orders": {
+        "1": {
+            "name": "Attaquer"
+        },
+        "2": {
+            "name": "Soutenir offensivement"
+        },
+        "3": {
+            "name": "Soutenir défensivement"
+        },
+        "4": {
+            "name": "Tenir"
+        },
+        "5": {
+            "name": "Convoyer"
+        },
+        "6": {
+            "name": "Retraiter"
+        },
+        "7": {
+            "name": "Disperser"
+        },
+        "8": {
+            "name": "Construire"
+        },
+        "9": {
+            "name": "Supprimer"
+        }
+    }
+ 
