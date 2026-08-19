@@ -102,6 +102,7 @@ class Zone:
 # 1 = COAST
 # 2 = LAND
 # 3 = SEA
+# 4 = ISLAND
 
 # unit type
 # 1 = ARMY
@@ -114,8 +115,8 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
     def compatible(unit_type: int, region_type: int) -> bool:
         """ compatible : reject zone of wrong region_type """
         if unit_type == 1:
-            return region_type in {1, 2}
-        return region_type in {1, 3}
+            return region_type in {1, 2, 4}
+        return region_type in {1, 3, 4}
 
     def acceptable(unit_type: int, zone: Zone) -> bool:
         """ acceptable : reject cases of special coasts"""
