@@ -70,6 +70,7 @@ INTERFACE_TABLE = {
     'crepusculerome': ['diplomania'],
     'chaos': ['diplomania'],
     'sailho': ['diplomania'],
+    'ombres_senat': ['diplomania'],
 }
 
 
