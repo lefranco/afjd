@@ -667,10 +667,10 @@
         "53": {
             "name": "PAP",
             "full_name": "Papauté",
-            "x_pos": 495,
-            "y_pos": 579,
-            "x_legend_pos": 482,
-            "y_legend_pos": 546
+            "x_pos": 481,
+            "y_pos": 542,
+            "x_legend_pos": 495,
+            "y_legend_pos": 582
         },
         "54": {
             "name": "APU",
