@@ -54,6 +54,7 @@ VARIANT_NAMES_DICT = {
     'spiceislands': 7,
     'crepusculerome': 8,
     'successionautriche': 9,
+    'ombres_senat': 9,
     'moderne': 10,
     'crowded': 11,
     'chaos': 34
