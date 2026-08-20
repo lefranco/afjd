@@ -300,9 +300,9 @@
         "10": {
             "name": "Cog",
             "full_name": "Corulag",
-            "x_pos": 521,
+            "x_pos": 514,
             "y_pos": 306,
-            "x_legend_pos": 521,
+            "x_legend_pos": 514,
             "y_legend_pos": 292
         },
         "11": {
@@ -578,10 +578,10 @@
         "42": {
             "name": "Ren",
             "full_name": "Rentor",
-            "x_pos": 881,
-            "y_pos": 246,
-            "x_legend_pos": 881,
-            "y_legend_pos": 232,
+            "x_pos": 885,
+            "y_pos": 252,
+            "x_legend_pos": 885,
+            "y_legend_pos": 238,
             "display": 1
         },
         "43": {
@@ -629,10 +629,10 @@
         "48": {
             "name": "Tal",
             "full_name": "Talus",
-            "x_pos": 283,
-            "y_pos": 310,
-            "x_legend_pos": 283,
-            "y_legend_pos": 296,
+            "x_pos": 287,
+            "y_pos": 308,
+            "x_legend_pos": 287,
+            "y_legend_pos": 294,
             "display": 8
         },
         "49": {
@@ -656,10 +656,10 @@
         "51": {
             "name": "Uta",
             "full_name": "Utapau",
-            "x_pos": 453,
-            "y_pos": 877,
-            "x_legend_pos": 453,
-            "y_legend_pos": 863,
+            "x_pos": 461,
+            "y_pos": 883,
+            "x_legend_pos": 461,
+            "y_legend_pos": 869,
             "display": 3
         },
         "52": {
