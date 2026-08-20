@@ -258,7 +258,7 @@
         },
         "5": {
             "name": "Cat",
-            "full_name": "Cato Neimodia",
+            "full_name": "Cato Neimoidia",
             "x_pos": 478,
             "y_pos": 450,
             "x_legend_pos": 478,
@@ -700,7 +700,7 @@
         },
         "56": {
             "name": "HCor",
-            "full_name": "Route Coréllienne",
+            "full_name": "Route Corellienne",
             "x_pos": 1101,
             "y_pos": 739,
             "x_legend_pos": 1101,
@@ -708,7 +708,7 @@
         },
         "57": {
             "name": "HRim",
-            "full_name": "Route imma",
+            "full_name": "Route Rimma",
             "x_pos": 1101,
             "y_pos": 794,
             "x_legend_pos": 1101,

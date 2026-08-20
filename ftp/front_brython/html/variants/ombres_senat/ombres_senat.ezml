@@ -2,6 +2,9 @@ Les ombres du Sénat
 
 _
 $ Contexte
+Une adaptation de Diplomacy dans l'univers officiel "canon" (pas "legends") Star Wars à 9 joueurs.
+
+(A NOTER : cette variante a été créée sur Diplomania et en est une exclusivité !)
 
 _
 $ Côtes spéciales
@@ -10,47 +13,167 @@ Sans objet
 _
 $ Particularités de la carte
 
-(Voies d'hyperespace)
+(Voies hyperespatiales)
+
+Ce sont des mers qui relient deux points d'accés, en général une capitale à un point éloigné. 
+.
+Elles permettent donc par exemple à une flotte de convoyer une armée de l'un à l'autre.
+.
+Elles sont matérialisées par un ovale en bas à droite de la carte et listées dans le tableau ci dessous :
+.
+.
+
+= Voies d'hyperespace
+| Abréviation | Nom complet | Repère sur la carte | Point d'accès | Point d'accès |
+| HPer | Route Perlemienne | P | Coruscant (Cor) | Csilla (Csi) |
+| HDur | Voie de l’Espace Duros | D | Muunilist (Muu) | Kashyyyk (Kas) |
+| HCor | Route Corrélienne | C | Corellia (Coa) | Ryloth (Ryl) |
+| HRim | Route de commerce Rimma | R | Sullust (Cor) | Geonosis (Csi) |
+=
+
+(Planètes qui ne sont pas des îles)
+
+Presque toutes les planètes sont des îles, c'est à dire à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). 
+.
+Contrairement à l'usage pour les îles, les armées peuvent se déplacer d'une île à la voisine.
+.
+Les exceptions sont listées dans le tableau ci-dessous :
+.
+.
+
+= Planètes spéciales
+| Abréviation | Nom complet | Type | Restriction (conforme aux règles usuelles) |
+| Cor | Coruscant | Côte | Une flotte ne peut y convoyer |
+| Cog | Corulag | Côte | Une flotte ne peut y convoyer |
+| Cog | Dathomir (Dat) | Terre | Une flotte ne peut y accéder |
+| HCor | Route Corellienne | Mer | Une armée ne peut y accéder |
+| HDur | Route Duros | Mer | Une armée ne peut y accéder |
+| HPer | Route Perlémienne | Mer | Une armée ne peut y accéder |
+| HRim | Route imma | Mer | Une armée ne peut y accéder |
+=
+
+(Centres non constructibles)
+
+A cause de la puissance de la Force qui habite ces lieux, personne ne peut construire sur les planètes du tableau ci-dessous :
+.
+.
+
+= Centres non constructibles
+| Abréviation | Nom complet | Explication |
+| Oss | Ossus | Temple Jedi |
+| Mor | Moraband | Sanctuaire Sith |
+| Dat | Dathomir | Repaire des Sorcières de Dathomir |
+=
+
+(Champ d'astéroïdes)
+
+Suite à sa destruction par l'empire, la zone au nord ouest de Coruscant (anciennement planète Alderan) est inaccessible.
 
 _
 $ Datation
 
 La partie commence en *34*. Chaque tour représente *1* années "en temps réel".
+.
+Ce début correspond à "Episode VII - le réveil de la force".
 
 _
 $ Conditions de victoire
 
-Il y a *17* centres de ravitaillement sur le plateau.
+Il y a *44* centres de ravitaillement sur le plateau.
 .
-Le gagnant donc est la puissance qui détient *9* centres de ravitaillement ou plus pendant une phase d'ajustement.
+Le gagnant donc est la puissance qui détient *23* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
 _
 $ Puissances en présence
 
-Il y a quatre puissances dont les unités de départ sont les suivantes :
+Il y a neuf puissances dont les unités de départ sont les suivantes (une armée et deux flottes) :
 .
 .
 = Position de départ
 |Puissance | Centres | Armées | Flottes| Centres inoccupés|
-|xxx | 2 | xxx (Her), xxx (Eol) | | |
+|Chiss (Ascendance Chiss) | 3 | Csilla (Csi) | Copero (Cop), Avidich (Avi) | |
+|Banquiers (Clan Bancaire Intergalactique) | 3 | Muunilinst(Muu) | Scipio (Sci), Aargau (Aar) | |
+|Séparatistes (Confédération des Systèmes Indépendants) | 3 | Geonosis (Geo) | Raxus (Rax), Mustafar (Mus) | |
+|Hutt (Empire Hutt) | 3 | Nal Hutta (Nal) | Nar Shaddaa (NSh), Tatooine (Tat) | |
+|Mandalore (État Mandalorien) | 3 | Mandalore (Man) | Concordia (Con), Kalevala (Kal) | |
+|Marchands (Fédération du Commerce) | 3 | Cato Neimodia (Cat) | Prime Neimoidia (Pri), Deko Neimoidia (Dek) | |
+|MonCala (Principauté de Mon Cala) | 3 | Mon Cala (Mon) | Manaan (Maa), Ahch-To (Ahc) | |
+|Corrélia (République Corellienne) | 3 | Corellia (Coa) | Selonia (Sel), Drall (Dra) | |
+|Pyke (Syndicat Pyke) | 3 | Oba Diah (Oba) | Nar Kanji (NKa), Kessel (Kes) | |
+|Dathomir (Sorcières de Dathomir) | 1 | Dathomir (Dat) |  | |
 =
 
-_
-$ Particularités
+Dathomir n'est pas jouée et ses unités sont en désordre civil pendant toute la partie.
 
-Sans objet.
+Remarque : la planète de l'armée est la capitale.
 
 _
 $ Pièges de la variante
 
-Les voies d'hyperespace.
+Les voies d'hyperespace. Les planètes qui ne sont pas une île. Les centres non constructibles. Dathomir non joué.
 
 _
 $ Nomenclature
 
 = Régions et abréviations de la variante
 | Abréviation | Nom complet | type | centre |
-| Alc | Village d'Alcmène | côte |  |
+| Aar | Aargau | île | \* |
+| Ahc | Ahch-To | île | \* |
+| Avi | Avidich | île | \* |
+| Bes | Bespin | île | \* |
+| Cat | Cato Neimoidia | île | \* |
+| Coa | Corellia | île | \* |
+| Cog | Corulag | côte | \* |
+| Con | Concordia | île | \* |
+| Cop | Copero | île | \* |
+| Cor | Coruscant | côte | \* |
+| Csi | Csilla | île | \* |
+| Dag | Dagobah | île |  |
+| Dat | Dathomir | terre | \* (non constructible) |
+| Dek | Deko Neimoidia | île | \* |
+| Dra | Drall | île | \* |
+| End | Endor | île | \* |
+| Exe | Exegol | île | \* |
+| Geo | Geonosis | île | \* |
+| HCor | Route Corellienne | mer |  |
+| HDur | Route Duros | mer |  |
+| Hot | Hoth | île | \* |
+| HPer | Route Perlémienne | mer |  |
+| HRim | Route Rimma | mer |  |
+| Jak | Jakku | île | \* |
+| Kal | Kalevala | île | \* |
+| Kam | Kamino | île | \* |
+| Kas | Kashyyyk | île | \* |
+| Kes | Kessel | île | \* |
+| Kor | Koru Neimoidia | île |  |
+| Kro | Krownest | île |  |
+| Maa | Manaan | île | \* |
+| Man | Mandalore | île | \* |
+| Mon | Mon Cala | île | \* |
+| Mor | Moraband | île | \* (non constructible) |
+| Mus | Mustafar | île | \* |
+| Muu | Muunilinst | île | \* |
+| Myg | Mygeeto | île |  |
+| Nab | Naboo | île | \* |
+| Nal | Nal Hutta | île | \* |
+| NKa | Nar Kanji | île | \* |
+| NSh | Nar Shaddaa | île | \* |
+| Oba | Oba Diah | île | \* |
+| Oss | Ossus | île | \* (non constructible) |
+| Pri | Prime Neimoidia | île | \* |
+| Rax | Raxus | île | \* |
+| Ren | Rentor | île |  |
+| Ryl | Ryloth | île | \* |
+| Sca | Scarif | île | \* |
+| Sci | Scipio | île | \* |
+| Sel | Selonia | île | \* |
+| Sul | Sullust | île | \* |
+| Tal | Talus | île |  |
+| Tat | Tatooine | île | \* |
+| Tra | Tralus | île |  |
+| Uta | Utapau | île |  |
+| Yav | Yavin | île | \* |
+| Yle | Ylesia | île |  |
 =
 
 _
@@ -58,12 +181,12 @@ $ Expansionnisme (oui)
 
 Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. 
 .
-Par exemple, xxx peut construire à yyy si ce centre est vacant et qu'elle en est propriétaire
+Par exemple, Chiss peut construire à Yavin si ce centre est vacant et qu'elle en est propriétaire
 
 _
 $ Ecart avec la version théorique
 
-Sans objet.
+Sans objet (variante originale).
 
 _
 $ Sur le wiki
@@ -73,8 +196,203 @@ Sans objet.
 _
 $ Un peu de contexte
 
+$$ Les factions en présence
 
-(xxx)
-xxx
+(État Mandalorien)
+Guerriers claniques du Bordure Extérieure, unis par une culture martiale et un code d'honneur strict. Faible en nombre mais redoutable au combat, coincée entre l'Empire Hutt et la CSI.
+
+(République Corellienne)
+Puissance industrielle et navale du Noyau Central, berceau des meilleurs pilotes et ingénieurs de la galaxie. Position centrale très exposée, mais bien connectée à tous les grands axes commerciaux.
+
+(Empire Hutt)
+Réseau criminel tentaculaire bâti sur la corruption, la contrebande et les jeux d'influence. Militairement faible, mais riche et doté d'un immense pouvoir de nuisance diplomatique.
+
+(Ascendance Chiss)
+Société aristocratique et isolationniste des Régions Inconnues, dirigée par de grandes familles rivales. Quasi-imprenable derrière sa frontière naturelle, mais peine à projeter sa puissance au loin.
+
+(Fédération du Commerce)
+Conglomérat neimoidien contrôlant d'immenses flottes de blocus et des routes commerciales stratégiques. Prospère mais pas taillée pour l'affrontement direct, elle négocie autant qu'elle combat.
+
+(Clan Bancaire Intergalactique)
+Dirigé par les Muuns, ce clan prête et finance toutes les grandes puissances sans distinction de camp. Son arme n'est pas l'épée mais la dette — et le chantage qui va avec.
+
+(Principauté de Mon Cala)
+Civilisation océanique unissant Mon Calamari et Quarren sous un même drapeau. Territoire compact et défendable, mais historiquement tiraillée par des tensions internes.
+
+(Syndicat Pyke)
+Organisation criminelle contrôlant le commerce de la spice depuis les mines de Kessel. Discrète et dispersée, elle prospère dans l'ombre plutôt que sur le champ de bataille.
+
+(Confédération des Systèmes Indépendants)
+Coalition séparatiste appuyée sur d'immenses armées de droïdes et une industrie militaire tentaculaire. Grande puissance militaire, mais dépendante de ses usines et de ses alliés corporatistes.
+
+(Sorcières de Dathomir)
+Clans mystiques maniant la magie de la Force sur ce monde isolé et hostile, indépendantes de toute grande puissance galactique. Farouchement défensives sur leur unique bastion.
+
+$$ Les planètes
+
+(Aargau)
+Monde financier du Noyau, sous influence du Clan Bancaire.
+
+(Ahch-To)
+Île isolée battue par les vagues, sanctuaire ancien des premiers Jedi.
+
+(Alderaan)
+Ancien monde-jardin détruit par l'Étoile de la Mort, aujourd'hui un champ d'astéroïdes dérivant dans le vide.
+
+(Avidich)
+Colonie chiss abritant la flotte de l'Ascendance.
+
+(Bespin)
+Géante gazeuse célèbre pour ses cités minières flottantes.
+
+(Cato Neimoidia)
+Monde-arche neimoidien aux ponts suspendus, capitale de la Fédération.
+
+(Corellia)
+Berceau industriel et naval du Noyau, patrie des meilleurs pilotes.
+
+(Corulag)
+Monde administratif du Noyau, proche de Coruscant.
+
+(Concordia)
+Lune minière de Mandalore, ancien fief du Death Watch.
+
+(Copero)
+Monde industriel et technologique de l'Ascendance Chiss.
+
+(Coruscant)
+Capitale-planète recouverte d'une seule cité-monde tentaculaire.
+
+(Csilla)
+Monde glacé, capitale ancestrale de l'Ascendance Chiss.
+
+(Dagobah)
+Marécage brumeux et isolé, imprégné d'énergies mystérieuses.
+
+(Dathomir)
+Monde sauvage des clans de sorcières, farouchement indépendant.
+
+(Deko Neimoidia)
+Second monde-arche du système neimoidien.
+
+(Drall)
+Petite lune boisée du système corellien.
+
+(Endor)
+Lune forestière peuplée par les Ewoks.
+
+(Exegol)
+Monde caché des Régions Inconnues, repaire sith légendaire.
+
+(Geonosis)
+Monde désertique aux usines de droïdes, capitale de la CSI.
+
+(Hoth)
+Planète glaciaire balayée par les tempêtes, aux confins de la carte.
+
+(Jakku)
+Désert de dunes du Bordure Extérieure, théâtre d'anciennes batailles.
+
+(Kalevala)
+Monde mandalorien, foyer de clans guerriers.
+
+(Kamino)
+Monde-océan couvert de tempêtes, berceau du clonage.
+
+(Kashyyyk)
+Forêt-monde géante, patrie des Wookiees.
+
+(Kessel)
+Astéroïde minier tenu par les Pykes, cœur du commerce de spice.
+
+(Koru Neimoidia)
+Troisième monde-arche du système neimoidien.
+
+(Krownest)
+Monde enneigé du secteur mandalorien, fief d'un clan rival.
+
+(Manaan)
+Monde-océan aux ressources précieuses convoitées de tous.
+
+(Mandalore)
+Planète-forge des guerriers, capitale du peuple mandalorien.
+
+(Mon Cala)
+Monde-océan partagé par Mon Calamari et Quarren.
+
+(Moraband)
+Cimetière sacré des anciens seigneurs Sith.
+
+(Mustafar)
+Monde volcanique aux rivières de lave, exploité pour ses minerais.
+
+(Muunilinst)
+Monde-marché des Muuns, capitale du Clan Bancaire.
+
+(Mygeeto)
+Monde cristallin gelé, riche en ressources énergétiques.
+
+(Naboo)
+Monde paisible aux paysages verdoyants, cœur du Noyau.
+
+(Nal Hutta)
+Marécage fétide, capitale historique des Hutts.
+
+(Nar Kanji)
+Repaire de gangs affiliés au Syndicat Pyke.
+
+(Nar Shaddaa)
+Lune-ville tentaculaire, refuge des contrebandiers.
+
+(Neimoidia)
+Monde d'origine du peuple neimoidien.
+
+(Oba Diah)
+Monde désolé, fief historique des Pykes.
+
+(Ossus)
+Ancien monde-bibliothèque des Jedi, gardien d'un savoir millénaire.
+
+(Prime Neimoidia)
+Monde souche du système neimoidien, avant ses colonies.
+
+(Raxus)
+Monde-décharge industriel, ancien bastion séparatiste.
+
+(Rentor)
+Avant-poste chiss à la lisière des Régions Inconnues.
+
+(Ryloth)
+Monde aride et accidenté, patrie des Twi'leks.
+
+(Scarif)
+Île tropicale abritant d'anciennes archives impériales.
+
+(Scipio)
+Monde-forteresse financier du Clan Bancaire.
+
+(Selonia)
+Monde souterrain du système corellien.
+
+(Sullust)
+Monde volcanique aux cavernes industrielles, carrefour commercial.
+
+(Talus)
+Petite lune du système corellien.
+
+(Tatooine)
+Désert de sable balayé par deux soleils, repaire de contrebandiers.
+
+(Tralus)
+Autre petite lune du système corellien.
+
+(Utapau)
+Monde de sinkholes abritant les Pau'ans et Ovissians.
+
+(Yavin)
+Lune-jungle abritant d'anciens temples massassi.
+
+(Ylesia)
+ Colonie religieuse des Hutts, façade d'un trafic de spice.
 
 

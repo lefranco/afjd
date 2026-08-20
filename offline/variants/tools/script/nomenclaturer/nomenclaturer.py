@@ -16,7 +16,7 @@ TYPE_TABLE = {
     1: "côte",
     2: "terre",
     3: "mer",
-    4: "ile"
+    4: "île"
 }
 
 
