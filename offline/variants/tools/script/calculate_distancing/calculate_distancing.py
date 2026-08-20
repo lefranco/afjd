@@ -30,9 +30,9 @@ def main() -> None:
 
         def check_type(zone: int) -> None:
             if neighbouring == neighbouring_army:
-                assert zone2type[zone] in [1, 2], f"Problem with {zone=} as army"
+                assert zone2type[zone] in [1, 2, 4], f"Problem with {zone=} as army"
             else:
-                assert zone2type[zone] in [1, 3], f"Problem with {zone=} as fleet"
+                assert zone2type[zone] in [1, 3, 4], f"Problem with {zone=} as fleet"
 
         for zone, neighbours in neighbouring.items():
             check_type(zone)
