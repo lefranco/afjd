@@ -51,7 +51,7 @@
         "1": {
             "name": "Chiss",
             "adjective_name": "chiss",
-            "letter_name": "A",
+            "letter_name": "C",
             "red": [
                 20,
                 0
@@ -83,7 +83,7 @@
             ]
         },
         "3": {
-            "name": "Séparatistes",
+            "name": "Separatistes",
             "adjective_name": "separatistes",
             "letter_name": "S",
             "red": [
@@ -153,10 +153,10 @@
         "7": {
             "name": "MonCala",
             "adjective_name": "moncala",
-            "letter_name": "P",
+            "letter_name": "A",
             "red": [
-                104,
-                84
+                124,
+                104
             ],
             "green": [
                 4,
@@ -168,26 +168,26 @@
             ]
         },
         "8": {
-            "name": "Corellia",
+            "name": "Correlia",
             "adjective_name": "correlia",
-            "letter_name": "C",
+            "letter_name": "R",
             "red": [
                 20,
                 0
             ],
             "green": [
-                60,
-                40
+                80,
+                60
             ],
             "blue": [
-                148,
-                128
+                118,
+                108
             ]
         },
         "9": {
             "name": "Pyke",
             "adjective_name": "pyke",
-            "letter_name": "P",
+            "letter_name": "Y",
             "red": [
                 20,
                 0
@@ -204,7 +204,7 @@
         "10": {
             "name": "Dathomir",
             "adjective_name": "Dathomir",
-            "letter_name": "S",
+            "letter_name": "D",
             "red": [
                 235,
                 255
