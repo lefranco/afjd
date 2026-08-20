@@ -42,14 +42,21 @@ Les exceptions sont listées dans le tableau ci-dessous :
 .
 
 = Planètes spéciales
-| Abréviation | Nom complet | Type | Restriction (conforme aux règles usuelles) |
-| Cor | Coruscant | Côte | Une flotte ne peut y convoyer |
-| Cog | Corulag | Côte | Une flotte ne peut y convoyer |
-| Cog | Dathomir (Dat) | Terre | Une flotte ne peut y accéder |
-| HCor | Route Corellienne | Mer | Une armée ne peut y accéder |
-| HDur | Route Duros | Mer | Une armée ne peut y accéder |
-| HPer | Route Perlémienne | Mer | Une armée ne peut y accéder |
-| HRim | Route imma | Mer | Une armée ne peut y accéder |
+| Abréviation | Nom complet | Type | Motif | Restriction (conforme aux règles usuelles) |
+| Csi | Csilla | Terre | Capitale | Une flotte ne peut y accéder |
+| Muu | Muunilinst | Terre | Capitale | Une flotte ne peut y accéder |
+| Geo | Geonosis | Terre | Capitale |Une flotte ne peut y accéder |
+| Nal | Nal Hutta  | Terre | Capitale |Une flotte ne peut y accéder |
+| Man | Mandalore | Terre | Capitale |Une flotte ne peut y accéder |
+| Cat | Cato Neimodia | Terre | Capitale |Une flotte ne peut y accéder |
+| Mon | Mon Cala | Terre | Capitale |Une flotte ne peut y accéder |
+| Coa | Corellia | Terre | Capitale |Une flotte ne peut y accéder |
+| Oba | Oba Diah | Terre | Capitale |Une flotte ne peut y accéder |
+| Dat | Dathomir | Terre | Capitale |Une flotte ne peut y accéder |
+| HCor | Route Corellienne | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
+| HDur | Route Duros | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
+| HPer | Route Perlémienne | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
+| HRim | Route imma | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
 =
 
 (Centres non constructibles)
@@ -105,7 +112,7 @@ Il y a neuf puissances dont les unités de départ sont les suivantes (une armé
 
 Dathomir n'est pas jouée et ses unités sont en désordre civil pendant toute la partie.
 
-Remarque : la planète de l'armée est la capitale.
+Remarque : la planète de l'armée est la capitale, et c'est une terre, non accessible par flotte.
 
 _
 $ Pièges de la variante
@@ -121,20 +128,20 @@ $ Nomenclature
 | Ahc | Ahch-To | île | \* |
 | Avi | Avidich | île | \* |
 | Bes | Bespin | île | \* |
-| Cat | Cato Neimoidia | île | \* |
-| Coa | Corellia | île | \* |
-| Cog | Corulag | côte | \* |
+| Cat | Cato Neimoidia | terre | \* |
+| Coa | Corellia | terre | \* |
+| Cog | Corulag | île | \* |
 | Con | Concordia | île | \* |
 | Cop | Copero | île | \* |
-| Cor | Coruscant | côte | \* |
-| Csi | Csilla | île | \* |
+| Cor | Coruscant | île | \* |
+| Csi | Csilla | terre | \* |
 | Dag | Dagobah | île |  |
 | Dat | Dathomir | terre | \* (non constructible) |
 | Dek | Deko Neimoidia | île | \* |
 | Dra | Drall | île | \* |
 | End | Endor | île | \* |
 | Exe | Exegol | île | \* |
-| Geo | Geonosis | île | \* |
+| Geo | Geonosis | terre | \* |
 | HCor | Route Corellienne | mer |  |
 | HDur | Route Duros | mer |  |
 | Hot | Hoth | île | \* |
@@ -148,17 +155,17 @@ $ Nomenclature
 | Kor | Koru Neimoidia | île |  |
 | Kro | Krownest | île |  |
 | Maa | Manaan | île | \* |
-| Man | Mandalore | île | \* |
-| Mon | Mon Cala | île | \* |
+| Man | Mandalore | terre | \* |
+| Mon | Mon Cala | terre | \* |
 | Mor | Moraband | île | \* (non constructible) |
 | Mus | Mustafar | île | \* |
-| Muu | Muunilinst | île | \* |
+| Muu | Muunilinst | terre | \* |
 | Myg | Mygeeto | île |  |
 | Nab | Naboo | île | \* |
-| Nal | Nal Hutta | île | \* |
+| Nal | Nal Hutta | terre | \* |
 | NKa | Nar Kanji | île | \* |
 | NSh | Nar Shaddaa | île | \* |
-| Oba | Oba Diah | île | \* |
+| Oba | Oba Diah | terre | \* |
 | Oss | Ossus | île | \* (non constructible) |
 | Pri | Prime Neimoidia | île | \* |
 | Rax | Raxus | île | \* |
@@ -181,7 +188,7 @@ $ Expansionnisme (oui)
 
 Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. 
 .
-Par exemple, Chiss peut construire à Yavin si ce centre est vacant et qu'elle en est propriétaire
+Par exemple, Chiss peut construire à Yavin si ce centre est vacant et qu'elle en est propriétaire.
 
 _
 $ Ecart avec la version théorique
