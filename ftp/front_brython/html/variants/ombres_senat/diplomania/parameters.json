@@ -335,10 +335,10 @@
         "14": {
             "name": "Dek",
             "full_name": "Deko Neimoidia",
-            "x_pos": 596,
-            "y_pos": 410,
-            "x_legend_pos": 596,
-            "y_legend_pos": 396,
+            "x_pos": 524,
+            "y_pos": 496,
+            "x_legend_pos": 524,
+            "y_legend_pos": 482,
             "display": 6
         },
         "15": {
@@ -428,10 +428,10 @@
         "25": {
             "name": "Kor",
             "full_name": "Koru Neimoidia",
-            "x_pos": 524,
-            "y_pos": 496,
-            "x_legend_pos": 524,
-            "y_legend_pos": 482,
+            "x_pos": 596,
+            "y_pos": 410,
+            "x_legend_pos": 596,
+            "y_legend_pos": 396,
             "display": 6
         },
         "26": {
@@ -830,8 +830,8 @@
             "y_pos": 390
         },
         "13": {
-            "x_pos": 570,
-            "y_pos": 409
+            "x_pos": 551,
+            "y_pos": 482
         },
         "5": {
             "x_pos": 493,
@@ -2473,7 +2473,7 @@
                 ]
             ]
         },
-        "14": {
+        "25": {
             "area": [
                 [
                     618,
@@ -2633,7 +2633,7 @@
                 ]
             ]
         },
-        "25": {
+        "14": {
             "area": [
                 [
                     586,
