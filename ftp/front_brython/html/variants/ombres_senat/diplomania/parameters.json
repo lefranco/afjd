@@ -473,10 +473,10 @@
         "30": {
             "name": "Mor",
             "full_name": "Moraband",
-            "x_pos": 246,
+            "x_pos": 265,
             "y_pos": 929,
-            "x_legend_pos": 246,
-            "y_legend_pos": 915
+            "x_legend_pos": 257,
+            "y_legend_pos": 920
         },
         "31": {
             "name": "Mus",
@@ -842,8 +842,8 @@
             "y_pos": 823
         },
         "27": {
-            "x_pos": 324,
-            "y_pos": 918
+            "x_pos": 238,
+            "y_pos": 924
         },
         "44": {
             "x_pos": 247,
