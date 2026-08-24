@@ -567,8 +567,8 @@
             "display": 6
         },
         "41": {
-            "name": "Rax",
-            "full_name": "Raxus",
+            "name": "Uta",
+            "full_name": "Utapau",
             "x_pos": 398,
             "y_pos": 859,
             "x_legend_pos": 398,
@@ -654,8 +654,8 @@
             "display": 8
         },
         "51": {
-            "name": "Uta",
-            "full_name": "Utapau",
+            "name": "Rax",
+            "full_name": "Raxus",
             "x_pos": 488,
             "y_pos": 925,
             "x_legend_pos": 488,
