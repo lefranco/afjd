@@ -89,9 +89,9 @@ Ce début correspond à "Episode VII - le réveil de la force".
 _
 $ Conditions de victoire
 
-Il y a *45* centres de ravitaillement sur le plateau.
+Il y a *43* centres de ravitaillement sur le plateau.
 .
-Le gagnant donc est la puissance qui détient *23* centres de ravitaillement ou plus pendant une phase d'ajustement.
+Le gagnant donc est la puissance qui détient *22* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
 _
 $ Puissances en présence
@@ -139,7 +139,7 @@ $ Nomenclature
 | Cop | Copero | île | \* |
 | Cor | Coruscant | île | \* |
 | Csi | Csilla | terre | \* |
-| Cyr | Cyrkon | île | \* |
+| Cyr | Cyrkon | île | |
 | Dag | Dagobah | île |  |
 | Dat | Dathomir | terre | \* (non constructible) |
 | Dek | Deko Neimoidia | île | \* |
@@ -180,7 +180,7 @@ $ Nomenclature
 | Rax | Raxus | île | \* |
 | Ren | Rentor | île |  |
 | Ryl | Ryloth | île | \* |
-| Sca | Scarif | île | \* |
+| Sca | Scarif | île | |
 | Sci | Scipio | île | \* |
 | Sel | Selonia | île | \* |
 | Sul | Sullust | île | \* |
