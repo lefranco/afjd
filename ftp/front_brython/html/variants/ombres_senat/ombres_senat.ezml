@@ -30,7 +30,7 @@ Elles sont matérialisées par un ovale en bas à droite de la carte et listées
 | Abréviation | Nom complet | Repère sur la carte | Point d'accès | Point d'accès |
 | HPer | Route Perlemienne | P | Coruscant (Cor) | Csilla (Csi) |
 | HDur | Voie de l’Espace Duros | D | Muunilist (Muu) | Kashyyyk (Kas) |
-| HCor | Route Corrélienne | C | Corellia (Coa) | Ryloth (Ryl) |
+| HCor | Route Correlienne | C | Corellia (Coa) | Ryloth (Ryl) |
 | HRim | Route de commerce Rimma | R | Sullust (Cor) | Geonosis (Csi) |
 =
 
@@ -102,14 +102,14 @@ Il y a neuf puissances dont les unités de départ sont les suivantes (une armé
 = Position de départ
 |Puissance | Centres | Armées | Flottes| Centres inoccupés|
 |Chiss (Ascendance Chiss) | 3 | Csilla (Csi) | Copero (Cop), Avidich (Avi) | |
-|Banquiers (Clan Bancaire Intergalactique) | 3 | Muunilinst(Muu) | Scipio (Sci), Aargau (Aar) | |
+|Banquiers (Clan Bancaire Intergalactique) | 3 | Muunilinst(Muu) | Scipio (Sci), Mygeeto (Myg) | |
 |Séparatistes (Confédération des Systèmes Indépendants) | 3 | Geonosis (Geo) | Raxus (Rax), Mustafar (Mus) | |
-|Hutt (Empire Hutt) | 3 | Nal Hutta (Nal) | Nar Shaddaa (NSh), Tatooine (Tat) | |
-|Mandalore (État Mandalorien) | 3 | Mandalore (Man) | Concordia (Con), Kalevala (Kal) | |
+|Hutt (Espace Hutt) | 3 | Nal Hutta (Nal) | Nar Shaddaa (NSh), Tatooine (Tat) | |
+|Mandalore (Gouvernement Mandalorien) | 3 | Mandalore (Man) | Concordia (Con), Kalevala (Kal) | |
 |Marchands (Fédération du Commerce) | 3 | Cato Neimodia (Cat) | Prime Neimoidia (Pri), Deko Neimoidia (Dek) | |
 |MonCala (Principauté de Mon Cala) | 3 | Mon Cala (Mon) | Manaan (Maa), Trandosha (Tha) | |
-|Corellia (République Corellienne) | 3 | Corellia (Coa) | Selonia (Sel), Drall (Dra) | |
-|Pyke (Syndicat Pyke) | 3 | Oba Diah (Oba) | Nar Kanji (NKa), Kessel (Kes) | |
+|Corellia (Système corellien) | 3 | Corellia (Coa) | Selonia (Sel), Drall (Dra) | |
+|Pyke (Syndicat Pyke) | 3 | Oba Diah (Oba) | Sansanna (San), Kessel (Kes) | |
 |Dathomir (Sorcières de Dathomir) | 1 | Dathomir (Dat) |  | |
 =
 
@@ -127,7 +127,7 @@ $ Nomenclature
 
 = Régions et abréviations de la variante
 | Abréviation | Nom complet | type | centre |
-| Aar | Aargau | île | \* |
+| Aar | Aargau | île | |
 | Ahc | Ahch-To | île | |
 | Avi | Avidich | île | \* |
 | Bes | Bespin | île | \* |
@@ -167,20 +167,20 @@ $ Nomenclature
 | Mor | Moraband | île | \* (non constructible) |
 | Mus | Mustafar | île | \* |
 | Muu | Muunilinst | terre | \* |
-| Myg | Mygeeto | île |  |
+| Myg | Mygeeto | île | \* |
 | Nab | Naboo | île | \* |
 | Nal | Nal Hutta | terre | \* |
-| NKa | Nar Kanji | île | \* |
 | NSh | Nar Shaddaa | île | \* |
 | Oba | Oba Diah | terre | \* |
 | Ond | Onderon | île | |
 | Oss | Ossus | île | \* (non constructible) |
-| Pri | Prime Neimoidia | île | \* |
+| Pur | Pure Neimoidia | île | \* |
 | Rap | Rapacc | île | \* |
 | Rat | Rottatak | île | |
 | Rax | Raxus | île | |
 | Ren | Rentor | île |  |
 | Ryl | Ryloth | île | \* |
+| San | Sansanna | île | \* |
 | Sca | Scarif | île | |
 | Sci | Scipio | île | \* |
 | Sel | Selonia | île | \* |
@@ -224,7 +224,7 @@ Guerriers claniques du Bordure Extérieure, unis par une culture martiale et un 
 (République Corellienne)
 Puissance industrielle et navale du Noyau Central, berceau des meilleurs pilotes et ingénieurs de la galaxie. Position centrale très exposée, mais bien connectée à tous les grands axes commerciaux.
 
-(Empire Hutt)
+(Espace Hutt)
 Réseau criminel tentaculaire bâti sur la corruption, la contrebande et les jeux d'influence. Militairement faible, mais riche et doté d'un immense pouvoir de nuisance diplomatique.
 
 (Ascendance Chiss)

@@ -219,8 +219,8 @@
     "coasts": {},
     "zones": {
         "1": {
-            "name": "Aar",
-            "full_name": "Aargau",
+            "name": "Myg",
+            "full_name": "Mygeeto",
             "x_pos": 693,
             "y_pos": 381,
             "x_legend_pos": 693,
@@ -497,8 +497,8 @@
             "display": 2
         },
         "33": {
-            "name": "Myg",
-            "full_name": "Mygeeto",
+            "name": "Aar",
+            "full_name": "Aargau",
             "x_pos": 667,
             "y_pos": 452,
             "x_legend_pos": 667,
@@ -523,8 +523,8 @@
             "display": 4
         },
         "36": {
-            "name": "NKa",
-            "full_name": "Nar Kanji",
+            "name": "San",
+            "full_name": "Sansanna",
             "x_pos": 836,
             "y_pos": 554,
             "x_legend_pos": 836,
@@ -558,8 +558,8 @@
             "y_legend_pos": 53
         },
         "40": {
-            "name": "Pri",
-            "full_name": "Prime Neimoidia",
+            "name": "Pur",
+            "full_name": "Pure Neimoidia",
             "x_pos": 521,
             "y_pos": 453,
             "x_legend_pos": 537,
