@@ -228,8 +228,8 @@
             "display": 2
         },
         "2": {
-            "name": "Ahc",
-            "full_name": "Ahch-To",
+            "name": "Tha",
+            "full_name": "Trandosha",
             "x_pos": 243,
             "y_pos": 483,
             "x_legend_pos": 243,
@@ -651,7 +651,7 @@
             "y_pos": 362,
             "x_legend_pos": 174,
             "y_legend_pos": 348,
-            "display": 7
+            "display": 8
         },
         "51": {
             "name": "Uta",
@@ -728,12 +728,13 @@
             "y_legend_pos": 899
         },
         "60": {
-            "name": "Tan",
-            "full_name": "Tandosha",
+            "name": "Ahc",
+            "full_name": "Ahch-To",
             "x_pos": 68,
             "y_pos": 492,
             "x_legend_pos": 68,
-            "y_legend_pos": 478
+            "y_legend_pos": 478,
+            "display": 7
         },
         "61": {
             "name": "Rap",
