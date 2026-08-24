@@ -107,7 +107,7 @@ Il y a neuf puissances dont les unités de départ sont les suivantes (une armé
 |Hutt (Empire Hutt) | 3 | Nal Hutta (Nal) | Nar Shaddaa (NSh), Tatooine (Tat) | |
 |Mandalore (État Mandalorien) | 3 | Mandalore (Man) | Concordia (Con), Kalevala (Kal) | |
 |Marchands (Fédération du Commerce) | 3 | Cato Neimodia (Cat) | Prime Neimoidia (Pri), Deko Neimoidia (Dek) | |
-|MonCala (Principauté de Mon Cala) | 3 | Mon Cala (Mon) | Manaan (Maa), Ahch-To (Ahc) | |
+|MonCala (Principauté de Mon Cala) | 3 | Mon Cala (Mon) | Manaan (Maa), Trandosha (Tha) | |
 |Corellia (République Corellienne) | 3 | Corellia (Coa) | Selonia (Sel), Drall (Dra) | |
 |Pyke (Syndicat Pyke) | 3 | Oba Diah (Oba) | Nar Kanji (NKa), Kessel (Kes) | |
 |Dathomir (Sorcières de Dathomir) | 1 | Dathomir (Dat) |  | |
@@ -132,6 +132,7 @@ $ Nomenclature
 | Avi | Avidich | île | \* |
 | Bes | Bespin | île | \* |
 | Cat | Cato Neimoidia | terre | \* |
+| Cha | Chandrilla | île | |
 | Coa | Corellia | terre | \* |
 | Cog | Corulag | île | \* |
 | Con | Concordia | île | \* |
@@ -144,12 +145,12 @@ $ Nomenclature
 | Dek | Deko Neimoidia | île | \* |
 | Dra | Drall | île | \* |
 | End | Endor | île | \* |
-| Eri | Eriadu | île | |
-| Exe | Exegol | île | \* |
+| Eri | Eriadu | île | \* |
+| Exe | Exegol | île | |
 | Geo | Geonosis | terre | \* |
 | HCor | Route Corellienne | mer |  |
 | HDur | Route Duros | mer |  |
-| Hot | Hoth | île | \* |
+| Hot | Hoth | île | |
 | HPer | Route Perlémienne | mer |  |
 | HRim | Route Rimma | mer |  |
 | Ilu | Ilum | île |  |
@@ -175,7 +176,7 @@ $ Nomenclature
 | Ond | Onderon | île | |
 | Oss | Ossus | île | \* (non constructible) |
 | Pri | Prime Neimoidia | île | \* |
-| Rap | Rapacc | île | |
+| Rap | Rapacc | île | \* |
 | Rax | Raxus | île | \* |
 | Ren | Rentor | île |  |
 | Ryl | Ryloth | île | \* |
