@@ -228,8 +228,8 @@
             "display": 2
         },
         "2": {
-            "name": "Tha",
-            "full_name": "Trandosha",
+            "name": "Kam",
+            "full_name": "Kamino",
             "x_pos": 243,
             "y_pos": 483,
             "x_legend_pos": 243,
@@ -401,8 +401,8 @@
             "display": 5
         },
         "22": {
-            "name": "Kam",
-            "full_name": "Kamino",
+            "name": "Rat",
+            "full_name": "Rattatak",
             "x_pos": 828,
             "y_pos": 390,
             "x_legend_pos": 828,
@@ -801,8 +801,8 @@
             "y_legend_pos": 208
         },
         "69": {
-            "name": "Rat",
-            "full_name": "Rattatak",
+            "name": "Tha",
+            "full_name": "Trandosha",
             "x_pos": 28,
             "y_pos": 717,
             "x_legend_pos": 28,
@@ -831,8 +831,8 @@
             "y_pos": 345
         },
         "21": {
-            "x_pos": 817,
-            "y_pos": 346
+            "x_pos": 438,
+            "y_pos": 640
         },
         "4": {
             "x_pos": 593,
@@ -925,10 +925,6 @@
         "19": {
             "x_pos": 377,
             "y_pos": 596
-        },
-        "43": {
-            "x_pos": 437,
-            "y_pos": 639
         },
         "42": {
             "x_pos": 618,
