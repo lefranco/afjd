@@ -720,16 +720,16 @@
             "y_legend_pos": 51
         },
         "59": {
-            "name": "Zlo",
-            "full_name": "Zlost",
+            "name": "Zio",
+            "full_name": "Ziost",
             "x_pos": 355,
             "y_pos": 913,
             "x_legend_pos": 355,
             "y_legend_pos": 899
         },
         "60": {
-            "name": "Lok",
-            "full_name": "Lok",
+            "name": "Tandosha",
+            "full_name": "Tan",
             "x_pos": 68,
             "y_pos": 492,
             "x_legend_pos": 68,
@@ -768,8 +768,8 @@
             "y_legend_pos": 458
         },
         "65": {
-            "name": "Rod",
-            "full_name": "Rodia",
+            "name": "Cyr",
+            "full_name": "Cyrkon",
             "x_pos": 513,
             "y_pos": 548,
             "x_legend_pos": 513,
