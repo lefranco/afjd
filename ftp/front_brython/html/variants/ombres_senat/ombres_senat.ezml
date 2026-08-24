@@ -82,16 +82,16 @@ Suite à sa destruction par l'empire, la zone au nord ouest de Coruscant (ancien
 _
 $ Datation
 
-La partie commence en *34*. Chaque tour représente *1* années "en temps réel".
+La partie commence en *20*. Chaque tour représente *1* années "en temps réel".
 .
-Ce début correspond à "Episode VII - le réveil de la force".
+Ce début correspond à la guerre des clones. La véritable datation est 22 BBY. La destruction d'Alderaan est "anticipée", puisqu'elle ne se produit que plus tard, en 0 BBY.
 
 _
 $ Conditions de victoire
 
-Il y a *43* centres de ravitaillement sur le plateau.
+Il y a *41* centres de ravitaillement sur le plateau.
 .
-Le gagnant donc est la puissance qui détient *22* centres de ravitaillement ou plus pendant une phase d'ajustement.
+Le gagnant donc est la puissance qui détient *21* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
 _
 $ Puissances en présence
@@ -177,6 +177,7 @@ $ Nomenclature
 | Oss | Ossus | île | \* (non constructible) |
 | Pri | Prime Neimoidia | île | \* |
 | Rap | Rapacc | île | \* |
+| Rap | Rattatak | île | |
 | Rax | Raxus | île | |
 | Ren | Rentor | île |  |
 | Ryl | Ryloth | île | \* |
@@ -186,7 +187,7 @@ $ Nomenclature
 | Sul | Sullust | île | \* |
 | Tak | Takodana | île |  |
 | Tal | Talus | île |  |
-| Tha | Trandosha | île | \* |
+| Tha | Trandosha | île | |
 | Tat | Tatooine | île | \* |
 | Tra | Tralus | île |  |
 | Uta | Utapau | île | \* |
