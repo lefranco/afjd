@@ -16,9 +16,9 @@ Sans objet
 _
 $ Particularités de la carte
 
-(Voies hyperespatiales)
+(Voies hyperspatiales)
 
-Ce sont des mers qui relient deux points d'accés, en général une capitale à un point éloigné. 
+Ce sont des mers qui relient deux points d'accès, en général une planète proche d'une capitale à un point assez éloigné. 
 .
 Elles permettent donc par exemple à une flotte de convoyer une armée de l'un à l'autre.
 .
@@ -77,14 +77,14 @@ A cause de la puissance de la Force qui habite ces lieux, personne ne peut const
 
 (Champ d'astéroïdes)
 
-Suite à sa destruction par l'empire, la zone au nord ouest de Coruscant (anciennement planète Alderan) est inaccessible.
+Suite à sa destruction par l'empire "anticipée", la zone au nord ouest de Coruscant (anciennement planète Alderan) est inaccessible.
 
 _
 $ Datation
 
 La partie commence en *20*. Chaque tour représente *1* années "en temps réel".
 .
-Ce début correspond à la guerre des clones. La véritable datation est 22 BBY. La destruction d'Alderaan est "anticipée", puisqu'elle ne se produit que plus tard, en 0 BBY.
+Ce début correspond à la guerre des clones. La véritable datation est 20 BBY. La destruction d'Alderaan est "anticipée", puisqu'elle ne se produit que plus tard, en 0 BBY.
 
 _
 $ Conditions de victoire
@@ -114,7 +114,7 @@ Il y a neuf puissances dont les unités de départ sont les suivantes (une armé
 =
 
 Dathomir n'est pas jouée et ses unités sont en désordre civil pendant toute la partie.
-
+.
 Remarque : la planète de l'armée est la capitale, et c'est une terre, non accessible par flotte.
 
 _
@@ -131,9 +131,10 @@ $ Nomenclature
 | Aga | Agamar | île | |
 | Ahc | Ahch-To | île | |
 | Avi | Avidich | île | \* |
+| Bat | Batuu | île |  |
 | Bes | Bespin | île | \* |
 | Cat | Cato Neimoidia | terre | \* |
-| Cha | Chandrilla | île | |
+| Cha | Chandrila | île | |
 | Coa | Corellia | terre | \* |
 | Cog | Corulag | île | \* |
 | Con | Concordia | île | \* |
@@ -176,11 +177,11 @@ $ Nomenclature
 | Ond | Onderon | île | |
 | Oss | Ossus | île | \* (non constructible) |
 | Pur | Pure Neimoidia | île | \* |
-| Rod | Rodia | île | |
 | Rap | Rapacc | île | \* |
-| Rat | Rottatak | île | |
 | Rax | Raxus | île | |
 | Ren | Rentor | île |  |
+| Rod | Rodia | île | |
+| Rat | Rottatak | île | |
 | Ryl | Ryloth | île | \* |
 | San | Sansanna | île | \* |
 | Sca | Scarif | île | |
@@ -189,10 +190,11 @@ $ Nomenclature
 | Sul | Sullust | île | \* |
 | Tak | Takodana | île |  |
 | Tal | Talus | île |  |
-| Tha | Trandosha | île | |
 | Tat | Tatooine | île | \* |
+| Tha | Trandosha | île | |
 | Tra | Tralus | île |  |
 | Uta | Utapau | île | \* |
+| Wob | Wobani | île | |
 | Yav | Yavin | île | \* |
 | Yle | Ylesia | île |  |
 | Zio | Ziost | île |  |
@@ -255,6 +257,9 @@ $$ Les planètes
 (Aargau)
 Monde financier du Noyau, sous influence du Clan Bancaire.
 
+(Agamar)
+Monde agricole tempéré, connu pour avoir accueilli des cellules de résistance contre l'Empire.
+
 (Ahch-To)
 Île isolée battue par les vagues, sanctuaire ancien des premiers Jedi.
 
@@ -264,11 +269,17 @@ Ancien monde-jardin détruit par l'Étoile de la Mort, aujourd'hui un champ d'as
 (Avidich)
 Colonie chiss abritant la flotte de l'Ascendance.
 
+(Batuu)
+Planète délibérément la plus reculée de la galaxie, hors des grandes routes commerciales.
+
 (Bespin)
 Géante gazeuse célèbre pour ses cités minières flottantes.
 
 (Cato Neimoidia)
 Monde-arche neimoidien aux ponts suspendus, capitale de la Fédération.
+
+(Chandrila)
+Monde pastoral du Noyau, berceau politique de Mon Mothma et de la Nouvelle République.
 
 (Corellia)
 Berceau industriel et naval du Noyau, patrie des meilleurs pilotes.
@@ -288,6 +299,9 @@ Capitale-planète recouverte d'une seule cité-monde tentaculaire.
 (Csilla)
 Monde glacé, capitale ancestrale de l'Ascendance Chiss.
 
+(Cyrkon)
+Monde discret de l'Espace Hutt, à la marge des grandes routes commerciales.
+
 (Dagobah)
 Marécage brumeux et isolé, imprégné d'énergies mystérieuses.
 
@@ -303,6 +317,9 @@ Petite lune boisée du système corellien.
 (Endor)
 Lune forestière peuplée par les Ewoks.
 
+(Eriadu)
+Capitale administrative de secteur, monde natal du Grand Moff Tarkin.
+
 (Exegol)
 Monde caché des Régions Inconnues, repaire sith légendaire.
 
@@ -311,6 +328,9 @@ Monde désertique aux usines de droïdes, capitale de la CSI.
 
 (Hoth)
 Planète glaciaire balayée par les tempêtes, aux confins de la carte.
+
+(Ilum)
+Monde sacré recouvert de glace, source des cristaux kyber utilisés dans les sabres laser jedi.
 
 (Jakku)
 Désert de dunes du Bordure Extérieure, théâtre d'anciennes batailles.
@@ -360,9 +380,6 @@ Monde paisible aux paysages verdoyants, cœur du Noyau.
 (Nal Hutta)
 Marécage fétide, capitale historique des Hutts.
 
-(Nar Kanji)
-Repaire de gangs affiliés au Syndicat Pyke.
-
 (Nar Shaddaa)
 Lune-ville tentaculaire, refuge des contrebandiers.
 
@@ -372,11 +389,17 @@ Monde d'origine du peuple neimoidien.
 (Oba Diah)
 Monde désolé, fief historique des Pykes.
 
+(Onderon)
+Royaume fortifié à la végétation sauvage, théâtre d'une rébellion contre l'occupation séparatiste.
+
 (Ossus)
 Ancien monde-bibliothèque des Jedi, gardien d'un savoir millénaire.
 
-(Prime Neimoidia)
+(Pure Neimoidia)
 Monde souche du système neimoidien, avant ses colonies.
+
+(Rapacc)
+Monde-siège d'une grande famille dirigeante de l'Ascendance Chiss.
 
 (Raxus)
 Monde-décharge industriel, ancien bastion séparatiste.
@@ -384,8 +407,14 @@ Monde-décharge industriel, ancien bastion séparatiste.
 (Rentor)
 Avant-poste chiss à la lisière des Régions Inconnues.
 
+(Rodia)
+Monde tropical densément peuplé, patrie des Rodiens, situé à la frontière Bordure Médiane/Extérieure près de la Route Corellienne.
+
 (Ryloth)
 Monde aride et accidenté, patrie des Twi'leks.
+
+(Sansanna)
+A VERIFIER
 
 (Scarif)
 Île tropicale abritant d'anciennes archives impériales.
@@ -399,17 +428,26 @@ Monde souterrain du système corellien.
 (Sullust)
 Monde volcanique aux cavernes industrielles, carrefour commercial.
 
+(Takodana)
+Avant-poste forestier neutre, point de rencontre pour contrebandiers et voyageurs.
+
 (Talus)
 Petite lune du système corellien.
 
 (Tatooine)
-Désert de sable balayé par deux soleils, repaire de contrebandiers.
+Désert de dunes balayé par deux soleils, refuge de contrebandiers et patrie d'Anakin puis Luke Skywalker.
 
 (Tralus)
 Autre petite lune du système corellien.
 
+(Trandosha)
+Monde de jungle aride, patrie des chasseurs et esclavagistes trandoshans.
+
 (Utapau)
 Monde de sinkholes abritant les Pau'ans et Ovissians.
+
+(Wobani)
+Planète-prison impériale, choisie pour son isolement total.
 
 (Yavin)
 Lune-jungle abritant d'anciens temples massassi.
@@ -417,4 +455,6 @@ Lune-jungle abritant d'anciens temples massassi.
 (Ylesia)
  Colonie religieuse des Hutts, façade d'un trafic de spice.
 
+(Ziost)
+Ancien monde sith dévasté, l'une des capitales historiques de l'Empire Sith originel.
 
