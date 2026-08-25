@@ -175,6 +175,7 @@ $ Nomenclature
 | NSh | Nar Shaddaa | île | \* |
 | Oba | Oba Diah | terre | \* |
 | Ond | Onderon | île | |
+| Ord | Ord Mantell | île | \* |
 | Oss | Ossus | île | \* (non constructible) |
 | Pur | Pure Neimoidia | île | \* |
 | Rap | Rapacc | île | \* |
@@ -183,7 +184,6 @@ $ Nomenclature
 | Rod | Rodia | île | |
 | Rat | Rottatak | île | |
 | Ryl | Ryloth | île | \* |
-| San | Sansanna | île | \* |
 | Sca | Scarif | île | |
 | Sci | Scipio | île | \* |
 | Sel | Selonia | île | \* |
@@ -383,14 +383,14 @@ Marécage fétide, capitale historique des Hutts.
 (Nar Shaddaa)
 Lune-ville tentaculaire, refuge des contrebandiers.
 
-(Neimoidia)
-Monde d'origine du peuple neimoidien.
-
 (Oba Diah)
 Monde désolé, fief historique des Pykes.
 
 (Onderon)
 Royaume fortifié à la végétation sauvage, théâtre d'une rébellion contre l'occupation séparatiste.
+
+(Ord Mantell)
+Monde industriel et militaire de la Bordure Extérieure, connu pour ses chantiers de démolition de vaisseaux et son passé de champ de bataille.
 
 (Ossus)
 Ancien monde-bibliothèque des Jedi, gardien d'un savoir millénaire.
