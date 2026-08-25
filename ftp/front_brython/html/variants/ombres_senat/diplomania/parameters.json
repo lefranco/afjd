@@ -610,12 +610,12 @@
             "display": 2
         },
         "46": {
-            "name": "Sel",
-            "full_name": "Selonia",
-            "x_pos": 355,
-            "y_pos": 380,
-            "x_legend_pos": 355,
-            "y_legend_pos": 366,
+            "name": "Tal",
+            "full_name": "Talus",
+            "x_pos": 388,
+            "y_pos": 347,
+            "x_legend_pos": 388,
+            "y_legend_pos": 333,
             "display": 8
         },
         "47": {
@@ -627,12 +627,12 @@
             "y_legend_pos": 478
         },
         "48": {
-            "name": "Tal",
-            "full_name": "Talus",
-            "x_pos": 287,
-            "y_pos": 308,
-            "x_legend_pos": 287,
-            "y_legend_pos": 294,
+            "name": "Sel",
+            "full_name": "Selonia",
+            "x_pos": 286,
+            "y_pos": 306,
+            "x_legend_pos": 286,
+            "y_legend_pos": 292,
             "display": 8
         },
         "49": {
@@ -843,8 +843,8 @@
             "y_pos": 206
         },
         "41": {
-            "x_pos": 360,
-            "y_pos": 345
+            "x_pos": 308,
+            "y_pos": 313
         },
         "21": {
             "x_pos": 465,
