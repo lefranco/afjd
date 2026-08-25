@@ -181,7 +181,6 @@ $ Nomenclature
 | Rap | Rapacc | île | \* |
 | Rax | Raxus | île | |
 | Ren | Rentor | île |  |
-| Rod | Rodia | île | |
 | Rat | Rottatak | île | |
 | Ryl | Ryloth | île | \* |
 | Sca | Scarif | île | |
@@ -192,6 +191,7 @@ $ Nomenclature
 | Tal | Talus | île |  |
 | Tat | Tatooine | île | \* |
 | Tha | Trandosha | île | |
+| Toy | Toydaria | île | |
 | Tra | Tralus | île |  |
 | Uta | Utapau | île | \* |
 | Wob | Wobani | île | |
@@ -407,14 +407,8 @@ Monde-décharge industriel, ancien bastion séparatiste.
 (Rentor)
 Avant-poste chiss à la lisière des Régions Inconnues.
 
-(Rodia)
-Monde tropical densément peuplé, patrie des Rodiens, situé à la frontière Bordure Médiane/Extérieure près de la Route Corellienne.
-
 (Ryloth)
 Monde aride et accidenté, patrie des Twi'leks.
-
-(Sansanna)
-A VERIFIER
 
 (Scarif)
 Île tropicale abritant d'anciennes archives impériales.
@@ -436,6 +430,9 @@ Petite lune du système corellien.
 
 (Tatooine)
 Désert de dunes balayé par deux soleils, refuge de contrebandiers et patrie d'Anakin puis Luke Skywalker.
+
+(Toydaria)
+Planète tempérée principalement composée de vastes marécages, forêts et zones humides, peuplée par les Toydariens.
 
 (Tralus)
 Autre petite lune du système corellien.
