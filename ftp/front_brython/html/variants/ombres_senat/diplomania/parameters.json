@@ -315,12 +315,12 @@
             "display": 1
         },
         "12": {
-            "name": "Dag",
-            "full_name": "Dagobah",
-            "x_pos": 745,
-            "y_pos": 555,
-            "x_legend_pos": 745,
-            "y_legend_pos": 541,
+            "name": "Oba",
+            "full_name": "Oba Diah",
+            "x_pos": 756,
+            "y_pos": 540,
+            "x_legend_pos": 756,
+            "y_legend_pos": 526,
             "display": 9
         },
         "13": {
@@ -541,12 +541,12 @@
             "display": 4
         },
         "38": {
-            "name": "Oba",
-            "full_name": "Oba Diah",
-            "x_pos": 645,
-            "y_pos": 641,
-            "x_legend_pos": 645,
-            "y_legend_pos": 627,
+            "name": "Dag",
+            "full_name": "Dagobah",
+            "x_pos": 627,
+            "y_pos": 588,
+            "x_legend_pos": 627,
+            "y_legend_pos": 574,
             "display": 9
         },
         "39": {
@@ -967,8 +967,8 @@
             "y_pos": 544
         },
         "34": {
-            "x_pos": 647,
-            "y_pos": 601
+            "x_pos": 723,
+            "y_pos": 575
         },
         "31": {
             "x_pos": 515,
