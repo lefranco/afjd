@@ -369,10 +369,10 @@
         "18": {
             "name": "Geo",
             "full_name": "Geonosis",
-            "x_pos": 586,
-            "y_pos": 851,
-            "x_legend_pos": 586,
-            "y_legend_pos": 837,
+            "x_pos": 585,
+            "y_pos": 860,
+            "x_legend_pos": 585,
+            "y_legend_pos": 846,
             "display": 3
         },
         "19": {
@@ -419,10 +419,10 @@
         "24": {
             "name": "Kes",
             "full_name": "Kessel",
-            "x_pos": 723,
-            "y_pos": 705,
-            "x_legend_pos": 723,
-            "y_legend_pos": 691,
+            "x_pos": 713,
+            "y_pos": 701,
+            "x_legend_pos": 713,
+            "y_legend_pos": 687,
             "display": 9
         },
         "25": {
@@ -817,12 +817,20 @@
             "y_legend_pos": 769
         },
         "71": {
-            "name": "Toydaria",
-            "full_name": "Toy",
+            "name": "Toy",
+            "full_name": "Toydaria",
             "x_pos": 441,
             "y_pos": 670,
             "x_legend_pos": 441,
             "y_legend_pos": 656
+        },
+        "72": {
+            "name": "Fel",
+            "full_name": "Felucia",
+            "x_pos": 696,
+            "y_pos": 775,
+            "x_legend_pos": 696,
+            "y_legend_pos": 761
         }
     },
     "centers": {
@@ -993,6 +1001,10 @@
         "40": {
             "x_pos": 608,
             "y_pos": 356
+        },
+        "43": {
+            "x_pos": 726,
+            "y_pos": 789
         }
     },
     "seasons": {
@@ -2641,12 +2653,16 @@
                     692
                 ],
                 [
-                    733,
-                    859
+                    784,
+                    742
                 ],
                 [
-                    669,
-                    794
+                    668,
+                    737
+                ],
+                [
+                    657,
+                    735
                 ],
                 [
                     649,
@@ -2657,8 +2673,8 @@
                     666
                 ],
                 [
-                    654,
-                    654
+                    657,
+                    650
                 ]
             ]
         },
@@ -3731,6 +3747,34 @@
                 [
                     416,
                     682
+                ]
+            ]
+        },
+        "72": {
+            "area": [
+                [
+                    658,
+                    737
+                ],
+                [
+                    770,
+                    742
+                ],
+                [
+                    783,
+                    744
+                ],
+                [
+                    733,
+                    859
+                ],
+                [
+                    669,
+                    794
+                ],
+                [
+                    657,
+                    738
                 ]
             ]
         }
