@@ -1663,7 +1663,7 @@ def game_master(arrival):
         play_low.MY_SUB_PANEL <= game_admin_table
 
     ############################################
-    if play_low.GAME_PARAMETERS_LOADED['current_state'] in [0, 1]:
+    if play_low.GAME_PARAMETERS_LOADED['current_state'] in [0, 1, 3]:
 
         play_low.MY_SUB_PANEL <= html.H3("Date limite")
 
@@ -1674,45 +1674,48 @@ def game_master(arrival):
         table = html.TABLE()
         row = html.TR()
 
-        deadline_form = html.FORM()
+        if play_low.GAME_PARAMETERS_LOADED['current_state'] in [0, 1]:
 
-        dl_gmt = html.DIV("ATTENTION : vous devez entrer une valeur en temps UTC.", Class='important')
-        special_legend = html.LEGEND(dl_gmt)
-        deadline_form <= special_legend
-        deadline_form <= html.BR()
+            deadline_form = html.FORM()
 
-        # convert 'deadline_loaded' to human editable format
-        deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
+            dl_gmt = html.DIV("ATTENTION : vous devez entrer une valeur en temps UTC.", Class='important')
+            special_legend = html.LEGEND(dl_gmt)
+            deadline_form <= special_legend
+            deadline_form <= html.BR()
 
-        datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-        datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
-        deadline_loaded_day, deadline_loaded_hour, _, _ = datetime_deadline_loaded_str.split(' ')
+            # convert 'deadline_loaded' to human editable format
+            deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
 
-        fieldset = html.FIELDSET()
-        legend_deadline_day = html.LEGEND("Jour de la prochaine D.L. (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
-        fieldset <= legend_deadline_day
-        input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day, Class='btn-inside')
-        fieldset <= input_deadline_day
-        deadline_form <= fieldset
+            datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+            datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded, year_first=True)
+            deadline_loaded_day, deadline_loaded_hour, _, _ = datetime_deadline_loaded_str.split(' ')
 
-        fieldset = html.FIELDSET()
-        legend_deadline_hour = html.LEGEND("Heure de la prochaine D.L. (hh:mm ou selon les réglages du navigateur)", title="La date limite. Dernière heure du jour pour soumettre les ordres. Après le joueur est en retard.")
-        fieldset <= legend_deadline_hour
-        input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour, step=1, Class='btn-inside')
-        fieldset <= input_deadline_hour
-        deadline_form <= fieldset
+            fieldset = html.FIELDSET()
+            legend_deadline_day = html.LEGEND("Jour de la prochaine D.L. (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
+            fieldset <= legend_deadline_day
+            input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day, Class='btn-inside')
+            fieldset <= input_deadline_day
+            deadline_form <= fieldset
 
-        input_change_deadline_game = html.INPUT(type="submit", value="Changer la prochaine D.L. de la partie à cette valeur", Class='btn-inside')
-        input_change_deadline_game.bind("click", change_deadline_game_callback)
-        deadline_form <= input_change_deadline_game
+            fieldset = html.FIELDSET()
+            legend_deadline_hour = html.LEGEND("Heure de la prochaine D.L. (hh:mm ou selon les réglages du navigateur)", title="La date limite. Dernière heure du jour pour soumettre les ordres. Après le joueur est en retard.")
+            fieldset <= legend_deadline_hour
+            input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour, step=1, Class='btn-inside')
+            fieldset <= input_deadline_hour
+            deadline_form <= fieldset
 
-        col = html.TD()
-        col <= deadline_form
-        row <= col
+            input_change_deadline_game = html.INPUT(type="submit", value="Changer la prochaine D.L. de la partie à cette valeur", Class='btn-inside')
+            input_change_deadline_game.bind("click", change_deadline_game_callback)
+            deadline_form <= input_change_deadline_game
+
+            col = html.TD()
+            col <= deadline_form
+            row <= col
 
         if play_low.GAME_PARAMETERS_LOADED['current_state'] == 1:
 
             deadline_form2 = html.FORM()
+
             input_push_deadline_game = html.INPUT(type="submit", value="Reporter la prochaine D.L. de 24 heures", Class='btn-inside')
             input_push_deadline_game.bind("click", push_deadline_game_callback)
             deadline_form2 <= input_push_deadline_game
@@ -1729,6 +1732,8 @@ def game_master(arrival):
             col = html.TD()
             col <= deadline_form3
             row <= col
+
+        if play_low.GAME_PARAMETERS_LOADED['current_state'] in [0, 1, 3]:
 
             deadline_form4 = html.FORM()
 
