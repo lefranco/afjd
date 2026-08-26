@@ -170,6 +170,7 @@ def game_master(arrival):
             summary = ""
             summary += "Préférences :"
             summary += "\n"
+            summary += "\n"
             content = req_result['content']
             for _, player_id, preferences in content:
                 player_pseudo = play_low.ID2PSEUDO[player_id]
@@ -180,6 +181,7 @@ def game_master(arrival):
                     role_name = play_low.VARIANT_DATA.role_name_table[role]
                     summary += role_name
                     summary += " "
+                summary += "\n"
                 summary += "\n"
 
             alert(summary)
@@ -1633,14 +1635,14 @@ def game_master(arrival):
             form = ""
             if not pseudo_there:
 
+                missing_role = True
+
                 if not possible_given_role and play_low.GAME_PARAMETERS_LOADED['current_state'] == 1:
 
                     form = html.FORM()
                     input_contact_replacers = html.INPUT(type="submit", value="Contacter les remplaçants", title="Ceci contactera tous les remplaçants déclarés volontaires du site", display='inline', Class='btn-inside')
                     input_contact_replacers.bind("click", lambda e, r=role_id: send_need_replacement_callback(e, r))
                     form <= input_contact_replacers
-
-                    missing_role = True
 
                 elif not (play_low.GAME_PARAMETERS_LOADED['current_state'] == 0 and not play_low.GAME_PARAMETERS_LOADED['manual']):
 
