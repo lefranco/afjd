@@ -569,8 +569,8 @@ def show_news():
     label_comfort = html.LABEL(html.B(f"Jauge de confort : {current_collected_value}€ / {COMFORT_NEEDED_VALUE}€: "), for_='comfort_raised')
     gauge_comfort = html.METER(id='comfort_raised', value=current_collected_value, min=0, max=COMFORT_NEEDED_VALUE)
     current_payers_list_value = news_content_table_loaded['members']
-    span_members = html.SPAN(f"Membres donateurs : {current_payers_list_value}")
-    link_pay = html.A("moi aussi !", href=PAY_LINK, target="_blank")
+    span_members = html.SPAN(f"Membres à jour : {current_payers_list_value}")
+    link_pay = html.A("Lien de cotisation", href=PAY_LINK, target="_blank")
 
     div_a5 <= label_overall
     div_a5 <= html.BR()
