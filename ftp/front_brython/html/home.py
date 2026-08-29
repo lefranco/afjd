@@ -218,24 +218,24 @@ def formatted_teaser(teasers):
                 c_score = int(champion_data[3])
                 c_num_games = int(champion_data[4])
                 c_rank = int(champion_data[5])
-                if SHOW_LOW:
-                    data_global[(c_rank, c_mode)] = (f"{c_pseudo} ({c_num_games})", c_score)
-                elif c_num_games >= common.GAMES_REQUIRED_GLOBAL_ELO:
-                    data_global[(c_rank, c_mode)] = (html.B(f"{c_pseudo} {c_num_games}"), c_score)
+                if c_num_games >= common.GAMES_REQUIRED_GLOBAL_ELO:
+                    data_global[(c_rank, c_mode)] = html.B(f"{c_pseudo} {c_score} ({c_num_games})") 
+                elif SHOW_LOW:
+                    data_global[(c_rank, c_mode)] = f"{c_pseudo} {c_score} ({c_num_games})"
                 else:
-                    data_global[(c_rank, c_mode)] = (html.I(f"- de {common.GAMES_REQUIRED_GLOBAL_ELO} parties"), c_score)
+                    data_global[(c_rank, c_mode)] = html.I(f"- de {common.GAMES_REQUIRED_GLOBAL_ELO} parties")
             elif c_type == 'role':
                 c_mode = champion_data[1]
                 c_pseudo = champion_data[2]
                 c_score = int(champion_data[3])
                 c_num_games = int(champion_data[4])
                 c_role = champion_data[5]
-                if SHOW_LOW:
-                    data_role[(c_role, c_mode)] = (f"{c_pseudo} ({c_num_games})", c_score)
-                elif c_num_games >= common.GAMES_REQUIRED_GLOBAL_ELO:
-                    data_role[(c_role, c_mode)] = (html.B(f"{c_pseudo} {c_num_games}"), c_score)
+                if c_num_games >= common.GAMES_REQUIRED_GLOBAL_ELO:
+                    data_role[(c_role, c_mode)] = html.B(f"{c_pseudo} {c_score} ({c_num_games})")
+                elif SHOW_LOW:
+                    data_role[(c_role, c_mode)] = f"{c_pseudo} {c_score} ({c_num_games})"
                 else:
-                    data_role[(c_role, c_mode)] = (html.I(f"- de {common.GAMES_REQUIRED_ROLE_ELO} parties"), c_score)
+                    data_role[(c_role, c_mode)] = html.I(f"- de {common.GAMES_REQUIRED_ROLE_ELO} parties")
 
     # ranks sorted numerically
     ranks = sorted({d[0] for d in data_global})
@@ -247,38 +247,38 @@ def formatted_teaser(teasers):
     modes_role = sorted({d[1] for d in data_role}, key=lambda m: {'classique': 1, 'blitz': 0}[m], reverse=True)
 
     # data in table for global
-    teaser_global_content_table = html.TABLE(width="100%")
-    title = html.TR()
-    for header in ['global'] + modes_global:
-        title <= html.TD(html.B(header))
-    teaser_global_content_table <= title
-    for rank in ranks:
-        row = html.TR()
-        row <= html.TD(html.B(rank))
-        for mode in modes_global:
-            # ignore score to save room
-            pseud, _ = data_global[(rank, mode)]
-            elem = html.DIV()
-            elem <= pseud
-            row <= html.TD(elem)
-        teaser_global_content_table <= row
+    teaser_global_content_table = None
+    if modes_global:
+        teaser_global_content_table = html.TABLE(width="100%")
+        title = html.TR()
+        for header in ['global'] + modes_global:
+            title <= html.TD(html.B(header))
+        teaser_global_content_table <= title
+        for rank in ranks:
+            row = html.TR()
+            row <= html.TD(html.B(rank))
+            for mode in modes_global:
+                elem = html.DIV()
+                elem <= data_global[(rank, mode)]
+                row <= html.TD(elem)
+            teaser_global_content_table <= row
 
     # data in table for roles
-    teaser_role_content_table = html.TABLE(width="100%")
-    title = html.TR()
-    for header in ['par rôle'] + modes_role:
-        title <= html.TD(html.B(header))
-    teaser_role_content_table <= title
-    for role in roles:
-        row = html.TR()
-        row <= html.TD(html.B(role))
-        for mode in modes_role:
-            # ignore score to save room
-            pseud, _ = data_role[(role, mode)]
-            elem = html.DIV()
-            elem <= pseud
-            row <= html.TD(elem)
-        teaser_role_content_table <= row
+    teaser_role_content_table = None
+    if modes_role:
+        teaser_role_content_table = html.TABLE(width="100%")
+        title = html.TR()
+        for header in ['par rôle'] + modes_role:
+            title <= html.TD(html.B(header))
+        teaser_role_content_table <= title
+        for role in roles:
+            row = html.TR()
+            row <= html.TD(html.B(role))
+            for mode in modes_role:
+                elem = html.DIV()
+                elem <= data_role[(role, mode)]
+                row <= html.TD(elem)
+            teaser_role_content_table <= row
 
     return teaser_global_content_table, teaser_role_content_table, datation
 
@@ -689,7 +689,6 @@ def show_news():
     possible_variants = list(config.VARIANT_NAMES_DICT.keys())
     num_day = int(time()) // (24 * 3600)
     num_variant = num_day % len(possible_variants)
-
     today_teased_variant = possible_variants[num_variant]
 
     div_a3 = html.DIV(Class='tooltip')
@@ -706,9 +705,17 @@ def show_news():
         "overflow-x": "auto",
         "display": "block"
     })
-    scroll_box <= teaser_global_table
+    if teaser_global_table:
+        scroll_box <= teaser_global_table
+    else:
+        scroll_box <= "Aucune donnée globale pour cette variante, il faut la jouer !"
+
     scroll_box <= html.BR()
-    scroll_box <= teaser_role_table
+    if teaser_role_table:
+        scroll_box <= teaser_role_table
+    else:
+        scroll_box <= "Aucune donnée par rôle pour cette variante, il faut la jouer !"
+
     div_a3 <= scroll_box
     div_a3 <= html.BR()
 
