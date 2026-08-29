@@ -37,6 +37,10 @@ def main() -> None:
                 if neighbouring == army_neighbouring:
                     print(f"special coast neighbouring for army for {zone1}")
 
+            # check no one neighbour of itself
+            if int(zone1) in neighbours:
+                print(f"By {'army' if neighbouring == army_neighbouring else 'fleet'} {zone1} is neighbour of itself!")
+
             # check reciprocity
             for zone2 in neighbours:
                 if str(zone2) not in neighbouring:
