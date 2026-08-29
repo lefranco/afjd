@@ -1001,6 +1001,7 @@ def my_games(state_name):
                 # button for sorting by changed
                 button = html.BUTTON("&lt;Changée&gt;", Class='btn-inside')
                 button.bind("click", lambda e, f='changed': sort_by_callback(e, f))
+                button.style.backgroundColor = "white"
                 button.style.color = "red"
                 buttons <= button
 
@@ -1154,12 +1155,14 @@ def my_games(state_name):
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     button = html.BUTTON(game_name, title="Cliquer pour aller dans la partie", Class='btn-inside')
                     if game_id in changed_games:
+                        button.style.backgroundColor = "white"
                         button.style.color = "red"
                     button.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     value = button
                 else:
                     link = html.A(game_name, href=f"?game={game_name}", title="Cliquer pour aller dans la partie", target="_blank")
                     if game_id in changed_games:
+                        link.style.backgroundColor = "white"
                         link.style.color = "red"
                     value = link
 
