@@ -137,7 +137,6 @@ $ Nomenclature
 | Cat | Cato Neimoidia | terre | \* |
 | Cha | Chandrila | île | |
 | Coa | Corellia | terre | \* |
-| Cog | Corulag | île | \* |
 | Con | Concordia | île | \* |
 | Cop | Copero | île | \* |
 | Cor | Coruscant | île | \* |
@@ -166,6 +165,7 @@ $ Nomenclature
 | Kes | Kessel | île | \* |
 | Kor | Koru Neimoidia | île |  |
 | Kro | Krownest | île |  |
+| Kua | Kuat | île | \* |
 | Maa | Manaan | île | \* |
 | Man | Mandalore | terre | \* |
 | Mon | Mon Cala | terre | \* |
@@ -272,6 +272,9 @@ Monde agricole tempéré, connu pour avoir accueilli des cellules de résistance
 (Alderaan)
 Ancien monde-jardin détruit par l'Étoile de la Mort, aujourd'hui un champ d'astéroïdes dérivant dans le vide.
 
+(Anaxes)
+Surnommée le « Défenseur du Noyau », une planète hautement militarisée et bastion historique des forces de la République.
+
 (Avidich)
 Colonie chiss abritant la flotte de l'Ascendance.
 
@@ -365,6 +368,9 @@ Troisième monde-arche du système neimoidien.
 (Krownest)
 Monde enneigé du secteur mandalorien, fief d'un clan rival.
 
+(Kuat)
+Le cœur industriel de la galaxie, célèbre pour ses chantiers navals géants construisant les croiseurs militaires.
+
 (Manaan)
 Monde-océan aux ressources précieuses convoitées de tous.
 
@@ -407,6 +413,9 @@ Monde industriel et militaire de la Bordure Extérieure, connu pour ses chantier
 (Ossus)
 Ancien monde-bibliothèque des Jedi, gardien d'un savoir millénaire.
 
+(Paecia)
+Un monde de la Bordure Intérieure principalement connu comme escale sur les routes commerciales.
+
 (Pure Neimoidia)
 Monde souche du système neimoidien, avant ses colonies.
 
@@ -421,6 +430,9 @@ Avant-poste chiss à la lisière des Régions Inconnues.
 
 (Ryloth)
 Monde aride et accidenté, patrie des Twi'leks.
+
+(Schesa)
+Une planète servant de point de transit le long des voies de navigation locales.
 
 (Saleucami)
 Monde-oasis aride et marécageux de la Bordure Extérieure, aux cratères fertiles chauffés par des vents géothermiques.
