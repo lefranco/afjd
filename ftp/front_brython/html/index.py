@@ -53,6 +53,7 @@ OPTIONS = {
     'Rejoindre une partie': "Se mettre dans une partie",
     'Les parties': "Créer une partie, rectifier une partie, liste des parties...",
     'Mes parties': "La liste des parties dans laquelle vous jouez (il faut être connecté)",
+    'Mes arbitrages': "La liste des parties que vous arbitrez (il faut être connecté)",
     'Interface tournois': "Les tournois en cours et passés ainsi que leurs resultats",
     'Evénements': "Les évenements  à venir sur lesquels il est possible de s'inscrire",
     'Classements': "Différents classements sur les joueurs du site (obtenir une liste de joueurs) et les scorages disponibles",
@@ -270,6 +271,8 @@ def load_option(_, item_name):
         allgames.render(PANEL_MIDDLE)
     if item_name == 'Mes parties':
         mygames.render(PANEL_MIDDLE)
+    if item_name == 'Mes arbitrages':
+        mygames.render2(PANEL_MIDDLE)
     if item_name == 'Interface tournois':
         tournament.render(PANEL_MIDDLE)
     if item_name == 'Evénements':

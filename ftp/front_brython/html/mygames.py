@@ -649,7 +649,7 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
     MY_SUB_PANEL <= html.BR()
 
 
-def my_games(state_name):
+def my_games(state_name, master):
     """ my_games """
 
     def select_game_callback(ev, game_name, game_data_sel, arrival):  # pylint: disable=invalid-name
@@ -673,97 +673,10 @@ def my_games(state_name):
         PANEL_MIDDLE.clear()
         play.render(PANEL_MIDDLE)
 
-    def edit_game_callback(ev, game_name):  # pylint: disable=invalid-name
-        """ edit_game_callback """
-
-        ev.preventDefault()
-
-        # action of selecting game
-        storage['GAME'] = game_name
-        game_id = game_data_sel[game_name][0]
-        storage['GAME_ID'] = game_id
-        game_variant = game_data_sel[game_name][1]
-        storage['GAME_VARIANT'] = game_variant
-
-        allgames.show_game_selected()
-
-        # action of going to edit game page
-        PANEL_MIDDLE.clear()
-        allgames.set_arrival()
-        allgames.render(PANEL_MIDDLE)
-
-    def start_game_callback(ev, game):  # pylint: disable=invalid-name
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur au démarrage de la partie {game}: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème au démarrage de la partie {game}: {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.info_go(f"La partie a été démarrée : {messages}")
-
-        ev.preventDefault()
-
-        json_dict = {
-            'name': game,
-            'current_state': 1,
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # changing game state : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        my_games(state_name)
-
-    def stop_game_callback(ev, game):  # pylint: disable=invalid-name
-
-        def reply_callback(req):
-            req_result = loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à l'arrêt de la partie {game}: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à l'arrêt de la partie {game}: {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.info_go(f"La partie a été arrêtée : {messages}")
-
-        ev.preventDefault()
-
-        json_dict = {
-            'name': game,
-            'current_state': 2,
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # changing game state : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        my_games(state_name)
-
     def again(state_name):
         """ again """
         MY_SUB_PANEL.clear()
-        my_games(state_name)
+        my_games(state_name, master)
 
     def change_show_mode_callback(_):
         if storage['GAME_SHOW_MODE'] == 'complete':
@@ -771,7 +684,7 @@ def my_games(state_name):
         else:
             storage['GAME_SHOW_MODE'] = 'complete'
         MY_SUB_PANEL.clear()
-        my_games(state_name)
+        my_games(state_name, master)
 
     def change_button_mode_callback(_):
         if storage['GAME_ACCESS_MODE'] == 'button':
@@ -779,15 +692,7 @@ def my_games(state_name):
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
         MY_SUB_PANEL.clear()
-        my_games(state_name)
-
-    def change_action_mode_callback(_):
-        if storage['ACTION_COLUMN_MODE'] == 'displayed':
-            storage['ACTION_COLUMN_MODE'] = 'not_displayed'
-        else:
-            storage['ACTION_COLUMN_MODE'] = 'displayed'
-        MY_SUB_PANEL.clear()
-        my_games(state_name)
+        my_games(state_name, master)
 
     def sort_by_callback(_, new_sort_by):
 
@@ -799,7 +704,7 @@ def my_games(state_name):
             storage['REVERSE_NEEDED_MYGAMES'] = str(not bool(storage['REVERSE_NEEDED_MYGAMES'] == 'True'))
 
         MY_SUB_PANEL.clear()
-        my_games(state_name)
+        my_games(state_name, master)
 
     overall_time_before = time()
 
@@ -817,7 +722,10 @@ def my_games(state_name):
             storage['DATE_NEW_MESSAGES_NOTIFIED'] = str(day_now)
 
     # title
-    MY_SUB_PANEL <= html.H3(f"Parties que je joue dans l'état : {state_name}")
+    if master:
+        MY_SUB_PANEL <= html.H3(f"Parties que j'arbitre dans l'état : {state_name}")
+    else:
+        MY_SUB_PANEL <= html.H3(f"Parties que je joue dans l'état : {state_name}")
 
     state = config.STATE_CODE_TABLE[state_name]
 
@@ -891,17 +799,18 @@ def my_games(state_name):
     hour_now = int(overall_time_before) // 3600
 
     # we alert about  suffering games once a day (that need to be started)
-    hour_notified = 0
-    if 'DATE_SUFFERING_NOTIFIED' in storage:
-        hour_notified = int(storage['DATE_SUFFERING_NOTIFIED'])
-    if hour_now > hour_notified:
-        if suffering_games_dict['need_start']:
-            alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games_dict['need_start'])} qui est(sont) complète(s) !\n\nPour ce faire, depuis la page 'mes parties', bouton 'en attente' (en bas) et aller dans la(les) partie(s) !")
-        if suffering_games_dict['need_replacement']:
-            alert(f"Il faut réaliser les remplacements dans la(les) partie(s) en cours {' '.join(suffering_games_dict['need_replacement'])} qui est(sont) prête(s) !")
-        if suffering_games_dict['need_know_who']:
-            alert(f"Il faut lever l'anonymat dans la(les) partie(s) en cours {' '.join(suffering_games_dict['need_know_who'])} qui est(sont) terminée(s) !")
-        storage['DATE_SUFFERING_NOTIFIED'] = str(hour_now)
+    if not master:
+        hour_notified = 0
+        if 'DATE_SUFFERING_NOTIFIED' in storage:
+            hour_notified = int(storage['DATE_SUFFERING_NOTIFIED'])
+        if hour_now > hour_notified:
+            if suffering_games_dict['need_start']:
+                alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games_dict['need_start'])} qui est(sont) complète(s) !\n\nPour ce faire, depuis la page 'mes parties', bouton 'en attente' (en bas) et aller dans la(les) partie(s) !")
+            if suffering_games_dict['need_replacement']:
+                alert(f"Il faut réaliser les remplacements dans la(les) partie(s) en cours {' '.join(suffering_games_dict['need_replacement'])} qui est(sont) prête(s) !")
+            if suffering_games_dict['need_know_who']:
+                alert(f"Il faut lever l'anonymat dans la(les) partie(s) en cours {' '.join(suffering_games_dict['need_know_who'])} qui est(sont) terminée(s) !")
+            storage['DATE_SUFFERING_NOTIFIED'] = str(hour_now)
 
     time_stamp_now = overall_time_before
 
@@ -915,10 +824,9 @@ def my_games(state_name):
     button.bind("click", change_show_mode_callback)
     MY_SUB_PANEL <= button
 
+    # button for switching mode (external)
     # separator
     MY_SUB_PANEL <= " "
-
-    # button for switching mode
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
@@ -928,19 +836,7 @@ def my_games(state_name):
     button.bind("click", change_button_mode_callback)
     MY_SUB_PANEL <= button
 
-    # separator
-    MY_SUB_PANEL <= " "
-
-    # button for switching mode (action)
-    if 'ACTION_COLUMN_MODE' not in storage:
-        storage['ACTION_COLUMN_MODE'] = 'not_displayed'
-    if storage['ACTION_COLUMN_MODE'] == 'not_displayed':
-        button = html.BUTTON("Mode avec les colonnes d'action (éditer+archiver/démarrer)", Class='btn-inside')
-    else:
-        button = html.BUTTON("Mode sans les colonnes d'action (éditer+archiver/démarrer)", Class='btn-inside')
-    button.bind("click", change_action_mode_callback)
-    MY_SUB_PANEL <= button
-
+    # end of buttons
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
@@ -949,26 +845,25 @@ def my_games(state_name):
     # the display order
     fields = ['name', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'votes', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'anonymous', 'game_type']
 
-    if storage['GAME_SHOW_MODE'] == 'reduced':
+    if master:
+        fields.remove('orders_submitted')
+        fields.remove('agreed')
+    else:
         fields.remove('all_orders_submitted')
         fields.remove('all_agreed')
         fields.remove('votes')
+
+    if storage['GAME_SHOW_MODE'] == 'reduced':
         fields.remove('used_for_elo')
         fields.remove('anonymous')
         fields.remove('nopress_current')
         fields.remove('nomessage_current')
 
-    if storage['ACTION_COLUMN_MODE'] == 'displayed':
-        fields.extend(['edit', 'startstop'])
-
     # header
     thead = html.THEAD()
     for field in fields:
-
-        content = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes expr.', 'new_declarations': 'presses', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'presse', 'anonymous': 'anonyme', 'nomessage_current': 'messagerie', 'game_type': 'type de partie', 'edit': 'éditer', 'startstop': 'archiver/démarrer'}[field]
-
-        legend = {'name': "Le nom de la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombre de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message privé non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_current': "Est-ce que les messages publics (presse) sont autorisés entre les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (messagerie) sont autorisés pour les joueurs actuellement", 'anonymous': 'Anonymat actuellement', 'game_type': "Type de partie pour la communication en jeu", 'edit': "Pour éditer les paramètres de la partie", 'startstop': "Pour arrêter ou démarrer la partie"}[field]
-
+        content = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes expr.', 'new_declarations': 'presses', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'presse', 'anonymous': 'anonyme', 'nomessage_current': 'messagerie', 'game_type': 'type de partie'}[field]
+        legend = {'name': "Le nom de la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombre de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message privé non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_current': "Est-ce que les messages publics (presse) sont autorisés entre les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (messagerie) sont autorisés pour les joueurs actuellement", 'anonymous': 'Anonymat actuellement', 'game_type': "Type de partie pour la communication en jeu"}[field]
         field = html.DIV(content, title=legend)
         col = html.TD(field)
         thead <= col
@@ -1075,6 +970,15 @@ def my_games(state_name):
         if game_id not in games_id_player:
             continue
 
+        # if master show game where master otherwise show games where role or allocated
+        role_id = dict_role_id[str(game_id)]
+        if master != (role_id == 0):
+            continue
+
+        if role_id == -1:
+            role_id = None
+        data['role_played'] = role_id
+
         # variant is available
         variant_name_loaded = data['variant']
 
@@ -1111,11 +1015,6 @@ def my_games(state_name):
         game_name = data['name']
         games_list.append(game_name)
 
-        role_id = dict_role_id[str(game_id)]
-        if role_id == -1:
-            role_id = None
-        data['role_played'] = role_id
-
         submitted_data = {}
         submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
         submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
@@ -1129,8 +1028,6 @@ def my_games(state_name):
         data['votes'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
-        data['edit'] = None
-        data['startstop'] = None
 
         missing_orders = False
         after_deadline = False
@@ -1388,40 +1285,6 @@ def my_games(state_name):
                 stats = game_type_conv[value]
                 value = html.DIV(stats, title=explanation)
 
-            if field == 'edit':
-                value = ""
-                if storage['ACTION_COLUMN_MODE'] == 'displayed':
-                    if role_id == 0:
-                        if storage['GAME_ACCESS_MODE'] == 'button':
-                            form = html.FORM()
-                            input_edit_game = html.INPUT(type="image", src="./images/edit_game.png", title="Pour éditer les paramètres de la partie", Class='btn-inside')
-                            input_edit_game.bind("click", lambda e, g=game_name: edit_game_callback(e, g))
-                            form <= input_edit_game
-                            value = form
-                        else:
-                            img = html.IMG(src="./images/edit_game.png", alt="Editer", title="Pour éditer les paramètres de la partie")
-                            link = html.A(href=f"?edit_game={game_name}", target="_blank")
-                            link <= img
-                            value = link
-
-            if field == 'startstop':
-                value = ""
-                if storage['ACTION_COLUMN_MODE'] == 'displayed':
-                    if role_id == 0:
-                        if state == 0:
-                            form = html.FORM()
-                            input_start_game = html.INPUT(type="image", src="./images/start_game.jpg", title="Cliquer pour démarrer la partie", Class='btn-inside')
-                            input_start_game.bind("click", lambda e, g=game_name: start_game_callback(e, g))
-                            form <= input_start_game
-                            value = form
-                            startable_game_present = True
-                        if state == 1:
-                            form = html.FORM()
-                            input_stop_game = html.INPUT(type="image", src="./images/archive_game.png", title="Cliquer pour archiver la partie", Class='btn-inside')
-                            input_stop_game.bind("click", lambda e, g=game_name: stop_game_callback(e, g))
-                            form <= input_stop_game
-                            value = form
-
             col = html.TD(value)
 
             if colour is not None:
@@ -1509,17 +1372,19 @@ def my_games(state_name):
             MY_SUB_PANEL <= input_change_state
             MY_SUB_PANEL <= "    "
 
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-    input_my_delays = html.INPUT(type="submit", value="Consulter la liste de tous mes retards", Class='btn-inside')
-    input_my_delays.bind("click", my_delays)
-    MY_SUB_PANEL <= input_my_delays
+    if not master:
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+        input_my_delays = html.INPUT(type="submit", value="Consulter la liste de tous mes retards", Class='btn-inside')
+        input_my_delays.bind("click", my_delays)
+        MY_SUB_PANEL <= input_my_delays
 
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-    input_my_dropouts = html.INPUT(type="submit", value="Consulter la liste de tous mes abandons", Class='btn-inside')
-    input_my_dropouts.bind("click", my_dropouts)
-    MY_SUB_PANEL <= input_my_dropouts
+    if not master:
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+        input_my_dropouts = html.INPUT(type="submit", value="Consulter la liste de tous mes abandons", Class='btn-inside')
+        input_my_dropouts.bind("click", my_dropouts)
+        MY_SUB_PANEL <= input_my_dropouts
 
 
 PANEL_MIDDLE = None
@@ -1532,5 +1397,16 @@ def render(panel_middle):
     PANEL_MIDDLE = panel_middle
 
     MY_SUB_PANEL.clear()
-    my_games('en cours')
+    my_games('en cours', False)
+    panel_middle <= MY_SUB_PANEL
+
+
+def render2(panel_middle):
+    """ render2 """
+
+    global PANEL_MIDDLE
+    PANEL_MIDDLE = panel_middle
+
+    MY_SUB_PANEL.clear()
+    my_games('en cours', True)
     panel_middle <= MY_SUB_PANEL
