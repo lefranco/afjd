@@ -178,19 +178,19 @@ def create_game(json_dict):
         # set durations
         if game_type_code in (0, 2):
 
-            alert(f"On met par défaut les paramètres de partie plutôt lente ({DEFAULT_SPEED_MOVES_SLOW}h/{DEFAULT_SPEED_RETREATS_SLOW}h/{DEFAULT_SPEED_ADJUSTMENTS_SLOW}h)/Autorisé de de forcer l'attente de la date limite")
+            alert(f"On met par défaut les paramètres de partie plutôt lente ({DEFAULT_SPEED_MOVES_SLOW}h/{DEFAULT_SPEED_RETREATS_SLOW}h/{DEFAULT_SPEED_ADJUSTMENTS_SLOW}h)")
             input_speed_moves.value = str(DEFAULT_SPEED_MOVES_SLOW)
             input_speed_retreats.value = str(DEFAULT_SPEED_RETREATS_SLOW)
             input_speed_adjustments.value = str(DEFAULT_SPEED_ADJUSTMENTS_SLOW)
-            input_force_wait.checked = False
+            input_anonymous.checked = False
 
         else:
 
-            alert(f"On met par défaut les paramètres de partie plutôt rapide ({DEFAULT_SPEED_MOVES_FAST}h/{DEFAULT_SPEED_RETREATS_FAST}h/{DEFAULT_SPEED_ADJUSTMENTS_FAST}h/Interdit de forcer l'attente de la date limite) ")
+            alert(f"On met par défaut les paramètres de partie plutôt rapide ({DEFAULT_SPEED_MOVES_FAST}h/{DEFAULT_SPEED_RETREATS_FAST}h/{DEFAULT_SPEED_ADJUSTMENTS_FAST}h)")
             input_speed_moves.value = str(DEFAULT_SPEED_MOVES_FAST)
             input_speed_retreats.value = str(DEFAULT_SPEED_RETREATS_FAST)
             input_speed_adjustments.value = str(DEFAULT_SPEED_ADJUSTMENTS_FAST)
-            input_force_wait.checked = True
+            input_anonymous.checked = True
 
     def display_deadline_time_callback(_):
         """ display_deadline_time_callback """
@@ -553,7 +553,7 @@ def create_game(json_dict):
     fieldset = html.FIELDSET()
     legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
     fieldset <= legend_anonymous
-    input_anonymous = html.INPUT(type="checkbox", checked=bool(anonymous) if anonymous is not None else True, Class='btn-inside')
+    input_anonymous = html.INPUT(type="checkbox", checked=bool(anonymous) if anonymous is not None else False, Class='btn-inside')
     fieldset <= input_anonymous
     form <= fieldset
 
