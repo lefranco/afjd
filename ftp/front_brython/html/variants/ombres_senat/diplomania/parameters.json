@@ -67,12 +67,12 @@
             "adjective_name": "banquiers",
             "letter_name": "B",
             "red": [
-                224,
-                204
+                254,
+                234
             ],
             "green": [
-                225,
-                204
+                255,
+                234
             ],
             "blue": [
                 20,
@@ -84,16 +84,16 @@
             "adjective_name": "separatistes",
             "letter_name": "S",
             "red": [
-                198,
-                178
+                208,
+                188
             ],
             "green": [
-                74,
-                54
+                84,
+                64
             ],
             "blue": [
-                74,
-                54
+                84,
+                64
             ]
         },
         "4": {
@@ -101,12 +101,12 @@
             "adjective_name": "hutt",
             "letter_name": "H",
             "red": [
-                148,
-                128
+                168,
+                148
             ],
             "green": [
-                84,
-                64
+                104,
+                84
             ],
             "blue": [
                 20,
@@ -118,16 +118,16 @@
             "adjective_name": "mandalore",
             "letter_name": "M",
             "red": [
-                148,
-                128
+                168,
+                148
             ],
             "green": [
-                148,
-                128
+                168,
+                148
             ],
             "blue": [
-                148,
-                128
+                168,
+                148
             ]
         },
         "6": {
@@ -135,16 +135,16 @@
             "adjective_name": "marchands",
             "letter_name": "F",
             "red": [
-                148,
-                128
+                168,
+                148
             ],
             "green": [
                 20,
                 0
             ],
             "blue": [
-                148,
-                128
+                168,
+                148
             ]
         },
         "7": {
@@ -152,8 +152,8 @@
             "adjective_name": "moncala",
             "letter_name": "A",
             "red": [
-                124,
-                104
+                144,
+                124
             ],
             "green": [
                 4,
@@ -173,12 +173,12 @@
                 0
             ],
             "green": [
-                80,
-                60
+                100,
+                80
             ],
             "blue": [
-                118,
-                108
+                138,
+                128
             ]
         },
         "9": {
