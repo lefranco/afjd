@@ -57,9 +57,9 @@ Les exceptions sont listées dans le tableau ci-dessous :
 | Oba | Oba Diah | Terre | Capitale |Une flotte ne peut y accéder |
 | Dat | Dathomir | Terre | Capitale |Une flotte ne peut y accéder |
 | HCor | Route Corellienne | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
-| HDur | Route Duros | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
+| HDur | Voie de l’Espace Duros | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
 | HPer | Route Perlémienne | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
-| HRim | Route imma | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
+| HHyd | Voie Hydienne | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
 =
 
 (Centres non constructibles)
@@ -154,10 +154,10 @@ $ Nomenclature
 | Fel | Felucia | île | \* |
 | Geo | Geonosis | terre | \* |
 | HCor | Route Corellienne | mer |  |
-| HDur | Route Duros | mer |  |
+| HDur | Voie de l’Espace Duros | mer |  |
+| HHyd | Voie Hydienne | mer |  |
 | Hot | Hoth | île | |
 | HPer | Route Perlémienne | mer |  |
-| HRim | Route Rimma | mer |  |
 | Ilu | Ilum | île |  |
 | Jak | Jakku | île | \* |
 | Kal | Kalevala | île | \* |

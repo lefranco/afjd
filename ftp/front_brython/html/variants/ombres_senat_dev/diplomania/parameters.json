@@ -656,9 +656,9 @@
         "51": {
             "name": "Rax",
             "full_name": "Raxus",
-            "x_pos": 486,
+            "x_pos": 477,
             "y_pos": 913,
-            "x_legend_pos": 486,
+            "x_legend_pos": 477,
             "y_legend_pos": 899,
             "display": 3
         },
@@ -689,7 +689,7 @@
         },
         "55": {
             "name": "HDur",
-            "full_name": "Route Duros",
+            "full_name": "Voie de l’Espace Duros",
             "x_pos": 1112,
             "y_pos": 673,
             "x_legend_pos": 1112,
@@ -704,8 +704,8 @@
             "y_legend_pos": 704
         },
         "57": {
-            "name": "HRim",
-            "full_name": "Route Rimma",
+            "name": "HHyd",
+            "full_name": "Voie Hydienne",
             "x_pos": 1114,
             "y_pos": 760,
             "x_legend_pos": 1114,
@@ -779,8 +779,8 @@
         "66": {
             "name": "Eri",
             "full_name": "Eriadu",
-            "x_pos": 481,
-            "y_pos": 393,
+            "x_pos": 476,
+            "y_pos": 391,
             "x_legend_pos": 481,
             "y_legend_pos": 379
         },
