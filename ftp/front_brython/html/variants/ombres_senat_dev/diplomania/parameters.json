@@ -1,0 +1,3890 @@
+{
+    "author": {
+        "x_pos": 10,
+        "y_pos": 10
+    },
+    "additional_text": "Enfin une variante dans l'univers de la guerre des étoiles !",
+    "map": {
+        "width": 1187,
+        "height": 954
+    },
+    "regions": {
+        "2": {
+            "name": "Terre"
+        },
+        "3": {
+            "name": "Mer"
+        },
+        "4": {
+            "name": "Ile"
+        }
+    },
+    "units": {
+        "1": {
+            "name": "Armée"
+        },
+        "2": {
+            "name": "Flotte"
+        }
+    },
+    "roles": {
+        "0": {
+            "name": "Arbitre",
+            "adjective_name": "Arbitre",
+            "letter_name": "M",
+            "red": [
+                0,
+                0
+            ],
+            "green": [
+                0,
+                0
+            ],
+            "blue": [
+                0,
+                0
+            ]
+        },
+        "1": {
+            "name": "Chiss",
+            "adjective_name": "chiss",
+            "letter_name": "C",
+            "red": [
+                20,
+                0
+            ],
+            "green": [
+                235,
+                255
+            ],
+            "blue": [
+                235,
+                255
+            ]
+        },
+        "2": {
+            "name": "Banquiers",
+            "adjective_name": "banquiers",
+            "letter_name": "B",
+            "red": [
+                254,
+                234
+            ],
+            "green": [
+                255,
+                234
+            ],
+            "blue": [
+                20,
+                0
+            ]
+        },
+        "3": {
+            "name": "Separatistes",
+            "adjective_name": "separatistes",
+            "letter_name": "S",
+            "red": [
+                208,
+                188
+            ],
+            "green": [
+                84,
+                64
+            ],
+            "blue": [
+                84,
+                64
+            ]
+        },
+        "4": {
+            "name": "Hutt",
+            "adjective_name": "hutt",
+            "letter_name": "H",
+            "red": [
+                168,
+                148
+            ],
+            "green": [
+                104,
+                84
+            ],
+            "blue": [
+                20,
+                0
+            ]
+        },
+        "5": {
+            "name": "Mandalore",
+            "adjective_name": "mandalore",
+            "letter_name": "M",
+            "red": [
+                168,
+                148
+            ],
+            "green": [
+                168,
+                148
+            ],
+            "blue": [
+                168,
+                148
+            ]
+        },
+        "6": {
+            "name": "Marchands",
+            "adjective_name": "marchands",
+            "letter_name": "F",
+            "red": [
+                168,
+                148
+            ],
+            "green": [
+                20,
+                0
+            ],
+            "blue": [
+                168,
+                148
+            ]
+        },
+        "7": {
+            "name": "MonCala",
+            "adjective_name": "moncala",
+            "letter_name": "A",
+            "red": [
+                144,
+                124
+            ],
+            "green": [
+                4,
+                24
+            ],
+            "blue": [
+                248,
+                228
+            ]
+        },
+        "8": {
+            "name": "Correlia",
+            "adjective_name": "correlia",
+            "letter_name": "R",
+            "red": [
+                20,
+                0
+            ],
+            "green": [
+                100,
+                80
+            ],
+            "blue": [
+                138,
+                128
+            ]
+        },
+        "9": {
+            "name": "Pyke",
+            "adjective_name": "pyke",
+            "letter_name": "Y",
+            "red": [
+                20,
+                0
+            ],
+            "green": [
+                255,
+                235
+            ],
+            "blue": [
+                20,
+                0
+            ]
+        },
+        "10": {
+            "name": "Dathomir",
+            "adjective_name": "Dathomir",
+            "letter_name": "D",
+            "red": [
+                235,
+                255
+            ],
+            "green": [
+                20,
+                0
+            ],
+            "blue": [
+                20,
+                0
+            ]
+        }
+    },
+    "coasts": {},
+    "zones": {
+        "1": {
+            "name": "Myg",
+            "full_name": "Mygeeto",
+            "x_pos": 693,
+            "y_pos": 381,
+            "x_legend_pos": 693,
+            "y_legend_pos": 367,
+            "display": 2
+        },
+        "2": {
+            "name": "Kam",
+            "full_name": "Kamino",
+            "x_pos": 243,
+            "y_pos": 483,
+            "x_legend_pos": 243,
+            "y_legend_pos": 469,
+            "display": 7
+        },
+        "3": {
+            "name": "Avi",
+            "full_name": "Avidich",
+            "x_pos": 949,
+            "y_pos": 50,
+            "x_legend_pos": 949,
+            "y_legend_pos": 36,
+            "display": 1
+        },
+        "4": {
+            "name": "Bes",
+            "full_name": "Bespin",
+            "x_pos": 617,
+            "y_pos": 216,
+            "x_legend_pos": 617,
+            "y_legend_pos": 202
+        },
+        "5": {
+            "name": "Cat",
+            "full_name": "Cato Neimoidia",
+            "x_pos": 470,
+            "y_pos": 420,
+            "x_legend_pos": 502,
+            "y_legend_pos": 434,
+            "display": 6
+        },
+        "6": {
+            "name": "Con",
+            "full_name": "Concordia",
+            "x_pos": 258,
+            "y_pos": 723,
+            "x_legend_pos": 258,
+            "y_legend_pos": 709,
+            "display": 5
+        },
+        "7": {
+            "name": "Cop",
+            "full_name": "Copero",
+            "x_pos": 1067,
+            "y_pos": 261,
+            "x_legend_pos": 1067,
+            "y_legend_pos": 247,
+            "display": 1
+        },
+        "8": {
+            "name": "Coa",
+            "full_name": "Corellia",
+            "x_pos": 346,
+            "y_pos": 274,
+            "x_legend_pos": 346,
+            "y_legend_pos": 260,
+            "display": 8
+        },
+        "9": {
+            "name": "Cor",
+            "full_name": "Coruscant",
+            "x_pos": 435,
+            "y_pos": 305,
+            "x_legend_pos": 435,
+            "y_legend_pos": 291
+        },
+        "10": {
+            "name": "Cog",
+            "full_name": "Corulag",
+            "x_pos": 514,
+            "y_pos": 306,
+            "x_legend_pos": 514,
+            "y_legend_pos": 292
+        },
+        "11": {
+            "name": "Csi",
+            "full_name": "Csilla",
+            "x_pos": 897,
+            "y_pos": 152,
+            "x_legend_pos": 897,
+            "y_legend_pos": 138,
+            "display": 1
+        },
+        "12": {
+            "name": "Oba",
+            "full_name": "Oba Diah",
+            "x_pos": 756,
+            "y_pos": 540,
+            "x_legend_pos": 756,
+            "y_legend_pos": 526,
+            "display": 9
+        },
+        "13": {
+            "name": "Dat",
+            "full_name": "Dathomir",
+            "x_pos": 599,
+            "y_pos": 713,
+            "x_legend_pos": 599,
+            "y_legend_pos": 699,
+            "display": 10
+        },
+        "14": {
+            "name": "Dek",
+            "full_name": "Deko Neimoidia",
+            "x_pos": 513,
+            "y_pos": 496,
+            "x_legend_pos": 513,
+            "y_legend_pos": 482,
+            "display": 6
+        },
+        "15": {
+            "name": "Dra",
+            "full_name": "Drall",
+            "x_pos": 227,
+            "y_pos": 183,
+            "x_legend_pos": 227,
+            "y_legend_pos": 169,
+            "display": 8
+        },
+        "16": {
+            "name": "End",
+            "full_name": "Endor",
+            "x_pos": 425,
+            "y_pos": 526,
+            "x_legend_pos": 425,
+            "y_legend_pos": 512
+        },
+        "17": {
+            "name": "Exe",
+            "full_name": "Exegol",
+            "x_pos": 1120,
+            "y_pos": 66,
+            "x_legend_pos": 1120,
+            "y_legend_pos": 52
+        },
+        "18": {
+            "name": "Geo",
+            "full_name": "Geonosis",
+            "x_pos": 585,
+            "y_pos": 860,
+            "x_legend_pos": 585,
+            "y_legend_pos": 846,
+            "display": 3
+        },
+        "19": {
+            "name": "Hot",
+            "full_name": "Hoth",
+            "x_pos": 752,
+            "y_pos": 255,
+            "x_legend_pos": 752,
+            "y_legend_pos": 241
+        },
+        "20": {
+            "name": "Jak",
+            "full_name": "Jakku",
+            "x_pos": 406,
+            "y_pos": 592,
+            "x_legend_pos": 406,
+            "y_legend_pos": 578
+        },
+        "21": {
+            "name": "Kal",
+            "full_name": "Kalevala",
+            "x_pos": 466,
+            "y_pos": 726,
+            "x_legend_pos": 466,
+            "y_legend_pos": 712,
+            "display": 5
+        },
+        "22": {
+            "name": "Rat",
+            "full_name": "Rattatak",
+            "x_pos": 828,
+            "y_pos": 380,
+            "x_legend_pos": 828,
+            "y_legend_pos": 366
+        },
+        "23": {
+            "name": "Kas",
+            "full_name": "Kashyyyk",
+            "x_pos": 144,
+            "y_pos": 586,
+            "x_legend_pos": 144,
+            "y_legend_pos": 572
+        },
+        "24": {
+            "name": "Kes",
+            "full_name": "Kessel",
+            "x_pos": 713,
+            "y_pos": 701,
+            "x_legend_pos": 713,
+            "y_legend_pos": 687,
+            "display": 9
+        },
+        "25": {
+            "name": "Kor",
+            "full_name": "Koru Neimoidia",
+            "x_pos": 596,
+            "y_pos": 410,
+            "x_legend_pos": 596,
+            "y_legend_pos": 396,
+            "display": 6
+        },
+        "26": {
+            "name": "Kro",
+            "full_name": "Krownest",
+            "x_pos": 299,
+            "y_pos": 624,
+            "x_legend_pos": 299,
+            "y_legend_pos": 610,
+            "display": 5
+        },
+        "27": {
+            "name": "Maa",
+            "full_name": "Manaan",
+            "x_pos": 303,
+            "y_pos": 566,
+            "x_legend_pos": 303,
+            "y_legend_pos": 552,
+            "display": 7
+        },
+        "28": {
+            "name": "Man",
+            "full_name": "Mandalore",
+            "x_pos": 370,
+            "y_pos": 664,
+            "x_legend_pos": 370,
+            "y_legend_pos": 650,
+            "display": 5
+        },
+        "29": {
+            "name": "Mon",
+            "full_name": "Mon Cala",
+            "x_pos": 346,
+            "y_pos": 488,
+            "x_legend_pos": 346,
+            "y_legend_pos": 474,
+            "display": 7
+        },
+        "30": {
+            "name": "Mor",
+            "full_name": "Moraband",
+            "x_pos": 265,
+            "y_pos": 929,
+            "x_legend_pos": 257,
+            "y_legend_pos": 920
+        },
+        "31": {
+            "name": "Mus",
+            "full_name": "Mustafar",
+            "x_pos": 343,
+            "y_pos": 854,
+            "x_legend_pos": 343,
+            "y_legend_pos": 840,
+            "display": 3
+        },
+        "32": {
+            "name": "Muu",
+            "full_name": "Muunilinst",
+            "x_pos": 550,
+            "y_pos": 349,
+            "x_legend_pos": 550,
+            "y_legend_pos": 335,
+            "display": 2
+        },
+        "33": {
+            "name": "Aar",
+            "full_name": "Aargau",
+            "x_pos": 667,
+            "y_pos": 452,
+            "x_legend_pos": 667,
+            "y_legend_pos": 438,
+            "display": 2
+        },
+        "34": {
+            "name": "Nab",
+            "full_name": "Naboo",
+            "x_pos": 429,
+            "y_pos": 441,
+            "x_legend_pos": 429,
+            "y_legend_pos": 427
+        },
+        "35": {
+            "name": "Nal",
+            "full_name": "Nal Hutta",
+            "x_pos": 475,
+            "y_pos": 589,
+            "x_legend_pos": 475,
+            "y_legend_pos": 575,
+            "display": 4
+        },
+        "36": {
+            "name": "Ord",
+            "full_name": "Ord Mantell",
+            "x_pos": 836,
+            "y_pos": 554,
+            "x_legend_pos": 836,
+            "y_legend_pos": 540,
+            "display": 9
+        },
+        "37": {
+            "name": "NSh",
+            "full_name": "Nar Shaddaa",
+            "x_pos": 584,
+            "y_pos": 596,
+            "x_legend_pos": 612,
+            "y_legend_pos": 646,
+            "display": 4
+        },
+        "38": {
+            "name": "Dag",
+            "full_name": "Dagobah",
+            "x_pos": 627,
+            "y_pos": 588,
+            "x_legend_pos": 627,
+            "y_legend_pos": 574,
+            "display": 9
+        },
+        "39": {
+            "name": "Oss",
+            "full_name": "Ossus",
+            "x_pos": 575,
+            "y_pos": 67,
+            "x_legend_pos": 575,
+            "y_legend_pos": 53
+        },
+        "40": {
+            "name": "Pur",
+            "full_name": "Pure Neimoidia",
+            "x_pos": 521,
+            "y_pos": 453,
+            "x_legend_pos": 537,
+            "y_legend_pos": 434,
+            "display": 6
+        },
+        "41": {
+            "name": "Uta",
+            "full_name": "Utapau",
+            "x_pos": 401,
+            "y_pos": 857,
+            "x_legend_pos": 401,
+            "y_legend_pos": 843,
+            "display": 3
+        },
+        "42": {
+            "name": "Ren",
+            "full_name": "Rentor",
+            "x_pos": 885,
+            "y_pos": 252,
+            "x_legend_pos": 885,
+            "y_legend_pos": 238,
+            "display": 1
+        },
+        "43": {
+            "name": "Ryl",
+            "full_name": "Ryloth",
+            "x_pos": 649,
+            "y_pos": 544,
+            "x_legend_pos": 649,
+            "y_legend_pos": 530
+        },
+        "44": {
+            "name": "Sca",
+            "full_name": "Scarif",
+            "x_pos": 96,
+            "y_pos": 738,
+            "x_legend_pos": 96,
+            "y_legend_pos": 724
+        },
+        "45": {
+            "name": "Sci",
+            "full_name": "Scipio",
+            "x_pos": 625,
+            "y_pos": 328,
+            "x_legend_pos": 625,
+            "y_legend_pos": 314,
+            "display": 2
+        },
+        "46": {
+            "name": "Tal",
+            "full_name": "Talus",
+            "x_pos": 388,
+            "y_pos": 347,
+            "x_legend_pos": 388,
+            "y_legend_pos": 333,
+            "display": 8
+        },
+        "47": {
+            "name": "Sul",
+            "full_name": "Sullust",
+            "x_pos": 642,
+            "y_pos": 492,
+            "x_legend_pos": 642,
+            "y_legend_pos": 478
+        },
+        "48": {
+            "name": "Sel",
+            "full_name": "Selonia",
+            "x_pos": 286,
+            "y_pos": 306,
+            "x_legend_pos": 286,
+            "y_legend_pos": 292,
+            "display": 8
+        },
+        "49": {
+            "name": "Tat",
+            "full_name": "Tatooine",
+            "x_pos": 444,
+            "y_pos": 617,
+            "x_legend_pos": 444,
+            "y_legend_pos": 603,
+            "display": 4
+        },
+        "50": {
+            "name": "Tra",
+            "full_name": "Tralus",
+            "x_pos": 184,
+            "y_pos": 362,
+            "x_legend_pos": 184,
+            "y_legend_pos": 348,
+            "display": 8
+        },
+        "51": {
+            "name": "Rax",
+            "full_name": "Raxus",
+            "x_pos": 486,
+            "y_pos": 913,
+            "x_legend_pos": 486,
+            "y_legend_pos": 899,
+            "display": 3
+        },
+        "52": {
+            "name": "Yav",
+            "full_name": "Yavin",
+            "x_pos": 211,
+            "y_pos": 856,
+            "x_legend_pos": 211,
+            "y_legend_pos": 842
+        },
+        "53": {
+            "name": "Yle",
+            "full_name": "Ylesia",
+            "x_pos": 557,
+            "y_pos": 546,
+            "x_legend_pos": 557,
+            "y_legend_pos": 532,
+            "display": 4
+        },
+        "54": {
+            "name": "HPer",
+            "full_name": "Route Perlémienne",
+            "x_pos": 1110,
+            "y_pos": 622,
+            "x_legend_pos": 1110,
+            "y_legend_pos": 608
+        },
+        "55": {
+            "name": "HDur",
+            "full_name": "Route Duros",
+            "x_pos": 1112,
+            "y_pos": 673,
+            "x_legend_pos": 1112,
+            "y_legend_pos": 659
+        },
+        "56": {
+            "name": "HCor",
+            "full_name": "Route Corellienne",
+            "x_pos": 1113,
+            "y_pos": 718,
+            "x_legend_pos": 1113,
+            "y_legend_pos": 704
+        },
+        "57": {
+            "name": "HRim",
+            "full_name": "Route Rimma",
+            "x_pos": 1114,
+            "y_pos": 760,
+            "x_legend_pos": 1114,
+            "y_legend_pos": 746
+        },
+        "58": {
+            "name": "Ilu",
+            "full_name": "Ilum",
+            "x_pos": 396,
+            "y_pos": 73,
+            "x_legend_pos": 396,
+            "y_legend_pos": 59
+        },
+        "59": {
+            "name": "Zio",
+            "full_name": "Ziost",
+            "x_pos": 355,
+            "y_pos": 913,
+            "x_legend_pos": 355,
+            "y_legend_pos": 899
+        },
+        "60": {
+            "name": "Ahc",
+            "full_name": "Ahch-To",
+            "x_pos": 56,
+            "y_pos": 520,
+            "x_legend_pos": 56,
+            "y_legend_pos": 506,
+            "display": 7
+        },
+        "61": {
+            "name": "Rap",
+            "full_name": "Rapacc",
+            "x_pos": 966,
+            "y_pos": 423,
+            "x_legend_pos": 966,
+            "y_legend_pos": 409
+        },
+        "62": {
+            "name": "Bat",
+            "full_name": "Batuu",
+            "x_pos": 793,
+            "y_pos": 887,
+            "x_legend_pos": 793,
+            "y_legend_pos": 873
+        },
+        "63": {
+            "name": "Wob",
+            "full_name": "Wobani",
+            "x_pos": 888,
+            "y_pos": 753,
+            "x_legend_pos": 888,
+            "y_legend_pos": 739
+        },
+        "64": {
+            "name": "Tak",
+            "full_name": "Takodana",
+            "x_pos": 387,
+            "y_pos": 472,
+            "x_legend_pos": 387,
+            "y_legend_pos": 458
+        },
+        "65": {
+            "name": "Cyr",
+            "full_name": "Cyrkon",
+            "x_pos": 513,
+            "y_pos": 548,
+            "x_legend_pos": 513,
+            "y_legend_pos": 534
+        },
+        "66": {
+            "name": "Eri",
+            "full_name": "Eriadu",
+            "x_pos": 481,
+            "y_pos": 393,
+            "x_legend_pos": 481,
+            "y_legend_pos": 379
+        },
+        "67": {
+            "name": "Ond",
+            "full_name": "Onderon",
+            "x_pos": 370,
+            "y_pos": 774,
+            "x_legend_pos": 370,
+            "y_legend_pos": 760
+        },
+        "68": {
+            "name": "Cha",
+            "full_name": "Chandrila",
+            "x_pos": 487,
+            "y_pos": 150,
+            "x_legend_pos": 487,
+            "y_legend_pos": 136
+        },
+        "69": {
+            "name": "Tha",
+            "full_name": "Trandosha",
+            "x_pos": 28,
+            "y_pos": 717,
+            "x_legend_pos": 28,
+            "y_legend_pos": 703
+        },
+        "70": {
+            "name": "Aga",
+            "full_name": "Agamar",
+            "x_pos": 522,
+            "y_pos": 783,
+            "x_legend_pos": 522,
+            "y_legend_pos": 769
+        },
+        "71": {
+            "name": "Toy",
+            "full_name": "Toydaria",
+            "x_pos": 441,
+            "y_pos": 670,
+            "x_legend_pos": 441,
+            "y_legend_pos": 656
+        },
+        "72": {
+            "name": "Fel",
+            "full_name": "Felucia",
+            "x_pos": 696,
+            "y_pos": 775,
+            "x_legend_pos": 696,
+            "y_legend_pos": 761
+        },
+        "73": {
+            "name": "Sal",
+            "full_name": "Saleucami",
+            "x_pos": 338,
+            "y_pos": 808,
+            "x_legend_pos": 338,
+            "y_legend_pos": 794
+        },
+        "74": {
+            "name": "Dur",
+            "full_name": "Duros",
+            "x_pos": 74,
+            "y_pos": 75,
+            "x_legend_pos": 74,
+            "y_legend_pos": 61
+        }
+    },
+    "centers": {
+        "44": {
+            "x_pos": 320,
+            "y_pos": 783
+        },
+        "16": {
+            "x_pos": 499,
+            "y_pos": 399
+        },
+        "3": {
+            "x_pos": 989,
+            "y_pos": 88
+        },
+        "11": {
+            "x_pos": 943,
+            "y_pos": 147
+        },
+        "7": {
+            "x_pos": 1007,
+            "y_pos": 206
+        },
+        "41": {
+            "x_pos": 308,
+            "y_pos": 313
+        },
+        "21": {
+            "x_pos": 465,
+            "y_pos": 637
+        },
+        "4": {
+            "x_pos": 593,
+            "y_pos": 243
+        },
+        "35": {
+            "x_pos": 572,
+            "y_pos": 28
+        },
+        "14": {
+            "x_pos": 291,
+            "y_pos": 250
+        },
+        "9": {
+            "x_pos": 462,
+            "y_pos": 302
+        },
+        "18": {
+            "x_pos": 1011,
+            "y_pos": 453
+        },
+        "29": {
+            "x_pos": 548,
+            "y_pos": 375
+        },
+        "1": {
+            "x_pos": 661,
+            "y_pos": 390
+        },
+        "13": {
+            "x_pos": 551,
+            "y_pos": 482
+        },
+        "5": {
+            "x_pos": 478,
+            "y_pos": 446
+        },
+        "36": {
+            "x_pos": 545,
+            "y_pos": 449
+        },
+        "37": {
+            "x_pos": 428,
+            "y_pos": 851
+        },
+        "28": {
+            "x_pos": 301,
+            "y_pos": 852
+        },
+        "27": {
+            "x_pos": 238,
+            "y_pos": 924
+        },
+        "39": {
+            "x_pos": 248,
+            "y_pos": 808
+        },
+        "25": {
+            "x_pos": 364,
+            "y_pos": 689
+        },
+        "22": {
+            "x_pos": 222,
+            "y_pos": 603
+        },
+        "2": {
+            "x_pos": 291,
+            "y_pos": 492
+        },
+        "15": {
+            "x_pos": 386,
+            "y_pos": 529
+        },
+        "26": {
+            "x_pos": 338,
+            "y_pos": 443
+        },
+        "8": {
+            "x_pos": 373,
+            "y_pos": 287
+        },
+        "10": {
+            "x_pos": 485,
+            "y_pos": 321
+        },
+        "6": {
+            "x_pos": 291,
+            "y_pos": 721
+        },
+        "19": {
+            "x_pos": 377,
+            "y_pos": 596
+        },
+        "42": {
+            "x_pos": 618,
+            "y_pos": 480
+        },
+        "17": {
+            "x_pos": 670,
+            "y_pos": 847
+        },
+        "12": {
+            "x_pos": 565,
+            "y_pos": 675
+        },
+        "38": {
+            "x_pos": 679,
+            "y_pos": 544
+        },
+        "34": {
+            "x_pos": 723,
+            "y_pos": 575
+        },
+        "31": {
+            "x_pos": 515,
+            "y_pos": 601
+        },
+        "30": {
+            "x_pos": 421,
+            "y_pos": 405
+        },
+        "33": {
+            "x_pos": 583,
+            "y_pos": 627
+        },
+        "32": {
+            "x_pos": 782,
+            "y_pos": 602
+        },
+        "24": {
+            "x_pos": 334,
+            "y_pos": 551
+        },
+        "23": {
+            "x_pos": 714,
+            "y_pos": 647
+        },
+        "20": {
+            "x_pos": 431,
+            "y_pos": 728
+        },
+        "40": {
+            "x_pos": 608,
+            "y_pos": 356
+        },
+        "43": {
+            "x_pos": 726,
+            "y_pos": 789
+        }
+    },
+    "seasons": {
+        "1": {
+            "name": "Printemps"
+        },
+        "2": {
+            "name": "Été"
+        },
+        "3": {
+            "name": "Automne"
+        },
+        "4": {
+            "name": "Hiver"
+        },
+        "5": {
+            "name": "Ajustements"
+        }
+    },
+    "orders": {
+        "1": {
+            "name": "Attaquer"
+        },
+        "2": {
+            "name": "Soutenir offensivement"
+        },
+        "3": {
+            "name": "Soutenir défensivement"
+        },
+        "4": {
+            "name": "Tenir"
+        },
+        "5": {
+            "name": "Convoyer"
+        },
+        "6": {
+            "name": "Retraiter"
+        },
+        "7": {
+            "name": "Disperser"
+        },
+        "8": {
+            "name": "Construire"
+        },
+        "9": {
+            "name": "Supprimer"
+        }
+    },
+    "zone_areas": {
+        "15": {
+            "area": [
+                [
+                    284,
+                    1
+                ],
+                [
+                    286,
+                    3
+                ],
+                [
+                    329,
+                    108
+                ],
+                [
+                    341,
+                    242
+                ],
+                [
+                    325,
+                    273
+                ],
+                [
+                    198,
+                    301
+                ],
+                [
+                    86,
+                    300
+                ],
+                [
+                    85,
+                    290
+                ],
+                [
+                    88,
+                    226
+                ],
+                [
+                    189,
+                    2
+                ]
+            ]
+        },
+        "39": {
+            "area": [
+                [
+                    519,
+                    1
+                ],
+                [
+                    630,
+                    2
+                ],
+                [
+                    577,
+                    114
+                ],
+                [
+                    574,
+                    112
+                ],
+                [
+                    518,
+                    2
+                ]
+            ]
+        },
+        "4": {
+            "area": [
+                [
+                    690,
+                    1
+                ],
+                [
+                    714,
+                    63
+                ],
+                [
+                    715,
+                    99
+                ],
+                [
+                    686,
+                    286
+                ],
+                [
+                    683,
+                    288
+                ],
+                [
+                    569,
+                    301
+                ],
+                [
+                    559,
+                    301
+                ],
+                [
+                    520,
+                    261
+                ],
+                [
+                    515,
+                    253
+                ],
+                [
+                    515,
+                    250
+                ],
+                [
+                    631,
+                    3
+                ],
+                [
+                    633,
+                    1
+                ]
+            ]
+        },
+        "11": {
+            "area": [
+                [
+                    692,
+                    2
+                ],
+                [
+                    779,
+                    1
+                ],
+                [
+                    1002,
+                    143
+                ],
+                [
+                    1006,
+                    147
+                ],
+                [
+                    927,
+                    214
+                ],
+                [
+                    718,
+                    66
+                ],
+                [
+                    714,
+                    60
+                ]
+            ]
+        },
+        "3": {
+            "area": [
+                [
+                    783,
+                    2
+                ],
+                [
+                    971,
+                    1
+                ],
+                [
+                    1093,
+                    136
+                ],
+                [
+                    1017,
+                    145
+                ],
+                [
+                    1007,
+                    145
+                ]
+            ]
+        },
+        "17": {
+            "area": [
+                [
+                    974,
+                    2
+                ],
+                [
+                    1185,
+                    1
+                ],
+                [
+                    1186,
+                    158
+                ],
+                [
+                    1183,
+                    159
+                ],
+                [
+                    1096,
+                    136
+                ]
+            ]
+        },
+        "7": {
+            "area": [
+                [
+                    1006,
+                    148
+                ],
+                [
+                    1022,
+                    145
+                ],
+                [
+                    1098,
+                    138
+                ],
+                [
+                    1172,
+                    157
+                ],
+                [
+                    1186,
+                    162
+                ],
+                [
+                    1185,
+                    491
+                ],
+                [
+                    1131,
+                    491
+                ],
+                [
+                    954,
+                    317
+                ],
+                [
+                    928,
+                    216
+                ],
+                [
+                    932,
+                    211
+                ],
+                [
+                    936,
+                    209
+                ]
+            ]
+        },
+        "42": {
+            "area": [
+                [
+                    717,
+                    66
+                ],
+                [
+                    901,
+                    196
+                ],
+                [
+                    927,
+                    216
+                ],
+                [
+                    953,
+                    314
+                ],
+                [
+                    952,
+                    316
+                ],
+                [
+                    852,
+                    294
+                ],
+                [
+                    849,
+                    291
+                ],
+                [
+                    717,
+                    94
+                ]
+            ]
+        },
+        "19": {
+            "area": [
+                [
+                    717,
+                    98
+                ],
+                [
+                    726,
+                    109
+                ],
+                [
+                    849,
+                    293
+                ],
+                [
+                    848,
+                    294
+                ],
+                [
+                    722,
+                    323
+                ],
+                [
+                    703,
+                    309
+                ],
+                [
+                    688,
+                    289
+                ],
+                [
+                    688,
+                    282
+                ]
+            ]
+        },
+        "36": {
+            "area": [
+                [
+                    924,
+                    487
+                ],
+                [
+                    925,
+                    489
+                ],
+                [
+                    812,
+                    685
+                ],
+                [
+                    807,
+                    691
+                ],
+                [
+                    737,
+                    611
+                ],
+                [
+                    827,
+                    478
+                ]
+            ]
+        },
+        "12": {
+            "area": [
+                [
+                    824,
+                    477
+                ],
+                [
+                    824,
+                    481
+                ],
+                [
+                    736,
+                    611
+                ],
+                [
+                    694,
+                    608
+                ],
+                [
+                    680,
+                    581
+                ],
+                [
+                    779,
+                    475
+                ],
+                [
+                    789,
+                    466
+                ]
+            ]
+        },
+        "45": {
+            "area": [
+                [
+                    698,
+                    307
+                ],
+                [
+                    615,
+                    392
+                ],
+                [
+                    592,
+                    381
+                ],
+                [
+                    587,
+                    377
+                ],
+                [
+                    556,
+                    316
+                ],
+                [
+                    561,
+                    303
+                ],
+                [
+                    686,
+                    289
+                ]
+            ]
+        },
+        "9": {
+            "area": [
+                [
+                    513,
+                    253
+                ],
+                [
+                    518,
+                    260
+                ],
+                [
+                    519,
+                    264
+                ],
+                [
+                    436,
+                    352
+                ],
+                [
+                    426,
+                    349
+                ],
+                [
+                    408,
+                    317
+                ],
+                [
+                    421,
+                    281
+                ],
+                [
+                    456,
+                    253
+                ]
+            ]
+        },
+        "8": {
+            "area": [
+                [
+                    343,
+                    242
+                ],
+                [
+                    399,
+                    270
+                ],
+                [
+                    419,
+                    282
+                ],
+                [
+                    406,
+                    316
+                ],
+                [
+                    349,
+                    310
+                ],
+                [
+                    326,
+                    275
+                ]
+            ]
+        },
+        "46": {
+            "area": [
+                [
+                    406,
+                    317
+                ],
+                [
+                    423,
+                    349
+                ],
+                [
+                    348,
+                    406
+                ],
+                [
+                    335,
+                    407
+                ],
+                [
+                    324,
+                    338
+                ],
+                [
+                    350,
+                    312
+                ]
+            ]
+        },
+        "50": {
+            "area": [
+                [
+                    85,
+                    303
+                ],
+                [
+                    197,
+                    302
+                ],
+                [
+                    290,
+                    329
+                ],
+                [
+                    319,
+                    336
+                ],
+                [
+                    324,
+                    339
+                ],
+                [
+                    334,
+                    407
+                ],
+                [
+                    300,
+                    422
+                ],
+                [
+                    81,
+                    422
+                ],
+                [
+                    80,
+                    411
+                ]
+            ]
+        },
+        "23": {
+            "area": [
+                [
+                    154,
+                    502
+                ],
+                [
+                    260,
+                    550
+                ],
+                [
+                    287,
+                    592
+                ],
+                [
+                    241,
+                    657
+                ],
+                [
+                    243,
+                    664
+                ],
+                [
+                    233,
+                    671
+                ],
+                [
+                    216,
+                    678
+                ],
+                [
+                    211,
+                    679
+                ],
+                [
+                    202,
+                    671
+                ],
+                [
+                    42,
+                    618
+                ]
+            ]
+        },
+        "27": {
+            "area": [
+                [
+                    349,
+                    513
+                ],
+                [
+                    351,
+                    515
+                ],
+                [
+                    350,
+                    525
+                ],
+                [
+                    371,
+                    561
+                ],
+                [
+                    320,
+                    598
+                ],
+                [
+                    289,
+                    592
+                ],
+                [
+                    262,
+                    550
+                ],
+                [
+                    322,
+                    518
+                ],
+                [
+                    330,
+                    507
+                ]
+            ]
+        },
+        "20": {
+            "area": [
+                [
+                    322,
+                    600
+                ],
+                [
+                    326,
+                    595
+                ],
+                [
+                    372,
+                    563
+                ],
+                [
+                    394,
+                    564
+                ],
+                [
+                    437,
+                    569
+                ],
+                [
+                    445,
+                    568
+                ],
+                [
+                    452,
+                    565
+                ],
+                [
+                    456,
+                    566
+                ],
+                [
+                    452,
+                    572
+                ],
+                [
+                    383,
+                    640
+                ],
+                [
+                    360,
+                    637
+                ]
+            ]
+        },
+        "28": {
+            "area": [
+                [
+                    382,
+                    642
+                ],
+                [
+                    414,
+                    682
+                ],
+                [
+                    369,
+                    733
+                ],
+                [
+                    352,
+                    737
+                ],
+                [
+                    315,
+                    686
+                ],
+                [
+                    361,
+                    639
+                ]
+            ]
+        },
+        "54": {
+            "area": [
+                [
+                    1048,
+                    615
+                ],
+                [
+                    1056,
+                    607
+                ],
+                [
+                    1072,
+                    602
+                ],
+                [
+                    1094,
+                    599
+                ],
+                [
+                    1128,
+                    599
+                ],
+                [
+                    1161,
+                    605
+                ],
+                [
+                    1169,
+                    609
+                ],
+                [
+                    1174,
+                    616
+                ],
+                [
+                    1167,
+                    623
+                ],
+                [
+                    1152,
+                    628
+                ],
+                [
+                    1133,
+                    631
+                ],
+                [
+                    1104,
+                    632
+                ],
+                [
+                    1081,
+                    630
+                ],
+                [
+                    1066,
+                    627
+                ],
+                [
+                    1055,
+                    623
+                ],
+                [
+                    1049,
+                    618
+                ]
+            ]
+        },
+        "57": {
+            "area": [
+                [
+                    1053,
+                    752
+                ],
+                [
+                    1061,
+                    744
+                ],
+                [
+                    1077,
+                    739
+                ],
+                [
+                    1099,
+                    736
+                ],
+                [
+                    1133,
+                    736
+                ],
+                [
+                    1166,
+                    742
+                ],
+                [
+                    1174,
+                    746
+                ],
+                [
+                    1179,
+                    753
+                ],
+                [
+                    1172,
+                    760
+                ],
+                [
+                    1157,
+                    765
+                ],
+                [
+                    1138,
+                    768
+                ],
+                [
+                    1109,
+                    769
+                ],
+                [
+                    1086,
+                    767
+                ],
+                [
+                    1071,
+                    764
+                ],
+                [
+                    1060,
+                    760
+                ],
+                [
+                    1054,
+                    755
+                ]
+            ]
+        },
+        "56": {
+            "area": [
+                [
+                    1052,
+                    710
+                ],
+                [
+                    1060,
+                    702
+                ],
+                [
+                    1076,
+                    697
+                ],
+                [
+                    1098,
+                    694
+                ],
+                [
+                    1132,
+                    694
+                ],
+                [
+                    1165,
+                    700
+                ],
+                [
+                    1173,
+                    704
+                ],
+                [
+                    1178,
+                    711
+                ],
+                [
+                    1171,
+                    718
+                ],
+                [
+                    1156,
+                    723
+                ],
+                [
+                    1137,
+                    726
+                ],
+                [
+                    1108,
+                    727
+                ],
+                [
+                    1085,
+                    725
+                ],
+                [
+                    1070,
+                    722
+                ],
+                [
+                    1059,
+                    718
+                ],
+                [
+                    1053,
+                    713
+                ]
+            ]
+        },
+        "55": {
+            "area": [
+                [
+                    1050,
+                    666
+                ],
+                [
+                    1058,
+                    658
+                ],
+                [
+                    1074,
+                    653
+                ],
+                [
+                    1096,
+                    650
+                ],
+                [
+                    1130,
+                    650
+                ],
+                [
+                    1163,
+                    656
+                ],
+                [
+                    1171,
+                    660
+                ],
+                [
+                    1176,
+                    667
+                ],
+                [
+                    1169,
+                    674
+                ],
+                [
+                    1154,
+                    679
+                ],
+                [
+                    1135,
+                    682
+                ],
+                [
+                    1106,
+                    683
+                ],
+                [
+                    1083,
+                    681
+                ],
+                [
+                    1068,
+                    678
+                ],
+                [
+                    1057,
+                    674
+                ],
+                [
+                    1051,
+                    669
+                ]
+            ]
+        },
+        "41": {
+            "area": [
+                [
+                    436,
+                    808
+                ],
+                [
+                    495,
+                    867
+                ],
+                [
+                    412,
+                    899
+                ],
+                [
+                    405,
+                    900
+                ],
+                [
+                    371,
+                    874
+                ],
+                [
+                    366,
+                    869
+                ],
+                [
+                    367,
+                    864
+                ],
+                [
+                    381,
+                    828
+                ],
+                [
+                    383,
+                    826
+                ]
+            ]
+        },
+        "16": {
+            "area": [
+                [
+                    453,
+                    477
+                ],
+                [
+                    461,
+                    490
+                ],
+                [
+                    468,
+                    508
+                ],
+                [
+                    465,
+                    530
+                ],
+                [
+                    458,
+                    561
+                ],
+                [
+                    456,
+                    563
+                ],
+                [
+                    449,
+                    564
+                ],
+                [
+                    443,
+                    567
+                ],
+                [
+                    374,
+                    561
+                ],
+                [
+                    353,
+                    527
+                ],
+                [
+                    352,
+                    516
+                ],
+                [
+                    354,
+                    514
+                ],
+                [
+                    354,
+                    511
+                ],
+                [
+                    362,
+                    504
+                ],
+                [
+                    424,
+                    485
+                ],
+                [
+                    426,
+                    483
+                ],
+                [
+                    441,
+                    478
+                ]
+            ]
+        },
+        "2": {
+            "area": [
+                [
+                    156,
+                    500
+                ],
+                [
+                    230,
+                    424
+                ],
+                [
+                    299,
+                    424
+                ],
+                [
+                    329,
+                    491
+                ],
+                [
+                    327,
+                    507
+                ],
+                [
+                    323,
+                    516
+                ],
+                [
+                    262,
+                    548
+                ],
+                [
+                    256,
+                    547
+                ],
+                [
+                    157,
+                    502
+                ]
+            ]
+        },
+        "34": {
+            "area": [
+                [
+                    425,
+                    350
+                ],
+                [
+                    437,
+                    354
+                ],
+                [
+                    464,
+                    370
+                ],
+                [
+                    449,
+                    447
+                ],
+                [
+                    444,
+                    464
+                ],
+                [
+                    434,
+                    464
+                ],
+                [
+                    424,
+                    459
+                ],
+                [
+                    348,
+                    408
+                ]
+            ]
+        },
+        "33": {
+            "area": [
+                [
+                    587,
+                    441
+                ],
+                [
+                    590,
+                    437
+                ],
+                [
+                    600,
+                    430
+                ],
+                [
+                    616,
+                    407
+                ],
+                [
+                    620,
+                    405
+                ],
+                [
+                    738,
+                    448
+                ],
+                [
+                    743,
+                    452
+                ],
+                [
+                    750,
+                    463
+                ],
+                [
+                    692,
+                    481
+                ],
+                [
+                    595,
+                    448
+                ]
+            ]
+        },
+        "1": {
+            "area": [
+                [
+                    616,
+                    392
+                ],
+                [
+                    700,
+                    308
+                ],
+                [
+                    720,
+                    323
+                ],
+                [
+                    723,
+                    327
+                ],
+                [
+                    773,
+                    457
+                ],
+                [
+                    766,
+                    459
+                ],
+                [
+                    765,
+                    458
+                ],
+                [
+                    752,
+                    463
+                ],
+                [
+                    743,
+                    450
+                ],
+                [
+                    738,
+                    447
+                ],
+                [
+                    735,
+                    447
+                ],
+                [
+                    645,
+                    413
+                ],
+                [
+                    620,
+                    405
+                ],
+                [
+                    617,
+                    400
+                ]
+            ]
+        },
+        "5": {
+            "area": [
+                [
+                    461,
+                    400
+                ],
+                [
+                    520,
+                    429
+                ],
+                [
+                    483,
+                    472
+                ],
+                [
+                    462,
+                    485
+                ],
+                [
+                    459,
+                    484
+                ],
+                [
+                    455,
+                    476
+                ],
+                [
+                    446,
+                    465
+                ],
+                [
+                    454,
+                    431
+                ],
+                [
+                    458,
+                    406
+                ]
+            ]
+        },
+        "13": {
+            "area": [
+                [
+                    501,
+                    660
+                ],
+                [
+                    538,
+                    638
+                ],
+                [
+                    542,
+                    638
+                ],
+                [
+                    628,
+                    663
+                ],
+                [
+                    633,
+                    659
+                ],
+                [
+                    647,
+                    662
+                ],
+                [
+                    647,
+                    698
+                ],
+                [
+                    667,
+                    792
+                ],
+                [
+                    664,
+                    793
+                ],
+                [
+                    521,
+                    735
+                ],
+                [
+                    493,
+                    689
+                ],
+                [
+                    493,
+                    685
+                ]
+            ]
+        },
+        "51": {
+            "area": [
+                [
+                    409,
+                    902
+                ],
+                [
+                    413,
+                    899
+                ],
+                [
+                    493,
+                    869
+                ],
+                [
+                    497,
+                    869
+                ],
+                [
+                    579,
+                    950
+                ],
+                [
+                    577,
+                    952
+                ],
+                [
+                    473,
+                    952
+                ]
+            ]
+        },
+        "6": {
+            "area": [
+                [
+                    214,
+                    681
+                ],
+                [
+                    235,
+                    672
+                ],
+                [
+                    243,
+                    666
+                ],
+                [
+                    250,
+                    676
+                ],
+                [
+                    312,
+                    686
+                ],
+                [
+                    351,
+                    738
+                ],
+                [
+                    329,
+                    766
+                ],
+                [
+                    301,
+                    773
+                ],
+                [
+                    295,
+                    773
+                ],
+                [
+                    233,
+                    751
+                ],
+                [
+                    230,
+                    748
+                ],
+                [
+                    221,
+                    688
+                ]
+            ]
+        },
+        "10": {
+            "area": [
+                [
+                    558,
+                    302
+                ],
+                [
+                    558,
+                    307
+                ],
+                [
+                    556,
+                    309
+                ],
+                [
+                    555,
+                    314
+                ],
+                [
+                    494,
+                    366
+                ],
+                [
+                    465,
+                    368
+                ],
+                [
+                    438,
+                    353
+                ],
+                [
+                    520,
+                    265
+                ]
+            ]
+        },
+        "25": {
+            "area": [
+                [
+                    618,
+                    404
+                ],
+                [
+                    600,
+                    429
+                ],
+                [
+                    586,
+                    440
+                ],
+                [
+                    535,
+                    417
+                ],
+                [
+                    533,
+                    414
+                ],
+                [
+                    532,
+                    407
+                ],
+                [
+                    533,
+                    405
+                ],
+                [
+                    586,
+                    380
+                ],
+                [
+                    612,
+                    392
+                ]
+            ]
+        },
+        "21": {
+            "area": [
+                [
+                    372,
+                    732
+                ],
+                [
+                    414,
+                    684
+                ],
+                [
+                    421,
+                    683
+                ],
+                [
+                    491,
+                    688
+                ],
+                [
+                    518,
+                    735
+                ],
+                [
+                    452,
+                    771
+                ],
+                [
+                    449,
+                    771
+                ],
+                [
+                    373,
+                    734
+                ]
+            ]
+        },
+        "22": {
+            "area": [
+                [
+                    724,
+                    325
+                ],
+                [
+                    850,
+                    295
+                ],
+                [
+                    918,
+                    310
+                ],
+                [
+                    919,
+                    312
+                ],
+                [
+                    887,
+                    480
+                ],
+                [
+                    885,
+                    482
+                ],
+                [
+                    826,
+                    476
+                ],
+                [
+                    787,
+                    464
+                ],
+                [
+                    777,
+                    459
+                ],
+                [
+                    768,
+                    440
+                ]
+            ]
+        },
+        "24": {
+            "area": [
+                [
+                    694,
+                    609
+                ],
+                [
+                    728,
+                    611
+                ],
+                [
+                    736,
+                    613
+                ],
+                [
+                    806,
+                    692
+                ],
+                [
+                    784,
+                    742
+                ],
+                [
+                    668,
+                    737
+                ],
+                [
+                    657,
+                    735
+                ],
+                [
+                    649,
+                    699
+                ],
+                [
+                    649,
+                    666
+                ],
+                [
+                    657,
+                    650
+                ]
+            ]
+        },
+        "14": {
+            "area": [
+                [
+                    586,
+                    518
+                ],
+                [
+                    575,
+                    519
+                ],
+                [
+                    475,
+                    510
+                ],
+                [
+                    469,
+                    507
+                ],
+                [
+                    461,
+                    487
+                ],
+                [
+                    485,
+                    471
+                ],
+                [
+                    582,
+                    462
+                ]
+            ]
+        },
+        "26": {
+            "area": [
+                [
+                    288,
+                    594
+                ],
+                [
+                    320,
+                    600
+                ],
+                [
+                    359,
+                    638
+                ],
+                [
+                    314,
+                    685
+                ],
+                [
+                    253,
+                    675
+                ],
+                [
+                    248,
+                    670
+                ],
+                [
+                    243,
+                    659
+                ],
+                [
+                    248,
+                    650
+                ]
+            ]
+        },
+        "29": {
+            "area": [
+                [
+                    333,
+                    409
+                ],
+                [
+                    346,
+                    409
+                ],
+                [
+                    378,
+                    431
+                ],
+                [
+                    365,
+                    499
+                ],
+                [
+                    362,
+                    503
+                ],
+                [
+                    357,
+                    505
+                ],
+                [
+                    351,
+                    513
+                ],
+                [
+                    338,
+                    508
+                ],
+                [
+                    331,
+                    507
+                ],
+                [
+                    329,
+                    505
+                ],
+                [
+                    330,
+                    488
+                ],
+                [
+                    327,
+                    484
+                ],
+                [
+                    301,
+                    425
+                ],
+                [
+                    302,
+                    422
+                ]
+            ]
+        },
+        "30": {
+            "area": [
+                [
+                    170,
+                    951
+                ],
+                [
+                    243,
+                    904
+                ],
+                [
+                    246,
+                    904
+                ],
+                [
+                    338,
+                    951
+                ]
+            ]
+        },
+        "31": {
+            "area": [
+                [
+                    381,
+                    826
+                ],
+                [
+                    364,
+                    869
+                ],
+                [
+                    274,
+                    886
+                ],
+                [
+                    269,
+                    885
+                ],
+                [
+                    282,
+                    835
+                ],
+                [
+                    286,
+                    829
+                ],
+                [
+                    370,
+                    814
+                ]
+            ]
+        },
+        "32": {
+            "area": [
+                [
+                    555,
+                    317
+                ],
+                [
+                    586,
+                    378
+                ],
+                [
+                    532,
+                    404
+                ],
+                [
+                    512,
+                    385
+                ],
+                [
+                    496,
+                    367
+                ]
+            ]
+        },
+        "35": {
+            "area": [
+                [
+                    463,
+                    554
+                ],
+                [
+                    559,
+                    589
+                ],
+                [
+                    554,
+                    603
+                ],
+                [
+                    538,
+                    637
+                ],
+                [
+                    503,
+                    657
+                ],
+                [
+                    499,
+                    655
+                ],
+                [
+                    449,
+                    578
+                ],
+                [
+                    458,
+                    566
+                ],
+                [
+                    461,
+                    556
+                ]
+            ]
+        },
+        "37": {
+            "area": [
+                [
+                    561,
+                    589
+                ],
+                [
+                    593,
+                    575
+                ],
+                [
+                    595,
+                    577
+                ],
+                [
+                    631,
+                    648
+                ],
+                [
+                    631,
+                    656
+                ],
+                [
+                    628,
+                    661
+                ],
+                [
+                    541,
+                    636
+                ]
+            ]
+        },
+        "38": {
+            "area": [
+                [
+                    610,
+                    553
+                ],
+                [
+                    613,
+                    553
+                ],
+                [
+                    678,
+                    581
+                ],
+                [
+                    681,
+                    584
+                ],
+                [
+                    692,
+                    606
+                ],
+                [
+                    691,
+                    610
+                ],
+                [
+                    654,
+                    651
+                ],
+                [
+                    648,
+                    660
+                ],
+                [
+                    639,
+                    659
+                ],
+                [
+                    632,
+                    656
+                ],
+                [
+                    632,
+                    646
+                ],
+                [
+                    595,
+                    575
+                ]
+            ]
+        },
+        "40": {
+            "area": [
+                [
+                    590,
+                    446
+                ],
+                [
+                    582,
+                    462
+                ],
+                [
+                    547,
+                    464
+                ],
+                [
+                    494,
+                    470
+                ],
+                [
+                    489,
+                    469
+                ],
+                [
+                    489,
+                    467
+                ],
+                [
+                    533,
+                    418
+                ],
+                [
+                    586,
+                    442
+                ]
+            ]
+        },
+        "18": {
+            "area": [
+                [
+                    731,
+                    860
+                ],
+                [
+                    729,
+                    862
+                ],
+                [
+                    554,
+                    916
+                ],
+                [
+                    547,
+                    917
+                ],
+                [
+                    477,
+                    847
+                ],
+                [
+                    639,
+                    784
+                ],
+                [
+                    668,
+                    796
+                ]
+            ]
+        },
+        "43": {
+            "area": [
+                [
+                    786,
+                    466
+                ],
+                [
+                    702,
+                    557
+                ],
+                [
+                    689,
+                    569
+                ],
+                [
+                    689,
+                    571
+                ],
+                [
+                    679,
+                    580
+                ],
+                [
+                    613,
+                    552
+                ],
+                [
+                    611,
+                    550
+                ],
+                [
+                    610,
+                    538
+                ],
+                [
+                    694,
+                    482
+                ],
+                [
+                    766,
+                    460
+                ],
+                [
+                    774,
+                    459
+                ]
+            ]
+        },
+        "44": {
+            "area": [
+                [
+                    202,
+                    673
+                ],
+                [
+                    220,
+                    690
+                ],
+                [
+                    229,
+                    750
+                ],
+                [
+                    1,
+                    944
+                ],
+                [
+                    0,
+                    660
+                ],
+                [
+                    40,
+                    619
+                ]
+            ]
+        },
+        "47": {
+            "area": [
+                [
+                    588,
+                    520
+                ],
+                [
+                    584,
+                    461
+                ],
+                [
+                    592,
+                    448
+                ],
+                [
+                    690,
+                    482
+                ],
+                [
+                    610,
+                    536
+                ]
+            ]
+        },
+        "48": {
+            "area": [
+                [
+                    349,
+                    312
+                ],
+                [
+                    324,
+                    337
+                ],
+                [
+                    200,
+                    302
+                ],
+                [
+                    203,
+                    300
+                ],
+                [
+                    325,
+                    275
+                ],
+                [
+                    349,
+                    310
+                ]
+            ]
+        },
+        "49": {
+            "area": [
+                [
+                    446,
+                    580
+                ],
+                [
+                    448,
+                    580
+                ],
+                [
+                    451,
+                    583
+                ],
+                [
+                    500,
+                    658
+                ],
+                [
+                    495,
+                    672
+                ],
+                [
+                    404,
+                    623
+                ]
+            ]
+        },
+        "52": {
+            "area": [
+                [
+                    202,
+                    673
+                ],
+                [
+                    220,
+                    690
+                ],
+                [
+                    229,
+                    750
+                ],
+                [
+                    1,
+                    944
+                ],
+                [
+                    0,
+                    792
+                ],
+                [
+                    125,
+                    648
+                ]
+            ]
+        },
+        "53": {
+            "area": [
+                [
+                    530,
+                    516
+                ],
+                [
+                    532,
+                    515
+                ],
+                [
+                    586,
+                    520
+                ],
+                [
+                    608,
+                    537
+                ],
+                [
+                    609,
+                    552
+                ],
+                [
+                    593,
+                    575
+                ],
+                [
+                    562,
+                    588
+                ],
+                [
+                    558,
+                    588
+                ],
+                [
+                    547,
+                    584
+                ],
+                [
+                    543,
+                    580
+                ]
+            ]
+        },
+        "58": {
+            "area": [
+                [
+                    287,
+                    2
+                ],
+                [
+                    516,
+                    1
+                ],
+                [
+                    547,
+                    61
+                ],
+                [
+                    389,
+                    163
+                ],
+                [
+                    382,
+                    166
+                ],
+                [
+                    330,
+                    107
+                ]
+            ]
+        },
+        "59": {
+            "area": [
+                [
+                    246,
+                    903
+                ],
+                [
+                    268,
+                    888
+                ],
+                [
+                    365,
+                    871
+                ],
+                [
+                    469,
+                    951
+                ],
+                [
+                    342,
+                    952
+                ]
+            ]
+        },
+        "60": {
+            "area": [
+                [
+                    226,
+                    424
+                ],
+                [
+                    227,
+                    425
+                ],
+                [
+                    1,
+                    657
+                ],
+                [
+                    0,
+                    495
+                ],
+                [
+                    78,
+                    424
+                ]
+            ]
+        },
+        "61": {
+            "area": [
+                [
+                    920,
+                    312
+                ],
+                [
+                    922,
+                    311
+                ],
+                [
+                    953,
+                    318
+                ],
+                [
+                    1127,
+                    490
+                ],
+                [
+                    988,
+                    492
+                ],
+                [
+                    890,
+                    482
+                ],
+                [
+                    888,
+                    479
+                ]
+            ]
+        },
+        "62": {
+            "area": [
+                [
+                    549,
+                    919
+                ],
+                [
+                    552,
+                    917
+                ],
+                [
+                    688,
+                    875
+                ],
+                [
+                    734,
+                    862
+                ],
+                [
+                    760,
+                    800
+                ],
+                [
+                    768,
+                    785
+                ],
+                [
+                    978,
+                    951
+                ],
+                [
+                    582,
+                    952
+                ]
+            ]
+        },
+        "63": {
+            "area": [
+                [
+                    928,
+                    487
+                ],
+                [
+                    990,
+                    494
+                ],
+                [
+                    984,
+                    859
+                ],
+                [
+                    984,
+                    941
+                ],
+                [
+                    982,
+                    952
+                ],
+                [
+                    768,
+                    783
+                ],
+                [
+                    806,
+                    695
+                ],
+                [
+                    810,
+                    691
+                ]
+            ]
+        },
+        "64": {
+            "area": [
+                [
+                    366,
+                    500
+                ],
+                [
+                    378,
+                    434
+                ],
+                [
+                    380,
+                    431
+                ],
+                [
+                    425,
+                    462
+                ],
+                [
+                    436,
+                    466
+                ],
+                [
+                    444,
+                    466
+                ],
+                [
+                    453,
+                    475
+                ],
+                [
+                    442,
+                    476
+                ],
+                [
+                    368,
+                    501
+                ]
+            ]
+        },
+        "65": {
+            "area": [
+                [
+                    470,
+                    511
+                ],
+                [
+                    476,
+                    510
+                ],
+                [
+                    527,
+                    515
+                ],
+                [
+                    530,
+                    522
+                ],
+                [
+                    542,
+                    580
+                ],
+                [
+                    536,
+                    580
+                ],
+                [
+                    463,
+                    553
+                ],
+                [
+                    462,
+                    550
+                ]
+            ]
+        },
+        "66": {
+            "area": [
+                [
+                    467,
+                    370
+                ],
+                [
+                    494,
+                    368
+                ],
+                [
+                    531,
+                    406
+                ],
+                [
+                    532,
+                    417
+                ],
+                [
+                    522,
+                    428
+                ],
+                [
+                    520,
+                    428
+                ],
+                [
+                    463,
+                    400
+                ],
+                [
+                    460,
+                    397
+                ],
+                [
+                    465,
+                    373
+                ]
+            ]
+        },
+        "67": {
+            "area": [
+                [
+                    331,
+                    766
+                ],
+                [
+                    353,
+                    738
+                ],
+                [
+                    371,
+                    734
+                ],
+                [
+                    450,
+                    773
+                ],
+                [
+                    438,
+                    802
+                ],
+                [
+                    434,
+                    808
+                ],
+                [
+                    382,
+                    825
+                ],
+                [
+                    334,
+                    771
+                ]
+            ]
+        },
+        "68": {
+            "area": [
+                [
+                    548,
+                    63
+                ],
+                [
+                    576,
+                    117
+                ],
+                [
+                    518,
+                    241
+                ],
+                [
+                    512,
+                    251
+                ],
+                [
+                    457,
+                    251
+                ],
+                [
+                    384,
+                    168
+                ],
+                [
+                    541,
+                    66
+                ]
+            ]
+        },
+        "69": {
+            "area": [
+                [
+                    121,
+                    646
+                ],
+                [
+                    123,
+                    648
+                ],
+                [
+                    1,
+                    789
+                ],
+                [
+                    0,
+                    660
+                ],
+                [
+                    40,
+                    619
+                ]
+            ]
+        },
+        "70": {
+            "area": [
+                [
+                    437,
+                    807
+                ],
+                [
+                    448,
+                    780
+                ],
+                [
+                    453,
+                    772
+                ],
+                [
+                    519,
+                    736
+                ],
+                [
+                    635,
+                    783
+                ],
+                [
+                    476,
+                    846
+                ]
+            ]
+        },
+        "71": {
+            "area": [
+                [
+                    384,
+                    642
+                ],
+                [
+                    403,
+                    624
+                ],
+                [
+                    494,
+                    673
+                ],
+                [
+                    495,
+                    676
+                ],
+                [
+                    492,
+                    685
+                ],
+                [
+                    490,
+                    687
+                ],
+                [
+                    416,
+                    682
+                ]
+            ]
+        },
+        "72": {
+            "area": [
+                [
+                    658,
+                    737
+                ],
+                [
+                    770,
+                    742
+                ],
+                [
+                    783,
+                    744
+                ],
+                [
+                    733,
+                    859
+                ],
+                [
+                    669,
+                    794
+                ],
+                [
+                    657,
+                    738
+                ]
+            ]
+        },
+        "73": {
+            "area": [
+                [
+                    368,
+                    811
+                ],
+                [
+                    366,
+                    814
+                ],
+                [
+                    290,
+                    828
+                ],
+                [
+                    285,
+                    827
+                ],
+                [
+                    298,
+                    776
+                ],
+                [
+                    300,
+                    774
+                ],
+                [
+                    329,
+                    767
+                ]
+            ]
+        },
+        "74": {
+            "area": [
+                [
+                    187,
+                    1
+                ],
+                [
+                    188,
+                    2
+                ],
+                [
+                    86,
+                    228
+                ],
+                [
+                    87,
+                    236
+                ],
+                [
+                    79,
+                    420
+                ],
+                [
+                    74,
+                    426
+                ],
+                [
+                    1,
+                    492
+                ],
+                [
+                    0,
+                    2
+                ]
+            ]
+        }
+    }
+}
