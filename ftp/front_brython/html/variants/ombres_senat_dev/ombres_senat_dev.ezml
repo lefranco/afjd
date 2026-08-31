@@ -82,9 +82,9 @@ Suite à sa destruction par l'empire "anticipée", la zone au nord ouest de Coru
 _
 $ Datation
 
-La partie commence en *20*. Chaque tour représente *1* années "en temps réel".
+La partie commence en *22*. Chaque tour représente *1* années "en temps réel". La datation décrémente au fil des tours.
 .
-Ce début correspond à la guerre des clones. La véritable datation est 20 BBY. La destruction d'Alderaan est "anticipée", puisqu'elle ne se produit que plus tard, en 0 BBY.
+Cette date correspond au début la guerre des clones. La véritable datation est 22 BBY. C'est à dire avant la bataille de Yavin.  La destruction d'Alderaan est "anticipée", puisqu'elle ne se produit que plus tard, en 0 BBY.
 
 _
 $ Conditions de victoire
@@ -102,14 +102,14 @@ Il y a neuf puissances dont les unités de départ sont les suivantes (une armé
 = Position de départ
 |Puissance | Centres | Armées | Flottes| Centres inoccupés|
 |Chiss (Ascendance Chiss) | 3 | Csilla (Csi) | Copero (Cop), Avidich (Avi) | |
-|Banquiers (Clan Bancaire Intergalactique) | 3 | Muunilinst(Muu) | Scipio (Sci), Mygeeto (Myg) | |
+|Banquiers (Clan Bancaire Intergalactique) | 3 | Muunilinst (Muu) | Scipio (Sci), Mygeeto (Myg) | |
 |Séparatistes (Confédération des Systèmes Indépendants) | 3 | Geonosis (Geo) | Raxus (Rax), Mustafar (Mus) | |
 |Hutt (Espace Hutt) | 3 | Nal Hutta (Nal) | Nar Shaddaa (NSh), Tatooine (Tat) | |
-|Mandalore (Gouvernement Mandalorien) | 3 | Mandalore (Man) | Concordia (Con), Kalevala (Kal) | |
-|Marchands (Fédération du Commerce) | 3 | Cato Neimodia (Cat) | Prime Neimoidia (Pri), Deko Neimoidia (Dek) | |
+|Mandalore (Mandaloriens) | 3 | Mandalore (Man) | Concordia (Con), Kalevala (Kal) | |
+|Marchands (Fédération du Commerce) | 3 | Cato Neimodia (Cat) | Neimoidia (Nei), Deko Neimoidia (Dek) | |
 |MonCala (Principauté de Mon Cala) | 3 | Mon Cala (Mon) | Manaan (Maa), Trandosha (Tha) | |
 |Corellia (Système corellien) | 3 | Corellia (Coa) | Selonia (Sel), Drall (Dra) | |
-|Pyke (Syndicat Pyke) | 3 | Oba Diah (Oba) | Sansanna (San), Kessel (Kes) | |
+|Pyke (Syndicat Pyke) | 3 | Oba Diah (Oba) | Ord Mantell (Ord), Kessel (Kes) | |
 |Dathomir (Sorcières de Dathomir) | 1 | Dathomir (Dat) |  | |
 =
 
@@ -175,13 +175,13 @@ $ Nomenclature
 | Myg | Mygeeto | île | \* |
 | Nab | Naboo | île | \* |
 | Nal | Nal Hutta | terre | \* |
+| Nei | Neimoidia | île | \* |
 | NSh | Nar Shaddaa | île | \* |
 | Oba | Oba Diah | terre | \* |
 | Ond | Onderon | île | |
 | Ord | Ord Mantell | île | \* |
 | Oss | Ossus | île | \* (non constructible) |
 | Pae | Paecia | île | |
-| Pur | Pure Neimoidia | île | \* |
 | Rap | Rapacc | île | \* |
 | Rax | Raxus | île | |
 | Ren | Rentor | île |  |
@@ -228,7 +228,7 @@ $ Un peu de contexte
 
 $$ Les factions en présence
 
-(État Mandalorien)
+(Mandaloriens)
 Guerriers claniques du Bordure Extérieure, unis par une culture martiale et un code d'honneur strict. Faible en nombre mais redoutable au combat, coincée entre l'Empire Hutt et la CSI.
 
 (République Corellienne)
@@ -285,7 +285,7 @@ Planète délibérément la plus reculée de la galaxie, hors des grandes routes
 Géante gazeuse célèbre pour ses cités minières flottantes.
 
 (Cato Neimoidia)
-Monde-arche neimoidien aux ponts suspendus, capitale de la Fédération.
+Monde-arche neimoidien aux ponts suspendus et bastion de la Fédération du Commerce.
 
 (Chandrila)
 Monde pastoral du Noyau, berceau politique de Mon Mothma et de la Nouvelle République.
@@ -416,7 +416,7 @@ Ancien monde-bibliothèque des Jedi, gardien d'un savoir millénaire.
 (Paecia)
 Un monde de la Bordure Intérieure principalement connu comme escale sur les routes commerciales.
 
-(Pure Neimoidia)
+(Neimoidia)
 Monde souche du système neimoidien, avant ses colonies.
 
 (Rapacc)

@@ -277,8 +277,8 @@
             "2": []
         }
     ],
-    "year_zero": 34,
-    "increment": 1,
+    "year_zero": 21,
+    "increment": -1,
     "extra_requirement_solo": 0,
     "build_everywhere": true,
     "start_build": false,
