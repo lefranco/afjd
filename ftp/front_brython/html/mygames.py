@@ -846,6 +846,7 @@ def my_games(state_name, master):
     fields = ['name', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'votes', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'anonymous', 'game_type']
 
     if master:
+        fields.remove('role_played')
         fields.remove('orders_submitted')
         fields.remove('agreed')
     else:
