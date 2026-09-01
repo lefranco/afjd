@@ -35,6 +35,17 @@ db.auth("nodebb", "<nodebb database password>")
 quit()
 
 ============================
+EN CAS DE RESTAURATION 
+1) redémarrer services
+2) REMPLACER ACTIONS CI DESSUS PAR :
+ - recupérer le backup nodebb sur le drive de sauvegarde google
+ - décompresser
+ - copier sur le serveur par ftp/filezilla
+ - copier dans le docker par : docker cp <repertoire>/nodebb nodebb-mongodb:/tmp/
+ - restaurer la base par : docker exec -it nodebb-mongodb mongorestore --username nodebb --password <mot de passe> --authenticationMechanism SCRAM-SHA-256 --gzip --drop --db=nodebb /tmp/nodebb
+3) continuer à partir d'ici
+
+============================
 docker compose exec nodebb ./nodebb setup
 (ignore ENOENT error)
 (takes some time)
