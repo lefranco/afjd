@@ -62,7 +62,7 @@ INTERFACE_TABLE = {
     'franceautriche': ['diplomania'],
     'crowded': ['diplomania'],
     'coldwar': ['diplomania'],
-    'coldwar_redux': ['diplomania'],
+    'coldwarredux': ['diplomania'],
     'canton': ['diplomania'],
     'v1900s': ['diplomania'],
     'westeros': ['diplomania'],
@@ -70,7 +70,7 @@ INTERFACE_TABLE = {
     'crepusculerome': ['diplomania'],
     'chaos': ['diplomania'],
     'sailho': ['diplomania'],
-    'ombres_senat': ['diplomania'],
+    'ombressenat': ['diplomania'],
 }
 
 
