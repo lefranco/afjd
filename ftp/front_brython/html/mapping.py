@@ -801,10 +801,7 @@ class Variant(Renderable):
         # =================
 
         # load the name and author(s)
-        try:  # TODO REMOVE THE TRY EXCEPT
-            self._real_name = raw_variant_content['name']
-        except:
-            self._real_name = name
+        self._real_name = raw_variant_content['name']
         self._variant_author = raw_variant_content['author']
 
         # load position where to put author and additional text if present
