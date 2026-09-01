@@ -652,6 +652,8 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
 def my_games(state_name, master):
     """ my_games """
 
+    toggle_game_selection_table = {}
+
     def select_game_callback(ev, game_name, game_data_sel, arrival):  # pylint: disable=invalid-name
         """ select_game_callback """
 
@@ -705,6 +707,30 @@ def my_games(state_name, master):
 
         MY_SUB_PANEL.clear()
         my_games(state_name, master)
+
+    def start_games_callback(ev):
+        ev.preventDefault()
+        games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
+        l = ' '.join(games_list)
+        alert(f"Should start games {l}")
+
+    def force_wait_game_callback(ev, force):
+        ev.preventDefault()
+        games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
+        l = ' '.join(games_list)
+        alert(f"Should force {force=} games {l}")
+
+    def change_anonymity_games_callback(ev, new_anonymous):
+        ev.preventDefault()
+        games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
+        l = ' '.join(games_list)
+        alert(f"Should set anonymity {new_anonymous=} games {l}")
+
+    def archive_games_callback(ev):
+        ev.preventDefault()
+        games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
+        l = ' '.join(games_list)
+        alert(f"Should archive games {l}")
 
     overall_time_before = time()
 
@@ -836,14 +862,69 @@ def my_games(state_name, master):
     button.bind("click", change_button_mode_callback)
     MY_SUB_PANEL <= button
 
+    if master:
+
+        buttons = html.DIV(style={
+            "border": "2px solid black",
+            "borderRadius": "5px",
+            "padding": "10px"
+            # pas de "width" fixe → s'adapte au contenu
+        })
+        
+        # title
+        buttons <= html.B("Sur les parties sélectionnées :")
+        buttons <= html.BR()
+
+        button = html.BUTTON("Démarrer", Class='btn-inside')
+        button.bind("click", start_games_callback)
+        buttons <= button
+
+        # separator
+        buttons <= " "
+
+        button = html.BUTTON("Forcer les résolutions à maintenant (au plus tôt)", Class='btn-inside')
+        button.bind("click", lambda e, f=-1: force_wait_game_callback(e, f))
+        buttons <= button
+
+        # separator
+        buttons <= " "
+
+        button = html.BUTTON("Ne rien forcer", Class='btn-inside')
+        button.bind("click", lambda e, f=0: force_wait_game_callback(e, f))
+        buttons <= button
+
+        # separator
+        buttons <= " "
+
+        button = html.BUTTON("Forcer les résolutions à la D.L. (au plus tard)", Class='btn-inside')
+        button.bind("click", lambda e, f=1: force_wait_game_callback(e, f))
+        buttons <= button
+
+        # separator
+        buttons <= " "
+
+        button = html.BUTTON("Supprimer l'anonymat", Class='btn-inside')
+        button.bind("click", lambda e, a=False: change_anonymity_games_callback(e, a))
+        buttons <= button
+
+        # separator
+        buttons <= " "
+
+        button = html.BUTTON("Archiver", Class='btn-inside')
+        button.bind("click", archive_games_callback)
+        buttons <= button
+
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= buttons
+
     # end of buttons
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
     games_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'votes', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'anonymous', 'game_type']
+    fields = ['name', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'votes', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_current', 'nomessage_current', 'anonymous', 'game_type', 'selection']
 
     if master:
         fields.remove('role_played')
@@ -853,6 +934,7 @@ def my_games(state_name, master):
         fields.remove('all_orders_submitted')
         fields.remove('all_agreed')
         fields.remove('votes')
+        fields.remove('selection')
 
     if storage['GAME_SHOW_MODE'] == 'reduced':
         fields.remove('used_for_elo')
@@ -863,8 +945,8 @@ def my_games(state_name, master):
     # header
     thead = html.THEAD()
     for field in fields:
-        content = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes expr.', 'new_declarations': 'presses', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'presse', 'anonymous': 'anonyme', 'nomessage_current': 'messagerie', 'game_type': 'type de partie'}[field]
-        legend = {'name': "Le nom de la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombre de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message privé non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_current': "Est-ce que les messages publics (presse) sont autorisés entre les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (messagerie) sont autorisés pour les joueurs actuellement", 'anonymous': 'Anonymat actuellement', 'game_type': "Type de partie pour la communication en jeu"}[field]
+        content = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes expr.', 'new_declarations': 'presses', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_current': 'presse', 'anonymous': 'anonyme', 'nomessage_current': 'messagerie', 'game_type': 'type de partie', 'selection': 'sélection'}[field]
+        legend = {'name': "Le nom de la partie", 'deadline': "Valeur temporelle et vision colorée de la date limite", 'current_advancement': "La saison qui est maintenant à jouer dans la partie", 'role_played': "Le rôle que vous jouez dans la partie", 'orders_submitted': "Le status de vos ordres", 'agreed': "Le statut de votre accord pour la résolution", 'all_orders_submitted': "Le statut global des ordres de tous les joueurs", 'all_agreed': "Le statut global des accords de tous les joueurs pour la résolution ('ma' pour 'maintenant' et 'dl' pour 'à la date limite')", 'votes': "Le nombre de votes exprimés pour arrêter la partie", 'new_declarations': "Existe-t-il une presse non lue pour vous dans la partie", 'new_messages': "Existe-t-il un message privé non lu pour vous dans la partie", 'variant': "La variante de la partie", 'used_for_elo': "Est-ce que la partie compte pour le classement E.L.O ?", 'nopress_current': "Est-ce que les messages publics (presse) sont autorisés entre les joueurs actuellement", 'nomessage_current': "Est-ce que les messages privés (messagerie) sont autorisés pour les joueurs actuellement", 'anonymous': 'Anonymat actuellement', 'game_type': "Type de partie pour la communication en jeu", 'selection': "Partie sélectionnée pour action"}[field]
         field = html.DIV(content, title=legend)
         col = html.TD(field)
         thead <= col
@@ -1029,6 +1111,7 @@ def my_games(state_name, master):
         data['votes'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
+        data['selection'] = None
 
         missing_orders = False
         after_deadline = False
@@ -1288,6 +1371,13 @@ def my_games(state_name, master):
                 explanation = common.TYPE_GAME_EXPLAIN_CONV[value]
                 stats = game_type_conv[value]
                 value = html.DIV(stats, title=explanation)
+
+            if field == 'selection':
+                form = html.FORM()
+                input_select_game = html.INPUT(type="checkbox", checked=False, Class='btn-inside')
+                form <= input_select_game
+                toggle_game_selection_table[game_name] = input_select_game
+                value = form
 
             col = html.TD(value)
 
