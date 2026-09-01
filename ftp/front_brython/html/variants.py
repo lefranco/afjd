@@ -316,6 +316,38 @@ def show_variants_frequentation_data():
             value = data[field]
 
             if field == 'variant':
+
+                variant_name_loaded = variant_name
+
+                # from variant name get variant content
+                if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+                    variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+                else:
+                    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+                    if not variant_content_loaded:
+                        alert("Erreur chargement données variante de la partie")
+                        return
+                    memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+                # selected display (user choice)
+                interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+                # parameters
+
+                if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+                    parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+                else:
+                    parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+                    memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+                # build variant data
+
+                if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+                    variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+                else:
+                    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+                    memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
                 value = variant_data.real_name
 
             col = html.TD(value)
