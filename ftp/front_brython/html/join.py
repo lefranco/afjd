@@ -486,6 +486,9 @@ def recruiting_games():
                 if advancement_loaded > (nb_max_cycles_to_play - 1) * 5 - 1:
                     arriving = True
 
+            if field == 'variant':
+                value = variant_data.real_name
+
             if field == 'allocated':
                 allocated = recruiting_games_dict[int(game_id_str)]['allocated']
                 capacity = recruiting_games_dict[int(game_id_str)]['capacity']

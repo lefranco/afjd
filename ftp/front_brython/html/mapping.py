@@ -800,7 +800,11 @@ class Variant(Renderable):
         # from variant file
         # =================
 
-        # load the author(s)
+        # load the name and author(s)
+        try:  # TODO REMOVE THE TRY EXCEPT
+            self._real_name = raw_variant_content['name']
+        except:
+            self._real_name = name
         self._variant_author = raw_variant_content['author']
 
         # load position where to put author and additional text if present
@@ -1235,6 +1239,11 @@ class Variant(Renderable):
     def name(self) -> str:
         """ property """
         return self._name
+
+    @property
+    def real_name(self) -> str:
+        """ property """
+        return self._real_name
 
     @property
     def map_size(self) -> geometry.PositionRecord:

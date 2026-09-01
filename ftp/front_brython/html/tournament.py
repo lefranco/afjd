@@ -471,6 +471,9 @@ def show_games():
                 if advancement_loaded > (nb_max_cycles_to_play - 1) * 5 - 1:
                     arriving = True
 
+            if field == 'variant':
+                value = variant_data.real_name
+
             if field == 'current_state':
                 state_name = data[field]
                 value = rev_state_code_table[state_name]

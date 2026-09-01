@@ -1217,7 +1217,8 @@ def get_game_status():
 
     # variant + link
     form = html.FORM()
-    input_show_variant = html.INPUT(type="submit", value=game_variant, Class='btn-inside')
+    game_variant_full_name = VARIANT_DATA.real_name
+    input_show_variant = html.INPUT(type="submit", value=game_variant_full_name, Class='btn-inside')
     input_show_variant.attrs['style'] = 'font-size: 10px'
     input_show_variant.bind("click", lambda e, v=game_variant: show_variant_callback(e, v))
     form <= input_show_variant

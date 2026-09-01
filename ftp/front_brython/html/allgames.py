@@ -1787,6 +1787,9 @@ def all_games(state_name):
                 if advancement_loaded > (nb_max_cycles_to_play - 1) * 5 - 1:
                     arriving = True
 
+            if field == 'variant':
+                value = variant_data.real_name
+
             if field == 'used_for_elo':
                 value = "Oui" if value else "Non"
 

@@ -1150,6 +1150,9 @@ def my_games(state_name, master):
                 if advancement_loaded > (nb_max_cycles_to_play - 1) * 5 - 1:
                     arriving = True
 
+            if field == 'variant':
+                value = variant_data.real_name
+
             if field == 'role_played':
                 value = ""
                 if role_id is None:

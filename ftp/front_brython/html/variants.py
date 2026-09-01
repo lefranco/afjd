@@ -19,7 +19,7 @@ import ezml_render
 
 
 OPTIONS = {'Généralités': "Généralités sur les variantes implémentées sur le site"}
-OPTIONS.update({f"{variant_name} ({nb_players}j.)": f"La variante {variant_name}" for variant_name, nb_players in config.VARIANT_NAMES_DICT.items()})
+OPTIONS.update({variant_name: f"La variante {variant_name}" for variant_name in config.VARIANT_NAMES_DICT.keys()})
 OPTIONS.update({'Fréquentation des variantes': "Statistiques sur la fréquentation des variantes sur le site"})
 OPTIONS.update({'Equilibre des variantes': "Statistiques l'équilibre des variantes sur le site"})
 
@@ -231,7 +231,8 @@ def show_variant():
 
     my_sub_panel2 <= buttons_right
 
-    MY_SUB_PANEL <= html.H3(f"La variante {VARIANT_NAME}")
+    real_name = VARIANT_DATA.real_name
+    MY_SUB_PANEL <= html.H3(f"La variante '{real_name}'")
 
     MY_SUB_PANEL <= my_sub_panel2
     MY_SUB_PANEL <= html.BR()
@@ -315,7 +316,7 @@ def show_variants_frequentation_data():
             value = data[field]
 
             if field == 'variant':
-                value = variant_name
+                value = variant_data.real_name
 
             col = html.TD(value)
 
@@ -367,8 +368,6 @@ def show_variants_balance_data():
     MY_SUB_PANEL <= html.DIV("ATTENTION : Le lecteur avisé (ce message s'adresse aux autres) sait que la vérité d'une mesure statistique est proportionelle à la taille de l'échantillon, aussi il prendra du recul sur les valeurs avec peu ou très peu de parties !", Class='important')
 
     for variant_name_loaded in config.VARIANT_NAMES_DICT:
-
-        # if variant_name_loaded != 'grandeguerre': continue
 
         # build dict of positions
         positions_dict_loaded = variant_position_reload(variant_name_loaded)
@@ -527,7 +526,7 @@ def show_variants_balance_data():
         deviation = (std_dev / nb_possible_centers) * 100
 
         # title
-        MY_SUB_PANEL <= html.H4(variant_name_loaded)
+        MY_SUB_PANEL <= html.H4(variant_data.real_name)
         MY_SUB_PANEL <= variant_powers_results_table
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= f"Moyenne des centres : {avg:.2f} écart type : {std_dev:.2f} ... nombre de centres : {nb_possible_centers} donc déviation de {deviation:.2f} % (sur un échantillon de {nb_games} parties)"
@@ -579,10 +578,48 @@ def load_option(_, item_name):
     # items in menu
     for possible_item_name, legend in OPTIONS.items():
 
-        if possible_item_name == ITEM_NAME_SELECTED:
-            item_name_bold_or_not = html.B(possible_item_name)
+        if possible_item_name in ('Généralités', 'Fréquentation des variantes', 'Equilibre des variantes'):
+            improved_possible_item_name = possible_item_name
         else:
-            item_name_bold_or_not = possible_item_name
+
+            variant_name_loaded = possible_item_name
+
+            # from variant name get variant content
+            if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+                variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+            else:
+                variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+                if not variant_content_loaded:
+                    alert("Erreur chargement données variante de la partie")
+                    return
+                memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+            # selected display (user choice)
+            interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+            # parameters
+
+            if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+                parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+            else:
+                parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+                memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+            # build variant data
+
+            if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+                variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+            else:
+                variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+                memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+            nb_players = len(variant_data.roles) - len(variant_content_loaded['disorder']) - 1
+            improved_possible_item_name = f"{variant_data.real_name} ({nb_players})"
+
+        if possible_item_name == ITEM_NAME_SELECTED:
+            item_name_bold_or_not = html.B(improved_possible_item_name)
+        else:
+            item_name_bold_or_not = improved_possible_item_name
 
         button = html.BUTTON(item_name_bold_or_not, title=legend, Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
