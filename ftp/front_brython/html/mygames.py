@@ -680,6 +680,94 @@ def my_games(state_name, master):
         MY_SUB_PANEL.clear()
         my_games(state_name, master)
 
+    def start_stop_game_action(new_state, game):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au démarrage/arrêt de la partie {game}: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au démarrage/arrêt de la partie {game}: {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+
+            new_state_name = {1: "démarrée", 2: "archivée"}[new_state]
+            mydialog.info_go(f"La partie {game} a été {new_state_name} : {messages}")
+
+        json_dict = {
+            'name': game,
+            'current_state': new_state,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # changing game state : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def force_wait_game_action(force, game):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au forçage attente date limite à la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au forçage attente de la date limite à la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            desc = {-1: 'Maintenant (au plus tôt)', 0: 'Pas de forçage', 1: 'A la date limite (au plus tard)'}[force]
+            mydialog.info_go(f"Le forçage d'attente pour la partie {game} à été mis à  {desc} : {messages}")
+
+        # push on server
+        json_dict = {
+            'name': game,
+            'force_wait': force,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # changing game deadline : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def change_anonymity_games_action(new_anonymous, game):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification anonymat de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification anonymat de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.info_go(f"L'anonymat de la partie {game} a été mis à {new_anonymous} : {messages}")
+
+        json_dict = {
+            'name': game,
+            'anonymous': new_anonymous,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # changing game anonimity : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     def change_show_mode_callback(_):
         if storage['GAME_SHOW_MODE'] == 'complete':
             storage['GAME_SHOW_MODE'] = 'reduced'
@@ -711,26 +799,34 @@ def my_games(state_name, master):
     def start_games_callback(ev):
         ev.preventDefault()
         games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
-        l = ' '.join(games_list)
-        alert(f"Should start games {l}")
+        for game in games_list:
+            start_stop_game_action(1, game)
+        MY_SUB_PANEL.clear()
+        my_games(state_name, master)
 
     def force_wait_game_callback(ev, force):
         ev.preventDefault()
         games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
-        l = ' '.join(games_list)
-        alert(f"Should force {force=} games {l}")
+        for game in games_list:
+            force_wait_game_action(force, game)
+        MY_SUB_PANEL.clear()
+        my_games(state_name, master)
 
     def change_anonymity_games_callback(ev, new_anonymous):
         ev.preventDefault()
         games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
-        l = ' '.join(games_list)
-        alert(f"Should set anonymity {new_anonymous=} games {l}")
+        for game in games_list:
+            change_anonymity_games_action(new_anonymous, game)
+        MY_SUB_PANEL.clear()
+        my_games(state_name, master)
 
     def archive_games_callback(ev):
         ev.preventDefault()
         games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
-        l = ' '.join(games_list)
-        alert(f"Should archive games {l}")
+        for game in games_list:
+            start_stop_game_action(2, game)
+        MY_SUB_PANEL.clear()
+        my_games(state_name, master)
 
     overall_time_before = time()
 
@@ -870,49 +966,53 @@ def my_games(state_name, master):
             "padding": "10px"
             # pas de "width" fixe → s'adapte au contenu
         })
-        
+
         # title
         buttons <= html.B("Sur les parties sélectionnées :")
         buttons <= html.BR()
 
-        button = html.BUTTON("Démarrer", Class='btn-inside')
-        button.bind("click", start_games_callback)
-        buttons <= button
+        if state == 0:
 
-        # separator
-        buttons <= " "
+            button = html.BUTTON("Démarrer", Class='btn-inside')
+            button.bind("click", start_games_callback)
+            buttons <= button
 
-        button = html.BUTTON("Forcer les résolutions à maintenant (au plus tôt)", Class='btn-inside')
-        button.bind("click", lambda e, f=-1: force_wait_game_callback(e, f))
-        buttons <= button
+            # separator
+            buttons <= " "
 
-        # separator
-        buttons <= " "
+        if state == 1:
 
-        button = html.BUTTON("Ne rien forcer", Class='btn-inside')
-        button.bind("click", lambda e, f=0: force_wait_game_callback(e, f))
-        buttons <= button
+            button = html.BUTTON("Forcer les résolutions à maintenant (au plus tôt)", Class='btn-inside')
+            button.bind("click", lambda e, f=-1: force_wait_game_callback(e, f))
+            buttons <= button
 
-        # separator
-        buttons <= " "
+            # separator
+            buttons <= " "
 
-        button = html.BUTTON("Forcer les résolutions à la D.L. (au plus tard)", Class='btn-inside')
-        button.bind("click", lambda e, f=1: force_wait_game_callback(e, f))
-        buttons <= button
+            button = html.BUTTON("Ne rien forcer", Class='btn-inside')
+            button.bind("click", lambda e, f=0: force_wait_game_callback(e, f))
+            buttons <= button
 
-        # separator
-        buttons <= " "
+            # separator
+            buttons <= " "
 
-        button = html.BUTTON("Supprimer l'anonymat", Class='btn-inside')
-        button.bind("click", lambda e, a=False: change_anonymity_games_callback(e, a))
-        buttons <= button
+            button = html.BUTTON("Forcer les résolutions à la D.L. (au plus tard)", Class='btn-inside')
+            button.bind("click", lambda e, f=1: force_wait_game_callback(e, f))
+            buttons <= button
 
-        # separator
-        buttons <= " "
+            # separator
+            buttons <= " "
 
-        button = html.BUTTON("Archiver", Class='btn-inside')
-        button.bind("click", archive_games_callback)
-        buttons <= button
+            button = html.BUTTON("Supprimer l'anonymat", Class='btn-inside')
+            button.bind("click", lambda e, a=False: change_anonymity_games_callback(e, a))
+            buttons <= button
+
+            # separator
+            buttons <= " "
+
+            button = html.BUTTON("Archiver", Class='btn-inside')
+            button.bind("click", archive_games_callback)
+            buttons <= button
 
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
