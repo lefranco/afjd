@@ -63,8 +63,8 @@
             ]
         },
         "2": {
-            "name": "Banquiers",
-            "adjective_name": "banquiers",
+            "name": "Muuns",
+            "adjective_name": "muuns",
             "letter_name": "B",
             "red": [
                 254,
@@ -97,8 +97,8 @@
             ]
         },
         "4": {
-            "name": "Hutt",
-            "adjective_name": "hutt",
+            "name": "Hutts",
+            "adjective_name": "hutts",
             "letter_name": "H",
             "red": [
                 168,
@@ -131,8 +131,8 @@
             ]
         },
         "6": {
-            "name": "Marchands",
-            "adjective_name": "marchands",
+            "name": "Neimoidiens",
+            "adjective_name": "neimoidiens",
             "letter_name": "F",
             "red": [
                 168,
@@ -148,8 +148,8 @@
             ]
         },
         "7": {
-            "name": "MonCala",
-            "adjective_name": "moncala",
+            "name": "MonCalamari",
+            "adjective_name": "moncalamari",
             "letter_name": "A",
             "red": [
                 144,
@@ -182,8 +182,8 @@
             ]
         },
         "9": {
-            "name": "Pyke",
-            "adjective_name": "pyke",
+            "name": "Pykes",
+            "adjective_name": "pykes",
             "letter_name": "Y",
             "red": [
                 20,
