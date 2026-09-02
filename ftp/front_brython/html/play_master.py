@@ -781,25 +781,15 @@ def game_master(arrival):
 
         ev.preventDefault()
 
-        # get deadline
-        deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
-
-        # add one day - if fast game change to one minute
-        time_unit = 60 if play_low.GAME_PARAMETERS_LOADED['fast'] else 24 * 60 * 60
-        deadline_forced = deadline_loaded + time_unit
-
         # push on server
-        json_dict = {
-            'name': play_low.GAME,
-            'deadline': deadline_forced,
-        }
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{play_low.GAME}"
+        url = f"{host}:{port}/game-postpone-deadline/{play_low.GAME_ID}"
 
         # changing game deadline : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def sync_deadline_game_callback(ev):  # pylint: disable=invalid-name
 

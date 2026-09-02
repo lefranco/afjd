@@ -710,6 +710,34 @@ def my_games(state_name, master):
         # changing game state : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    def push_deadline_game_action(game):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au poussage de date limite à la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au poussage de la date limite à la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            mydialog.info_go(f"La date limite de la partie {game} a été reportée : {messages}")
+
+        game_id = common.get_game_id(game)
+
+        # push on server
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-postpone-deadline/{game_id}"
+
+        # changing game deadline : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     def force_wait_game_action(force, game):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -801,6 +829,14 @@ def my_games(state_name, master):
         games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
         for game in games_list:
             start_stop_game_action(1, game)
+        MY_SUB_PANEL.clear()
+        my_games(state_name, master)
+
+    def push_deadline_game_callback(ev):
+        ev.preventDefault()
+        games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
+        for game in games_list:
+            push_deadline_game_action(game)
         MY_SUB_PANEL.clear()
         my_games(state_name, master)
 
@@ -981,6 +1017,13 @@ def my_games(state_name, master):
             buttons <= " "
 
         if state == 1:
+
+            button = html.BUTTON("Reporter la prochaine D.L. de 24 heures", Class='btn-inside')
+            button.bind("click", push_deadline_game_callback)
+            buttons <= button
+
+            # separator
+            buttons <= " "
 
             button = html.BUTTON("Forcer les résolutions à maintenant (au plus tôt)", Class='btn-inside')
             button.bind("click", lambda e, f=-1: force_wait_game_callback(e, f))

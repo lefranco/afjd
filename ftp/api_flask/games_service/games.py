@@ -638,6 +638,18 @@ class Game:
                 self._finished = True
                 self._nopress_current = False   # also open press
 
+    def postpone_deadline(self) -> None:
+        """ postpone_deadline """
+
+        # do not touch deadline if game is exposition
+        if self._exposition:
+            return
+
+        if self._fast:
+            self._deadline += 60
+        else:
+            self._deadline += 24 * 3600
+
     def push_deadline(self, now: float) -> None:
         """ push_deadline """
 
