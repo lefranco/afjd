@@ -63,8 +63,8 @@
             ]
         },
         "2": {
-            "name": "Banquiers",
-            "adjective_name": "banquiers",
+            "name": "Muuns",
+            "adjective_name": "muuns",
             "letter_name": "B",
             "red": [
                 254,
@@ -84,21 +84,21 @@
             "adjective_name": "separatistes",
             "letter_name": "S",
             "red": [
-                208,
-                188
+                255,
+                235
             ],
             "green": [
-                84,
-                64
+                130,
+                110
             ],
             "blue": [
-                84,
-                64
+                160,
+                140
             ]
         },
         "4": {
-            "name": "Hutt",
-            "adjective_name": "hutt",
+            "name": "Hutts",
+            "adjective_name": "hutts",
             "letter_name": "H",
             "red": [
                 168,
@@ -131,8 +131,8 @@
             ]
         },
         "6": {
-            "name": "Marchands",
-            "adjective_name": "marchands",
+            "name": "Neimoidiens",
+            "adjective_name": "neimoidiens",
             "letter_name": "F",
             "red": [
                 168,
@@ -143,25 +143,25 @@
                 0
             ],
             "blue": [
-                168,
-                148
+                128,
+                108
             ]
         },
         "7": {
-            "name": "MonCala",
-            "adjective_name": "moncala",
+            "name": "MonCalamari",
+            "adjective_name": "moncalamari",
             "letter_name": "A",
             "red": [
-                144,
-                124
+                124,
+                104
             ],
             "green": [
-                4,
-                24
+                24,
+                44
             ],
             "blue": [
-                248,
-                228
+                255,
+                235
             ]
         },
         "8": {
@@ -173,17 +173,17 @@
                 0
             ],
             "green": [
-                100,
-                80
+                120,
+                100
             ],
             "blue": [
-                138,
-                128
+                118,
+                108
             ]
         },
         "9": {
-            "name": "Pyke",
-            "adjective_name": "pyke",
+            "name": "Pykes",
+            "adjective_name": "pykes",
             "letter_name": "Y",
             "red": [
                 20,
