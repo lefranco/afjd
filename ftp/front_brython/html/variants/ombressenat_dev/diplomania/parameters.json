@@ -315,8 +315,8 @@
             "display": 1
         },
         "12": {
-            "name": "Oba",
-            "full_name": "Oba Diah",
+            "name": "Ord",
+            "full_name": "Ord Mantell",
             "x_pos": 756,
             "y_pos": 540,
             "x_legend_pos": 756,
@@ -523,8 +523,8 @@
             "display": 4
         },
         "36": {
-            "name": "Ord",
-            "full_name": "Ord Mantell",
+            "name": "Oba",
+            "full_name": "Oba Diah",
             "x_pos": 836,
             "y_pos": 554,
             "x_legend_pos": 836,
@@ -1012,8 +1012,8 @@
             "y_pos": 544
         },
         "34": {
-            "x_pos": 723,
-            "y_pos": 575
+            "x_pos": 718,
+            "y_pos": 578
         },
         "31": {
             "x_pos": 515,
@@ -1028,8 +1028,8 @@
             "y_pos": 627
         },
         "32": {
-            "x_pos": 782,
-            "y_pos": 602
+            "x_pos": 780,
+            "y_pos": 604
         },
         "24": {
             "x_pos": 334,
