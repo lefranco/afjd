@@ -397,7 +397,7 @@ def main() -> None:
 
     if args.purge:
         print("Purging messages not needing attention...")
-        for i, (description, (message_id, _, attention, __)) in enumerate(ITEMS_DICT.items()):
+        for description, (message_id, _, attention, __) in ITEMS_DICT.items():
             if attention:
                 continue
             # delete from server
