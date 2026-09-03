@@ -404,8 +404,8 @@ def show_variants_balance_data():
         # build dict of positions
         positions_dict_loaded = variant_position_reload(variant_name_loaded)
         if not positions_dict_loaded:
-            alert("Erreur chargement positions des parties du tournoi")
-            return
+            alert(f"Erreur chargement positions des parties de la variante {variant_name_loaded}")
+            continue
 
         # from variant name get variant content
         if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
@@ -486,6 +486,9 @@ def show_variants_balance_data():
 
         nb_possible_centers = len(variant_data.centers)
         nb_games = len(positions_dict_loaded)
+
+        if not nb_games:
+            continue
 
         result_table = {}
         for role_id in sorted(variant_data.roles, key=lambda r, vd=variant_data: vd.role_name_table[vd.roles[r]]):
