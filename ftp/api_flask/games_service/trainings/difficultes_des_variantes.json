@@ -84,7 +84,23 @@
 },
 
 {
-    "title": "Méditerranée 1/2", 
+    "title": "Sail Ho", 
+    "type": "display",
+"introduction" : "Pas de difficulté pour cette variante assez simple !<br><br>Pour cet exercice, pas d'ordres à entrer !",
+    "role_id" : 1,
+    "variant_name" : "sailho",
+    "game_parameters_current_advancement": 0, 
+    "position" : {
+        "ownerships": {},
+        "dislodged_ones": {},
+        "units": {}, 
+        "forbiddens": []
+    },
+    "expected_orders" : {"fake_units":[], "orders":[] }
+},
+
+{
+    "title": "Méditerranée Antique 1/2", 
     "type": "submit",
 "introduction" : "Le mouvement Baléares vers Tarraconaise semble possible mais ne l'est pas, surtout si la flotte en Mer Ligurienne est inamicale. Tentez le déplacement pour voir...ça passe mais il faut bien lire l'avertissement !'",
     "role_id" : 1,
@@ -100,7 +116,7 @@
 },
 
 {
-    "title": "Méditerranée 2/2", 
+    "title": "Méditerranée Antique 2/2", 
     "type": "submit",
 "introduction" : "La flotte en Mer Ligurienne a maintenant disparu. Tentez à nouveau le déplacement ... puis ordonnez à l'unité de tenir...",
     "role_id" : 1,
@@ -148,7 +164,7 @@
 },
 
 {
-    "title": "v1900s 1/2", 
+    "title": "1900s 1/2", 
     "type": "submit",
 "introduction" : "Cette variante comporte plusieurs particularités, mais la plus déroutante reste la fusion entre la Mer Rouge et la mer Atliantique. Vous pouvez soutenir la flotte en Egypte pour se défendre de la menace Turque...",
     "role_id" : 3,
@@ -164,7 +180,7 @@
 },
 
 {
-    "title": "v1900s 1/2", 
+    "title": "1900s 1/2", 
     "type": "submit",
 "introduction" : "Danc cette variante le Russe peut utiliser des constructions de secours. S'il lui manque un centre mais pas tous, on considère qu'il a un centre de plus et peut construire en Sibérie si la Sibérie est libre. Faites-le ...",
     "role_id" : 6,
@@ -212,7 +228,7 @@
 },
 
 {
-    "title": "Crépuscule de Rome 1/2", 
+    "title": "Le crépuscule de Rome 1/2", 
     "type": "submit",
 "introduction" : "Cette variante introduit une zone de steppes (avec explication sur la carte). Ordonnez la chaîne Bachikiristan -> Stepp 3 -> Steppe 1 -> Pologne...",
     "role_id" : 5,
@@ -228,7 +244,7 @@
 },
 
 {
-    "title": "Crépuscule de Rome 2/2", 
+    "title": "Le crépuscule de Rome 2/2", 
     "type": "submit",
 "introduction" : "Constantinople semble s'étendre sur deux régions. Ordonnez à vos deux flottes d'y réaliser un stand-off pour en empêcher l'accès au joueur Africain...",
     "role_id" : 7,
@@ -244,7 +260,7 @@
 },
 
 {
-    "title": "Succession Autriche", 
+    "title": "La succession Autriche", 
     "type": "submit",
 "introduction" : "Milan est un centre Autrichien, entre le Piémont et la partie de Italie qui appartient à l'Espagnol. Contruisez-y une armée (en tant que joueur Autrichien)...",
     "role_id" : 1,
