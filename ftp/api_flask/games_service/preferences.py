@@ -16,6 +16,14 @@ class Preference:
     """ Class for handling a preferences """
 
     @staticmethod
+    def content_by_game_id_player_id(sql_executor: database.SqlExecutor, game_id: int, player_id: int) -> typing.List[typing.Tuple[int, int, str]]:
+        """ class lookup : finds the object in database from fame id """
+        content_found = sql_executor.execute("SELECT * from preferences where game_id = ? AND player_id = ?", (game_id, player_id), need_result=True)
+        if not content_found:
+            return []
+        return content_found
+
+    @staticmethod
     def content_by_game_id(sql_executor: database.SqlExecutor, game_id: int) -> typing.List[typing.Tuple[int, int, str]]:
         """ class lookup : finds the object in database from fame id """
         content_found = sql_executor.execute("SELECT * from preferences where game_id = ?", (game_id,), need_result=True)

@@ -340,6 +340,53 @@ def show_position(advancement=None):
         play.set_arrival('choisir')
         play.render(play_low.PANEL_MIDDLE)
 
+    def check_chosen_role_callback(ev):
+
+        ev.preventDefault()
+
+        def reply_callback(req):
+            req_result = loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération des préférences dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à récupération des préférences dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            summary = ""
+            summary += "Préférences :"
+            summary += "\n"
+            summary += "\n"
+            content = req_result['content']
+            for _, player_id, preferences in content:
+                player_pseudo = play_low.ID2PSEUDO[player_id]
+                summary += player_pseudo
+                summary += " : "
+                for role_id in map(int, preferences.split()):
+                    role = play_low.VARIANT_DATA.roles[role_id]
+                    role_name = play_low.VARIANT_DATA.role_name_table[role]
+                    summary += role_name
+                    summary += " "
+                summary += "\n"
+                summary += "\n"
+
+            alert(summary)
+
+        ev.preventDefault()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-preferences/{play_low.GAME_ID}"
+
+        # show  role chocesin a game : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
+
     def quit_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -840,11 +887,20 @@ def show_position(advancement=None):
                 if in_game:
 
                     if play_low.GAME_PARAMETERS_LOADED['manual']:
+
                         # may emit preferences
                         form = html.FORM()
                         input_choose_role = html.INPUT(type="submit", value="Je choisis mon rôle !", Class='btn-inside')
                         input_choose_role.bind("click", choose_role_callback)
                         form <= input_choose_role
+                        buttons_right <= form
+                        buttons_right <= html.BR()
+
+                        # may check emitted preferences
+                        form = html.FORM()
+                        input_check_chosen_role = html.INPUT(type="submit", value="Je vérifier mon choix de rôle !", Class='btn-inside')
+                        input_check_chosen_role.bind("click", check_chosen_role_callback)
+                        form <= input_check_chosen_role
                         buttons_right <= form
                         buttons_right <= html.BR()
 

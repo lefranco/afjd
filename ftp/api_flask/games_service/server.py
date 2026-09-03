@@ -6895,13 +6895,14 @@ class GamePreferenceRessource(flask_restful.Resource):  # type: ignore
         # get the role
         assert game is not None
         role_id = game.find_role(sql_executor, player_id)
-        if role_id != 0:
-            del sql_executor
-            flask_restful.abort(403, msg=f"You do not seem to master game {game_id}")
 
         # retrieve preference here
-        assert role_id is not None
-        content = preferences.Preference.content_by_game_id(sql_executor, game_id)
+        if role_id == 0:
+            # master : you get everything
+            content = preferences.Preference.content_by_game_id(sql_executor, game_id)
+        else:
+            # not master : you get your own (or none)
+            content = preferences.Preference.content_by_game_id_player_id(sql_executor, game_id, player_id)
 
         del sql_executor
 
