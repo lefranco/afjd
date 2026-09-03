@@ -9,6 +9,11 @@ services:
     container_name: dokuwiki
     volumes:
       - ./dokuwiki-data:/storage
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dokuwiki.rule=Host(`dokuwiki.diplomania2.fr`)"
@@ -25,6 +30,11 @@ services:
     container_name: dokuwiki2
     volumes:
       - ./dokuwiki-data2:/storage
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dokuwiki2.rule=Host(`dokuwiki2.diplomania2.fr`)"
