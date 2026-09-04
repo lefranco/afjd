@@ -17,8 +17,8 @@ import colorsys
 TRANSPARENCY_OWNER = 0.70
 
 TOLERANCE_HUE = 10
-MIN_DIFFERENCE_LUM = 25
-THRESHOLD_SEPARATION = 25
+MIN_DIFFERENCE_LUM = 20
+THRESHOLD_SEPARATION = 20
 
 
 def alpha_compose(background, item):
@@ -73,7 +73,6 @@ def check_pairs_factions(factions) -> None:
 
         if not conflicts:
             print(f"  No conflict detected, all factions are separated enough for {type_}")
-            return
 
         for n1, n2, gap in sorted(conflicts, key=lambda x: x[2]):
             print(f"  ⚠️  {n1} vs {n2} : gap of {gap:.1f}° (should be >= {THRESHOLD_SEPARATION}°)")
