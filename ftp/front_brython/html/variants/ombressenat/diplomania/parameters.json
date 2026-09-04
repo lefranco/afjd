@@ -50,16 +50,16 @@
             "adjective_name": "chiss",
             "letter_name": "C",
             "red": [
-                193,
-                231
+                40,
+                170
             ],
             "green": [
-                248,
-                255
+                90,
+                205
             ],
             "blue": [
-                255,
-                251
+                190,
+                245
             ]
         },
         "2": {
@@ -67,16 +67,16 @@
             "adjective_name": "muuns",
             "letter_name": "B",
             "red": [
-                255,
-                254
+                180,
+                235
             ],
             "green": [
-                220,
-                244
+                150,
+                220
             ],
             "blue": [
-                97,
-                208
+                20,
+                140
             ]
         },
         "3": {
@@ -84,16 +84,16 @@
             "adjective_name": "separatistes",
             "letter_name": "S",
             "red": [
-                255,
-                254
+                200,
+                250
             ],
             "green": [
-                193,
-                232
+                30,
+                150
             ],
             "blue": [
-                244,
-                233
+                30,
+                150
             ]
         },
         "4": {
@@ -101,16 +101,16 @@
             "adjective_name": "hutts",
             "letter_name": "H",
             "red": [
-                255,
-                244
+                90,
+                200
             ],
             "green": [
-                132,
-                225
+                130,
+                215
             ],
             "blue": [
-                1,
-                214
+                30,
+                150
             ]
         },
         "5": {
@@ -118,16 +118,16 @@
             "adjective_name": "mandalore",
             "letter_name": "M",
             "red": [
-                153,
-                230
+                90,
+                200
             ],
             "green": [
-                153,
-                228
+                90,
+                200
             ],
             "blue": [
-                153,
-                229
+                95,
+                205
             ]
         },
         "6": {
@@ -135,16 +135,16 @@
             "adjective_name": "neimoidiens",
             "letter_name": "F",
             "red": [
-                0,
-                203
+                110,
+                205
             ],
             "green": [
-                160,
-                225
+                40,
+                170
             ],
             "blue": [
-                11,
-                205
+                190,
+                240
             ]
         },
         "7": {
@@ -152,33 +152,33 @@
             "adjective_name": "moncalamari",
             "letter_name": "A",
             "red": [
-                179,
+                210,
                 250
             ],
             "green": [
-                33,
-                231
+                110,
+                205
             ],
             "blue": [
-                255,
-                255
+                20,
+                150
             ]
         },
         "8": {
-            "name": "Correlia",
-            "adjective_name": "correlia",
+            "name": "Corellia",
+            "adjective_name": "corellia",
             "letter_name": "R",
             "red": [
-                97,
-                231
+                20,
+                150
             ],
             "green": [
-                197,
-                234
+                150,
+                225
             ],
             "blue": [
-                255,
-                255
+                160,
+                230
             ]
         },
         "9": {
@@ -186,16 +186,16 @@
             "adjective_name": "pykes",
             "letter_name": "Y",
             "red": [
-                150,
-                235
+                60,
+                180
             ],
             "green": [
-                255,
-                255
+                70,
+                190
             ],
             "blue": [
-                65,
-                238
+                190,
+                240
             ]
         },
         "10": {
@@ -203,16 +203,16 @@
             "adjective_name": "Dathomir",
             "letter_name": "D",
             "red": [
-                255,
-                248
+                120,
+                210
             ],
             "green": [
-                1,
-                214
+                10,
+                120
             ],
             "blue": [
-                79,
-                214
+                60,
+                170
             ]
         }
     },
