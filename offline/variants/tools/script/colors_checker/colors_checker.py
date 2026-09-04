@@ -16,51 +16,55 @@ import colorsys
 
 TRANSPARENCY_OWNER = 0.70
 
+TOLERANCE_HUE = 10
+MIN_DIFFERENCE_LUM = 25
+THRESHOLD_SEPARATION = 25
+
 
 def alpha_compose(background, item):
     """Compose item over background using alpha transparency."""
     return tuple(round(TRANSPARENCY_OWNER * item[i] + (1-TRANSPARENCY_OWNER) * background[i]) for i in range(3))
 
 
-def rgb_to_hsl(r, g, b):
-    """Converts RGB (0-255) to HSL (H en degrees 0-360, S and L in %)"""
+def rgb_to_hls(r, g, b):
+    """Converts RGB (0-255) to HLS (H en degrees 0-360, L and S in %)"""
 
-    r, g, b = r / 255, g / 255, b / 255
+    r, g, b = r / 255.0, g / 255.0, b / 255.0
     h, l, s = colorsys.rgb_to_hls(r, g, b)  # beware : colorsys returns H,L,S
-    return h * 360, s * 100, l * 100
+    return h * 360.0, l * 100.0, s * 100.0
 
 
-def check_couple_unit_background(name: str, unit, fill, tol_hue=10, gap_min_lum=25) -> None:
+def check_couple_unit_background(name: str, unit, fill) -> None:
     """Checks that the fill has a similar hue and sufficient lightness difference from the unit."""
 
-    h1, s1, l1 = rgb_to_hsl(*unit)
-    h2, s2, l2 = rgb_to_hsl(*fill)
+    h1, l1, s1 = rgb_to_hls(*unit)
+    h2, l2, s2 = rgb_to_hls(*fill)
 
     hue_difference = min(abs(h1 - h2), 360 - abs(h1 - h2))  # handles wrap-around 0°/360°
     gap_lum = l2 - l1
 
-    ok_hue = hue_difference <= tol_hue
-    ok_lum = gap_lum >= gap_min_lum
+    ok_hue = hue_difference <= TOLERANCE_HUE
+    ok_lum = gap_lum >= MIN_DIFFERENCE_LUM
 
     print(f"--- {name} ---")
-    print(f"  Unit : H={h1:.1f}° S={s1:.1f}% L={l1:.1f}%")
-    print(f"  Filler  : H={h2:.1f}° S={s2:.1f}% L={l2:.1f}%")
-    print(f"  Gap hue = {hue_difference:.1f}°  {'OK' if ok_hue else f'⚠️ TOO DIFFERENT because > {tol_hue}'}")
-    print(f"  Gap lightness = {gap_lum:.1f} pts  {'OK' if ok_lum else f'⚠️ TOO SMALL should be >= {gap_min_lum}'}")
+    print(f"  Unit : H={h1:.2f}° L={l1:.2f}% S={s1:.2f}%")
+    print(f"  Filler  : H={h2:.2f}° L={l2:.2f}% S={s2:.2f}%")
+    print(f"  Hue difference = {hue_difference:.2f}°  {'OK' if ok_hue else f'⚠️ TOO DIFFERENT should be <= {TOLERANCE_HUE:.2f}'}")
+    print(f"  Lightness difference = {gap_lum:.2f} pts  {'OK' if ok_lum else f'⚠️ TOO SMALL should be >= {MIN_DIFFERENCE_LUM:.2f}'}")
     print()
 
 
-def check_pairs_factions(factions, threshold_separation=25) -> None:
+def check_pairs_factions(factions) -> None:
     """Compares all factions by unit color to detect potential confusion."""
 
     print("=== CHECK CONFLICTS BETWEEN FACTIONS (unit color) ===\n")
 
     conflicts = []
     for n1, n2 in itertools.combinations(factions, 2):
-        h1, _, _ = rgb_to_hsl(*factions[n1]["unit"])
-        h2, _, _ = rgb_to_hsl(*factions[n2]["unit"])
+        h1, _, _ = rgb_to_hls(*factions[n1]["unit"])
+        h2, _, _ = rgb_to_hls(*factions[n2]["unit"])
         gap = min(abs(h1 - h2), 360 - abs(h1 - h2))
-        if gap < threshold_separation:
+        if gap < THRESHOLD_SEPARATION:
             conflicts.append((n1, n2, gap))
 
     if not conflicts:
@@ -68,7 +72,7 @@ def check_pairs_factions(factions, threshold_separation=25) -> None:
         return
 
     for n1, n2, gap in sorted(conflicts, key=lambda x: x[2]):
-        print(f"  ⚠️  {n1} vs {n2} : gap of {gap:.1f}° (should be >= {threshold_separation}°)")
+        print(f"  ⚠️  {n1} vs {n2} : gap of {gap:.1f}° (should be >= {THRESHOLD_SEPARATION}°)")
     print()
 
 
@@ -78,18 +82,13 @@ def check_colors(background_param: str, json_parameters_data: typing.Dict[str, t
     # ----------
     # background
     # ----------
-    if len(background_param) != 7:
-        print("Incorrect background !")
-        sys.exit(1)
-
-    if background_param[0] != '#':
-        print("Incorrect background !")
-        sys.exit(1)
-
     try:
-        background_tuple = tuple(map(lambda s: int(s, 16), (background_param[1:3], background_param[3:5], background_param[5:7])))
+        hex_val = background_param.lstrip('#')
+        if len(background_param) != 7 or len(hex_val) != 6:
+            raise ValueError
+        background_tuple = tuple(int(hex_val[i:i+2], 16) for i in (0, 2, 4))
     except ValueError:
-        print("Incorrect background !")
+        print("Incorrect background format! Expected #RRGGBB")
         sys.exit(1)
 
     # ----------
@@ -104,9 +103,15 @@ def check_colors(background_param: str, json_parameters_data: typing.Dict[str, t
 
         role_name = role_data['name']
         unit_color_tuple = (role_data['red'][0], role_data['green'][0], role_data['blue'][0])
+        if any(not 0 <= c <= 255 for c in unit_color_tuple):
+            print(f"Incorrect rgb for {role_name}!")
+            sys.exit(1)
         unit_color_tuple_rendered = alpha_compose(background_tuple, unit_color_tuple)
 
         fill_color_tuple = (role_data['red'][1], role_data['green'][1], role_data['blue'][1])
+        if any(not 0 <= c <= 255 for c in fill_color_tuple):
+            print(f"Incorrect rgb for {role_name}!")
+            sys.exit(1)
         fill_color_tuple_rendered = alpha_compose(background_tuple, fill_color_tuple)
 
         factions[role_name] = {"unit": unit_color_tuple_rendered, "fill": fill_color_tuple_rendered}
@@ -116,7 +121,7 @@ def check_colors(background_param: str, json_parameters_data: typing.Dict[str, t
         check_couple_unit_background(nom, couleurs["unit"], couleurs["fill"])
 
     # check conflicts between factions (hue too close)
-    check_pairs_factions(factions, threshold_separation=25)
+    check_pairs_factions(factions)
 
 
 def main() -> None:
