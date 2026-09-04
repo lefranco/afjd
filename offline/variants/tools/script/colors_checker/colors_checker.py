@@ -37,7 +37,9 @@ def rgb_to_hls(r, g, b):
 def check_couple_unit_background(name: str, unit, fill) -> None:
     """Checks that the fill has a similar hue and sufficient lightness difference from the unit."""
 
+    r1, g1, b1 = unit
     h1, l1, s1 = rgb_to_hls(*unit)
+    r2, g2, b2 = fill
     h2, l2, s2 = rgb_to_hls(*fill)
 
     hue_difference = min(abs(h1 - h2), 360 - abs(h1 - h2))  # handles wrap-around 0°/360°
@@ -47,8 +49,8 @@ def check_couple_unit_background(name: str, unit, fill) -> None:
     ok_lum = gap_lum >= MIN_DIFFERENCE_LUM
 
     print(f"--- {name} ---")
-    print(f"  Unit : H={h1:.2f}° L={l1:.2f}% S={s1:.2f}%")
-    print(f"  Filler  : H={h2:.2f}° L={l2:.2f}% S={s2:.2f}%")
+    print(f"  Unit : H={h1:.2f}° L={l1:.2f}% S={s1:.2f}%  (from rendered unit r={r1} g={g1} b={b1}")
+    print(f"  Filler  : H={h2:.2f}° L={l2:.2f}% S={s2:.2f}% (from rendered fill r={r2} g={g2} b={b2})")
     print(f"  Hue difference = {hue_difference:.2f}°  {'OK' if ok_hue else f'⚠️ TOO DIFFERENT should be <= {TOLERANCE_HUE:.2f}'}")
     print(f"  Lightness difference = {gap_lum:.2f} pts  {'OK' if ok_lum else f'⚠️ TOO SMALL should be >= {MIN_DIFFERENCE_LUM:.2f}'}")
     print()
