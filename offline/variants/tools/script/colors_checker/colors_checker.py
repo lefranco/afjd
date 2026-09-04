@@ -57,23 +57,25 @@ def check_couple_unit_background(name: str, unit, fill) -> None:
 def check_pairs_factions(factions) -> None:
     """Compares all factions by unit color to detect potential confusion."""
 
-    print("=== CHECK CONFLICTS BETWEEN FACTIONS (unit color) ===\n")
+    for type_ in ("unit", "fill"):
 
-    conflicts = []
-    for n1, n2 in itertools.combinations(factions, 2):
-        h1, _, _ = rgb_to_hls(*factions[n1]["unit"])
-        h2, _, _ = rgb_to_hls(*factions[n2]["unit"])
-        gap = min(abs(h1 - h2), 360 - abs(h1 - h2))
-        if gap < THRESHOLD_SEPARATION:
-            conflicts.append((n1, n2, gap))
+        print(f"=== CHECK CONFLICTS BETWEEN FACTIONS ({type_} color) ===\n")
 
-    if not conflicts:
-        print("  No conflict detected, all factions are separated enough")
-        return
+        conflicts = []
+        for n1, n2 in itertools.combinations(factions, 2):
+            h1, _, _ = rgb_to_hls(*factions[n1][type_])
+            h2, _, _ = rgb_to_hls(*factions[n2][type_])
+            gap = min(abs(h1 - h2), 360 - abs(h1 - h2))
+            if gap < THRESHOLD_SEPARATION:
+                conflicts.append((n1, n2, gap))
 
-    for n1, n2, gap in sorted(conflicts, key=lambda x: x[2]):
-        print(f"  ⚠️  {n1} vs {n2} : gap of {gap:.1f}° (should be >= {THRESHOLD_SEPARATION}°)")
-    print()
+        if not conflicts:
+            print(f"  No conflict detected, all factions are separated enough for {type_}")
+            return
+
+        for n1, n2, gap in sorted(conflicts, key=lambda x: x[2]):
+            print(f"  ⚠️  {n1} vs {n2} : gap of {gap:.1f}° (should be >= {THRESHOLD_SEPARATION}°)")
+        print()
 
 
 def check_colors(background_param: str, json_parameters_data: typing.Dict[str, typing.Any]) -> None:
@@ -117,8 +119,8 @@ def check_colors(background_param: str, json_parameters_data: typing.Dict[str, t
         factions[role_name] = {"unit": unit_color_tuple_rendered, "fill": fill_color_tuple_rendered}
 
     # check every pair unit/background individually
-    for nom, couleurs in factions.items():
-        check_couple_unit_background(nom, couleurs["unit"], couleurs["fill"])
+    for name, colors in factions.items():
+        check_couple_unit_background(name, colors["unit"], colors["fill"])
 
     # check conflicts between factions (hue too close)
     check_pairs_factions(factions)
