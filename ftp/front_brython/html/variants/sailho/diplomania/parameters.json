@@ -50,16 +50,16 @@
             "adjective_name": "arctos",
             "letter_name": "N",
             "red": [
-                255,
-                235
+                180,
+                255
             ],
             "green": [
-                155,
-                135
+                80,
+                155
             ],
             "blue": [
                 0,
-                20
+                75
             ]
         },
         "2": {
@@ -67,16 +67,16 @@
             "adjective_name": "anatole",
             "letter_name": "E",
             "red": [
-                235,
+                180,
                 255
             ],
             "green": [
-                235,
+                180,
                 255
             ],
             "blue": [
-                30,
-                10
+                0,
+                75
             ]
         },
         "3": {
@@ -84,15 +84,15 @@
             "adjective_name": "dysis",
             "letter_name": "W",
             "red": [
-                20,
-                0
+                10,
+                80
             ],
             "green": [
-                127,
-                107
+                70,
+                160
             ],
             "blue": [
-                235,
+                175,
                 255
             ]
         },
@@ -101,16 +101,16 @@
             "adjective_name": "mesembria",
             "letter_name": "S",
             "red": [
-                225,
-                205
+                170,
+                250
             ],
             "green": [
                 0,
-                20
+                80
             ],
             "blue": [
                 0,
-                20
+                80
             ]
         }
     },
