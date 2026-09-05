@@ -249,6 +249,11 @@ class OrderTypeEnum:
         return False
 
 
+class Special(Renderable):
+
+    def __init__(self, letter: str, x_pos: int, y_pos: int) -> None:
+        self._letter = letter
+
 class Center(Highliteable, Renderable):
     """ A Center """
 
@@ -718,6 +723,7 @@ ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 # legend & additional
 LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 AUTHORS_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
+SPECIAL_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 ADDITIONAL_COLOUR = ColourRecord(red=255, green=0, blue=0)  # red
 
 # outline
@@ -765,9 +771,21 @@ def map_additional_text_font() -> str:
     return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"
 
 
-MAP_TEXT_FONT = map_text_font()
+def map_big_text_font() -> str:
+    """ map_text_font """
 
+    font_style = 'normal'
+    font_variant = 'normal'
+    font_weight = 'normal'
+    font_size = '30px'
+    font_family = 'Arial'
+    return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"
+
+
+MAP_TEXT_FONT = map_text_font()
 MAP_ADDITIONAL_TEXT_FONT = map_additional_text_font()
+MAP_BIG_TEXT_FONT = map_big_text_font()
+
 ADDITIONAL_X_POS = 10
 ADDITIONAL_Y_POS = 10
 TEXT_HEIGHT_PIXEL = 16
@@ -958,6 +976,7 @@ class Variant(Renderable):
         self._path_table = {}
         self._paths_table = {}
         self._geographic_owner_table = {}
+        self._letters_table = {}
 
         # load the map size
         data_dict = raw_parameters_content['map']
@@ -1109,6 +1128,12 @@ class Variant(Renderable):
             assert order_type is not None
             self._order_name_table[order_type] = data_dict['name']
 
+        # load letters if available
+        if 'letters' in raw_parameters_content:
+            for letter, (x_pos, y_pos) in raw_parameters_content['letters'].values():
+                assert len(letter) == 1
+                self._letters_table[(x_pos, y_pos)] = letter
+
     def closest_center(self, designated_pos: geometry.PositionRecord):
         """ closest_center  """
 
@@ -1171,6 +1196,14 @@ class Variant(Renderable):
         # put legends actually
         for zone in self._zones.values():
             zone.render_legend(ctx)
+
+        # put big letters
+        ctx.font = MAP_BIG_TEXT_FONT
+        info_colour = SPECIAL_COLOUR
+        ctx.fillStyle = info_colour.str_value()  # for a text
+
+        for (x_pos, y_pos), letter in self._letters_table.items():
+            ctx.fillText(letter, x_pos, y_pos)
 
         ctx.font = MAP_TEXT_FONT
 
