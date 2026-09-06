@@ -195,8 +195,8 @@ def check_pairs_factions(factions) -> None:
             print(f"  ⚠️  {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {THRESHOLD_SEPARATION_DE}°)")
         print()
 
-    print(f"Worst gap is {worst_gap:.4f} dE...")
-    print()
+        print(f"Worst gap is {worst_gap:.4f} dE...")
+        print()
 
 
 def check_colors(sea_background_param: str, earth_background_param: str, json_parameters_data: typing.Dict[str, typing.Any]) -> None:
