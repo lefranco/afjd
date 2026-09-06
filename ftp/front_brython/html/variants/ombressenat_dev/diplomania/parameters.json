@@ -118,12 +118,12 @@
             "adjective_name": "mandalore",
             "letter_name": "M",
             "red": [
-                20,
-                180
+                125,
+                235
             ],
             "green": [
-                165,
-                253
+                125,
+                235
             ],
             "blue": [
                 125,
@@ -203,16 +203,16 @@
             "adjective_name": "Dathomir",
             "letter_name": "D",
             "red": [
-                190,
+                220,
                 255
             ],
             "green": [
-                40,
-                190
+                10,
+                100
             ],
             "blue": [
-                25,
-                175
+                10,
+                100
             ]
         }
     },
