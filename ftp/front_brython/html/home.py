@@ -687,6 +687,10 @@ def show_news():
 
     # This will select a diffferent variant every hour for teaser
     possible_variants = list(config.VARIANT_NAMES_DICT.keys())
+
+    # remove dev ones
+    possible_variants = [pv for pv in possible_variants if not pv.endswith('_dev')]
+
     num_day = int(time()) // (24 * 3600)
     num_variant = num_day % len(possible_variants)
     today_teased_variant = possible_variants[num_variant]
