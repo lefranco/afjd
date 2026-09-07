@@ -20,11 +20,11 @@ TRANSPARENCY_OWNER = 0.70
 TOLERANCE_HUE = 10
 MIN_DIFFERENCE_LUM = 20
 
-THRESHOLD_SEPARATION_DE = 10
-# dE < 1 : Imperceptible à l'œil nu")
-# dE < 5: ⚠️ Très proche, à peine distinguable
-# dE < 10 Distinguable mais proche
-# else OK, nettement distinctes"""
+# parameter 'threshold_separation' : 
+# dE < 1 : Imperceptible to the naked eye
+# dE < 5 : Very close, barely distinguishable
+# dE < 10 : Distinguishable but close
+# else OK, clearly distinct
 
 
 def alpha_compose(background, item):
@@ -168,7 +168,7 @@ def check_couple_unit_filler(name: str, unit, fill) -> None:
     print()
 
 
-def check_pairs_factions(factions) -> None:
+def check_pairs_factions(factions, threshold_separation) -> None:
     """Compares all factions by unit color to detect potential confusion."""
 
     worst_gap = 1000
@@ -182,7 +182,7 @@ def check_pairs_factions(factions) -> None:
             rgb1 = factions[n1][type_]
             rgb2 = factions[n2][type_]
             gap = closeness(rgb1, rgb2)
-            if gap < THRESHOLD_SEPARATION_DE:
+            if gap < threshold_separation:
                 conflicts.append((n1, n2, gap))
                 worst_gap = min(worst_gap, gap)
 
@@ -192,14 +192,14 @@ def check_pairs_factions(factions) -> None:
             continue
 
         for n1, n2, gap in sorted(conflicts, key=lambda x: x[2]):
-            print(f"  ⚠️  {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {THRESHOLD_SEPARATION_DE}°)")
+            print(f"  ⚠️  {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {threshold_separation} dE)")
         print()
 
         print(f"Worst gap is {worst_gap:.4f} dE...")
         print()
 
 
-def check_colors(sea_background_param: str, earth_background_param: str, json_parameters_data: typing.Dict[str, typing.Any]) -> None:
+def check_colors(sea_background_param: str, earth_background_param: str, threshold_separation: int, json_parameters_data: typing.Dict[str, typing.Any]) -> None:
     """ check_colors """
 
     # ----------
@@ -267,7 +267,7 @@ def check_colors(sea_background_param: str, earth_background_param: str, json_pa
             check_couple_unit_filler(name, colors["unit"], colors["fill"])
 
         # check conflicts between factions (hue too close)
-        check_pairs_factions(factions)
+        check_pairs_factions(factions, threshold_separation)
 
 
 def main() -> None:
@@ -277,12 +277,14 @@ def main() -> None:
     parser.add_argument('-p', '--parameters_file', required=True, help='Load a parameters file at start')
     parser.add_argument('-s', '--sea_background', required=True, help='Provide a background color for sea from map file')
     parser.add_argument('-e', '--earth_background', required=True, help='Provide a background color for earth from map file')
+    parser.add_argument('-t', '--threshold_separation', type=int, default=20, help='Provide a threshold for accepted separatoin between colors')
     args = parser.parse_args()
 
     #  load files at start
     parameters_file = args.parameters_file
     sea_background = args.sea_background
     earth_background = args.earth_background
+    threshold_separation = args.threshold_separation
 
     if not os.path.exists(parameters_file):
         print(f"File '{parameters_file}' does not seem to exist, please advise !", file=sys.stderr)
@@ -297,7 +299,7 @@ def main() -> None:
             sys.exit(-1)
 
     earth_background = args.earth_background
-    check_colors(sea_background, earth_background, json_parameters_data)
+    check_colors(sea_background, earth_background, threshold_separation, json_parameters_data)
 
 
 if __name__ == "__main__":
