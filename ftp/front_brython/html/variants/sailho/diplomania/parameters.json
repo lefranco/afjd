@@ -50,16 +50,16 @@
             "adjective_name": "arctos",
             "letter_name": "N",
             "red": [
-                180,
+                200,
                 255
             ],
             "green": [
-                80,
+                70,
                 155
             ],
             "blue": [
                 0,
-                75
+                60
             ]
         },
         "2": {
@@ -101,16 +101,16 @@
             "adjective_name": "mesembria",
             "letter_name": "S",
             "red": [
-                170,
-                250
+                150,
+                240
             ],
             "green": [
                 0,
-                80
+                70
             ],
             "blue": [
-                0,
-                80
+                40,
+                100
             ]
         }
     },
