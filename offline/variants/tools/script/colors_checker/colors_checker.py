@@ -214,6 +214,8 @@ def check_colors(sea_background_param: str, earth_background_param: str, thresho
         print("Incorrect background format for sea! Expected #RRGGBB")
         sys.exit(1)
 
+    print(f"Using sea background as r={sea_background_tuple[0]} g={sea_background_tuple[1]} b={sea_background_tuple[2]}")
+
     # ----------
     # earth background
     # ----------
@@ -225,6 +227,8 @@ def check_colors(sea_background_param: str, earth_background_param: str, thresho
     except ValueError:
         print("Incorrect background format for earth! Expected #RRGGBB")
         sys.exit(1)
+
+    print(f"Using earth background as r={earth_background_tuple[0]} g={earth_background_tuple[1]} b={earth_background_tuple[2]}")
 
     # ----------
     # parameters
