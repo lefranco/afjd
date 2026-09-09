@@ -11,6 +11,8 @@ import argparse
 import sys
 import typing
 import collections
+import statistics
+
 
 JSON_PARAMETERS_DATA: dict[str, typing.Any] = {}
 JSON_VARIANT_DATA: dict[str, typing.Any] = {}
@@ -24,9 +26,9 @@ def can_reach(type_unit: int, unit_zone: int, destination: int) -> bool:
 def check_all_direct_center_access() -> None:
     """check_all_direct_center_access"""
 
-    print("")
-    print("Factions that can reach a center in first moves:")
-    print("")
+    print("============")
+    print("1. Factions that can reach a center in first moves:")
+    print("============")
 
     # for printing
     role_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['roles'].items() if n != "0"}
@@ -41,10 +43,14 @@ def check_all_direct_center_access() -> None:
         zone_name_table[zone_num] = f"{zone_name_table[special[0]]}{coast_name_table[special[1]]}"
         region_zones_table[special[0]].append(zone_num)
 
+    stats = {}
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
             continue
-        print(f"\t{role_name_table[role_num]} :")
+
+        print(f"\t{role_name_table[role_num]} :", end='')
+        stats[role_num] = 0
+
         has_one = False
         for num_center, num_region in sorted(enumerate(JSON_VARIANT_DATA['centers']), key=lambda t: center_name_table[t[0] + 1]):
             center_printed = False
@@ -55,28 +61,36 @@ def check_all_direct_center_access() -> None:
                         continue
                     for num_zone in region_zones_table[num_region]:
                         if can_reach(type_unit, zone_unit, num_zone):
+                            stats[role_num] += 1
                             if not center_printed:
-                                print(f"\t\t{center_name_table[num_center]}:")
+                                print(f"\n\t\t{center_name_table[num_center]}: ", end='')
                                 center_printed = True
-                            print(f"\t\t\t{type_unit_name_table[type_unit][0]} in {zone_name_table[zone_unit]} has access", end='')
+                            else:
+                                print("/ ", end='')
+                            print(f"from {type_unit_name_table[type_unit][0]} in {zone_name_table[zone_unit]} ", end='')
                             for other_role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
                                 if other_role_num == role_num:
                                     continue
                                 if num_center + 1 in JSON_VARIANT_DATA['start_centers'][other_role_num - 1]:
-                                    print(f" (start center of {role_name_table[other_role_num]} ⚠️)", end='')
+                                    print(f" (start center of {role_name_table[other_role_num]} ⚠️ )", end='')
                                     break
-                            print("")
                             has_one = True
         if not has_one:
-            print("\t\tHas no direct access to any center ⚠️ ")
+            print("\n\t\tHas no direct access to any center ⚠️ ")
+
+        print()
+
+    # print(f"{stats=}")
+    print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
+    print()
 
 
 def check_contested_direct_center_access() -> None:
     """check_contested_direct_center_access"""
 
-    print("")
-    print("Centers that can be reached in first move (contested or not by more than a faction):")
-    print("")
+    print("============")
+    print("2. Centers that can be reached in first move (contested or not by more than a faction):")
+    print("============")
 
     # for printing
     role_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['roles'].items() if n != "0"}
@@ -90,19 +104,28 @@ def check_contested_direct_center_access() -> None:
         zone_name_table[zone_num] = f"{zone_name_table[special[0]]}{coast_name_table[special[1]]}"
         region_zones_table[special[0]].append(zone_num)
 
+    # zone to center table
+    center_zone_table = {}
+    for region, zones in region_zones_table.items():
+        if region in JSON_VARIANT_DATA['centers']:
+            for zone in zones:
+                center_zone_table[zone] = JSON_VARIANT_DATA['centers'].index(region) + 1
+
     access_table = collections.defaultdict(set)
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
             continue
+
         for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
             type_unit = int(type_unit_str)
             for zone_unit in zones:
-                for num_center, num_region in enumerate(JSON_VARIANT_DATA['centers']):
-                    if num_center + 1 in JSON_VARIANT_DATA['start_centers'][role_num - 1]:
-                        continue
-                    for num_zone in region_zones_table[num_region]:
-                        if can_reach(type_unit, zone_unit, num_zone):
-                            access_table[num_center].add(role_num)
+                for num_zone_dest in range(1, len(JSON_VARIANT_DATA['regions']) + len(JSON_VARIANT_DATA['coastal_zones']) + 1):
+                    if can_reach(type_unit, zone_unit, num_zone_dest):
+                        if num_zone_dest in center_zone_table:
+                            center = center_zone_table[num_zone_dest]
+                            if center in JSON_VARIANT_DATA['start_centers'][role_num - 1]:
+                                continue
+                            access_table[center].add(role_num)
 
     for num_center, factions in sorted(access_table.items(), key=lambda t: (len(t[1]), center_name_table[t[0]])):
         faction_names = ' '.join(role_name_table[f] for f in factions)
@@ -113,15 +136,18 @@ def check_contested_direct_center_access() -> None:
             print(f"\t{center_name_table[num_center]}:")
             print(f"\t\twithout contest by {faction_names} alone ⚠️")
 
+    print("(No deviation involved)")
+    print()
+
 
 def check_distances_to_win() -> None:
     """check_distances_to_win"""
 
     debug = False
 
-    print("")
-    print("For every factions, the distance to reach the solo is:")
-    print("")
+    print("============")
+    print("3. For every factions, the distance to reach the solo is:")
+    print("============")
 
     # for printing
     role_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['roles'].items() if n != "0"}
@@ -135,9 +161,11 @@ def check_distances_to_win() -> None:
         zone_name_table[zone_num] = f"{zone_name_table[special[0]]}{coast_name_table[special[1]]}"
         region_zones_table[special[0]].append(zone_num)
 
+    stats = {}
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
             continue
+
         print(f"\t{role_name_table[role_num]} :")
 
         # initialize 'zones_reached'
@@ -190,7 +218,99 @@ def check_distances_to_win() -> None:
             prev_nb_centers = nb_centers
             steps += 1
 
+        stats[role_num] = value
         print(f"\t\tvalue is {value:0.2f}")
+
+    # print(f"{stats=}")
+    print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
+    print()
+
+
+def check_safe_home_center() -> None:
+    """check_safe_home_center"""
+
+    print("============")
+    print("4. Factions that some other faction can reach home center at first autumn:")
+    print("============")
+
+    # for printing
+    role_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['roles'].items() if n != "0"}
+    zone_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['zones'].items() if d['name']}
+    coast_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['coasts'].items()}
+    center_name_table = {n + 1: zone_name_table[v] for n, v in enumerate(JSON_VARIANT_DATA['centers'])}
+
+    # for locating special coasts
+    region_zones_table = {n: [n] for n in zone_name_table}
+    for zone_num, special in enumerate(JSON_VARIANT_DATA['coastal_zones'], start=len(zone_name_table) + 1):
+        zone_name_table[zone_num] = f"{zone_name_table[special[0]]}{coast_name_table[special[1]]}"
+        region_zones_table[special[0]].append(zone_num)
+
+    # zone to center table
+    center_zone_table = {}
+    for region, zones in region_zones_table.items():
+        if region in JSON_VARIANT_DATA['centers']:
+            for zone in zones:
+                center_zone_table[zone] = JSON_VARIANT_DATA['centers'].index(region) + 1
+
+    faction_reached = {}
+    faction_zone_centers = {}
+
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+
+        # initialize 'zones_reached'
+        zones_reached = set()
+        for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
+            type_unit = int(type_unit_str)
+            for zone_unit in zones:
+                zones_reached.add((type_unit, zone_unit))
+
+        # make two moves
+        for _ in range(2):
+
+            # increase zones
+            for type_unit, zone_unit in zones_reached.copy():
+                for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+                    if can_reach(type_unit, zone_unit, num_new_zone):
+                        zones_reached.add((type_unit, num_new_zone))
+
+        # keep a note of what is reached
+        faction_reached[role_num] = {tr[1] for tr in zones_reached}
+
+        # zones of my centers
+        zone_centers = set()
+        for num_center, num_region in enumerate(JSON_VARIANT_DATA['centers']):
+            if num_center + 1 not in JSON_VARIANT_DATA['start_centers'][role_num - 1]:
+                continue
+            zone_centers |= set(region_zones_table[num_region])
+
+        # keep a note of zone occupying my centers
+        faction_zone_centers[role_num] = zone_centers
+
+    stats = {}
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+
+        print(f"\t{role_name_table[role_num]} :")
+        stats[role_num] = 0
+
+        for role_num2 in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+            if str(role_num2) in JSON_VARIANT_DATA['disorder']:
+                continue
+
+            if role_num2 == role_num:
+                continue
+
+            if occupied := faction_reached[role_num2] & faction_zone_centers[role_num]:
+                stats[role_num] += len(occupied)
+                centers_names = ' '.join([center_name_table[center_zone_table[z]] for z in occupied])
+                print(f"\t\tHome center {centers_names} occupied by a unit of {role_name_table[role_num2]}")
+
+    # print(f"{stats=}")
+    print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
+    print()
 
 
 def main() -> None:
@@ -235,6 +355,7 @@ def main() -> None:
     check_all_direct_center_access()
     check_contested_direct_center_access()
     check_distances_to_win()
+    check_safe_home_center()
 
 
 if __name__ == '__main__':
