@@ -9,19 +9,23 @@ import os
 import json
 import argparse
 import sys
+import typing
 import collections
 
-JSON_PARAMETERS_DATA = None
-JSON_VARIANT_DATA = None
+JSON_PARAMETERS_DATA: dict[str, typing.Any] = {}
+JSON_VARIANT_DATA: dict[str, typing.Any] = {}
 
-def can_reach(type_unit, unit_zone, destination):    
+
+def can_reach(type_unit: int, unit_zone: int, destination: int) -> bool:
+    """ Apply neighbouring to see if access is possible"""
     return str(unit_zone) in JSON_VARIANT_DATA['neighbouring'][type_unit - 1] and destination in JSON_VARIANT_DATA['neighbouring'][type_unit - 1][str(unit_zone)]
 
 
-def check_all_direct_center_access():
+def check_all_direct_center_access() -> None:
+    """check_all_direct_center_access"""
 
     print("")
-    print("Factions that can reach a center in first moves (contested or not):")
+    print("Factions that can reach a center in first moves:")
     print("")
 
     # for printing
@@ -29,10 +33,11 @@ def check_all_direct_center_access():
     type_unit_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['units'].items()}
     zone_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['zones'].items() if d['name']}
     coast_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['coasts'].items()}
+    center_name_table = {n + 1: zone_name_table[v] for n, v in enumerate(JSON_VARIANT_DATA['centers'])}
 
     # for locating special coasts
-    region_zones_table = {n : [n] for n in zone_name_table}
-    for zone_num, special in enumerate(JSON_VARIANT_DATA['coastal_zones'], start=len(zone_name_table)+1):
+    region_zones_table = {n: [n] for n in zone_name_table}
+    for zone_num, special in enumerate(JSON_VARIANT_DATA['coastal_zones'], start=len(zone_name_table) + 1):
         zone_name_table[zone_num] = f"{zone_name_table[special[0]]}{coast_name_table[special[1]]}"
         region_zones_table[special[0]].append(zone_num)
 
@@ -40,21 +45,25 @@ def check_all_direct_center_access():
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
             continue
         print(f"\t{role_name_table[role_num]} :")
-        has_one =  False
-        for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
-            type_unit = int(type_unit_str)
-            for zone_unit in zones:
-                for num_center, num_region in enumerate(JSON_VARIANT_DATA['centers']):
+        has_one = False
+        for num_center, num_region in sorted(enumerate(JSON_VARIANT_DATA['centers']), key=lambda t: center_name_table[t[0] + 1]):
+            center_printed = False
+            for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
+                type_unit = int(type_unit_str)
+                for zone_unit in zones:
                     if num_center + 1 in JSON_VARIANT_DATA['start_centers'][role_num - 1]:
                         continue
                     for num_zone in region_zones_table[num_region]:
                         if can_reach(type_unit, zone_unit, num_zone):
-                            print(f"\t\t{type_unit_name_table[type_unit][0]} in {zone_name_table[zone_unit]} has direct access to center {zone_name_table[num_region]}", end='')
+                            if not center_printed:
+                                print(f"\t\t{center_name_table[num_center]}:")
+                                center_printed = True
+                            print(f"\t\t\t{type_unit_name_table[type_unit][0]} in {zone_name_table[zone_unit]} has access", end='')
                             for other_role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
                                 if other_role_num == role_num:
                                     continue
                                 if num_center + 1 in JSON_VARIANT_DATA['start_centers'][other_role_num - 1]:
-                                    print(f" (start center of {role_name_table[other_role_num]})", end='')
+                                    print(f" (start center of {role_name_table[other_role_num]} ⚠️)", end='')
                                     break
                             print("")
                             has_one = True
@@ -62,20 +71,22 @@ def check_all_direct_center_access():
             print("\t\tHas no direct access to any center ⚠️ ")
 
 
-def check_uncontested_direct_center_access():
+def check_contested_direct_center_access() -> None:
+    """check_contested_direct_center_access"""
 
     print("")
-    print("Factions that can reach a center in first moves (not contested):")
+    print("Centers that can be reached in first move (contested or not by more than a faction):")
     print("")
 
     # for printing
     role_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['roles'].items() if n != "0"}
     zone_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['zones'].items() if d['name']}
     coast_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['coasts'].items()}
+    center_name_table = {n + 1: zone_name_table[v] for n, v in enumerate(JSON_VARIANT_DATA['centers'])}
 
     # for locating special coasts
-    region_zones_table = {n : [n] for n in zone_name_table}
-    for zone_num, special in enumerate(JSON_VARIANT_DATA['coastal_zones'], start=len(zone_name_table)+1):
+    region_zones_table = {n: [n] for n in zone_name_table}
+    for zone_num, special in enumerate(JSON_VARIANT_DATA['coastal_zones'], start=len(zone_name_table) + 1):
         zone_name_table[zone_num] = f"{zone_name_table[special[0]]}{coast_name_table[special[1]]}"
         region_zones_table[special[0]].append(zone_num)
 
@@ -93,16 +104,18 @@ def check_uncontested_direct_center_access():
                         if can_reach(type_unit, zone_unit, num_zone):
                             access_table[num_center].add(role_num)
 
-    for num_center, factions in access_table.items():
+    for num_center, factions in sorted(access_table.items(), key=lambda t: (len(t[1]), center_name_table[t[0]])):
         faction_names = ' '.join(role_name_table[f] for f in factions)
-        num_zone = JSON_VARIANT_DATA['centers'][num_center]
         if len(factions) > 1:
-            print(f"\tCenter {zone_name_table[num_zone]} directly contested between {faction_names}")
+            print(f"\t{center_name_table[num_center]}:")
+            print(f"\t\tcontested between {faction_names}")
         else:
-            print(f"\tCenter {zone_name_table[num_zone]} directly taken without contest by {faction_names[0]} alone⚠️")
+            print(f"\t{center_name_table[num_center]}:")
+            print(f"\t\twithout contest by {faction_names} alone ⚠️")
 
 
-def check_distances_to_win():
+def check_distances_to_win() -> None:
+    """check_distances_to_win"""
 
     debug = False
 
@@ -114,11 +127,11 @@ def check_distances_to_win():
     role_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['roles'].items() if n != "0"}
     zone_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['zones'].items() if d['name']}
     coast_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['coasts'].items()}
-    center_name_table = {n+1 : zone_name_table[v] for n, v in enumerate(JSON_VARIANT_DATA['centers'])}
+    center_name_table = {n + 1: zone_name_table[v] for n, v in enumerate(JSON_VARIANT_DATA['centers'])}
 
     # for locating special coasts
-    region_zones_table = {n : [n] for n in zone_name_table}
-    for zone_num, special in enumerate(JSON_VARIANT_DATA['coastal_zones'], start=len(zone_name_table)+1):
+    region_zones_table = {n: [n] for n in zone_name_table}
+    for zone_num, special in enumerate(JSON_VARIANT_DATA['coastal_zones'], start=len(zone_name_table) + 1):
         zone_name_table[zone_num] = f"{zone_name_table[special[0]]}{coast_name_table[special[1]]}"
         region_zones_table[special[0]].append(zone_num)
 
@@ -131,12 +144,12 @@ def check_distances_to_win():
         # original units only (unlike superstition)
         zones_reached = set()
         for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
-            type_unit = int(type_unit_str)            
+            type_unit = int(type_unit_str)
             for zone_unit in zones:
                 zones_reached.add((type_unit, zone_unit))
 
         # keep increasing 'zones_reached'
-        nb_steps = 1
+        steps = 1
         prev_nb_centers = 0
         solo_value = len(JSON_VARIANT_DATA['centers']) // 2 + 1
         while True:
@@ -146,36 +159,38 @@ def check_distances_to_win():
                 for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
                     if can_reach(type_unit, zone_unit, num_new_zone):
                         zones_reached.add((type_unit, num_new_zone))
-            if(debug): print(f"\t\t\tAfter {nb_steps=} {len(zones_reached)} zones: {' '.join(zone_name_table[zr[1]] for zr in zones_reached)}")
+            if debug:
+                print(f"\t\t\tAfter {steps=} {len(zones_reached)} zones: {' '.join(zone_name_table[zr[1]] for zr in zones_reached)}")
 
             # zones -> centers
             centers_reached = set()
             for num_center, num_region in enumerate(JSON_VARIANT_DATA['centers']):
                 if any(z in region_zones_table[num_region] for z in (zr[1] for zr in zones_reached)):
                     centers_reached.add(num_center + 1)
-            if(debug): print(f"\t\t\tAfter {nb_steps=} {len(centers_reached)} centers: {' '.join(center_name_table[c] for c in centers_reached)}")
-            if(debug): print()
+            if debug:
+                print(f"\t\t\tAfter {steps=} {len(centers_reached)} centers: {' '.join(center_name_table[c] for c in centers_reached)}")
+            if debug:
+                print()
             nb_centers = len(centers_reached)
 
             # are we done ?
             if nb_centers == solo_value:
+                value = float(steps)
                 break
 
             if nb_centers > solo_value:
                 frac = (nb_centers - solo_value) / (nb_centers - prev_nb_centers)
-                if(debug): print(f"\t\t\t{nb_centers=} {prev_nb_centers=} {solo_value=} {frac=}")
+                if debug:
+                    print(f"\t\t\t{nb_centers=} {prev_nb_centers=} {solo_value=} {frac=}")
                 assert (0 < frac < 1), f"Error in {frac=}"
-                nb_steps += frac
+                value = steps + frac
                 break
 
             # keep going
             prev_nb_centers = nb_centers
-            nb_steps += 1
+            steps += 1
 
-        print(f"\t\t{nb_steps=:0.2f}")
-        #break # TODO remove
-
-
+        print(f"\t\tvalue is {value:0.2f}")
 
 
 def main() -> None:
@@ -218,9 +233,8 @@ def main() -> None:
             sys.exit(-1)
 
     check_all_direct_center_access()
-    check_uncontested_direct_center_access()
+    check_contested_direct_center_access()
     check_distances_to_win()
-
 
 
 if __name__ == '__main__':
