@@ -43,6 +43,12 @@ def check_all_direct_center_access() -> None:
         zone_name_table[zone_num] = f"{zone_name_table[special[0]]}{coast_name_table[special[1]]}"
         region_zones_table[special[0]].append(zone_num)
 
+    # start centers
+    owner_table = {}
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        for num_center in JSON_VARIANT_DATA['start_centers'][role_num - 1]:
+            owner_table[num_center] = role_num
+
     stats = {}
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
@@ -68,12 +74,8 @@ def check_all_direct_center_access() -> None:
                             else:
                                 print("/ ", end='')
                             print(f"from {type_unit_name_table[type_unit][0]} in {zone_name_table[zone_unit]} ", end='')
-                            for other_role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-                                if other_role_num == role_num:
-                                    continue
-                                if num_center + 1 in JSON_VARIANT_DATA['start_centers'][other_role_num - 1]:
-                                    print(f" (start center of {role_name_table[other_role_num]} ⚠️ )", end='')
-                                    break
+                            if num_center in owner_table and owner_table[num_center] != role_num:
+                                print(f" (start center of {role_name_table[owner_table[num_center]]} ⚠️ )", end='')
                             has_one = True
         if not has_one:
             print("\n\t\tHas no direct access to any center ⚠️ ")
@@ -313,6 +315,94 @@ def check_safe_home_center() -> None:
     print()
 
 
+def check_no_initial_threats() -> None:
+    """check_no_initial_threats"""
+
+    print("============")
+    print("5. No unit can start with a move that both threatens more than one of another faction's starting centers besides a neutral center:")
+    print("============")
+
+    # for printing
+    role_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['roles'].items() if n != "0"}
+    type_unit_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['units'].items()}
+    zone_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['zones'].items() if d['name']}
+    coast_name_table = {int(n): d['name'] for n, d in JSON_PARAMETERS_DATA['coasts'].items()}
+    center_name_table = {n + 1: zone_name_table[v] for n, v in enumerate(JSON_VARIANT_DATA['centers'])}
+
+    # for locating special coasts
+    region_zones_table = {n: [n] for n in zone_name_table}
+    for zone_num, special in enumerate(JSON_VARIANT_DATA['coastal_zones'], start=len(zone_name_table) + 1):
+        zone_name_table[zone_num] = f"{zone_name_table[special[0]]}{coast_name_table[special[1]]}"
+        region_zones_table[special[0]].append(zone_num)
+
+    # zone to center table
+    center_zone_table = {}
+    for region, zones in region_zones_table.items():
+        if region in JSON_VARIANT_DATA['centers']:
+            for zone in zones:
+                center_zone_table[zone] = JSON_VARIANT_DATA['centers'].index(region) + 1
+
+    # start centers
+    owner_table = {}
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        for num_center in JSON_VARIANT_DATA['start_centers'][role_num - 1]:
+            owner_table[num_center] = role_num
+
+    stats = {}
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+
+        print(f"\t{role_name_table[role_num]} :")
+        stats[role_num] = 0
+
+        # for every starting unit
+        for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
+            type_unit = int(type_unit_str)
+            for zone_unit in zones:
+
+                # where can it go
+                for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+                    if can_reach(type_unit, zone_unit, num_new_zone):
+
+                        # what does it threatens
+                        threatening = set()
+                        for num_new_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+
+                            if num_new_new_zone == zone_unit:
+                                continue
+                            if num_new_new_zone not in center_zone_table:
+                                continue
+                            if center_zone_table[num_new_new_zone] in owner_table and owner_table[center_zone_table[num_new_new_zone]] == role_num:
+                                continue
+                            if can_reach(type_unit, num_new_zone, num_new_new_zone):
+                                threatening.add(center_zone_table[num_new_new_zone])
+
+                        if not threatening:
+                            continue
+
+                        print(f"\t\tMoving {type_unit_name_table[type_unit][0]} {zone_name_table[zone_unit]} to {zone_name_table[num_new_zone]} makes {len(threatening)} threats:", end='')
+                        print(f" {' '.join([center_name_table[c] for c in threatening])}", end='')
+
+                        neutrals = [c for c in threatening if c not in owner_table]
+                        if len(threatening) - len(neutrals) < 2:
+                            print()
+                            continue
+
+                        owned = collections.defaultdict(list)
+                        for center in threatening:
+                            if center in owner_table:
+                                owned[owner_table[center]].append(center)
+                        if not any(len(v) >= 2 for v in owned.values()):
+                            print()
+                            continue
+
+                        print(" ⚠️  ", end='')
+                        for k, v in owned.items():
+                            print(f"{role_name_table[k]}: {' '.join([center_name_table[c] for c in v])}", end='')
+                        print()
+
+
 def main() -> None:
     """ main """
 
@@ -352,10 +442,11 @@ def main() -> None:
             print(f"Failed to load {parameters_file} : {exception}")
             sys.exit(-1)
 
-    check_all_direct_center_access()
-    check_contested_direct_center_access()
-    check_distances_to_win()
-    check_safe_home_center()
+    # check_all_direct_center_access()
+    # check_contested_direct_center_access()
+    # check_distances_to_win()
+    # check_safe_home_center()
+    check_no_initial_threats()
 
 
 if __name__ == '__main__':
