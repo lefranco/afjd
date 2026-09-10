@@ -74,8 +74,8 @@ def check_all_direct_center_access() -> None:
                             else:
                                 print("/ ", end='')
                             print(f"from {type_unit_name_table[type_unit][0]} in {zone_name_table[zone_unit]} ", end='')
-                            if num_center in owner_table and owner_table[num_center] != role_num:
-                                print(f" (start center of {role_name_table[owner_table[num_center]]} ⚠️ )", end='')
+                            if num_center + 1 in owner_table and owner_table[num_center + 1] != role_num:
+                                print(f" (start center of {role_name_table[owner_table[num_center + 1]]} ⚠️ )", end='')
                             has_one = True
         if not has_one:
             print("\n\t\tHas no direct access to any center ⚠️ ")
@@ -399,7 +399,7 @@ def check_no_initial_threats() -> None:
 
                         print(" ⚠️  ", end='')
                         for k, v in owned.items():
-                            print(f"{role_name_table[k]}: {' '.join([center_name_table[c] for c in v])}", end='')
+                            print(f"/{role_name_table[k]}: {' '.join([center_name_table[c] for c in v])} ", end='')
                         print()
 
 
@@ -442,10 +442,10 @@ def main() -> None:
             print(f"Failed to load {parameters_file} : {exception}")
             sys.exit(-1)
 
-    # check_all_direct_center_access()
-    # check_contested_direct_center_access()
-    # check_distances_to_win()
-    # check_safe_home_center()
+    check_all_direct_center_access()
+    check_contested_direct_center_access()
+    check_distances_to_win()
+    check_safe_home_center()
     check_no_initial_threats()
 
 
