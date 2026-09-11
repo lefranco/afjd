@@ -308,7 +308,7 @@ def check_safe_home_center() -> None:
             if occupied := faction_reached[role_num2] & faction_zone_centers[role_num]:
                 stats[role_num] += len(occupied)
                 centers_names = ' '.join([center_name_table[center_zone_table[z]] for z in occupied])
-                print(f"\t\tHome center {centers_names} occupied by a unit of {role_name_table[role_num2]}")
+                print(f"\t\tHome center {centers_names} can be occupied by a unit of {role_name_table[role_num2]}")
 
     # print(f"{stats=}")
     print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
