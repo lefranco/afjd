@@ -264,6 +264,7 @@ def check_no_initial_threats() -> None:
     print("============")
 
     stats = {}
+    threatened = collections.Counter()
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
             continue
@@ -300,23 +301,28 @@ def check_no_initial_threats() -> None:
                         print(f" {' '.join([CENTER_NAME_TABLE[c] for c in threatening])}", end='')
 
                         neutrals = [c for c in threatening if c not in OWNER_TABLE]
-                        if len(threatening) - len(neutrals) < 2:
-                            print()
-                            continue
-
                         owned = collections.defaultdict(list)
                         for center in threatening:
                             if center in OWNER_TABLE:
                                 owned[OWNER_TABLE[center]].append(center)
-                        if not any(len(v) >= 2 for v in owned.values()):
+                        if not (neutrals and any(len(v) >= 2 for v in owned.values())):
                             print()
                             continue
 
                         print(" ⚠️  ", end='')
                         for k, v in owned.items():
+                            if len(v) < 2:
+                                continue
+                            threatened[k] += 1
                             print(f"/{ROLE_NAME_TABLE[k]}: {' '.join([CENTER_NAME_TABLE[c] for c in v])} ", end='')
                         print()
 
+    print()
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+        print(f"\t{ROLE_NAME_TABLE[role_num]} :")
+        print(f"\t\tthreatened {threatened[role_num]} times")
 
 def main() -> None:
     """ main """
