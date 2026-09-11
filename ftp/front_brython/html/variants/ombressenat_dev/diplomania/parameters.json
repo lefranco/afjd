@@ -530,12 +530,12 @@
             "display": 5
         },
         "27": {
-            "name": "Maa",
-            "full_name": "Manaan",
-            "x_pos": 303,
-            "y_pos": 566,
-            "x_legend_pos": 303,
-            "y_legend_pos": 552,
+            "name": "Mon",
+            "full_name": "Mon Cala",
+            "x_pos": 295,
+            "y_pos": 563,
+            "x_legend_pos": 295,
+            "y_legend_pos": 549,
             "display": 7
         },
         "28": {
@@ -548,12 +548,12 @@
             "display": 5
         },
         "29": {
-            "name": "Mon",
-            "full_name": "Mon Cala",
-            "x_pos": 346,
-            "y_pos": 488,
-            "x_legend_pos": 346,
-            "y_legend_pos": 474,
+            "name": "Maa",
+            "full_name": "Manaan",
+            "x_pos": 343,
+            "y_pos": 472,
+            "x_legend_pos": 343,
+            "y_legend_pos": 458,
             "display": 7
         },
         "30": {
@@ -1062,8 +1062,8 @@
             "y_pos": 529
         },
         "26": {
-            "x_pos": 340,
-            "y_pos": 439
+            "x_pos": 339,
+            "y_pos": 427
         },
         "8": {
             "x_pos": 371,
@@ -1118,8 +1118,8 @@
             "y_pos": 603
         },
         "24": {
-            "x_pos": 334,
-            "y_pos": 551
+            "x_pos": 330,
+            "y_pos": 549
         },
         "23": {
             "x_pos": 714,
