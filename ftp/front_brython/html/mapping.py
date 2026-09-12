@@ -16,7 +16,7 @@ import unit_design
 MAX_PROXIMITY_ITEM_UNIT = 10
 
 # for filling zones coloring
-TRANSPARENCY_OWNER = 0.70
+TRANSPARENCY_OWNER = 0.80
 
 # for filling zones fog
 TRANSPARENCY_FOG = 0.60
