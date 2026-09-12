@@ -160,44 +160,48 @@ def check_couple_unit_filler(name: str, unit, fill) -> None:
     ok_hue = hue_difference <= TOLERANCE_HUE
     ok_lum = gap_lum >= MIN_DIFFERENCE_LUM
 
-    print(f"      +++ Consistency unit/fill within faction {name} +++")
-    print(f"      Unit : H={h1:.2f}° S={s1:.2f}% V={v1:.2f}% LUM={lum1:.2f} (from rendered unit r={r1} g={g1} b={b1}")
-    print(f"      Filler  : H={h2:.2f}° S={s2:.2f}% V={v2:.2f}% LUM={lum2:.2f} (from rendered fill r={r2} g={g2} b={b2})")
-    print(f"      Hue difference = {hue_difference:.2f}°  {'OK' if ok_hue else f'⚠️ TOO DIFFERENT should be <= {TOLERANCE_HUE:.2f}'}")
-    print(f"      Lum difference = {gap_lum:.2f} pts  {'OK' if ok_lum else f'⚠️ TOO SMALL should be >= {MIN_DIFFERENCE_LUM:.2f}'}")
+    print(f"\t+++ Consistency unit/fill within faction {name} +++")
+    print(f"\t\tUnit : H={h1:.2f}° S={s1:.2f}% V={v1:.2f}% LUM={lum1:.2f} (from rendered unit r={r1} g={g1} b={b1}")
+    print(f"\t\tFiller  : H={h2:.2f}° S={s2:.2f}% V={v2:.2f}% LUM={lum2:.2f} (from rendered fill r={r2} g={g2} b={b2})")
+    print(f"\t\tHue difference = {hue_difference:.2f}°  {'OK' if ok_hue else f'⚠️ TOO DIFFERENT should be <= {TOLERANCE_HUE:.2f}'}")
+    print(f"\t\tLum difference = {gap_lum:.2f} pts  {'OK' if ok_lum else f'⚠️ TOO SMALL should be >= {MIN_DIFFERENCE_LUM:.2f}'}")
     print()
 
 
 def check_pairs_factions(factions, threshold_separation) -> None:
     """Compares all factions by unit color to detect potential confusion."""
 
-    worst_gap = 1000
-    for type_ in ("unit", "fill"):
+    worst_worst_gap = worst_gap = 1000
+    first_key = next(iter(factions))
+    for check in factions[first_key]:
 
-        print(f"  ----  Check conflicts between factions for {type_} color ----")
+        print(f"\t++++  Check conflicts between factions for [{check.replace('_', ' ')}] color ++++")
         print()
 
         conflicts = []
         for n1, n2 in itertools.combinations(factions, 2):
-            rgb1 = factions[n1][type_]
-            rgb2 = factions[n2][type_]
+            rgb1 = factions[n1][check]
+            rgb2 = factions[n2][check]
             gap = closeness(rgb1, rgb2)
             if gap < threshold_separation:
                 conflicts.append((n1, n2, gap))
                 worst_gap = min(worst_gap, gap)
+                worst_worst_gap = min(worst_worst_gap, worst_gap)
 
         if not conflicts:
-            print(f"  No conflict detected, all factions are separated enough for {type_}")
+            print(f"\t\tNo conflict detected, all factions are separated enough!")
             print()
             continue
 
         for n1, n2, gap in sorted(conflicts, key=lambda x: x[2]):
-            print(f"  ⚠️  {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {threshold_separation} dE)")
+            print(f"\t\t ⚠️  {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {threshold_separation} dE)")
         print()
 
-        print(f"Worst gap is {worst_gap:.4f} dE...")
+        print(f"\tWorst gap is {worst_gap:.4f} dE...")
         print()
 
+    print(f"Worstworst gap is {worst_worst_gap:.4f} dE...")
+    print()
 
 def check_colors(sea_background_param: str, earth_background_param: str, threshold_separation: int, json_parameters_data: typing.Dict[str, typing.Any]) -> None:
     """ check_colors """
@@ -213,7 +217,6 @@ def check_colors(sea_background_param: str, earth_background_param: str, thresho
     except ValueError:
         print("Incorrect background format for sea! Expected #RRGGBB")
         sys.exit(1)
-
     print(f"Using sea background as r={sea_background_tuple[0]} g={sea_background_tuple[1]} b={sea_background_tuple[2]}")
 
     # ----------
@@ -227,51 +230,53 @@ def check_colors(sea_background_param: str, earth_background_param: str, thresho
     except ValueError:
         print("Incorrect background format for earth! Expected #RRGGBB")
         sys.exit(1)
-
     print(f"Using earth background as r={earth_background_tuple[0]} g={earth_background_tuple[1]} b={earth_background_tuple[2]}")
+
+    print()
 
     # ----------
     # parameters
     # ----------
 
-    for background_tuple in set([sea_background_tuple, earth_background_tuple]):
-
-        print()
-        if background_tuple == sea_background_tuple:
-            print("==== Checking with sea background...")
-        else:
-            print("==== Checking with earth background...")
-        print()
+    factions = {}
+    for role, role_data in json_parameters_data['roles'].items():
+        if int(role) == 0:
+            continue
 
         # load colors
-        factions = {}
-        for role, role_data in json_parameters_data['roles'].items():
-            if int(role) == 0:
-                continue
+        role_name = role_data['name']
+        unit_color_tuple = (role_data['red'][0], role_data['green'][0], role_data['blue'][0])
+        if any(not 0 <= c <= 255 for c in unit_color_tuple):
+            print(f"Incorrect rgb for {role_name}!")
+            sys.exit(1)
 
-            role_name = role_data['name']
-            unit_color_tuple = (role_data['red'][0], role_data['green'][0], role_data['blue'][0])
-            if any(not 0 <= c <= 255 for c in unit_color_tuple):
-                print(f"Incorrect rgb for {role_name}!")
-                sys.exit(1)
-            unit_color_tuple_rendered = alpha_compose(background_tuple, unit_color_tuple)
+        fill_color_tuple = (role_data['red'][1], role_data['green'][1], role_data['blue'][1])
+        if any(not 0 <= c <= 255 for c in fill_color_tuple):
+            print(f"Incorrect rgb for {role_name}!")
+            sys.exit(1)
 
-            fill_color_tuple = (role_data['red'][1], role_data['green'][1], role_data['blue'][1])
-            if any(not 0 <= c <= 255 for c in fill_color_tuple):
-                print(f"Incorrect rgb for {role_name}!")
-                sys.exit(1)
-            fill_color_tuple_rendered = alpha_compose(background_tuple, fill_color_tuple)
+        unit_on_sea_color_tuple_rendered = alpha_compose(sea_background_tuple, unit_color_tuple)
+        unit_on_earth_color_tuple_rendered = alpha_compose(earth_background_tuple, unit_color_tuple)
+        fill_on_earth_color_tuple_rendered = alpha_compose(earth_background_tuple, fill_color_tuple)
+        unit_on_fill_on_earth_color_tuple_rendered = alpha_compose(fill_on_earth_color_tuple_rendered, unit_color_tuple)
 
-            factions[role_name] = {"unit": unit_color_tuple_rendered, "fill": fill_color_tuple_rendered}
+        factions[role_name] = {
+            "unit_on_sea": unit_on_sea_color_tuple_rendered, 
+            "unit_on_earth": unit_on_earth_color_tuple_rendered,
+            "fill_on_earth": fill_on_earth_color_tuple_rendered, 
+            "unit_on_fill_on_earth": unit_on_fill_on_earth_color_tuple_rendered
+        }
 
-        # check every pair unit/background individually
-        print(f"  ---- Consistency unit/fill within factions ----")
-        print()
-        for name, colors in factions.items():
-            check_couple_unit_filler(name, colors["unit"], colors["fill"])
+    # check every pair unit/background individually
+    print(f"---- Check consistency unit/fill within factions ----")
+    print()
+    for name, colors in factions.items():
+        check_couple_unit_filler(name, colors["unit_on_fill_on_earth"], colors["fill_on_earth"])
 
-        # check conflicts between factions (hue too close)
-        check_pairs_factions(factions, threshold_separation)
+    # check conflicts between factions (hue too close)
+    print(f"---- Check factions separation ----")
+    print()
+    check_pairs_factions(factions, threshold_separation)
 
 
 def main() -> None:
