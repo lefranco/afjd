@@ -15,7 +15,8 @@ import math
 import colorsys
 
 
-TRANSPARENCY_OWNER = 0.70
+MAXINT = 1000000
+TRANSPARENCY_OWNER = 0.80
 
 TOLERANCE_HUE = 10
 MIN_DIFFERENCE_LUM = 20
@@ -171,7 +172,7 @@ def check_couple_unit_filler(name: str, unit, fill) -> None:
 def check_pairs_factions(factions, threshold_separation) -> None:
     """Compares all factions by unit color to detect potential confusion."""
 
-    worst_worst_gap = worst_gap = 1000
+    worst_worst_gap = worst_gap = MAXINT
     first_key = next(iter(factions))
     for check in factions[first_key]:
 
@@ -200,8 +201,10 @@ def check_pairs_factions(factions, threshold_separation) -> None:
         print(f"\tWorst gap is {worst_gap:.4f} dE...")
         print()
 
-    print(f"Worstworst gap is {worst_worst_gap:.4f} dE...")
+    if worst_worst_gap != MAXINT:
+        print(f"Worstworst gap is {worst_worst_gap:.4f} dE...")
     print()
+    
 
 def check_colors(sea_background_param: str, earth_background_param: str, threshold_separation: int, json_parameters_data: typing.Dict[str, typing.Any]) -> None:
     """ check_colors """
