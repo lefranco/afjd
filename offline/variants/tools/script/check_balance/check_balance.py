@@ -33,11 +33,46 @@ def can_reach(type_unit: int, unit_zone: int, destination: int) -> bool:
     return str(unit_zone) in JSON_VARIANT_DATA['neighbouring'][type_unit - 1] and destination in JSON_VARIANT_DATA['neighbouring'][type_unit - 1][str(unit_zone)]
 
 
+def check_starting_units() -> None:
+    """check_starting_units"""
+
+    print("============")
+    print("1. Starting units stats:")
+    print("============")
+
+    stats = {}
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+
+        print(f"\t{ROLE_NAME_TABLE[role_num]} :")
+        stats[role_num] = 0
+
+        for unit, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
+            if unit == '1':
+                armies = len(zones)
+            else:
+                fleets = len(zones)
+        stats[role_num] = armies + fleets
+        print(f"\t\tstarts with {armies} armies and {fleets} fleet(s)")
+        if not armies:
+            print(f"\t\thas no armies ⚠️ ")
+        if not fleets:
+            print(f"\t\thas no fleets ⚠️ ")
+        if abs(fleets - armies) > 1:
+            print(f"\t\thas more than one as difference between number of armies and fleets ⚠️ ")
+        print()
+
+    # print(f"{stats=}")
+    print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
+    print()
+
+
 def check_all_direct_center_access() -> None:
     """check_all_direct_center_access"""
 
     print("============")
-    print("1. Factions that can reach a center in first moves:")
+    print("2. Factions that can reach a center in first moves:")
     print("============")
 
     stats = {}
@@ -413,6 +448,7 @@ def main() -> None:
 
     # now do the checks
 
+    check_starting_units()
     check_all_direct_center_access()
     check_contested_direct_center_access()
     check_distances_to_win()
