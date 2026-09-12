@@ -251,7 +251,7 @@ def check_safe_home_center() -> None:
                 centers_names = ' '.join([CENTER_NAME_TABLE[CENTER_ZONE_TABLE[z]] for z in occupied])
                 print(f"\t\tHome center(s) {centers_names} can be occupied by a unit of {ROLE_NAME_TABLE[role_num2]}")
 
-        print(f"\t\t* Its home centers can be occupied {stats[role_num]} times.")
+        print(f"\t\t -- Its home centers can be occupied {stats[role_num]} times. --")
 
     # print(f"{stats=}")
     print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
@@ -328,7 +328,7 @@ def check_no_initial_threats() -> None:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
         print(f"\t\t threatens {threatens[role_num]} times and is threatened {threatened[role_num]} times")
 
-    delta = {r: threatens[r] - threatened[r] for r in threatens}
+    delta = {r: threatens[r] - threatened[r] for r in range(1, JSON_VARIANT_DATA['roles']['number'] + 1)}
 
     print(f"Deviation for active is {statistics.stdev(threatens.values()):0.3f}")
     print(f"Deviation for passive is {statistics.stdev(threatened.values()):0.3f}")
