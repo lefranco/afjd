@@ -31,7 +31,7 @@ def makeflags(json_parameters_data: typing.Dict[str, typing.Any]) -> None:
         if int(role) == 0:
             continue
 
-        color_tuple = (role_data['red'][1], role_data['green'][1], role_data['blue'][1])
+        color_tuple = (role_data['red'][0], role_data['green'][0], role_data['blue'][0])
         new_img = Image.new('RGB', (37, 25), color=color_tuple)
 
         if sum(color_tuple) > 127 * 3:

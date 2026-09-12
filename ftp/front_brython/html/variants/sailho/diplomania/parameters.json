@@ -46,25 +46,25 @@
             ]
         },
         "1": {
-            "name": "Arctos",
-            "adjective_name": "arctos",
+            "name": "Nord",
+            "adjective_name": "nord",
             "letter_name": "N",
             "red": [
-                200,
-                255
+                20,
+                90
             ],
             "green": [
-                70,
-                155
+                105,
+                205
             ],
             "blue": [
-                0,
-                60
+                70,
+                160
             ]
         },
         "2": {
-            "name": "Anatole",
-            "adjective_name": "anatole",
+            "name": "Est",
+            "adjective_name": "est",
             "letter_name": "E",
             "red": [
                 180,
@@ -75,42 +75,42 @@
                 255
             ],
             "blue": [
-                0,
-                75
+                10,
+                90
             ]
         },
         "3": {
-            "name": "Dysis",
-            "adjective_name": "dysis",
+            "name": "Ouest",
+            "adjective_name": "ouest",
             "letter_name": "W",
             "red": [
-                10,
-                80
+                30,
+                130
             ],
             "green": [
-                70,
-                160
+                20,
+                130
             ],
             "blue": [
-                175,
+                160,
                 255
             ]
         },
         "4": {
-            "name": "Mesembria",
-            "adjective_name": "mesembria",
+            "name": "Sud",
+            "adjective_name": "sud",
             "letter_name": "S",
             "red": [
-                150,
+                120,
                 240
             ],
             "green": [
-                0,
-                70
+                50,
+                130
             ],
             "blue": [
                 40,
-                100
+                130
             ]
         }
     },
