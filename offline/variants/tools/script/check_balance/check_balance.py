@@ -49,7 +49,7 @@ def check_all_direct_center_access() -> None:
         stats[role_num] = 0
 
         has_one = False
-        for num_center, num_region in sorted(enumerate(JSON_VARIANT_DATA['centers']), key=lambda t: CENTER_NAME_TABLE[t[0] + 1]):
+        for num_center, num_region in enumerate(JSON_VARIANT_DATA['centers']):
             center_printed = False
             for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
                 type_unit = int(type_unit_str)
@@ -60,7 +60,7 @@ def check_all_direct_center_access() -> None:
                         if can_reach(type_unit, zone_unit, num_zone):
                             stats[role_num] += 1
                             if not center_printed:
-                                print(f"\n\t\t{CENTER_NAME_TABLE[num_center]}: ", end='')
+                                print(f"\n\t\t{CENTER_NAME_TABLE[num_center + 1]}: ", end='')
                                 center_printed = True
                             else:
                                 print("/ ", end='')
@@ -249,7 +249,9 @@ def check_safe_home_center() -> None:
             if occupied := faction_reached[role_num2] & faction_zone_centers[role_num]:
                 stats[role_num] += len(occupied)
                 centers_names = ' '.join([CENTER_NAME_TABLE[CENTER_ZONE_TABLE[z]] for z in occupied])
-                print(f"\t\tHome center {centers_names} can be occupied by a unit of {ROLE_NAME_TABLE[role_num2]}")
+                print(f"\t\tHome center(s) {centers_names} can be occupied by a unit of {ROLE_NAME_TABLE[role_num2]}")
+
+        print(f"\t\t* Its home centers can be occupied {stats[role_num]} times.")
 
     # print(f"{stats=}")
     print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
@@ -263,14 +265,13 @@ def check_no_initial_threats() -> None:
     print("5. No unit can start with a move that both threatens more than one of another faction's starting centers besides a neutral center:")
     print("============")
 
-    stats = {}
+    threatens = collections.Counter()
     threatened = collections.Counter()
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
             continue
 
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
-        stats[role_num] = 0
 
         # for every starting unit
         for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
@@ -310,6 +311,7 @@ def check_no_initial_threats() -> None:
                             continue
 
                         print(" ⚠️  ", end='')
+                        threatens[role_num] += 1
                         for k, v in owned.items():
                             if len(v) < 2:
                                 continue
@@ -318,11 +320,21 @@ def check_no_initial_threats() -> None:
                         print()
 
     print()
+    print("Recap")
+    print()
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
             continue
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
-        print(f"\t\tthreatened {threatened[role_num]} times")
+        print(f"\t\t threatens {threatens[role_num]} times and is threatened {threatened[role_num]} times")
+
+    delta = {r: threatens[r] - threatened[r] for r in threatens}
+
+    print(f"Deviation for active is {statistics.stdev(threatens.values()):0.3f}")
+    print(f"Deviation for passive is {statistics.stdev(threatened.values()):0.3f}")
+    print(f"Deviation for delta is {statistics.stdev(delta.values()):0.3f}")
+    print()
+
 
 def main() -> None:
     """ main """
