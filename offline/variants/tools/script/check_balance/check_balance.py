@@ -49,6 +49,7 @@ def check_starting_units() -> None:
         stats[role_num] = 0
 
         for unit, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
+            fleets = armies = 0
             if unit == '1':
                 armies = len(zones)
             else:
@@ -56,11 +57,11 @@ def check_starting_units() -> None:
         stats[role_num] = armies + fleets
         print(f"\t\tstarts with {armies} armies and {fleets} fleet(s)")
         if not armies:
-            print(f"\t\thas no armies ⚠️ ")
+            print("\t\thas no armies to start with ⚠️ ")
         if not fleets:
-            print(f"\t\thas no fleets ⚠️ ")
+            print("\t\thas no fleets to start with ⚠️ ")
         if abs(fleets - armies) > 1:
-            print(f"\t\thas more than one as difference between number of armies and fleets ⚠️ ")
+            print("\t\thas more than one as difference between number of armies and fleets to start with  ⚠️ ")
         print()
 
     # print(f"{stats=}")
@@ -117,7 +118,7 @@ def check_contested_direct_center_access() -> None:
     """check_contested_direct_center_access"""
 
     print("============")
-    print("2. Centers that can be reached in first move (contested or not by more than a faction):")
+    print("3. Centers that can be reached in first move (contested or not by more than a faction):")
     print("============")
 
     access_table = collections.defaultdict(set)
@@ -155,7 +156,7 @@ def check_distances_to_win() -> None:
     debug = False
 
     print("============")
-    print("3. For every factions, the distance to reach the solo is:")
+    print("4. For every factions, the distance to reach the solo is:")
     print("============")
 
     stats = {}
@@ -227,7 +228,7 @@ def check_safe_home_center() -> None:
     """check_safe_home_center"""
 
     print("============")
-    print("4. Factions that some other faction can reach home center at first autumn:")
+    print("5. Factions that some other faction can reach home center at first autumn:")
     print("============")
 
     faction_reached = {}
@@ -281,10 +282,17 @@ def check_safe_home_center() -> None:
             if role_num2 == role_num:
                 continue
 
-            if occupied := faction_reached[role_num2] & faction_zone_centers[role_num]:
-                stats[role_num] += len(occupied)
-                centers_names = ' '.join([CENTER_NAME_TABLE[CENTER_ZONE_TABLE[z]] for z in occupied])
+            if occupied_centers := faction_reached[role_num2] & faction_zone_centers[role_num]:
+                stats[role_num] += len(occupied_centers)
+                centers_names = ' '.join([CENTER_NAME_TABLE[CENTER_ZONE_TABLE[z]] for z in occupied_centers])
                 print(f"\t\tHome center(s) {centers_names} can be occupied by a unit of {ROLE_NAME_TABLE[role_num2]}")
+                start_centers = set(JSON_VARIANT_DATA['start_centers'][role_num - 1])
+                safe_centers = set(start_centers) - set(occupied_centers)
+                if not safe_centers:
+                    print("\t\tHas no safe center ⚠️")
+                else:
+                    centers_names = ' '.join([CENTER_NAME_TABLE[c] for c in safe_centers])
+                    print(f"\t\tSafe centers : {centers_names}")
 
         print(f"\t\t -- Its home centers can be occupied {stats[role_num]} times. --")
 
@@ -297,11 +305,14 @@ def check_no_initial_threats() -> None:
     """check_no_initial_threats"""
 
     print("============")
-    print("5. No unit can start with a move that both threatens more than one of another faction's starting centers besides a neutral center:")
+    print("6. No unit can start with a move that both threatens more than one of another faction's starting centers besides a neutral center:")
     print("============")
 
-    threatens = collections.Counter()
-    threatened = collections.Counter()
+    print("  Threats:")
+    print()
+
+    threatens: collections.Counter[int] = collections.Counter()
+    threatened: collections.Counter[int] = collections.Counter()
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
             continue
@@ -355,7 +366,7 @@ def check_no_initial_threats() -> None:
                         print()
 
     print()
-    print("Recap")
+    print("  Recap:")
     print()
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
