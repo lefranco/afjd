@@ -503,8 +503,8 @@
             "y_legend_pos": 572
         },
         "24": {
-            "name": "Kes",
-            "full_name": "Kessel",
+            "name": "Oba",
+            "full_name": "Oba Diah",
             "x_pos": 713,
             "y_pos": 701,
             "x_legend_pos": 713,
@@ -609,8 +609,8 @@
             "display": 4
         },
         "36": {
-            "name": "Oba",
-            "full_name": "Oba Diah",
+            "name": "Kes",
+            "full_name": "Kessel",
             "x_pos": 836,
             "y_pos": 554,
             "x_legend_pos": 836,
@@ -1127,8 +1127,8 @@
             "y_pos": 578
         },
         "31": {
-            "x_pos": 514,
-            "y_pos": 601
+            "x_pos": 513,
+            "y_pos": 600
         },
         "30": {
             "x_pos": 421,
@@ -1139,16 +1139,16 @@
             "y_pos": 627
         },
         "32": {
-            "x_pos": 781,
-            "y_pos": 603
+            "x_pos": 789,
+            "y_pos": 601
         },
         "24": {
             "x_pos": 330,
             "y_pos": 549
         },
         "23": {
-            "x_pos": 714,
-            "y_pos": 647
+            "x_pos": 707,
+            "y_pos": 650
         },
         "20": {
             "x_pos": 431,
