@@ -23,9 +23,6 @@ import pstats
 PROFILE = False
 
 
-# two segment with middle further than this are not considered to be potentially intersected
-FAR_AWAY_OPTIMIZATION = 50.
-
 # a segment shorter that this is not considered
 SEGMENT_LENGTH_REQUIREMENT = 1.
 
@@ -176,12 +173,6 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
 
             # ignore short segments
             if length_segment(segment1) < SEGMENT_LENGTH_REQUIREMENT or length_segment(segment2) < SEGMENT_LENGTH_REQUIREMENT:
-                return False
-
-            # ignore far away segments
-            mid_seg1 = middle_segment(segment1)
-            mid_seg2 = middle_segment(segment2)
-            if distance_point_point(mid_seg1, mid_seg2) > FAR_AWAY_OPTIMIZATION:
                 return False
 
             # a segment is included in the other (2 posibilities)
