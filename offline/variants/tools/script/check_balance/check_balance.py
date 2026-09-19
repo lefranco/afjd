@@ -435,10 +435,13 @@ def check_supported_attacks() -> None:
     print("Rationale: we expect that no faction can start a supported attack on home center of other faction by the first autumn.\nIf this is possible can, than we expect it to be balanced, with no faction to be immune.")
     print("============")
 
-    debug = True
+    # table to get region from zone
+    zone2region = {}
+    for k, v in REGION_ZONES_TABLE.items():
+        for z in v:
+            zone2region[z] = k
 
-    faction_reached = {}
-    faction_zone_centers = {}
+    faction_reached: dict[int, set[int]] = {}
 
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
@@ -450,25 +453,27 @@ def check_supported_attacks() -> None:
         for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
             type_unit = int(type_unit_str)
             for zone_unit in zones:
-                zones_reached = set()
-                zones_reached.add((type_unit, zone_unit))
+                zones_reached: set[tuple[int, int, tuple[int,...]]] = set()
+                zones_reached.add((type_unit, zone_unit, ()))
 
                 # make two moves
                 for _ in range(2):
 
                     # increase zones
-                    for type_unit, zone_unit in zones_reached.copy():
+                    for type_unit2, zone_unit2, path_taken in zones_reached.copy():
                         for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
-                            if can_reach(type_unit, zone_unit, num_new_zone):
-                                zones_reached.add((type_unit, num_new_zone))
+                            if can_reach(type_unit2, zone_unit2, num_new_zone):
+                                zones_reached.add((type_unit2, num_new_zone, (*path_taken, zone_unit2)))
 
                 # keep a note of what is reached once
-                centers_reached[(type_unit, zone_unit)] = {CENTER_ZONE_TABLE[z] for _, z in zones_reached if z in CENTER_ZONE_TABLE}
+                centers_reached[(type_unit, zone_unit)] = {(CENTER_ZONE_TABLE[z], p) for _, z, p in zones_reached if z in CENTER_ZONE_TABLE and len(p) == 2}  # noqa: PLR2004
 
         faction_reached[role_num] = set()
         for unit1, unit2 in itertools.combinations(centers_reached.keys(), 2):
-            if reachable_twice := centers_reached[unit1] & centers_reached[unit2]:
-                faction_reached[role_num] |= reachable_twice
+            for center1, path_taken1 in centers_reached[unit1]:
+                for center2, path_taken2 in centers_reached[unit2]:
+                    if center1 == center2 and zone2region[path_taken1[1]] != zone2region[path_taken2[1]]:
+                        faction_reached[role_num].add(center1)
 
     stats = {}
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
@@ -490,9 +495,9 @@ def check_supported_attacks() -> None:
             attackable_centers |= start_centers & faction_reached[role_num2]
 
         if attackable_centers:
-            print(f"\t\t -- It has {len (attackable_centers)} home centers that can be attacked supported : {' '.join([CENTER_NAME_TABLE[c] for c in attackable_centers])} --")
+            print(f"\t\t -- It has {len (attackable_centers)} home centers that can be attacked supported : {' '.join([CENTER_NAME_TABLE[c] for c in attackable_centers])} ⚠️  --")
         else:
-            print(f"\t\t -- It has no home centers that can be attacked supported. --")
+            print("\t\t -- It has no home centers that can be attacked supported. --")
         stats[role_num] = len(attackable_centers)
 
     # print(f"{stats=}")
@@ -770,15 +775,15 @@ def main() -> None:
 
     # now do the checks
 
-    # check_starting_units()
-    # check_all_direct_center_access()
-    # check_contested_direct_center_access()
-    # check_distances_to_win()
-    # check_safe_home_center()
-    # check_easy_center()
+    check_starting_units()
+    check_all_direct_center_access()
+    check_contested_direct_center_access()
+    check_distances_to_win()
+    check_safe_home_center()
+    check_easy_center()
     check_supported_attacks()
-    # check_no_initial_threats()
-    # check_unit_defensive_effectiveness()
+    check_no_initial_threats()
+    check_unit_defensive_effectiveness()
 
 
 if __name__ == '__main__':
