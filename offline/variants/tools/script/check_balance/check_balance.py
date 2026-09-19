@@ -14,6 +14,11 @@ import collections
 import statistics
 
 
+# for windows only
+#  sys.stdout.reconfigure(encoding='utf-8')
+
+NUMBER = 0
+
 JSON_PARAMETERS_DATA: dict[str, typing.Any] = {}
 JSON_VARIANT_DATA: dict[str, typing.Any] = {}
 
@@ -28,6 +33,25 @@ CENTER_ZONE_TABLE: dict[int, int] = {}
 OWNER_TABLE: dict[int, int] = {}
 
 
+def compatible(type_unit: int, num_region: int) -> bool:
+    """Say if this type of unit can go on this type of region"""
+
+    # 1 = coast
+    # 2 = earth
+    # 3 = sea
+    # 4 = island
+
+    # determine type of zone
+    type_zone = JSON_VARIANT_DATA['regions'][num_region - 1]
+    assert type_zone in (1, 2, 3, 4)
+
+    if type_unit == 1:  # army
+        return type_zone in (1, 2, 4)
+
+    # fleet
+    return type_zone in (1, 3, 4)
+
+
 def can_reach(type_unit: int, unit_zone: int, destination: int) -> bool:
     """ Apply neighbouring to see if access is possible"""
     return str(unit_zone) in JSON_VARIANT_DATA['neighbouring'][type_unit - 1] and destination in JSON_VARIANT_DATA['neighbouring'][type_unit - 1][str(unit_zone)]
@@ -36,8 +60,11 @@ def can_reach(type_unit: int, unit_zone: int, destination: int) -> bool:
 def check_starting_units() -> None:
     """check_starting_units"""
 
+    global NUMBER
+    NUMBER += 1
     print("============")
-    print("1. Starting units stats:")
+    print(f"{NUMBER}. Starting units stats.")
+    print("Rationale: we expect factions to have an approximatively equal number of armies and fleets. \nThere should be at least one of each, and no more than one between them.")
     print("============")
 
     stats = {}
@@ -48,21 +75,20 @@ def check_starting_units() -> None:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
         stats[role_num] = 0
 
+        armies = fleets = 0
         for unit, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
-            fleets = armies = 0
             if unit == '1':
                 armies = len(zones)
             else:
                 fleets = len(zones)
         stats[role_num] = armies + fleets
-        print(f"\t\tstarts with {armies} armies and {fleets} fleet(s)")
+        print(f"\t\tstarts with {armies} armie(s) and {fleets} fleet(s)")
         if not armies:
             print("\t\thas no armies to start with ⚠️ ")
         if not fleets:
             print("\t\thas no fleets to start with ⚠️ ")
         if abs(fleets - armies) > 1:
             print("\t\thas more than one as difference between number of armies and fleets to start with  ⚠️ ")
-        print()
 
     # print(f"{stats=}")
     print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
@@ -72,8 +98,11 @@ def check_starting_units() -> None:
 def check_all_direct_center_access() -> None:
     """check_all_direct_center_access"""
 
+    global NUMBER
+    NUMBER += 1
     print("============")
-    print("2. Factions that can reach a center in first moves:")
+    print(f"{NUMBER}. Centers reachable on the first move.")
+    print("Rationale: we expect factions to have approximatively the same opportunity to reach a center in the very first move.\nEither all af them can, or none of them can. We do not expect a faction to directly reach anothr faction's home center.")
     print("============")
 
     stats = {}
@@ -117,8 +146,11 @@ def check_all_direct_center_access() -> None:
 def check_contested_direct_center_access() -> None:
     """check_contested_direct_center_access"""
 
+    global NUMBER
+    NUMBER += 1
     print("============")
-    print("3. Centers that can be reached in first move (contested or not by more than a faction):")
+    print(f"{NUMBER}. Centers reachable on the first move (contested or not by more than one faction).")
+    print("Rationale: we expect factions to have approximatively the same possibilties of reaching centers at firt move, whether  contested by another faction or not. Either every factions has one garanteed center or none does.")
     print("============")
 
     access_table = collections.defaultdict(set)
@@ -153,11 +185,14 @@ def check_contested_direct_center_access() -> None:
 def check_distances_to_win() -> None:
     """check_distances_to_win"""
 
-    debug = False
+    global NUMBER
+    NUMBER += 1
+    print("============")
+    print(f"{NUMBER}. Distance to reach a solo victory.")
+    print("Rationale: we calculate how many moves it takes each factions to reach a solo victory.\nWe expect factions to have approximatively same value.")
+    print("============")
 
-    print("============")
-    print("4. For every factions, the distance to reach the solo is:")
-    print("============")
+    debug = False
 
     stats = {}
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
@@ -167,12 +202,29 @@ def check_distances_to_win() -> None:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
         # initialize 'zones_reached'
-        # original units only (unlike superstition)
+        # any unit buildable a start position
+        zones_reached: set[tuple[int, int ]] = set()
+
+        # first we determine all satrting zones
+        start_zones = set()
+        for type_unit in (1, 2):
+            for zone in JSON_VARIANT_DATA['start_units'][role_num - 1][str(type_unit)]:
+                start_zones.add(zone)
+
+        # for all regions that include a strting zone
         zones_reached = set()
-        for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
-            type_unit = int(type_unit_str)
-            for zone_unit in zones:
-                zones_reached.add((type_unit, zone_unit))
+        for region, zones in REGION_ZONES_TABLE.items():
+            if any(z in start_zones for z in zones):
+                # iterate other all possible built units
+                for zone_unit in zones:
+                    for type_unit in (1, 2):
+                        # on special coast
+                        if zone_unit > len(JSON_VARIANT_DATA['regions']):
+                            if type_unit == 2:
+                                zones_reached.add((type_unit, zone_unit))
+                        # not on special coast
+                        elif compatible(type_unit, region):
+                            zones_reached.add((type_unit, zone_unit))
 
         # keep increasing 'zones_reached'
         steps = 1
@@ -185,8 +237,6 @@ def check_distances_to_win() -> None:
                 for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
                     if can_reach(type_unit, zone_unit, num_new_zone):
                         zones_reached.add((type_unit, num_new_zone))
-            if debug:
-                print(f"\t\t\tAfter {steps=} {len(zones_reached)} zones: {' '.join(ZONE_NAME_TABLE[zr[1]] for zr in zones_reached)}")
 
             # zones -> centers
             centers_reached = set()
@@ -195,8 +245,6 @@ def check_distances_to_win() -> None:
                     centers_reached.add(num_center + 1)
             if debug:
                 print(f"\t\t\tAfter {steps=} {len(centers_reached)} centers: {' '.join(CENTER_NAME_TABLE[c] for c in centers_reached)}")
-            if debug:
-                print()
             nb_centers = len(centers_reached)
 
             # are we done ?
@@ -205,11 +253,11 @@ def check_distances_to_win() -> None:
                 break
 
             if nb_centers > solo_value:
-                frac = (nb_centers - solo_value) / (nb_centers - prev_nb_centers)
+                frac = (solo_value - prev_nb_centers) / (nb_centers - prev_nb_centers)
                 if debug:
                     print(f"\t\t\t{nb_centers=} {prev_nb_centers=} {solo_value=} {frac=}")
                 assert (0 < frac < 1), f"Error in {frac=}"
-                value = steps + frac
+                value = steps - 1 + frac
                 break
 
             # keep going
@@ -227,8 +275,11 @@ def check_distances_to_win() -> None:
 def check_safe_home_center() -> None:
     """check_safe_home_center"""
 
+    global NUMBER
+    NUMBER += 1
     print("============")
-    print("5. Factions that some other faction can reach home center at first autumn:")
+    print(f"{NUMBER}. Safe home centers.")
+    print("Rationale: we expect that no faction can reach home center of other faction by the first autumn.\nIf this is possible can, than we expect it to be balanced, with no faction to be immune.")
     print("============")
 
     faction_reached = {}
@@ -274,6 +325,8 @@ def check_safe_home_center() -> None:
 
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
         stats[role_num] = 0
+        start_centers = set(JSON_VARIANT_DATA['start_centers'][role_num - 1])
+        safe_centers = start_centers
 
         for role_num2 in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
             if str(role_num2) in JSON_VARIANT_DATA['disorder']:
@@ -282,19 +335,95 @@ def check_safe_home_center() -> None:
             if role_num2 == role_num:
                 continue
 
-            if occupied_centers := faction_reached[role_num2] & faction_zone_centers[role_num]:
+            if occupied_zone_centers := faction_reached[role_num2] & faction_zone_centers[role_num]:
+                occupied_centers = [CENTER_ZONE_TABLE[z] for z in occupied_zone_centers]
                 stats[role_num] += len(occupied_centers)
-                centers_names = ' '.join([CENTER_NAME_TABLE[CENTER_ZONE_TABLE[z]] for z in occupied_centers])
+                centers_names = ' '.join([CENTER_NAME_TABLE[c] for c in occupied_centers])
                 print(f"\t\tHome center(s) {centers_names} can be occupied by a unit of {ROLE_NAME_TABLE[role_num2]}")
-                start_centers = set(JSON_VARIANT_DATA['start_centers'][role_num - 1])
-                safe_centers = set(start_centers) - set(occupied_centers)
-                if not safe_centers:
-                    print("\t\tHas no safe center ⚠️")
-                else:
-                    centers_names = ' '.join([CENTER_NAME_TABLE[c] for c in safe_centers])
-                    print(f"\t\tSafe centers : {centers_names}")
+                safe_centers -= set(occupied_centers)
 
-        print(f"\t\t -- Its home centers can be occupied {stats[role_num]} times. --")
+        if not safe_centers:
+            print("\t\tHas no safe centers ⚠️")
+        else:
+            centers_names = ' '.join([CENTER_NAME_TABLE[c] for c in safe_centers])
+            print(f"\t\tSafe centers : {centers_names}")
+
+        print(f"\t\t -- Its home centers can be occupied {stats[role_num]} time(s). --")
+
+    # print(f"{stats=}")
+    print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
+    print()
+
+
+def check_easy_center() -> None:
+    """check_easy_center"""
+
+    global NUMBER
+    NUMBER += 1
+    print("============")
+    print(f"{NUMBER}. Easy centers.")
+    print("Rationale: we expect that no faction can reach a center by the first autumn with no possible oppostion. If such possibility exists, then we expect this to be balanced, with each factions having the same opportunities.")
+    print("============")
+
+    debug = True
+
+    faction_centers = {}
+
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+
+        # initialize 'zones_reached'
+        zones_reached = set()
+        for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
+            type_unit = int(type_unit_str)
+            for zone_unit in zones:
+                zones_reached.add((type_unit, zone_unit))
+
+        # make two moves
+        for _ in range(2):
+
+            # increase zones
+            for type_unit, zone_unit in zones_reached.copy():
+                for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+                    if can_reach(type_unit, zone_unit, num_new_zone):
+                        zones_reached.add((type_unit, num_new_zone))
+
+        # zones centers
+        centers = {CENTER_ZONE_TABLE[z] for _, z in zones_reached if z in CENTER_ZONE_TABLE}
+
+        # remove starting centers
+        centers -= set(JSON_VARIANT_DATA['start_centers'][role_num - 1])
+
+        # keep a note of centers reached
+        faction_centers[role_num] = centers
+
+    stats = {}
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+
+        print(f"\t{ROLE_NAME_TABLE[role_num]} :")
+
+        if debug:
+            print("\t\tReachable: ")
+            print(f"\t\t\t{' '.join([CENTER_NAME_TABLE[c] for c in faction_centers[role_num]])}")
+
+        other_active_roles = set(range(1, JSON_VARIANT_DATA['roles']['number'] + 1)) - set([role_num]) - set(map(int, JSON_VARIANT_DATA['disorder'].keys()))
+
+        # centers I can reach
+        easy_centers = faction_centers[role_num].copy()
+
+        # centers other can reached removed
+        easy_centers -= set().union(*[faction_centers[r] for r in other_active_roles])
+
+        # other home centers removed
+        easy_centers -= set().union(*[JSON_VARIANT_DATA['start_centers'][r - 1] for r in other_active_roles])
+
+        print("\t\tEasy centers: ")
+        print(f"\t\t\t{' '.join([CENTER_NAME_TABLE[c] for c in easy_centers])}")
+
+        stats[role_num] = len(easy_centers)
 
     # print(f"{stats=}")
     print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
@@ -304,8 +433,11 @@ def check_safe_home_center() -> None:
 def check_no_initial_threats() -> None:
     """check_no_initial_threats"""
 
+    global NUMBER
+    NUMBER += 1
     print("============")
-    print("6. No unit can start with a move that both threatens more than one of another faction's starting centers besides a neutral center:")
+    print(f"{NUMBER}. Inital threats.")
+    print("Rationale: we expect no factions to be able to make an opening move that threatens more than one of another faction's starting centers (aside from a neutral center). If such move exists, then we expect this to be balanced, with each factions having the same number of active and passive threats of this kind.")
     print("============")
 
     print("  Threats:")
@@ -344,7 +476,7 @@ def check_no_initial_threats() -> None:
                         if not threatening:
                             continue
 
-                        print(f"\t\tMoving {TYPE_UNIT_NAME_TABLE[type_unit][0]} {ZONE_NAME_TABLE[zone_unit]} to {ZONE_NAME_TABLE[num_new_zone]} makes {len(threatening)} threats:", end='')
+                        print(f"\t\tMoving {TYPE_UNIT_NAME_TABLE[type_unit][0]} {ZONE_NAME_TABLE[zone_unit]} to {ZONE_NAME_TABLE[num_new_zone]} creates {len(threatening)} threat(s):", end='')
                         print(f" {' '.join([CENTER_NAME_TABLE[c] for c in threatening])}", end='')
 
                         neutrals = [c for c in threatening if c not in OWNER_TABLE]
@@ -372,13 +504,125 @@ def check_no_initial_threats() -> None:
         if str(role_num) in JSON_VARIANT_DATA['disorder']:
             continue
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
-        print(f"\t\t threatens {threatens[role_num]} times and is threatened {threatened[role_num]} times")
+        print(f"\t\tThreatens {threatens[role_num]} times and is threatened {threatened[role_num]} times")
+        if abs(threatens[role_num] - threatened[role_num]) > 1:
+            print("\t\tWe have a too big difference here ⚠️  ")
 
     delta = {r: threatens[r] - threatened[r] for r in range(1, JSON_VARIANT_DATA['roles']['number'] + 1)}
 
+    print()
     print(f"Deviation for active is {statistics.stdev(threatens.values()):0.3f}")
     print(f"Deviation for passive is {statistics.stdev(threatened.values()):0.3f}")
     print(f"Deviation for delta is {statistics.stdev(delta.values()):0.3f}")
+    print()
+
+
+def check_unit_defensive_effectiveness() -> None:
+    """check_unit_defensive_effectiveness"""
+
+    def compute(unit_type: int, role_num: int) -> float:
+        """compute"""
+
+        regions = set()
+        for num_region in range(1, len(JSON_VARIANT_DATA['regions']) + 1):
+
+            if not compatible(unit_type, num_region):
+                continue
+
+            for zone in REGION_ZONES_TABLE[num_region]:
+                if zone in CENTER_ZONE_TABLE and CENTER_ZONE_TABLE[zone] in OWNER_TABLE and OWNER_TABLE[CENTER_ZONE_TABLE[zone]] == role_num:
+                    regions.add(num_region)
+                    if debug:
+                        print(f"\t\tadd {ZONE_NAME_TABLE[zone]} as center")
+                    for num_region2 in range(1, len(JSON_VARIANT_DATA['regions']) + 1):
+                        for zone2 in REGION_ZONES_TABLE[num_region2]:
+                            if can_reach(unit_type, zone, zone2):
+                                regions.add(num_region2)
+                                if debug:
+                                    print(f"\t\t\t + {ZONE_NAME_TABLE[zone2]} as next to home center")
+
+        if debug:
+            print("\t\tNeed to consider: ", end='')
+            print(f"{' '.join([ZONE_NAME_TABLE[z] for z in regions])}")
+
+        unit_defensive_effectiveness_table: dict[int, int] = collections.defaultdict(int)
+        for num_region in regions:
+
+            for zone in REGION_ZONES_TABLE[num_region]:
+                if zone in CENTER_ZONE_TABLE and CENTER_ZONE_TABLE[zone] in OWNER_TABLE and OWNER_TABLE[CENTER_ZONE_TABLE[zone]] == role_num:
+                    unit_defensive_effectiveness_table[num_region] += 1
+                    break
+
+            for zone1 in REGION_ZONES_TABLE[num_region]:
+                for num_region2 in range(1, len(JSON_VARIANT_DATA['regions']) + 1):
+                    for zone2 in REGION_ZONES_TABLE[num_region2]:
+                        if zone2 in CENTER_ZONE_TABLE and CENTER_ZONE_TABLE[zone2] in OWNER_TABLE and OWNER_TABLE[CENTER_ZONE_TABLE[zone2]] == role_num:
+                            if can_reach(unit_type, zone1, zone2):
+                                unit_defensive_effectiveness_table[num_region] += 1
+                                break
+
+        if debug:
+            print("\t\tAfter step 1:")
+            for k, v in unit_defensive_effectiveness_table.items():
+                print(f"\t\t\t{ZONE_NAME_TABLE[k]}: {v}")
+
+        for num_region in unit_defensive_effectiveness_table:
+            unit_defensive_effectiveness_table[num_region] -= 1
+
+        if debug:
+            print("\t\tAfter step 2:")
+            for k, v in unit_defensive_effectiveness_table.items():
+                print(f"\t\t\t{ZONE_NAME_TABLE[k]}: {v}")
+
+        for num_region in unit_defensive_effectiveness_table:
+            if num_region in CENTER_ZONE_TABLE:
+                unit_defensive_effectiveness_table[num_region] += 1
+
+        if debug:
+            print("\t\tAfter step 3:")
+            for k, v in unit_defensive_effectiveness_table.items():
+                print(f"\t\t\t{ZONE_NAME_TABLE[k]}: {v}")
+
+        unit_defensive_effectiveness = float(sum(unit_defensive_effectiveness_table.values()))
+        unit_defensive_effectiveness *= 3.
+        unit_defensive_effectiveness /= len(JSON_VARIANT_DATA['start_centers'][role_num - 1])
+
+        if debug:
+            print("\t\tFinally:")
+            print(f"\t\t\t{unit_defensive_effectiveness=}")
+
+        return unit_defensive_effectiveness
+
+    global NUMBER
+    NUMBER += 1
+    print("============")
+    print(f"{NUMBER}. Unit defensive effectiveness.:")
+    print("Rationale: we compute 'Unit defensive effectiveness' for fleets and armies for all factions. \nWe expect the result to be higher for armies than fleets and the ratio armies/fleets balanced between factions...")
+    print("============")
+
+    debug = False
+
+    stats = {}
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+        print(f"\t{ROLE_NAME_TABLE[role_num]} :")
+
+        print("\t\tArmies: ", end='')
+        army_defensive_effectiveness = compute(1, role_num)
+        print(f"{army_defensive_effectiveness}")
+
+        print("\t\tFleets: ", end='')
+        fleet_defensive_effectiveness = compute(2, role_num)
+        print(f"{fleet_defensive_effectiveness}")
+
+        if not army_defensive_effectiveness > fleet_defensive_effectiveness:
+            print("\t\tArmies are not more effective than fleets ⚠️  ")
+
+        stats[role_num] = army_defensive_effectiveness / fleet_defensive_effectiveness
+
+    # print(f"{stats=}")
+    print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
     print()
 
 
@@ -464,7 +708,9 @@ def main() -> None:
     check_contested_direct_center_access()
     check_distances_to_win()
     check_safe_home_center()
+    check_easy_center()
     check_no_initial_threats()
+    check_unit_defensive_effectiveness()
 
 
 if __name__ == '__main__':
