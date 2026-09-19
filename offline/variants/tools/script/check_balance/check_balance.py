@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 
 
-"""
-Check balance
+"""Check balance.
+
+for windows only, add this line:
+   sys.stdout.reconfigure(encoding='utf-8')
 """
 
-import os
-import json
+from __future__ import annotations
+
 import argparse
+import collections
+import json
+import pathlib
+import statistics
 import sys
 import typing
-import collections
-import statistics
-
-
-# for windows only
-#  sys.stdout.reconfigure(encoding='utf-8')
 
 NUMBER = 0
 
@@ -32,10 +32,12 @@ REGION_ZONES_TABLE: dict[int, list[int]] = {}
 CENTER_ZONE_TABLE: dict[int, int] = {}
 OWNER_TABLE: dict[int, int] = {}
 
+ARMY = 1
+FLEET = 2
+
 
 def compatible(type_unit: int, num_region: int) -> bool:
-    """Say if this type of unit can go on this type of region"""
-
+    """Say if this type of unit can go on this type of region."""
     # 1 = coast
     # 2 = earth
     # 3 = sea
@@ -53,13 +55,12 @@ def compatible(type_unit: int, num_region: int) -> bool:
 
 
 def can_reach(type_unit: int, unit_zone: int, destination: int) -> bool:
-    """ Apply neighbouring to see if access is possible"""
+    """Apply neighbouring to see if access is possible."""
     return str(unit_zone) in JSON_VARIANT_DATA['neighbouring'][type_unit - 1] and destination in JSON_VARIANT_DATA['neighbouring'][type_unit - 1][str(unit_zone)]
 
 
 def check_starting_units() -> None:
-    """check_starting_units"""
-
+    """check_starting_units."""
     global NUMBER
     NUMBER += 1
     print("============")
@@ -96,8 +97,7 @@ def check_starting_units() -> None:
 
 
 def check_all_direct_center_access() -> None:
-    """check_all_direct_center_access"""
-
+    """check_all_direct_center_access."""
     global NUMBER
     NUMBER += 1
     print("============")
@@ -144,8 +144,7 @@ def check_all_direct_center_access() -> None:
 
 
 def check_contested_direct_center_access() -> None:
-    """check_contested_direct_center_access"""
-
+    """check_contested_direct_center_access."""
     global NUMBER
     NUMBER += 1
     print("============")
@@ -162,12 +161,11 @@ def check_contested_direct_center_access() -> None:
             type_unit = int(type_unit_str)
             for zone_unit in zones:
                 for num_zone_dest in range(1, len(JSON_VARIANT_DATA['regions']) + len(JSON_VARIANT_DATA['coastal_zones']) + 1):
-                    if can_reach(type_unit, zone_unit, num_zone_dest):
-                        if num_zone_dest in CENTER_ZONE_TABLE:
-                            center = CENTER_ZONE_TABLE[num_zone_dest]
-                            if center in JSON_VARIANT_DATA['start_centers'][role_num - 1]:
-                                continue
-                            access_table[center].add(role_num)
+                    if can_reach(type_unit, zone_unit, num_zone_dest) and num_zone_dest in CENTER_ZONE_TABLE:
+                        center = CENTER_ZONE_TABLE[num_zone_dest]
+                        if center in JSON_VARIANT_DATA['start_centers'][role_num - 1]:
+                            continue
+                        access_table[center].add(role_num)
 
     for num_center, factions in sorted(access_table.items(), key=lambda t: (len(t[1]), CENTER_NAME_TABLE[t[0]])):
         faction_names = ' '.join(ROLE_NAME_TABLE[f] for f in factions)
@@ -183,8 +181,7 @@ def check_contested_direct_center_access() -> None:
 
 
 def check_distances_to_win() -> None:
-    """check_distances_to_win"""
-
+    """check_distances_to_win."""
     global NUMBER
     NUMBER += 1
     print("============")
@@ -203,7 +200,7 @@ def check_distances_to_win() -> None:
 
         # initialize 'zones_reached'
         # any unit buildable a start position
-        zones_reached: set[tuple[int, int ]] = set()
+        zones_reached: set[tuple[int, int]] = set()
 
         # first we determine all satrting zones
         start_zones = set()
@@ -217,10 +214,10 @@ def check_distances_to_win() -> None:
             if any(z in start_zones for z in zones):
                 # iterate other all possible built units
                 for zone_unit in zones:
-                    for type_unit in (1, 2):
+                    for type_unit in (ARMY, FLEET):
                         # on special coast
                         if zone_unit > len(JSON_VARIANT_DATA['regions']):
-                            if type_unit == 2:
+                            if type_unit == FLEET:
                                 zones_reached.add((type_unit, zone_unit))
                         # not on special coast
                         elif compatible(type_unit, region):
@@ -273,8 +270,7 @@ def check_distances_to_win() -> None:
 
 
 def check_safe_home_center() -> None:
-    """check_safe_home_center"""
-
+    """check_safe_home_center."""
     global NUMBER
     NUMBER += 1
     print("============")
@@ -356,8 +352,7 @@ def check_safe_home_center() -> None:
 
 
 def check_easy_center() -> None:
-    """check_easy_center"""
-
+    """check_easy_center."""
     global NUMBER
     NUMBER += 1
     print("============")
@@ -409,7 +404,7 @@ def check_easy_center() -> None:
             print("\t\tReachable: ")
             print(f"\t\t\t{' '.join([CENTER_NAME_TABLE[c] for c in faction_centers[role_num]])}")
 
-        other_active_roles = set(range(1, JSON_VARIANT_DATA['roles']['number'] + 1)) - set([role_num]) - set(map(int, JSON_VARIANT_DATA['disorder'].keys()))
+        other_active_roles = set(range(1, JSON_VARIANT_DATA['roles']['number'] + 1)) - {role_num} - set(map(int, JSON_VARIANT_DATA['disorder'].keys()))
 
         # centers I can reach
         easy_centers = faction_centers[role_num].copy()
@@ -431,8 +426,7 @@ def check_easy_center() -> None:
 
 
 def check_no_initial_threats() -> None:
-    """check_no_initial_threats"""
-
+    """check_no_initial_threats."""
     global NUMBER
     NUMBER += 1
     print("============")
@@ -443,6 +437,7 @@ def check_no_initial_threats() -> None:
     print("  Threats:")
     print()
 
+    number_threats = 2
     threatens: collections.Counter[int] = collections.Counter()
     threatened: collections.Counter[int] = collections.Counter()
     for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
@@ -484,14 +479,14 @@ def check_no_initial_threats() -> None:
                         for center in threatening:
                             if center in OWNER_TABLE:
                                 owned[OWNER_TABLE[center]].append(center)
-                        if not (neutrals and any(len(v) >= 2 for v in owned.values())):
+                        if not (neutrals and any(len(v) >= number_threats for v in owned.values())):
                             print()
                             continue
 
                         print(" ⚠️  ", end='')
                         threatens[role_num] += 1
                         for k, v in owned.items():
-                            if len(v) < 2:
+                            if len(v) < number_threats:
                                 continue
                             threatened[k] += 1
                             print(f"/{ROLE_NAME_TABLE[k]}: {' '.join([CENTER_NAME_TABLE[c] for c in v])} ", end='')
@@ -518,11 +513,10 @@ def check_no_initial_threats() -> None:
 
 
 def check_unit_defensive_effectiveness() -> None:
-    """check_unit_defensive_effectiveness"""
+    """check_unit_defensive_effectiveness."""
 
     def compute(unit_type: int, role_num: int) -> float:
-        """compute"""
-
+        """Compute."""
         regions = set()
         for num_region in range(1, len(JSON_VARIANT_DATA['regions']) + 1):
 
@@ -556,10 +550,9 @@ def check_unit_defensive_effectiveness() -> None:
             for zone1 in REGION_ZONES_TABLE[num_region]:
                 for num_region2 in range(1, len(JSON_VARIANT_DATA['regions']) + 1):
                     for zone2 in REGION_ZONES_TABLE[num_region2]:
-                        if zone2 in CENTER_ZONE_TABLE and CENTER_ZONE_TABLE[zone2] in OWNER_TABLE and OWNER_TABLE[CENTER_ZONE_TABLE[zone2]] == role_num:
-                            if can_reach(unit_type, zone1, zone2):
-                                unit_defensive_effectiveness_table[num_region] += 1
-                                break
+                        if zone2 in CENTER_ZONE_TABLE and CENTER_ZONE_TABLE[zone2] in OWNER_TABLE and OWNER_TABLE[CENTER_ZONE_TABLE[zone2]] == role_num and can_reach(unit_type, zone1, zone2):
+                            unit_defensive_effectiveness_table[num_region] += 1
+                            break
 
         if debug:
             print("\t\tAfter step 1:")
@@ -627,42 +620,41 @@ def check_unit_defensive_effectiveness() -> None:
 
 
 def main() -> None:
-    """ main """
-
+    """Do main."""
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--parameters_file', required=True, help='Load a parameters file at start')
     parser.add_argument('-v', '--variant_file', required=True, help='variant file')
     args = parser.parse_args()
 
     #  load files at start
-    parameters_file = args.parameters_file
-    variant_file = args.variant_file
+    parameters_path = pathlib.Path(args.parameters_file)
+    variant_path = pathlib.Path(args.variant_file)
 
     # load parameters from json data file
-    if not os.path.exists(parameters_file):
-        print(f"File '{parameters_file}' does not seem to exist, please advise !", file=sys.stderr)
+    if not parameters_path.exists():
+        print(f"File '{parameters_path}' does not seem to exist, please advise !", file=sys.stderr)
         sys.exit(-1)
 
-    with open(parameters_file, "r", encoding='utf-8') as read_file:
+    with pathlib.Path.open(parameters_path, encoding='utf-8') as read_file:
         try:
             global JSON_PARAMETERS_DATA
             JSON_PARAMETERS_DATA = json.load(read_file)
-        except Exception as exception:  # pylint: disable=broad-except
-            print(f"Failed to load {parameters_file} : {exception}")
+        except json.JSONDecodeError as exception:
+            print(f"Failed to load {parameters_path} : {exception}")
             sys.exit(-1)
 
     # load variant from json data file
-    if not os.path.exists(variant_file):
-        print(f"File '{variant_file}' does not seem to exist, please advise !", file=sys.stderr)
+    if not variant_path.exists():
+        print(f"File '{variant_path}' does not seem to exist, please advise !", file=sys.stderr)
         sys.exit(-1)
 
     # load parameters from json data file
-    with open(variant_file, "r", encoding='utf-8') as read_file:
+    with pathlib.Path.open(variant_path, encoding='utf-8') as read_file:
         try:
             global JSON_VARIANT_DATA
             JSON_VARIANT_DATA = json.load(read_file)
-        except Exception as exception:  # pylint: disable=broad-except
-            print(f"Failed to load {parameters_file} : {exception}")
+        except json.JSONDecodeError as exception:
+            print(f"Failed to load {variant_path} : {exception}")
             sys.exit(-1)
 
     # calculate some useful stuff

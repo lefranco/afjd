@@ -1,0 +1,43 @@
+# run with command ""ruff -check""
+# derogation : # noqa F401
+
+[lint]
+
+select = ["ALL"]
+
+ignore = [
+
+    "D203", # Utilise D211 no empy line
+    "D213", # Utilise D212 abstract fisrt line
+
+    # commented code is ok
+    "ERA001",
+
+    # line-too-long is ok
+    "E501",
+
+   # assert is ok
+     "S101",
+
+    # global statement is ok
+    "PLW0603",
+
+    # print is ok
+    "T201",
+
+    # Single quotes found but double quotes preferred
+    "Q000",
+
+    # mccabe : when code is too complicated
+    "C90",
+
+    # Too many statements
+    "PLR0915",
+
+    # Too many branches
+    "PLR0912",
+
+    # Too many arguments in function definition 
+    "PLR0913"
+]
+
