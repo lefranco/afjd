@@ -1589,7 +1589,7 @@ void suppressionelimines2(void) {
 
 							/* seulement un pays pas menace */
 							for (z = PAYSMENACE.t; z < PAYSMENACE.t + PAYSMENACE.n; z++) {
-								if(*z == *y)
+								if(*z == x->unite->pays)
 									break;
 							}
 							if(z < PAYSMENACE.t + PAYSMENACE.n)
@@ -1631,7 +1631,7 @@ void suppressionelimines2(void) {
 		if (collisionpossible)
 			continue; /* une delogee du pays peut realiser une collision */
 
-		/* si on arrive ici c'est que le pays est mort, il n'a plus aucun centre ni aucon moyen de gener un pays non menace */
+		/* si on arrive ici c'est que le pays est mort, il n'a plus aucun centre ni aucun moyen de gener un pays non menace */
 		PAYSELIMINE.t[PAYSELIMINE.n] = *y;
 		PAYSELIMINE.n++;
 		assert(PAYSELIMINE.n <= NPAYSS);
