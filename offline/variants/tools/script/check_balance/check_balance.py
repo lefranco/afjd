@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import itertools
 import json
 import pathlib
 import statistics
@@ -425,6 +426,80 @@ def check_easy_center() -> None:
     print()
 
 
+def check_supported_attacks() -> None:
+    """check_supported_attacks."""
+    global NUMBER
+    NUMBER += 1
+    print("============")
+    print(f"{NUMBER}. Supported attack on center.")
+    print("Rationale: we expect that no faction can start a supported attack on home center of other faction by the first autumn.\nIf this is possible can, than we expect it to be balanced, with no faction to be immune.")
+    print("============")
+
+    debug = True
+
+    faction_reached = {}
+    faction_zone_centers = {}
+
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+
+        centers_reached = {}
+
+        # initialize 'zones_reached'
+        for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
+            type_unit = int(type_unit_str)
+            for zone_unit in zones:
+                zones_reached = set()
+                zones_reached.add((type_unit, zone_unit))
+
+                # make two moves
+                for _ in range(2):
+
+                    # increase zones
+                    for type_unit, zone_unit in zones_reached.copy():
+                        for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+                            if can_reach(type_unit, zone_unit, num_new_zone):
+                                zones_reached.add((type_unit, num_new_zone))
+
+                # keep a note of what is reached once
+                centers_reached[(type_unit, zone_unit)] = {CENTER_ZONE_TABLE[z] for _, z in zones_reached if z in CENTER_ZONE_TABLE}
+
+        faction_reached[role_num] = set()
+        for unit1, unit2 in itertools.combinations(centers_reached.keys(), 2):
+            if reachable_twice := centers_reached[unit1] & centers_reached[unit2]:
+                faction_reached[role_num] |= reachable_twice
+
+    stats = {}
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+
+        print(f"\t{ROLE_NAME_TABLE[role_num]} :")
+        stats[role_num] = 0
+        start_centers = set(JSON_VARIANT_DATA['start_centers'][role_num - 1])
+        attackable_centers = set()
+
+        for role_num2 in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+            if str(role_num2) in JSON_VARIANT_DATA['disorder']:
+                continue
+
+            if role_num2 == role_num:
+                continue
+
+            attackable_centers |= start_centers & faction_reached[role_num2]
+
+        if attackable_centers:
+            print(f"\t\t -- It has {len (attackable_centers)} home centers that can be attacked supported : {' '.join([CENTER_NAME_TABLE[c] for c in attackable_centers])} --")
+        else:
+            print(f"\t\t -- It has no home centers that can be attacked supported. --")
+        stats[role_num] = len(attackable_centers)
+
+    # print(f"{stats=}")
+    print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
+    print()
+
+
 def check_no_initial_threats() -> None:
     """check_no_initial_threats."""
     global NUMBER
@@ -695,14 +770,15 @@ def main() -> None:
 
     # now do the checks
 
-    check_starting_units()
-    check_all_direct_center_access()
-    check_contested_direct_center_access()
-    check_distances_to_win()
-    check_safe_home_center()
-    check_easy_center()
-    check_no_initial_threats()
-    check_unit_defensive_effectiveness()
+    # check_starting_units()
+    # check_all_direct_center_access()
+    # check_contested_direct_center_access()
+    # check_distances_to_win()
+    # check_safe_home_center()
+    # check_easy_center()
+    check_supported_attacks()
+    # check_no_initial_threats()
+    # check_unit_defensive_effectiveness()
 
 
 if __name__ == '__main__':
