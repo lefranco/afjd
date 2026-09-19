@@ -149,7 +149,7 @@ def check_contested_direct_center_access() -> None:
     NUMBER += 1
     print("============")
     print(f"{NUMBER}. Centers reachable on the first move (contested or not by more than one faction).")
-    print("Rationale: we expect factions to have approximatively the same possibilties of reaching centers at firt move, whether  contested by another faction or not. Either every factions has one garanteed center or none does.")
+    print("Rationale: we expect factions to have approximatively the same possibilties of reaching centers at firt move, whether  contested by another faction or not.\nEither every factions has one garanteed center or none does.")
     print("============")
 
     access_table = collections.defaultdict(set)
@@ -357,7 +357,7 @@ def check_easy_center() -> None:
     NUMBER += 1
     print("============")
     print(f"{NUMBER}. Easy centers.")
-    print("Rationale: we expect that no faction can reach a center by the first autumn with no possible oppostion. If such possibility exists, then we expect this to be balanced, with each factions having the same opportunities.")
+    print("Rationale: we expect that no faction can reach a center by the first autumn with no possible oppostion.\nIf such possibility exists, then we expect this to be balanced, with each factions having the same opportunities.")
     print("============")
 
     debug = True
@@ -431,7 +431,7 @@ def check_no_initial_threats() -> None:
     NUMBER += 1
     print("============")
     print(f"{NUMBER}. Inital threats.")
-    print("Rationale: we expect no factions to be able to make an opening move that threatens more than one of another faction's starting centers (aside from a neutral center). If such move exists, then we expect this to be balanced, with each factions having the same number of active and passive threats of this kind.")
+    print("Rationale: we expect no factions to be able to make an opening move that threatens more than one of another faction's starting centers (aside from a neutral center).\nIf such move exists, then we expect this to be balanced, with each factions having the same number of active and passive threats of this kind.")
     print("============")
 
     print("  Threats:")
@@ -590,7 +590,7 @@ def check_unit_defensive_effectiveness() -> None:
     NUMBER += 1
     print("============")
     print(f"{NUMBER}. Unit defensive effectiveness.:")
-    print("Rationale: we compute 'Unit defensive effectiveness' for fleets and armies for all factions. \nWe expect the result to be higher for armies than fleets and the ratio armies/fleets balanced between factions...")
+    print("Rationale: we compute 'Unit defensive effectiveness' for fleets and armies for all factions. \nWe expect the result to be higher for armies than fleets and the ratio armies/fleets balanced between factions.")
     print("============")
 
     debug = False
