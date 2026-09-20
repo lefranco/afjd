@@ -37,23 +37,23 @@ ACTIVE_ROLES: list[int] = []
 ARMY = 1
 FLEET = 2
 
+COAST = 1
+EARTH = 2
+SEA = 3
+ISLAND = 4
+
 
 def compatible(type_unit: int, num_region: int) -> bool:
     """Say if this type of unit can go on this type of region."""
-    # 1 = coast
-    # 2 = earth
-    # 3 = sea
-    # 4 = island
-
     # determine type of zone
     type_zone = JSON_VARIANT_DATA['regions'][num_region - 1]
-    assert type_zone in (1, 2, 3, 4)
+    assert type_zone in (COAST, EARTH, SEA, ISLAND)
 
-    if type_unit == 1:  # army
-        return type_zone in (1, 2, 4)
+    if type_unit == ARMY:  # army
+        return type_zone in (COAST, EARTH, ISLAND)
 
     # fleet
-    return type_zone in (1, 3, 4)
+    return type_zone in (COAST, SEA, ISLAND)
 
 
 def can_reach(type_unit: int, unit_zone: int, destination: int) -> bool:
@@ -67,7 +67,7 @@ def check_starting_units() -> None:
     NUMBER += 1
     print("============")
     print(f"{NUMBER}. Starting units stats.")
-    print("Rationale: we expect factions to have an approximatively equal number of armies and fleets. \nThere should be at least one of each, and no more than one between them.")
+    print("Rationale: we expect factions to have an approximately equal number of armies and fleets. \nThere should be at least one of each, and no more than one between them.")
     print("============")
 
     stats = {}
@@ -105,7 +105,7 @@ def check_start_flexibility() -> None:
     print("Rationale: we expect factions to have approximatively the same number of possible moves on the first move.")
     print("============")
 
-    stats = {}
+    stats: dict[int, float] = {}
     for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
@@ -140,10 +140,10 @@ def check_all_direct_center_access() -> None:
     NUMBER += 1
     print("============")
     print(f"{NUMBER}. Centers reachable on the first move.")
-    print("Rationale: we expect factions to have approximatively the same opportunity to reach a center in the very first move.\nEither all af them can, or none of them can. We do not expect a faction to directly reach anothr faction's home center.")
+    print("Rationale: we expect factions to have approximatively the same opportunity to reach a center in the very first move.\nEither all af them can, or none of them can. We do not expect a faction to directly reach another faction's home center.")
     print("============")
 
-    stats = {}
+    stats: dict[int, float] = {}
     for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
@@ -185,7 +185,7 @@ def check_contested_direct_center_access() -> None:
     NUMBER += 1
     print("============")
     print(f"{NUMBER}. Centers reachable on the first move (contested or not by more than one faction).")
-    print("Rationale: we expect factions to have approximatively the same possibilties of reaching centers at firt move, whether  contested by another faction or not.\nEither every factions has one garanteed center or none does.")
+    print("Rationale: we expect factions to have approximatively the same possibilities of reaching centers at first move, whether  contested by another faction or not.\nEither every factions has one guaranteed center or none does.")
     print("============")
 
     access_table = collections.defaultdict(set)
@@ -225,8 +225,7 @@ def check_distances_to_solo() -> None:
 
     debug = False
 
-    stats = {}
-
+    stats: dict[int, float] = {}
     for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
@@ -240,7 +239,7 @@ def check_distances_to_solo() -> None:
             for zone in JSON_VARIANT_DATA['start_units'][role_num - 1][str(type_unit)]:
                 start_zones.add(zone)
 
-        # for all regions that include a strting zone
+        # for all regions that include a starting zone
         zones_reached = set()
         for region, zones in REGION_ZONES_TABLE.items():
             if any(z in start_zones for z in zones):
@@ -344,7 +343,7 @@ def check_safe_home_center() -> None:
         # keep a note of zone occupying my centers
         faction_zone_centers[role_num] = zone_centers
 
-    stats = {}
+    stats: dict[int, float] = {}
     for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
@@ -383,7 +382,7 @@ def check_easy_center() -> None:
     NUMBER += 1
     print("============")
     print(f"{NUMBER}. Easy centers.")
-    print("Rationale: we expect that no faction can reach a center by the first autumn with no possible oppostion.\nIf such possibility exists, then we expect this to be balanced, with each factions having the same opportunities.")
+    print("Rationale: we expect that no faction can reach a center by the first autumn with no possible opposition.\nIf such possibility exists, then we expect this to be balanced, with each factions having the same opportunities.")
     print("============")
 
     debug = True
@@ -417,7 +416,7 @@ def check_easy_center() -> None:
         # keep a note of centers reached
         faction_centers[role_num] = centers
 
-    stats = {}
+    stats: dict[int, float] = {}
     for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
@@ -496,7 +495,7 @@ def check_supported_attacks() -> None:
                     if center1 == center2 and zone2region[path_taken1[1]] != zone2region[path_taken2[1]]:
                         faction_reached[role_num].add(center1)
 
-    stats = {}
+    stats: dict[int, float] = {}
     for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
@@ -527,7 +526,7 @@ def check_no_initial_threats() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Inital threats.")
+    print(f"{NUMBER}. Initial threats.")
     print("Rationale: we expect no factions to be able to make an opening move that threatens more than one of another faction's starting centers (aside from a neutral center).\nIf such move exists, then we expect this to be balanced, with each factions having the same number of active and passive threats of this kind.")
     print("============")
 
@@ -687,7 +686,7 @@ def check_unit_defensive_effectiveness() -> None:
 
     debug = False
 
-    stats = {}
+    stats: dict[int, float] = {}
     for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
