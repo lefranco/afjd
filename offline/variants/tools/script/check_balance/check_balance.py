@@ -32,6 +32,7 @@ CENTER_NAME_TABLE: dict[int, str] = {}
 REGION_ZONES_TABLE: dict[int, list[int]] = {}
 CENTER_ZONE_TABLE: dict[int, int] = {}
 OWNER_TABLE: dict[int, int] = {}
+ACTIVE_ROLES: list[int] = []
 
 ARMY = 1
 FLEET = 2
@@ -70,16 +71,14 @@ def check_starting_units() -> None:
     print("============")
 
     stats = {}
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
-
+    for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
+
         stats[role_num] = 0
 
         armies = fleets = 0
         for unit, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
-            if unit == '1':
+            if int(unit) == ARMY:
                 armies = len(zones)
             else:
                 fleets = len(zones)
@@ -107,18 +106,16 @@ def check_start_flexibility() -> None:
     print("============")
 
     stats = {}
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
-
+    for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
+
         stats[role_num] = 0
 
         options_faction = 1
         for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
             type_unit = int(type_unit_str)
             for zone_unit in zones:
-                print(f"\t\t\t{TYPE_UNIT_NAME_TABLE[type_unit]} {ZONE_NAME_TABLE[zone_unit]}: ", end='')
+                print(f"\t\t\t{TYPE_UNIT_NAME_TABLE[type_unit][0]} {ZONE_NAME_TABLE[zone_unit]}: ", end='')
                 options_unit = 0
                 for zone_dest in range(1, len(JSON_PARAMETERS_DATA['zones']) + len(JSON_VARIANT_DATA['coastal_zones']) + 1):
                     if zone_dest in CENTER_ZONE_TABLE and CENTER_ZONE_TABLE[zone_dest] in OWNER_TABLE and OWNER_TABLE[CENTER_ZONE_TABLE[zone_dest]] == role_num:
@@ -147,11 +144,9 @@ def check_all_direct_center_access() -> None:
     print("============")
 
     stats = {}
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
+    for role_num in ACTIVE_ROLES:
+        print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
-        print(f"\t{ROLE_NAME_TABLE[role_num]} :", end='')
         stats[role_num] = 0
 
         has_one = False
@@ -166,18 +161,18 @@ def check_all_direct_center_access() -> None:
                         if can_reach(type_unit, zone_unit, num_zone):
                             stats[role_num] += 1
                             if not center_printed:
-                                print(f"\n\t\t{CENTER_NAME_TABLE[num_center + 1]}: ", end='')
+                                print(f"\t\t{CENTER_NAME_TABLE[num_center + 1]}: ", end='')
                                 center_printed = True
                             else:
                                 print("/ ", end='')
-                            print(f"from {TYPE_UNIT_NAME_TABLE[type_unit][0]} in {ZONE_NAME_TABLE[zone_unit]} ", end='')
+                            print(f"from {TYPE_UNIT_NAME_TABLE[type_unit][0]} {ZONE_NAME_TABLE[zone_unit]} ", end='')
                             if num_center + 1 in OWNER_TABLE and OWNER_TABLE[num_center + 1] != role_num:
                                 print(f" (start center of {ROLE_NAME_TABLE[OWNER_TABLE[num_center + 1]]} ⚠️ )", end='')
                             has_one = True
+            if center_printed:
+                print()
         if not has_one:
-            print("\n\t\tHas no direct access to any center ⚠️ ")
-
-        print()
+            print("\t\tHas no direct access to any center ⚠️ ")
 
     # print(f"{stats=}")
     print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
@@ -194,10 +189,8 @@ def check_contested_direct_center_access() -> None:
     print("============")
 
     access_table = collections.defaultdict(set)
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
 
+    for role_num in ACTIVE_ROLES:
         for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
             type_unit = int(type_unit_str)
             for zone_unit in zones:
@@ -221,8 +214,8 @@ def check_contested_direct_center_access() -> None:
     print()
 
 
-def check_distances_to_win() -> None:
-    """check_distances_to_win."""
+def check_distances_to_solo() -> None:
+    """check_distances_to_solo."""
     global NUMBER
     NUMBER += 1
     print("============")
@@ -233,19 +226,17 @@ def check_distances_to_win() -> None:
     debug = False
 
     stats = {}
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
 
+    for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
         # initialize 'zones_reached'
         # any unit buildable a start position
         zones_reached: set[tuple[int, int]] = set()
 
-        # first we determine all satrting zones
+        # first we determine all starting zones
         start_zones = set()
-        for type_unit in (1, 2):
+        for type_unit in (ARMY, FLEET):
             for zone in JSON_VARIANT_DATA['start_units'][role_num - 1][str(type_unit)]:
                 start_zones.add(zone)
 
@@ -272,7 +263,7 @@ def check_distances_to_win() -> None:
 
             # increase zones
             for type_unit, zone_unit in zones_reached.copy():
-                for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+                for num_new_zone in range(1, len(JSON_VARIANT_DATA['regions']) + len(JSON_VARIANT_DATA['coastal_zones']) + 1):
                     if can_reach(type_unit, zone_unit, num_new_zone):
                         zones_reached.add((type_unit, num_new_zone))
 
@@ -322,9 +313,7 @@ def check_safe_home_center() -> None:
     faction_reached = {}
     faction_zone_centers = {}
 
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
+    for role_num in ACTIVE_ROLES:
 
         # initialize 'zones_reached'
         zones_reached = set()
@@ -338,7 +327,7 @@ def check_safe_home_center() -> None:
 
             # increase zones
             for type_unit, zone_unit in zones_reached.copy():
-                for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+                for num_new_zone in range(1, len(JSON_VARIANT_DATA['regions']) + len(JSON_VARIANT_DATA['coastal_zones']) + 1):
                     if can_reach(type_unit, zone_unit, num_new_zone):
                         zones_reached.add((type_unit, num_new_zone))
 
@@ -356,18 +345,14 @@ def check_safe_home_center() -> None:
         faction_zone_centers[role_num] = zone_centers
 
     stats = {}
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
-
+    for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
+
         stats[role_num] = 0
         start_centers = set(JSON_VARIANT_DATA['start_centers'][role_num - 1])
         safe_centers = start_centers
 
-        for role_num2 in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-            if str(role_num2) in JSON_VARIANT_DATA['disorder']:
-                continue
+        for role_num2 in ACTIVE_ROLES:
 
             if role_num2 == role_num:
                 continue
@@ -405,9 +390,7 @@ def check_easy_center() -> None:
 
     faction_centers = {}
 
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
+    for role_num in ACTIVE_ROLES:
 
         # initialize 'zones_reached'
         zones_reached = set()
@@ -421,7 +404,7 @@ def check_easy_center() -> None:
 
             # increase zones
             for type_unit, zone_unit in zones_reached.copy():
-                for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+                for num_new_zone in range(1, len(JSON_VARIANT_DATA['regions']) + len(JSON_VARIANT_DATA['coastal_zones']) + 1):
                     if can_reach(type_unit, zone_unit, num_new_zone):
                         zones_reached.add((type_unit, num_new_zone))
 
@@ -435,17 +418,14 @@ def check_easy_center() -> None:
         faction_centers[role_num] = centers
 
     stats = {}
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
-
+    for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
         if debug:
             print("\t\tReachable: ")
             print(f"\t\t\t{' '.join([CENTER_NAME_TABLE[c] for c in faction_centers[role_num]])}")
 
-        other_active_roles = set(range(1, JSON_VARIANT_DATA['roles']['number'] + 1)) - {role_num} - set(map(int, JSON_VARIANT_DATA['disorder'].keys()))
+        other_active_roles = set(ACTIVE_ROLES) - {role_num}
 
         # centers I can reach
         easy_centers = faction_centers[role_num].copy()
@@ -457,7 +437,10 @@ def check_easy_center() -> None:
         easy_centers -= set().union(*[JSON_VARIANT_DATA['start_centers'][r - 1] for r in other_active_roles])
 
         print("\t\tEasy centers: ")
-        print(f"\t\t\t{' '.join([CENTER_NAME_TABLE[c] for c in easy_centers])}")
+        if easy_centers:
+            print(f"\t\t\t{' '.join([CENTER_NAME_TABLE[c] for c in easy_centers])}")
+        else:
+            print("\t\t\tNone.")
 
         stats[role_num] = len(easy_centers)
 
@@ -483,9 +466,7 @@ def check_supported_attacks() -> None:
 
     faction_reached: dict[int, set[int]] = {}
 
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
+    for role_num in ACTIVE_ROLES:
 
         centers_reached = {}
 
@@ -501,7 +482,7 @@ def check_supported_attacks() -> None:
 
                     # increase zones
                     for type_unit2, zone_unit2, path_taken in zones_reached.copy():
-                        for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+                        for num_new_zone in range(1, len(JSON_VARIANT_DATA['regions']) + len(JSON_VARIANT_DATA['coastal_zones']) + 1):
                             if can_reach(type_unit2, zone_unit2, num_new_zone):
                                 zones_reached.add((type_unit2, num_new_zone, (*path_taken, zone_unit2)))
 
@@ -516,18 +497,14 @@ def check_supported_attacks() -> None:
                         faction_reached[role_num].add(center1)
 
     stats = {}
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
-
+    for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
+
         stats[role_num] = 0
         start_centers = set(JSON_VARIANT_DATA['start_centers'][role_num - 1])
         attackable_centers = set()
 
-        for role_num2 in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-            if str(role_num2) in JSON_VARIANT_DATA['disorder']:
-                continue
+        for role_num2 in ACTIVE_ROLES:
 
             if role_num2 == role_num:
                 continue
@@ -560,10 +537,8 @@ def check_no_initial_threats() -> None:
     number_threats = 2
     threatens: collections.Counter[int] = collections.Counter()
     threatened: collections.Counter[int] = collections.Counter()
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
 
+    for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
         # for every starting unit
@@ -572,12 +547,12 @@ def check_no_initial_threats() -> None:
             for zone_unit in zones:
 
                 # where can it go
-                for num_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+                for num_new_zone in range(1, len(JSON_VARIANT_DATA['regions']) + len(JSON_VARIANT_DATA['coastal_zones']) + 1):
                     if can_reach(type_unit, zone_unit, num_new_zone):
 
                         # what does it threatens
                         threatening = set()
-                        for num_new_new_zone in range(1, len(JSON_PARAMETERS_DATA['zones']) + 1):
+                        for num_new_new_zone in range(1, len(JSON_VARIANT_DATA['regions']) + len(JSON_VARIANT_DATA['coastal_zones']) + 1):
 
                             if num_new_new_zone == zone_unit:
                                 continue
@@ -615,17 +590,14 @@ def check_no_initial_threats() -> None:
     print()
     print("  Recap:")
     print()
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
+    for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
         print(f"\t\tThreatens {threatens[role_num]} times and is threatened {threatened[role_num]} times")
         if abs(threatens[role_num] - threatened[role_num]) > 1:
             print("\t\tWe have a too big difference here ⚠️  ")
 
-    delta = {r: threatens[r] - threatened[r] for r in range(1, JSON_VARIANT_DATA['roles']['number'] + 1)}
+    delta = {r: threatens[r] - threatened[r] for r in ACTIVE_ROLES}
 
-    print()
     print(f"Deviation for active is {statistics.stdev(threatens.values()):0.3f}")
     print(f"Deviation for passive is {statistics.stdev(threatened.values()):0.3f}")
     print(f"Deviation for delta is {statistics.stdev(delta.values()):0.3f}")
@@ -716,9 +688,7 @@ def check_unit_defensive_effectiveness() -> None:
     debug = False
 
     stats = {}
-    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
-        if str(role_num) in JSON_VARIANT_DATA['disorder']:
-            continue
+    for role_num in ACTIVE_ROLES:
         print(f"\t{ROLE_NAME_TABLE[role_num]} :")
 
         print("\t\tArmies: ", end='')
@@ -813,18 +783,22 @@ def main() -> None:
         for num_center in JSON_VARIANT_DATA['start_centers'][role_num - 1]:
             OWNER_TABLE[num_center] = role_num
 
+    # active roles
+    global ACTIVE_ROLES
+    ACTIVE_ROLES = [r for r in range(1, JSON_VARIANT_DATA['roles']['number'] + 1) if str(r) not in JSON_VARIANT_DATA['disorder']]
+
     # now do the checks
 
-    #  check_starting_units()
+    check_starting_units()
     check_start_flexibility()
-    #  check_all_direct_center_access()
-    #  check_contested_direct_center_access()
-    #  check_distances_to_win()
-    #  check_safe_home_center()
-    #  check_easy_center()
-    #  check_supported_attacks()
-    #  check_no_initial_threats()
-    #  check_unit_defensive_effectiveness()
+    check_all_direct_center_access()
+    check_contested_direct_center_access()
+    check_distances_to_solo()
+    check_safe_home_center()
+    check_easy_center()
+    check_supported_attacks()
+    check_no_initial_threats()
+    check_unit_defensive_effectiveness()
 
 
 if __name__ == '__main__':
