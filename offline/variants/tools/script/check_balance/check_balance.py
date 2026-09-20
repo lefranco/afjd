@@ -597,9 +597,12 @@ def check_no_initial_threats() -> None:
 
     delta = {r: threatens[r] - threatened[r] for r in ACTIVE_ROLES}
 
-    print(f"Deviation for active is {statistics.stdev(threatens.values()):0.3f}")
-    print(f"Deviation for passive is {statistics.stdev(threatened.values()):0.3f}")
-    print(f"Deviation for delta is {statistics.stdev(delta.values()):0.3f}")
+    if len(threatens) >= 2:
+        print(f"Deviation for active is {statistics.stdev(threatens.values()):0.3f}")
+    if len(threatened) >= 2:
+        print(f"Deviation for passive is {statistics.stdev(threatened.values()):0.3f}")
+    if len(delta) >= 2:
+        print(f"Deviation for delta is {statistics.stdev(delta.values()):0.3f}")
     print()
 
 
@@ -817,6 +820,7 @@ def main() -> None:
 
     # some info about variant
     display_infos()
+
 
 if __name__ == '__main__':
     main()
