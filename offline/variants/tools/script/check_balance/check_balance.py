@@ -38,7 +38,7 @@ ARMY = 1
 FLEET = 2
 
 COAST = 1
-EARTH = 2
+LAND = 2
 SEA = 3
 ISLAND = 4
 
@@ -47,10 +47,10 @@ def compatible(type_unit: int, num_region: int) -> bool:
     """Say if this type of unit can go on this type of region."""
     # determine type of zone
     type_zone = JSON_VARIANT_DATA['regions'][num_region - 1]
-    assert type_zone in (COAST, EARTH, SEA, ISLAND)
+    assert type_zone in (COAST, LAND, SEA, ISLAND)
 
     if type_unit == ARMY:  # army
-        return type_zone in (COAST, EARTH, ISLAND)
+        return type_zone in (COAST, LAND, ISLAND)
 
     # fleet
     return type_zone in (COAST, SEA, ISLAND)
@@ -708,6 +708,23 @@ def check_unit_defensive_effectiveness() -> None:
     print()
 
 
+def display_infos():
+    """display_infos"""
+    print("Some information about the variant:")
+    print(f"\tFull name: {JSON_VARIANT_DATA['name']}")
+    print(f"\tAuthor: {JSON_VARIANT_DATA['author']}")
+    print(f"\tPlayers: {len(ACTIVE_ROLES)}")
+    print(f"\tCenters: {len(JSON_VARIANT_DATA['centers'])}")
+    print(f"\tRegions: {len(JSON_VARIANT_DATA['regions'])}")
+    print(f"\tRegions per player: {len(JSON_VARIANT_DATA['regions']) / len(ACTIVE_ROLES):0.2f}")
+    print(f"\t\tCoasts: {len([r for r in JSON_VARIANT_DATA['regions'] if r == COAST])}")
+    print(f"\t\tLands: {len([r for r in JSON_VARIANT_DATA['regions'] if r == LAND])}")
+    print(f"\t\tSeas: {len([r for r in JSON_VARIANT_DATA['regions'] if r == SEA])}")
+    print(f"\t\tIslands: {len([r for r in JSON_VARIANT_DATA['regions'] if r == ISLAND])}")
+    print(f"\tSolo at: {len(JSON_VARIANT_DATA['centers']) // 2 + JSON_VARIANT_DATA['extra_requirement_solo'] + 1}")
+    print(f"\tExpansionnist: {'yes' if JSON_VARIANT_DATA['build_everywhere'] else 'no'}")
+
+
 def main() -> None:
     """Do main."""
     parser = argparse.ArgumentParser()
@@ -787,7 +804,6 @@ def main() -> None:
     ACTIVE_ROLES = [r for r in range(1, JSON_VARIANT_DATA['roles']['number'] + 1) if str(r) not in JSON_VARIANT_DATA['disorder']]
 
     # now do the checks
-
     check_starting_units()
     check_start_flexibility()
     check_all_direct_center_access()
@@ -799,6 +815,8 @@ def main() -> None:
     check_no_initial_threats()
     check_unit_defensive_effectiveness()
 
+    # some info about variant
+    display_infos()
 
 if __name__ == '__main__':
     main()
