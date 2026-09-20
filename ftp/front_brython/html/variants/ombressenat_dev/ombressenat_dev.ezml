@@ -160,6 +160,7 @@ $ Nomenclature
 | HPer | Route Perlémienne | mer |  |
 | Ilu | Ilum | île |  |
 | Jak | Jakku | île | \* |
+| Jha | Jhas | île |  |
 | Kal | Kalevala | île | \* |
 | Kam | Kamino | île | \* |
 | Kas | Kashyyyk | île | \* |
@@ -181,6 +182,7 @@ $ Nomenclature
 | Oba | Oba Diah | terre | \* |
 | Ond | Onderon | île | |
 | Ord | Ord Mantell | île | \* |
+| Ori | Orin | île | |
 | Oss | Ossus | île | \* (non constructible) |
 | Pae | Paecia | île | |
 | Rap | Rapacc | île | \* |
@@ -194,6 +196,7 @@ $ Nomenclature
 | Sci | Scipio | île | \* |
 | Sal | Saleucami | île | \* |
 | Sar | Sartinaynian | île | |
+| Sav | Sarvchi | île | |
 | Sel | Selonia | île | \* |
 | Sul | Sullust | île | \* |
 | Tak | Takodana | île |  |
@@ -359,6 +362,9 @@ Monde sacré recouvert de glace, source des cristaux kyber utilisés dans les sa
 (Jakku)
 Désert de dunes du Bordure Extérieure, théâtre d'anciennes batailles.
 
+(Jhas)
+Géante gazeuse du système de Hoth, entourée d'un vaste cortège de vingt-quatre lunes.
+
 (Kalevala)
 Monde mandalorien, foyer de clans guerriers.
 
@@ -428,6 +434,9 @@ Un monde de la Bordure Intérieure principalement connu comme escale sur les rou
 (Neimoidia)
 Monde souche du système neimoidien, avant ses colonies.
 
+(Orin)
+Monde désolé au sol instable, resté largement inexploré après la mort de plusieurs équipes de prospection.
+
 (Rapacc)
 Monde-siège d'une grande famille dirigeante de l'Ascendance Chiss.
 
@@ -451,6 +460,9 @@ Monde-oasis aride et marécageux de la Bordure Extérieure, aux cratères fertil
 
 (Sartinaynian)
 Colonie humaine financée par les Muuns, dont la rupture avec la République reste marquée par des tensions anti-Muuns.
+
+(Sarvchi)
+Monde reculé l'Ascendance Chiss, terre de refuge pour une partie de la population de Csilla après la catastrophe du Starflash
 
 (Scarif)
 Île tropicale abritant d'anciennes archives impériales.
