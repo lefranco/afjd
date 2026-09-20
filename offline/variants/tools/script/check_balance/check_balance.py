@@ -124,7 +124,8 @@ def check_start_flexibility() -> None:
                         print(f"{ZONE_NAME_TABLE[zone_dest]} ", end='')
                         options_unit += 1
                 print(f"({options_unit})")
-                options_faction *= options_unit
+                if options_unit:
+                    options_faction *= options_unit
 
         print(f"\t\tNumber of options : {options_faction}")
         stats[role_num] = options_faction
