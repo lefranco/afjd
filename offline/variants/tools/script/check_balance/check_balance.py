@@ -97,6 +97,46 @@ def check_starting_units() -> None:
     print()
 
 
+def check_start_flexibility() -> None:
+    """check_start_flexibility."""
+    global NUMBER
+    NUMBER += 1
+    print("============")
+    print(f"{NUMBER}. Options on the first move.")
+    print("Rationale: we expect factions to have approximatively the same number of possible moves on the first move.")
+    print("============")
+
+    stats = {}
+    for role_num in range(1, JSON_VARIANT_DATA['roles']['number'] + 1):
+        if str(role_num) in JSON_VARIANT_DATA['disorder']:
+            continue
+
+        print(f"\t{ROLE_NAME_TABLE[role_num]} :")
+        stats[role_num] = 0
+
+        options_faction = 1
+        for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
+            type_unit = int(type_unit_str)
+            for zone_unit in zones:
+                print(f"\t\t\t{TYPE_UNIT_NAME_TABLE[type_unit]} {ZONE_NAME_TABLE[zone_unit]}: ", end='')
+                options_unit = 0
+                for zone_dest in range(1, len(JSON_PARAMETERS_DATA['zones']) + len(JSON_VARIANT_DATA['coastal_zones']) + 1):
+                    if zone_dest in CENTER_ZONE_TABLE and CENTER_ZONE_TABLE[zone_dest] in OWNER_TABLE and OWNER_TABLE[CENTER_ZONE_TABLE[zone_dest]] == role_num:
+                        continue
+                    if can_reach(type_unit, zone_unit, zone_dest):
+                        print(f"{ZONE_NAME_TABLE[zone_dest]} ", end='')
+                        options_unit += 1
+                print(f"({options_unit})")
+                options_faction *= options_unit
+
+        print(f"\t\tNumber of options : {options_faction}")
+        stats[role_num] = options_faction
+
+    # print(f"{stats=}")
+    print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
+    print()
+
+
 def check_all_direct_center_access() -> None:
     """check_all_direct_center_access."""
     global NUMBER
@@ -453,7 +493,7 @@ def check_supported_attacks() -> None:
         for type_unit_str, zones in JSON_VARIANT_DATA['start_units'][role_num - 1].items():
             type_unit = int(type_unit_str)
             for zone_unit in zones:
-                zones_reached: set[tuple[int, int, tuple[int,...]]] = set()
+                zones_reached: set[tuple[int, int, tuple[int, ...]]] = set()
                 zones_reached.add((type_unit, zone_unit, ()))
 
                 # make two moves
@@ -775,15 +815,16 @@ def main() -> None:
 
     # now do the checks
 
-    check_starting_units()
-    check_all_direct_center_access()
-    check_contested_direct_center_access()
-    check_distances_to_win()
-    check_safe_home_center()
-    check_easy_center()
-    check_supported_attacks()
-    check_no_initial_threats()
-    check_unit_defensive_effectiveness()
+    #  check_starting_units()
+    check_start_flexibility()
+    #  check_all_direct_center_access()
+    #  check_contested_direct_center_access()
+    #  check_distances_to_win()
+    #  check_safe_home_center()
+    #  check_easy_center()
+    #  check_supported_attacks()
+    #  check_no_initial_threats()
+    #  check_unit_defensive_effectiveness()
 
 
 if __name__ == '__main__':
