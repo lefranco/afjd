@@ -194,13 +194,17 @@ def check_pairs_factions(factions, threshold_separation) -> None:
 
         for n1, n2, gap in sorted(conflicts, key=lambda x: x[2]):
             icon = factions[first_key][check][1]
+            mess = f"\t\t {icon} {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {threshold_separation} dE)"
             if icon == '⛔️':
-                worst_gap = min(worst_gap, gap)
-            print(f"\t\t {icon} {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {threshold_separation} dE)")
+                if gap < worst_gap:
+                    worst_gap = gap
+                    mess_worst = mess
+            print(mess)
         print()
 
     if worst_gap != MAXINT:
-        print(f"Worst gap is {worst_gap:.4f} dE...")
+        print(f"Worst gap is {worst_gap:.4f} dE for:")
+        print(mess_worst)
     print()
     
 
