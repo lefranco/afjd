@@ -171,8 +171,8 @@ def check_couple_unit_filler(name: str, unit, fill) -> None:
 
 def check_pairs_factions(factions, threshold_separation) -> None:
     """Compares all factions by unit color to detect potential confusion."""
-
-    worst_worst_gap = worst_gap = MAXINT
+    
+    worst_gap = MAXINT
     first_key = next(iter(factions))
     for check in factions[first_key]:
 
@@ -181,13 +181,11 @@ def check_pairs_factions(factions, threshold_separation) -> None:
 
         conflicts = []
         for n1, n2 in itertools.combinations(factions, 2):
-            rgb1 = factions[n1][check]
-            rgb2 = factions[n2][check]
+            rgb1 = factions[n1][check][0]
+            rgb2 = factions[n2][check][0]
             gap = closeness(rgb1, rgb2)
             if gap < threshold_separation:
                 conflicts.append((n1, n2, gap))
-                worst_gap = min(worst_gap, gap)
-                worst_worst_gap = min(worst_worst_gap, worst_gap)
 
         if not conflicts:
             print(f"\t\tNo conflict detected, all factions are separated enough!")
@@ -195,14 +193,14 @@ def check_pairs_factions(factions, threshold_separation) -> None:
             continue
 
         for n1, n2, gap in sorted(conflicts, key=lambda x: x[2]):
-            print(f"\t\t ⚠️  {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {threshold_separation} dE)")
+            icon = factions[first_key][check][1]
+            if icon == '⛔️':
+                worst_gap = min(worst_gap, gap)
+            print(f"\t\t {icon} {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {threshold_separation} dE)")
         print()
 
-        print(f"\tWorst gap is {worst_gap:.4f} dE...")
-        print()
-
-    if worst_worst_gap != MAXINT:
-        print(f"Worstworst gap is {worst_worst_gap:.4f} dE...")
+    if worst_gap != MAXINT:
+        print(f"Worst gap is {worst_gap:.4f} dE...")
     print()
     
 
@@ -264,17 +262,17 @@ def check_colors(sea_background_param: str, earth_background_param: str, thresho
         unit_on_fill_on_earth_color_tuple_rendered = alpha_compose(fill_on_earth_color_tuple_rendered, unit_color_tuple)
 
         factions[role_name] = {
-            "unit_on_sea": unit_on_sea_color_tuple_rendered, 
-            "unit_on_earth": unit_on_earth_color_tuple_rendered,
-            "fill_on_earth": fill_on_earth_color_tuple_rendered, 
-            "unit_on_fill_on_earth": unit_on_fill_on_earth_color_tuple_rendered
+            "fill_on_earth": (fill_on_earth_color_tuple_rendered, '⚠️'),
+            "unit_on_sea": (unit_on_sea_color_tuple_rendered, '⛔️'),
+            "unit_on_earth": (unit_on_earth_color_tuple_rendered, '⛔️'),
+            "unit_on_fill_on_earth": (unit_on_fill_on_earth_color_tuple_rendered, '⛔️')
         }
 
     # check every pair unit/background individually
     print(f"---- Check consistency unit/fill within factions ----")
     print()
     for name, colors in factions.items():
-        check_couple_unit_filler(name, colors["unit_on_fill_on_earth"], colors["fill_on_earth"])
+        check_couple_unit_filler(name, colors["unit_on_fill_on_earth"][0], colors["fill_on_earth"][0])
 
     # check conflicts between factions (hue too close)
     print(f"---- Check factions separation ----")
@@ -287,15 +285,19 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--parameters_file', required=True, help='Load a parameters file at start')
-    parser.add_argument('-s', '--sea_background', required=True, help='Provide a background color for sea from map file')
     parser.add_argument('-e', '--earth_background', required=True, help='Provide a background color for earth from map file')
+    parser.add_argument('-s', '--sea_background', help='Provide a background color for sea from map file')
     parser.add_argument('-t', '--threshold_separation', type=int, default=20, help='Provide a threshold for accepted separatoin between colors')
     args = parser.parse_args()
 
     #  load files at start
     parameters_file = args.parameters_file
-    sea_background = args.sea_background
     earth_background = args.earth_background
+    if not args.sea_background:
+        print("Taking for sea same background as for earth...")
+        sea_background = earth_background
+    else:
+        sea_background = args.sea_background
     threshold_separation = args.threshold_separation
 
     if not os.path.exists(parameters_file):
