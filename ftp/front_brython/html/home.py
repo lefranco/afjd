@@ -230,7 +230,7 @@ def formatted_teaser(teasers):
                 c_score = int(champion_data[3])
                 c_num_games = int(champion_data[4])
                 c_role = champion_data[5]
-                if c_num_games >= common.GAMES_REQUIRED_GLOBAL_ELO:
+                if c_num_games >= common.GAMES_REQUIRED_ROLE_ELO:
                     data_role[(c_role, c_mode)] = html.B(f"{c_pseudo} {c_score} ({c_num_games})")
                 elif SHOW_LOW:
                     data_role[(c_role, c_mode)] = f"{c_pseudo} {c_score} ({c_num_games})"
