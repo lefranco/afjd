@@ -19,7 +19,7 @@ import tkinter.scrolledtext
 
 import yaml
 
-WINDOW_WIDTH = 600
+WINDOW_WIDTH = 700
 WINDOW_HEIGHT = 900
 
 IMAP_SERVER = ''
