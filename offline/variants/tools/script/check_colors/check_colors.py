@@ -172,7 +172,7 @@ def check_couple_unit_filler(name: str, unit, fill) -> None:
 def check_pairs_factions(factions, threshold_separation) -> None:
     """Compares all factions by unit color to detect potential confusion."""
     
-    worst_gap = MAXINT
+    worst_data = (MAXINT, "", "")
     first_key = next(iter(factions))
     for check in factions[first_key]:
 
@@ -196,15 +196,14 @@ def check_pairs_factions(factions, threshold_separation) -> None:
             icon = factions[first_key][check][1]
             mess = f"\t\t {icon} {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {threshold_separation} dE)"
             if icon == '⛔️':
-                if gap < worst_gap:
-                    worst_gap = gap
-                    mess_worst = mess
+                if gap < worst_data[0]:
+                    worst_data = (gap, check, mess)
             print(mess)
         print()
 
-    if worst_gap != MAXINT:
-        print(f"Worst gap is {worst_gap:.4f} dE for:")
-        print(mess_worst)
+    if worst_data[0] != MAXINT:
+        print(f"Worst gap is {worst_data[0]:.4f} dE when checking '{worst_data[1].replace('_', ' ')}' for:")
+        print(worst_data[2])
     print()
     
 
