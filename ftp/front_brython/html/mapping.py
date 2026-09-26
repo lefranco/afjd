@@ -1047,6 +1047,7 @@ class Variant(Renderable):
             if zone.coast_type:
 
                 # name
+                assert zone.region.zone is not None
                 region_name = self._zone_name_table[zone.region.zone]
                 coast_name = self._coast_name_table[zone.coast_type]
                 name = f"{region_name}{coast_name}"
@@ -1396,7 +1397,7 @@ class Variant(Renderable):
         return self._start_build
 
     @property
-    def extra_requirement_solo(self) -> bool:
+    def extra_requirement_solo(self) -> int:
         """ property """
         return self._extra_requirement_solo
 

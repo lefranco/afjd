@@ -573,8 +573,8 @@ class Variant:
 
     def role_adjective(self, role: Role) -> str:
         """ role_adjective """
-        role_adj, _ = self._role_add_table[role]
-        return role_adj
+        role_info = self._role_add_table[role]
+        return role_info[0]
 
     def number_centers(self) -> int:
         """ number_centers """
@@ -669,3 +669,7 @@ class Variant:
     def emergency_centers(self) -> typing.List[EmergencyCenter]:
         """ property """
         return self._emergency_centers
+
+
+if __name__ == '__main__':
+    assert False, "Do not run this script"
