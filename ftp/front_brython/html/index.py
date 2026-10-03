@@ -321,7 +321,7 @@ def load_option(_, item_name):
         # do not display some options
 
         # not connected
-        if possible_item_name in ['Mon compte', 'Mes parties', 'Editer partie']:
+        if possible_item_name in ['Mon compte', 'Mes parties', 'Mes arbitrages', 'Editer partie']:
             if pseudo is None:
                 continue
             # should check account exist (but slower for rare case)
