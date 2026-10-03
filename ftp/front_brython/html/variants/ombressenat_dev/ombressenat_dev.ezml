@@ -18,53 +18,56 @@ $ Particularités de la carte
 
 (Voies hyperspatiales)
 
-Ce sont des mers qui relient deux points d'accès, en général une planète proche d'une capitale à un point assez éloigné. 
+Ce sont des voisinages entre deux points d'accès, en général une planète proche d'une capitale à un point assez éloigné. 
 .
-Elles permettent donc par exemple à une flotte de convoyer une armée de l'un à l'autre.
-.
-Elles sont matérialisées par un ovale en bas à droite de la carte et listées dans le tableau ci dessous :
-.
-.
+Elles permettent donc :
+- à une flotte (mais pas une armée) de se déplacer de l'un à l'autre.
+- à une flotte (mais pas une armée) sur l'un de soutenir l'autre ou vers l'autre.
+- à une flotte sur l'un de convoyer une armée depuis ou vers l'autre
 
+
+Elles sont matérialisées par une même lettre sur deux régions éloignées de la carte.
+.
+.
 = Voies d'hyperespace
-| Abréviation | Nom complet | Repère sur la carte | Point d'accès | Point d'accès |
-| HPer | Route Perlémienne | P | Coruscant (Cor) | Felucia (Fel) |
-| HDur | Voie de l’Espace Duros | D | Scipio (Sci) | Kashyyyk (Kas) |
-| HCor | Route Correlienne | C | Selonia (Sel) | Ryloth (Ryl) |
-| HHyd | Voie Hydienne | H | Eriadu (Eri) | Yavin (Yav) |
+| Nom de la vokie (pour information) | Repère sur la carte | Point d'accès | Point d'accès |
+| Route Perlémienne | P | Coruscant (Cor) | Felucia (Fel) |
+| Voie de l’Espace Duros | D | Scipio (Sci) | Kashyyyk (Kas) |
+| Route Correlienne | C | Selonia (Sel) | Ryloth (Ryl) |
+| Voie Hydienne | H | Eriadu (Eri) | Yavin (Yav) |
 =
 
-(Planètes qui ne sont pas des îles)
+(Les capitales)
 
 Presque toutes les planètes sont des îles, c'est à dire à la fois mer (une flotte peut y convoyer) et côte (une armée peut s'y arrêter). 
 .
 Contrairement à l'usage pour les îles, les armées peuvent se déplacer d'une île à la voisine.
 .
-Les exceptions sont listées dans le tableau ci-dessous :
+Les exceptions sont les capitales, des terres réservées aux armées, listées dans le tableau ci-dessous :
 .
 .
-
-= Planètes spéciales
-| Abréviation | Nom complet | Type | Motif | Restriction (conforme aux règles usuelles) |
-| Csi | Csilla | Terre | Capitale | Une flotte ne peut y accéder |
-| Muu | Muunilinst | Terre | Capitale | Une flotte ne peut y accéder |
-| Geo | Geonosis | Terre | Capitale |Une flotte ne peut y accéder |
-| Nal | Nal Hutta  | Terre | Capitale |Une flotte ne peut y accéder |
-| Man | Mandalore | Terre | Capitale |Une flotte ne peut y accéder |
-| Cat | Cato Neimodia | Terre | Capitale |Une flotte ne peut y accéder |
-| Mon | Mon Cala | Terre | Capitale |Une flotte ne peut y accéder |
-| Coa | Corellia | Terre | Capitale |Une flotte ne peut y accéder |
-| Oba | Oba Diah | Terre | Capitale |Une flotte ne peut y accéder |
-| Dat | Dathomir | Terre | Capitale |Une flotte ne peut y accéder |
-| HCor | Route Corellienne | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
-| HDur | Voie de l’Espace Duros | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
-| HPer | Route Perlémienne | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
-| HHyd | Voie Hydienne | Mer | Voie hyperspatiale | Une armée ne peut y accéder |
+= Planètes spéciales (capitales)
+| Abréviation | Nom complet | Capitale de la faction |
+| Csi | Csilla | Chiss|
+| Muu | Muunilinst | Muuns |
+| Geo | Geonosis | Séparatistes |
+| Nal | Nal Hutta  | Hutts |
+| Man | Mandalore | Mandalore |
+| Cat | Cato Neimodia | Neimoidiens |
+| Mon | Mon Cala | Mon Calamari|
+| Coa | Corellia |  Corellia |
+| Oba | Oba Diah | Pykes |
+| Dat | Dathomir | Dathomir |
 =
+
+.
+Dans ces régions, une flotte adjacente  :
+- ne peut accéder 
+- ne peut convoyer une armée pour en partir ou y arriver.
 
 (Centres non constructibles)
 
-A cause de la puissance de la Force qui habite ces lieux, personne ne peut construire sur les planètes du tableau ci-dessous :
+Il est impossible de construire sur les planètes du tableau ci-dessous :
 .
 .
 
@@ -75,9 +78,11 @@ A cause de la puissance de la Force qui habite ces lieux, personne ne peut const
 | Dat | Dathomir | Repaire des Sorcières de Dathomir |
 =
 
+Ce, cause de la puissance de la Force qui habite ces lieux.
+
 (Champ d'astéroïdes)
 
-Suite à sa destruction par l'empire "anticipée", la zone au nord ouest de Coruscant (anciennement planète Alderan) est inaccessible.
+Suite à sa destruction par l'empire (anticipée), la zone au nord ouest de Coruscant (anciennement planète Alderan) est inaccessible.
 
 _
 $ Datation
@@ -115,12 +120,13 @@ Il y a neuf puissances dont les unités de départ sont les suivantes (une armé
 
 Dathomir n'est pas jouée et ses unités sont en désordre civil pendant toute la partie.
 .
-Remarque : la planète de l'armée est la capitale, et c'est une terre, non accessible par flotte.
 
 _
 $ Pièges de la variante
 
-Les voies d'hyperespace. Les planètes qui ne sont pas une île. Les centres non constructibles. Dathomir non joué.
+Les voies d'hyperespace. Les capitale, des terres, non accessible par flotte. Les centres non constructibles. Dathomir non joué.
+.
+
 
 _
 $ Nomenclature
@@ -154,11 +160,7 @@ $ Nomenclature
 | Exe | Exegol | île | |
 | Fel | Felucia | île | \* |
 | Geo | Geonosis | terre | \* |
-| HCor | Route Corellienne | mer |  |
-| HDur | Voie de l’Espace Duros | mer |  |
-| HHyd | Voie Hydienne | mer |  |
 | Hot | Hoth | île | |
-| HPer | Route Perlémienne | mer |  |
 | Ilu | Ilum | île |  |
 | Jak | Jakku | île | \* |
 | Jha | Jhas | île |  |
