@@ -1065,6 +1065,9 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
                     del sql_executor
                     flask_restful.abort(404, msg=f"There is already a game named {new_name}!")
 
+                if not (new_name.isidentifier() and new_name.isascii()):
+                    flask_restful.abort(400, msg=f"Name '{new_name}' is not a valid name")
+
                 # change the lock !
                 if name_before in MOVE_GAME_LOCK_TABLE:
                     lock = MOVE_GAME_LOCK_TABLE[name_before]
