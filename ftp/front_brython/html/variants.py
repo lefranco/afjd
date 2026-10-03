@@ -19,7 +19,7 @@ import ezml_render
 
 
 OPTIONS = {'Généralités': "Généralités sur les variantes implémentées sur le site"}
-OPTIONS.update({variant_name: f"La variante {variant_name}" for variant_name in config.VARIANT_NAMES_DICT.keys()})
+OPTIONS.update({variant_name: f"La variante {variant_name}" for variant_name in config.VARIANT_NAMES_DICT})
 OPTIONS.update({'Fréquentation des variantes': "Statistiques sur la fréquentation des variantes sur le site"})
 OPTIONS.update({'Equilibre des variantes': "Statistiques l'équilibre des variantes sur le site"})
 
