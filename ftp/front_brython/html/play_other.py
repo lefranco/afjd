@@ -601,7 +601,7 @@ def show_position(advancement=None):
             # perform actual exportation
             text_file_as_blob = window.Blob.new([json_text], {'type': 'text/plain'})
             download_link = document['download_link']
-            download_link.download = f"diplomania_{play_low.GAME}_{play_low.GAME_ID}_json.txt"
+            download_link.download = f"diplomania_{play_low.GAME}_{play_low.GAME_ID}.json"
             download_link.href = window.URL.createObjectURL(text_file_as_blob)
             document['download_link'].click()
 
