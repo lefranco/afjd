@@ -867,6 +867,7 @@ def show_position(advancement=None):
 
             player_status_str = "Vous n'êtes pas identifié"
             buttons_right <= html.DIV(player_status_str, Class='important')
+            buttons_right <= html.BR()
 
         else:
 
