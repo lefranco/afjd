@@ -56,7 +56,7 @@
     "type": "submit",
 "introduction" : "Certaines variantes ont des îles ! C'est un mélange de mer et côte. Une mer accessible à une armée. Une côte ou une flotte peut convoyer. Bref, un mélange des deux. Ordonnez à la flotte de convoyer l'armée sur l''îles des Baléares...",
     "role_id" : 2,
-    "variant_name" : "mediterranee",
+    "variant_name" : "mediterraneeantique",
     "game_parameters_current_advancement": 0, 
     "position" : {
         "ownerships": {"4": 1},

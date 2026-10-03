@@ -57,7 +57,7 @@ INTERFACE_TABLE = {
     'hundred': ['diplomania'],
     'moderne': ['diplomania'],
     'egeemonie': ['diplomania'],
-    'mediterranee': ['diplomania'],
+    'mediterraneeantique': ['diplomania'],
     'successionautriche': ['diplomania'],
     'franceautriche': ['diplomania'],
     'crowded': ['diplomania'],

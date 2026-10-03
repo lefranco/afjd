@@ -45,7 +45,7 @@ VARIANT_NAMES_DICT = {
     'hundred': 3,
     'coldwarredux': 4,
     'sailho': 4,
-    'mediterranee': 5,
+    'mediterraneeantique': 5,
     'egeemonie': 6,
     'standard_pds': 7,
     'canton': 7,
