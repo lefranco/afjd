@@ -396,8 +396,6 @@ def my_delays(ev):  # pylint: disable=invalid-name
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
-    number_games = 0
-
     for game_id, role_id, advancement_delay, duration_delay, date_delay in sorted(delays_list, key=lambda t: t[4], reverse=True):
 
         data = games_dict[str(game_id)]
@@ -433,8 +431,6 @@ def my_delays(ev):  # pylint: disable=invalid-name
         else:
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
-
-        number_games += 1
 
         row = html.TR()
         for field in fields:
@@ -571,8 +567,6 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
-    number_games = 0
-
     for game_id, role_id, date_dropout in sorted(dropouts_list, key=lambda t: t[2], reverse=True):
 
         data = games_dict[str(game_id)]
@@ -608,8 +602,6 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
         else:
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
-
-        number_games += 1
 
         row = html.TR()
         for field in fields:
@@ -1183,6 +1175,7 @@ def my_games(state_name, master):
     one_deadline_forced_now = False
 
     games_list = []
+    variants_list = set()
     late_games = []
 
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
@@ -1240,6 +1233,7 @@ def my_games(state_name, master):
         # add to game list
         game_name = data['name']
         games_list.append(game_name)
+        variants_list.add(variant_name_loaded)
 
         submitted_data = {}
         submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
@@ -1577,9 +1571,12 @@ def my_games(state_name, master):
     elapsed = overall_time_after - overall_time_before
 
     number_games = len(games_list)
-    stats = f"Temps de chargement de la page {elapsed:.2f} secs avec {number_games} partie(s)"
+    number_variants = len(variants_list)
+    stats = f"Temps de chargement de la page {elapsed:.2f} secs avec {number_games} partie(s) et {number_variants} variante(s)"
     if number_games:
         stats += f" soit {elapsed / number_games:.2f} par partie"
+    if number_variants:
+        stats += f" et {elapsed / number_variants:.2f} par variante"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()

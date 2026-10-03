@@ -262,8 +262,6 @@ def show_games():
 
     rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
 
-    number_games = 0
-
     # default
     if 'SORT_BY_TOURNAMENT' not in storage:
         storage['SORT_BY_TOURNAMENT'] = 'creation'
@@ -339,14 +337,13 @@ def show_games():
         add_game_table[game_id] = add_group_table[advancement] + (per_advancement_table[advancement] - deadline_day)
 
     games_list = []
+    variants_list = set()
 
     # exception : games are sorted by name, not identifier
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
         if int(game_id_str) not in games_in:
             continue
-
-        number_games += 1
 
         game_id = int(game_id_str)
 
@@ -386,6 +383,7 @@ def show_games():
         # add to game list
         game_name = data['name']
         games_list.append(game_name)
+        variants_list.add(variant_name_loaded)
 
         data['master'] = None
         data['all_orders_submitted'] = None
@@ -546,9 +544,13 @@ def show_games():
     overall_time_after = time()
     elapsed = overall_time_after - overall_time_before
 
-    stats = f"Temps de chargement de la page {elapsed:.2f} secs avec {number_games} partie(s)"
+    number_games = len(games_list)
+    number_variants = len(variants_list)
+    stats = f"Temps de chargement de la page {elapsed:.2f} secs avec {number_games} partie(s) et {number_variants} variante(s)"
     if number_games:
         stats += f" soit {elapsed / number_games:.2f} par partie"
+    if number_variants:
+        stats += f" et {elapsed / number_variants:.2f} par variante"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
 

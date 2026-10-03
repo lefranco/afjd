@@ -302,8 +302,6 @@ def recruiting_games():
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
-    number_games = 0
-
     # default
     if 'SORT_BY_OPPORTUNITIES' not in storage:
         storage['SORT_BY_OPPORTUNITIES'] = 'creation'
@@ -346,14 +344,13 @@ def recruiting_games():
     time_stamp_now = time()
 
     games_list = []
+    variants_list = set()
 
     for game_id_str, data in sorted(games_dict_recruiting.items(), key=key_function, reverse=reverse_needed):
 
         # ignore finished (or distinguished) games
         if data['current_state'] in [2, 3]:
             continue
-
-        number_games += 1
 
         game_id = int(game_id_str)
 
@@ -396,6 +393,7 @@ def recruiting_games():
         # add to game list
         game_name = data['name']
         games_list.append(game_name)
+        variants_list.add(variant_name_loaded)
 
         data['master'] = None
         data['action'] = None
@@ -553,9 +551,13 @@ def recruiting_games():
     overall_time_after = time()
     elapsed = overall_time_after - overall_time_before
 
-    stats = f"Temps de chargement de la page {elapsed:.2f} secs"
+    number_games = len(games_list)
+    number_variants = len(variants_list)
+    stats = f"Temps de chargement de la page {elapsed:.2f} secs avec {number_games} partie(s) et {number_variants} variante(s)"
     if number_games:
         stats += f" soit {elapsed / number_games:.2f} par partie"
+    if number_variants:
+        stats += f" et {elapsed / number_variants:.2f} par variante"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()
