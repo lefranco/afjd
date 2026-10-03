@@ -385,8 +385,6 @@ def show_position(advancement=None):
         # show  role chocesin a game : need token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-
-
     def quit_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
