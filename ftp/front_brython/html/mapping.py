@@ -249,12 +249,6 @@ class OrderTypeEnum:
         return False
 
 
-class Special(Renderable):
-
-    def __init__(self, letter: str, x_pos: int, y_pos: int) -> None:
-        self._letter = letter
-
-
 class Center(Highliteable, Renderable):
     """ A Center """
 
