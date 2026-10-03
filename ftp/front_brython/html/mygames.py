@@ -1053,6 +1053,10 @@ def my_games(state_name, master):
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= buttons
 
+    else:
+        # just en empty line
+        MY_SUB_PANEL <= html.BR()
+
     # end of buttons
     MY_SUB_PANEL <= html.BR()
 
