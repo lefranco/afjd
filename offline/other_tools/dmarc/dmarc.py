@@ -384,6 +384,7 @@ def main() -> None:
     parser.add_argument('-d', '--dump', action='store_true', help="Dump report content")
     parser.add_argument('-H', '--header', action='store_true', help="Dump emails headers")
     parser.add_argument('-p', '--purge', action='store_true', help="Purge mails with no warning")
+    parser.add_argument('-r', '--remove', action='store_true', help="Remove all mails")
     args = parser.parse_args()
     config_file = pathlib.Path(args.config)
     read_config(config_file)
@@ -393,6 +394,13 @@ def main() -> None:
 
     if not ITEMS_DICT:
         print("Nothing in mailbox!")
+        sys.exit(0)
+
+    if args.remove:
+        print("Removins all messages...")
+        for description, (message_id, _, attention, __) in ITEMS_DICT.items():
+            # delete from server
+            delete_mail(message_id)
         sys.exit(0)
 
     if args.purge:
