@@ -701,6 +701,9 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                         # no mailing for fake player in disorder from variant
                         if role_id in map(int, variant_data['disorder'].keys()):
                             continue
+                        # no mailing for game master
+                        if role_id == 0:
+                            continue
                         addressees.append(player_id)
                     body = "Bonjour !\n"
                     body += "\n"
@@ -758,6 +761,9 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     for _, player_id, role_id in allocations_list:
                         # no mailing for fake player in disorder from variant
                         if role_id in map(int, variant_data['disorder'].keys()):
+                            continue
+                        # no mailing for game master
+                        if role_id == 0:
                             continue
                         addressees.append(player_id)
                     body = "Bonjour !\n"
@@ -3508,6 +3514,9 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                         # no mailing for fake player in disorder from variant
                         if role_id in map(int, variant_data['disorder'].keys()):
                             continue
+                        # no mailing for game master
+                        if role_id == 0:
+                            continue
                         addressees.append(player_id)
                     body = "Bonjour !\n"
                     body += "\n"
@@ -3667,6 +3676,9 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 for _, player_id, role_id in allocations_list:
                     # no mailing for fake player in disorder from variant
                     if role_id in map(int, variant_data['disorder'].keys()):
+                        continue
+                    # no mailing for game master
+                    if role_id == 0:
                         continue
                     addressees.append(player_id)
                 body = "Vous pouvez continuer à jouer dans cette partie !\n"
@@ -4157,6 +4169,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                         # no mailing for fake player in disorder from variant
                         if role_id2 in map(int, variant_data['disorder'].keys()):
                             continue
+                        # no mailing for game master
+                        if role_id2 == 0:
+                            continue
                         addressees.append(player_id)
                     body = "Bonjour !\n"
                     body += "\n"
@@ -4350,6 +4365,16 @@ class GamepostponeDeadlineRessource(flask_restful.Resource):  # type: ignore
         if user_id != game_master_id and pseudo != COMMUTER_ACCOUNT:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game of the commuter")
+
+        # cannot be weekend for some games
+        if not game.play_weekend:
+            new_deadline = game.deadline + 24 * 3600
+            new_deadline_date = datetime.datetime.fromtimestamp(new_deadline, datetime.timezone.utc)
+            new_deadline_day = new_deadline_date.date()
+            if new_deadline_day.weekday() in [5, 6]:
+                date_desc = new_deadline_date.strftime('%Y-%m-%d %H:%M:%S')
+                del sql_executor
+                flask_restful.abort(400, msg=f"You cannot set a deadline in the weekend for this game!: '{date_desc} UTC'")
 
         # add 24 hours
         game.postpone_deadline()
@@ -8201,6 +8226,9 @@ class ArchiveFinishedGamesRessource(flask_restful.Resource):  # type: ignore
             for _, player_id, role_id in allocations_list:
                 # no mailing for fake player in disorder from variant
                 if role_id in map(int, variant_data['disorder'].keys()):
+                    continue
+                # no mailing for game master
+                if role_id == 0:
                     continue
                 addressees.append(player_id)
             body = "Bonjour !\n"
