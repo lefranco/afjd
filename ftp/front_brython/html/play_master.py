@@ -297,6 +297,10 @@ def game_master(arrival):
 
         ev.preventDefault()
 
+        # warning if blitz not anonymous
+        if play_low.GAME_PARAMETERS_LOADED['current_state'] in (0, 1) and play_low.GAME_PARAMETERS_LOADED['game_type'] == 1 and not new_anonymous:
+            alert(f"Attention : vous allez mettre la partie {play_low.GAME} Blitz non anonyme. Il faut rectifier si necessaire !")
+
         json_dict = {
             'name': play_low.GAME,
             'anonymous': new_anonymous,

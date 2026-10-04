@@ -528,6 +528,7 @@ def rectify_parameters():
     soloed_loaded = None
     nb_max_cycles_to_play_loaded = None
     variant_loaded = None
+    anonymous_loaded = None
 
     def change_parameters_reload():
         """ change_parameters_reload """
@@ -551,6 +552,7 @@ def rectify_parameters():
             nonlocal soloed_loaded
             nonlocal nb_max_cycles_to_play_loaded
             nonlocal variant_loaded
+            nonlocal anonymous_loaded
 
             req_result = loads(req.text)
             if req.status != 200:
@@ -572,6 +574,7 @@ def rectify_parameters():
             soloed_loaded = req_result['soloed']
             nb_max_cycles_to_play_loaded = req_result['nb_max_cycles_to_play']
             variant_loaded = req_result['variant']
+            anonymous_loaded = req_result['anonymous']
 
         json_dict = {}
 
@@ -611,6 +614,10 @@ def rectify_parameters():
         end_voted = int(input_end_voted.checked)
         soloed = int(input_soloed.checked)
         nb_max_cycles_to_play = int(input_nb_max_cycles_to_play.value)
+
+        # warning if blitz not anonymous
+        if game_type == 'Blitz' and not anonymous_loaded:
+            alert(f"Attention : vous allez mettre la partie {game} Blitz non anonyme. Il faut rectifier si necessaire !")
 
         json_dict = {
             'used_for_elo': used_for_elo,

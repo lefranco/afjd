@@ -435,6 +435,10 @@ def create_game(json_dict):
                 create_game(json_dict)
                 return
 
+        # warning if blitz not anonymous
+        if game_type == 'Blitz' and not anonymous:
+            alert("Attention : vous allez créer une partie Blitz non anonyme. Il faut rectifier si necessaire !")
+
         # send to server
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -728,6 +732,8 @@ def rectify_parameters_game():
     speed_retreats_loaded = None
     speed_adjustments_loaded = None
     play_weekend_loaded = None
+    game_type_loaded = None
+    current_state_loaded = None
 
     # alert will be shown once
     information_displayed_disorder = False
@@ -773,6 +779,8 @@ def rectify_parameters_game():
             nonlocal speed_retreats_loaded
             nonlocal speed_adjustments_loaded
             nonlocal play_weekend_loaded
+            nonlocal game_type_loaded
+            nonlocal current_state_loaded
 
             req_result = loads(req.text)
 
@@ -802,6 +810,8 @@ def rectify_parameters_game():
             speed_retreats_loaded = req_result['speed_retreats']
             speed_adjustments_loaded = req_result['speed_adjustments']
             play_weekend_loaded = req_result['play_weekend']
+            game_type_loaded = req_result['game_type']
+            current_state_loaded = req_result['current_state']
 
             # moves, retreats, builds : just one
             cd_possible_loaded = req_result['cd_possible_moves']
@@ -839,6 +849,10 @@ def rectify_parameters_game():
             'name': game,
             'anonymous': input_anonymous.checked,
         }
+
+        # warning if blitz not anonymous
+        if current_state_loaded in (0, 1) and game_type_loaded == 1 and not input_anonymous.checked:
+            alert(f"Attention : vous allez mettre la partie {game} Blitz non anonyme. Il faut rectifier si necessaire !")
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']

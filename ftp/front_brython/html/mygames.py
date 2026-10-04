@@ -760,7 +760,7 @@ def my_games(state_name, master):
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def change_anonymity_games_action(new_anonymous, game):  # pylint: disable=invalid-name
+    def change_anonymity_games_action(new_anonymous, game_data):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = loads(req.text)
@@ -774,16 +774,22 @@ def my_games(state_name, master):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            mydialog.info_go(f"L'anonymat de la partie {game} a été mis à {new_anonymous} : {messages}")
+            mydialog.info_go(f"L'anonymat de la partie {game_name} a été mis à {new_anonymous} : {messages}")
+
+        game_name = game_data['name']
+
+        # warning if blitz not anonymous
+        if game_data['game_type'] in (0, 1) and game_data['game_type'] == 1 and not new_anonymous:
+            alert(f"Attention : vous allez mettre la partie {game_name} Blitz non anonyme. Il faut rectifier si necessaire !")
 
         json_dict = {
-            'name': game,
+            'name': game_name,
             'anonymous': new_anonymous,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
+        url = f"{host}:{port}/games/{game_name}"
 
         # changing game anonimity : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -840,11 +846,11 @@ def my_games(state_name, master):
         MY_SUB_PANEL.clear()
         my_games(state_name, master)
 
-    def change_anonymity_games_callback(ev, new_anonymous):
+    def change_anonymity_games_callback(ev, new_anonymous, game_dict2):
         ev.preventDefault()
         games_list = [n for n, b in toggle_game_selection_table.items() if b.checked]
         for game in games_list:
-            change_anonymity_games_action(new_anonymous, game)
+            change_anonymity_games_action(new_anonymous, game_dict2[game])
         MY_SUB_PANEL.clear()
         my_games(state_name, master)
 
@@ -1038,8 +1044,9 @@ def my_games(state_name, master):
             # separator
             buttons <= " "
 
+            games_dict2 = {d['name']: d for d in games_dict.values()}
             button = html.BUTTON("Supprimer l'anonymat", Class='btn-inside')
-            button.bind("click", lambda e, a=False: change_anonymity_games_callback(e, a))
+            button.bind("click", lambda e, a=False, gd2=games_dict2: change_anonymity_games_callback(e, a, gd2))
             buttons <= button
 
             # separator
