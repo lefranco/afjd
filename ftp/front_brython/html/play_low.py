@@ -1311,7 +1311,7 @@ def get_game_status():
     if explanations:
         row = html.TR()
         specific_information = html.DIV(Class='important')
-        specific_information <= "Communication sur la partie : "
+        specific_information <= "Sur cette partie : "
         for num, explanations in enumerate(explanations):
             specific_information <= f"{num + 1}) {explanations} "
         col = html.TD(specific_information, colspan="12")
