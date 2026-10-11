@@ -1422,6 +1422,9 @@ def create_tournament():
 def handle_tournament():
     """ handle_tournament """
 
+    toggle_insert_game_selection_table = {}
+    toggle_remove_game_selection_table = {}
+
     def cancel_delete_tournament_callback(_, dialog):
         """ cancel_delete_tournament_callback """
         dialog.close(None)
@@ -1472,8 +1475,8 @@ def handle_tournament():
         MY_SUB_PANEL.clear()
         handle_tournament()
 
-    def put_in_tournament_callback(ev):  # pylint: disable=invalid-name
-        """ put_in_tournament_callback """
+    def put_in_tournament(game_name):  # pylint: disable=invalid-name
+        """ put_in_tournament """
 
         def reply_callback(req):
             req_result = loads(req.text)
@@ -1484,26 +1487,11 @@ def handle_tournament():
                     alert(f"Problème à la mise d'une partie dans le tournoi : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
-
-                # failed but refresh
-                MY_SUB_PANEL.clear()
-                handle_tournament()
-
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.info_go(f"La partie a été mise dans le tournoi : {messages}")
 
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            handle_tournament()
-
-        ev.preventDefault()
-
-        game_name = input_incomer.value
-        if not game_name:
-            alert("Pas de partie!")
-            return
         game_id = common.get_game_id(game_name)
         if not game_id:
             alert("Erreur chargement identifiant partie")
@@ -1521,7 +1509,7 @@ def handle_tournament():
         # putting a game in a tournament : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def remove_from_tournament_callback(ev):  # pylint: disable=invalid-name
+    def remove_from_tournament(game_name):
         """remove_from_tournament_callback"""
 
         def reply_callback(req):
@@ -1533,23 +1521,10 @@ def handle_tournament():
                     alert(f"Problème au retrait d'une partie du tournoi : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
-
-                # failed but refresh
-                MY_SUB_PANEL.clear()
-                handle_tournament()
-
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             mydialog.info_go(f"La partie a été retirée du tournoi : {messages}")
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            handle_tournament()
-
-        ev.preventDefault()
-
-        game_name = input_outcomer.value
 
         game_id = common.get_game_id(game_name)
         if not game_id:
@@ -1663,6 +1638,24 @@ def handle_tournament():
         MY_SUB_PANEL.clear()
         handle_tournament()
 
+    def insert_games_callback(ev):
+        ev.preventDefault()
+        games_list = [n for n, b in toggle_insert_game_selection_table.items() if b.checked]
+        for game in games_list:
+            put_in_tournament(game)
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        handle_tournament()
+
+    def remove_games_callback(ev):
+        ev.preventDefault()
+        games_list = [n for n, b in toggle_remove_game_selection_table.items() if b.checked]
+        for game in games_list:
+            remove_from_tournament(game)
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        handle_tournament()
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -1727,14 +1720,6 @@ def handle_tournament():
 
     games_grouped_list = sum(groupings_dict.values(), [])
 
-    form = html.FORM()
-
-    # ---
-
-    fieldset = html.FIELDSET()
-    legend_incomer = html.LEGEND("Entrant", title="Sélectionner la partie à mettre dans le tournoi")
-    fieldset <= legend_incomer
-
     # put the games not in any tournament
     # all games can come in
     possible_incomers = set(map(int, games_dict.keys()))
@@ -1742,55 +1727,68 @@ def handle_tournament():
     # not those already in a tournament
     possible_incomers -= set(games_grouped_list)
 
-    input_incomer = html.SELECT(type="select-one", value="", Class='btn-inside')
+    MY_SUB_PANEL <= html.H5("")
+
+    overall_table = html.TABLE()
+    overall_row = html.TR()
+    overall_table <= overall_row
+
+    insert_table = html.TABLE()
+    row = html.THEAD()
+    insert_table <= row
+    col = html.TH("Parties sans tournoi", style={"vertical-align": "top"})
+    row <= col
     for game_name in sorted(map(lambda i: id2name[i], possible_incomers), key=lambda g: g.upper()):
-        option = html.OPTION(game_name)
-        input_incomer <= option
+        row = html.TR()
+        insert_table <= row
+        col = html.TD(game_name)
+        row <= col
+        form = html.FORM()
+        input_select_game = html.INPUT(type="checkbox", checked=False, Class='btn-inside')
+        form <= input_select_game
+        toggle_insert_game_selection_table[game_name] = input_select_game
+        col = html.TD(form)
+        row <= col
 
-    fieldset <= input_incomer
-    form <= fieldset
+    overall_col = html.TD(insert_table, style={"vertical-align": "top"})
+    overall_row <= overall_col
 
-    form <= html.BR()
+    overall_col = html.TD()
 
-    input_put_in_tournament = html.INPUT(type="submit", value="Mettre dans le tournoi", Class='btn-inside')
-    input_put_in_tournament.bind("click", put_in_tournament_callback)
-    form <= input_put_in_tournament
+    button = html.BUTTON("->", Class='btn-inside')
+    button.bind("click", insert_games_callback)
+    overall_col <= button
 
-    form <= html.BR()
-    form <= html.BR()
+    overall_col <= html.BR()
+    overall_col <= html.BR()
 
-    # ---
+    button = html.BUTTON("<-", Class='btn-inside')
+    button.bind("click", remove_games_callback)
+    overall_col <= button
 
-    fieldset = html.FIELDSET()
-    fieldset <= html.LEGEND("Sont dans le tournoi : ")
-    fieldset <= html.DIV(" ".join(sorted(map(lambda i: id2name[i], games_in), key=lambda g: g.upper())), Class='note')
-    form <= fieldset
+    overall_row <= overall_col
 
-    # ---
-    form <= html.BR()
+    remove_table = html.TABLE()
+    row = html.THEAD()
+    remove_table <= row
+    col = html.TH(f"Parties du tournoi {tournament_name}", style={"vertical-align": "top"})
+    row <= col
+    for game_name in sorted(map(lambda i: id2name[i], games_in), key=lambda g: g.upper()):
+        row = html.TR()
+        remove_table <= row
+        col = html.TD(game_name)
+        row <= col
+        form = html.FORM()
+        input_select_game = html.INPUT(type="checkbox", checked=False, Class='btn-inside')
+        form <= input_select_game
+        toggle_remove_game_selection_table[game_name] = input_select_game
+        col = html.TD(form)
+        row <= col
 
-    fieldset = html.FIELDSET()
-    legend_outcomer = html.LEGEND("Sortant", title="Sélectionner la partie à retirer du tournoi")
-    fieldset <= legend_outcomer
+    overall_col = html.TD(remove_table)
+    overall_row <= overall_col
 
-    # put the games in the tournament
-    possible_outcomers = games_in
-
-    input_outcomer = html.SELECT(type="select-one", value="", Class='btn-inside')
-    for game_name in sorted(map(lambda i: id2name[i], possible_outcomers), key=lambda g: g.upper()):
-        option = html.OPTION(game_name)
-        input_outcomer <= option
-
-    fieldset <= input_outcomer
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_remove_from_tournament = html.INPUT(type="submit", value="Retirer du tournoi", Class='btn-inside')
-    input_remove_from_tournament.bind("click", remove_from_tournament_callback)
-    form <= input_remove_from_tournament
-
-    MY_SUB_PANEL <= form
+    MY_SUB_PANEL <= overall_table
 
     # title 2
     MY_SUB_PANEL <= html.H4("Annoncer dans le tournoi")
