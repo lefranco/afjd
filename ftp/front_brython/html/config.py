@@ -47,7 +47,6 @@ VARIANT_NAMES_DICT = {
     'sailho': 4,
     'mediterraneeantique': 5,
     'egeemonie': 6,
-    'standard_pds': 7,
     'canton': 7,
     'v1900s': 7,
     'westeros': 7,
