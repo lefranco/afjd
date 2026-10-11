@@ -90,9 +90,9 @@ def create_game(json_dict):
     speed_adjustments = json_dict['speed_adjustments'] if json_dict and 'speed_adjustments' in json_dict else None
     cd_possible_builds = json_dict['cd_possible_builds'] if json_dict and 'cd_possible_builds' in json_dict else None
     play_weekend = json_dict['play_weekend'] if json_dict and 'play_weekend' in json_dict else None
-    access_restriction_reliability = json_dict['access_restriction_reliability'] if json_dict and 'access_restriction_reliability' in json_dict else None
-    access_restriction_regularity = json_dict['access_restriction_regularity'] if json_dict and 'access_restriction_regularity' in json_dict else None
-    access_restriction_performance = json_dict['access_restriction_performance'] if json_dict and 'access_restriction_performance' in json_dict else None
+    solo_cancelled = json_dict['solo_cancelled'] if json_dict and 'solo_cancelled' in json_dict else None
+    unused1 = json_dict['unused1'] if json_dict and 'unused1' in json_dict else None
+    unused2 = json_dict['unused2'] if json_dict and 'unused2' in json_dict else None
     nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play'] if json_dict and 'nb_max_cycles_to_play' in json_dict else None
     endgame_vote_allowed = json_dict['end_game_vote'] if json_dict and 'end_game_vote' in json_dict else None
     force_wait = json_dict['force_wait'] if json_dict and 'force_wait' in json_dict else None
@@ -109,6 +109,7 @@ def create_game(json_dict):
     information_displayed_just_play = False
     information_displayed_deadline_time = False
     information_displayed_vote_allowed = False
+    information_displayed_solo_cancelled = False
 
     def display_disorder_callback(_):
         """ display_disorder_callback """
@@ -212,6 +213,15 @@ def create_game(json_dict):
                 alert("Attention, le vote de fin de partie s'impose et n'a de sens que pour les parties relativement longues.")
                 information_displayed_vote_allowed = True
 
+    def display_solo_cancelled_callback(_):
+        """ display_solo_cancelled_callback """
+
+        nonlocal information_displayed_solo_cancelled
+
+        if not information_displayed_solo_cancelled:
+            alert("Attention, continuer la partie après le solo n'est pas la norme en général et sur le site.")
+            information_displayed_solo_cancelled = True
+
     def display_just_play_callback(_):
         """ display_just_play_callback """
 
@@ -252,9 +262,9 @@ def create_game(json_dict):
         nonlocal speed_adjustments
         nonlocal cd_possible_builds
         nonlocal play_weekend
-        nonlocal access_restriction_reliability
-        nonlocal access_restriction_regularity
-        nonlocal access_restriction_performance
+        nonlocal solo_cancelled
+        nonlocal unused1
+        nonlocal unused2
         nonlocal nb_max_cycles_to_play
         nonlocal endgame_vote_allowed
         nonlocal force_wait
@@ -561,6 +571,17 @@ def create_game(json_dict):
     fieldset <= input_anonymous
     form <= fieldset
 
+    title_solo_cancelled = html.H4("Annulation du solo")
+    form <= title_solo_cancelled
+
+    fieldset = html.FIELDSET()
+    legend_solo_cancelled = html.LEGEND("annulation du solo", title="La partie continue-t-elle après un solo ?")
+    fieldset <= legend_solo_cancelled
+    input_solo_cancelled = html.INPUT(type="checkbox", checked=bool(solo_cancelled) if solo_cancelled is not None else False, Class='btn-inside')
+    input_solo_cancelled.bind("click", display_solo_cancelled_callback)
+    fieldset <= input_solo_cancelled
+    form <= fieldset
+
     title_endgame_vote_allowed = html.H4("Votes de fin de partie")
     form <= title_endgame_vote_allowed
 
@@ -721,9 +742,9 @@ def rectify_parameters_game():
     description_loaded = None
     endgame_vote_allowed_loaded = None
     scoring_code_loaded = None
-    access_restriction_reliability_loaded = None
-    access_restriction_regularity_loaded = None
-    access_restriction_performance_loaded = None
+    solo_cancelled = None
+    unused1 = None
+    unused2 = None
     deadline_hour_loaded = None
     deadline_sync_loaded = None
     grace_duration_loaded = None
@@ -768,9 +789,9 @@ def rectify_parameters_game():
             nonlocal description_loaded
             nonlocal endgame_vote_allowed_loaded
             nonlocal scoring_code_loaded
-            nonlocal access_restriction_reliability_loaded
-            nonlocal access_restriction_regularity_loaded
-            nonlocal access_restriction_performance_loaded
+            nonlocal solo_cancelled
+            nonlocal unused1
+            nonlocal unused2
             nonlocal deadline_hour_loaded
             nonlocal deadline_sync_loaded
             nonlocal grace_duration_loaded
@@ -800,9 +821,9 @@ def rectify_parameters_game():
             description_loaded = req_result['description']
             endgame_vote_allowed_loaded = req_result['end_vote_allowed']
             scoring_code_loaded = req_result['scoring']
-            access_restriction_reliability_loaded = req_result['access_restriction_reliability']
-            access_restriction_regularity_loaded = req_result['access_restriction_regularity']
-            access_restriction_performance_loaded = req_result['access_restriction_performance']
+            solo_cancelled = req_result['solo_cancelled']
+            unused1 = req_result['unused1']
+            unused2 = req_result['unused2']
             deadline_hour_loaded = req_result['deadline_hour']
             deadline_sync_loaded = req_result['deadline_sync']
             grace_duration_loaded = req_result['grace_duration']

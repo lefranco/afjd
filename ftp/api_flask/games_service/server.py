@@ -95,9 +95,9 @@ GAME_PARSER.add_argument('used_for_elo', type=int, required=False)
 GAME_PARSER.add_argument('play_weekend', type=int, required=False)
 GAME_PARSER.add_argument('manual', type=int, required=False)
 GAME_PARSER.add_argument('access_code', type=int, required=False)
-GAME_PARSER.add_argument('access_restriction_reliability', type=int, required=False)
-GAME_PARSER.add_argument('access_restriction_regularity', type=int, required=False)
-GAME_PARSER.add_argument('access_restriction_performance', type=int, required=False)
+GAME_PARSER.add_argument('solo_cancelled', type=int, required=False)
+GAME_PARSER.add_argument('unused1', type=int, required=False)
+GAME_PARSER.add_argument('unused2', type=int, required=False)
 GAME_PARSER.add_argument('current_advancement', type=int, required=False)
 GAME_PARSER.add_argument('nb_max_cycles_to_play', type=int, required=False)
 GAME_PARSER.add_argument('current_state', type=int, required=False)
@@ -119,6 +119,7 @@ GAME_PARSER2.add_argument('finished', type=int, required=False)
 GAME_PARSER2.add_argument('end_voted', type=int, required=False)
 GAME_PARSER2.add_argument('soloed', type=int, required=False)
 GAME_PARSER2.add_argument('nb_max_cycles_to_play', type=int, required=False)
+GAME_PARSER2.add_argument('solo_cancelled', type=int, required=False)
 
 GAMES_SELECT_PARSER = flask_restful.reqparse.RequestParser()
 GAMES_SELECT_PARSER.add_argument('selection', type=str, required=True)
@@ -1349,7 +1350,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
             # create game here
             identifier = games.Game.free_identifier(sql_executor)
-            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0, 0, False, False)
+            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, False, 0, 0, 0, 0, 0, 0, 0, False, False)
             _ = game.load_json(args)
             game.update_database(sql_executor)
 
@@ -10021,11 +10022,21 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
 
-        # sql_executor = database.SqlExecutor()
+        sql_executor = database.SqlExecutor()
 
-        # sql_executor.commit()
+        for game in games.Game.inventory(sql_executor):
+            if game.variant == 'standard_pds':
+                print(f"{game.name=} {game.variant=} solo cancelled")
+                game._solo_cancelled = True
+            else:
+                game._solo_cancelled = False
+            game._unused1 = 0
+            game._unused2 = 0
+            game.update_database(sql_executor)
 
-        # del sql_executor
+        sql_executor.commit()
+
+        del sql_executor
 
         print("MAINTENANCE - done !!!", file=sys.stderr)
 

@@ -48,9 +48,9 @@ GAME_PARAMETERS_LOADED = {
     'speed_adjustments': 24,
     'cd_possible_builds': False,
     'play_weekend': False,
-    'access_restriction_reliability': 0,
-    'access_restriction_regularity': 0,
-    'access_restriction_performance': 0,
+    'solo_cancelled': False,
+    'unused1': 0,
+    'unused2': 0,
     'current_advancement': 1,  # to be precised
     'nb_max_cycles_to_play': 7,
     'current_state': 1,

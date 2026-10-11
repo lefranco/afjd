@@ -529,6 +529,7 @@ def rectify_parameters():
     nb_max_cycles_to_play_loaded = None
     variant_loaded = None
     anonymous_loaded = None
+    solo_cancelled_loaded = None
 
     def change_parameters_reload():
         """ change_parameters_reload """
@@ -553,6 +554,7 @@ def rectify_parameters():
             nonlocal nb_max_cycles_to_play_loaded
             nonlocal variant_loaded
             nonlocal anonymous_loaded
+            nonlocal solo_cancelled_loaded
 
             req_result = loads(req.text)
             if req.status != 200:
@@ -575,6 +577,7 @@ def rectify_parameters():
             nb_max_cycles_to_play_loaded = req_result['nb_max_cycles_to_play']
             variant_loaded = req_result['variant']
             anonymous_loaded = req_result['anonymous']
+            solo_cancelled_loaded = req_result['solo_cancelled']
 
         json_dict = {}
 
@@ -614,6 +617,7 @@ def rectify_parameters():
         end_voted = int(input_end_voted.checked)
         soloed = int(input_soloed.checked)
         nb_max_cycles_to_play = int(input_nb_max_cycles_to_play.value)
+        solo_cancelled = int(input_solo_cancelled.checked)
 
         # warning if blitz not anonymous
         if game_type == 'Blitz' and not anonymous_loaded:
@@ -627,7 +631,8 @@ def rectify_parameters():
             'finished': finished,
             'end_voted': end_voted,
             'soloed': soloed,
-            'nb_max_cycles_to_play': nb_max_cycles_to_play
+            'nb_max_cycles_to_play': nb_max_cycles_to_play,
+            'solo_cancelled': solo_cancelled
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -704,6 +709,13 @@ def rectify_parameters():
     fieldset <= legend_nb_max_cycles_to_play
     input_nb_max_cycles_to_play = html.INPUT(type="number", value=nb_max_cycles_to_play_loaded, Class='btn-inside')
     fieldset <= input_nb_max_cycles_to_play
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_solo_cancelled = html.LEGEND("annulation du solo", title="La partie continue-t-elle après un solo ?")
+    fieldset <= legend_solo_cancelled
+    input_solo_cancelled = html.INPUT(type="checkbox", checked=solo_cancelled_loaded, Class='btn-inside')
+    fieldset <= input_solo_cancelled
     form <= fieldset
 
     fieldset = html.FIELDSET()

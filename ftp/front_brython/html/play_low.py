@@ -1295,6 +1295,9 @@ def get_game_status():
     # calculate it
     explanations = []
 
+    if GAME_PARAMETERS_LOADED['solo_cancelled']:
+        explanations.append("La partie continue après un solo")
+
     if GAME_PARAMETERS_LOADED['nopress_current']:
         explanations.append("La presse (déclaration publique) est actuellement interdite")
 
