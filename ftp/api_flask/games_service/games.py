@@ -608,6 +608,10 @@ class Game:
         except IndexError:
             ncenterssecond = 0
 
+        # solo cancelled : need just *all* centers
+        if self._solo_cancelled:
+            return ncentersmax == len(variant_data['centers'])
+
         # solo when more than int(c/2) + extra
         # but need to be alone
         return ncentersmax > ncenterssecond and ncentersmax > len(variant_data['centers']) // 2 + int(variant_data['extra_requirement_solo'])
@@ -619,11 +623,10 @@ class Game:
         self._current_advancement += 1
 
         # solo (if solo is not cancelled)
-        if not self._solo_cancelled:
-            if not self._soloed:
-                if self.detect_soloed(sql_executor):
-                    self._soloed = True
-                    self._nopress_current = False   # also open press
+        if not self._soloed:
+            if self.detect_soloed(sql_executor):
+                self._soloed = True
+                self._nopress_current = False   # also open press
 
         # end voted is set manually by game master
 
