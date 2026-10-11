@@ -10025,16 +10025,9 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
         sql_executor = database.SqlExecutor()
 
         for game in games.Game.inventory(sql_executor):
-            if game.variant == 'standard_pds':
-                print(f"{game.name=} {game.variant=} solo cancelled")
-                game._solo_cancelled = True
-            else:
-                game._solo_cancelled = False
-            game._unused1 = 0
-            game._unused2 = 0
-            game.update_database(sql_executor)
+            pass
 
-        sql_executor.commit()
+        # sql_executor.commit()
 
         del sql_executor
 

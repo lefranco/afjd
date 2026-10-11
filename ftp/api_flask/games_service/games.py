@@ -292,9 +292,9 @@ class Game:
 
         if 'used_for_elo' in json_dict and json_dict['used_for_elo'] is not None and json_dict['used_for_elo'] != self._used_for_elo:
 
-            if self._fog:
+            if self._fog or self._solo_cancelled:
                 self._used_for_elo = False
-            #  Note: DC can be used for elo now
+            #  Note: DC can be used for elo
             else:
                 self._used_for_elo = json_dict['used_for_elo']
 
@@ -618,13 +618,14 @@ class Game:
         # advancement
         self._current_advancement += 1
 
-        # solo
-        if not self._soloed:
-            if self.detect_soloed(sql_executor):
-                self._soloed = True
-                self._nopress_current = False   # also open press
+        # solo (if solo is not cancelled)
+        if not self._solo_cancelled:
+            if not self._soloed:
+                if self.detect_soloed(sql_executor):
+                    self._soloed = True
+                    self._nopress_current = False   # also open press
 
-        # end voted is set manuallly by game master
+        # end voted is set manually by game master
 
         # end of the game
         if not self._finished:
