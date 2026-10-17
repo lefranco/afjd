@@ -620,7 +620,7 @@ def rectify_parameters():
         solo_cancelled = int(input_solo_cancelled.checked)
 
         # warning if blitz not anonymous
-        if game_type == 'Blitz' and not anonymous_loaded:
+        if game_type == 'Blitz' and not anonymous_loaded and not (finished or end_voted or soloed):
             alert(f"Attention : vous allez mettre la partie {game} Blitz non anonyme. Il faut rectifier si necessaire !")
 
         json_dict = {

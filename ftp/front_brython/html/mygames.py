@@ -779,7 +779,7 @@ def my_games(state_name, master):
         game_name = game_data['name']
 
         # warning if blitz not anonymous
-        if game_data['game_type'] in (0, 1) and game_data['game_type'] == 1 and not new_anonymous:
+        if game_data['game_type'] in (0, 1) and game_data['game_type'] == 1 and not new_anonymous and not (game_data['finished'] or game_data['soloed'] or game_data['end_voted']):
             alert(f"Attention : vous allez mettre la partie {game_name} Blitz non anonyme. Il faut rectifier si necessaire !")
 
         json_dict = {

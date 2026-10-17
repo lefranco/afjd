@@ -755,6 +755,9 @@ def rectify_parameters_game():
     play_weekend_loaded = None
     game_type_loaded = None
     current_state_loaded = None
+    finished_loaded = None
+    soloed_loaded = None
+    end_voted_loaded = None
 
     # alert will be shown once
     information_displayed_disorder = False
@@ -802,6 +805,9 @@ def rectify_parameters_game():
             nonlocal play_weekend_loaded
             nonlocal game_type_loaded
             nonlocal current_state_loaded
+            nonlocal finished_loaded
+            nonlocal soloed_loaded
+            nonlocal end_voted_loaded
 
             req_result = loads(req.text)
 
@@ -833,6 +839,9 @@ def rectify_parameters_game():
             play_weekend_loaded = req_result['play_weekend']
             game_type_loaded = req_result['game_type']
             current_state_loaded = req_result['current_state']
+            finished_loaded = req_result['finished']
+            soloed_loaded = req_result['soloed']
+            end_voted_loaded = req_result['end_voted']
 
             # moves, retreats, builds : just one
             cd_possible_loaded = req_result['cd_possible_moves']
@@ -872,7 +881,7 @@ def rectify_parameters_game():
         }
 
         # warning if blitz not anonymous
-        if current_state_loaded in (0, 1) and game_type_loaded == 1 and not input_anonymous.checked:
+        if current_state_loaded in (0, 1) and game_type_loaded == 1 and not input_anonymous.checked and not (finished_loaded or soloed_loaded or end_voted_loaded):
             alert(f"Attention : vous allez mettre la partie {game} Blitz non anonyme. Il faut rectifier si necessaire !")
 
         host = config.SERVER_CONFIG['GAME']['HOST']
