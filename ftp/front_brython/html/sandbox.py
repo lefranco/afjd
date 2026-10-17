@@ -385,7 +385,7 @@ def sandbox():
         data_dict_json = dumps(data_dict)
 
         # perform actual exportation
-        text_file_as_blob = window.Blob.new([data_dict_json], {'type': 'text/plain'})
+        text_file_as_blob = window.Blob.new([data_dict_json], {'type': 'application/json'})
         download_link = document['download_link']
         download_link.download = f"diplomania_position_{label}.json"
         download_link.href = window.URL.createObjectURL(text_file_as_blob)

@@ -599,7 +599,7 @@ def show_position(advancement=None):
             play_low.MY_SUB_PANEL <= html.A(id='download_link')
 
             # perform actual exportation
-            text_file_as_blob = window.Blob.new([json_text], {'type': 'text/plain'})
+            text_file_as_blob = window.Blob.new([json_text], {'type': 'application/json'})
             download_link = document['download_link']
             download_link.download = f"diplomania_{play_low.GAME}_{play_low.GAME_ID}.json"
             download_link.href = window.URL.createObjectURL(text_file_as_blob)
