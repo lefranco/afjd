@@ -66,7 +66,7 @@ def check_starting_units() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Starting units stats.")
+    print(f"{NUMBER}.Starting units stats.")
     print("Rationale: we expect factions to have an approximately equal number of armies and fleets. \nThere should be at least one of each, and no more than one between them.")
     print("============")
 
@@ -101,7 +101,7 @@ def check_start_flexibility() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Options on the first move.")
+    print(f"{NUMBER}.Options on the first move.")
     print("Rationale: we expect factions to have approximatively the same number of possible moves on the first move.")
     print("============")
 
@@ -140,7 +140,7 @@ def check_all_direct_center_access() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Centers reachable on the first move.")
+    print(f"{NUMBER}.Centers reachable on the first move.")
     print("Rationale: we expect factions to have approximatively the same opportunity to reach a center in the very first move.\nEither all af them can, or none of them can. We do not expect a faction to directly reach another faction's home center.")
     print("============")
 
@@ -185,7 +185,7 @@ def check_contested_direct_center_access() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Centers reachable on the first move (contested or not by more than one faction).")
+    print(f"{NUMBER}.Centers reachable on the first move (contested or not by more than one faction).")
     print("Rationale: we expect factions to have approximatively the same possibilities of reaching centers at first move, whether  contested by another faction or not.\nEither every factions has one guaranteed center or none does.")
     print("============")
 
@@ -220,7 +220,7 @@ def check_distances_to_solo() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Distance to reach a solo victory.")
+    print(f"{NUMBER}.Distance to reach a solo victory.")
     print("Rationale: we calculate how many moves it takes each factions to reach a solo victory.\nWe expect factions to have approximatively same value.")
     print("============")
 
@@ -306,7 +306,7 @@ def check_safe_home_center() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Safe home centers.")
+    print(f"{NUMBER}.Safe home centers.")
     print("Rationale: we expect that no faction can reach home center of other faction by the first autumn.\nIf this is possible can, than we expect it to be balanced, with no faction to be immune.")
     print("============")
 
@@ -382,7 +382,7 @@ def check_easy_center() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Easy centers.")
+    print(f"{NUMBER}.Easy centers.")
     print("Rationale: we expect that no faction can reach a center by the first autumn with no possible opposition.\nIf such possibility exists, then we expect this to be balanced, with each factions having the same opportunities.")
     print("============")
 
@@ -454,7 +454,7 @@ def check_supported_attacks() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Supported attack on center.")
+    print(f"{NUMBER}.Supported attack on center.")
     print("Rationale: we expect that no faction can start a supported attack on home center of other faction by the first autumn.\nIf this is possible can, than we expect it to be balanced, with no faction to be immune.")
     print("============")
 
@@ -527,7 +527,7 @@ def check_no_initial_threats() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Initial threats.")
+    print(f"{NUMBER}.Initial threats.")
     print("Rationale: we expect no factions to be able to make an opening move that threatens more than one of another faction's starting centers (aside from a neutral center).\nIf such move exists, then we expect this to be balanced, with each factions having the same number of active and passive threats of this kind.")
     print("============")
 
@@ -684,7 +684,7 @@ def check_unit_defensive_effectiveness() -> None:
     global NUMBER
     NUMBER += 1
     print("============")
-    print(f"{NUMBER}. Unit defensive effectiveness.:")
+    print(f"{NUMBER}.Unit defensive effectiveness.:")
     print("Rationale: we compute 'Unit defensive effectiveness' for fleets and armies for all factions. \nWe expect the result to be higher for armies than fleets and the ratio armies/fleets balanced between factions.")
     print("============")
 
@@ -714,6 +714,7 @@ def check_unit_defensive_effectiveness() -> None:
 
 def display_infos():
     """display_infos"""
+    print("============")
     print("Some information about the variant:")
     print(f"\tFull name: {JSON_VARIANT_DATA['name']}")
     print(f"\tAuthor: {JSON_VARIANT_DATA['author']}")
@@ -727,6 +728,7 @@ def display_infos():
     print(f"\t\tIslands: {len([r for r in JSON_VARIANT_DATA['regions'] if r == ISLAND])}")
     print(f"\tSolo at: {len(JSON_VARIANT_DATA['centers']) // 2 + JSON_VARIANT_DATA['extra_requirement_solo'] + 1}")
     print(f"\tExpansionnist: {'yes' if JSON_VARIANT_DATA['build_everywhere'] else 'no'}")
+    print("============")
 
 
 def main() -> None:
