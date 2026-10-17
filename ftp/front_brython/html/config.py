@@ -54,7 +54,6 @@ VARIANT_NAMES_DICT = {
     'crepusculerome': 8,
     'successionautriche': 9,
     'ombressenat': 9,
-    'ombressenat_dev': 9,
     'moderne': 10,
     'crowded': 11,
     'chaos': 34

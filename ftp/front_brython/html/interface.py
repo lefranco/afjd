@@ -26,7 +26,6 @@ INTERFACE_TABLE = {
     'chaos': ['diplomania'],
     'sailho': ['diplomania'],
     'ombressenat': ['diplomania'],
-    'ombressenat_dev': ['diplomania'],
 }
 
 
