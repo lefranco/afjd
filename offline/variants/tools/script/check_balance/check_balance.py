@@ -202,6 +202,7 @@ def check_contested_direct_center_access() -> None:
                             continue
                         access_table[center].add(role_num)
 
+    stats: dict[int, float] = {r: 0 for r in ACTIVE_ROLES}
     for num_center, factions in sorted(access_table.items(), key=lambda t: (len(t[1]), CENTER_NAME_TABLE[t[0]])):
         faction_names = ' '.join(ROLE_NAME_TABLE[f] for f in factions)
         if len(factions) > 1:
@@ -210,8 +211,14 @@ def check_contested_direct_center_access() -> None:
         else:
             print(f"\t{CENTER_NAME_TABLE[num_center]}:")
             print(f"\t\twithout contest by {faction_names} alone ⚠️")
+            happy_role = list(factions)[0]
+            stats[happy_role] += 1
 
-    print("(No deviation involved)")
+    print(f"\tUncontested centers:")
+    for role_num in ACTIVE_ROLES:
+        print(f"\t\t{ROLE_NAME_TABLE[role_num]} : {stats[role_num]}")
+
+    print(f"Deviation is {statistics.stdev(stats.values()):0.3f}")
     print()
 
 
