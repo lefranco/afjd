@@ -930,7 +930,8 @@ void creeajustements(_PAYS *pays) {
 	/* cas ou on construit */
 	if(possessions > unites) {
 		souhaites = INF(possessions - unites, possibles);
-		creeconstructions(pays, souhaites); 
+		/* on enleve urgences sinon boucle infinie appel russie */
+		creeconstructions(pays, souhaites - urgences); 
 	}
 }
 

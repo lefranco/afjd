@@ -13,6 +13,9 @@ import shutil
 import subprocess
 import collections
 
+# DEBUG
+#  import sys
+
 
 import flask_restful  # type: ignore
 
@@ -534,13 +537,28 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         with open(f"{tmpdirname}/DIPLOCOM/DEFAULT/DIPLO.DAT", "w", encoding="utf-8") as outfile:
             outfile.write("\n".join(diplo_dat_content))
 
+        # DEBUG
+        #  with open(f"{tmpdirname}/DIPLOCOM/DEFAULT/DIPLO.DAT", "r", encoding="utf-8") as outfile:
+        #      print("DIPLO.DAT\n", file=sys.stderr)
+        #      print(outfile.read(), file=sys.stderr)
+
         # copy situation
         with open(f"{tmpdirname}/situation.dat", "w", encoding="utf-8") as outfile:
             outfile.write("\n".join(situation_content))
 
+        # DEBUG
+        #  with open(f"{tmpdirname}/situation.dat", "r", encoding="utf-8") as outfile:
+        #      print("SITUATION.DAT\n", file=sys.stderr)
+        #      print(outfile.read(), file=sys.stderr)
+
         # copy orders
         with open(f"{tmpdirname}/orders.txt", "w", encoding="utf-8") as outfile:
             outfile.write("\n".join(orders_content))
+
+        # DEBUG
+        #  with open(f"{tmpdirname}/orders.txt", "r", encoding="utf-8") as outfile:
+        #      print("ORDERS.TXT\n", file=sys.stderr)
+        #      print(outfile.read(), file=sys.stderr)
 
         # affect env variable
         os.putenv("DIPLOCOM", f"{tmpdirname}/DIPLOCOM")
@@ -568,6 +586,10 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
             call_list += [
                 "-E",
             ]
+
+        # DEBUG
+        #  print("CALL\n", file=sys.stderr)
+        #  print(' '.join(call_list), file=sys.stderr)
 
         # run solver
         try:
