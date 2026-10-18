@@ -111,6 +111,8 @@ def select_event():
         event_name = input_event.value
         storage['EVENT'] = event_name
 
+        alert(f"Evénement sélectionné :\n'{event_name}'.\nIl faut maintenant utiliser les autres menus !")
+
         # back to where we started
         MY_SUB_PANEL.clear()
         select_event()
