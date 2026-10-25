@@ -349,13 +349,24 @@ def process_elo_variant(variant_data: mapping.Variant, players_dict: typing.Dict
 
     # agregate to have actual ELO values
 
+    elo_table2 = elo_table.copy()
+    players = [p for (p, _, __) in elo_table]
+    for classic in (False, True):
+        for player in players:
+            for num in effective_roles:
+                role_name = num2rolename[num]
+                if (player, role_name, classic) not in elo_table2:
+                    elo_table2[(player, role_name, classic)] = DEFAULT_ELO
+
     elo_global_table = {}
     for (player, role_name, classic) in elo_table:
         elo_value = elo_table[(player, role_name, classic)]
         player_id = players_dict[player]
         if (classic, player_id) not in elo_global_table:
             elo_global_table[(classic, player_id)] = 0.
-        elo_global_table[(classic, player_id)] += elo_value
+        elo_global_table[(classic, player_id)] += round(elo_value)
+    for (classic, player_id) in elo_global_table:
+        elo_global_table[(classic, player_id)] /= num_players
 
     elo_global_table2 = {}
     for (classic, _, player_id, _, _, _, number_games) in elo_raw_list:
