@@ -352,65 +352,86 @@ def check_colors(sea_background_param: str, earth_background_param: str, thresho
     return climb_heuristic(factions)
 
 
-FAILED_COUNTER_LIMIT = 20000
+FAILED_COUNTER_LIMIT = 30000
 MAX_ABS_CHANGE = 15
 NUM_CHANGED = 2
 
 START_PAIR_HEURIS_MIN = 15
-MAX_START_ATTEMPTS = 150000
+START_HUE_FACTION_CONSISTENCY_HEURIS_MAX = 100
+MAX_START_ATTEMPTS = 300000
 
 
 def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_background: str, threshold_separation: int, json_parameters_data: dict[str, typing.Any]) -> None:
     """hill_climber."""
+    
     sorted_start_factions: list[str] = []
-    pair_heuris: float | None = None
-    hue_faction_consistency_heuris: float | None = None
+    pair_heuris = 0
+    hue_faction_consistency_heuris = float(MAXINT)
 
-    try:
+    if restart:
 
-        if restart:
+        print("Restarting ! Hoho !")
 
-            print("Restarting ! Hoho !")
+        # memorize start faction order by hue
+        _, _, sorted_start_factions = check_colors(sea_background, earth_background, threshold_separation, json_parameters_data, silent=True)
 
-            # memorize start faction order by hue
-            _, _, sorted_start_factions = check_colors(sea_background, earth_background, threshold_separation, json_parameters_data, silent=True)
-
-            # we restart everything so make a random initial situation
-            restart_attempts = 0
+        # we restart everything so make a random initial situation
+        restart_attempts = 0
+        stop = False
+        try:
             while True:
+
+                if stop:
+                    print()
+                    break
+
                 for role in [r for r in json_parameters_data['roles'] if int(r)]:
                     for rgb in ('red', 'green', 'blue'):
-                        json_parameters_data['roles'][role][rgb][0] = random.choice(range(256))
-                        json_parameters_data['roles'][role][rgb][1] = random.choice(range(256))
+                        while True:
+                            json_parameters_data['roles'][role][rgb][0] = random.choice(range(256))
+                            json_parameters_data['roles'][role][rgb][1] = random.choice(range(256))
+                            # fill > unit 
+                            if json_parameters_data['roles'][role][rgb][1] > json_parameters_data['roles'][role][rgb][0]:
+                                break
 
                 pair_heuris, hue_faction_consistency_heuris, _ = check_colors(sea_background, earth_background, threshold_separation, json_parameters_data, silent=True)
 
+                if restart_attempts % 50 == 0:
+                    print(f"~{pair_heuris=:05.2f} {hue_faction_consistency_heuris=:06.2f}", end='\r', file=sys.stderr)
+
                 # need at least some quality
-                if pair_heuris > START_PAIR_HEURIS_MIN:
+                if pair_heuris > START_PAIR_HEURIS_MIN and hue_faction_consistency_heuris < START_HUE_FACTION_CONSISTENCY_HEURIS_MAX:
                     break
 
                 # and give up if too long
                 restart_attempts += 1
                 assert restart_attempts < MAX_START_ATTEMPTS, "Damn it, could not restart!"
 
-        failed_changes_counter = 0
-        pair_heuris = None
+        except KeyboardInterrupt:
+            print("", file=sys.stderr)
+            print("CTRL-C !", file=sys.stderr)
+            stop = True
 
-        # fill_step : we change fill values instead of unit values
-        if fill_step:
-            unit_or_fill = 1
-            print("Playing with fill color...")
-        else:
-            unit_or_fill = 0
-            print("Playing with unit color...")
+    print("", file=sys.stderr)
 
+    failed_changes_counter = 0
+
+    # fill_step : we change fill values instead of unit values
+    if fill_step:
+        unit_or_fill = 1
+        print("Playing with fill color...")
+    else:
+        unit_or_fill = 0
+        print("Playing with unit color...")
+
+    pair_heuris, hue_faction_consistency_heuris, _ = check_colors(sea_background, earth_background, threshold_separation, json_parameters_data, silent=True)
+
+    try:
+        stop = False
         while True:
 
-            # if never done : get initial values
-            if pair_heuris is None:
-                pair_heuris, hue_faction_consistency_heuris, _ = check_colors(sea_background, earth_background, threshold_separation, json_parameters_data, silent=True)
-                # show for user
-                print(f"I{pair_heuris=:05.2f} {hue_faction_consistency_heuris=:06.2f}", file=sys.stderr)
+            if stop:
+                break
 
             # determine two random change
             role_table: dict[int, str] = {}
@@ -427,7 +448,12 @@ def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_back
             # check random change is correct, if not reject
             rejected = False
             for num in range(NUM_CHANGED):
+                # with bounds
                 if not 0 <= json_parameters_data['roles'][role_table[num]][rgb_table[num]][unit_or_fill] <= 255:
+                    rejected = True
+                    break
+                # fill > unit
+                if not json_parameters_data['roles'][role_table[num]][rgb_table[num]][1] > json_parameters_data['roles'][role_table[num]][rgb_table[num]][0]:
                     rejected = True
                     break
             if rejected:
@@ -444,6 +470,7 @@ def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_back
             improvement = new_pair_heuris > pair_heuris
 
             if fill_step:
+                assert hue_faction_consistency_heuris is not None
                 assert new_hue_faction_consistency_heuris is not None
                 # need to improve consistency without breaking the rest
                 regression |= new_hue_faction_consistency_heuris > hue_faction_consistency_heuris
@@ -457,9 +484,8 @@ def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_back
                     json_parameters_data['roles'][role_table[num]][rgb_table[num]][unit_or_fill] -= delta_table[num]
                 failed_changes_counter += 1
                 if failed_changes_counter > FAILED_COUNTER_LIMIT:
-                    print()
                     print("LOCKED !", file=sys.stderr)
-                    raise KeyboardInterrupt
+                    stop = True
                 continue
 
             # officialize change
@@ -467,34 +493,37 @@ def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_back
             hue_faction_consistency_heuris = new_hue_faction_consistency_heuris
 
             # show for user
-            print(f"^{pair_heuris=:05.2f} {hue_faction_consistency_heuris=:06.2f}", end='\r', file=sys.stderr)
-
+            print(f"C{pair_heuris=:05.2f} {hue_faction_consistency_heuris=:06.2f}", end='\r', file=sys.stderr)
             failed_changes_counter = 0
 
     except KeyboardInterrupt:
+        print("", file=sys.stderr)
+        print("CTRL-C !", file=sys.stderr)
+        stop = True
 
-        print(file=sys.stderr)
-        _, _, sorted_factions = check_colors(sea_background, earth_background, threshold_separation, json_parameters_data, silent=True)
+    print(file=sys.stderr)
 
-        # reinstall order of factions per hue
-        if restart:
-            role_copy = json_parameters_data['roles'].copy()
-            role2strrank = {v['name']: k for k, v in json_parameters_data['roles'].items()}
-            for name1, name2 in zip(sorted_start_factions, sorted_factions):
-                json_parameters_data['roles'][role2strrank[name1]] = role_copy[role2strrank[name2]]
-                json_parameters_data['roles'][role2strrank[name1]]['name'] = name1
-                #  print(f"{name2} -> {name1}")
+    _, _, sorted_factions = check_colors(sea_background, earth_background, threshold_separation, json_parameters_data, silent=True)
 
-        # output optimized situation
-        parameters_file_opt = f"optimized_{pair_heuris:05.2f}_{hue_faction_consistency_heuris:06.2f}__json".replace('.', '').replace('__', '.')
-        with open(parameters_file_opt, "w", encoding='utf-8') as write_file:
-            try:
-                json.dump(json_parameters_data, write_file, ensure_ascii=False, indent=4)
-            except Exception as exception:  # pylint: disable=broad-except
-                print(f"Failed to save {parameters_file_opt} : {exception}")
-                sys.exit(-1)
-        print(f"Written file {parameters_file_opt}")
-        sys.exit(0)
+    # reinstall order of factions per hue
+    if restart:
+        role_copy = json_parameters_data['roles'].copy()
+        role2strrank = {v['name']: k for k, v in json_parameters_data['roles'].items()}
+        for name1, name2 in zip(sorted_start_factions, sorted_factions):
+            json_parameters_data['roles'][role2strrank[name1]] = role_copy[role2strrank[name2]]
+            json_parameters_data['roles'][role2strrank[name1]]['name'] = name1
+            #  print(f"{name2} -> {name1}")
+
+    # output optimized situation
+    parameters_file_opt = f"optimized_{pair_heuris:05.2f}_{hue_faction_consistency_heuris:06.2f}__json".replace('.', '').replace('__', '.')
+    with open(parameters_file_opt, "w", encoding='utf-8') as write_file:
+        try:
+            json.dump(json_parameters_data, write_file, ensure_ascii=False, indent=4)
+        except Exception as exception:  # pylint: disable=broad-except
+            print(f"Failed to save {parameters_file_opt} : {exception}")
+            sys.exit(-1)
+    print(f"Written file {parameters_file_opt}")
+    sys.exit(0)
 
 
 def main() -> None:
