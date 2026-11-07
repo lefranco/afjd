@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 
-"""Check colors used in displaying
-"""
+"""Check colors used in displaying."""
+
+from __future__ import annotations
 
 import argparse
 import colorsys
@@ -44,7 +45,7 @@ def rgb_to_luminance(r: int, g: int, b: int) -> float:
 
 
 def rgb_to_hsv(r_i: int, g_i: int, b_i: int) -> tuple[float, float, float]:
-    """Converts RGB (0-255) to HSV (H en degrees 0-360, S and V in %)"""
+    """Converts RGB (0-255) to HSV (H en degrees 0-360, S and V in %)."""
     r, g, b = r_i / 255.0, g_i / 255.0, b_i / 255.0
     h, s, v = colorsys.rgb_to_hsv(r, g, b)  # beware : colorsys returns H,L,S
     return h * 360.0, s * 100.0, v * 100.0
@@ -127,16 +128,14 @@ def delta_e_cie2000(lab1: tuple[float, float, float], lab2: tuple[float, float, 
     SH = 1 + 0.015 * Cp_avg * T
     RT = -math.sin(math.radians(2 * d_ro)) * RC
 
-    dE = math.sqrt((dLp / SL) ** 2 + (dCp / SC) ** 2 + (dHp / SH) ** 2 + RT * (dCp / SC) * (dHp / SH))
-    return dE
+    return math.sqrt((dLp / SL) ** 2 + (dCp / SC) ** 2 + (dHp / SH) ** 2 + RT * (dCp / SC) * (dHp / SH))
 
 
 def closeness(rgb1: tuple[int, int, int], rgb2: tuple[int, int, int]) -> float:
     """The ultimate comparer between two RGB... so simple !"""
     lab1 = rgb_to_lab(*rgb1)
     lab2 = rgb_to_lab(*rgb2)
-    dE = delta_e_cie2000(lab1, lab2)
-    return dE
+    return delta_e_cie2000(lab1, lab2)
 
 
 def check_couple_unit_filler(name: str, unit: tuple[int, int, int], fill: tuple[int, int, int], silent: bool) -> float:
@@ -194,9 +193,8 @@ def check_pairs_factions(factions: dict[str, dict[str, tuple[tuple[int, int, int
         for n1, n2, gap in sorted(conflicts, key=lambda x: x[2]):
             icon = factions[first_key][check][1]
             mess = f"\t\t {icon} {n1} vs {n2} : gap of {gap:.1f} dE (should be >= {threshold_separation} dE)"
-            if icon == '⛔️':
-                if gap < worst_data[0]:
-                    worst_data = (gap, check, mess)
+            if icon == '⛔️' and gap < worst_data[0]:
+                worst_data = (gap, check, mess)
             print(mess)
         print()
 
@@ -209,7 +207,7 @@ def check_pairs_factions(factions: dict[str, dict[str, tuple[tuple[int, int, int
 
 
 def display_factions_hue_recap(factions: dict[str, dict[str, tuple[tuple[int, int, int], str]]]) -> None:
-    """Recap on hue circle"""
+    """Recap on hue circle."""
     worst = float(MAXINT)
     target = 0.9 * (360. / len(factions))
 
@@ -231,15 +229,14 @@ def display_factions_hue_recap(factions: dict[str, dict[str, tuple[tuple[int, in
 
 
 def sort_factions_on_hue(factions: dict[str, dict[str, tuple[tuple[int, int, int], str]]]) -> list[str]:
-    """sort_factions_on_hue"""
+    """sort_factions_on_hue."""
     hue_table = {name: rgb_to_hsv(*colors["unit_on_fill_on_earth"][0])[0] for name, colors in factions.items()}
     stat = dict(sorted(hue_table.items(), key=lambda i: i[1]))
     return list(stat.keys())
 
 
 def climb_heuristic(factions: dict[str, dict[str, tuple[tuple[int, int, int], str]]]) -> tuple[float, float, list[str]]:
-    """Heuristic for climbing"""
-
+    """Heuristic for climbing."""
     # ----------
     # closest gap must be as big as possible
     # ----------
@@ -267,7 +264,7 @@ def climb_heuristic(factions: dict[str, dict[str, tuple[tuple[int, int, int], st
 
 
 def check_colors(sea_background_param: str, earth_background_param: str, threshold_separation: int, json_parameters_data: dict[str, typing.Any], silent: bool) -> tuple[float, float, list[str]]:
-    """check_colors"""
+    """check_colors."""
     # ----------
     # sea background
     # ----------
@@ -364,7 +361,7 @@ MAX_START_ATTEMPTS = 150000
 
 
 def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_background: str, threshold_separation: int, json_parameters_data: dict[str, typing.Any]) -> None:
-    """hill_climber"""
+    """hill_climber."""
     sorted_start_factions: list[str] = []
     pair_heuris: float | None = None
     hue_faction_consistency_heuris: float | None = None
@@ -501,7 +498,7 @@ def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_back
 
 
 def main() -> None:
-    """Main"""
+    """Main."""
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--parameters_file', required=True, help='Load a parameters file at start')
     parser.add_argument('-e', '--earth_background', required=True, help='Provide a background color for earth from map file')
