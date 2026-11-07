@@ -356,23 +356,23 @@ FAILED_COUNTER_LIMIT = 30000
 MAX_ABS_CHANGE = 15
 NUM_CHANGED = 2
 
-START_PAIR_HEURIS_MIN = 15
-START_HUE_FACTION_CONSISTENCY_HEURIS_MAX = 100
+START_PAIR_HEURIS_MIN = 15.
+START_HUE_FACTION_CONSISTENCY_HEURIS_MAX = 100.
 MAX_START_ATTEMPTS = 300000
 
 
 def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_background: str, threshold_separation: int, json_parameters_data: dict[str, typing.Any]) -> None:
     """hill_climber."""
-    
+
     sorted_start_factions: list[str] = []
-    pair_heuris = 0
+    pair_heuris = 0.
     hue_faction_consistency_heuris = float(MAXINT)
 
     if restart:
 
         print("Restarting ! Hoho !")
 
-        # memorize start faction order by hue
+        # memorize start faction order by hue for later
         _, _, sorted_start_factions = check_colors(sea_background, earth_background, threshold_separation, json_parameters_data, silent=True)
 
         # we restart everything so make a random initial situation
@@ -390,7 +390,7 @@ def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_back
                         while True:
                             json_parameters_data['roles'][role][rgb][0] = random.choice(range(256))
                             json_parameters_data['roles'][role][rgb][1] = random.choice(range(256))
-                            # fill > unit 
+                            # impose fill > unit
                             if json_parameters_data['roles'][role][rgb][1] > json_parameters_data['roles'][role][rgb][0]:
                                 break
 
@@ -452,7 +452,7 @@ def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_back
                 if not 0 <= json_parameters_data['roles'][role_table[num]][rgb_table[num]][unit_or_fill] <= 255:
                     rejected = True
                     break
-                # fill > unit
+                # impose fill > unit
                 if not json_parameters_data['roles'][role_table[num]][rgb_table[num]][1] > json_parameters_data['roles'][role_table[num]][rgb_table[num]][0]:
                     rejected = True
                     break
