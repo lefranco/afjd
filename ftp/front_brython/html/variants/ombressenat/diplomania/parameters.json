@@ -47,172 +47,172 @@
         },
         "1": {
             "name": "Chiss",
-            "adjective_name": "chiss",
-            "letter_name": "C",
+            "adjective_name": "hutts",
+            "letter_name": "H",
             "red": [
-                20,
-                130
+                7,
+                143
             ],
             "green": [
-                145,
-                235
+                59,
+                182
             ],
             "blue": [
-                195,
-                255
+                110,
+                237
             ]
         },
         "2": {
             "name": "Muuns",
-            "adjective_name": "muuns",
-            "letter_name": "B",
+            "adjective_name": "pykes",
+            "letter_name": "Y",
             "red": [
-                155,
-                255
+                84,
+                188
             ],
             "green": [
-                210,
-                255
+                93,
+                192
             ],
             "blue": [
-                20,
-                180
+                1,
+                68
             ]
         },
         "3": {
             "name": "Separatistes",
-            "adjective_name": "separatistes",
-            "letter_name": "S",
+            "adjective_name": "moncalamari",
+            "letter_name": "A",
             "red": [
-                205,
-                255
+                218,
+                244
             ],
             "green": [
-                10,
-                95
+                130,
+                175
             ],
             "blue": [
-                110,
-                200
+                162,
+                196
             ]
         },
         "4": {
             "name": "Hutts",
-            "adjective_name": "hutts",
-            "letter_name": "H",
+            "adjective_name": "corellia",
+            "letter_name": "R",
             "red": [
-                160,
-                255
+                40,
+                229
             ],
             "green": [
-                106,
-                215
+                23,
+                187
             ],
             "blue": [
-                55,
-                185
+                9,
+                150
             ]
         },
         "5": {
             "name": "Mandalore",
-            "adjective_name": "mandalore",
-            "letter_name": "M",
+            "adjective_name": "chiss",
+            "letter_name": "C",
             "red": [
-                124,
-                230
+                10,
+                75
             ],
             "green": [
-                126,
-                230
+                200,
+                217
             ],
             "blue": [
-                120,
-                215
+                18,
+                77
             ]
         },
         "6": {
             "name": "Neimoidiens",
-            "adjective_name": "neimoidiens",
-            "letter_name": "F",
+            "adjective_name": "separatistes",
+            "letter_name": "S",
             "red": [
-                95,
-                215
+                170,
+                207
             ],
             "green": [
-                30,
-                166
+                36,
+                98
             ],
             "blue": [
-                155,
-                250
+                203,
+                218
             ]
         },
         "7": {
             "name": "MonCalamari",
-            "adjective_name": "moncalamari",
-            "letter_name": "A",
+            "adjective_name": "mandalore",
+            "letter_name": "M",
             "red": [
-                140,
-                240
+                106,
+                255
             ],
             "green": [
-                100,
-                215
+                0,
+                58
             ],
             "blue": [
-                145,
-                237
+                34,
+                126
             ]
         },
         "8": {
             "name": "Corellia",
-            "adjective_name": "corellia",
-            "letter_name": "R",
+            "adjective_name": "neimoidiens",
+            "letter_name": "F",
             "red": [
-                35,
-                180
+                128,
+                133
             ],
             "green": [
-                85,
-                205
+                144,
+                157
             ],
             "blue": [
-                215,
-                255
+                185,
+                217
             ]
         },
         "9": {
             "name": "Pykes",
-            "adjective_name": "pykes",
-            "letter_name": "Y",
+            "adjective_name": "Dathomir",
+            "letter_name": "D",
             "red": [
-                25,
-                175
+                0,
+                92
             ],
             "green": [
-                160,
-                245
+                117,
+                189
             ],
             "blue": [
-                75,
-                195
+                109,
+                185
             ]
         },
         "10": {
             "name": "Dathomir",
-            "adjective_name": "Dathomir",
-            "letter_name": "D",
+            "adjective_name": "muuns",
+            "letter_name": "B",
             "red": [
-                220,
+                176,
                 255
             ],
             "green": [
-                10,
-                100
+                79,
+                191
             ],
             "blue": [
-                10,
-                100
+                26,
+                161
             ]
         }
     },
