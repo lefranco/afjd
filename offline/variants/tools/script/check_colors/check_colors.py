@@ -371,6 +371,7 @@ def hill_climber(restart: bool, fill_step: bool, sea_background: str, earth_back
     if restart:
 
         print("Restarting ! Hoho !")
+        assert False, "Bug needs to be correected about resetting hue ordre of factions"
 
         # memorize start faction order by hue for later
         _, _, sorted_start_factions = check_colors(sea_background, earth_background, threshold_separation, json_parameters_data, silent=True)
