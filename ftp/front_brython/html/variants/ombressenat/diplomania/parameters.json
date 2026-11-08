@@ -47,8 +47,8 @@
         },
         "1": {
             "name": "Chiss",
-            "adjective_name": "hutts",
-            "letter_name": "H",
+            "adjective_name": "chiss",
+            "letter_name": "C",
             "red": [
                 7,
                 143
@@ -64,8 +64,8 @@
         },
         "2": {
             "name": "Muuns",
-            "adjective_name": "pykes",
-            "letter_name": "Y",
+            "adjective_name": "muuns",
+            "letter_name": "B",
             "red": [
                 84,
                 188
@@ -81,8 +81,8 @@
         },
         "3": {
             "name": "Separatistes",
-            "adjective_name": "moncalamari",
-            "letter_name": "A",
+            "adjective_name": "separatistes",
+            "letter_name": "S",
             "red": [
                 218,
                 244
@@ -98,8 +98,8 @@
         },
         "4": {
             "name": "Hutts",
-            "adjective_name": "corellia",
-            "letter_name": "R",
+            "adjective_name": "hutts",
+            "letter_name": "H",
             "red": [
                 40,
                 229
@@ -115,8 +115,8 @@
         },
         "5": {
             "name": "Mandalore",
-            "adjective_name": "chiss",
-            "letter_name": "C",
+            "adjective_name": "mandalore",
+            "letter_name": "M",
             "red": [
                 10,
                 75
@@ -132,8 +132,8 @@
         },
         "6": {
             "name": "Neimoidiens",
-            "adjective_name": "separatistes",
-            "letter_name": "S",
+            "adjective_name": "neimoidiens",
+            "letter_name": "F",
             "red": [
                 170,
                 207
@@ -149,8 +149,8 @@
         },
         "7": {
             "name": "MonCalamari",
-            "adjective_name": "mandalore",
-            "letter_name": "M",
+            "adjective_name": "moncalamari",
+            "letter_name": "A",
             "red": [
                 106,
                 255
@@ -166,8 +166,8 @@
         },
         "8": {
             "name": "Corellia",
-            "adjective_name": "neimoidiens",
-            "letter_name": "F",
+            "adjective_name": "corellia",
+            "letter_name": "R",
             "red": [
                 128,
                 133
@@ -183,8 +183,8 @@
         },
         "9": {
             "name": "Pykes",
-            "adjective_name": "Dathomir",
-            "letter_name": "D",
+            "adjective_name": "pykes",
+            "letter_name": "Y",
             "red": [
                 0,
                 92
@@ -200,8 +200,8 @@
         },
         "10": {
             "name": "Dathomir",
-            "adjective_name": "muuns",
-            "letter_name": "B",
+            "adjective_name": "Dathomir",
+            "letter_name": "D",
             "red": [
                 176,
                 255
